@@ -25,6 +25,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'expects_chart_of_accounts': fields.boolean('Expects a Chart of Accounts'),
+        'bank_account_code_char': fields.char('Code of the main bank account'),
         'tax_calculation_rounding_method': fields.selection([
             ('round_per_line', 'Round per Line'),
             ('round_globally', 'Round Globally'),

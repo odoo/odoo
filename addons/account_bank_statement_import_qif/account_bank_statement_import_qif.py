@@ -12,10 +12,9 @@ class account_bank_statement_import(osv.TransientModel):
     def _check_qif(self, cr, uid, data_file, context=None):
         return data_file.strip().startswith('!Type:')
 
-    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
-        """ Import a file in the .QIF format"""
+    def _parse_file(self, cr, uid, data_file=None, context=None):
         if not self._check_qif(cr, uid, data_file, context=context):
-            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
+            return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
 
         try:
             fileobj = TemporaryFile('wb+')
@@ -68,11 +67,12 @@ class account_bank_statement_import(osv.TransientModel):
                     pass
         else:
             raise osv.except_osv(_('Error!'), _('This file is either not a bank statement or is not correctly formed.'))
-        vals_bank_statement.update({'balance_end_real': total,
-                                    'line_ids': line_ids,
-                                    'journal_id': journal_id})
+        
+        vals_bank_statement.update({
+            'balance_end_real': total,
+            'line_ids': line_ids
+        })
         return {
-            'account_number': False,
             'bank_statement_vals': [vals_bank_statement],
         }
 

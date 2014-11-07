@@ -32,6 +32,7 @@ class account_bank_statement(osv.osv):
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
             vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
         if 'line_ids' in vals:
+            vals['line_ids'] = [[0, False, line] for line in vals['line_ids'] if isinstance(line, dict)]
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
@@ -923,9 +924,8 @@ class account_bank_statement_line(osv.osv):
     _defaults = {
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
-    # Note : ideally the constraint should be on unique_import_id and statement_id.account_id
     _sql_constraints = [
-        ('unique_import_id', 'unique (bank_account_id, unique_import_id)', 'A bank account\'s transactions can be imported only once !')
+        ('unique_import_id', 'unique (unique_import_id)', 'A bank account transactions can be imported only once !')
     ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

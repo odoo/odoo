@@ -27,8 +27,7 @@ class account_bank_statement_import(osv.TransientModel):
             return False
         return True
 
-    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
-        """ Import a file in the .OFX format"""
+    def _parse_file(self, cr, uid, data_file=None, context=None):
         try:
             tempfile = open("temp.ofx", "w+")
             tempfile.write(data_file)
@@ -38,10 +37,11 @@ class account_bank_statement_import(osv.TransientModel):
         except:
             raise osv.except_osv(_('Import Error!'), _('File handling error.'))
         if not self._check_ofx(cr, uid, file(path), context=context):
-            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
+            return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
         try:
             ofx = ofxparser.parse(file(path))
         except:
+            os.remove(path)
             raise osv.except_osv(_('Import Error!'), _('Could not decipher the OFX file.'))
 
         line_ids = []
@@ -61,26 +61,21 @@ class account_bank_statement_import(osv.TransientModel):
                 total_amt += float(transaction.amount)
                 line_ids.append(vals_line)
         except Exception, e:
+            os.remove(path)
             raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
-        account_number = ofx.account.number
-        st_start_date = ofx.account.statement.start_date or False
-        st_end_date = ofx.account.statement.end_date or False
-        period_obj = self.pool.get('account.period')
-        if st_end_date:
-            period_ids = period_obj.find(cr, uid, st_end_date, context=context)
-        else:
-            period_ids = period_obj.find(cr, uid, st_start_date, context=context)
+
         vals_bank_statement = {
             'name': ofx.account.routing_number,
+            'line_ids': line_ids,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
-            'period_id': period_ids and period_ids[0] or False,
-            'journal_id': journal_id
+            'statement_start_date': ofx.account.statement.start_date or False,
+            'statement_end_date': ofx.account.statement.end_date or False,
         }
-        vals_bank_statement.update({'line_ids': line_ids})
         os.remove(path)
         return {
-            'account_number': account_number,
+            'currency_code': ofx.account.statement.currency,
+            'account_number': ofx.account.number,
             'bank_statement_vals': [vals_bank_statement],
         }
 

@@ -36,13 +36,12 @@ class account_bank_statement_import(osv.TransientModel):
     def _check_coda(self, cr, uid, data_file, context=None):
         return re.match('0{5}\d{9}05[ D] {7}', data_file) != None
 
-    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
+    def _parse_file(self, cr, uid, data_file=None, context=None):
         if not self._check_coda(cr, uid, data_file, context=context):
-            return super(account_bank_statement_import, self)._process_file(cr, uid, data_file, journal_id, context=context)
+            return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
 
         if context is None:
             context = {}
-        journal_id = self.pool.get('account.journal').browse(cr, uid, journal_id)
         recordlist = unicode(data_file, 'windows-1252', 'strict').split('\n')
         statements = []
         globalisation_comm = {}
@@ -182,13 +181,6 @@ class account_bank_statement_import(osv.TransientModel):
                 statement['balance_end_realDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[57:63]), '%d%m%y'))
                 if statement['debit'] == '1':    # 1=Debit
                     statement['balance_end_real'] = - statement['balance_end_real']
-                if statement['balance_end_realDate']:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', journal_id.company_id.id), ('date_start', '<=', statement['balance_end_realDate']), ('date_stop', '>=', statement['balance_end_realDate'])])
-                else:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', journal_id.company_id.id), ('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
-                if not period_id and len(period_id) == 0:
-                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s for the company %s.") % (statement['balance_end_realDate'], journal_id.company_id.name))
-                statement['period_id'] = period_id[0]
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000
                 statement['balancePlus'] = float(rmspaces(line[37:52])) / 1000
@@ -198,29 +190,13 @@ class account_bank_statement_import(osv.TransientModel):
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
             statement_line = []
-            balance_start_check_date = (len(statement['lines']) > 0 and statement['lines'][0]['entryDate']) or statement['date']
-            cr.execute('SELECT balance_end_real \
-                FROM account_bank_statement \
-                WHERE journal_id = %s and date <= %s \
-                ORDER BY date DESC,id DESC LIMIT 1', (journal_id.id, balance_start_check_date))
-            res = cr.fetchone()
-            balance_start_check = res and res[0]
-            if balance_start_check is None:
-                if journal_id.default_debit_account_id and (journal_id.default_credit_account_id == journal_id.default_debit_account_id):
-                    balance_start_check = journal_id.default_debit_account_id.balance
-                else:
-                    raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % journal_id.name)
-            if balance_start_check != statement['balance_start']:
-                statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, journal_id.name)
-            if not(statement.get('period_id')):
-                raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
             statement_data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
-                'journal_id': journal_id.id,
-                'period_id': statement['period_id'],
                 'balance_start': statement['balance_start'],
                 'balance_end_real': statement['balance_end_real'],
+                # TODO : 'statement_start_date' ?
+                'statement_end_date': statement['balance_end_realDate'],
             }
             for line in statement['lines']:
                 if line['type'] == 'information':
@@ -270,9 +246,10 @@ class account_bank_statement_import(osv.TransientModel):
                     statement_line.append(line_data)
             if statement['coda_note'] != '':
                 statement_data.update({'coda_note': statement['coda_note']})
-            statement_data.update({'journal_id': journal_id.id, 'line_ids': statement_line})
+            statement_data.update({'line_ids': statement_line})
             ret_statements.append(statement_data)
         return {
+            'currency_code': statement['currency'],
             'account_number': statements[0] and statements[0]['acc_number'] or False,
             'bank_statement_vals': ret_statements,
         }
