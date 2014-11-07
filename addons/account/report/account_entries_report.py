@@ -38,7 +38,7 @@ class account_entries_report(models.Model):
     credit = fields.Float('Credit', readonly=True)
     balance = fields.Float('Balance', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    amount_currency = fields.Float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True)
+    amount_currency = fields.Float('Amount Currency', digits=dp.get_precision('Account'), readonly=True)
     period_id = fields.Many2one('account.period', 'Period', readonly=True)
     account_id = fields.Many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', 'Journal', readonly=True)
@@ -70,12 +70,12 @@ class account_entries_report(models.Model):
     _order = 'date desc'
 
     @api.model
-    def search(self):
+    def search(self, args, offset=0, limit=None, order=None, count=False):
         fiscalyear_obj = self.env['account.fiscalyear']
         period_obj = self.env['account.period']
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = period_obj.with_context(context).find()[0]
+                current_period = period_obj.find()[0]
                 args.append(['period_id','in',[current_period]])
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
@@ -85,10 +85,10 @@ class account_entries_report(models.Model):
         for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
             if a in args:
                 args.remove(a)
-        return super(account_entries_report, self).with_context(context).search()
+        return super(account_entries_report, self).with_context(context).search(args=args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model
-    def read_group(self):
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False,lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
         period_obj = self.env['account.period']
         if self._context.get('period', False) == 'current_period':
@@ -100,7 +100,7 @@ class account_entries_report(models.Model):
             domain.append(['period_id','in',ids])
         else:
             domain = domain
-        return super(account_entries_report, self).with_context(context).read_group()
+        return super(account_entries_report, self).read_group(self, domain, fields, groupby, offset, limit, orderby, lazy)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

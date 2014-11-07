@@ -113,7 +113,7 @@ class report_aged_receivable(models.Model):
         return res
 
     name = fields.Char('Month Range', size=24, readonly=True)
-    balance = fields.Float(string='Balance', compute=_calc_bal, readonly=True)
+    balance = fields.Float(string='Balance', compute='_calc_bal', readonly=True)
     
     @api.model
     def _init(self): 
