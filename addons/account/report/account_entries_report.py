@@ -29,29 +29,29 @@ class account_entries_report(models.Model):
     _auto = False
     _rec_name = 'date'
     
-    date = fields.Date('Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
-    date_created = fields.Date('Date Created', readonly=True)
-    date_maturity = fields.Date('Date Maturity', readonly=True)
-    ref = fields.Char('Reference', readonly=True)
-    nbr = fields.Integer('# of Items', readonly=True)
-    debit = fields.Float('Debit', readonly=True)
-    credit = fields.Float('Credit', readonly=True)
-    balance = fields.Float('Balance', readonly=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    amount_currency = fields.Float('Amount Currency', digits=dp.get_precision('Account'), readonly=True)
-    period_id = fields.Many2one('account.period', 'Period', readonly=True)
-    account_id = fields.Many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)])
-    journal_id = fields.Many2one('account.journal', 'Journal', readonly=True)
-    fiscalyear_id = fields.Many2one('account.fiscalyear', 'Fiscal Year', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', readonly=True)
-    move_state = fields.Selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True)
-    move_line_state = fields.Selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True)
-    reconcile_id = fields.Many2one('account.move.reconcile', 'Reconciliation number', readonly=True)
-    partner_id = fields.Many2one('res.partner','Partner', readonly=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    quantity = fields.Float('Products Quantity', digits=(16,2), readonly=True)  # TDE FIXME master: rename into product_quantity
-    user_type = fields.Many2one('account.account.type', 'Account Type', readonly=True)
+    date = fields.Date(string='Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
+    date_created = fields.Date(string='Date Created', readonly=True)
+    date_maturity = fields.Date(string='Date Maturity', readonly=True)
+    ref = fields.Char(string='Reference', readonly=True)
+    nbr = fields.Integer(string='# of Items', readonly=True)
+    debit = fields.Float(string='Debit', readonly=True)
+    credit = fields.Float(string='Credit', readonly=True)
+    balance = fields.Float(string='Balance', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    amount_currency = fields.Float(string='Amount Currency', digits=dp.get_precision('Account'), readonly=True)
+    period_id = fields.Many2one('account.period', string='Period', readonly=True)
+    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', readonly=True)
+    move_state = fields.Selection([('draft','Unposted'), ('posted','Posted')], string='Status', readonly=True)
+    move_line_state = fields.Selection([('draft','Unbalanced'), ('valid','Valid')], string='State of Move Line', readonly=True)
+    reconcile_id = fields.Many2one('account.move.reconcile', string='Reconciliation number', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
+    quantity = fields.Float(string='Products Quantity', digits=(16,2), readonly=True)  # TDE FIXME master: rename into product_quantity
+    user_type = fields.Many2one('account.account.type', string='Account Type', readonly=True)
     type = fields.Selection([
         ('receivable', 'Receivable'),
         ('payable', 'Payable'),
@@ -60,11 +60,11 @@ class account_entries_report(models.Model):
         ('consolidation', 'Consolidation'),
         ('other', 'Regular'),
         ('closed', 'Closed'),
-    ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
+    ], string='Internal Type', readonly=True, help="This type is used to differentiate types with "\
         "special effects in Odoo: view can not have entries, consolidation are accounts that "\
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations), closed for depreciated accounts.")
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
     
 
     _order = 'date desc'

@@ -41,15 +41,15 @@ class account_treasury_report(models.Model):
             res[record.id]['ending_balance'] = current_sum[record.company_id.id]
         return res    
 
-    fiscalyear_id = fields.Many2one('account.fiscalyear', 'Fiscalyear', readonly=True)
-    period_id = fields.Many2one('account.period', 'Period', readonly=True)
-    debit = fields.Float('Debit', readonly=True)
-    credit = fields.Float('Credit', readonly=True)
-    balance = fields.Float('Balance', readonly=True)
-    date = fields.Date('Beginning of Period Date', readonly=True)
+    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscalyear', readonly=True)
+    period_id = fields.Many2one('account.period', string='Period', readonly=True)
+    debit = fields.Float(string='Debit', readonly=True)
+    credit = fields.Float(string='Credit', readonly=True)
+    balance = fields.Float(string='Balance', readonly=True)
+    date = fields.Date(string='Beginning of Period Date', readonly=True)
     starting_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Starting Balance')
     ending_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Ending Balance')
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
 
     _order = 'date asc'
 

@@ -54,26 +54,26 @@ class account_invoice_report(models.Model):
         return res
 
 
-    date = fields.Date('Date', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    product_qty = fields.Float('Product Quantity', readonly=True)
-    uom_name = fields.Char('Reference Unit of Measure', size=128, readonly=True)
-    payment_term = fields.Many2one('account.payment.term', 'Payment Term', readonly=True)
-    period_id = fields.Many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True)
-    fiscal_position = fields.Many2one('account.fiscal.position', 'Fiscal Position', readonly=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    categ_id = fields.Many2one('product.category','Category of Product', readonly=True)
-    journal_id = fields.Many2one('account.journal', 'Journal', readonly=True)
-    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', 'Partner Company', help="Commercial Entity")
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
-    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
-    price_total = fields.Float('Total Without Tax', readonly=True)
+    date = fields.Date(string='Date', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    product_qty = fields.Float(string='Product Quantity', readonly=True)
+    uom_name = fields.Char(string='Reference Unit of Measure', size=128, readonly=True)
+    payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
+    period_id = fields.Many2one('account.period', string='Force Period', domain=[('state','<>','done')], readonly=True)
+    fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    categ_id = fields.Many2one('product.category', string='Category of Product', readonly=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    price_total = fields.Float(string='Total Without Tax', readonly=True)
     user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
-    price_average = fields.Float('Average Price', readonly=True, group_operator="avg")
+    price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
-    currency_rate = fields.Float('Currency Rate', readonly=True)
-    nbr = fields.Integer('# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    currency_rate = fields.Float(string='Currency Rate', readonly=True)
+    nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice','Customer Invoice'),
         ('in_invoice','Supplier Invoice'),
@@ -87,14 +87,14 @@ class account_invoice_report(models.Model):
         ('open','Open'),
         ('paid','Done'),
         ('cancel','Cancelled')
-        ], 'Invoice Status', readonly=True)
-    date_due = fields.Date('Due Date', readonly=True)
-    account_id = fields.Many2one('account.account', 'Account',readonly=True, domain=[('deprecated', '=', False)])
-    account_line_id = fields.Many2one('account.account', 'Account Line',readonly=True, domain=[('deprecated', '=', False)])
-    partner_bank_id = fields.Many2one('res.partner.bank', 'Bank Account',readonly=True)
-    residual = fields.Float('Total Residual', readonly=True)
+        ], string='Invoice Status', readonly=True)
+    date_due = fields.Date(string='Due Date', readonly=True)
+    account_id = fields.Many2one('account.account', string='Account',readonly=True, domain=[('deprecated', '=', False)])
+    account_line_id = fields.Many2one('account.account', string='Account Line',readonly=True, domain=[('deprecated', '=', False)])
+    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',readonly=True)
+    residual = fields.Float(string='Total Residual', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
-    country_id = fields.Many2one('res.country', 'Country of the Partner Company')
+    country_id = fields.Many2one('res.country', string='Country of the Partner Company')
 
     _order = 'date desc'
 

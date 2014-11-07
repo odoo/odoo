@@ -39,11 +39,11 @@ class report_account_receivable(models.Model):
     _description = "Receivable accounts"
     _auto = False
 
-    name = fields.Char('Week of Year', size=7, readonly=True)
-    type = fields.Selection(_code_get, 'Account Type', required=True)
-    balance = fields.Float('Balance', readonly=True)
-    debit = fields.Float('Debit', readonly=True)
-    credit = fields.Float('Credit', readonly=True)
+    name = fields.Char(string='Week of Year', size=7, readonly=True)
+    type = fields.Selection(_code_get, string='Account Type', required=True)
+    balance = fields.Float(string='Balance', readonly=True)
+    debit = fields.Float(string='Debit', readonly=True)
+    credit = fields.Float(string='Credit', readonly=True)
 
     _order = 'name desc'
 
@@ -73,7 +73,7 @@ class temp_range(models.Model):
     _name = 'temp.range'
     _description = 'A Temporary table used for Dashboard view'
     
-    name = fields.Char('Range')
+    name = fields.Char(string='Range')
     
 
 
@@ -112,7 +112,7 @@ class report_aged_receivable(models.Model):
 
         return res
 
-    name = fields.Char('Month Range', size=24, readonly=True)
+    name = fields.Char(string='Month Range', size=24, readonly=True)
     balance = fields.Float(string='Balance', compute='_calc_bal', readonly=True)
     
     @api.model
@@ -156,21 +156,21 @@ class report_invoice_created(models.Model):
     _description = "Report of Invoices Created within Last 15 days"
     _auto = False
 
-    name = fields.Char('Description', readonly=True)
+    name = fields.Char(string='Description', readonly=True)
     type = fields.Selection([
         ('out_invoice','Customer Invoice'),
         ('in_invoice','Supplier Invoice'),
         ('out_refund','Customer Refund'),
         ('in_refund','Supplier Refund'),
         ],'Type', readonly=True)
-    number = fields.Char('Invoice Number', readonly=True)
-    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
-    amount_untaxed = fields.Float('Untaxed', readonly=True)
-    amount_total = fields.Float('Total', readonly=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    date_invoice = fields.Date('Invoice Date', readonly=True)
-    date_due = fields.Date('Due Date', readonly=True)
-    residual = fields.Float('Residual', readonly=True)
+    number = fields.Char(string='Invoice Number', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    amount_untaxed = fields.Float(string='Untaxed', readonly=True)
+    amount_total = fields.Float(string='Total', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    date_invoice = fields.Date(string='Invoice Date', readonly=True)
+    date_due = fields.Date(string='Due Date', readonly=True)
+    residual = fields.Float(string='Residual', readonly=True)
     state = fields.Selection([
         ('draft','Draft'),
         ('proforma','Pro-forma'),
@@ -179,8 +179,8 @@ class report_invoice_created(models.Model):
         ('paid','Done'),
         ('cancel','Cancelled')
     ],'Status', readonly=True)
-    origin = fields.Char('Source Document', readonly=True, help="Reference of the document that generated this invoice report.")
-    create_date = fields.Datetime('Create Date', readonly=True)
+    origin = fields.Char(string='Source Document', readonly=True, help="Reference of the document that generated this invoice report.")
+    create_date = fields.Datetime(string='Create Date', readonly=True)
 
     _order = 'create_date'
 
@@ -208,15 +208,15 @@ class report_account_type_sales(models.Model):
     _description = "Report of the Sales by Account Type"
     _auto = False
 
-    name = fields.Char('Year', required=False, readonly=True)
-    period_id = fields.Many2one('account.period', 'Force Period', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    quantity = fields.Float('Quantity', readonly=True)
-    user_type = fields.Many2one('account.account.type', 'Account Type', readonly=True)
-    amount_total = fields.Float('Total', readonly=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
+    name = fields.Char(string='Year', required=False, readonly=True)
+    period_id = fields.Many2one('account.period', string='Force Period', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    quantity = fields.Float(string='Quantity', readonly=True)
+    user_type = fields.Many2one('account.account.type', string='Account Type', readonly=True)
+    amount_total = fields.Float(string='Total', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     month = fields.Selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True)
+                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], string='Month', readonly=True)
 
     _order = 'name desc,amount_total desc'
 
@@ -249,15 +249,15 @@ class report_account_sales(models.Model):
     _description = "Report of the Sales by Account"
     _auto = False
 
-    name = fields.Char('Year', required=False, readonly=True, select=True)
-    period_id = fields.Many2one('account.period', 'Force Period', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    quantity = fields.Float('Quantity', readonly=True)
-    account_id = fields.Many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)])
-    amount_total = fields.Float('Total', readonly=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
+    name = fields.Char(string='Year', required=False, readonly=True, select=True)
+    period_id = fields.Many2one('account.period', string='Force Period', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    quantity = fields.Float(string='Quantity', readonly=True)
+    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
+    amount_total = fields.Float(string='Total', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     month = fields.Selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True)
+                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], string='Month', readonly=True)
 
     _order = 'name desc'
 
