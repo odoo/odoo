@@ -295,7 +295,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         };
         recurse(this.fields_view.arch);
         var group_ids = _.map(groups, function (elem) { return elem.attributes.value[0]});
-        if (group_ids && group_by_fields_to_read) {
+        if (this.grouped_by_m2o && group_ids.length && group_by_fields_to_read.length) {
             var group_data = new instance.web.DataSet(
                 this,
                 this.group_by_field.relation).read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read));
