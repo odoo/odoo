@@ -128,9 +128,10 @@
                         <field name="gift_product_id"       attrs="{ 'invisible':[('type','!=','gift')], 'required':[('type','==','gift')]}" />
                         <field name="discount"              attrs="{ 'invisible':[('type','!=','discount')] }"/>
                         <field name="discount_product_id"   attrs="{ 'invisible':[('type','!=','discount')], 'required':[('type','==','discount')] }"/>
+                        <field name="point_product_id"      attrs="{ 'invisible':[('type','!=','resale')],   'required':[('type','==','resale')] }"/>
                     </group>
                     <group>
-                        <field name="point_cost" />
+                        <field name="point_cost"           attrs="{ 'invisible':[('type','=','resale')] }" />      
                         <field name="minimum_points" />
                     </group>
                 </form>

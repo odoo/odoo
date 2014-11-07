@@ -53,7 +53,7 @@ openerp.pos_loyalty = function(instance){
             },{
                 model: 'loyalty.reward',
                 condition: function(self){ return !!self.loyalty; },
-                fields: ['name','type','minimum_points','gift_product_id','point_cost','discount_product_id','discount'],
+                fields: ['name','type','minimum_points','gift_product_id','point_cost','discount_product_id','discount','point_value','point_product_id'],
                 domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
                 loaded: function(self,rewards){
                     self.loyalty.rewards = rewards; 
@@ -175,9 +175,12 @@ openerp.pos_loyalty = function(instance){
                             points += round_pr(line.get_quantity() * reward.point_cost, rounding);
                         } else if (reward.type === 'discount') {
                             points += round_pr(-line.get_display_price() * reward.point_cost, rounding);
+                        } else if (reward.type === 'resale') {
+                            points += (-line.get_quantity());
                         }
                     }
                 }
+
                 return points;
             }
         },
@@ -268,7 +271,7 @@ openerp.pos_loyalty = function(instance){
                 }
 
                 var product   = this.pos.db.get_product_by_id(reward.discount_product_id[0]);
-                if (!product) {
+                if (!product) { //FIXME, move this as a server side constraint
                     this.pos.pos_widget.screen_selector.show_popup('error',{
                         'message':'Configuration Error',
                         'comment':'The product associated with the reward "'+reward.name+'" could not be found. Make sure it is available for sale in the point of sale.',
@@ -279,6 +282,35 @@ openerp.pos_loyalty = function(instance){
                 var line = this.add_product(product, { 
                     price: -discount, 
                     quantity: 1, 
+                    merge: false,
+                    extras: { reward_id: reward.id },
+                });
+
+            } else if (reward.type === 'resale') {
+
+                var lrounding = this.pos.loyalty.rounding;
+                var crounding = this.pos.currency.rounding;
+                var spendable = this.get_spendable_points();
+                var order_total = this.get_total_with_tax();
+                var product = this.pos.db.get_product_by_id(reward.point_product_id[0]);
+
+                if (!product) { //FIXME, move this as a server side constraint
+                    this.pos.pos_widget.screen_selector.show_popup('error',{
+                        'message':'Configuration Error',
+                        'comment':'The product associated with the reward "'+reward.name+'" could not be found. Make sure it is available for sale in the point of sale.',
+                    });
+                    return;
+                }
+
+                if ( round_pr( spendable * product.price, crounding ) > order_total ) {
+                    spendable = round_pr( Math.floor(order_total / product.price), lrounding);
+                }
+
+                if ( spendable < 0.00001 ) {
+                    return;
+                }
+                var line = this.add_product(product, {
+                    quantity: -spendable,
                     merge: false,
                     extras: { reward_id: reward.id },
                 });
