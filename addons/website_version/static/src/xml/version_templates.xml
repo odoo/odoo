@@ -249,7 +249,17 @@
                 <h4 class="modal-title"><t t-esc="message"></t></h4>
               </div>
               <div class="modal-body">
-                <p>When you publish a version, you erase some views in master. If you want to save the views that will be erased, you can save these views in a new version.</p> 
+                <p>When you publish a version, you erase some views in master. If you want to save the views that will be erased, you can save these views in a new version. Here is the list of master views which will be erased:</p>
+                <t t-if="list.length != 0"> 
+                    <ul>
+                        <t t-foreach="list" t-as="item">      
+                            <li><t t-esc="item"></t> </li>            
+                        </t>
+                    </ul>
+                </t>
+                <t t-if="list.length == 0"> 
+                    <p>There is no difference with Master</p>
+                </t>
                 <form id="productForm" class="form-horizontal" role="form">              
                     <div class="form-group form-group">
                         <label class="col-sm-3 control-label">Save master</label>

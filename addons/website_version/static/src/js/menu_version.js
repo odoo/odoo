@@ -119,7 +119,8 @@
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
-            self.wizard = $(openerp.qweb.render("website_version.publish_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
+            openerp.jsonRpc( '/website_version/diff_version', 'call', { 'version_id':version_id}).then(function (result) {
+                self.wizard = $(openerp.qweb.render("website_version.publish_message",{message:"Are you sure you want to publish the " + name + " version ?", list:result}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
                     self.wizard.find('.message').remove();
@@ -152,13 +153,13 @@
                 self.wizard.on('click','.o_check', function(){
                     self.wizard.find('.name').prop('disabled',!self.wizard.find('.o_check').is(':checked'));
                 });
+            });
         },
 
         diff_version: function(event) {
             var version_id = $('html').data('version_id');
             var name = $('#version-menu-button').data('version_name');
             openerp.jsonRpc( '/website_version/diff_version', 'call', { 'version_id':version_id}).then(function (result) {
-                console.log(result);
                 self.wizard = $(openerp.qweb.render("website_version.diff",{list:result, version_name:name}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){});
