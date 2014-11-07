@@ -101,7 +101,7 @@ class xml_decl(osv.TransientModel):
             raise exceptions.RedirectWarning(_('Insufficient Data!\nNo company registry associated with your company.'), action_id, _('Go to the companies configuration'))
         if len(decl_datas.month) != 2:
             decl_datas.month = "0%s" % decl_datas.month
-        if int(decl_datas.month)<1 or int(decl_datas.month)>12:
+        if int(decl_datas.month) < 1 or int(decl_datas.month) > 12:
             raise osv.except_osv(_('Incorrect Data!'), _('Month is a number between 1 and 12.'))
         if len(decl_datas.year) != 4:
             raise osv.except_osv(_('Incorrect Data!'), _('Year is a number of 4 digits.'))
@@ -130,7 +130,7 @@ class xml_decl(osv.TransientModel):
         data_file = ET.tostring(decl, encoding='UTF-8', method='xml')
 
         #change state of the wizard
-        self.write(cr, uid, ids, {'file_save' : base64.encodestring(data_file), 'state' : 'download'}, context=context)
+        self.write(cr, uid, ids, {'file_save': base64.encodestring(data_file), 'state': 'download'}, context=context)
         return {
             'name': _('Save'),
             'context': context,
@@ -178,7 +178,7 @@ class xml_decl(osv.TransientModel):
         else:
             datas.set('form', 'EXF%sE' % declcode)
         datas.set('close', 'true')
-        intrastatkey = namedtuple("intrastatkey", ['EXTRF','EXCNT','EXTTA','EXREG','EXGO','EXTPC','EXDELTRM'])
+        intrastatkey = namedtuple("intrastatkey", ['EXTRF', 'EXCNT', 'EXTTA', 'EXREG', 'EXGO', 'EXTPC', 'EXDELTRM'])
         entries = {}
 
         sqlreq = """
@@ -241,8 +241,6 @@ class xml_decl(osv.TransientModel):
                 soline_ids = self.pool['sale.order.line'].search(cr, uid, [('invoice_lines', 'in', invoiceline.id)], context=context)
                 if soline_ids:
                     saleorder = self.pool['sale.order.line'].browse(cr, uid, soline_ids[0], context=context).order_id
-                    import pudb
-                    pudb.set_trace()
                     if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
                         exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
 
@@ -297,7 +295,7 @@ class xml_decl(osv.TransientModel):
                 supply_units = invoiceline.quantity
             else:
                 supply_units = invoiceline.quantity * invoiceline.uos_id.factor
-            amounts = entries.setdefault(linekey,(0,0,0))
+            amounts = entries.setdefault(linekey, (0, 0, 0))
             amounts = (amounts[0] + amount, amounts[1] + weight, amounts[2] + supply_units)
             entries[linekey] = amounts
 
@@ -315,9 +313,9 @@ class xml_decl(osv.TransientModel):
             if extendedmode:
                 self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
                 self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0],0)).replace(".",","))
-            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1],0)).replace(".",","))
-            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2],0)).replace(".",","))
+            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2], 0)).replace(".", ","))
 
         if numlgn == 0:
             #no datas
@@ -326,5 +324,5 @@ class xml_decl(osv.TransientModel):
 
     def _set_Dim(self, item, prop, value):
         dim = ET.SubElement(item, 'Dim')
-        dim.set('prop',prop)
+        dim.set('prop', prop)
         dim.text = value
