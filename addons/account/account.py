@@ -2394,9 +2394,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
         """
         This method used for checking journals already created or not. If not then create new journal.
         """
+        JournalObj = self.env['account.journal']
         rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company_id)], limit=1)
         if not rec_list:
-            self.env['account.journal'].create(vals_journal)
+            JournalObj.create(vals_journal)
         return True
 
     @api.model
