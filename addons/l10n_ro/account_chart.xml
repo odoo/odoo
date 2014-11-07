@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="0">
+<data>
 
     <!-- Account Templates -->
 
@@ -2242,12 +2242,30 @@
         <field name="parent_id" ref="pcg_442"/>
         <field name="reconcile" eval="True"/>
     </record>
+    
     <record id="pcg_4428" model="account.account.template">
         <field name="name">TVA neexigibila</field>
         <field name="code">4428</field>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="parent_id" ref="pcg_442"/>
+    </record>
+
+    <record id="pcg_44281" model="account.account.template">
+        <field name="name">TVA neexigibila - Colectata</field>
+        <field name="code">44281</field>
         <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_asset"/>
-        <field name="parent_id" ref="pcg_442"/>
+        <field name="parent_id" ref="pcg_4428"/>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record id="pcg_44282" model="account.account.template">
+        <field name="name">TVA neexigibila - Deductibila</field>
+        <field name="code">44282</field>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_asset"/>
+        <field name="parent_id" ref="pcg_4428"/>
         <field name="reconcile" eval="True"/>
     </record>
 
