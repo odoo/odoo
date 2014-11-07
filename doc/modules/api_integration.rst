@@ -43,8 +43,8 @@ Connection and authentication
         url, db, username, password = \
             info['host'], info['database'], info['user'], info['password']
         common = XMLRPC::Client.new2("#{url}/xmlrpc/2/common")
-        uid = common.authenticate(db, username, password, {})
-        models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+        uid = common.call('authenticate', db, username, password, {})
+        models = XMLRPC::Client.new2("#{url}/xmlrpc/2/object").proxy
 
     .. code-block:: php
 
