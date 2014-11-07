@@ -718,7 +718,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         scan_product: function(parsed_code){
             var self = this;
-            var selectedOrder = this.get_order();
+            var selectedOrder = this.get_order();       
             //if(parsed_code.encoding === 'barcode'){
                 var product = this.db.get_product_by_ean13(parsed_code.base_code);
             /*}else if(parsed_code.encoding === 'reference'){

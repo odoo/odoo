@@ -61,7 +61,7 @@
                         <field name="type" />
                         <field name="encoding"/>
                         <field name="pattern" />
-                        <field name="alias" />
+                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>   
                     </group>
                 </form>
             </field>
