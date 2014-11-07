@@ -334,7 +334,7 @@
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                        <input class='detail barcode'       name='barcode'    t-att-value='partner.barcode || ""'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Tax ID</span>
@@ -376,10 +376,10 @@
                 <div class='client-details-right'>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <t t-if='partner.ean13'>
-                            <span class='detail client-id'><t t-esc='partner.ean13'/></span>
+                        <t t-if='partner.barcode'>
+                            <span class='detail client-id'><t t-esc='partner.barcode'/></span>
                         </t>
-                        <t t-if='!partner.ean13'>
+                        <t t-if='!partner.barcode'>
                             <span class='detail client-id empty'>N/A</span>
                         </t>
                     </div>

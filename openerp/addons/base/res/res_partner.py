@@ -250,7 +250,7 @@ class res_partner(osv.Model, format_address):
         'comment': fields.text('Notes'),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
-        'ean13': fields.char('EAN13', size=13),
+        'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
         'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
@@ -395,21 +395,21 @@ class res_partner(osv.Model, format_address):
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
-                    return False
-                sum=0
-                for i in range(12):
-                    if not (i % 2):
-                        sum+=int(thisean[i])
-                    else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-                    return False
-        return True
+    # def _check_ean_key(self, cr, uid, ids, context=None):
+    #     for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['barcode',]):
+    #         thisean=partner_o['barcode']
+    #         if thisean and thisean!='':
+    #             if len(thisean)!=13:
+    #                 return False
+    #             sum=0
+    #             for i in range(12):
+    #                 if not (i % 2):
+    #                     sum+=int(thisean[i])
+    #                 else:
+    #                     sum+=3*int(thisean[i])
+    #             if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
+    #                 return False
+    #     return True
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 

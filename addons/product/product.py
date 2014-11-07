@@ -572,7 +572,7 @@ class product_template(osv.osv):
         'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
-        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='Barcode'),
+        'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
     }
 
@@ -703,8 +703,8 @@ class product_template(osv.osv):
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
         related_vals = {}
-        if vals.get('ean13'):
-            related_vals['ean13'] = vals['ean13']
+        if vals.get('barcode'):
+            related_vals['barcode'] = vals['barcode']
         if vals.get('default_code'):
             related_vals['default_code'] = vals['default_code']
         if related_vals:
@@ -922,7 +922,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
-        'ean13': fields.char('Barcode', help="International Article Number used for product identification."),
+        'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -978,14 +978,6 @@ class product_product(osv.osv):
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
-
-    # def _check_ean_key(self, cr, uid, ids, context=None):
-    #     for product in self.read(cr, uid, ids, ['ean13'], context=context):
-    #         if not check_ean(product['ean13']):
-    #             return False
-    #     return True
-    #
-    #_constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
@@ -1052,7 +1044,7 @@ class product_product(osv.osv):
             if operator in positive_operators:
                 ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
                 if not ids:
-                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+                    ids = self.search(cr, user, [('barcode','=',name)]+ args, limit=limit, context=context)
             if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
@@ -1166,7 +1158,7 @@ class product_product(osv.osv):
 class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
-    _rec_name = 'ean'
+    _rec_name = 'barcode'
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
@@ -1179,7 +1171,7 @@ class product_packaging(osv.osv):
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
-        'ean' : fields.char('Barcode', help="The Barcode of the package unit."),
+        'barcode' : fields.char('Barcode', help="The Barcode of the package unit.", oldname="ean"),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
@@ -1198,7 +1190,7 @@ class product_packaging(osv.osv):
             return []
         res = []
         for pckg in self.browse(cr, uid, ids, context=context):
-            p_name = pckg.ean and '[' + pckg.ean + '] ' or ''
+            p_name = pckg.barcode and '[' + pckg.barcode + '] ' or ''
             p_name += pckg.ul.name
             res.append((pckg.id,p_name))
         return res

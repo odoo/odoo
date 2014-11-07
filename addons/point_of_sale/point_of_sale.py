@@ -1344,7 +1344,7 @@ class ean_wizard(osv.osv_memory):
             ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
             m = context.get('active_model')
             m_id =  context.get('active_id')
-            self.pool[m].write(cr,uid,[m_id],{'ean13':ean13})
+            self.pool[m].write(cr,uid,[m_id],{'barcode':ean13})
         return { 'type' : 'ir.actions.act_window_close' }
 
 class pos_category(osv.osv):

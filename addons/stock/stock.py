@@ -1464,12 +1464,12 @@ class stock_picking(osv.osv):
         if parsed_result['type'] in ['weight', 'product', 'package']:
             weight=-1
             if parsed_result['type'] == 'weight':
-                domain = ['|', ('ean13', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
+                domain = ['|', ('barcode', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
                 weight=parsed_result['value']
                 obj = self.pool.get('product.product')
                 id_in_operation = 'product_id'
             elif parsed_result['type'] == 'product':
-                domain = ['|', ('ean13', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
+                domain = ['|', ('barcode', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
                 obj = self.pool.get('product.product')
                 id_in_operation = 'product_id'
             else:

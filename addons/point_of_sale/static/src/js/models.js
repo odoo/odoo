@@ -167,12 +167,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },{
             model:  'res.users',
-            fields: ['name','ean13'],
+            fields: ['name','barcode'],
             domain: null,
             loaded: function(self,users){ self.users = users; },
         },{
             model:  'res.partner',
-            fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','ean13','write_date'],
+            fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date'],
             domain: null,
             loaded: function(self,partners){
                 self.partners = partners;
@@ -250,7 +250,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         },{
             model: 'product.packaging',
-            fields: ['ean','product_tmpl_id'],
+            fields: ['barcode','product_tmpl_id'],
             domain: null,
             loaded: function(self, packagings){ 
                 self.db.add_packagings(packagings);
@@ -264,7 +264,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         },{
             model:  'product.product',
-            fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
+            fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
@@ -720,7 +720,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
             var selectedOrder = this.get_order();       
             //if(parsed_code.encoding === 'barcode'){
-                var product = this.db.get_product_by_ean13(parsed_code.base_code);
+                var product = this.db.get_product_by_barcode(parsed_code.base_code);
             /*}else if(parsed_code.encoding === 'reference'){
                 var product = this.db.get_product_by_reference(parsed_code.code);
             }*/

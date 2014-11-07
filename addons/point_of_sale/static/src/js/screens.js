@@ -174,12 +174,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         // what happens when a cashier id barcode is scanned.
         // the default behavior is the following : 
-        // - if there's a user with a matching ean, put it as the active 'cashier', go to cashier mode, and return true
+        // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
         // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
         barcode_cashier_action: function(code){
             var users = this.pos.users;
             for(var i = 0, len = users.length; i < len; i++){
-                if(users[i].ean13 === code.code){
+                if(users[i].barcode === code.code){
                     this.pos.cashier = users[i];
                     this.pos_widget.username.refresh();
                     return true;
@@ -191,10 +191,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         
         // what happens when a client id barcode is scanned.
         // the default behavior is the following : 
-        // - if there's a user with a matching ean, put it as the active 'client' and return true
+        // - if there's a user with a matching barcode, put it as the active 'client' and return true
         // - else : return false. 
         barcode_client_action: function(code){
-            var partner = this.pos.db.get_partner_by_ean13(code.code);
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
             if(partner){
                 this.pos.get_order().set_client(partner);
                 this.pos_widget.username.refresh();
@@ -707,8 +707,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         barcode_client_action: function(code){
             if (this.editing_client) {
                 this.$('.detail.barcode').val(code.code);
-            } else if (this.pos.db.get_partner_by_ean13(code.code)) {
-                this.display_client_details('show',this.pos.db.get_partner_by_ean13(code.code));
+            } else if (this.pos.db.get_partner_by_barcode(code.code)) {
+                this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
             }
         },
         perform_search: function(query, associate_result){
@@ -841,7 +841,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             fields.id           = partner.id || false;
             fields.country_id   = fields.country_id || false;
-            fields.ean13        = fields.ean13 ? this.pos.barcode_reader.sanitize_ean(fields.ean13) : false; 
+            fields.barcode        = fields.barcode ? this.pos.barcode_reader.sanitize_ean(fields.barcode) : false; 
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
