@@ -317,7 +317,7 @@
             <field name="name">project.project.gantt</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <gantt date_delay="planned_hours" date_start="date_start" progress="progress_rate" string="Projects">
+                <gantt date_delay="planned_hours" date_start="date_start" progress="progress_rate" string="Projects" action="project.action_view_task_gantt" relative_field="project_id">
                 </gantt>
             </field>
         </record>
@@ -607,7 +607,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id">
+                <gantt date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id" colors="#ec7063:kanban_state=='blocked';#2ecb71:kanban_state=='done';#95a5a5:kanban_state=='normal';">
                 </gantt>
             </field>
         </record>
@@ -648,6 +648,11 @@
                     track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
+        </record>
+        <record id="action_view_task_gantt" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">gantt,kanban,tree,form,calendar,graph</field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>

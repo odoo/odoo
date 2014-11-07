@@ -1,14 +1,18 @@
 
-.openerp .oe_gantt {
-    min-height: 500px;
+.openerp .oe_gantt .oe_gantt_view {
+    min-height: 250px;
 }
 
 .openerp .oe_gantt .oe_gantt_button_create {
-    position: absolute;
-    top: 5px;
+    margin-left: 7px;
 }
+
+.openerp .oe_gantt .btn-group {
+    margin-left: 120px;
+}
+
 @media print {
-    .oe_gantt button {
+    .oe_gantt button, .oe_gantt .btn-group {
         display: none;
     }
     .oe_gantt > table > tbody > tr > td > div > div {

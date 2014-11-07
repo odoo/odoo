@@ -2,11 +2,23 @@
 
 <templates>
     <t t-name="GanttView">
-        <div>
-            <div t-att-id="widget.chart_id" class="oe_gantt"/>
+        <div class="oe_gantt">
+            <button class="btn btn-primary btn-sm oe_gantt_button_create">Create</button>
+            <div class="btn-group btn-sm" data-toggle="buttons">
+                <label class="btn btn-default btn-sm">
+                    <input type="radio" name="scale" value="day" /> Day
+                </label>
+                <label class="btn btn-default btn-sm">
+                    <input type="radio" name="scale" value="week" /> Week
+                </label>
+                <label class="btn btn-default btn-sm">
+                    <input type="radio" name="scale" value="month" /> Month
+                </label>
+                <label class="btn btn-default btn-sm">
+                    <input type="radio" name="scale" value="year" /> Year
+                </label>
+            </div>
+            <div t-att-id="widget.chart_id" class="oe_gantt_view"/>
         </div>
-    </t>
-    <t t-name="GanttView-create-button">
-        <button class="oe_button oe_gantt_button_create">Create</button>
     </t>
 </templates>

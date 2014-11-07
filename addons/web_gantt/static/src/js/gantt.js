@@ -16,6 +16,22 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
+        // Gantt configuration
+        gantt.config.autosize = "y";
+        gantt.config.scale_offset_minimal = false;
+        gantt.config.open_tree_initially = true;
+        gantt.config.round_dnd_dates = false;
+        gantt.config.drag_links = false,
+        gantt.config.drag_progress = false,
+        gantt.config.grid_width = 200;
+        gantt.config.row_height = 25;
+        gantt.config.duration_unit = "hour";
+        gantt.config.columns = [{name:"text", label:_t("Gantt View"), tree:true, width:'*' }];
+        gantt.templates.grid_folder = function() { return ""; };
+        gantt.templates.grid_file = function() { return ""; };
+        gantt.templates.grid_indent = function() {
+            return "<div class='gantt_tree_indent' style='width:5px;'></div>";
+        };
     },
     view_loading: function(r) {
         return this.load_gantt(r);
@@ -24,6 +40,14 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
+        // Get colors attribute from xml view file.
+        if(this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain().compact().map(function(color_pair) {
+                var pair = color_pair.split(':'), color = pair[0], expr = pair[1];
+                var temp = py.parse(py.tokenize(expr));
+                return {'color': color, 'field': temp.expressions[0].value, 'opt': temp.operators[0], 'value': temp.expressions[1].value};
+            }).value();
+        }
         return self.alive(new instance.web.Model(this.dataset.model)
             .call('fields_get')).then(function (fields) {
                 self.fields = fields;
@@ -47,7 +71,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "progress"], function(key) {
             return self.fields_view.arch.attrs[key] || '';
         }));
-        fields = _.uniq(fields.concat(n_group_bys));
+        fields = _.uniq(fields.concat(_.pluck(this.colors, "field").concat(n_group_bys)));
         
         return $.when(this.has_been_loaded).then(function() {
             return self.dataset.read_slice(fields, {
@@ -74,7 +98,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
-        $(".oe_gantt", this.$el).html("");
+        this.$el.find(".oe_gantt").html("");
 
         //prevent more that 1 group by
         if (group_bys.length > 0) {
@@ -110,19 +134,44 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         }
         var groups = split_groups(tasks, group_bys);
         
-        // track ids of task items for context menu
-        var task_ids = {};
+        // Use scale_zoom attribute in xml file to specify zoom timeline(day,week,month,year), By default month
+        var scale = this.fields_view.arch.attrs.scale_zoom;
+        if (!_.contains(['day', 'week', 'month', 'year'], scale)) {
+            scale = "month";
+        }
+        this.$el.find("div.btn-group").button('reset');
+        this.$el.find("input[value=" + scale + "]").prop("checked", true).parent().addClass("active");
+        self.scale_zoom(scale);
+        gantt.init(this.chart_id);
+        gantt.clearAll();
+        this.$el.find(".oe_gantt_button_create").unbind("click");
+        gantt.detachAllEvents();
+        // call dhtmlxgantt_tooltip.js code, because detachAllEvents() method detach tooltip events.
+        call_tooltip();
+        var normalize_format = instance.web.normalize_format(_t.database.parameters.date_format);
+        gantt.templates.tooltip_text = function(start, end, task) {
+            var duration = task.duration / 3;
+            if(duration < 1) duration = 1;
+            return "<b><u>" + task.text + "</u></b><br/><b>" + _t("Start date") + ":</b> " +
+                _t(moment(start).format(normalize_format)) + "<br/><b>" +
+                _t("End date") + ":</b> " + _t(moment(end).format(normalize_format)) +
+                "<br/><b>" + _t("Duration") + ":</b> " + duration.toFixed(2) + " " + _t("Hours");
+        };
+        
+        var tasks = [];
+        var total_percent = 0, total_task = 0;
         // creation of the chart
-        var generate_task_info = function(task, plevel) {
+        var generate_task_info = function(task, plevel, project_id) {
             if (_.isNumber(task[self.fields_view.arch.attrs.progress])) {
                 var percent = task[self.fields_view.arch.attrs.progress] || 0;
             } else {
                 var percent = 100;
             }
             var level = plevel || 0;
+            project_id = project_id || _.uniqueId("gantt_project_");
             if (task.__is_group) {
                 var task_infos = _.compact(_.map(task.tasks, function(sub_task) {
-                    return generate_task_info(sub_task, level + 1);
+                    return generate_task_info(sub_task, level + 1, project_id);
                 }));
                 if (task_infos.length == 0)
                     return;
@@ -135,18 +184,28 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var group_name = task.name ? instance.web.format_value(task.name, self.fields[group_bys[level]]) : "-";
                 if (level == 0) {
-                    var group = new GanttProjectInfo(_.uniqueId("gantt_project_"), group_name, task_start);
-                    _.each(task_infos, function(el) {
-                        group.addTask(el.task_info);
+                    gantt.addTask({
+                        'id': project_id,
+                        'text': group_name,
+                        'start_date': task_start,
+                        'duration': ((duration / 24) * 8) * 3 || 1,
+                        'progress': total_percent / total_task / 100,
                     });
-                    return group;
+                    total_task = total_percent = 0;
+                    return {task_start: task_start, task_stop: task_stop};
                 } else {
-                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration || 1, percent);
-                    _.each(task_infos, function(el) {
-                        group.addChildTask(el.task_info);
-                    });
-                    return {task_info: group, task_start: task_start, task_stop: task_stop};
-                }
+                  var id = _.uniqueId("gantt_project_task_");
+                  tasks.push({
+                      'id': id,
+                      'text': group_name,
+                      'start_date': task_start,
+                      'duration': duration || 1,
+                      'progress': percent / 100,
+                      'parent': project_id
+                  });
+                  total_task = total_percent = 0;
+                  return {task_start: task_start, task_stop: task_stop};
+              }
             } else {
                 var task_name = task.__name;
                 var task_start = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
@@ -166,49 +225,134 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                     task_stop = m_task_start.toDate();
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                var id = _.uniqueId("gantt_task_");
-                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8) || 1, percent);
-                task_info.internal_task = task;
-                task_ids[id] = task_info;
-                return {task_info: task_info, task_start: task_start, task_stop: task_stop};
+                total_percent += percent, total_task += 1;
+                // Check condition to apply color.
+                _.each(self.colors, function(color){
+                    if(eval("'" + task[color.field] + "' " + color.opt + " '" + color.value + "'"))
+                        self.color = color.color;
+                });
+                tasks.push({
+                    'id': "gantt_task_" + task.id,
+                    'text': task_name,
+                    'start_date': task_start,
+                    'duration': (((duration / 24) * 8) * 3 || 1),
+                    'progress': percent / 100,
+                    'parent': project_id,
+                    'color': self.color
+                });
+                self.color = undefined;
+                return {task_start: task_start, task_stop: task_stop};
             }
         }
-        var gantt = new GanttChart();
-        _.each(_.compact(_.map(groups, function(e) {return generate_task_info(e, 0);})), function(project) {
-            gantt.addProject(project);
-        });
-        gantt.setEditable(true);
-        gantt.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
-        gantt.attachEvent("onTaskEndDrag", function(task) {
-            self.on_task_changed(task);
-        });
-        gantt.attachEvent("onTaskEndResize", function(task) {
-            self.on_task_changed(task);
-        });
-        gantt.create(this.chart_id);
-        
-        // bind event to display task when we click the item in the tree
-        $(".taskNameItem", self.$el).click(function(event) {
-            var task_info = task_ids[event.target.id];
-            if (task_info) {
-                self.on_task_display(task_info.internal_task);
+        _.each(groups, function(group) { generate_task_info(group, 0); });
+        gantt.parse({"data": tasks});
+        gantt.attachEvent("onTaskClick", function(id, e){
+            if(gantt.hasChild(id)) return true;
+            var attr = self.fields_view.arch.attrs;
+            if(e.target.className == "gantt_task_content" || e.target.className == "gantt_task_drag task_left" || e.target.className == "gantt_task_drag task_right") {
+                if(attr.action) {
+                    var actual_id = parseInt(id.split("gantt_task_").slice(1)[0]);
+                    if(attr.relative_field) {
+                        new instance.web.Model("ir.model.data").call("xmlid_lookup", [attr.action]).done(function(result) {
+                            var add_context = {};
+                            add_context["search_default_" + attr.relative_field] = actual_id;
+                            self.do_action(result[2], {'additional_context': add_context});
+                        });
+                    }
+                    return false;
+                }
             }
+            self.on_task_display(gantt.getTask(id));
         });
-        if (this.is_action_enabled('create')) {        
-            // insertion of create button
-            var td = $($("table td", self.$el)[0]);
-            var rendered = QWeb.render("GanttView-create-button");
-            $(rendered).prependTo(td);
-            $(".oe_gantt_button_create", this.$el).click(this.on_task_create);
+        gantt.attachEvent("onTaskDblClick", function(){ return false; });
+        gantt.attachEvent("onBeforeTaskDrag", function(id){
+            if(gantt.hasChild(id)) return false;
+            return true;
+        });
+        gantt.attachEvent("onTaskDrag", function(id){
+            // Refresh parent when children are resize
+            var start_date, stop_date;
+            var parent = gantt.getTask(gantt.getTask(id).parent);
+            _.each(gantt.getChildren(parent.id), function(task_id){
+                var task_start_date = gantt.getTask(task_id).start_date;
+                var task_stop_date = gantt.getTask(task_id).end_date;
+                if(!start_date) start_date = task_start_date;
+                if(!stop_date) stop_date = task_stop_date;
+                if(start_date > task_start_date) start_date = task_start_date;
+                if(stop_date < task_stop_date) stop_date = task_stop_date;
+            });
+            parent.start_date = start_date;
+            parent.end_date = stop_date;
+            gantt.updateTask(parent.id);
+        });
+        gantt.attachEvent("onAfterTaskDrag", function(id){
+            self.on_task_changed(gantt.getTask(id));
+        });
+        if (this.is_action_enabled('create')) {
+            this.$el.find(".oe_gantt_button_create").click(this.on_task_create);
         }
-        // Fix for IE to display the content of gantt view.
-        this.$el.find(".oe_gantt td:first > div, .oe_gantt td:eq(1) > div > div").css("overflow", "");
+        this.$el.find("div.btn-group label").click(function(e) {
+            self.scale_zoom(self.$el.find(e.currentTarget).find("input").val());
+            gantt.parse({"data": tasks});
+        });
+    },
+    scale_zoom: function(value) {
+        gantt.config.step = 1;
+        gantt.config.min_column_width = 50;
+        gantt.config.scale_height = 50;
+        gantt.templates.scale_cell_class = function(date) {};
+        gantt.templates.task_cell_class = function(item, date) {
+            if(date.getDay() == 0 || date.getDay() == 6) return "weekend_task";
+        };
+        gantt.templates.date_scale = null;
+        switch (value) {
+            case "day":
+                gantt.templates.scale_cell_class = function(date) {
+                    if(date.getDay() == 0 || date.getDay() == 6) return "weekend_scale";
+                };
+                gantt.config.scale_unit = "day";
+                gantt.config.date_scale = "%d %M";
+                gantt.config.subscales = [];
+                gantt.config.scale_height = 27;
+                break;
+            case "week":
+                var weekScaleTemplate = function(date){
+                    var dateToStr = gantt.date.date_to_str("%d %M %Y");
+                    var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+                        return dateToStr(date) + " - " + dateToStr(endDate);
+                };
+                gantt.config.scale_unit = "week";
+                gantt.templates.date_scale = weekScaleTemplate;
+                gantt.config.subscales = [
+                    {unit:"day", step:1, date:"%d, %D", css:function(date) {
+                        if(date.getDay() == 0 || date.getDay() == 6) return "weekend_scale";
+                    } }
+                ];
+                break;
+            case "month":
+                gantt.config.scale_unit = "month";
+                gantt.config.date_scale = "%F, %Y";
+                gantt.config.subscales = [
+                    {unit:"day", step:1, date:"%d", css:function(date) {
+                        if(date.getDay() == 0 || date.getDay() == 6) return "weekend_scale";
+                    } }
+                ];
+                gantt.config.min_column_width = 25;
+                break;
+            case "year":
+                gantt.config.scale_unit = "year";
+                gantt.config.date_scale = "%Y";
+                gantt.config.subscales = [
+                    {unit:"month", step:1, date:"%M" }
+                ];
+                gantt.templates.task_cell_class = function(item, date) {};
+                break;
+        }
     },
     on_task_changed: function(task_obj) {
         var self = this;
-        var itask = task_obj.TaskInfo.internal_task;
-        var start = task_obj.getEST();
-        var duration = (task_obj.getDuration() / 8) * 24;
+        var start = task_obj.start_date;
+        var duration = (task_obj.duration / 8) * 24 / 3;
         var end = moment(start).add(duration, 'hours').toDate();
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =
@@ -219,18 +363,41 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
-        this.dataset.write(itask.id, data);
+        var task_id = parseInt(task_obj.id.split("gantt_task_").slice(1)[0]);
+        this.dataset.write(task_id, data);
     },
     on_task_display: function(task) {
         var self = this;
+        var task_id = parseInt(task.id.split("gantt_task_").slice(1)[0]);
         var pop = new instance.web.form.FormOpenPopup(self);
-        pop.on('write_completed',self,self.reload);
+        pop.on('write_completed', self, self.reload);
         pop.show_element(
             self.dataset.model,
-            task.id,
+            task_id,
             null,
-            {}
+            {readonly: true, title: task.text}
         );
+        pop.on('closed', self, self.reload);
+        var form_controller = pop.view_form;
+        form_controller.on("load_record", self, function() {
+             var footer = pop.$el.closest(".modal").find(".modal-footer");
+             footer.find('.oe_form_button_edit,.oe_form_button_save').remove();
+             footer.find(".oe_form_button_cancel").prev().remove();
+             footer.find('.oe_form_button_cancel').before("<span> or </span>");
+             button_edit = _.str.sprintf("<button class='oe_button oe_form_button_edit oe_bold oe_highlight'><span> %s </span></button>",_t("Edit"));
+             button_save = _.str.sprintf("<button class='oe_button oe_form_button_save oe_bold oe_highlight'><span> %s </span></button>",_t("Save"));
+             footer.prepend(button_edit + button_save);
+             footer.find('.oe_form_button_save').hide();
+             footer.find('.oe_form_button_edit').on('click', function() {
+                 form_controller.to_edit_mode();
+                 footer.find('.oe_form_button_edit,.oe_form_button_save').toggle();
+             });
+             footer.find('.oe_form_button_save').on('click', function() {
+                 form_controller.save();
+                 form_controller.to_view_mode();
+                 footer.find('.oe_form_button_edit,.oe_form_button_save').toggle();
+             });
+        });
     },
     on_task_create: function() {
         var self = this;
@@ -241,10 +408,10 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         pop.select_element(
             self.dataset.model,
             {
+                title: _t("Create"),
                 initial_view: "form",
             }
         );
     },
 });
-
 };
