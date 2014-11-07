@@ -89,6 +89,7 @@ class account_entries_report(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False,lazy=True):
+        print "dddddddddddddd",self._context
         fiscalyear_obj = self.env['account.fiscalyear']
         period_obj = self.env['account.period']
         if self._context.get('period', False) == 'current_period':
@@ -100,7 +101,8 @@ class account_entries_report(models.Model):
             domain.append(['period_id','in',ids])
         else:
             domain = domain
-        return super(account_entries_report, self).read_group(self, domain, fields, groupby, offset, limit, orderby, lazy)
+        print "kkkkkkkkkkkkkkkkkkkkkk",self._context
+        return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
