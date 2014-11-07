@@ -101,7 +101,7 @@ class mrp_routing(osv.osv):
     For specifying the routings of Work Centers.
     """
     _name = 'mrp.routing'
-    _description = 'Routing'
+    _description = 'Work Order Operations'
     _columns = {
         'name': fields.char('Name', required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
@@ -136,9 +136,9 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Number of iterations this work center has to do in the specified operation of the routing."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this Work Center to achieve the operation of the specified routing."),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
-             help="Routing indicates all the Work Centers used, for how long and/or cycles." \
-                "If Routing is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Work Order Operations', select=True, ondelete='cascade',
+             help="Work Order Operations indicates all the Work Centers used, for how long and/or cycles." \
+                "If Work Order Operations is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
         'note': fields.text('Description'),
         'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
@@ -172,7 +172,7 @@ class mrp_bom(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. "\
+        'routing_id': fields.many2one('mrp.routing', 'Work Order Operations', help="The list of operations (list of work centers) to produce the finished product. "\
                 "The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% during the production process."),
@@ -387,7 +387,7 @@ class mrp_bom_line(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying."),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
+        'routing_id': fields.many2one('mrp.routing', 'Work Order Operations', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
         'property_ids': fields.many2many('mrp.property', string='Properties'), #Not used
@@ -546,7 +546,7 @@ class mrp_production(osv.osv):
         'date_finished': fields.datetime('End Date', select=True, readonly=True, copy=False),
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', readonly=True, states={'draft': [('readonly', False)]},
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft': [('readonly', False)]},
+        'routing_id': fields.many2one('mrp.routing', string='Work Order Operations', on_delete='set null', readonly=True, states={'draft': [('readonly', False)]},
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True, copy=False),
         'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
@@ -566,17 +566,18 @@ class mrp_production(osv.osv):
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
             track_visibility='onchange', copy=False,
-            help="When the production order is created the status is set to 'Draft'.\n\
-                If the order is confirmed the status is set to 'Waiting Goods'.\n\
-                If any exceptions are there, the status is set to 'Picking Exception'.\n\
-                If the stock is available then the status is set to 'Ready to Produce'.\n\
-                When the production gets started then the status is set to 'In Production'.\n\
-                When the production is over, the status is set to 'Done'."),
+            help="When the production order is created the status is set to 'Draft'.\n"
+                "If the order is confirmed the status is set to 'Waiting Goods.\n"
+                "If any exceptions are there, the status is set to 'Picking Exception.\n"
+                "If the stock is available then the status is set to 'Ready to Produce.\n"
+                "When the production gets started then the status is set to 'In Production.\n"
+                "When the production is over, the status is set to 'Done'."),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', string="Ready for production", store={'stock.move': (_mrp_from_move, ['state'], 10)}),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product'),
     }
 
     _defaults = {
@@ -645,7 +646,8 @@ class mrp_production(osv.osv):
                 'bom_id': False,
                 'routing_id': False,
                 'product_uos_qty': 0,
-                'product_uos': False
+                'product_uos': False,
+                'product_tmpl_id': False
             }}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -655,7 +657,7 @@ class mrp_production(osv.osv):
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
         product_uom_id = product.uom_id and product.uom_id.id or False
-        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id}
+        result['value'] = {'product_uos_qty': 0, 'product_uos': False, 'product_uom': product_uom_id, 'bom_id': bom_id, 'routing_id': routing_id, 'product_tmpl_id': product.product_tmpl_id}
         if product.uos_id.id:
             result['value']['product_uos_qty'] = product_qty * product.uos_coeff
             result['value']['product_uos'] = product.uos_id.id

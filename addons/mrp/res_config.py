@@ -44,9 +44,9 @@ class mrp_config_settings(osv.osv_memory):
                  'Without this module: A + B + C -> D.\n'
                  'With this module: A + B + C -> D + E.\n'
                  '-This installs the module mrp_byproduct.'),
-        'group_mrp_routings': fields.boolean("Manage routings and work orders ",
+        'group_mrp_routings': fields.boolean("Manage Work Order Operations and work orders ",
             implied_group='mrp.group_mrp_routings',
-            help='Routings allow you to create and manage the manufacturing operations that should be followed '
+            help='Work Order Operations allow you to create and manage the manufacturing operations that should be followed '
                  'within your work centers in order to produce a product. They are attached to bills of materials '
                  'that will define the required raw materials.'),
         'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
