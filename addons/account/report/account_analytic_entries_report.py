@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp import tools
-from openerp import models, fields, api, _
+from openerp import models, fields
 
 class analytic_entries_report(models.Model):
     _name = "analytic.entries.report"
