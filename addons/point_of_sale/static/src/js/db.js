@@ -122,6 +122,17 @@ function openerp_pos_db(instance, module){
             }
             make_ancestors(this.root_category_id, []);
         },
+        category_contains: function(categ_id, product_id) {
+            var product = this.product_by_id[product_id];
+            if (product) {
+                var cid = product.pos_categ_id[0];
+                while (cid && cid !== categ_id){
+                    cid = this.category_parent[cid];
+                }
+                return !!cid;
+            }
+            return false;
+        },
         /* loads a record store from the database. returns default if nothing is found */
         load: function(store,deft){
             if(this.cache[store] !== undefined){

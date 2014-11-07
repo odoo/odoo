@@ -1479,6 +1479,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             return fulldetails;
         },
+        // Returns a total only for the orderlines with products belonging to the category 
+        get_total_for_category_with_tax: function(categ_id){
+            var total = 0;
+            var self = this;
+
+            if (categ_id instanceof Array) {
+                for (var i = 0; i < categ_id.length; i++) {
+                    total += this.get_total_for_category_with_tax(categ_id[i]);
+                }
+                return total;
+            }
+            
+            this.orderlines.each(function(line){
+                if ( self.pos.db.category_contains(categ_id,line.product.id) ) {
+                    total += line.get_price_with_tax();
+                }
+            });
+
+            return total;
+        },
         get_change: function(paymentline) {
             if (!paymentline) {
                 var change = this.get_total_paid() - this.get_total_with_tax();
