@@ -572,53 +572,32 @@ updating a record):
 
     .. code-block:: python
 
-        fields = models.execute_kw(db, uid, password, 'res.partner', 'fields_get', [])
-        # filter keys of field attributes for display
-        {field: {
-                    k: v for k, v in attributes.iteritems()
-                    if k in ['string', 'help', 'type']
-                }
-         for field, attributes in fields.iteritems()}
+        models.execute_kw(
+            db, uid, password, 'res.partner', 'fields_get',
+            [], {'attributes': ['string', 'help', 'type']})
 
     .. code-block:: ruby
 
-        fields = models.execute_kw(db, uid, password, 'res.partner', 'fields_get', [])
-        # filter keys of field attributes for display
-        fields.each {|k, v|
-            fields[k] = v.keep_if {|kk, vv| %w(string help type).include? kk}
-        }
+        models.execute_kw(
+            db, uid, password, 'res.partner', 'fields_get',
+            [], {attributes: %w(string help type)})
 
     .. code-block:: php
 
-        $fields_full = $models->execute_kw($db, $uid, $password,
-            'res.partner', 'fields_get', array());
-        // filter keys of field attributes for display
-        $allowed = array_flip(array('string', 'help', 'type'));
-        $fields = array();
-        foreach($fields_full as $field => $attributes) {
-          $fields[$field] = array_intersect_key($attributes, $allowed);
-        }
+        $models->execute_kw($db, $uid, $password,
+            'res.partner', 'fields_get',
+            array(), array('attributes' => array('string', 'help', 'type')));
 
     .. code-block:: java
 
-        final Map<String, Map<String, Object>> fields  =
-            (Map<String, Map<String, Object>>)models.execute("execute_kw", Arrays.asList(
-                db, uid, password,
-                "res.partner", "fields_get",
-                Collections.emptyList()));
-        // filter keys of field attributes for display
-        final List<String> allowed = Arrays.asList("string", "help", "type");
-        new HashMap<String, Map<String, Object>>() {{
-            for(Entry<String, Map<String, Object>> item: fields.entrySet()) {
-                put(item.getKey(), new HashMap<String, Object>() {{
-                    for(Entry<String, Object> it: item.getValue().entrySet()) {
-                        if (allowed.contains(it.getKey())) {
-                            put(it.getKey(), it.getValue());
-                        }
-                    }
-                }});
-            }
-        }};
+        (Map<String, Map<String, Object>>)models.execute("execute_kw", Arrays.asList(
+            db, uid, password,
+            "res.partner", "fields_get",
+            Collections.emptyList(),
+            new HashMap() {{
+                put("attributes", Arrays.asList("string", "help", "type"));
+            }}
+        ));
 
 .. code-block:: json
 

@@ -2992,8 +2992,8 @@ class BaseModel(object):
         elif 'name' in cls._fields:
             cls._rec_name = 'name'
 
-    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ fields_get([fields])
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
+        """ fields_get([fields][, attributes])
 
         Return the definition of each field.
 
@@ -3001,15 +3001,13 @@ class BaseModel(object):
         dictionaries. The _inherits'd fields are included. The string, help,
         and selection (if present) attributes are translated.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param allfields: list of fields
-        :param context: context arguments, like lang, time zone
-        :return: dictionary of field dictionaries, each one describing a field of the business object
-        :raise AccessError: * if user has no create/write rights on the requested object
-
+        :param allfields: list of fields to document, all if empty or not provided
+        :param attributes: list of description attributes to return for each field, all if empty or not provided
         """
         recs = self.browse(cr, user, [], context)
+
+        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
+        readonly = not (has_access('write') or has_access('create'))
 
         res = {}
         for fname, field in self._fields.iteritems():
@@ -3019,14 +3017,15 @@ class BaseModel(object):
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
-            res[fname] = field.get_description(recs.env)
 
-        # if user cannot create or modify records, make all fields readonly
-        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
-        if not (has_access('write') or has_access('create')):
-            for description in res.itervalues():
+            description = field.get_description(recs.env)
+            if readonly:
                 description['readonly'] = True
                 description['states'] = {}
+            if attributes:
+                description = {k: v for k, v in description.iteritems()
+                               if k in attributes}
+            res[fname] = description
 
         return res
 
