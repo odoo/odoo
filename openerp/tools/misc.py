@@ -437,7 +437,7 @@ ALL_LANGUAGES = {
         'am_ET': u'Amharic / አምሃርኛ',
         'ar_SY': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
-        'bs_BS': u'Bosnian / bosanski jezik',
+        'bs_BA': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
