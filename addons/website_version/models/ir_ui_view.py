@@ -116,32 +116,41 @@ class view(osv.Model):
         arch = super(view, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
         v = self.browse(cr, uid, [view_id],context)[0]
         if context and context.get('website_id') and v.type == 'qweb':
-            #dico to collect the right ids according to the key
-            dico = {}
+            #right_ids to collect the right ids according to the key
+            right_ids = {}
+            priority = {}
             #To create a dico called view_arch where v(key) is the id and a the arch(value)
             view_arch = dict([(v, a) for a, v in arch])
             keys = self.read(cr, uid, view_arch.keys(), ['key','version_id','website_id'], context)
             for k in keys:
                 #The view to take depends of the context
                 if context.get('version_id'):
-                    #first take the view which is in the same version
+                    #priority:1 take the view which is in the same version
                     if k['version_id'] and k['version_id'][0] == context.get('version_id'):
-                        dico[k['key']] = k['id']
-                    #if the view.key is not in the dico and the view is in the same website
-                    elif k['version_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id') and not dico.get(k['key']):
-                        dico[k['key']] = k['id']
-                    #if the view.key is not in the dico
-                    elif k['version_id'] == False and k['website_id'] == False and not dico.get(k['key']):
-                        dico[k['key']] = k['id']
+                        right_ids[k['key']] = k['id']
+                        priority[k['key']] = 3
+                    #priority:2 take the view which is just in the same website
+                    elif k['version_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id'):
+                        if not priority.get(k['key']) or priority.get(k['key']) < 3:
+                            right_ids[k['key']] = k['id']
+                            priority[k['key']] = 2
+                    #priority:3 take the original view
+                    elif k['version_id'] == False and k['website_id'] == False:
+                        if not priority.get(k['key']) or priority.get(k['key']) < 2:
+                            right_ids[k['key']] = k['id']
+                            priority[k['key']] = 1
                 else:
                     if k['version_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id'):
-                        dico[k['key']] = k['id']
-                    elif k['version_id'] == False and k['website_id'] == False and not dico.get(k['key']):
-                        dico[k['key']] = k['id']
+                        right_ids[k['key']] = k['id']
+                        priority[k['key']] = 2
+                    elif k['version_id'] == False and k['website_id'] == False:
+                        if not priority.get(k['key']) or priority.get(k['key']) < 2:
+                            right_ids[k['key']] = k['id']
+                            priority[k['key']] = 1
             result = []
             for x in arch:
                 #x[1] is the id
-                if x[1] in dico.values():
+                if x[1] in right_ids.values():
                     result.append(x)
             return result
         return arch 
