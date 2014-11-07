@@ -150,7 +150,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                     new project_timesheet.Model(project_timesheet.session, "ir.model.data")
                     .call("get_object_reference", ['hr_timesheet', 'menu_hr_timesheet_report_all'])
                     .then(function (result) {
-                        console.log("Result of get_object_reference is :::: ", result);
                         if (result) {
                             self.reporting_menu_src = project_timesheet.session.origin + "/web?#menu_id=" + result[1];
                         }
@@ -167,9 +166,9 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get("activities");
             if(activity_collection.get(data.id)) {
                 var activity_model = activity_collection.get(data.id);
-                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], unit_amount: data['unit_amount'], command: (data['command'] || 0)});
+                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], unit_amount: data['unit_amount'], command: data['command']});
             } else {
-                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'] });
+                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], command: data['command'] });
                 this.get('activities').add(activity);
             }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
@@ -283,8 +282,12 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get('activities');
             var activity_models = activity_collection.models;
             for (var i = 0; i < activity_models.length; i++) {
-                //TODO: Export only those row which has been modified i.e. having some command, so sync data do not need to sync all data 
-                records.push(activity_models[i].export_as_JSON());
+                //TODO: Export only those row which has been modified i.e. having some command, so sync data do not need to sync all data
+                var json_data = activity_models[i].export_as_JSON();
+                console.log("IS command undefined ::: ", _.isUndefined(json_data.command));
+                if (!_.isUndefined(json_data.command)) {
+                    records.push(activity_models[i].export_as_JSON());
+                }
             }
             var momObj = new moment();
             var end_date = project_timesheet.datetime_to_str(momObj._d);

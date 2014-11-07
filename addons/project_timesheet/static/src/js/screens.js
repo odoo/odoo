@@ -664,6 +664,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
             console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
+            console.log("project_activity_data before add_project ::: ", project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
