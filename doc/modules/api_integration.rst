@@ -645,10 +645,11 @@ Because that is a very common task, Odoo provides a
 :meth:`~openerp.models.Model.search_read` shortcut which as its name notes is
 equivalent to a :meth:`~openerp.models.Model.search` followed by a
 :meth:`~openerp.models.Model.read`, but avoids having to perform two requests
-and keep ids around. Its arguments are similar to
-:meth:`~openerp.models.Model.search`'s, but it can also take a list of
-``fields`` (like :meth:`~openerp.models.Model.read`, if that list is not
-provided it'll fetch all fields of matched records):
+and keep ids around.
+
+Its arguments are similar to :meth:`~openerp.models.Model.search`'s, but it
+can also take a list of ``fields`` (like :meth:`~openerp.models.Model.read`,
+if that list is not provided it'll fetch all fields of matched records):
 
 .. rst-class:: switchable
 
@@ -724,6 +725,13 @@ provided it'll fetch all fields of matched records):
 Create records
 --------------
 
+Records of a model are created using :meth:`~openerp.models.Model.create`. The
+method will create a single record and return its database identifier.
+
+:meth:`~openerp.models.Model.create` takes a mapping of fields to values, used
+to initialize the record. For any field which has a default value and is not
+set through the mapping argument, the default value will be used.
+
 .. rst-class:: switchable
 
     .. code-block:: python
@@ -756,8 +764,29 @@ Create records
 
     78
 
+.. warning::
+
+    while most value types are what would be expected (integer for
+    :class:`~openerp.fields.Integer`, string for :class:`~openerp.fields.Char`
+    or :class:`~openerp.fields.Text`),
+
+    * :class:`~openerp.fields.Date`, :class:`~openerp.fields.Datetime` and
+      :class:`~openerp.fields.Binary` fields use string values
+    * :class:`~openerp.fields.One2many` and :class:`~openerp.fields.Many2many`
+      use a special command protocol detailed in :meth:`the documentation to
+      the write method <openerp.models.Model.write>`.
+
 Update records
 --------------
+
+Reccords can be updated using :meth:`~openerp.models.Model.write`, it takes
+a list of records to update and a mapping of updated fields to values similar
+to :meth:`~openerp.models.Model.create`.
+
+Multiple records can be updated simultanously, but they will all get the same
+values for the fields being set. It is not currently possible to perform
+"computed" updates (where the value being set depends on an existing value of
+a record).
 
 .. rst-class:: switchable
 
@@ -808,6 +837,9 @@ Update records
 
 Delete records
 --------------
+
+Records can be deleted in bulk by providing the ids of all records to remove
+to :meth:`~openerp.models.Model.unlink`.
 
 .. rst-class:: switchable
 

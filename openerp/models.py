@@ -3601,38 +3601,67 @@ class BaseModel(object):
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        .. _openerp/models/relationals/format:
+        * For numeric fields (:class:`~openerp.fields.Integer`,
+          :class:`~openerp.fields.Float`) the value should be of the
+          corresponding type
+        * For :class:`~openerp.fields.Boolean`, the value should be a
+          :class:`python:bool`
+        * For :class:`~openerp.fields.Selection`, the value should match the
+          selection values (generally :class:`python:str`, sometimes
+          :class:`python:int`)
+        * For :class:`~openerp.fields.Many2one`, the value should be the
+          database identifier of the record to set
+        * Other non-relational fields use a string for value
 
-        .. note:: Relational fields use a special "commands" format to manipulate their values
+          .. danger::
 
-            This format is a list of command triplets executed sequentially,
-            possible command triplets are:
+              for historical and compatibility reasons,
+              :class:`~openerp.fields.Date` and
+              :class:`~openerp.fields.Datetime` fields use strings as values
+              (written and read) rather than :class:`~python:datetime.date` or
+              :class:`~python:datetime.datetime`. These date strings are
+              UTC-only and formatted according to
+              :const:`openerp.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
+              :const:`openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
+        * .. _openerp/models/relationals/format:
 
-            ``(0, _, values: dict)``
-                links to a new record created from the provided values
-            ``(1, id, values: dict)``
-                updates the already-linked record of id ``id`` with the
-                provided ``values``
-            ``(2, id, _)``
-                unlinks and deletes the linked record of id ``id``
-            ``(3, id, _)``
-                unlinks the linked record of id ``id`` without deleting it
-            ``(4, id, _)``
-                links to an existing record of id ``id``
-            ``(5, _, _)``
-                unlinks all records in the relation, equivalent to using
-                the command ``3`` on every linked record
-            ``(6, _, ids)``
-                replaces the existing list of linked records by the provoded
-                ones, equivalent to using ``5`` then ``4`` for each id in
-                ``ids``)
+          :class:`~openerp.fields.One2many` and
+          :class:`~openerp.fields.Many2many` use a special "commands" format to
+          manipulate the set of records stored in/associated with the field.
 
-            (in command triplets, ``_`` values are ignored and can be
-            anything, generally ``0`` or ``False``)
+          This format is a list of triplets executed sequentially, where each
+          triplet is a command to execute on the set of records. Not all
+          commands apply in all situations. Possible commands are:
 
-            Any command can be used on :class:`~openerp.fields.Many2many`,
-            only ``0``, ``1`` and ``2`` can be used on
-            :class:`~openerp.fields.One2many`.
+          ``(0, _, values)``
+              adds a new record created from the provided ``value`` dict.
+          ``(1, id, values)``
+              updates an existing record of id ``id`` with the values in
+              ``values``. Can not be used in :meth:`~.create`.
+          ``(2, id, _)``
+              removes the record of id ``id`` from the set, then deletes it
+              (from the database). Can not be used in :meth:`~.create`.
+          ``(3, id, _)``
+              removes the record of id ``id`` from the set, but does not
+              delete it. Can not be used on
+              :class:`~openerp.fields.One2many`. Can not be used in
+              :meth:`~.create`.
+          ``(4, id, _)``
+              adds an existing record of id ``id`` to the set. Can not be
+              used on :class:`~openerp.fields.One2many`.
+          ``(5, _, _)``
+              removes all records from the set, equivalent to using the
+              command ``3`` on every record explicitly. Can not be used on
+              :class:`~openerp.fields.One2many`. Can not be used in
+              :meth:`~.create`.
+          ``(6, _, ids)``
+              replaces all existing records in the set by the ``ids`` list,
+              equivalent to using the command ``5`` followed by a command
+              ``4`` for each ``id`` in ``ids``. Can not be used on
+              :class:`~openerp.fields.One2many`.
+
+          .. note:: Values marked as ``_`` in the list above are ignored and
+                    can be anything, generally ``0`` or ``False``.
         """
         if not self:
             return True

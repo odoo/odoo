@@ -1057,8 +1057,8 @@ class Char(_String):
         return ustr(value)[:self.size]
 
 class Text(_String):
-    """ Text field. Very similar to :class:`~.Char` but used for longer
-     contents and displayed as a multiline text box
+    """ Very similar to :class:`~.Char` but used for longer contents, does not
+    have a size and usually displayed as a multiline text box.
 
     :param translate: whether the value of this field can be translated
     """
