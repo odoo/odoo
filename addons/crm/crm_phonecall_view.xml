@@ -177,7 +177,7 @@
                 <filter string="My Team" domain="[('section_id.user_id', '=', uid)]"/>
                 <filter string="Unassigned" domain="[('user_id','=',False)]"/>
                 <separator/>
-                <filter string="To Do" name="current" domain="[('state','=','open')]"/>
+                <filter string="To Do" name="current" domain="[('state','in',('open','pending'))]"/>
                 <separator/>
                 <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
