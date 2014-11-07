@@ -47,8 +47,8 @@ class account_treasury_report(models.Model):
     credit = fields.Float('Credit', readonly=True)
     balance = fields.Float('Balance', readonly=True)
     date = fields.Date('Beginning of Period Date', readonly=True)
-    starting_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Starting Balance', multi='balance')
-    ending_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Ending Balance', multi='balance')
+    starting_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Starting Balance')
+    ending_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Ending Balance')
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
 
     _order = 'date asc'
