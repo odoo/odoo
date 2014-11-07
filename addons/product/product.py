@@ -365,6 +365,14 @@ class product_attribute_value(osv.osv):
                     'price_extra': value,
                 }, context=context)
 
+    def name_get(self, cr, uid, ids, context=None):
+        if context and not context.get('show_attribute', True):
+            return super(product_attribute_value, self).name_get(cr, uid, ids, context=context)
+        res = []
+        for value in self.browse(cr, uid, ids, context=context):
+            res.append([value.id, "%s: %s" % (value.attribute_id.name, value.name)])
+        return res
+
     _columns = {
         'sequence': fields.integer('Sequence', help="Determine the display order"),
         'name': fields.char('Value', translate=True, required=True),

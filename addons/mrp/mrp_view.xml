@@ -383,7 +383,7 @@
                                     <field name="product_efficiency"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
-                                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]"/>
                                 </tree>
                             </field>
                         </page>

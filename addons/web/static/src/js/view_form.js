@@ -4398,7 +4398,9 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         return _.every(this.records.records, function(record){
             r = record;
             _.each(self.editor.form.fields, function(field){
+                field._inhibit_on_change_flag = true;
                 field.set_value(r.attributes[field.name]);
+                field._inhibit_on_change_flag = false;
             });
             return _.every(self.editor.form.fields, function(field){
                 field.process_modifiers();
@@ -5762,7 +5764,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -5777,8 +5779,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    start: function() {
-        this._super(this);
+    initialize_content: function() {
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     // WARNING: duplicated in 4 other M2M widgets
