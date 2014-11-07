@@ -2387,7 +2387,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         return $.when(dd_fetched).then(function (states) {
             self.states = states;
             self.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-            self.$el.find('li').on('click', this.set_kanban_selection.bind(this));
+            self.$el.find('li').on('click', self.set_kanban_selection.bind(self));
         })
     },
     /* setting the value: in view mode, perform an asynchronous call and reload
