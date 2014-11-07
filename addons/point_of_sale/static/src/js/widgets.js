@@ -1025,6 +1025,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
             this.error_barcode_popup.appendTo(this.$el);
 
+            this.error_alias_barcode_popup = new module.ErrorAliasBarcodePopupWidget(this, {});
+            this.error_alias_barcode_popup.appendTo(this.$el);
+
             this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
             this.error_traceback_popup.appendTo(this.$el);
 
@@ -1115,6 +1118,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 popup_set:{
                     'error': this.error_popup,
                     'error-barcode': this.error_barcode_popup,
+                    'error-alias-barcode': this.error_alias_barcode_popup,
                     'error-traceback': this.error_traceback_popup,
                     'textinput': this.textinput_popup,
                     'textarea': this.textarea_popup,

@@ -1458,22 +1458,22 @@ class stock_picking(osv.osv):
             return answer # TODO: return specific error?
         else:
             barcode_nom = rec.barcode_nomenclature_id
-        parsed_result = barcode_nom.parse_ean(barcode_str)
+        parsed_result = barcode_nom.parse_barcode(barcode_str)
 
         #check if the barcode is a weighted barcode or simply a product
         if parsed_result['type'] in ['weight', 'product', 'package']:
             weight=-1
             if parsed_result['type'] == 'weight':
-                domain = ['|', ('ean13', '=', parsed_result['base_code']), ('default_code', '=', barcode_str)]
+                domain = ['|', ('ean13', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
                 weight=parsed_result['value']
                 obj = self.pool.get('product.product')
                 id_in_operation = 'product_id'
             elif parsed_result['type'] == 'product':
-                domain = ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)]
+                domain = ['|', ('ean13', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
                 obj = self.pool.get('product.product')
                 id_in_operation = 'product_id'
             else:
-                domain = [('name', '=', barcode_str)]
+                domain = [('name', '=', parsed_result['code'])]
                 obj = self.pool.get('stock.quant.package')
                 id_in_operation = 'package_id'
 
@@ -1486,7 +1486,7 @@ class stock_picking(osv.osv):
         #check if the barcode correspond to a lot
         elif parsed_result['type'] == 'lot':
             lot_obj = self.pool.get('stock.production.lot')
-            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', parsed_result['code'])], context=context)
             if matching_lot_ids:
                 lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
                 op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
@@ -1496,7 +1496,7 @@ class stock_picking(osv.osv):
         #check if the barcode correspond to a location
         elif parsed_result['type'] == 'location':
             stock_location_obj = self.pool.get('stock.location')
-            matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
+            matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', parsed_result['code'])], context=context)
             if matching_location_ids:
                 #if we have a location, return immediatly with the location name
                 location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)

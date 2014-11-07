@@ -322,7 +322,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         }, {
             model: 'barcode.rule',
-            fields: ['name','sequence','type','encoding','pattern'],
+            fields: ['name','sequence','type','encoding','pattern','alias'],
             domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
             loaded: function(self,rules){
                 if (self.nomenclature) {

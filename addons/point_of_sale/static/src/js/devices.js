@@ -542,7 +542,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // - base_code : the barcode with all the encoding parts set to zero; the one put on
         //               the product in the backend
         parse_barcode: function(barcode){
-            console.log("Parse barcode");
             var self = this;
             var parsed_result = {
                 encoding: '',
@@ -553,14 +552,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };
             
             if (!this.pos.nomenclature) {
-                console.log("no nomenclature");
                 return parsed_result;
             }
-
-            // The barcode can contain any alphanumerical character, including ( and )
-            /*if (!/^[A-Za-z0-9()]+$/.test(barcode)){
-                return parsed_result;
-            }*/
 
             function match_pattern(barcode,pattern){
                 if(barcode.length < pattern.replace(/[{}]/g, '').length){
@@ -633,25 +626,29 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 for(i=j; i<barcode.length; i++){ // Read the rest of the barcode
                     base += barcode[i];
                 }
-                if(encoding == "ean13"){
+                if(encoding === "ean13"){
                     base = self.sanitize_ean(base);
                 }
                 return base;
             }
 
             var rules = this.pos.nomenclature.rules;
-
             for (var i = 0; i < rules.length; i++) {
                 if (match_pattern(barcode,rules[i].pattern)) {
-                    parsed_result.encoding  = rules[i].encoding;
-                    parsed_result.type      = rules[i].type;
-                    parsed_result.value     = get_value(barcode,rules[i].pattern);
-                    parsed_result.base_code = get_basecode(barcode,rules[i].pattern,parsed_result.encoding);
-                    console.log(parsed_result);
-                    return parsed_result;
+                    if(rules[i].type === 'alias') {
+                        barcode = rules[i].alias;
+                        parsed_result.code = barcode;
+                        parsed_result.type = 'alias';
+                    }
+                    else {
+                        parsed_result.encoding  = rules[i].encoding;
+                        parsed_result.type      = rules[i].type;
+                        parsed_result.value     = get_value(barcode,rules[i].pattern);
+                        parsed_result.base_code = get_basecode(barcode,rules[i].pattern,parsed_result.encoding);
+                        return parsed_result;
+                    }
                 }
             }
-            console.log(parsed_result);
             return parsed_result;
         },
         

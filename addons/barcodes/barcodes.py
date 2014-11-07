@@ -69,7 +69,7 @@ class barcode_nomenclature(osv.osv):
     #  - value  : if the id encodes a numerical value, it will be put there
     #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
-    def parse_ean(self, barcode):
+    def parse_barcode(self, barcode):
         parsed_result = {
             'encoding': '', 
             'type': 'error', 
@@ -143,15 +143,19 @@ class barcode_nomenclature(osv.osv):
 
         rules = []
         for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern})
+            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
             if match_pattern(barcode, rule['pattern']):
-                parsed_result['encoding'] = rule['encoding']
-                parsed_result['type'] = rule['type']
-                parsed_result['value'] = get_value(barcode, rule['pattern'])
-                parsed_result['base_code'] = get_basecode(barcode, rule['pattern'], parsed_result['encoding'])
-                return parsed_result
+                if rule['type'] == 'alias':
+                    barcode = rule['alias']
+                    parsed_result['code'] = barcode
+                else:
+                    parsed_result['encoding'] = rule['encoding']
+                    parsed_result['type'] = rule['type']
+                    parsed_result['value'] = get_value(barcode, rule['pattern'])
+                    parsed_result['base_code'] = get_basecode(barcode, rule['pattern'], parsed_result['encoding'])
+                    return parsed_result
         return parsed_result
 
 class barcode_rule(models.Model):
@@ -164,9 +168,9 @@ class barcode_rule(models.Model):
         'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
         #'encoding': fields.selection([('any','Any'),('ean13','EAN-13'),('ean8','EAN-8'),('codabar','Codabar'),('upca','UPC-A'),('upce','UPC-E')],'Encoding',help='This rule will apply only if the barcode is encoded with the specified encoding'),
         'encoding': fields.selection([('any','Any'),('ean13','EAN-13')],'Encoding',required=True,help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        'type':     fields.selection([('product','Unit Product')],'Type', required=True),
+        'type':     fields.selection([('alias','Alias'),('product','Unit Product')],'Type', required=True),
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
-        #'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode'),      
+        'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode'),      
     }
 
     _defaults = {
