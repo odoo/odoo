@@ -60,11 +60,11 @@
                             <div class="oe_title" style="width: 390px;">
                                 <label class="oe_edit_only" for="name" string="Product Name"/>
                                 <h1><field name="name" class="oe_inline"/></h1>
-                            </div>
-                            <div class="oe_left" name="options" groups="base.group_user">
-                                <div>
-                                    <field name="sale_ok"/>
-                                    <label for="sale_ok"/>
+                                <div name="options" groups="base.group_user">
+                                    <div>
+                                        <field name="sale_ok"/>
+                                        <label for="sale_ok"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +126,6 @@
                                     <group groups="product.group_uos" string="Unit of Measure">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
-                                        <field name="mes_type"/>
                                     </group>
                                 </group>
                                 <group name="website_and_pos" col="2">

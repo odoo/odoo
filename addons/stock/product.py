@@ -234,6 +234,11 @@ class product_product(osv.osv):
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
+    _defaults = {
+        # Dirty hack to avoid empty stat button in create view
+        'qty_available_text': lambda *x: '0.0 On Hand',
+    }
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if context is None:
@@ -381,6 +386,8 @@ class product_template(osv.osv):
 
     _defaults = {
         'sale_delay': 7,
+        # Dirty hack to avoid empty stat button in create view
+        'qty_available_text': lambda *x: '0.0 On Hand',
     }
 
     def action_view_routes(self, cr, uid, ids, context=None):

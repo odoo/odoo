@@ -338,26 +338,31 @@
                     <h2><field name="location_id"/></h2>
 
                     <group>
-                        <group string="Additional Information">
-                            <field name="usage"/>
-                            <field name="partner_id"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="scrap_location"/>
-                            <field name="active"/>
-                        </group>
-                        <group string="Localization" name="localization">
-                            <field name="posx"/>
-                            <field name="posy"/>
-                            <field name="posz"/>
-                            <field name="loc_barcode"/>
-                        </group>
-                        <group string="Logistics" groups="stock.group_adv_location">
-                            <field name="removal_strategy_id" options="{'no_create': True}"/>
-                            <field name="putaway_strategy_id"/>
-                        </group>
+                        <div>
+                            <group string="Additional Information">
+                                <field name="usage"/>
+                                <field name="partner_id"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="scrap_location"/>
+                                <field name="active"/>
+                            </group>
+                        </div>
+                        <div>
+                            <group string="Localization" name="localization">
+                                <field name="posx"/>
+                                <field name="posy"/>
+                                <field name="posz"/>
+                                <field name="loc_barcode"/>
+                            </group>
+                        </div>
+                        <div>
+                            <group string="Logistics" groups="stock.group_adv_location">
+                                <field name="removal_strategy_id" options="{'no_create': True}"/>
+                                <field name="putaway_strategy_id"/>
+                            </group>
+                        </div>
                     </group>
-                    <separator string="Additional Information"/>
-                    <field name="comment"/>
+                    <field name="comment" placeholder="External note..."/>
                 </form>
             </field>
         </record>
@@ -1046,7 +1051,9 @@
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <field name="reserved_quant_ids"/>
+                            <div>
+                                <field name="reserved_quant_ids"/>
+                            </div>
                         </group>
                     </group>
                 </sheet>
@@ -1552,7 +1559,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="do_view_pickings" string="Group's Pickings" type="object"/>
+                    <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>

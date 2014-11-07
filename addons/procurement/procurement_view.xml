@@ -35,7 +35,7 @@
                     </header>
                     <sheet>
                     <div class="oe_right oe_button_box" name="button_box">
-                        <button name="do_view_procurements" string="Group's Procurements" type="object"/>
+                        <button name="do_view_procurements" class="oe_stat_button" icon="fa-bars" string="Group's Procurements" type="object"/>
                     </div>
                     <group>
                         <group>
@@ -60,7 +60,6 @@
                     </group>
                     <notebook>
                         <page string="Notes">
-                            <label for="name" class="oe_edit_only"/>
                             <field name="name" placeholder="External note..."/>
                         </page>
                         <page string="Extra Information">
