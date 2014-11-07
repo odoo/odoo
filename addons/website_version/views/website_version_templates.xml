@@ -24,9 +24,8 @@
                             </t>
                             <t t-if="website.get_current_version(context=context)[0] != 0 ">
                                 <li><a href="#" data-action="duplicate_version">Duplicate Version</a></li>
-                                <li><a href="#" data-action="publish_version" 
-                                    t-att-data-version_id="website.get_current_version(context=context)[0]">Publish Version</a>
-                                </li>
+                                <li><a href="#" data-action="publish_version">Publish Version</a></li>
+                                <li><a href="#" data-action="diff_version" groups="base.group_no_one">Diff with Master</a></li>
                             </t>
                             <li class="divider publish_version"> </li>
                             <li class="create_experiment"><a href="#" data-action="create_experiment">Launch A/B tests</a></li>

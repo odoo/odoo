@@ -111,6 +111,16 @@ class TableExporter(http.Controller):
         request.session['master'] = 1
         return version.name
 
+    @http.route(['/website_version/diff_version'], type = 'json', auth = "public", website = True)
+    def diff_version(self, version_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        mod_version = request.registry['website_version.version']
+        version = mod_version.browse(cr, uid, [int(version_id)],context)[0]
+        name_list = []
+        for view in version.view_ids:
+            name_list.append(view.name)
+        return name_list
+
     @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
     def get_analytics(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context

@@ -154,6 +154,17 @@
                 });
         },
 
+        diff_version: function(event) {
+            var version_id = $('html').data('version_id');
+            var name = $('#version-menu-button').data('version_name');
+            openerp.jsonRpc( '/website_version/diff_version', 'call', { 'version_id':version_id}).then(function (result) {
+                console.log(result);
+                self.wizard = $(openerp.qweb.render("website_version.diff",{list:result, version_name:name}));
+                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                self.wizard.on('click','.confirm', function(){});
+            });
+        },
+
         google_analytics: function(event){
             window.location.href = 'https://www.google.com/analytics/web';
 
