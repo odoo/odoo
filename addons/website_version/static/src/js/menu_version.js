@@ -128,7 +128,7 @@
                     var copy_master_name = self.wizard.find('.name').val();
                     if(check){
                         if(copy_master_name.length == 0){
-                            self.wizard.find(".name").parent().after("<p class='message' style='color : red'> *This field is required</p>");
+                            self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
                         }
                         else{
                             openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':true, 'copy_master_name':copy_master_name}).then(function (result) {
@@ -150,8 +150,14 @@
                         });
                     }
                 });
-                self.wizard.on('click','.o_check', function(){
-                    self.wizard.find('.name').prop('disabled',!self.wizard.find('.o_check').is(':checked'));
+                self.wizard.on('click','input[name="optionsRadios"]', function(){
+                    self.wizard.find('.message').remove();
+                    if(self.wizard.find('.o_check').is(':checked')){
+                        self.wizard.find('.name').show();
+                    }
+                    else{
+                        self.wizard.find('.name').hide();
+                    }
                 });
             });
         },

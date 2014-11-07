@@ -260,17 +260,20 @@
                 <t t-if="list.length == 0"> 
                     <p>There is no difference with Master</p>
                 </t>
-                <form id="productForm" class="form-horizontal" role="form">              
-                    <div class="form-group form-group">
-                        <label class="col-sm-3 control-label">Save master</label>
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                              <span class="input-group-addon">
-                                <input type="checkbox" class="o_check"/>
-                              </span>
-                              <input type="text" class="form-control name required_field" disabled="disabled"/>
-                            </div>
-                        </div>
+                <form id="productForm" class="form-horizontal" role="form">
+
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked"/>
+                            Don't save Master
+                        </label>
+                    </div>              
+                    <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class="o_check"/>
+                          Save Master
+                          <input type="text" class="form-control name required_field" style="display: none;"/>
+                        </label>
                     </div>
                 </form>
               </div>
