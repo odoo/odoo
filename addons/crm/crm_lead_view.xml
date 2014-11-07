@@ -632,7 +632,7 @@
 
         <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
             allowing to have a well formed email template (context action considered as set). -->
-        <record id="email_template_opportunity_mail" model="email.template">
+        <record id="email_template_opportunity_mail" model="mail.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
 

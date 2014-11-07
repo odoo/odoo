@@ -54,7 +54,7 @@ class actions_server(osv.Model):
             readonly=True, string='Body'
         ),
         'template_id': fields.many2one(
-            'email.template', 'Email Template', ondelete='set null',
+            'mail.template', 'Email Template', ondelete='set null',
             domain="[('model_id', '=', model_id)]",
         ),
     }
@@ -63,7 +63,7 @@ class actions_server(osv.Model):
         """ Render the raw template in the server action fields. """
         fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to']
         if template_id:
-            template_values = self.pool.get('email.template').read(cr, uid, [template_id], fields, context)[0]
+            template_values = self.pool.get('mail.template').read(cr, uid, [template_id], fields, context)[0]
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
             if not values.get('email_from'):
                 return {'warning': {'title': 'Incomplete template', 'message': 'Your template should define email_from'}, 'value': values}
@@ -75,6 +75,6 @@ class actions_server(osv.Model):
     def run_action_email(self, cr, uid, action, eval_context=None, context=None):
         if not action.template_id or not context.get('active_id'):
             return False
-        self.pool['email.template'].send_mail(cr, uid, action.template_id.id, context.get('active_id'),
+        self.pool['mail.template'].send_mail(cr, uid, action.template_id.id, context.get('active_id'),
                                               force_send=False, raise_exception=False, context=context)
         return False

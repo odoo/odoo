@@ -618,7 +618,7 @@ class test_mail(TestMail):
         self.assertEqual(compose.res_id, self.group_pigs_id, 'compose wizard: mail.compose.message incorrect res_id')
 
         # Do: Post the comment
-        mail_compose.send_mail(cr, user_raoul.id, [compose_id], {'mail_post_autofollow': True, 'mail_create_nosubscribe': True})
+        mail_compose.send_mail(cr, user_raoul.id, [compose_id], context={'mail_post_autofollow': True, 'mail_create_nosubscribe': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail_mail: notifications have been deleted

@@ -58,7 +58,7 @@ class gamification_badge_user(osv.Model):
         :param ids: list(int) of badge users that will receive the badge
         """
         res = True
-        temp_obj = self.pool.get('email.template')
+        temp_obj = self.pool.get('mail.template')
         user_obj = self.pool.get('res.users')
         template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
         for badge_user in self.browse(cr, uid, ids, context=context):

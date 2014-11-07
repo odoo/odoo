@@ -18,7 +18,7 @@
     </record>
 
     <!-- Templates for interest / refusing applicants -->
-    <record id="applicant_refuse" model="email.template">
+    <record id="applicant_refuse" model="mail.template">
         <field name="name">Application refused</field>
         <field name="subject">Application refused</field>
         <field name="email_to">${object.email_from}</field>
@@ -36,7 +36,7 @@
          ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
-    <record id="applicant_interest" model="email.template">
+    <record id="applicant_interest" model="mail.template">
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
         <field name="email_to">${object.email_from}</field>

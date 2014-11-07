@@ -196,7 +196,7 @@ class survey_survey(osv.Model):
             string="Print link", type="char"),
         'result_url': fields.function(_get_result_url,
             string="Results link", type="char"),
-        'email_template_id': fields.many2one('email.template',
+        'email_template_id': fields.many2one('mail.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
             help="This message will be displayed when survey is completed"),

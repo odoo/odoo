@@ -287,12 +287,12 @@ class res_users(osv.Model):
                 pass
         if not bool(template):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
-        assert template._name == 'email.template'
+        assert template._name == 'mail.template'
 
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
+            self.pool.get('mail.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
 
     def create(self, cr, uid, values, context=None):
         if context is None:

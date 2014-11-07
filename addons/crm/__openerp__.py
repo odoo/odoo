@@ -53,7 +53,6 @@ Dashboard for CRM will include:
         'base_setup',
         'sales_team',
         'mail',
-        'email_template',
         'calendar',
         'resource',
         'board',

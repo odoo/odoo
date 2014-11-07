@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record id="event_subscription" model="email.template">
+        <record id="event_subscription" model="mail.template">
             <field name="name">Event subscription</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
@@ -15,7 +15,7 @@ You will automatically receive an email providing you more practical information
 <p>Best regards</p>]]></field>
         </record>
 
-        <record id="event_reminder" model="email.template">
+        <record id="event_reminder" model="mail.template">
             <field name="name">Event: reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
@@ -28,7 +28,7 @@ For any further information please contact our event department.</p>
 <p>Best regards</p>]]></field>
         </record>
 
-        <record id="event_thanks" model="email.template">
+        <record id="event_thanks" model="mail.template">
             <field name="name">Event: thanks for attending</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>

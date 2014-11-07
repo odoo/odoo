@@ -34,7 +34,7 @@ class EventMailScheduler(models.Model):
         ('after_event', 'After the event')],
         string='When to Run ', default="before_event", required=True)
     template_id = fields.Many2one(
-        'email.template', string='Email to Send',
+        'mail.template', string='Email to Send',
         domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)

@@ -3,7 +3,7 @@
     <data>
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <form string="Templates">
                     <sheet>
@@ -87,7 +87,7 @@
 
         <record model="ir.ui.view" id="email_template_tree">
             <field name="name">email.template.tree</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
                     <field name="mail_server_id" invisible="1"/>
@@ -104,7 +104,7 @@
 
         <record id="view_email_template_search" model="ir.ui.view">
            <field name="name">email.template.search</field>
-           <field name="model">email.template</field>
+           <field name="model">mail.template</field>
            <field name="arch" type="xml">
                <search string="Templates">
                     <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
@@ -120,7 +120,7 @@
 
         <record model="ir.actions.act_window" id="action_email_template_tree_all">
             <field name="name">Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="email_template_tree" />

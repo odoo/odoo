@@ -15,7 +15,7 @@
             Update Email template to send right quote url
         -->
 
-        <record id="sale.email_template_edi_sale" model="email.template">
+        <record id="sale.email_template_edi_sale" model="mail.template">
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 
@@ -167,7 +167,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_edi_sale" model="email.template">
+        <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order - Send by Email (Online Quote)</field>
             <field name="email_from">${(object.user_id.email or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>

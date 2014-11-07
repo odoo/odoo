@@ -58,7 +58,7 @@ class WebsiteEmailDesigner(http.Controller):
                 return request.redirect('/website_mail/email_designer?%s' % urlencode(fragments))
             values['mode'] = 'email_template'
 
-        tmpl_obj = request.registry['email.template']
+        tmpl_obj = request.registry['mail.template']
         if template_model:
             tids = tmpl_obj.search(cr, uid, [('model', '=', template_model)], context=context)
         else:

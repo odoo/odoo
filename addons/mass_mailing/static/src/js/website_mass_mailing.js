@@ -55,4 +55,31 @@
             });
         },
     });
+
+    openerp.website.if_dom_contains('div.o_unsubscribe_form', function() {
+        $('#unsubscribe_form').on('submit', function(e) {
+            e.preventDefault();
+
+            var email = $("input[name='email']").val();
+            var mailing_id = parseInt($("input[name='mailing_id']").val());
+
+            var checked_ids = [];
+            $("input[type='checkbox']:checked").each(function(i){
+              checked_ids[i] = parseInt($(this).val());
+            });
+
+            var unchecked_ids = [];
+            $("input[type='checkbox']:not(:checked)").each(function(i){
+              unchecked_ids[i] = parseInt($(this).val());
+            });
+
+            openerp.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
+                .then(function(result) {
+                    $('.alert-info').html('Your changes has been saved.').removeClass('alert-info').addClass('alert-success');
+                })
+                .fail(function() {
+                    $('.alert-info').html('You changes has not been saved, try again later.').removeClass('alert-info').addClass('alert-warning');
+                }); 
+        });
+    });
 })();

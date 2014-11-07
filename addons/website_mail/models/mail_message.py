@@ -87,3 +87,4 @@ class MailMessage(osv.Model):
                         _('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
         return super(MailMessage, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)
+

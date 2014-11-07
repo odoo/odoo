@@ -34,7 +34,7 @@ documentation at http://doc.openerp.com.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/api',
-    'depends': ['base', 'email_template'],
+    'depends': ['base', 'mail'],
     'data' : [
         'views/edi.xml',
     ],

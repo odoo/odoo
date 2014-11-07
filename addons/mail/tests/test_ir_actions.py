@@ -29,7 +29,7 @@ class TestServerActionsEmail(TestServerActionsBase):
         cr, uid = self.cr, self.uid
 
         # create email_template
-        template_id = self.registry('email.template').create(cr, uid, {
+        template_id = self.registry('mail.template').create(cr, uid, {
             'name': 'TestTemplate',
             'email_from': 'myself@example.com',
             'email_to': 'brigitte@example.com',

@@ -4,11 +4,11 @@
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
             <field name="name">Email Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="email_template.email_template_tree" />
-            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="view_id" ref="mail.email_template_tree" />
+            <field name="search_view_id" ref="mail.view_email_template_search"/>
             <field name="context" eval="{'search_default_model_id': ref('sale.model_sale_order')}"/>
         </record>
     </data>
@@ -18,7 +18,7 @@
     <data noupdate="1">
 
         <!--Email template -->
-        <record id="email_template_edi_sale" model="email.template">
+        <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales Order - Send by Email</field>
             <field name="email_from">${(object.user_id.email or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>

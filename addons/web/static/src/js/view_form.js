@@ -2667,6 +2667,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
+
         this.pop = new instance.web.form.SelectCreatePopup(this);
         this.pop.select_element(
             model, {

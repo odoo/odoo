@@ -183,7 +183,7 @@ class gamification_challenge(osv.Model):
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
-        'report_template_id': fields.many2one('email.template', string="Report Template", required=True),
+        'report_template_id': fields.many2one('mail.template', string="Report Template", required=True),
         'remind_update_delay': fields.integer('Non-updated manual goals will be reminded after',
             help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
@@ -622,7 +622,7 @@ class gamification_challenge(osv.Model):
         if context is None:
             context = {}
 
-        temp_obj = self.pool.get('email.template')
+        temp_obj = self.pool.get('mail.template')
         ctx = context.copy()
         if challenge.visibility_mode == 'ranking':
             lines_boards = self._get_serialized_challenge_lines(cr, uid, challenge, user_id=False, restrict_goal_ids=subset_goal_ids, restrict_top=False, context=context)

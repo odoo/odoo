@@ -4,11 +4,11 @@
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
             <field name="name">Email Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="email_template.email_template_tree" />
-            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="view_id" ref="mail.email_template_tree" />
+            <field name="search_view_id" ref="mail.view_email_template_search"/>
             <field name="context">{'search_default_model_id':'account.invoice'}</field>
             <field name="context" eval="{'search_default_model_id': ref('account.model_account_invoice')}"/>
         </record>
@@ -18,7 +18,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_edi_invoice" model="email.template">
+        <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice - Send by Email</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
             <field name="subject">${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})</field>

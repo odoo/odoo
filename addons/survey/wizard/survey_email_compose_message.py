@@ -120,7 +120,7 @@ class survey_mail_compose_message(osv.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
-    def send_mail(self, cr, uid, ids, context=None):
+    def send_mail(self, cr, uid, ids, auto_commit=False, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed """
         if context is None:

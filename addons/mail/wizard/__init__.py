@@ -21,3 +21,4 @@
 
 import invite
 import mail_compose_message
+import email_template_preview

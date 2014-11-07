@@ -25,6 +25,18 @@
                     <field name="mail_mail_id_int"/>
                     <field name="message_id"/>
                     <field name="mass_mailing_id"/>
+                    <filter help="Sent" domain="[('sent', '!=', False)]"/>
+                    <filter help="Opened" domain="[('opened', '!=', False)]"/>
+                    <filter help="Replied" domain="[('replied', '!=', False)]"/>
+                    <filter help="Bounced" domain="[('bounced', '!=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" domain="[]"
+                            context="{'group_by':'state'}"/>
+                        <filter string="Last State Update" domain="[]"
+                            context="{'group_by':'state_update'}"/>
+                        <filter string="Mass Mailing" domain="[]"
+                            context="{'group_by':'mass_mailing_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -83,8 +95,20 @@
             <field name="name">Mail Statistics</field>
             <field name="res_model">mail.mail.statistics</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="domain">[]</field>
             <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+        </record>
+
+        <record id="view_mail_mail_statistics_graph" model="ir.ui.view">
+            <field name="name">Mail Statistics Graph</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <graph string="Mail Statistics" type="bar" stacked="True" interval="day">
+                    <field name="state_update" type="row" interval="day"/>
+                    <field name="state" type="row"/>
+                </graph>
+            </field>
         </record>
 
         <!-- Add in Technical/Email -->
@@ -250,12 +274,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing list.
-</p><p>
-    Mailing lists allows you to to manage customers and
-    contacts easily and to send to mailings in a single click.
-</p></field>
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new mailing list.
+                </p><p>
+                    Mailing lists allows you to to manage customers and
+                    contacts easily and to send to mailings in a single click.
+                </p></field>
         </record>
 
         <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
@@ -271,10 +295,7 @@
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Campaign" name="group_mass_mailing_campaign_id"
-                            groups="mass_mailing.group_mass_mailing_campaign"
-                            context="{'group_by': 'mass_mailing_campaign_id'}"/>
-                        <filter string="State" name="group_state"
+                        <filter string="Status" name="group_state"
                             context="{'group_by': 'state'}"/>
                         <filter string="Sent By" domain="[]"
                             context="{'group_by':'email_from'}"/>
@@ -308,20 +329,15 @@
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
                 <form string="Mass Mailing">
-                    <header>
-                        <button name="action_test_mailing" type="object"
-                            class="oe_highlight" string="Test Mailing"
-                            attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('body_html', '=', False)]}"/>
-                        <button name="action_test_mailing" type="object"
-                            attrs="{'invisible': ['&amp;', ('state', '=', 'draft'), ('body_html', '!=', False)]}"
-                            string="Test Mailing"/>
-                        <button name="send_mail" type="object"
-                            attrs="{'invisible': ['|', ('state', '=', 'done'), ('body_html', '=', False)]}"
-                            class="oe_highlight" string="Send to All"/>
-                        <button name="send_mail" type="object"
-                            attrs="{'invisible': ['&amp;', ('state', '!=', 'done'), ('body_html', '!=', False)]}"
-                            string="Send to All"/>
-                        <field name="state" widget="statusbar"/>
+                    <header style="min-height:31px;">
+                        <button name="action_test_mailing" type="object" class="oe_highlight" attrs="{'invisible': [('body_html', '=', False)]}" string="Test Mailing"/>
+                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('body_html', '=', False)]}" class="oe_highlight" string="Send to All"/>
+                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
+                        <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
+
+                        <!-- Note : the statusbar is between <span> because of a Chrome CSS interpretation bug,
+                        which render the statusbar on two lines instead of one -->
+                        <span><field name="state" readonly="1" widget="statusbar"/></span>
                     </header>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
                         <p><strong>
@@ -329,8 +345,25 @@
                             emails are in queue and will be sent soon.
                         </strong></p>
                     </div>
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                        <p><strong>
+                            <field name="failed" class="oe_inline"/>
+                            emails could not be sent.
+                        </strong></p>
+                    </div>
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                        <p><strong>
+                            This mass mailing is scheduled to
+                            <field name="next_departure" class="oe_inline"/>
+                        </strong></p>
+                    </div>
                     <sheet>
                         <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
+                            <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
+                                icon="fa-envelope-o" class="oe_stat_button"
+                                attrs="{'invisible': [('sent', '=', 0)]}" >
+                                <field name="sent" string="Emails Sent" widget="statinfo"/>
+                            </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
@@ -347,19 +380,11 @@
                                 type="object" class="oe_stat_button">
                                 <field name="clicks_ratio" string="clicks" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d" type="action" class="oe_stat_button oe_inline">
-                                <field name="opened_daily" string="Opened Daily" widget="barchart"/>
-                            </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button oe_inline">
-                                <field name="replied_daily" string="Replied Daily" widget="barchart"/>
+                                type="action" class="oe_stat_button">
+                                <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
                         </div>
-                        <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
-                            icon="fa-envelope-o" class="oe_stat_button"
-                            attrs="{'invisible': [('total', '=', 0)]}" >
-                            <field name="total" string="Emails" widget="statinfo"/>
-                        </button>
 
                         <group>
                             <field name="email_from"/>
@@ -371,7 +396,7 @@
 
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
-                                    options="{'model_field': 'mailing_model'}"/>
+                                    options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain'}"/>
 
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
@@ -380,7 +405,6 @@
                                         on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
                                 </div>
                             </div>
-                            <field name="keep_archives"/>
                         </group>
                         <notebook>
                             <page string="Mail Body">
@@ -389,7 +413,7 @@
                                 <button name="action_edit_html" type="object" string="Change Email Design"
                                     attrs="{'invisible': [('body_html', '=', False)]}"/>
                                 <div attrs="{'invisible' : ['|', ('state', '=', 'done'), ('body_html','!=',False)]}" class="oe_view_nocontent oe_clear">
-                                    <p class="oe_view_nocontent_create oe_edit_only">
+                                    <p class="oe_view_nocontent_create">
                                         Click to design your email.
                                     </p>
                                 </div>
@@ -399,17 +423,15 @@
                             <page string="Options">
                                 <group>
                                     <group string="Mailing">
+                                        <field name="keep_archives" groups="base.group_no_one"/>
                                         <label for="reply_to"/>
                                         <div>
-                                            <p class="alert alert-danger"
-                                                    attrs="{'invisible': ['|', ('reply_to_mode', '!=', 'thread'), ('mailing_model', 'not in', ['mail.mass_mailing.contact', 'res.partner'])]}">
-                                                This option is not available for the recipients you selected.
-                                                Please use a specific reply-to email address.
-                                            </p>
-                                            <field name="reply_to_mode" widget="radio"/>
-                                            <field name="reply_to" style="margin-left: 16px;"
+                                            <field name="reply_to_mode" widget="radio"
+                                                attrs="{'invisible': [('mailing_model', 'in', ['mail.mass_mailing.contact', 'res.partner'])]}"/>
+                                            <field name="reply_to"  
                                                 attrs="{'required': [('reply_to_mode', '=', 'email')]}"/>
                                         </div>
+                                        <field name="schedule_date" />
                                         <field name="create_date" readonly="1"/>
                                         <field name="sent_date" readonly="1"/>
                                     </group>
@@ -442,6 +464,7 @@
                 <kanban default_group_by='state'>
                     <field name='color'/>
                     <field name='total'/>
+                    <field name='failed'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
@@ -455,7 +478,8 @@
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div>
-                                        <h3><field name="name"/></h3>
+                                        <h3><field name="name"/> 
+                                        <!-- <i class="fa fa-exclamation-triangle oe_kanban_mass_mailing_exclamation_sign" attrs="{'invisible': [('failed', '=', 0)]}"></i> --></h3>
                                         <h4 style="display: inline;"><field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h4>
                                         <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
                                     </div>
@@ -483,9 +507,8 @@
             <field name="name">mail.mass_mailing.graph</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <graph string="Mass Mailing" type="bar" stacked="True">
-                    <field name="mass_mailing_campaign_id" type="row"/>
-                    <field name="sent_date" interval="month" type="col"/>
+                <graph string="Mass Mailing" type="bar">
+                    <field name="state" type="row"/>
                 </graph>
             </field>
         </record>
@@ -494,7 +517,7 @@
             <field name="name">Mass Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
             <field name="help" type="html">
 <p class="oe_view_nocontent_create">
     Click here to create a new mailing.
@@ -511,6 +534,43 @@
             <field name="context">{
                 'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
+            }
+            </field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+    Click here to create a new mailing.
+</p><p>
+    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
+</p></field>
+        </record>
+
+        <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,kanban,tree</field>
+            <field name="context">{
+                'search_default_mass_mailing_campaign_id': [active_id],
+                'default_mass_mailing_campaign_id': active_id, 
+            }
+            </field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+    Click here to create a new mailing.
+</p><p>
+    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.
+</p></field>
+        </record>
+
+        <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,kanban,tree</field>
+            <field name="context">{
+                'search_default_mass_mailing_campaign_id': [active_id],
+                'default_mass_mailing_campaign_id': active_id,
+                'default_contact_ab_pc': 10,
             }
             </field>
             <field name="help" type="html">
@@ -568,8 +628,8 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                <search string="Mass Mailing Campaigns">
-                    <field name="name"/>
-                    <field name="category_ids"/>
+                    <field name="name" string="Campaigns"/>
+                    <field name="tag_ids"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="group_stage_id"
@@ -590,7 +650,7 @@
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
-                    <field name="category_ids"/>
+                    <field name="tag_ids"/>
                 </tree>
             </field>
         </record>
@@ -600,20 +660,31 @@
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                 <form string="Mass Mailing Campaign">
-                    <header>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                    <header style="min-height:31px;">
+                        <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mass Mailing"/>
+                        <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mass Mailing"/>
+                        <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
                                 <field name="user_id"/>
-                                <field name="category_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="total" invisible="1"/>
                                 <div class="oe_right oe_button_box" name="buttons"
                                     attrs="{'invisible': [('total', '=', 0)]}">
+                                    <button name="%(action_view_mass_mailings_from_campaign)d"
+                                        type="action" class="oe_inline oe_stat_button" icon="fa-envelope-o">
+                                        <field name="total_mailings" widget="statinfo" string="Mailings"/>
+                                    </button>
+                                    <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
+                                        icon="fa-envelope-o" class="oe_stat_button"
+                                        attrs="{'invisible': [('sent', '=', 0)]}" >
+                                        <field name="sent" string="Emails Sent" widget="statinfo"/>
+                                    </button>
                                     <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="received_ratio" widget="percentpie" string="Received"/>
@@ -629,10 +700,6 @@
                                     <button name="mass_mailing_statistics_action"
                                         type="object" class="oe_stat_button">
                                         <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
-                                    </button>
-                                    <button name="%(action_view_mass_mailings_from_campaign)d"
-                                        type="action" class="oe_inline oe_stat_button" icon="fa-envelope-o">
-                                        <field name="total_mailings" widget="statinfo" string="Mailings"/>
                                     </button>
                                 </div>
                             </group>
@@ -660,19 +727,6 @@
                                 </field>
                             </page>
                         </notebook>
-                        <separator string="Related Mailing(s)" groups="base.group_no_one"/>
-                        <field name="mass_mailing_ids" readonly="1" groups="base.group_no_one">
-                            <tree>
-                                <field name="name"/>
-                                <field name="sent_date"/>
-                                <field name="state"/>
-                                <field name="delivered"/>
-                                <field name="opened"/>
-                                <field name="replied"/>
-                                <field name="bounced"/>
-                                <button name="action_duplicate" type="object" string="Duplicate"/>
-                            </tree>
-                        </field>
                     </sheet>
                 </form>
             </field>
@@ -687,6 +741,7 @@
                     <field name='color'/>
                     <field name='user_id'/>
                     <field name='mass_mailing_ids'/>
+                    <field name="stage_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing_campaign">
@@ -707,7 +762,7 @@
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                             t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                          <h3 class="oe_margin_bottom_8"><field name="name"/></h3>
-                                        <field name="category_ids"/>
+                                        <field name="tag_ids"/>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                                             class="oe_mailings">
                                             <h4 class="oe_margin_top_8"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
@@ -740,12 +795,26 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new mass mailing campaign.
-              </p><p>
-                Create a campaign to structure mass mailing and get analysis from email status.
-              </p>
-            </field>
+  <p class="oe_view_nocontent_create">
+    Click to define a new mass mailing campaign.
+  </p><p>
+    Create a campaign to structure mass mailing and get analysis from email status.
+  </p>
+</field>
+        </record>
+
+        <!-- Cron that process the mass mailing queue -->   
+         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
+            <field name="name">Process Mass Mailing Queue</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">60</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="model">mail.mass_mailing</field>
+            <field name="function">_process_mass_mailing_queue</field>
+            <field name="args">()</field>
         </record>
 
         <menuitem name="Campaigns" id="menu_email_campaigns"

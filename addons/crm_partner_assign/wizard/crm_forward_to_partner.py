@@ -51,7 +51,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if context is None:
             context = {}
         lead_obj = self.pool.get('crm.lead')
-        email_template_obj = self.pool.get('email.template')
+        email_template_obj = self.pool.get('mail.template')
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
@@ -80,7 +80,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     def action_forward(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         record = self.browse(cr, uid, ids[0], context=context)
-        email_template_obj = self.pool.get('email.template')
+        email_template_obj = self.pool.get('mail.template')
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:

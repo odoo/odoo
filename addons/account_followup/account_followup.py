@@ -60,7 +60,7 @@ class followup_line(osv.osv):
         'manual_action':fields.boolean('Manual Action', help="When processing, it will set the manual action to be taken for that customer. "),
         'manual_action_note':fields.text('Action To Do', placeholder="e.g. Give a phone call, check with others , ..."),
         'manual_action_responsible_id':fields.many2one('res.users', 'Assign a Responsible', ondelete='set null'),
-        'email_template_id':fields.many2one('email.template', 'Email Template', ondelete='set null'),
+        'email_template_id':fields.many2one('mail.template', 'Email Template', ondelete='set null'),
     }
     _order = 'delay'
     _sql_constraints = [('days_uniq', 'unique(followup_id, delay)', 'Days of the follow-up levels must be different')]
@@ -200,7 +200,7 @@ class res_partner(osv.osv):
         ctx['followup'] = True
         #partner_ids are res.partner ids
         # If not defined by latest follow-up level, it will be the default template if it can find it
-        mtp = self.pool.get('email.template')
+        mtp = self.pool.get('mail.template')
         unknown_mails = 0
         for partner in self.browse(cr, uid, partner_ids, context=ctx):
             if partner.email and partner.email.strip():

@@ -238,7 +238,7 @@ class event_event(models.Model):
     @api.one
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
         for attendee in self.registration_ids.filtered(filter_func):
-            self.env['email.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+            self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
 
 class event_registration(models.Model):

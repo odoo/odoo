@@ -186,7 +186,7 @@ class calendar_attendee(osv.Model):
         data_pool = self.pool['ir.model.data']
         mailmess_pool = self.pool['mail.message']
         mail_pool = self.pool['mail.mail']
-        template_pool = self.pool['email.template']
+        template_pool = self.pool['mail.template']
         local_context = context.copy()
         color = {
             'needsAction': 'grey',

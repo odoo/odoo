@@ -397,7 +397,7 @@ class marketing_campaign_activity(osv.osv):
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
-        'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
+        'email_template_id': fields.many2one('mail.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
@@ -452,7 +452,7 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').send_mail(cr, uid,
+        return self.pool.get('mail.template').send_mail(cr, uid,
                                             activity.email_template_id.id,
                                             workitem.res_id, context=context)
 
@@ -769,7 +769,7 @@ class marketing_campaign_workitem(osv.osv):
         res = {}
         wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
-            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'email_template', 'email_template_preview_form')
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'email_template_preview_form')
             res = {
                 'name': _('Email Preview'),
                 'view_type': 'form',
@@ -801,8 +801,8 @@ class marketing_campaign_workitem(osv.osv):
         return res
 
 
-class email_template(osv.osv):
-    _inherit = "email.template"
+class mail_template(osv.osv):
+    _inherit = "mail.template"
     _defaults = {
         'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
     }

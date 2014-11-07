@@ -107,14 +107,14 @@ except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
 
 
-class email_template(osv.osv):
+class mail_template(osv.osv):
     "Templates for sending email"
-    _name = "email.template"
+    _name = "mail.template"
     _description = 'Email Templates'
     _order = 'name'
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(email_template, self).default_get(cr, uid, fields, context)
+        res = super(mail_template, self).default_get(cr, uid, fields, context)
         if res.get('model'):
             res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
         return res
@@ -221,6 +221,7 @@ class email_template(osv.osv):
         if not template_id:
             return results
         template = self.browse(cr, uid, template_id, context)
+
         langs = self.render_template_batch(cr, uid, template.lang, template.model, res_ids, context)
         for res_id, lang in langs.iteritems():
             if lang:
@@ -357,13 +358,13 @@ class email_template(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         self.unlink_action(cr, uid, ids, context=context)
-        return super(email_template, self).unlink(cr, uid, ids, context=context)
+        return super(mail_template, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         template = self.browse(cr, uid, id, context=context)
         default = dict(default or {},
                        name=_("%s (copy)") % template.name)
-        return super(email_template, self).copy(cr, uid, id, default, context)
+        return super(mail_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
         """Returns a placeholder expression for use in a template field,
@@ -515,7 +516,7 @@ class email_template(osv.osv):
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
             
-            	    # TODO in trunk, change return format to binary to match message_post expected format
+                    # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service

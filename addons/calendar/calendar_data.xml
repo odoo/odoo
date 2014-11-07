@@ -92,7 +92,7 @@
             <field name="name">Feedback Meeting</field>
         </record>
 
-        <record id="calendar_template_meeting_invitation" model="email.template">
+        <record id="calendar_template_meeting_invitation" model="mail.template">
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name}</field>
@@ -215,7 +215,7 @@
                 </field>
         </record>
         
-        <record id="calendar_template_meeting_changedate" model="email.template">
+        <record id="calendar_template_meeting_changedate" model="mail.template">
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name} - Date has been updated</field>
@@ -340,7 +340,7 @@
                 </field>
         </record>
         
-        <record id="calendar_template_meeting_reminder" model="email.template">
+        <record id="calendar_template_meeting_reminder" model="mail.template">
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name} - Reminder</field>

@@ -5,7 +5,7 @@
         <!-- Email Templates -->
         <record model="ir.ui.view" id="email_template_form_minimal">
             <field name="name">email.template.form.minimal</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="priority">32</field>
             <field name="arch" type="xml">
                 <form string="Templates">
@@ -22,7 +22,7 @@
                             <group>
                                 <div class="oe_right oe_button_box" name="buttons">
                                     <button string="Edit Template" name="action_edit_html" type="object"/>
-                                    <button name="%(email_template.wizard_email_template_preview)d" string="Preview"
+                                    <button name="%(mail.wizard_email_template_preview)d" string="Preview"
                                         type="action" target="new"
                                         context="{'template_id':active_id}"/>
                                     <br />
@@ -42,7 +42,7 @@
 
         <record model="ir.ui.view" id="view_email_template_kanban">
             <field name="name">email.template.kanban</field>
-            <field name="model">email.template</field>
+            <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="body_html"/>
@@ -78,7 +78,7 @@
 
         <record model="ir.actions.act_window" id="action_email_template_marketing">
             <field name="name">Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{

@@ -56,7 +56,7 @@ class test_message_compose(TestMail):
 
         # Create template on mail.group, with attachments
         group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
-        email_template = self.registry('email.template')
+        email_template = self.registry('mail.template')
         email_template_id = email_template.create(cr, uid, {
             'model_id': group_model_id,
             'name': 'Pigs Template',
@@ -161,7 +161,7 @@ class test_message_compose(TestMail):
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
+        mail_compose.send_mail(cr, uid, [compose_id], context={'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
         group_pigs.refresh()
         group_bird.refresh()
         message_pigs = group_pigs.message_ids[0]
@@ -207,9 +207,9 @@ class test_message_compose(TestMail):
         """ Tests designed for the mail.compose.message wizard updated by email_template. """
         cr, uid, context = self.cr, self.uid, {}
 
-        # create the email.template on mail.group model
+        # create the mail.template on mail.group model
         group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
-        email_template = self.registry('email.template')
+        email_template = self.registry('mail.template')
         email_template_id = email_template.create(cr, uid, {
             'model_id': group_model_id,
             'name': 'Pigs Template',

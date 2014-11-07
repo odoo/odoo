@@ -5,7 +5,7 @@
     <data noupdate="1">
         <!--Email template -->
         
-        <record id="email_template_goal_reminder" model="email.template">
+        <record id="email_template_goal_reminder" model="mail.template">
             <field name="name">Reminder for Goal Update</field>
             <field name="body_html"><![CDATA[
     <header>
@@ -16,7 +16,7 @@
             ]]></field>
         </record>
         
-        <record id="simple_report_template" model="email.template">
+        <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
             <field name="body_html"><![CDATA[
 <header>

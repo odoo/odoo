@@ -23,7 +23,7 @@
 from openerp.osv import fields, osv
 
 class email_template_preview(osv.osv_memory):
-    _inherit = "email.template"
+    _inherit = "mail.template"
     _name = "email_template.preview"
     _description = "Email Template Preview"
 
@@ -37,7 +37,7 @@ class email_template_preview(osv.osv_memory):
         template_id = context.get('template_id', False)
         if not template_id:
             return []
-        email_template = self.pool.get('email.template')
+        email_template = self.pool.get('mail.template')
         template = email_template.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
         model =  self.pool[template_object.model]
@@ -55,7 +55,7 @@ class email_template_preview(osv.osv_memory):
             context = {}
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
 
-        email_template = self.pool.get('email.template')
+        email_template = self.pool.get('mail.template')
         template_id = context.get('template_id')
         if 'res_id' in fields and not result.get('res_id'):
             records = self._get_records(cr, uid, context=context)
@@ -75,7 +75,7 @@ class email_template_preview(osv.osv_memory):
         if not res_id or not context.get('template_id'):
             return {'value': {}}
 
-        email_template = self.pool.get('email.template')
+        email_template = self.pool.get('mail.template')
         template_id = context.get('template_id')
         template = email_template.browse(cr, uid, template_id, context=context)
 

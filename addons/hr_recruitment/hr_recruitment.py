@@ -99,7 +99,7 @@ class hr_recruitment_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
-        'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
+        'template_id': fields.many2one('mail.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'legend_priority': fields.text(
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on applicants that are in this stage.'),

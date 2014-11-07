@@ -25,7 +25,7 @@
     'version': '1.1',
     'depends': ['marketing',
                  'document',
-                 'email_template',
+                 'mail',
                  'decimal_precision'
     ],
     'author': 'OpenERP SA',
