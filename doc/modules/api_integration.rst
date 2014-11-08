@@ -22,13 +22,74 @@ easily available over XML-RPC_ and accessible from a variety of languages.
 Connection and authentication
 =============================
 
+.. kinda gross because it duplicates existing bits
+
+.. rst-class:: setupcode hidden
+
+    .. code-block:: python
+
+        import xmlrpclib
+        info = xmlrpclib.ServerProxy('https://demo.odoo.com/start').start()
+        url, db, username, password = \
+            info['host'], info['database'], info['user'], info['password']
+        common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+        uid = common.authenticate(db, username, password, {})
+        models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+
+    .. code-block:: ruby
+
+        require "xmlrpc/client"
+        info = XMLRPC::Client.new2('https://demo.odoo.com/start').call('start')
+        url, db, username, password = \
+            info['host'], info['database'], info['user'], info['password']
+        common = XMLRPC::Client.new2("#{url}/xmlrpc/2/common")
+        uid = common.call('authenticate', db, username, password, {})
+        models = XMLRPC::Client.new2("#{url}/xmlrpc/2/object").proxy
+
+    .. code-block:: php
+
+        require_once('ripcord.php');
+        $info = ripcord::client('https://demo.odoo.com/start')->start();
+        list($url, $db, $username, $password) =
+          array($info['host'], $info['database'], $info['user'], $info['password']);
+        $common = ripcord::client("$url/xmlrpc/2/common");
+        $uid = $common->authenticate($db, $username, $password, array());
+        $models = ripcord::client("$url/xmlrpc/2/object");
+
+    .. code-block:: java
+
+        final XmlRpcClient client = new XmlRpcClient();
+
+        final XmlRpcClientConfigImpl start_config = new XmlRpcClientConfigImpl();
+        start_config.setServerURL(new URL("https://demo.odoo.com/start"));
+        final Map<String, String> info = (Map<String, String>)client.execute(
+            start_config, "start", Collections.emptyList());
+
+        final String url = info.get("host"),
+                      db = info.get("database"),
+                username = info.get("user"),
+                password = info.get("password");
+
+        final XmlRpcClientConfigImpl common_config = new XmlRpcClientConfigImpl();
+        common_config.setServerURL(new URL(String.format("%s/xmlrpc/2/common", url)));
+
+        int uid = (int)client.execute(
+            common_config, "authenticate", Arrays.asList(
+                db, username, password, Collections.emptyMap()));
+
+        final XmlRpcClient models = new XmlRpcClient() {{
+            setConfig(new XmlRpcClientConfigImpl() {{
+                setServerURL(new URL(String.format("%s/xmlrpc/2/object", url)));
+            }});
+        }};
+
 Configuration
 -------------
 
 If you already have an Odoo server installed, you can just use its
 parameters
 
-.. rst-class:: switchable
+.. rst-class:: switchable setup
 
     .. code-block:: python
 
@@ -61,7 +122,7 @@ parameters
 To make exploration simpler, you can also ask https://demo.odoo.com for a test
 database:
 
-.. rst-class:: switchable
+.. rst-class:: switchable setup
 
     .. code-block:: python
 
@@ -134,7 +195,7 @@ authentication itself is done through the ``authenticate`` function and
 returns a user identifier (``uid``) used in authenticated calls instead of
 the login.
 
-.. rst-class:: switchable
+.. rst-class:: switchable setup
 
     .. code-block:: python
 
@@ -166,7 +227,7 @@ the login.
         "protocol_version": 1,
     }
 
-.. rst-class:: switchable
+.. rst-class:: switchable setup
 
     .. code-block:: python
 
@@ -209,7 +270,7 @@ For instance to see if we can read the ``res.partner`` model we can call
 ``raise_exception`` passed by keyword (in order to get a true/false result
 rather than true/error):
 
-.. rst-class:: switchable
+.. rst-class:: switchable setup
 
     .. code-block:: python
 

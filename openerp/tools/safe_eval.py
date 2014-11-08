@@ -44,7 +44,7 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
 # lp:703841), does import time.
-_ALLOWED_MODULES = ['_strptime', 'time']
+_ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']

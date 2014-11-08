@@ -919,8 +919,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ReceiptScreenWidget = module.ScreenWidget.extend({
         template: 'ReceiptScreenWidget',
 
-        show_numpad:     true,
-        show_leftpane:   true,
+        show_numpad:     false,
+        show_leftpane:   false,
 
         show: function(){
             this._super();
@@ -939,7 +939,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.refresh();
-            this.print();
+
+            if (!this.pos.get('selectedOrder')._printed) {
+                this.print();
+            }
 
             //
             // The problem is that in chrome the print() is asynchronous and doesn't
@@ -964,6 +967,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }, 2000);
         },
         print: function() {
+            this.pos.get('selectedOrder')._printed = true;
             window.print();
         },
         finishOrder: function() {

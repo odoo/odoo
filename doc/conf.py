@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'odoo'
-copyright = u'2014, OpenERP s.a.'
+copyright = u'OpenERP S.A.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -55,7 +55,7 @@ copyright = u'2014, OpenERP s.a.'
 # The short X.Y version.
 version = '8.0'
 # The full version, including alpha/beta/rc tags.
-release = '8.0b1'
+release = '8.0'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

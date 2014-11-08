@@ -24,6 +24,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import except_orm
 
 import openerp.addons.decimal_precision as dp
 
@@ -251,7 +252,14 @@ class product_pricelist(osv.osv):
             price = False
             rule_id = False
             for rule in items:
-                if rule.min_quantity and qty<rule.min_quantity:
+                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
+                    try:
+                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
+                    except except_orm:
+                        qty_in_product_uom = qty
+                else:
+                    qty_in_product_uom = qty
+                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
@@ -285,9 +293,14 @@ class product_pricelist(osv.osv):
                                 price_tmp, round=False,
                                 context=context)
                 elif rule.base == -2:
-                    for seller in product.seller_ids:
-                        if (not partner) or (seller.name.id != partner):
+                    seller = False
+                    for seller_id in product.seller_ids:
+                        if (not partner) or (seller_id.name.id != partner):
                             continue
+                        seller = seller_id
+                    if not seller and product.seller_ids:
+                        seller = product.seller_ids[0]
+                    if seller:
                         qty_in_seller_uom = qty
                         from_uom = context.get('uom') or product.uom_id.id
                         seller_uom = seller.product_uom and seller.product_uom.id or False

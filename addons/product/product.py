@@ -365,6 +365,14 @@ class product_attribute_value(osv.osv):
                     'price_extra': value,
                 }, context=context)
 
+    def name_get(self, cr, uid, ids, context=None):
+        if context and not context.get('show_attribute', True):
+            return super(product_attribute_value, self).name_get(cr, uid, ids, context=context)
+        res = []
+        for value in self.browse(cr, uid, ids, context=context):
+            res.append([value.id, "%s: %s" % (value.attribute_id.name, value.name)])
+        return res
+
     _columns = {
         'sequence': fields.integer('Sequence', help="Determine the display order"),
         'name': fields.char('Value', translate=True, required=True),
@@ -590,7 +598,9 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                res[product.id] = product.sudo()[ptype]
+                company_id = product.env.user.company_id.id
+                product = product.with_context(force_company=company_id)
+                res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:

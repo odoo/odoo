@@ -469,27 +469,26 @@ div.section > h2 {
   padding: 4px;
 
   font-size: 75%;
-  // code block lines should not wrap
+  // don't break lines within words
   word-break: normal;
   word-wrap: normal;
+}
+.switchable .highlight.with-btn-clipboard pre {
+  // avoid copy button overlapping with even long lines
+  padding-right: 50px;
 }
 
 /*
  * ZeroClipboard styles
  */
-
-.zero-clipboard {
+.highlight {
   position: relative;
-  display: none;
-  @media (min-width: @screen-sm-min) {
-    display: block;
-  }
 }
 .btn-clipboard {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 3;
   display: block;
   padding: 5px 8px;
   font-size: 12px;
@@ -498,11 +497,15 @@ div.section > h2 {
   background-color: #fff;
   border: 1px solid #e1e1e8;
   border-radius: 0 4px 0 4px;
-}
-.btn-clipboard-hover {
-  color: #fff;
-  background-color: @brand-primary;
-  border-color: @brand-primary;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.active {
+    background-color: #ffffad;
+    .transition(background-color .5s linear);
+  }
 }
 
 // rST styles
@@ -591,6 +594,11 @@ td.field-body {
         width: 0;
         border-left: 1px solid @gray-light;
       }
+    }
+
+    .highlight pre {
+      // but allow additional line-breaks between "words" to avoid overflow
+      white-space: pre-wrap;
     }
   }
 

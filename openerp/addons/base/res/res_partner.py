@@ -416,16 +416,16 @@ class res_partner(osv.Model, format_address):
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
-        for field in fields:
-            column = self._all_columns[field].column
-            if column._type == 'one2many':
+        for fname in fields:
+            field = self._fields[fname]
+            if field.type == 'one2many':
                 raise AssertionError('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`')
-            if column._type == 'many2one':
-                values[field] = partner[field].id if partner[field] else False
-            elif column._type == 'many2many':
-                values[field] = [(6,0,[r.id for r in partner[field] or []])]
+            if field.type == 'many2one':
+                values[fname] = partner[fname].id if partner[fname] else False
+            elif field.type == 'many2many':
+                values[fname] = [(6,0,[r.id for r in partner[fname] or []])]
             else:
-                values[field] = partner[field]
+                values[fname] = partner[fname]
         return values
 
     def _address_fields(self, cr, uid, context=None):
