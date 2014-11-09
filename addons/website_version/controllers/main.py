@@ -23,9 +23,9 @@ class TableExporter(http.Controller):
         if name == "":
             name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         iuv = request.registry['ir.ui.view']
-        snap = request.registry['website_version.version']
+        ver = request.registry['website_version.version']
         website_id = request.website.id
-        new_version_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
+        new_version_id = ver.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
         if version_id:
             iuv.copy_version(cr, uid, version_id,new_version_id,context=context)
         request.session['version_id'] = new_version_id
@@ -36,9 +36,9 @@ class TableExporter(http.Controller):
     @http.route(['/website_version/delete_version'], type = 'json', auth = "user", website = True)
     def delete_version(self, version_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        snap = request.registry['website_version.version']
-        version_name = snap.browse(cr, uid, [int(version_id)], context=context)[0].name
-        snap.unlink(cr, uid, [int(version_id)], context=context)
+        ver = request.registry['website_version.version']
+        version_name = ver.browse(cr, uid, [int(version_id)], context=context)[0].name
+        ver.unlink(cr, uid, [int(version_id)], context=context)
         current_id = request.context.get('version_id')
         if int(version_id)== current_id:
             request.session['version_id'] = 0
@@ -54,24 +54,25 @@ class TableExporter(http.Controller):
     
     @http.route(['/website_version/all_versions'], type = 'json', auth = "public", website = True)
     def get_all_versions(self, view_id):
+        #To get all versions in the menu
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         view = request.registry['ir.ui.view']
         v = view.browse(cr,uid,[int(view_id)],context=context)
-        snap = request.registry['website_version.version']
+        ver = request.registry['website_version.version']
         website_id = request.website.id
-        ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
-        result = snap.read(cr, uid, ids,['id','name'],context=context)
-        snap_id = request.context.get('version_id')
+        ids = ver.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
+        result = ver.read(cr, uid, ids,['id','name'],context=context)
+        version_id = request.context.get('version_id')
         check = False
         for x in result:
-            if x['id'] == snap_id:
+            if x['id'] == version_id:
                 x['bold'] = 1
                 check = True
             else:
                 x['bold'] = 0 
         #To always show in the menu the current version
-        if not check and snap_id:
-            result.append({'id':snap_id, 'name':snap.browse(cr, uid, [snap_id],context=context)[0].name, 'bold':1})
+        if not check and version_id:
+            result.append({'id':version_id, 'name':ver.browse(cr, uid, [version_id],context=context)[0].name, 'bold':1})
         return result
 
     @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
@@ -83,6 +84,7 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
     def publish_version(self, version_id, save_master, copy_master_name):
+        #Info: there were some cache problems with browse, this is why the code is so long
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         obj = request.registry['website_version.version']
         version = obj.browse(cr, uid, [int(version_id)],context)[0]
@@ -91,20 +93,26 @@ class TableExporter(http.Controller):
         for view in version.view_ids:
             master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             if master_id:
+                #Delete all the website views having a key which is in the version published
                 del_l += master_id
                 copy_l+= master_id
             else:
+                #Views that have no website_id, must be copied because they can be shared with another website
                 master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', False)],context=context)
                 copy_l+= master_id
         if copy_l:
             if save_master:
+                #To check if the name of the version to copy master already exists
                 check_id = obj.search(cr, uid, [('name','=', copy_master_name),('website_id', '=', version.website_id.id)],context=context)
+                #If it already exists, we delete the old to make the new
                 if check_id:
                     obj.unlink(cr, uid, check_id, context=context)
                 copy_version_id = obj.create(cr, uid, {'name' : copy_master_name, 'website_id' : version.website_id.id}, context=context)
                 for view in request.registry['ir.ui.view'].browse(cr, uid, copy_l, context=context):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
-            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)      
+            #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
+            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)
+        #All the views in the version published are copied without version_id   
         for view in obj.browse(cr, uid, [int(version_id)],context).view_ids:
             view.copy({'version_id': None}, context=context)
         request.session['version_id'] = 0
@@ -123,19 +131,21 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
     def get_analytics(self, view_id):
+        #To get the ExpId and the VarId of the view if it is in a running experiment
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         result = {'ExpId':False, 'VarId': 0}
         obj_v = request.registry['ir.ui.view']
         view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
-        #search all the running experiemnts with the key of view
+        #search all the running experiments with the key of view
         exp_ids = request.registry['website_version.experiment'].search(cr, uid, [('experiment_version_ids.version_id.view_ids.key', '=', view.key),('state','=','running'),('experiment_version_ids.version_id.website_id', '=',request.context['website_id'])],context=context)
         if exp_ids:
+            #No overlap between running experiments then we can take the first one
             x = request.registry['website_version.experiment'].browse(cr, uid, [exp_ids[0]],context)[0]
             result['ExpId'] = x.google_id
             if view.version_id:
-                exp_snap_ids = request.registry['website_version.experiment_version'].search(cr, uid, [('experiment_id','=',exp_ids[0]),('version_id','=',view.version_id.id)],context=context)
-                if exp_snap_ids:
-                    y = request.registry['website_version.experiment_version'].browse(cr, uid, [exp_snap_ids[0]],context)[0]
+                exp_ver_ids = request.registry['website_version.experiment_version'].search(cr, uid, [('experiment_id','=',exp_ids[0]),('version_id','=',view.version_id.id)],context=context)
+                if exp_ver_ids:
+                    y = request.registry['website_version.experiment_version'].browse(cr, uid, [exp_ver_ids[0]],context)[0]
                     result['VarId'] = y.google_index  
         return result
 
@@ -162,6 +172,7 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/set_google_access'], type = 'json', auth = "public", website = True)
     def set_google_access(self, ga_key, view_id, client_id, client_secret):
+        #To set ga_key, view_id, client_id, client_secret
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         website_id = context.get('website_id')
         request.registry['website'].write(cr, uid, [website_id], {'google_analytics_key':ga_key, 'google_analytics_view_id':view_id}, context=context)
@@ -172,22 +183,24 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/all_versions_all_goals'], type = 'json', auth = "public", website = True)
     def get_all_versions_all_goals(self, view_id):
+        #To get all versions and all goals to create an experiment
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         view = request.registry['ir.ui.view']
-        snap = request.registry['website_version.version']
+        version = request.registry['website_version.version']
         goal = request.registry['website_version.goals']
         icp = request.registry['ir.config_parameter']
         v = view.browse(cr,uid,[int(view_id)],context=context)
         website_id = request.website.id
-        snap_ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
-        r1 = snap.read(cr, uid, snap_ids,['id','name'],context=context)
+        version_ids = version.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
+        r1 = version.read(cr, uid, version_ids,['id','name'],context=context)
         goal_ids = goal.search(cr, uid, [],context=context)
         r2 = goal.read(cr, uid, goal_ids,['id','name'],context=context)
+        #Check if all the parameters are set to communicate with Google analytics
         if request.website.google_analytics_key and request.website.google_analytics_view_id and icp.get_param(cr, 1, 'google_%s_token' % 'management'):
             r3 = 1
         else:
             r3 = 0
-        return {'tab_snap':r1, 'tab_goal':r2, 'check_conf': r3}
+        return {'tab_version':r1, 'tab_goal':r2, 'check_conf': r3}
 
     @http.route(['/website_version/create_experiment'], type = 'json', auth = "public", website = True)
     def create_experiment(self, name, version_ids, objectives):
@@ -200,17 +213,18 @@ class TableExporter(http.Controller):
         exp_obj.create(cr, uid, vals, context=None)
 
     def check_view(self, version_ids):
+        #Check if version_ids don't overlap with running experiments
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         version_keys = set()
-        for s in request.registry['website_version.version'].browse(cr, uid, version_ids,context):
-            for v in s.view_ids:
+        for version in request.registry['website_version.version'].browse(cr, uid, version_ids,context):
+            for v in version.view_ids:
                 version_keys.add(v.key)
         exp_mod = request.registry['website_version.experiment']
         exp_ids = exp_mod.search(cr,uid,[('state','=','running'),('website_id','=',context.get('website_id'))],context=context)
         exps = exp_mod.browse(cr,uid,exp_ids,context=context)
         for exp in exps:
-            for exp_snap in exp.experiment_version_ids:
-                for view in exp_snap.version_id.view_ids:
+            for exp_ver in exp.experiment_version_ids:
+                for view in exp_ver.version_id.view_ids:
                     if view.key in version_keys:
                         return (False,exp.name)           
         return (True,"")

@@ -181,7 +181,7 @@
             var self = this;
             var view_id = $('html').attr('data-view-xmlid');
             openerp.jsonRpc( '/website_version/all_versions_all_goals', 'call', { 'view_id': view_id }).then(function (result) {
-                self.wizard = $(openerp.qweb.render("website_version.create_experiment",{versions:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
+                self.wizard = $(openerp.qweb.render("website_version.create_experiment",{versions:result.tab_version, goals:result.tab_goal, config:result.check_conf}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
             
                 self.wizard.on('click','.launch', function(){
