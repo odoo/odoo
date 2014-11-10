@@ -12,7 +12,7 @@
                 <div class="row oe_mt oe_mb">
                     <div class="col-xs-4 col-md-5">
                         <t t-if="widget.dates.length">
-                            <h1> <t t-esc="widget.dates[0].toString('MMM yyyy') == widget.dates[widget.dates.length-1].toString('MMM yyyy') and widget.dates[0].toString('dd') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy') or widget.dates[0].toString('dd MMMM') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy')" /></h1>
+                            <h1> <t t-esc="moment(widget.dates[0]).format('MMM YYYY') == moment(widget.dates[widget.dates.length-1]).format('MMM YYYY') and moment(widget.dates[0]).format('DD') + ' - ' + moment(widget.dates[widget.dates.length-1]).format('DD MMMM YYYY') or moment(widget.dates[0]).format('DD MMMM') + ' - ' + moment(widget.dates[widget.dates.length-1]).format('DD MMMM YYYY')" /></h1>
                         </t>
                     </div>
                     <div class="col-xs-4 col-md-4">
@@ -38,8 +38,8 @@
                                     <t t-if="(day.week == (widget.get('week') or widget.week))">
                                         <td t-attf-class="btn-default oe_timesheet_weekly_day" t-att-data-day-counter="day.day_index">
                                             <span class="text-primary">
-                                                <t t-esc="day.date.toString('ddd')"/><br />
-                                                <t t-esc="day.date.toString('d MMM')"/>
+                                                <t t-esc="moment(day.date).format('ddd')"/><br />
+                                                <t t-esc="moment(day.date).format('DD MMM')"/>
                                             </span>
                                         </td>
                                     </t>
@@ -127,7 +127,7 @@
                     <div class="row oe_mt oe_mb">
                         <div class="col-xs-5 col-md-5">
                             <h1>
-                                <t t-esc="widget.days[widget.get('count')].day.toString('dddd')"/> <t t-esc="widget.days[widget.get('count')].day.toString('dd MMMM')"/>
+                                <t t-esc="moment(widget.days[widget.get('count')].day).format('dddd')"/> <t t-esc="moment(widget.days[widget.get('count')].day).format('DD MMMM')"/>
                             </h1>
                         </div>
                         <div class="col-xs-4 col-md-4">
@@ -148,7 +148,7 @@
                                 <t t-foreach="widget.days" t-as="date">
                                     <t t-if="(date.week == (widget.get('week') or widget.week))">
                                         <h5 t-att-data-day-counter="date.day_index" class="btn btn-default oe_nav_button oe_header">
-                                            <span t-esc="date.day.toString('ddd')" /><br />
+                                            <span t-esc="moment(date.day).format('ddd')" /><br />
                                             <span class="oe_display_day_total" t-att-data-day-total="date.day_index" t-att-data-day-counter="date.day_index" />
                                         </h5>
                                     </t>

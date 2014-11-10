@@ -178,7 +178,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                         account_id = account_id === "false" ? false :  Number(account_id);
                         var group_by_date = _.groupBy(lines, "date");
                         var days = _.map(dates, function(date, index) {
-                            var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], day_index: index, week: date.getWeek()};
+                            var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], day_index: index, week: moment(date).week()};
                             // add line where we will insert/remove hours
                             var to_add = _.find(day.lines, function(line) { return line.name === self.description_line;});
                             if (to_add) {
@@ -213,9 +213,9 @@ openerp.hr_timesheet_sheet = function(instance) {
                 // we put all the gathered data in self, then we render
                 self.dates = dates;
                 if(self.dates.length) {
-                    self.set('week', _.first(self.dates).getWeek());
+                    self.set('week', moment(_.first(self.dates)).week());
                     _.extend(self.options, {'week': self.get('week')});
-                    self.last_week = _.last(self.dates).getWeek();
+                    self.last_week = moment(_.last(self.dates)).week();
                 }
                 self.accounts = accounts;
                 self.account_names = account_names;
@@ -464,7 +464,8 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var end = this.parent.get("date_to");
         while (start <= end) {
             dates.push(start);
-            start = start.clone().addDays(1);
+            var m_start = moment(start).add(1,'days');
+            start = m_start.toDate();
         }
         //groupby date
         new_days = _(self.parent.get("sheets")).chain()
@@ -485,7 +486,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         .union().value();
 
         days = _.map(dates, function(date, index) {
-            var week = date.getWeek();
+            var week = moment(date).week();
             var account_group = _.groupBy(new_days[instance.web.date_to_str(date)], "account_id");
             var day = {day: date, account_defaults: self.parent.account_defaults, account_group: account_group, week: week, day_index: index, };
             return day;
@@ -829,7 +830,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         this.default_get = parent.default_get;
         this.account_defaults = parent.account_defaults;
         this.days = _.map(parent.dates, function(date, index) {
-            var week = date.getWeek();
+            var week = moment(date).week();
             var day = {date: date, week: week, day_index: index, };
             return day;
         });
@@ -887,7 +888,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     do_switch_mode: function(e) {
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
-            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week: this.dates[index].getWeek()});
+            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week: moment(this.dates[index]).week()});
         else
             this.parent.do_switch_mode(e);
     },
