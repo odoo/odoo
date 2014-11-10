@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 
 from openerp import workflow
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import tools
@@ -966,18 +966,33 @@ class account_move_line(osv.osv):
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
 
-        additional_domain += [('state', '=', 'valid')]
+        additional_domain = expression.AND([additional_domain, [('state', '=', 'valid')]])
         if excluded_ids:
-            additional_domain += [('id', 'not in', excluded_ids)]
+            additional_domain = expression.AND([additional_domain, [('id', 'not in', excluded_ids)]])
         if str:
-            additional_domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+            str_domain = [
+                '|', ('move_id.name', 'ilike', str),
+                '|', ('move_id.ref', 'ilike', str),
+                '|', ('date_maturity', 'like', str),
+                '&', ('name', '!=', '/'), ('name', 'ilike', str)
+            ]
+            # Warning : this is undue coupling. But building this domain is really tricky.
+            # What follows means : "If building a domain for the bank statement reconciliation, id there's no partner
+            # and a search string, we want to find the string in any of those fields including the partner name
+            if 'bank_statement_line' in context and not context['bank_statement_line'].partner_id.id:
+                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
+
+            additional_domain = expression.AND([additional_domain, str_domain])
             # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
-            try:
-                amount = float(str)
-                # additional_domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
-            except:
-                pass
+            # try:
+            #     amount = float(str)
+            #     additional_domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+            # except:
+            #     pass
+
         
         return additional_domain
 
@@ -1079,27 +1094,23 @@ class account_move_line(osv.osv):
                 amount_currency = line.amount_currency
 
             # Get right debit / credit:
+            target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
-            if line.currency_id and line.amount_currency:
-                amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
-            if target_currency and target_currency != company_currency:
+            if line_currency != company_currency:
                 debit = debit > 0 and amount_currency or 0.0
                 credit = credit > 0 and amount_currency or 0.0
-                if line_currency == target_currency:
-                    amount_currency_str = rml_parser.formatLang(amount, currency_obj=company_currency)
-                else:
-                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
-                    ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
-                    debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
-                    credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
             else:
                 debit = debit > 0 and amount or 0.0
                 credit = credit > 0 and amount or 0.0
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
+            if line_currency != target_currency:
+                amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
+                ctx = context.copy()
+                if target_date:
+                    ctx.update({'date': target_date})
+                debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, debit, context=ctx)
+                credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, credit, context=ctx)
+            amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
 
             ret_line['credit'] = credit
             ret_line['debit'] = debit

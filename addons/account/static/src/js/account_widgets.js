@@ -58,6 +58,7 @@ openerp.account = function (instance) {
             this.formatCurrencies; // Method that formats the currency ; loaded from the server
             this.model_res_users = new instance.web.Model("res.users");
             this.model_tax = new instance.web.Model("account.tax");
+            this.model_presets = new instance.web.Model("account.operation.template");
             this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
@@ -173,40 +174,7 @@ openerp.account = function (instance) {
                 );
 
                 // Get operation templates
-                deferred_promises.push(new instance.web.Model("account.operation.template")
-                    .query()
-                    .order_by('sequence, id')
-                    .all().then(function (data) {
-                        _(data).each(function(datum){
-                            var preset = {
-                                id: datum.id,
-                                name: datum.name,
-                                sequence: datum.sequence,
-                                lines: [{
-                                    account_id: datum.account_id,
-                                    journal_id: datum.journal_id,
-                                    label: datum.label,
-                                    amount_type: datum.amount_type,
-                                    amount: datum.amount,
-                                    tax_id: datum.tax_id,
-                                    analytic_account_id: datum.analytic_account_id
-                                }]
-                            };
-                            if (datum.has_second_line) {
-                                preset.lines.push({
-                                    account_id: datum.second_account_id,
-                                    journal_id: datum.second_journal_id,
-                                    label: datum.second_label,
-                                    amount_type: datum.second_amount_type,
-                                    amount: datum.second_amount,
-                                    tax_id: datum.second_tax_id,
-                                    analytic_account_id: datum.second_analytic_account_id
-                                });
-                            }
-                            self.presets[datum.id] = preset;
-                        });
-                    })
-                );
+                deferred_promises.push(self.fetchPresets());
 
                 // Get the function to format currencies
                 deferred_promises.push(new instance.web.Model("res.currency")
@@ -225,9 +193,62 @@ openerp.account = function (instance) {
             });
         },
 
+        fetchPresets: function() {
+            var self = this;
+            var deferred_last_update = self.model_presets.query(['write_date']).order_by('-write_date').first().then(function (data) {
+                self.presets_last_write_date = data.write_date;
+            });
+            var deferred_presets = self.model_presets.query().order_by('-sequence', '-id').all().then(function (data) {
+                self.presets = {};
+                _(data).each(function(datum){
+                    var preset = {
+                        id: datum.id,
+                        name: datum.name,
+                        sequence: datum.sequence,
+                        lines: [{
+                            account_id: datum.account_id,
+                            journal_id: datum.journal_id,
+                            label: datum.label,
+                            amount_type: datum.amount_type,
+                            amount: datum.amount,
+                            tax_id: datum.tax_id,
+                            analytic_account_id: datum.analytic_account_id
+                        }]
+                    };
+                    if (datum.has_second_line) {
+                        preset.lines.push({
+                            account_id: datum.second_account_id,
+                            journal_id: datum.second_journal_id,
+                            label: datum.second_label,
+                            amount_type: datum.second_amount_type,
+                            amount: datum.second_amount,
+                            tax_id: datum.second_tax_id,
+                            analytic_account_id: datum.second_analytic_account_id
+                        });
+                    }
+                    self.presets[datum.id] = preset;
+                });
+            });
+            return $.when(deferred_last_update, deferred_presets);
+        },
+
+        // NB : this method is not called when the widget is instanciated
         do_show: function() {
-            this._super();
-            // TODO : find out if (parts of) the widget needs to be reloaded
+            var self = this;
+            var super_call = _.bind(this._super, this);
+            // Reload presets if they were modified
+            self.model_presets.query(['write_date']).order_by('-write_date').first().then(function (data) {
+                if (data.write_date != self.presets_last_write_date) {
+                    self.fetchPresets().then(function(){
+                        var presetsHTML = self.renderPresetsButtons(self.presets);
+                        _.each(self.getChildren(), function(child) {
+                            child.$(".presets_container").html(presetsHTML);
+                        });
+                    });
+                }
+                // Finally reappear
+                super_call();
+            });
         },
 
         doActionClickHandler: function(e) {
@@ -292,6 +313,38 @@ openerp.account = function (instance) {
                 $notification.appendTo(this.$(".notification_area")).slideDown(speed);
             }
         },
+
+        // Create the HTML code for the list of preset buttons, with a dropdown if needed
+        renderPresetsButtons: function(presets) {
+            var presets_array = [];
+            for (var id in presets)
+                if (presets.hasOwnProperty(id))
+                    presets_array.push(presets[id]);
+            presets_array = _.sortBy(presets_array, function(o){ return o.sequence });
+            var temp = $("<div class='quick_add'><div class='btn-group btn-group-sm sandbox_lillibullero'></div></div>").appendTo(this.$el);
+            var sandbox_dom = this.$(".sandbox_lillibullero");
+            var dropdown_width = $(QWeb.render("presets_dropdown", {presets: []})).appendTo(sandbox_dom).outerWidth();
+            var max_width = 540; // Warning : hardcoded value (would be pretty tricky to compute from the DOM)
+            var total_width = 0;
+            var html = "";
+            while (presets_array.length > 0) {
+                var preset = presets_array[0];
+                var preset_html = QWeb.render("preset_button", {id: preset.id, name: preset.name});
+                var actual_max_width = (presets_array.length === 1 ? max_width : max_width - dropdown_width);
+                total_width += $(preset_html).appendTo(sandbox_dom).outerWidth();
+                if (total_width < actual_max_width) {
+                    html += preset_html;
+                    presets_array.shift();
+                } else {
+                    break;
+                }
+            }
+            if (presets_array.length > 0) {
+                html += QWeb.render("presets_dropdown", {presets: presets_array});
+            }
+            temp.remove();
+            return html;
+        },
     
         keyboardShortcutsHandler: function(e) {
             var self = this;
@@ -348,6 +401,7 @@ openerp.account = function (instance) {
 
             this.decorateMoveLine = this.getParent().decorateMoveLine;
             this.formatCurrencies = this.getParent().formatCurrencies;
+            this.renderPresetsButtons = this.getParent().renderPresetsButtons;
 
             if (context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
                 console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
@@ -540,38 +594,6 @@ openerp.account = function (instance) {
                 }
             }
             self.field_manager.do_show();
-        },
-
-        // Create the HTML code for the list of preset buttons, with a dropdown if needed
-        renderPresetsButtons: function(presets) {
-            var presets_array = [];
-            for (var id in presets)
-                if (presets.hasOwnProperty(id))
-                    presets_array.push(presets[id]);
-            presets_array = _.sortBy(presets_array, function(o){ return o.sequence });
-            var temp = $("<div class='quick_add'><div class='btn-group btn-group-sm sandbox_lillibullero'></div></div>").appendTo(this.$el);
-            var sandbox_dom = this.$(".sandbox_lillibullero");
-            var dropdown_width = $(QWeb.render("presets_dropdown", {presets: []})).appendTo(sandbox_dom).outerWidth();
-            var max_width = 540; // Warning : hardcoded value (would be pretty tricky to compute from the DOM)
-            var total_width = 0;
-            var html = "";
-            while (presets_array.length > 0) {
-                var preset = presets_array[0];
-                var preset_html = QWeb.render("preset_button", {id: preset.id, name: preset.name});
-                var actual_max_width = (presets_array.length === 1 ? max_width : max_width - dropdown_width);
-                total_width += $(preset_html).appendTo(sandbox_dom).outerWidth();
-                if (total_width < actual_max_width) {
-                    html += preset_html;
-                    presets_array.shift();
-                } else {
-                    break;
-                }
-            }
-            if (presets_array.length > 0) {
-                html += QWeb.render("presets_dropdown", {presets: presets_array});
-            }
-            temp.remove();
-            return html;
         },
 
     

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
@@ -630,7 +630,7 @@ class account_bank_statement_line(osv.osv):
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
             domain = [('ref', '=', st_line.name)]
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids:
                 return [match_ids[0]]
 
@@ -648,7 +648,7 @@ class account_bank_statement_line(osv.osv):
             amount_field = 'amount_currency'
 
         # Look for a single move line with the same partner, the same amount
-        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_ids:
             return [match_ids[0]]
 
@@ -668,9 +668,9 @@ class account_bank_statement_line(osv.osv):
         ret = []
         total = 0
         for line in mv_lines:
-            if total + line[amount_field] <= abs(st_line.amount):
+            if total + abs(line['debit'] - line['credit']) <= abs(st_line.amount):
                 ret.append(line)
-                total += line[amount_field]
+                total += abs(line['debit'] - line['credit'])
             if total >= abs(st_line.amount):
                 break
         return ret
@@ -685,40 +685,35 @@ class account_bank_statement_line(osv.osv):
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-
-        def AND(a, b):
-            if not a or not b:
-                return a and a or b
-            else:
-                return ['&'] + a + b
-        def OR(a, b):
-            if not a or not b:
-                return a and a or b
-            else:
-                return ['|'] + a + b
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
 
         # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
         domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])]
 
+        # Domain for classic reconciliation
         domain_reconciliation = [('reconcile_id', '=', False)]
-        domain_all = []
         if st_line.partner_id.id or overlook_partner:
-            domain_reconciliation = AND(domain_reconciliation, [('account_id.type', 'in', ['payable', 'receivable'])])
-            if not overlook_partner:
-                domain_all = AND(domain_all, [('partner_id', '=', st_line.partner_id.id)])
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.type', 'in', ['payable', 'receivable'])]])
         else:
-            domain_reconciliation = AND(domain_reconciliation, [('account_id.reconcile', '=', True)])
-            if str:
-                domain_all = AND(domain_all, [('partner_id.name', 'ilike', str)])
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.reconcile', '=', True)]])
 
-        return AND(additional_domain, AND(domain_all, OR(domain_rapprochement, domain_reconciliation)))
+        # Let's add what applies to both
+        domain = expression.OR([domain_rapprochement, domain_reconciliation])
+        if st_line.partner_id.id and not overlook_partner:
+            domain = expression.AND([domain, [('partner_id', '=', st_line.partner_id.id)]])
+
+        return expression.AND([additional_domain, domain])
 
     def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False, context=None):
         """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
+        if context is None:
+            context = {}
         aml_pool = self.pool.get('account.move.line')
         domain = self._domain_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, overlook_partner=overlook_partner, context=context)
 
         # Fetch lines or lines number
+        context['bank_statement_line'] = st_line
         res = aml_pool.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=domain, context=context)
         if count:
             return res
