@@ -119,7 +119,8 @@ class project_work(osv.osv):
         vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
-        vals_line['date'] = vals['date'][:10]
+        if vals.get('date'):
+            vals_line['date' ] = vals['date'][:10]
 
         # Calculate quantity based on employee's product's uom
         vals_line['unit_amount'] = vals['hours']
@@ -263,7 +264,7 @@ class task(osv.osv):
                                 missing_analytic_entries[task_work.id] = {
                                     'name' : task_work.name,
                                     'user_id' : task_work.user_id.id,
-                                    'date' : task_work.date[:10],
+                                    'date' : task_work.date and task_work.date[:10] or False,
                                     'account_id': acc_id,
                                     'hours' : task_work.hours,
                                     'task_id' : task_obj.id
