@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,6 +25,7 @@ Some functions related to the os and os.path module
 
 from contextlib import contextmanager
 import os
+import sys
 from os.path import join as opj
 import shutil
 import tempfile
@@ -53,6 +54,11 @@ def walksymlinks(top, topdown=True, onerror=None):
     same as os.walk but follow symlinks
     attention: all symlinks are walked before all normals directories
     """
+    # convert back to str as http://stackoverflow.com/a/16926375/2163315
+    # need to remove for Python3!
+    if isinstance(top, unicode):
+        top = top.encode(sys.getfilesystemencoding())
+
     for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
         if topdown:
             yield dirpath, dirnames, filenames

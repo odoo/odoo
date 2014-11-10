@@ -6,7 +6,7 @@ from os.path import join as opj
 
 import openerp
 from openerp.osv import osv
-from openerp.tools import convert_file
+from openerp.tools import convert_file, osutil
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ class view(osv.osv):
         path_static = opj(path, 'static')
         ir_attach = self.pool['ir.attachment']
         if os.path.isdir(path_static):
-            for root, dirs, files in os.walk(path_static):
+            for root, dirs, files in osutil.walksymlinks(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with open(full_path, 'r') as fp:
