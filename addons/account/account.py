@@ -1022,12 +1022,6 @@ class account_move(models.Model):
         for move in self:
             if move['state'] != 'draft':
                 raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
-              # About to remove 'invoice' field from 'account.move.line' object
-#             for line in move.line_id:
-#                 if line.invoice:
-#                     raise osv.except_osv(_('User Error!'),
-#                             _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
-#                                     (line.invoice.number,move.name))
             move_lines = move.line_id
             ctx = dict(context)
             ctx['journal_id'] = move.journal_id.id
@@ -1347,7 +1341,7 @@ class account_tax_code(models.Model):
 
     @api.multi
     def _sum_year(self):
-        if not self.ids:
+        if not self:
             return True
         move_state = ('posted', )
         FiscalyearObj = self.env['account.fiscalyear']
@@ -1418,9 +1412,7 @@ class account_tax_code(models.Model):
     @api.multi
     @api.depends('name', 'code')
     def name_get(self):
-        reads = self.read(['name','code'], load='_classic_write')
-        return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
-                for x in reads]
+        return [(x.id, (x.code and (x.code + ' - ') or '') + x.name) for x in self]
 
     _constraints = [
         (models.Model._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])

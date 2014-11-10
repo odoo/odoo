@@ -226,20 +226,6 @@ class account_move_line(models.Model):
             else:
                 line.reconcile_ref = False
 
-#     @api.multi
-#     def _get_move_from_reconcile(self, cr, uid, ids, context=None):
-#         move = {}
-#         for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids, context=context):
-#             for line in r.line_partial_ids:
-#                 move[line.move_id.id] = True
-#             for line in r.line_id:
-#                 move[line.move_id.id] = True
-#         move_line_ids = []
-#         if move:
-#             move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('journal_id','in',move.keys())], context=context)
-#         return move_line_ids
-
-
     name = fields.Char(string='Name', required=True)
     quantity = fields.Float(string='Quantity', digits=(16,2), 
         help="The optional quantity expressed by this line, eg: number of product sold. "\
@@ -262,7 +248,6 @@ class account_move_line(models.Model):
     reconcile_partial_id = fields.Many2one('account.move.reconcile', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False)
     reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
-                #TODO: 'account.move.reconcile = (_get_move_from_reconcile, None, 50)})
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency',
@@ -302,7 +287,6 @@ class account_move_line(models.Model):
         string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
     invoice = fields.Many2one('account.invoice', string='Invoice')
-
 
     @api.model
     def _get_date(self):
@@ -483,7 +467,6 @@ class account_move_line(models.Model):
                 if self.account_id:
                     self.onchange_account_id()
 
-    # Need some guidance to get rid of this
     @api.onchange('account_id')
     def onchange_account_id(self):
         if self.account_id:
