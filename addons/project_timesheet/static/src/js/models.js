@@ -9,6 +9,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.project_id = options.project_id || null;
             this.name = options.name || null; //Actually description field
             this.unit_amount = options.unit_amount || null;
+            this.reference_id = options.reference_id || null;
             this.command = options.command;
         },
         export_as_JSON: function() {
@@ -20,7 +21,9 @@ function odoo_project_timesheet_models(project_timesheet) {
                 command: this.command,
                 task_id: this.task_id,
                 project_id: this.project_id,
+                reference_id: this.reference_id,
                 user_id: project_timesheet.session.uid,
+                
             };
         },
     });
@@ -163,12 +166,14 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         //TODO: Change name, save_activity or set_activity, this method is used in different context, like it is also used for set delete activity(rewrite)
         add_activity: function(data) {
+            console.log("data inside add_activity ::: ", data);
             var activity_collection = this.get("activities");
             if(activity_collection.get(data.id)) {
                 var activity_model = activity_collection.get(data.id);
-                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], unit_amount: data['unit_amount'], command: data['command']});
+                console.log("activity_model is ::: ", activity_model);
+                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], unit_amount: data['unit_amount'], command: data['command']});
             } else {
-                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], command: data['command'] });
+                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], reference_id: data['reference_id'], command: data['command'] });
                 this.get('activities').add(activity);
             }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
@@ -251,7 +256,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             */
            return new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("load_data", {
                domain: [["date", ">=", start_date], ["date", "<=", end_date]],
-               fields: ["id", "task_id", "name", "unit_amount", "date", "account_id"]
+               fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id']
            }).then(function(work_activities) {
                self.project_timesheet_db.add_activities(work_activities);
            }).promise();
@@ -286,7 +291,11 @@ function odoo_project_timesheet_models(project_timesheet) {
                 var json_data = activity_models[i].export_as_JSON();
                 console.log("IS command undefined ::: ", _.isUndefined(json_data.command));
                 if (!_.isUndefined(json_data.command)) {
-                    records.push(activity_models[i].export_as_JSON());
+                    //If reference_id is not there then create unique Reference ID
+                    if (json_data.command == 0 && !json_data.reference_id) {
+                        json_data['reference_id'] = json_data.user_id.toString() + json_data.project_id[0].toString() + json_data.date;
+                    }
+                    records.push(json_data);
                 }
             }
             var momObj = new moment();

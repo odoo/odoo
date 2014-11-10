@@ -639,13 +639,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
-            
         },
         get_form_data: function() {
             var self = this;
             var project_activity_data = {};
             //$form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
-            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100)) || 0;
+            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val() || 0) * 100) / 60))/100)) || 0;
             project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
             project_activity_data['task_id'] = self.task_m2o.get("value") ? ([self.task_m2o.get("value"), self.task_m2o.get("display_string")]) : false;
             project_activity_data['name'] = this.$("#name").val();
@@ -664,7 +663,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
             console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
-            console.log("project_activity_data before add_project ::: ", project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
@@ -673,7 +671,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 return;
             }
             var project_activity_data = this.get_form_data();
-            console.log("project_activity_data is inside edit ::: ", project_activity_data);
+            console.log("project_activity_data after edit ::: ", project_activity_data);
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             if (!(this.project_timesheet_db.virtual_id_regex.test(project_activity_data['id']))) {
                 project_activity_data['command'] = 1;
