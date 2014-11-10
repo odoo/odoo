@@ -3,6 +3,7 @@
 
 import os
 import re
+import sys
 from glob import glob
 from setuptools import find_packages, setup
 from os.path import join, dirname
@@ -16,7 +17,7 @@ def py2exe_datafiles():
     data_files = {}
     data_files['Microsoft.VC90.CRT'] = glob('C:\Microsoft.VC90.CRT\*.*')
 
-    for root, dirnames, filenames in os.walk('openerp'):
+    for root, dirnames, filenames in os.walk(u'openerp'):
         for filename in filenames:
             if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
                 data_files.setdefault(root, []).append(join(root, filename))
@@ -29,19 +30,19 @@ def py2exe_datafiles():
     data_files['babel/messages'] = map(lambda f: join(dirname(babel.__file__), 'messages', f), others)
 
     import pytz
-    tzdir = dirname(pytz.__file__)
-    for root, _, filenames in os.walk(join(tzdir, 'zoneinfo')):
+    tzdir = dirname(unicode(pytz.__file__, sys.getfilesystemencoding()))
+    for root, _, filenames in os.walk(join(tzdir, u'zoneinfo')):
         base = join('pytz', root[len(tzdir) + 1:])
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
-    dudir = dirname(docutils.__file__)
+    dudir = dirname(unicode(docutils.__file__, sys.getfilesystemencoding()))
     for root, _, filenames in os.walk(dudir):
         base = join('docutils', root[len(dudir) + 1:])
         data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
 
     import passlib
-    pl = dirname(passlib.__file__)
+    pl = dirname(unicode(passlib.__file__, sys.getfilesystemencoding()))
     for root, _, filenames in os.walk(pl):
         base = join('passlib', root[len(pl) + 1:])
         data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]

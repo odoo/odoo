@@ -51,7 +51,7 @@ class view(osv.osv):
         path_static = opj(path, 'static')
         ir_attach = self.pool['ir.attachment']
         if os.path.isdir(path_static):
-            for root, dirs, files in os.walk(path_static):
+            for root, dirs, files in os.walk(unicode(path_static, sys.getfilesystemencoding())):
                 for static_file in files:
                     full_path = opj(root, static_file)
                     with open(full_path, 'r') as fp:
