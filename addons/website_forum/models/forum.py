@@ -393,7 +393,7 @@ class Post(osv.Model):
         for post in self.browse(cr, uid, ids, context=context):
             if post.closed_reason_id.id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
-                             post.create_uid.login)
+                             post.create_uid)
                 # TODO: in master, consider making this a tunable karma parameter
                 self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
                                                  post.forum_id.karma_gen_question_downvote * -5,
@@ -409,7 +409,7 @@ class Post(osv.Model):
         if reason_id in (reason_offensive, reason_spam):
             for post in self.browse(cr, uid, ids, context=context):
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
-                             post.create_uid.login)
+                             post.create_uid)
                 # TODO: in master, consider making this a tunable karma parameter
                 self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
                                                  post.forum_id.karma_gen_question_downvote * 5,
