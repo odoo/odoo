@@ -24,14 +24,13 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import tools
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
-@api.one
+@api.model
 def _code_get(self):
     acc_type_obj = self.env['account.account.type']
-    ids = acc_type_obj.search([])
-    res = acc_type_obj.read(ids, ['code', 'name'])
-    return [(r['code'], r['name']) for r in res]
+    account_type = acc_type_obj.search([])
+    return [(r.code, r.name) for r in account_type]
 
 
 class report_account_receivable(models.Model):
@@ -98,9 +97,9 @@ class report_aged_receivable(models.Model):
         return res
 
     @api.multi
-    def _calc_bal(self, name):
+    def _calc_bal(self):
         res = {}
-        for period in self.read(ids, ['name']):
+        for period in self.name:
             date1,date2 = period['name'].split(' to ')
             cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
