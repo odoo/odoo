@@ -316,7 +316,6 @@
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="refund_sales_journal" model="account.journal">
@@ -327,7 +326,6 @@
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
 
@@ -339,7 +337,6 @@
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="refund_expenses_journal" model="account.journal">
@@ -350,7 +347,6 @@
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
 
@@ -362,7 +358,6 @@
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="check_journal" model="account.journal">
@@ -373,7 +368,6 @@
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="cash_journal" model="account.journal">
@@ -394,7 +388,6 @@
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="miscellaneous_journal" model="account.journal">
@@ -403,7 +396,6 @@
             <field name="type">general</field>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <record id="opening_journal" model="account.journal">
@@ -414,7 +406,6 @@
             <field name="default_credit_account_id" ref="o_expense"/>
             <field eval="True" name="centralisation"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
 
@@ -425,7 +416,6 @@
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
-            <field name="restart_sequence" eval="True"/>
             <field name="refund_sequence" eval="True"/>
         </record>
         <!--
