@@ -106,7 +106,7 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve section_id from the context and write the domain
+        # retrieve team_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
@@ -230,7 +230,7 @@ class project_issue(osv.Model):
         'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
                                                multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
@@ -283,7 +283,7 @@ class project_issue(osv.Model):
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_issue_work, ['hours'], 10),
             }),
     }
@@ -371,28 +371,28 @@ class project_issue(osv.Model):
             return {'value': {'date_closed': fields.datetime.now()}}
         return {'value': {'date_closed': False}}
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
             - type: stage type must be the same or 'both'
-            - section_id: if set, stages must belong to this section or
+            - team_id: if set, stages must belong to this team or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all section_ids
-        section_ids = []
-        if section_id:
-            section_ids.append(section_id)
+        # collect all team_ids
+        team_ids = []
+        if team_id:
+            team_ids.append(team_id)
         for task in cases:
             if task.project_id:
-                section_ids.append(task.project_id.id)
-        # OR all section_ids and OR with case_default
+                team_ids.append(task.project_id.id)
+        # OR all team_ids and OR with case_default
         search_domain = []
-        if section_ids:
-            search_domain += [('|')] * (len(section_ids)-1)
-            for section_id in section_ids:
-                search_domain.append(('project_ids', '=', section_id))
+        if team_ids:
+            search_domain += [('|')] * (len(team_ids)-1)
+            for team_id in team_ids:
+                search_domain.append(('project_ids', '=', team_id))
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
@@ -498,7 +498,7 @@ class project(osv.Model):
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
-        'issue_ids': fields.one2many('project.issue', 'project_id',
+        'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                      domain=[('date_closed', '!=', False)]),
         'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
                                              string='Project Issue By Month')
@@ -565,7 +565,7 @@ class project_project(osv.Model):
         if use_tasks and not use_issues:
             values['alias_model'] = 'project.task'
         elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issues'
+            values['alias_model'] = 'project.issue'
         return {'value': values}
 
     def create(self, cr, uid, vals, context=None):

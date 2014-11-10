@@ -134,10 +134,10 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12,12),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
@@ -511,8 +511,7 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'state': fields.selection([('',''),
-            ('draft', 'In Development'),
+        'state': fields.selection([('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status'),
@@ -558,7 +557,7 @@ class product_template(osv.osv):
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
@@ -584,7 +583,15 @@ class product_template(osv.osv):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
-            res[product.id] = product[ptype] or 0.0
+            # standard_price field can only be seen by users in base.group_user
+            # Thus, in order to compute the sale price from the cost price for users not in this group
+            # We fetch the standard price as the superuser
+            if ptype != 'standard_price':
+                res[product.id] = product[ptype] or 0.0
+            else:
+                company_id = product.env.user.company_id.id
+                product = product.with_context(force_company=company_id)
+                res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -913,6 +920,7 @@ class product_product(osv.osv):
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
+        'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is product variant'),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
@@ -990,6 +998,10 @@ class product_product(osv.osv):
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -1001,8 +1013,8 @@ class product_product(osv.osv):
             variant = ", ".join([v.name for v in product.attribute_value_ids])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
-            if partner_id:
-                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if partner_ids:
+                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
@@ -1022,6 +1034,8 @@ class product_product(osv.osv):
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         if name:
@@ -1049,6 +1063,17 @@ class product_product(osv.osv):
                 res = ptrn.search(name)
                 if res:
                     ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            # still no results, partner in context: search on supplier info as last hope to find something
+            if not ids and context.get('partner_id'):
+                supplier_ids = self.pool['product.supplierinfo'].search(
+                    cr, user, [
+                        ('name', '=', context.get('partner_id')),
+                        '|',
+                        ('product_code', operator, name),
+                        ('product_name', operator, name)
+                    ], context=context)
+                if supplier_ids:
+                    ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
@@ -1100,6 +1125,34 @@ class product_product(osv.osv):
 
     def need_procurement(self, cr, uid, ids, context=None):
         return False
+
+    def _compute_uos_qty(self, cr, uid, ids, uom, qty, uos, context=None):
+        '''
+        Computes product's invoicing quantity in UoS from quantity in UoM.
+        Takes into account the
+        :param uom: Source unit
+        :param qty: Source quantity
+        :param uos: Target UoS unit.
+        '''
+        if not uom or not qty or not uos:
+            return qty
+        uom_obj = self.pool['product.uom']
+        product_id = ids[0] if isinstance(ids, (list, tuple)) else ids
+        product = self.browse(cr, uid, product_id, context=context)
+        if isinstance(uos, (int, long)):
+            uos = uom_obj.browse(cr, uid, uos, context=context)
+        if isinstance(uom, (int, long)):
+            uom = uom_obj.browse(cr, uid, uom, context=context)
+        if product.uos_id:  # Product has UoS defined
+            # We cannot convert directly between units even if the units are of the same category
+            # as we need to apply the conversion coefficient which is valid only between quantities
+            # in product's default UoM/UoS
+            qty_default_uom = uom_obj._compute_qty_obj(cr, uid, uom, qty, product.uom_id)  # qty in product's default UoM
+            qty_default_uos = qty_default_uom * product.uos_coeff
+            return uom_obj._compute_qty_obj(cr, uid, product.uos_id, qty_default_uos, uos)
+        else:
+            return uom_obj._compute_qty_obj(cr, uid, uom, qty, uos)
+
 
 
 class product_packaging(osv.osv):
@@ -1186,7 +1239,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
-        'company_id':fields.many2one('res.company','Company',select=1),
+        'company_id':fields.many2one('res.company', string='Company',select=1),
     }
     _defaults = {
         'min_qty': 0.0,

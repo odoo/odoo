@@ -105,9 +105,9 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'charge_expenses' : fields.boolean('Charge Expenses'),
-        'expense_invoiced' : fields.function(_expense_invoiced_calc, type="float"),
-        'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
-        'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
+        'expense_invoiced' : fields.function(_expense_invoiced_calc, string="Expenses invoiced", type="float"),
+        'expense_to_invoice' : fields.function(_expense_to_invoice_calc, string="Expenses to invoice", type='float'),
+        'remaining_expense' : fields.function(_remaining_expnse_calc, string="Remaining Expenses", type="float"), 
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",

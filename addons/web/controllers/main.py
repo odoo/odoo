@@ -467,7 +467,6 @@ class Home(http.Controller):
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
-
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
@@ -478,6 +477,11 @@ class Home(http.Controller):
             return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
+
+    @http.route('/web/dbredirect', type='http', auth="none")
+    def web_db_redirect(self, redirect='/', **kw):
+        ensure_db()
+        return werkzeug.utils.redirect(redirect, 303)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -554,14 +558,6 @@ class WebClient(http.Controller):
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
         addons_path = http.addons_manifest['web']['addons_path']
-        #load datejs locale
-        datejs_locale = ""
-        try:
-            with open(os.path.join(addons_path, 'web', 'static', 'lib', 'datejs', 'globalization', lang.replace('_', '-') + '.js'), 'r') as f:
-                datejs_locale = f.read()
-        except IOError:
-            pass
-
         #load momentjs locale
         momentjs_locale_file = False
         momentjs_locale = ""
@@ -576,7 +572,7 @@ class WebClient(http.Controller):
 
         #return the content of the locale
         headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
-        return request.make_response(datejs_locale + "\n"+ momentjs_locale, headers)
+        return request.make_response(momentjs_locale, headers)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -1210,7 +1206,7 @@ class Binary(http.Controller):
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
-    ], type='http', auth="none")
+    ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo.png'
         placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')

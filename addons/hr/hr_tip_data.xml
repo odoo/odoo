@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="hr_tip_1">
+            <field name="title"></field>
+            <field name="description">By clicking here, you can keep a track of yours applications concerning this job position. You'll be able to plan meetings and manage documents related to the applicants.</field>
+            <field name="action_id" ref="hr.action_hr_job"/>
+            <field name="model">hr.job</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view:visible,div.oe_right > .oe_button_box > button</field>
+            <field name="highlight_selector">div.oe_right > .oe_button_box:visible > button:nth-child(1)</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="hr_tip_2">
+            <field name="title"></field>
+            <field name="description">This is where you navigate through your process. Click here to go back to where you came from.</field>
+            <field name="model">hr.applicant</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">ol.breadcrumb:visible</field>
+            <field name="highlight_selector">ol.breadcrumb a:nth-child(3)</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="hr_tip_3">
+            <field name="title"></field>
+            <field name="description">Congratulations! Your employee has been created. In this form, you can modify his personal information or even add a picture.</field>
+            <field name="model">hr.employee</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">ol.breadcrumb:visible,.oe_form_sheet:visible</field>
+            <field name="highlight_selector">.oe_form_sheet:visible</field>
+            <field name="placement">auto top</field>
+        </record>
+    </data>
+</openerp>

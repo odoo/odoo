@@ -15,13 +15,13 @@
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="oe_kanban_button_new oe_highlight">
+            <button type="button" class="oe_kanban_button_new btn btn-primary btn-sm">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
             <span t-if="widget.is_action_enabled('group_create')" class="oe_alternative" style="display: none">
                 <span class="oe_fade">or</span>
                 <div class="oe_bounce_container">
-                    <a href="#" class="oe_bold oe_kanban_add_column">Add a new column</a>
+                    <a href="#" class="oe_kanban_add_column text-info">Add a new column</a>
                 </div>
             </span>
         </t>

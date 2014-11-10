@@ -186,6 +186,7 @@ class view(osv.osv):
             ('tree','Tree'),
             ('form','Form'),
             ('graph', 'Graph'),
+            ('pivot', 'Pivot'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
@@ -305,7 +306,7 @@ class view(osv.osv):
         return values
 
     def create(self, cr, uid, values, context=None):
-        if 'type' not in values:
+        if not values.get('type'):
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
@@ -873,11 +874,11 @@ class view(osv.osv):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
         if node.tag in ('kanban'):
-            group_by_field = node.get('default_group_by')
-            if group_by_field and Model._all_columns.get(group_by_field):
-                group_by_column = Model._all_columns[group_by_field].column
-                if group_by_column._type == 'many2one':
-                    group_by_model = Model.pool.get(group_by_column._obj)
+            group_by_name = node.get('default_group_by')
+            if group_by_name in Model._fields:
+                group_by_field = Model._fields[group_by_name]
+                if group_by_field.type == 'many2one':
+                    group_by_model = Model.pool[group_by_field.comodel_name]
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
                         if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
                             node.set(action, 'false')
@@ -965,7 +966,7 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+        if {'t-esc', 't-raw'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)

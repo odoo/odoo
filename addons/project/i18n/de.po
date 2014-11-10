@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-22 06:32+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-30 19:19+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-23 07:26+0000\n"
+"X-Launchpad-Export-Date: 2014-10-01 06:33+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 "Language: de\n"
 
@@ -30,8 +30,9 @@ msgid "# of Days"
 msgstr "# Tage"
 
 #. module: project
+#: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
-msgid "# of tasks"
+msgid "# of Tasks"
 msgstr "# Aufgaben"
 
 #. module: project
@@ -242,8 +243,9 @@ msgid "Assignation Date"
 msgstr "Zuweisungsdatum"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
-msgid "Assignation date"
+msgid "Assignation Month"
 msgstr "Zuweisungsdatum"
 
 #. module: project
@@ -257,7 +259,9 @@ msgid "Assigned To"
 msgstr "Zugewiesen an"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
 #: field:project.task,user_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assigned to"
 msgstr "Zugewiesen an"
@@ -278,6 +282,7 @@ msgstr "Durch. Plan. - Eff."
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "Blocked"
 msgstr "Blockiert"
 
@@ -365,6 +370,7 @@ msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
 #: field:project.task,company_id:0
 #: field:project.task.work,company_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -400,7 +406,6 @@ msgstr "Projekt konfigurieren"
 #. module: project
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_filter
-#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
 msgstr "Kontakt"
@@ -442,6 +447,8 @@ msgid "Created on"
 msgstr "Angelegt am"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Creation Date"
 msgstr "Erstelldatum"
@@ -712,6 +719,7 @@ msgstr "Die Reihenfolge der Liste der Aufgaben."
 #. module: project
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
 msgstr "Gruppieren nach"
@@ -841,6 +849,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,state:0
 #: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "In Bearbeitung"
 
@@ -911,9 +920,7 @@ msgid "Last Modification Date"
 msgstr "Letztes Bearbeitungsdatum"
 
 #. module: project
-#: view:project.task:project.view_task_search_form
 #: field:project.task,date_last_stage_update:0
-#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr "Aktuellste Stufenaktualisierung"
@@ -1009,6 +1016,11 @@ msgstr "Nachrichten und Kommunikations-Historie"
 #: view:project.project:project.edit_project
 msgid "Miscellaneous"
 msgstr "Verschiedenes"
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "Month"
+msgstr "Monat"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1211,6 +1223,7 @@ msgstr "Fortschritt"
 #: view:project.task:project.view_task_search_form
 #: field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,project_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,project_id:0
@@ -1340,6 +1353,7 @@ msgstr "Bereit"
 #: selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
 msgstr "Bereit für nächste Stufe"
 
@@ -1391,11 +1405,6 @@ msgid "Reviewer"
 msgstr "Prüfer"
 
 #. module: project
-#: view:project.task:project.view_task_search_form
-msgid "Reviewers"
-msgstr "Prüfer"
-
-#. module: project
 #: view:project.project:project.view_project_project_filter
 msgid "Search Project"
 msgstr "Projekt suchen"
@@ -1427,7 +1436,9 @@ msgstr "Geleistete Stunden"
 #: view:project.task:project.view_task_search_form
 #: field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,type_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,stage_id:0
 msgid "Stage"
 msgstr "Stufe"
@@ -1464,6 +1475,8 @@ msgstr "Start"
 
 #. module: project
 #: field:project.project,state:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:report.project.task.user,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -1516,7 +1529,9 @@ msgstr "Schlagwörter"
 #: model:ir.model,name:project.model_project_task
 #: view:project.config.settings:project.view_config_settings
 #: view:project.task:project.view_task_form2
+#: view:project.task:project.view_task_search_form
 #: field:project.task.history,task_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,task_id:0
 #: field:project.task.work,task_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1556,6 +1571,11 @@ msgstr "Aufgabe delegieren"
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
 msgstr "Aufgabendelegation"
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_task_pipe
+msgid "Task Pipe"
+msgstr "Aufgaben Pipeline"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -1864,11 +1884,6 @@ msgid "User you want to delegate this task to"
 msgstr "Benutzer an den die Aufgabe delegiert werden soll"
 
 #. module: project
-#: view:project.task:project.view_task_search_form
-msgid "Users"
-msgstr "Benutzer"
-
-#. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
 msgstr "Validierung Status"
@@ -1917,6 +1932,11 @@ msgid "Working time unit"
 msgstr "Arbeitseinheit"
 
 #. module: project
+#: model:ir.filters,name:project.filter_task_report_workload
+msgid "Workload"
+msgstr "Arbeitsanfall"
+
+#. module: project
 #: code:addons/project/project.py:172
 #, python-format
 msgid ""
@@ -1958,3 +1978,9 @@ msgstr "Aufgaben"
 #: field:project.project,task_ids:0
 msgid "unknown"
 msgstr "unbekannt"
+
+#~ msgid "# of tasks"
+#~ msgstr "# Aufgaben"
+
+#~ msgid "Users"
+#~ msgstr "Benutzer"

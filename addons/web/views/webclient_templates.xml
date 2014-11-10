@@ -7,7 +7,6 @@
             <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
             <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
 
             <!-- jQuery stuff -->
@@ -42,12 +41,6 @@
         </template>
 
         <template id="web.assets_backend">
-            <!-- Datejs -->
-            <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
-
             <!-- jQuery addons -->
             <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.autosize/jquery.autosize.js"></script>
@@ -106,6 +99,7 @@
             <script type="text/javascript" src="/web/static/src/js/view_list.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_pivot.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
             <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
 
@@ -156,21 +150,17 @@
                 <span class="oe_logo_edit">Edit Company data</span>
                 <img src='/web/binary/company_logo'/>
             </a>
-            <div>
-                <div>
-                    <div class="oe_secondary_menus_container">
-                        <t t-foreach="menu_data['children']" t-as="menu">
-                            <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                                <t t-foreach="menu['children']" t-as="menu">
-                                    <div class="oe_secondary_menu_section">
-                                        <t t-esc="menu['name']"/>
-                                    </div>
-                                    <t t-call="web.menu_secondary_submenu"/>
-                                </t>
+            <div class="oe_secondary_menus_container">
+                <t t-foreach="menu_data['children']" t-as="menu">
+                    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                        <t t-foreach="menu['children']" t-as="menu">
+                            <div class="oe_secondary_menu_section">
+                                <t t-esc="menu['name']"/>
                             </div>
+                            <t t-call="web.menu_secondary_submenu"/>
                         </t>
                     </div>
-                </div>
+                </t>
             </div>
             <div class="oe_footer">
                 Powered by <a href="http://www.openerp.com" target="_blank"><span>Odoo</span></a>
@@ -229,17 +219,10 @@
                         <t t-call="web.menu"/>
                     </div>
                 </nav>
-                <div class="openerp openerp_webclient_container">
-                    <table class="oe_webclient">
-                        <tr>
-                            <td class="oe_leftbar" valign="top">
-                                <div groups="base.group_user,base.group_portal">
-                                    <t t-call="web.menu_secondary"/>
-                                </div>
-                            </td>
-                            <td class="oe_application"/>
-                        </tr>
-                    </table>
+                <div class="openerp openerp_webclient_container oe_webclient">
+                    <div class="oe_leftbar" groups="base.group_user,base.group_portal">
+                        <t t-call="web.menu_secondary"/>
+                    </div><div class="oe_application"/>
                 </div>
             </t>
         </template>

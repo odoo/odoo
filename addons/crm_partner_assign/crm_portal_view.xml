@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
-            <tree string="Leads" colors="red:stage_id[1]=='Disinterested';black:stage_id[1]=='Interested'">
+            <tree string="Leads" colors="red:stage_id and stage_id[1]=='Disinterested';black:stage_id and stage_id[1]=='Interested'">
               <field name="date_deadline" invisible="1"/>
               <field name="create_date"/>
               <field name="name" string="Subject"/>
@@ -18,7 +18,7 @@
               <field name="campaign_id" invisible="1"/>
               <field name="referred" invisible="1"/>
               <field name="medium_id" invisible="1"/>
-              <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
+              <field name="team_id" invisible="context.get('invisible_team', True)" groups="base.group_multi_salesteams"/>
 
               <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
               <button string="I'm not interested" name="case_disinterested" icon="gtk-close" type="object"/>
@@ -84,7 +84,7 @@
                    <field name="campaign_id" invisible="1"/>
                    <field name="planned_revenue" sum="Expected Revenues"/>
                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                   <field name="section_id" groups="base.group_multi_salesteams" invisible="context.get('invisible_section', True)" />
+                   <field name="team_id" groups="base.group_multi_salesteams" invisible="context.get('invisible_team', True)" />
                    <field name="priority" invisible="1"/>
                </tree>
             </field>

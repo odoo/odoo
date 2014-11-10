@@ -5,4 +5,4 @@ Module Objects
 .. toctree::
     :titlesonly:
 
-    modules/mail
+    modules/api_integration

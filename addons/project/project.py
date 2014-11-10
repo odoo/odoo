@@ -205,9 +205,9 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('public', 'Public project'),
-                ('employees', 'Internal project: all employees can access'),
-                ('followers', 'Private project: followers Only')]
+        return [('public', _('Public project')),
+                ('employees', _('Internal project: all employees can access')),
+                ('followers', _('Private project: followers Only'))]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -1063,7 +1063,7 @@ class task(osv.osv):
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('start_date'):
+        if vals.get('user_id') and not vals.get('date_start'):
             vals['date_start'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
@@ -1231,7 +1231,7 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
     _columns = {
         'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
-        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

@@ -1188,7 +1188,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(self.$('.oe_application'));
+        self.action_manager.replace(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);

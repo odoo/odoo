@@ -71,7 +71,7 @@
                    }'/>
                 </td>
                 <td>
-                  <div class="input-group">
+                  <div class="input-group oe_website_spinner">
                       <span class="input-group-addon">
                           <a t-attf-href="#" class="mb8 js_add_cart_json">
                               <i class="fa fa-minus"></i>
@@ -131,6 +131,7 @@
                     <a href="#" class="js_remove"><small>Remove from cart</small></a>
                   </span>
                 </td>
+                <t t-set="option_inc" t-value="option_inc+1"/>
               </tr>
 
             </tbody>

@@ -101,9 +101,9 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
-        'balance': fields.function(_get_balance, 'Balance', multi='balance'),
-        'debit': fields.function(_get_balance, 'Debit', multi='balance'),
-        'credit': fields.function(_get_balance, 'Credit', multi="balance"),
+        'balance': fields.function(_get_balance, string='Balance', multi='balance'),
+        'debit': fields.function(_get_balance, string='Debit', multi='balance'),
+        'credit': fields.function(_get_balance, string='Credit', multi="balance"),
         'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
             ('sum','View'),

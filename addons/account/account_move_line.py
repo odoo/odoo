@@ -187,11 +187,11 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context=None):
         acc_ana_line_obj = self.pool.get('account.analytic.line')
         for obj_line in self.browse(cr, uid, ids, context=context):
+            if obj_line.analytic_lines:
+                acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                if obj_line.analytic_lines:
-                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -274,8 +274,13 @@ class account_move_line(osv.osv):
             journal_data = journal_obj.browse(cr, uid, context['journal_id'], context=context)
             account = total > 0 and journal_data.default_credit_account_id or journal_data.default_debit_account_id
             #map the account using the fiscal position of the partner, if needed
-            part = data.get('partner_id') and partner_obj.browse(cr, uid, data['partner_id'], context=context) or False
-            if account and data.get('partner_id'):
+            if isinstance(data.get('partner_id'), (int, long)):
+                part = partner_obj.browse(cr, uid, data['partner_id'], context=context)
+            elif isinstance(data.get('partner_id'), (tuple, list)):
+                part = partner_obj.browse(cr, uid, data['partner_id'][0], context=context)
+            else:
+                part = False
+            if account and part:
                 account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
                 account = account_obj.browse(cr, uid, account, context=context)
             data['account_id'] =  account and account.id or False
@@ -332,12 +337,12 @@ class account_move_line(osv.osv):
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
             invoice_ids.append(invoice_id)
-        invoice_names = {False: ''}
+        invoice_names = {}
         for invoice_id, name in invoice_obj.name_get(cursor, user, invoice_ids, context=context):
             invoice_names[invoice_id] = name
         for line_id in res.keys():
             invoice_id = res[line_id]
-            res[line_id] = (invoice_id, invoice_names[invoice_id])
+            res[line_id] = invoice_id and (invoice_id, invoice_names[invoice_id]) or False
         return res
 
     def name_get(self, cr, uid, ids, context=None):
@@ -434,7 +439,7 @@ class account_move_line(osv.osv):
                 move[line.move_id.id] = True
         move_line_ids = []
         if move:
-            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('journal_id','in',move.keys())], context=context)
+            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id','in',move.keys())], context=context)
         return move_line_ids
 
 

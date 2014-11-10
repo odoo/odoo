@@ -41,8 +41,8 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">sales_team = self.pool.get('ir.model.data').get_object(cr, uid, 'sales_team', 'section_sales_department')
-object.write({'section_id': sales_team.id})
+            <field name="code">sales_team = self.pool.get('ir.model.data').get_object(cr, uid, 'sales_team', 'team_sales_department')
+object.write({'team_id': sales_team.id})
             </field>
         </record>
         <record id="rule_set_followers_lead" model="base.action.rule">

@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-03 13:14+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:27+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:222
+#: code:addons/mrp/stock.py:260
 #, python-format
 msgid " Manufacture"
 msgstr ""
@@ -35,13 +35,13 @@ msgid "# Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353
+#: code:addons/mrp/mrp.py:356
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:957
+#: code:addons/mrp/mrp.py:958
 #, python-format
 msgid "%s produced"
 msgstr ""
@@ -239,6 +239,7 @@ msgstr ""
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
 msgstr ""
+"Un fattore di 0.9 significa una perdita del 10% durante la produzione."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
@@ -416,13 +417,13 @@ msgid "BoM"
 msgstr "Distinta base"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:324
+#: code:addons/mrp/mrp.py:322
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:348
 #, python-format
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
@@ -450,7 +451,7 @@ msgid "BoM Type"
 msgstr "Tipo di Distinta base"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:219
+#: code:addons/mrp/stock.py:257
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr ""
@@ -476,19 +477,19 @@ msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:147
+#: code:addons/mrp/stock.py:182
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:613
+#: code:addons/mrp/mrp.py:617
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Impossibile eliminare un ordine di produzione in stato '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:700
+#: code:addons/mrp/mrp.py:704
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Impossibile trovare una distinta base per questo prodotto."
@@ -529,7 +530,7 @@ msgstr "Cambia Quantità dei Prodotti"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Controllo disponibilità"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -686,7 +687,7 @@ msgstr "Informazioni sui Costi"
 #: field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0
@@ -707,7 +708,7 @@ msgstr ""
 #: field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -782,9 +783,9 @@ msgid "End Date"
 msgstr "Data di fine"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:700
-#: code:addons/mrp/stock.py:147
-#: code:addons/mrp/stock.py:219
+#: code:addons/mrp/mrp.py:704
+#: code:addons/mrp/stock.py:182
+#: code:addons/mrp/stock.py:257
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -881,7 +882,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -936,7 +937,7 @@ msgstr "Costo orario"
 #: field:report.workcenter.load,id:0
 #: field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
@@ -986,9 +987,9 @@ msgid "Internal Reference"
 msgstr "Riferimento interno"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:324
-#: code:addons/mrp/mrp.py:345
-#: code:addons/mrp/mrp.py:613
+#: code:addons/mrp/mrp.py:322
+#: code:addons/mrp/mrp.py:348
+#: code:addons/mrp/mrp.py:617
 #, python-format
 msgid "Invalid Action!"
 msgstr "Azione non valida!"
@@ -1017,7 +1018,7 @@ msgstr ""
 #: field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Ultimo Messaggio"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0
@@ -1086,7 +1087,7 @@ msgstr "Ubicazione dove il sistema stoccherà i prodotti finiti"
 #: field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Lotto"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1110,7 +1111,7 @@ msgstr "Manager"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:32
-#: code:addons/mrp/stock.py:216
+#: code:addons/mrp/stock.py:254
 #, python-format
 msgid "Manufacture"
 msgstr ""
@@ -1131,7 +1132,7 @@ msgstr ""
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "Gestione Produzione"
+msgstr "Gestione della Produzione"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
@@ -1170,7 +1171,7 @@ msgstr "Ordine di Produzione <em>%s</em> creato."
 #: view:mrp.production:mrp.view_production_calendar
 #: view:mrp.production:mrp.view_production_graph
 msgid "Manufacturing Orders"
-msgstr "Ordini di produzione"
+msgstr "Ordini di Produzione"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1261,7 +1262,7 @@ msgstr "Nuovo"
 #: code:addons/mrp/procurement.py:120
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Non esiste una Distinta Base per questo prodotto!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1366,7 +1367,7 @@ msgstr "Routing Superiore"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Rif. Partner:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1403,10 +1404,10 @@ msgid "Planning"
 msgstr "Pianificazione"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:134
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Si prega di fornire una quantità valida."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1422,7 +1423,7 @@ msgstr "Stampa Struttura Costo Prodotto."
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Data di stampa:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1579,7 +1580,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Prodotto:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1707,13 +1708,13 @@ msgstr "Proprietà"
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr "Gruppo di Proprietà"
+msgstr "Categoria di Proprietà"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr "Gruppi Proprietà"
+msgstr "Categorie di Proprietà"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -1730,12 +1731,12 @@ msgstr "Quantità"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Quantità (UdM predefinita)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Quantità:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1853,7 +1854,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "Ordine di Vendita:"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1961,7 +1962,7 @@ msgstr "Documento Sorgente"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Documento Sorgente:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -2035,8 +2036,8 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:363
-#: code:addons/mrp/mrp.py:430
+#: code:addons/mrp/mrp.py:366
+#: code:addons/mrp/mrp.py:433
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2283,17 +2284,16 @@ msgid "Warehouse"
 msgstr "Magazzino"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:363
-#: code:addons/mrp/mrp.py:430
+#: code:addons/mrp/mrp.py:366
+#: code:addons/mrp/mrp.py:433
 #, python-format
 msgid "Warning"
 msgstr "Attenzione"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:923
 #: code:addons/mrp/stock.py:42
 #: code:addons/mrp/stock.py:44
-#: code:addons/mrp/stock.py:134
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Warning!"
 msgstr "Attenzione!"
@@ -2463,17 +2463,7 @@ msgstr "Centro di lavoro"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
-msgstr "Orario di Lavoro"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:923
-#, python-format
-msgid ""
-"You are going to produce total %s quantities of \"%s\".\n"
-"But you can only produce up to total %s quantities."
-msgstr ""
-"Stai per produrre un totale di %s \"%s\".\n"
-"Ma puoi produrne al massimo %s."
+msgstr "Orari di Lavoro"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2488,12 +2478,12 @@ msgstr ""
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Devi assegnare un numero di serie per il prodotto %s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "giorni"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2517,3 +2507,11 @@ msgstr "più"
 #: field:mrp.production,ready_production:0
 msgid "unknown"
 msgstr ""
+
+#, python-format
+#~ msgid ""
+#~ "You are going to produce total %s quantities of \"%s\".\n"
+#~ "But you can only produce up to total %s quantities."
+#~ msgstr ""
+#~ "Stai per produrre un totale di %s \"%s\".\n"
+#~ "Ma puoi produrne al massimo %s."

@@ -19,7 +19,7 @@
                 <div class="oe_suggested_item">
                     <div class="oe_suggested_item_image">
                         <a t-attf-href="#model=hr.employee&amp;id=#{result.id}">
-                            <img t-attf-src="{result.image}" t-attf-alt="{result.name}"/>
+                            <img t-att-src="result.image" t-att-alt="result.name"/>
                         </a>
                     </div>
                     <div class="oe_suggested_item_content">

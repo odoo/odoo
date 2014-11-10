@@ -494,7 +494,7 @@ class JsonRequest(WebRequest):
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
-           to abitrary responses. Anything returned (except None) will
+           to arbitrary responses. Anything returned (except None) will
            be used as response."""
         try:
             return super(JsonRequest, self)._handle_exception(exception)
@@ -827,9 +827,9 @@ class Model(object):
                 or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
-            mod = request.registry.get(self.model)
             if method.startswith('_'):
                 raise Exception("Access denied")
+            mod = request.registry[self.model]
             meth = getattr(mod, method)
             cr = request.cr
             result = meth(cr, request.uid, *args, **kw)

@@ -181,7 +181,7 @@
                                     <t t-if="record.comment.raw_value">
                                         <p><em><field name="comment"/></em></p>
                                     </t>
-                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="record.create_date.raw_value.toString(Date.CultureInfo.formatPatterns.shortDate)" /></p>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="moment(record.create_date.raw_value).format('L')" /></p>
                                 </div>
                             </div>
                         </t>

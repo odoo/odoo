@@ -63,19 +63,9 @@
     <iframe width="100%" frameborder="0" t-att-src="url"/>
 </t>
 
-<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
-    <h4>Add to Dashboard</h4>
-    <form>
-        <p><input placeholder="Title of new dashboard item"/></p>
-        <button class="oe_apply" type="submit">Add</button>
-    </form>
-</div>
-<t t-name="SearchView.addtodashboard.selection">
-    <select>
-        <option t-foreach="selections" t-as="element"
-                t-att-value="element.id ">
-            <t t-esc="element.name"/></option>
-    </select>
+<t t-name="SearchView.addtodashboard">
+    <li class="add-to-dashboard closed-menu"><a>Add to my Dashboard</a></li>
+    <li class="add-to-dashboard"><input class="form-control" type="text"/></li>
+    <li class="add-to-dashboard"><button class="btn btn-default">Add</button></li>
 </t>
-
 </template>

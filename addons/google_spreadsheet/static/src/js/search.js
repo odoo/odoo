@@ -1,54 +1,50 @@
 openerp.google_spreadsheet = function(instance) {
-    var _t = instance.web._t;
+    var _t = instance.web._t,
+        QWeb = instance.web.qweb;
+
     instance.web.FormView.include({
-    	on_processed_onchange: function(result, processed) {
-    		var self = this;
-    		
-    			var fields = self.fields;
-		        _(result.selection).each(function (selection, fieldname) {
-		            var field = fields[fieldname];
-		            if (!field) { return; }
-		            field.field.selection = selection;
-		            field.values = selection;
-		            field.renderElement(); 
-		        });
-    		return this._super(result, processed);
-    	},
+        on_processed_onchange: function(result, processed) {
+            var self = this;
+            var fields = self.fields;
+            _(result.selection).each(function (selection, fieldname) {
+                var field = fields[fieldname];
+                if (!field) { return; }
+                field.field.selection = selection;
+                field.values = selection;
+                field.renderElement(); 
+            });
+            return this._super(result, processed);
+        },
     });
-    instance.board.AddToGoogleSpreadsheet = instance.web.search.Input.extend({
-	    template: 'SearchView.addtogooglespreadsheet',
-	    _in_drawer: true,
-	    start: function () {
-	        var self = this;
-	        this.$el.on('click', 'h4', function(){
-    		 	var view = self.view;
-				var data = view.build_search_data();
-				var model = view.model;
-				var list_view = self.view.getParent().views['list'];
-				var view_id = list_view ? list_view.view_id : false; 
-		        var context = new instance.web.CompoundContext(view.dataset.get_context() || []);
-		        var domain = new instance.web.CompoundDomain(view.dataset.get_domain() || []);
-		        _.each(data.contexts, context.add, context);
-		        _.each(data.domains, domain.add, domain);
-		        domain = JSON.stringify(domain.eval());
-		        var groupbys = instance.web.pyeval.eval('groupbys', data.groupbys).join(" ");
-		        var view_id = view_id;
-                var ds = new instance.web.DataSet(self, 'google.drive.config');
-                ds.call('set_spreadsheet', [model, domain, groupbys, view_id]).done(function (res) {
-        			if (res['url']){
-            			window.open(res['url'], '_blank');
-        			}
-				});
-	        });
-	    },
-	});
-	instance.web.SearchViewDrawer.include({
-	    add_common_inputs: function() {
-	        this._super();
-	        var vm = this.getParent().getParent();
-	        if (vm.inner_action && vm.inner_action.views) {
-	            (new instance.board.AddToGoogleSpreadsheet(this));
-	        }
-	    }
-	});
+    instance.web.search.FavoriteMenu.include({
+        prepare_dropdown_menu: function (filters) {
+            this._super(filters);
+            this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+            this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+        },
+        add_to_spreadsheet: function () {
+            var data = this.searchview.build_search_data(),
+                model = this.searchview.dataset.model,
+                view_manager = this.searchview.getParent(),
+                list_view = view_manager.views.list,
+                list_view_id = list_view ? list_view.view_id : false,
+                context = this.searchview.dataset.get_context() || [],
+                domain = this.searchview.dataset.get_domain() || [],
+                compound_context = new instance.web.CompoundContext(context),
+                compound_domain = new instance.web.CompoundDomain(context),
+                groupbys = instance.web.pyeval.eval('groupbys', data.groupbys).join(" "),
+                ds = new instance.web.DataSet(this, 'google.drive.config');
+
+            _.each(data.contexts, compound_context.add, compound_context);
+            _.each(data.domains, compound_domain.add, compound_domain);
+
+            compound_domain = JSON.stringify(compound_domain.eval());
+            ds.call('set_spreadsheet', [model, compound_domain, groupbys, list_view_id])
+                .done(function (res) {
+                    if (res['url']){
+                        window.open(res['url'], '_blank');
+                    }
+                });
+        },
+    });
 };

@@ -43,6 +43,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        if (!this.options.$buttons || !this.options.$buttons.length) {
+            this.options.$buttons = false;
+        }
     },
     view_loading: function(r) {
         return this.load_kanban(r);
@@ -69,13 +72,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         if (unsorted && default_order) {
             this.dataset.set_sort(default_order.split(','));
         }
-
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
         } else {
-            this.$el.find('.oe_kanban_buttons').replaceWith(this.$buttons);
+            this.$('.oe_kanban_buttons').replaceWith(this.$buttons);
         }
         this.$buttons
             .on('click', 'button.oe_kanban_button_new', this.do_add_record)
@@ -252,30 +254,72 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
             }
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields);
-            return self.alive($.when(grouping)).done(function(groups) {
+            return self.alive($.when(grouping)).then(function(groups) {
                 self.remove_no_result();
                 if (groups) {
-                    self.do_process_groups(groups);
+                    return self.do_process_groups(groups);
                 } else {
-                    self.do_process_dataset();
+                    return self.do_process_dataset();
                 }
             });
         });
     },
     do_process_groups: function(groups) {
         var self = this;
+
+        // Check in the arch the fields to fetch on the stage to get tooltips data.
+        // Fetching data is done in batch for all stages, to avoid doing multiple
+        // calls. The first naive implementation of group_by_tooltip made a call
+        // for each displayed stage and was quite limited.
+        // Data for the group tooltip (group_by_tooltip) and to display stage-related
+        // legends for kanban state management (states_legend) are fetched in
+        // one call.
+        var group_by_fields_to_read = [];
+        var recurse = function(node) {
+            if (node.tag === "field" && node.attrs && node.attrs.options) {
+                var options = instance.web.py_eval(node.attrs.options);
+                var states_fields_to_read = _.map(
+                    options && options.states_legend || {},
+                    function (value, key, list) { return value; });
+                var tooltip_fields_to_read = _.map(
+                    options && options.group_by_tooltip || {},
+                    function (value, key, list) { return key; });
+                group_by_fields_to_read = _.union(
+                    group_by_fields_to_read,
+                    states_fields_to_read,
+                    tooltip_fields_to_read);
+            }
+            _.each(node.children, function(child) {
+                recurse(child);
+            });
+        };
+        recurse(this.fields_view.arch);
+        var group_ids = _.map(groups, function (elem) { return elem.attributes.value[0]});
+        if (this.grouped_by_m2o && group_ids.length && group_by_fields_to_read.length) {
+            var group_data = new instance.web.DataSet(
+                this,
+                this.group_by_field.relation).read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read));
+        }
+        else { var group_data = $.Deferred().resolve({}); }
+
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
-        this.add_group_mutex.exec(function() {
+        return $.when(group_data).then(function (results) {
+            _.each(results, function (group_by_data) {
+                var group = _.find(groups, function (elem) {return elem.attributes.value[0] == group_by_data.id});
+                if (group) {
+                    group.values = group_by_data;
+                }
+            });
+        }).done( function () {return self.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
                 self.no_result();
-                return false;
+                return $.when();
             }
             self.nb_records = 0;
-            var remaining = groups.length - 1,
-                groups_array = [];
+            var groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
                 var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
@@ -287,27 +331,26 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (self.dataset.index >= records.length){
-                            self.dataset.index = self.dataset.size() ? 0 : null;
-                        }
-                        if (!remaining--) {
-                            return self.do_add_groups(groups_array);
-                        }
                 });
             })).then(function () {
                 if(!self.nb_records) {
                     self.no_result();
                 }
-                self.trigger('kanban_groups_processed');
+                if (self.dataset.index >= self.nb_records){
+                    self.dataset.index = self.dataset.size() ? 0 : null;
+                }
+                return self.do_add_groups(groups_array).done(function() {
+                    self.trigger('kanban_groups_processed');
+                });
             });
-        });
+        })});
     },
     do_process_dataset: function() {
         var self = this;
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
+        var def = $.Deferred();
         this.add_group_mutex.exec(function() {
-            var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
@@ -326,8 +369,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             }).done(null, function() {
                 def.reject();
             });
-            return def;
         });
+        return def;
     },
     do_reload: function() {
         this.do_search(this.search_domain, this.search_context, this.search_group_by);
@@ -490,7 +533,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
 
     do_show: function() {
-        if (this.$buttons) {
+        if (this.options.$buttons) {
             this.$buttons.show();
         }
         this.do_push_state({});
@@ -583,8 +626,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.dataset = dataset;
         this.dataset_offset = 0;
         this.aggregates = {};
-        this.value = this.title = null;
+        this.value = this.title = this.values = null;
         if (this.group) {
+            this.values = group.values;
             this.value = group.get('value');
             this.title = group.get('value');
             if (this.value instanceof Array) {
@@ -621,7 +665,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
     },
     start: function() {
-        var self = this;
+        var self = this,
+            def = this._super();
         if (! self.view.group_by) {
             self.$el.addClass("oe_kanban_no_group");
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
@@ -678,39 +723,37 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             }
         });
         this.is_started = true;
-        var def_tooltip = this.fetch_tooltip();
-        return $.when(def_tooltip);
+        this.fetch_tooltip();
+        return def;
     },
+    /* 
+     * Form the tooltip, based on optional group_by_tooltip on the grouping field.
+     * This function goes through the arch of the view, finding the declaration
+     * of the field used to group. If group_by_tooltip is defined, use the previously
+     * computed values of the group to form the tooltip. */
     fetch_tooltip: function() {
+        var self = this;
         if (! this.group)
-            return;
-        var field_name = this.view.group_by;
-        var field = this.view.group_by_field;
-        var field_desc = null;
+            return;        
+        var options = null;
         var recurse = function(node) {
-            if (node.tag === "field" && node.attrs.name === field_name) {
-                field_desc = node;
+            if (node.tag === "field" && node.attrs.name == self.view.group_by) {
+                options = instance.web.py_eval(node.attrs.options || '{}');
                 return;
             }
             _.each(node.children, function(child) {
-                if (field_desc === null)
-                    recurse(child);
+                recurse(child);
             });
         };
         recurse(this.view.fields_view.arch);
-        if (! field_desc)
-            return;
-        var options = instance.web.py_eval(field_desc.attrs.options || '{}')
-        if (! options.tooltip_on_group_by)
-            return;
-
-        var self = this;
-        if (this.value) {
-            return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
-                    .filter([["id", "=", this.value]]).first().then(function(res) {
-                self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip();
-            });
+        if (options && options.group_by_tooltip) {
+            this.tooltip = _.union(
+                [this.title],
+                _.map(
+                    options.group_by_tooltip,
+                    function (key, value, list) { return self.values[value] || ''; })
+            ).join('\n\n');
+            this.$(".oe_kanban_group_title_text").attr("title", this.tooltip || this.title || "");
         }
     },
     compute_cards_auto_height: function() {
@@ -949,7 +992,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.$el.find('[title]').each(function(){
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
-                container: $(this),
                 title: function() {
                     var template = $(this).attr('tooltip');
                     if (!self.view.qweb.has_template(template)) {
@@ -1333,12 +1375,17 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
+        var self = this;
         var data = [];
         _.map(this.field.selection || [], function(res) {
             var value = {
                 'name': res[0],
                 'tooltip': res[1],
                 'state_name': res[1],
+            }
+            var leg_opt = self.options && self.options.states_legend || null;
+            if (leg_opt && leg_opt[res[0]] && self.parent.group.values && self.parent.group.values[leg_opt[res[0]]]) {
+                value['state_name'] = self.parent.group.values[leg_opt[res[0]]];
             }
             if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
             else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }

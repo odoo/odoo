@@ -218,7 +218,7 @@ openerp.mail = function (session) {
 
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
-            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
+            this.display_date = moment(this.date).format('ddd MMM DD YYYY LT');
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
             }
@@ -880,7 +880,7 @@ openerp.mail = function (session) {
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
                 self.id = false;
                 // insert the message on dom after this message
-                self.parent_thread.switch_new_message( data, self.$el.parent() );
+                self.parent_thread.switch_new_message(data, self.$el);
                 self.animated_destroy(200);
             });
 
@@ -1278,6 +1278,7 @@ openerp.mail = function (session) {
         start: function () {
             this._super.apply(this, arguments);
             this.bind_events();
+            return $.when();
         },
 
         /* instantiate the compose message object and insert this on the DOM.
@@ -1457,7 +1458,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids === false ? undefined : ids, 
+                    ids === false ? undefined : ids && ids.slice(0, this.options.fetch_limit),
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1467,7 +1468,8 @@ openerp.mail = function (session) {
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
-                    this.context.default_parent_id || undefined
+                    this.context.default_parent_id || undefined,
+                    this.options.fetch_limit,
                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
                 ).done(this.proxy('message_fetch_set_read'));
         },
@@ -1737,6 +1739,7 @@ openerp.mail = function (session) {
                 'compose_as_todo' : false,
                 'readonly' : false,
                 'emails_from_on_composer': true,
+                'fetch_limit': 30   // limit of chatter messages
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
@@ -1745,7 +1748,6 @@ openerp.mail = function (session) {
         start: function (options) {
             this._super.apply(this, arguments);
             this.message_render();
-            this.bind_events();
         },
         
         /**
@@ -1788,12 +1790,6 @@ openerp.mail = function (session) {
 
         },
 
-        bind_events: function () {
-            $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
-            $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
-            this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
-            window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
-        },
     });
 
 
@@ -1947,6 +1943,7 @@ openerp.mail = function (session) {
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
                 'emails_from_on_composer': false,
+                'fetch_limit': 1000   // allow inbox to load all children messages
             }, this.action.params);
         },
 
@@ -1967,11 +1964,14 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
-            var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
-            this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
+            var self = this,
+                ds_msg = new session.web.DataSetSearch(this, 'mail.message'),
+                options = { $buttons: this.$('.oe-search-options') };
+            this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, options);
             this.searchview.on('search_data', this, this.do_searchview_search);
-            this.searchview.appendTo(this.$('.oe_view_manager_view_search'), 
-                                   this.$('.oe_searchview_drawer_container'));
+            this.searchview.appendTo(this.$('.oe-view-manager-search-view')).then(function () {
+                self.searchview.toggle_visibility(true);
+            });
             if (this.searchview.has_defaults) {
                 this.searchview.ready.then(this.searchview.do_search);
             }

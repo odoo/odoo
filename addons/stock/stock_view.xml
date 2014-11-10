@@ -1043,6 +1043,7 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
                             <field name="reserved_quant_ids"/>
@@ -1092,6 +1093,7 @@
                         <field name="create_date" invisible="1"/>
                         <field name="date"/>
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
+                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group string="Locations" groups="stock.group_locations">
                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>

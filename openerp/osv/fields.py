@@ -42,6 +42,7 @@ import logging
 import pytz
 import re
 import xmlrpclib
+from operator import itemgetter
 from psycopg2 import Binary
 
 import openerp
@@ -82,7 +83,28 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
     _deprecated = False
-    copy = True # whether the field is copied by BaseModel.copy()
+
+    copy = True                 # whether value is copied by BaseModel.copy()
+    string = None
+    help = ""
+    required = False
+    readonly = False
+    _domain = []
+    _context = {}
+    states = None
+    priority = 0
+    change_default = False
+    size = None
+    ondelete = None
+    translate = False
+    select = False
+    manual = False
+    write = False
+    read = False
+    selectable = True
+    group_operator = False
+    groups = False              # CSV list of ext IDs of groups
+    deprecated = False          # Optional deprecation warning
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
@@ -91,37 +113,48 @@ class _column(object):
         It corresponds to the 'state' column in ir_model_fields.
 
         """
-        if domain is None:
-            domain = []
-        if context is None:
-            context = {}
-        self.states = states or {}
-        self.string = string
-        self.readonly = readonly
-        self.required = required
-        self.size = size
-        self.help = args.get('help', '')
-        self.priority = priority
-        self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else None # defaults to 'set null' in ORM
-        self.translate = translate
-        self._domain = domain
-        self._context = context
-        self.write = False
-        self.read = False
-        self.select = select
-        self.manual = manual
-        self.selectable = True
-        self.group_operator = args.get('group_operator', False)
-        self.groups = False  # CSV list of ext IDs of groups that can access this field
-        self.deprecated = False # Optional deprecation warning
-        for a in args:
-            setattr(self, a, args[a])
+        args0 = {
+            'string': string,
+            'required': required,
+            'readonly': readonly,
+            '_domain': domain,
+            '_context': context,
+            'states': states,
+            'priority': priority,
+            'change_default': change_default,
+            'size': size,
+            'ondelete': ondelete.lower() if ondelete else None,
+            'translate': translate,
+            'select': select,
+            'manual': manual,
+        }
+        for key, val in args0.iteritems():
+            if val:
+                setattr(self, key, val)
+
+        self._args = args
+        for key, val in args.iteritems():
+            setattr(self, key, val)
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
         if not self._classic_write or self.deprecated:
             self._prefetch = False
+
+    def new(self, **args):
+        """ return a column like `self` with the given parameters """
+        # memory optimization: reuse self whenever possible; you can reduce the
+        # average memory usage per registry by 10 megabytes!
+        return self if self.same_parameters(args) else type(self)(**args)
+
+    def same_parameters(self, args):
+        dummy = object()
+        return all(
+            # either both are falsy, or they are equal
+            (not val1 and not val) or (val1 == val)
+            for key, val in args.iteritems()
+            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
+        )
 
     def to_field(self):
         """ convert column `self` to a new-style field """
@@ -130,9 +163,11 @@ class _column(object):
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
-        items = [
+        base_items = [
             ('column', self),                   # field interfaces self
             ('copy', self.copy),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
@@ -141,15 +176,16 @@ class _column(object):
             ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
+            ('group_operator', self.group_operator),
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
-            ('change_default', self.change_default),
-            ('deprecated', self.deprecated),
-        ]
-        return dict(item for item in items if item[1])
+        ])
+        return dict(base_items + truthy_items + self._args.items())
 
     def restart(self):
         pass
@@ -313,6 +349,10 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
+
+    def new(self, **args):
+        # float columns are database-dependent, so always recreate them
+        return type(self)(**args)
 
     def to_field_args(self):
         args = super(float, self).to_field_args()
@@ -597,6 +637,8 @@ class many2one(_column):
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
 
+    ondelete = 'set null'
+
     def __init__(self, obj, string='unknown', auto_join=False, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -705,31 +747,32 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the model has on delete cascade, just delete the row
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, [act[1]], context=context)
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # table of the field (parent_model in case of inherit)
-                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field = obj.pool[self._obj]._fields[self._fields_id]
+                field_model = field.base_field.model_name
                 field_table = obj.pool[field_model]._table
                 cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
                 domain = self._domain(obj) if callable(self._domain) else self._domain
                 extra_domain = domain or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, ids_to_unlink, context=context)
                 else:
                     obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
@@ -1244,8 +1287,14 @@ class function(_column):
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
 
+    def new(self, **args):
+        # HACK: function fields are tricky to recreate, simply return a copy
+        import copy
+        return copy.copy(self)
+
     def to_field_args(self):
         args = super(function, self).to_field_args()
+        args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self.digits_compute or self.digits
         elif self._type in ('selection', 'reference'):
@@ -1564,12 +1613,12 @@ class property(function):
 
         res = {id: {} for id in ids}
         for prop_name in prop_names:
-            column = obj._all_columns[prop_name].column
+            field = obj._fields[prop_name]
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if column._type == 'many2one':
+            if field.type == 'many2one':
                 # name_get the non-null values as SUPERUSER_ID
                 vals = sum(set(filter(None, values.itervalues())),
-                           obj.pool[column._obj].browse(cr, uid, [], context=context))
+                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
                 vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
                     ng = False

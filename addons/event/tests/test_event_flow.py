@@ -16,7 +16,7 @@ class TestEventFlow(TestEventCommon):
         self.env['ir.values'].set_default('marketing.config.settings', 'auto_confirmation', True)
 
         # EventUser creates a new event: ok
-        test_event = self.Event.sudo(self.user_eventuser).create({
+        test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
@@ -68,7 +68,7 @@ class TestEventFlow(TestEventCommon):
         self.env['ir.values'].set_default('marketing.config.settings', 'auto_confirmation', False)
 
         # EventUser creates a new event: ok
-        test_event = self.Event.sudo(self.user_eventuser).create({
+        test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .openerp .oe_dashboard_layout_1 .oe_dashboard_column.index_0 {
   width: 100%;
 }
@@ -82,7 +83,7 @@
   color: #b3b3b3;
 }
 .openerp .oe_dashboard .oe_action .oe_header .oe_icon:hover {
-  color: #666666;
+  color: #666;
   text-decoration: none;
 }
 .openerp .oe_dashboard .oe_action .oe_header .oe_close:after {
@@ -116,12 +117,28 @@
 .openerp .oe_dashboard .oe_action .oe_content {
   padding: 0 12px 12px 12px;
 }
-.openerp .oe_dashboard .oe_action .oe_content .oe_view_manager_header {
-  display: none;
+.openerp .oe_dashboard .oe_action .oe_content .oe-view-manager {
+  display: block;
+}
+.openerp .oe_dashboard .oe_action .oe_content .oe-view-manager-content {
+  display: block;
+  position: static;
+}
+.openerp .oe_dashboard .oe_action .oe_content .oe-view-manager-view-kanban {
+  position: static;
 }
 .openerp .oe_dashboard .oe_action .oe_content .oe_list_content > thead {
   border-bottom: 1px;
 }
 .openerp .oe_dashboard .oe_action .oe_content .oe_list_content > tbody tr:nth-child(odd) {
   background: transparent;
+}
+.openerp .oe-search-options .add-to-dashboard button {
+  margin: 3px 25px;
+  display: none;
+}
+.openerp .oe-search-options .add-to-dashboard input {
+  width: calc(100% - 50px);
+  margin: 3px 25px;
+  display: none;
 }

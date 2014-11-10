@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-09-06 19:59+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@zupy.com.br>\n"
@@ -15,45 +15,32 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-07 07:48+0000\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: gamification
-#: selection:gamification.challenge.line,condition:0
-msgid "<="
-msgstr "<="
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:741
-#, python-format
+#: model:email.template,body_html:gamification.email_template_badge_received
 msgid ""
-"<br/>Nobody has succeeded to reach every goal, no badge is rewared for this "
-"challenge."
+"\n"
+"        <p>Congratulation, you have received the badge "
+"<strong>${object.badge_id.name}</strong> !\n"
+"            % if object.sender_id\n"
+"                This badge was granted by "
+"<strong>${object.sender_id.name}</strong>.\n"
+"            % endif\n"
+"        </p>\n"
+"\n"
+"        % if object.comment\n"
+"            <p><em>${object.comment}</em></p>\n"
+"        % endif\n"
+"        "
 msgstr ""
-"<br/>Ninguém conseguiu alcançar cada objetivo, nenhuma medalha obtida para "
-"este desafio."
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:739
-#, python-format
-msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
-"<br/>Medalha ( %s) para cada usuário com sucesso foi enviada para %s."
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:748
-#, python-format
-msgid ""
-"<br/>Special rewards were sent to the top competing users. The ranking for "
-"this challenge is :"
-msgstr ""
-"<br/>Recompensas especiais foram enviadas aos melhores usuários. O Ranking "
-"para este desafio é :"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
 msgid ""
-"<header>\n"
+"\n"
+"    <header>\n"
 "        <strong>Reminder ${object.name}</strong>\n"
 "    </header>\n"
 "    \n"
@@ -67,6 +54,7 @@ msgstr ""
 #. module: gamification
 #: model:email.template,body_html:gamification.simple_report_template
 msgid ""
+"\n"
 "<header>\n"
 "    <strong>${object.name}</strong>\n"
 "</header>\n"
@@ -82,10 +70,11 @@ msgid ""
 "        <th>Completeness</th>\n"
 "    </tr>\n"
 "    % for line in ctx[\"challenge_lines\"]:\n"
-"        <tr if line>= 100:\n"
+"        <tr\n"
+"            % if line['completeness'] >= 100:\n"
 "                style=\"font-weight:bold;\"\n"
 "            % endif\n"
-"            &gt;\n"
+"            >\n"
 "            <td>${line['name']}</td>\n"
 "            <td>${line['target']}\n"
 "            % if line['suffix']:\n"
@@ -114,10 +103,11 @@ msgid ""
 "                <th>Current</th>\n"
 "            </tr>\n"
 "            % for goal in line['goals']:\n"
-"                <tr if goal.completeness>= 100:\n"
+"                <tr\n"
+"                    % if goal.completeness >= 100:\n"
 "                        style=\"font-weight:bold;\"\n"
 "                    % endif\n"
-"                    &gt;\n"
+"                    >\n"
 "                    <td>${goal['rank']}</td>\n"
 "                    <td>${goal['name']}</td>\n"
 "                    <td>${goal['completeness']}%</td>\n"
@@ -130,12 +120,44 @@ msgid ""
 "            % endfor\n"
 "        </table>\n"
 "\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "\n"
 "    % endfor\n"
 "% endif\n"
 "            "
 msgstr ""
+
+#. module: gamification
+#: selection:gamification.challenge.line,condition:0
+msgid "<="
+msgstr "<="
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:745
+#, python-format
+msgid ""
+"<br/>Nobody has succeeded to reach every goal, no badge is rewared for this "
+"challenge."
+msgstr ""
+"<br/>Ninguém conseguiu alcançar cada objetivo, nenhuma medalha obtida para "
+"este desafio."
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:743
+#, python-format
+msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
+msgstr ""
+"<br/>Medalha ( %s) para cada usuário com sucesso foi enviada para %s."
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:752
+#, python-format
+msgid ""
+"<br/>Special rewards were sent to the top competing users. The ranking for "
+"this challenge is :"
+msgstr ""
+"<br/>Recompensas especiais foram enviadas aos melhores usuários. O Ranking "
+"para este desafio é :"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -209,23 +231,6 @@ msgid ""
 "least one user.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: gamification
-#: model:email.template,body_html:gamification.email_template_badge_received
-msgid ""
-"<p>Congratulation, you have received the badge "
-"<strong>${object.badge_id.name}</strong> !\n"
-"            % if object.sender_id\n"
-"                This badge was granted by "
-"<strong>${object.sender_id.name}</strong>.\n"
-"            % endif\n"
-"        </p>\n"
-"\n"
-"        % if object.comment\n"
-"            <p><em>${object.comment}</em></p>\n"
-"        % endif\n"
-"        "
 msgstr ""
 
 #. module: gamification
@@ -371,7 +376,7 @@ msgid "Can not grant"
 msgstr "Não pode conceder"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:444
+#: code:addons/gamification/models/goal.py:453
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "Não é possível modificar a configuração de um objetivo já iniciado"
@@ -490,11 +495,6 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: gamification
-#: view:gamification.challenge:gamification.view_challenge_kanban
-msgid "Configure Challenge"
-msgstr "Configurar Desafio"
-
-#. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
 msgstr "Criar Usuário"
@@ -545,7 +545,6 @@ msgid "Creator"
 msgstr "Criador"
 
 #. module: gamification
-#: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal.wizard,current:0
 msgid "Current"
 msgstr "Atual"
@@ -656,6 +655,7 @@ msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
+#: view:gamification.goal:gamification.goal_search_view
 msgid "Done"
 msgstr "Concluído"
 
@@ -674,9 +674,9 @@ msgid "End Date"
 msgstr "Data Final"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:549
-#: code:addons/gamification/models/goal.py:146
-#: code:addons/gamification/models/goal.py:444
+#: code:addons/gamification/models/challenge.py:553
+#: code:addons/gamification/models/goal.py:148
+#: code:addons/gamification/models/goal.py:453
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -1026,7 +1026,12 @@ msgid "Individual Goals"
 msgstr "Objetivos Individuais"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:310
+#: field:gamification.goal.definition,model_inherited_model_ids:0
+msgid "Inherited models"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:319
 #, python-format
 msgid "Invalid return content from the evaluation of code for definition %s"
 msgstr ""
@@ -1230,7 +1235,7 @@ msgid "No one, assigned through challenges"
 msgstr "Ninguém, atribuido através dos desafios"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:751
+#: code:addons/gamification/models/challenge.py:755
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr "Ninguém atingiu as condições para receber as medalhas especiais."
@@ -1284,11 +1289,6 @@ msgstr "Proprietários"
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "Participating"
 msgstr "Participando"
-
-#. module: gamification
-#: view:gamification.goal:gamification.goal_search_view
-msgid "Passed"
-msgstr "Passou"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1420,7 +1420,7 @@ msgid "Responsible"
 msgstr "Responsável"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:549
+#: code:addons/gamification/models/challenge.py:553
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
@@ -1456,6 +1456,11 @@ msgstr "Recompensado por"
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Rewards for challenges"
 msgstr "Recompensas para os desafios"
+
+#. module: gamification
+#: view:gamification.goal:gamification.goal_search_view
+msgid "Running"
+msgstr ""
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1542,6 +1547,11 @@ msgid "Setup your Company"
 msgstr "Configurar a Empresa"
 
 #. module: gamification
+#: view:gamification.challenge:gamification.challenge_form_view
+msgid "Start Challenge"
+msgstr ""
+
+#. module: gamification
 #: field:gamification.challenge,start_date:0
 #: field:gamification.goal,start_date:0
 msgid "Start Date"
@@ -1620,7 +1630,7 @@ msgid "The action that will be called to update the goal value."
 msgstr "A ação que será executada para atualizar o valor do objetivo."
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:735
+#: code:addons/gamification/models/challenge.py:739
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "O desafio %s está concluído."
@@ -1656,7 +1666,7 @@ msgstr ""
 "objetivo."
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:146
+#: code:addons/gamification/models/goal.py:148
 #, python-format
 msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
@@ -1803,7 +1813,7 @@ msgid "These goals will not be recomputed."
 msgstr "Estes objetivos não serão recalculados."
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:230
+#: code:addons/gamification/models/badge.py:238
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "Esta medalha não pode ser enviada por usuários."
@@ -1851,7 +1861,7 @@ msgid "Update"
 msgstr "Atualizar"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:478
+#: code:addons/gamification/models/goal.py:487
 #, python-format
 msgid "Update %s"
 msgstr "Atualizar %s"
@@ -1876,10 +1886,10 @@ msgid "Users"
 msgstr "Usuários"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:230
-#: code:addons/gamification/models/badge.py:232
-#: code:addons/gamification/models/badge.py:234
-#: code:addons/gamification/models/badge.py:236
+#: code:addons/gamification/models/badge.py:238
+#: code:addons/gamification/models/badge.py:240
+#: code:addons/gamification/models/badge.py:242
+#: code:addons/gamification/models/badge.py:244
 #: code:addons/gamification/wizard/grant_badge.py:44
 #, python-format
 msgid "Warning!"
@@ -1917,7 +1927,7 @@ msgid "Yearly"
 msgstr "Anualmente"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:232
+#: code:addons/gamification/models/badge.py:240
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr "Você não está na lista de permissões"
@@ -1934,13 +1944,13 @@ msgid "You can still grant"
 msgstr "Você ainda pode conceder"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:234
+#: code:addons/gamification/models/badge.py:242
 #, python-format
 msgid "You do not have the required badges."
 msgstr "Você não tem as medalhas necessárias"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:236
+#: code:addons/gamification/models/badge.py:244
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr "Você já enviou esta medalha muitas vezes este mês."
@@ -2015,3 +2025,9 @@ msgstr "o"
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "this month"
 msgstr "este mês"
+
+#~ msgid "Configure Challenge"
+#~ msgstr "Configurar Desafio"
+
+#~ msgid "Passed"
+#~ msgstr "Passou"

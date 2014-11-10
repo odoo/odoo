@@ -117,9 +117,14 @@ class website_hr_recruitment(http.Controller):
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
         value['partner_phone'] = post.pop('phone', False)
 
-        attachment = []
+        applicant = env['hr.applicant'].create(value)
         if post['ufile']:
-            attachment.append((post['ufile'].filename, post['ufile'].read()))
-        env['hr.applicant'].with_context(attachments = attachment).create(value)
+            name = applicant.partner_name if applicant.partner_name else applicant.name
+            applicant.message_post(
+                body = _("%s's Application \n From: %s \n\n %s \n") % (name, applicant.email_from or "", applicant.description or ""),
+                attachments = [(post['ufile'].filename, post['ufile'].read())],
+                content_subtype = 'plaintext',
+                subtype = "hr_recruitment.mt_applicant_hired")
+
         return request.render("website_hr_recruitment.thankyou", {})
 

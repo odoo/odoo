@@ -23,6 +23,7 @@
 import time
 
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
@@ -63,7 +64,7 @@ class account_cashbox_line(osv.osv):
         'number_closing' : fields.integer('Number of Units', help='Closing Unit Numbers'),
         'subtotal_opening': fields.function(_sub_total, string='Opening Subtotal', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
         'subtotal_closing': fields.function(_sub_total, string='Closing Subtotal', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
-        'bank_statement_id' : fields.many2one('account.bank.statement', ondelete='cascade'),
+        'bank_statement_id' : fields.many2one('account.bank.statement', string="Bank Statements", ondelete='cascade'),
      }
 
 
@@ -80,7 +81,8 @@ class account_cash_statement(osv.osv):
             if (statement.journal_id.type not in ('cash',)):
                 continue
             if not statement.journal_id.cash_control:
-                if statement.balance_end_real <> statement.balance_end:
+                prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+                if float_compare(statement.balance_end_real, statement.balance_end, precision_digits=prec):
                     statement.write({'balance_end_real' : statement.balance_end})
                 continue
             start = end = 0

@@ -2,7 +2,7 @@
 
 import pytz
 
-from openerp import models, fields, api, _
+from openerp import _, api, fields, models
 from openerp.exceptions import Warning
 
 
@@ -11,21 +11,13 @@ class event_type(models.Model):
     _name = 'event.type'
     _description = 'Event Type'
 
-    name = fields.Char(string='Event Type', required=True)
-    default_reply_to = fields.Char(
-        string='Default Reply-To',
-        help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one.")
-    default_email_event = fields.Many2one(
-        'email.template', string='Event Confirmation Email',
-        help="It will select this default confirmation event mail value when you choose this event")
-    default_email_registration = fields.Many2one(
-        'email.template', string='Registration Confirmation Email',
-        help="It will select this default confirmation registration mail value when you choose this event")
+    name = fields.Char('Event Type', required=True)
+    default_reply_to = fields.Char('Reply To')
     default_registration_min = fields.Integer(
-        string='Default Minimum Registration', default=0,
+        'Default Minimum Registration', default=0,
         help="It will select this default minimum value when you choose this event")
     default_registration_max = fields.Integer(
-        string='Default Maximum Registration', default=0,
+        'Default Maximum Registration', default=0,
         help="It will select this default maximum value when you choose this event")
 
 
@@ -54,6 +46,15 @@ class event_event(models.Model):
         'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]})
     color = fields.Integer('Kanban Color Index')
+    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', default=lambda self: self._default_event_mail_ids())
+
+    @api.model
+    def _default_event_mail_ids(self):
+        return [(0, 0, {
+            'interval_unit': 'now',
+            'interval_type': 'after_sub',
+            'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')
+        })]
 
     # Seats and computation
     seats_max = fields.Integer(
@@ -165,24 +166,13 @@ class event_event(models.Model):
     def _compute_auto_confirm(self):
         self.auto_confirm = self.env['ir.values'].get_default('marketing.config.settings', 'auto_confirmation')
 
-    # Mailing
-    email_registration_id = fields.Many2one(
-        'email.template', string='Registration Confirmation Email',
-        domain=[('model', '=', 'event.registration')],
-        help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.')
-    email_confirmation_id = fields.Many2one(
-        'email.template', string='Event Confirmation Email',
-        domain=[('model', '=', 'event.registration')],
-        help="If you set an email template, each participant will receive this email announcing the confirmation of the event.")
     reply_to = fields.Char(
-        string='Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
+        'Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
         help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
     address_id = fields.Many2one(
         'res.partner', string='Location', default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]})
-    country_id = fields.Many2one(
-        'res.country', string='Country', related='address_id.country_id',
-        store=True, readonly=False, states={'done': [('readonly', True)]})
+    country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
     description = fields.Html(
         string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})
@@ -213,7 +203,7 @@ class event_event(models.Model):
     def create(self, vals):
         res = super(event_event, self).create(vals)
         if res.auto_confirm:
-            res.confirm_event()
+            res.button_confirm()
         return res
 
     @api.one
@@ -233,26 +223,15 @@ class event_event(models.Model):
         self.state = 'done'
 
     @api.one
-    def confirm_event(self):
-        if self.email_confirmation_id:
-            # send reminder that will confirm the event for all the people that were already confirmed
-            regs = self.registration_ids.filtered(lambda reg: reg.state not in ('draft', 'cancel'))
-            regs.mail_user_confirm()
-        self.state = 'confirm'
-
-    @api.one
     def button_confirm(self):
-        """ Confirm Event and send confirmation email to all register peoples """
-        self.confirm_event()
+        self.state = 'confirm'
 
     @api.onchange('type')
     def _onchange_type(self):
         if self.type:
-            self.reply_to = self.type.default_reply_to
-            self.email_registration_id = self.type.default_email_registration
-            self.email_confirmation_id = self.type.default_email_event
             self.seats_min = self.type.default_registration_min
             self.seats_max = self.type.default_registration_max
+            self.reply_to = self.type.default_reply_to
 
     @api.multi
     def action_event_registration_report(self):
@@ -262,6 +241,11 @@ class event_event(models.Model):
             "group_by": ['create_date:day'],
         }
         return res
+
+    @api.one
+    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
+        for attendee in self.registration_ids.filtered(filter_func):
+            self.env['email.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
 
 class event_registration(models.Model):
@@ -279,9 +263,8 @@ class event_registration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    date_open = fields.Datetime(string='Registration Date', readonly=True)
+    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
-    reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to', readonly=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     company_id = fields.Many2one(
@@ -311,10 +294,10 @@ class event_registration(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(event_registration, self).create(vals)
-        if res._check_auto_confirmation()[0]:
-            res.sudo().confirm_registration()
-        return res
+        registration = super(event_registration, self).create(vals)
+        if registration._check_auto_confirmation():
+            registration.sudo().confirm_registration()
+        return registration
 
     @api.one
     def do_draft(self):
@@ -328,12 +311,6 @@ class event_registration(models.Model):
         self.state = 'open'
 
     @api.one
-    def registration_open(self):
-        """ Open Registration """
-        self.confirm_registration()
-        self.mail_user()
-
-    @api.one
     def button_reg_close(self):
         """ Close Registration """
         today = fields.Datetime.now()
@@ -345,23 +322,6 @@ class event_registration(models.Model):
     @api.one
     def button_reg_cancel(self):
         self.state = 'cancel'
-
-    @api.one
-    def mail_user(self):
-        """Send email to user with email_template when registration is done """
-        if self.event_id.state == 'confirm' and self.event_id.email_confirmation_id:
-            self.mail_user_confirm()
-        else:
-            template = self.event_id.email_registration_id
-            if template:
-                template.send_mail(self.id)
-
-    @api.one
-    def mail_user_confirm(self):
-        """Send email to user when the event is confirmed """
-        template = self.event_id.email_confirmation_id
-        if template:
-            template.send_mail(self.id)
 
     @api.onchange('partner_id')
     def _onchange_partner(self):

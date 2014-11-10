@@ -112,10 +112,21 @@ class pos_config(osv.osv):
                 return False
         return True
 
+    def _check_company_payment(self, cr, uid, ids, context=None):
+        for config in self.browse(cr, uid, ids, context=context):
+            journal_ids = [j.id for j in config.journal_ids]
+            if self.pool['account.journal'].search(cr, uid, [
+                    ('id', 'in', journal_ids),
+                    ('company_id', '!=', config.company_id.id)
+                ], count=True, context=context):
+                return False
+        return True
+
     _constraints = [
         (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
         (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
         (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
+        (_check_company_payment, "The company of a payment method is different than the one of point of sale", ['company_id', 'journal_ids']),
     ]
 
     def name_get(self, cr, uid, ids, context=None):
@@ -259,7 +270,7 @@ class pos_session(osv.osv):
                                     readonly=True,
                                     states={'opening_control' : [('readonly', False)]}
                                    ),
-        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
+        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currency"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
@@ -671,7 +682,7 @@ class pos_order(osv.osv):
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
+        'amount_return': fields.function(_amount_all, string='Returned', digits_compute=dp.get_precision('Account'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
@@ -993,6 +1004,10 @@ class pos_order(osv.osv):
     def create_account_move(self, cr, uid, ids, context=None):
         return self._create_account_move_line(cr, uid, ids, None, None, context=context)
 
+    def _prepare_analytic_account(self, cr, uid, line, context=None):
+        '''This method is designed to be inherited in a custom module'''
+        return False
+
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -1062,7 +1077,7 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], values['product_id'], values['debit'] > 0)
+                    key = ('product', values['partner_id'], (values['product_id'], values['name']), values['debit'] > 0)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
@@ -1135,12 +1150,18 @@ class pos_order(osv.osv):
                     if tax_code_id:
                         break
 
+                name = line.product_id.name
+                if line.notice:
+                    # add discount reason in move
+                    name = name + ' (' + line.notice + ')'
+
                 # Create a move for the line
                 insert_data('product', {
-                    'name': line.product_id.name,
+                    'name': name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
                     'account_id': income_account,
+                    'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
                     'tax_code_id': tax_code_id,
@@ -1231,7 +1252,7 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {
-        'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
+        'pos_statement_id': fields.many2one('pos.order', string="POS statement", ondelete='cascade'),
     }
 
 
