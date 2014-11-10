@@ -194,7 +194,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             model:  'account.tax',
             fields: ['name','amount', 'price_include', 'type'],
             domain: null,
-            loaded: function(self,taxes){ self.taxes = taxes; },
+            loaded: function(self,taxes){ 
+                self.taxes = taxes; 
+                self.taxes_by_id = {};
+                
+                for (var i = 0; i < taxes.length; i++) {
+                    self.taxes_by_id[taxes[i].id] = taxes[i];
+                }
+            },
         },{
             model:  'pos.session',
             fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
@@ -948,6 +955,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax_details: function(){
             return this.get_all_prices().taxDetails;
         },
+        get_taxes: function(){
+            var taxes_ids = this.get_product().taxes_id;
+            var taxes = [];
+            for (var i = 0; i < taxes_ids.length; i++) {
+                taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            }
+            return taxes;
+        },
         get_all_prices: function(){
             var self = this;
             var currency_rounding = this.pos.currency.rounding;
@@ -1485,6 +1500,32 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.orderlines.each(function(line){
                 if ( self.pos.db.category_contains(categ_id,line.product.id) ) {
                     total += line.get_price_with_tax();
+                }
+            });
+
+            return total;
+        },
+        get_total_for_taxes: function(tax_id){
+            var total = 0;
+            var self = this;
+
+            if (!(tax_id instanceof Array)) {
+                tax_id = [tax_id];
+            }
+
+            var tax_set = {};
+
+            for (var i = 0; i < tax_id.length; i++) {
+                tax_set[tax_id[i]] = true;
+            }
+
+            this.orderlines.each(function(line){
+                var taxes_ids = line.get_product().taxes_id;
+                for (var i = 0; i < taxes_ids.length; i++) {
+                    if (tax_set[taxes_ids[i]]) {
+                        total += line.get_price_with_tax();
+                        return;
+                    }
                 }
             });
 
