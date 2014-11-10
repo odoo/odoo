@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+         <record id="barcode_rule_weight_three_dec" model="barcode.rule">
+            <field name="name">Weight Barcodes 3 Decimals</field>
+            <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+            <field name="sequence">36</field>
+            <field name="type">weight</field>
+            <field name="encoding">ean13</field>
+            <field name="pattern">21*****{NNDDD}*</field>
+        </record>
+        
         <record id="barcode_rule_package" model="barcode.rule">
             <field name="name">Package barcodes</field>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>

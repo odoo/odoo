@@ -7,5 +7,3 @@ openerp.barcodes = function(instance) {
 
     openerp_barcode_reader(instance,module);         // import barcodes.js
 };
-
-    

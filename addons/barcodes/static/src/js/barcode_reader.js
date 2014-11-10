@@ -51,8 +51,6 @@ function openerp_barcode_reader(instance,module){
             };
             
             if (!nomenclature) {
-                console.log(this);
-                console.log("nomenclature does not exist");
                 return parsed_result;
             }
 

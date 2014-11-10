@@ -4317,7 +4317,8 @@ class stock_picking_type(osv.osv):
 class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
 
-    type = openerp.fields.Selection(selection_add=[
+    type = openerp.fields.Selection(selection_add=[ 
+                                                    ('weight','Weighted Product'),
                                                     ('location','Location'),
                                                     ('lot','Lot'),
                                                     ('package','Package')
