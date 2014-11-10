@@ -510,6 +510,7 @@ class Field(object):
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
+    _related_states = property(attrgetter('states'))
 
     @property
     def base_field(self):
