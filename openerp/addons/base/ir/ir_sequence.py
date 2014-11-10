@@ -195,8 +195,8 @@ class ir_sequence(openerp.osv.osv.osv):
         return values['id']
 
     def unlink(self, cr, uid, ids, context=None):
-        super(ir_sequence, self).unlink(cr, uid, ids, context)
         self._drop_sequence(cr, uid, ids)
+        super(ir_sequence, self).unlink(cr, uid, ids, context)
         return True
 
     def write(self, cr, uid, ids, values, context=None):
@@ -221,7 +221,7 @@ class ir_sequence(openerp.osv.osv.osv):
                         for seq_date_id in row['date_range_ids']:
                             self._alter_sequence(cr, uid, row['id'], number_increment=i, seq_date_id=seq_date_id)
                 else:
-                    self._drop_sequence(cr, row['id'])
+                    self._drop_sequence(cr, uid, row['id'])
             else:
                 if new_implementation in ('no_gap', None):
                     pass
