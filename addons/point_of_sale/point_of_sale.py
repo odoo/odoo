@@ -92,6 +92,8 @@ class pos_config(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required="True"),
+        'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
+        'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -166,14 +168,30 @@ class pos_config(osv.osv):
 
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        print company_id
         return company_id
 
+<<<<<<< HEAD
     def _get_default_nomenclature(self, cr, uid, context=None):
         nom_obj = self.pool.get('barcode.nomenclature')
         res = nom_obj.search(cr, uid, [], limit=1, context=context)
         if res and res[0]:
             return nom_obj.browse(cr, uid, res[0], context=context).id
         return False
+=======
+    def _get_group_pos_manager(self, cr, uid, context=None):
+        group = self.pool.get('ir.model.data').get_object_reference(cr,uid,'point_of_sale','group_pos_manager')
+        if group:
+            return group[1]
+        else:
+            return False
+
+    def _get_group_pos_user(self, cr, uid, context=None):
+        group = self.pool.get('ir.model.data').get_object_reference(cr,uid,'point_of_sale','group_pos_user')
+        if group:
+            return group[1]
+        else:
+            return False
 
     _defaults = {
         'uuid'  : _generate_uuid,
@@ -186,6 +204,8 @@ class pos_config(osv.osv):
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
         'barcode_nomenclature_id': _get_default_nomenclature,
+        'group_pos_manager_id': _get_group_pos_manager,
+        'group_pos_user_id': _get_group_pos_user,
     }
 
     def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):

@@ -165,11 +165,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.units_by_id = units_by_id;
             }
         },{
-            model:  'res.users',
-            fields: ['name','pos_security_pin','barcode'],
-            domain: null,
-            loaded: function(self,users){ self.users = users; },
-        },{
             model:  'res.partner',
             fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date'],
             domain: null,
@@ -231,6 +226,29 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
                 }
            },
+        },{
+            model:  'res.users',
+            fields: ['name','pos_security_pin','groups_id','barcode'],
+            domain: null,
+            loaded: function(self,users){ 
+                var pos_users = [];
+                for (var i = 0; i < users.length; i++) {
+                    var user = users[i];
+                    for (var j = 0; j < user.groups_id.length; j++) {
+                        var group_id = user.groups_id[j];
+                        if (group_id === self.config.group_pos_manager_id[0]) {
+                            user.role = 'manager';
+                            break;
+                        } else if (group_id === self.config.group_pos_user_id[0]) {
+                            user.role = 'cashier';
+                        }
+                    }
+                    if (user.role) {
+                        pos_users.push(user);
+                    }
+                }
+                self.users = pos_users; 
+            },
         },{
             model: 'stock.location',
             fields: [],
