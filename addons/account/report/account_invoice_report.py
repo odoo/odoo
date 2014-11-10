@@ -21,7 +21,7 @@
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
 class account_invoice_report(models.Model):
     _name = "account.invoice.report"
@@ -36,22 +36,14 @@ class account_invoice_report(models.Model):
         """
         currency_obj = self.env['res.currency']
         currency_rate_obj = self.env['res.currency.rate']
-        user_currency_id = self.env['res.users'].browse(uid).company_id.currency_id.id
+        user_currency_id = self.env.user.company_id.currency_id.id
         currency_rate_id = currency_rate_obj.search([('rate', '=', 1)], limit=1)[0]
-        base_currency_id = currency_rate_obj.browse(currency_rate_id).currency_id.id
         res = {}
         context = self._context.copy()
-        for item in self.browse(ids):
-            context['date'] = item.date
-            price_total = currency_obj.with_context(context).compute(base_currency_id, user_currency_id)
-            price_average = currency_obj.with_context(context).compute(base_currency_id, user_currency_id)
-            residual = currency_obj.with_context(context).compute(base_currency_id, user_currency_id)
-            res[item.id] = {
-                'user_currency_price_total': price_total,
-                'user_currency_price_average': price_average,
-                'user_currency_residual': residual,
-            }
-        return res
+        context['date'] = item.date
+        self.user_currency_price_total = currency_obj.with_context(context).compute(currency_rate_id, user_currency_id)
+        self.user_currency_price_average = currency_obj.with_context(context).compute(currency_rate_id, user_currency_id)
+        self.user_currency_residual = currency_obj.with_context(context).compute(currency_rate_id, user_currency_id)
 
 
     date = fields.Date(string='Date', readonly=True)
@@ -230,4 +222,4 @@ class account_invoice_report(models.Model):
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:   
