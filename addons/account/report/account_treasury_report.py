@@ -21,7 +21,7 @@
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
 class account_treasury_report(models.Model):
     _name = "account.treasury.report"
@@ -35,11 +35,11 @@ class account_treasury_report(models.Model):
         all_companies = self.env['res.company'].search([])
         current_sum = dict((company, 0.0) for company in all_companies)
         res = dict((id, dict((fn, 0.0) for fn in field_names)) for id in all_treasury_lines)
-        for record in self.browse(all_treasury_lines):
-            res[record.id]['starting_balance'] = current_sum[record.company_id.id]
+        for record in self.all_treasury_lines:
+            record.starting_balance = current_sum[record.company_id.id]
             current_sum[record.company_id.id] += record.balance
-            res[record.id]['ending_balance'] = current_sum[record.company_id.id]
-        return res    
+            record.ending_balance = current_sum[record.company_id.id]
+        return res
 
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscalyear', readonly=True)
     period_id = fields.Many2one('account.period', string='Period', readonly=True)
