@@ -560,41 +560,29 @@
             if (!py.PY_isInstance(other, datetime.date)) {
                 return py.NotImplemented;
             }
-            // TODO: test this whole mess
-            var year = asJS(this.ops.year) || asJS(other.year);
-            if (asJS(this.ops.years)) {
-                year += asJS(this.ops.years);
-            }
-
-            var month = asJS(this.ops.month) || asJS(other.month);
-            if (asJS(this.ops.months)) {
-                month += asJS(this.ops.months);
-                // FIXME: no divmod in JS?
-                while (month < 1) {
-                    year -= 1;
-                    month += 12;
-                }
-                while (month > 12) {
-                    year += 1;
-                    month -= 12;
-                }
-            }
-
-            var lastMonthDay = new Date(year, month, 0).getDate();
-            var day = asJS(this.ops.day) || asJS(other.day);
-            if (day > lastMonthDay) { day = lastMonthDay; }
+            
+            var year_offset = (asJS(this.ops.years) || 0);
+            var month_offset = (asJS(this.ops.months) || 0);
             var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-            if (days_offset) {
-                day = new Date(year, month-1, day + days_offset).getDate();
+
+            var year = asJS(this.ops.year) || asJS(other.year);
+            var month = asJS(this.ops.month) || asJS(other.month);
+            var day = asJS(this.ops.day) || asJS(other.day);
+
+            if (asJS(this.ops.weekday) != null) {
+            	var d = new Date(year, month - 1, day);
+            	days_offset += asJS(this.ops.weekday) - d.getDay();
             }
+
+            var s = tmxxx(year + year_offset, month + month_offset, day + days_offset, 0, 0, 0, 0);
+
             // TODO: leapdays?
             // TODO: hours, minutes, seconds? Not used in XML domains
-            // TODO: weekday?
             // FIXME: use date.replace
             return py.PY_call(datetime.date, [
-                py.float.fromJSON(year),
-                py.float.fromJSON(month),
-                py.float.fromJSON(day)
+                py.float.fromJSON(s.year),
+                py.float.fromJSON(s.month),
+                py.float.fromJSON(s.day)
             ]);
         },
         __radd__: function (other) {
@@ -605,40 +593,28 @@
             if (!py.PY_isInstance(other, datetime.date)) {
                 return py.NotImplemented;
             }
-            // TODO: test this whole mess
-            var year = asJS(this.ops.year) || asJS(other.year);
-            if (asJS(this.ops.years)) {
-                year -= asJS(this.ops.years);
-            }
 
-            var month = asJS(this.ops.month) || asJS(other.month);
-            if (asJS(this.ops.months)) {
-                month -= asJS(this.ops.months);
-                // FIXME: no divmod in JS?
-                while (month < 1) {
-                    year -= 1;
-                    month += 12;
-                }
-                while (month > 12) {
-                    year += 1;
-                    month -= 12;
-                }
-            }
-
-            var lastMonthDay = new Date(year, month, 0).getDate();
-            var day = asJS(this.ops.day) || asJS(other.day);
-            if (day > lastMonthDay) { day = lastMonthDay; }
+            var year_offset = (asJS(this.ops.years) || 0);
+            var month_offset = (asJS(this.ops.months) || 0);
             var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-            if (days_offset) {
-                day = new Date(year, month-1, day - days_offset).getDate();
+
+            var year = asJS(this.ops.year) || asJS(other.year);
+            var month = asJS(this.ops.month) || asJS(other.month);
+            var day = asJS(this.ops.day) || asJS(other.day);
+
+            if (asJS(this.ops.weekday) != null) {
+            	var d = new Date(year, month - 1, day);
+            	days_offset += asJS(this.ops.weekday) - d.getDay();
             }
+
+            var s = tmxxx(year - year_offset, month - month_offset, day - days_offset, 0, 0, 0, 0);
+
             // TODO: leapdays?
             // TODO: hours, minutes, seconds? Not used in XML domains
-            // TODO: weekday?
             return py.PY_call(datetime.date, [
-                py.float.fromJSON(year),
-                py.float.fromJSON(month),
-                py.float.fromJSON(day)
+                py.float.fromJSON(s.year),
+                py.float.fromJSON(s.month),
+                py.float.fromJSON(s.day)
             ]);
         },
         __rsub__: function (other) {
