@@ -3,6 +3,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
+    var barcode_reader_module = instance.barcode_reader;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -26,9 +27,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos_widget = attributes.pos_widget;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
-            
-            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
-        
+
+            this.barcode_reader = new barcode_reader_module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
+
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -83,8 +84,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     if(self.config.use_proxy){
                         return self.connect_to_proxy();
                     }
-                });
-            
+                });  // used to read barcodes);
         },
 
         // releases ressources holds by the model at the end of life of the posmodel
@@ -224,7 +224,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 for (var i = 0; i < orders.length; i++) {
                     self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
                 }
-            },
+           },
         },{
             model: 'stock.location',
             fields: [],
@@ -306,40 +306,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.cashregisters_by_id[self.cashregisters[i].id] = self.cashregisters[i];
                 }
             },
-        }, {
-            model: 'barcode.nomenclature',
-            fields: ['name','rule_ids'],
-            domain: function(self){ return [] },
-            loaded: function(self,nomenclatures){
-                if (self.config.barcode_nomenclature_id) {
-                    for (var i = 0; i < nomenclatures.length; i++) {
-                        if (nomenclatures[i].id === self.config.barcode_nomenclature_id[0]) {
-                            self.nomenclature = nomenclatures[i];
-                        }
-                    }
-                }
-                self.nomenclature = self.nomenclature || null;
-            },
-        }, {
-            model: 'barcode.rule',
-            fields: ['name','sequence','type','encoding','pattern','alias'],
-            domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
-            loaded: function(self,rules){
-                if (self.nomenclature) {
-                    rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
-                    self.nomenclature.rules = rules;
-                    /*for (var i = 0; i < rules.length; i++) {
-                        var pattern = rules[i].pattern;
-                        pattern = pattern.replace(/[x\*]/gi,'x');
-                        
-                        while (pattern.length < 12) {
-                            pattern += '';
-                        }
-                        rules[i].pattern = pattern;
-                    }*/
-                }
-            },
-        }, {
+        },  {
             label: 'fonts',
             loaded: function(self){
                 var fonts_loaded = new $.Deferred();
@@ -391,6 +358,30 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
 
                 return logo_loaded;
+            },
+        }, {
+            model: 'barcode.nomenclature',
+            fields: ['name','rule_ids'],
+            domain: function(self){ return [] },
+            loaded: function(self,nomenclatures){
+                if (self.config.barcode_nomenclature_id) {
+                    for (var i = 0; i < nomenclatures.length; i++) {
+                        if (nomenclatures[i].id === self.config.barcode_nomenclature_id[0]) {
+                            self.nomenclature = nomenclatures[i];
+                        }
+                    }
+                }
+                self.nomenclature = self.nomenclature || null;
+            },
+        }, {
+            model: 'barcode.rule',
+            fields: ['name','sequence','type','encoding','pattern','alias'],
+            domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
+            loaded: function(self,rules){
+                if (self.nomenclature) {
+                    rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
+                    self.nomenclature.rules = rules;
+                }
             },
         },
         ],

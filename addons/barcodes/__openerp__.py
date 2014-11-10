@@ -44,6 +44,7 @@ This module unlocks several advanced barcode features:
         'data/barcodes_data.xml',
         'barcodes_view.xml',
         'security/ir.model.access.csv',
+        'views/templates.xml',
     ],
     'installable': True,
     'auto_install': False,
