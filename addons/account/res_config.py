@@ -283,8 +283,8 @@ class account_config_settings(models.TransientModel):
 
     @api.onchange('date_start')
     def onchange_start_date(self):
-        if self.start_date:
-            start_date = datetime.datetime.strptime(self.start_date, "%Y-%m-%d")
+        if self.date_start:
+            start_date = datetime.datetime.strptime(self.date_start, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             self.date_stop = end_date.strftime('%Y-%m-%d')
 
