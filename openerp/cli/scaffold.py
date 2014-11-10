@@ -98,7 +98,7 @@ class template(object):
     def files(self):
         """ Lists the (local) path and content of all files in the template
         """
-        for root, _, files in os.walk(self.path):
+        for root, _, files in os.walk(unicode(self.path, sys.getfilesystemencoding())):
             for f in files:
                 path = os.path.join(root, f)
                 yield path, open(path, 'rb').read()

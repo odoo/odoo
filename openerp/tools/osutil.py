@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,6 +29,7 @@ from os.path import join as opj
 import shutil
 import tempfile
 import zipfile
+import sys
 
 if os.name == 'nt':
     import ctypes
@@ -53,7 +54,7 @@ def walksymlinks(top, topdown=True, onerror=None):
     same as os.walk but follow symlinks
     attention: all symlinks are walked before all normals directories
     """
-    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
+    for dirpath, dirnames, filenames in os.walk(unicode(top, sys.getfilesystemencoding()), topdown, onerror):
         if topdown:
             yield dirpath, dirnames, filenames
 
@@ -80,7 +81,7 @@ def zip_dir(path, stream, include_dir=True):      # TODO add ignore list
         len_prefix += 1
 
     with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zipf:
-        for dirpath, dirnames, filenames in os.walk(path):
+        for dirpath, dirnames, filenames in os.walk(unicode(path, sys.getfilesystemencoding())):
             for fname in filenames:
                 bname, ext = os.path.splitext(fname)
                 ext = ext or bname
