@@ -21,7 +21,7 @@
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
 class account_entries_report(models.Model):
     _name = "account.entries.report"
@@ -80,12 +80,12 @@ class account_entries_report(models.Model):
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
                 current_year = fiscalyear_obj.find()
-                ids = fiscalyear_obj.read([current_year], ['period_ids'])[0]['period_ids']
-                args.append(['period_id','in',ids])
+                fiscalyear = fiscalyear_obj.browse([current_year]).period_fiscalyear
+                args.append(['period_id','in',fiscalyear])
         for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
             if a in args:
                 args.remove(a)
-        return super(account_entries_report, self).with_context(context).search(args=args, offset=offset, limit=limit, order=order, count=count)
+        return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False,lazy=True):
@@ -96,10 +96,8 @@ class account_entries_report(models.Model):
             domain.append(['period_id','in',[current_period]])
         elif self._context.get('year', False) == 'current_year':
             current_year = fiscalyear_obj.find()
-            ids = fiscalyear_obj.read([current_year], ['period_ids'])[0]['period_ids']
-            domain.append(['period_id','in',ids])
-        else:
-            domain = domain
+            fiscalyear = fiscalyear_obj.browse([current_year]).period_fiscalyear
+            domain.append(['period_id','in',fiscalyear])
         return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
