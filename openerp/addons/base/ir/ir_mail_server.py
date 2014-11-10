@@ -121,7 +121,7 @@ def encode_header_param(param_text):
          else Charset('utf8').header_encode(param_text_utf8)
 
 # TODO master, remove me, no longer used internaly
-name_with_email_pattern = re.compile(r'("[^<@>]+")\s*<([^ ,<@]+@[^> ,]+)>')
+name_with_email_pattern = re.compile(r'([^<@>]+)\s*<([^ ,<@]+@[^> ,]+)>')
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 
 def extract_rfc2822_addresses(text):
