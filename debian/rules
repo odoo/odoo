@@ -2,7 +2,7 @@
 # vim:noet:
 
 %:
-	dh  ${@}
+	dh ${@} -Spython_distutils
 
 override_dh_installchangelogs:
 	dh_installchangelogs -X./history
