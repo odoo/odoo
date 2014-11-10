@@ -15,6 +15,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.account_id = [];
             this.updating = false;
             this.defs = [];
+            this.week = false;
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
                 this.set({"date_from": instance.web.str_to_date(this.field_manager.get_field_value("date_from"))});
@@ -26,6 +27,9 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.set({"user_id": this.field_manager.get_field_value("user_id")});
             });
             this.on("change:sheets", this, this.update_sheets);
+            this.on("change:week", this, function() {
+                self.week = self.get('week');
+            });
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
@@ -208,8 +212,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             })).then(function(result) {
                 // we put all the gathered data in self, then we render
                 self.dates = dates;
-                if(self.dates.length){
-                    self.week = _.first(self.dates).getWeek();
+                if(self.dates.length) {
+                    self.set('week', _.first(self.dates).getWeek());
+                    _.extend(self.options, {'week': self.get('week')});
                     self.last_week = _.last(self.dates).getWeek();
                 }
                 self.accounts = accounts;
