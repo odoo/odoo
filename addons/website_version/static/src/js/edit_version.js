@@ -31,7 +31,7 @@
                         
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                        self.wizard.on('click','.confirm', function(){
+                        self.wizard.on('click','.o_confirm', function(){
                             self.save();
                             location.reload();
                         });
@@ -52,7 +52,7 @@
                 {
                     self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish your modifications."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                    self.wizard.on('click','.confirm', function(){
+                    self.wizard.on('click','.o_confirm', function(){
                         self.save();
                     });
                 }
@@ -60,13 +60,13 @@
             });
 
             $('.option_choice').click(function() {
-                self.$el.find(".second_choice").remove();
+                self.$el.find(".o_second_choice").remove();
                 var name = $('#version-menu-button').data('version_name');
                 if(name){
-                    self.$el.find(".first_choice").before(openerp.qweb.render("all_options", {version:'Save on '+name}));
+                    self.$el.find(".o_first_choice").before(openerp.qweb.render("all_options", {version:'Save on '+name}));
                 }
                 else{
-                    self.$el.find(".first_choice").before(openerp.qweb.render("all_options", {version:'Save and Publish'}));
+                    self.$el.find(".o_first_choice").before(openerp.qweb.render("all_options", {version:'Save and Publish'}));
                 }
 
             });
