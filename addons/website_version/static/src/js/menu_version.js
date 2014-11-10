@@ -202,7 +202,7 @@
                         check = false;
                     }
                     if (result.length == 0 && check){
-                        self.wizard.find(".o_versions").after("<p class='o_message' style='color : red'> *You must select at least one version which is not the original</p>");
+                        self.wizard.find(".o_versions").after("<p class='o_message' style='color : red'> *You must select at least one version which is not Master</p>");
                         check = false;
                     }
                     if(check){
