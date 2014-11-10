@@ -1364,7 +1364,8 @@ class account_invoice_line(models.Model):
             if values['uos_id'] and values['uos_id'] != product.uom_id.id:
                 values['price_unit'] = self.env['product.uom']._compute_price(
                     product.uom_id.id, values['price_unit'], values['uos_id'])
-
+        if name:
+            values['name'] = name
         return {'value': values, 'domain': domain}
 
     @api.multi
