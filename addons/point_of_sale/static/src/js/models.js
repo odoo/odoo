@@ -131,12 +131,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         {
             model:  'res.users',
             fields: ['name','company_id'],
-            domain: function(self){ return [['id','=',self.session.uid]]; },
+            ids:    function(self){ return [self.session.uid]; },
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
             fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
-            domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
+            ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
             model:  'product.uom',
@@ -222,17 +222,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model: 'stock.location',
             fields: [],
-            domain: function(self){ return [['id','=', self.config.stock_location_id[0]]]; },
+            ids:    function(self){ return [self.config.stock_location_id[0]]; },
             loaded: function(self, locations){ self.shop = locations[0]; },
         },{
             model:  'product.pricelist',
             fields: ['currency_id'],
-            domain: function(self){ return [['id','=',self.config.pricelist_id[0]]]; },
+            ids:    function(self){ return [self.config.pricelist_id[0]]; },
             loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
         },{
             model: 'res.currency',
             fields: ['symbol','position','rounding','accuracy'],
-            domain: function(self){ return [['id','=',self.pricelist.currency_id[0]]]; },
+            ids:    function(self){ return [self.pricelist.currency_id[0]]; },
             loaded: function(self, currencies){
                 self.currency = currencies[0];
             },
@@ -365,11 +365,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     progress += progress_step;
                     
+
                     if( model.model ){
-                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
-                            .then(function(result){
+                        if (model.ids) {
+                            var records = new instance.web.Model(model.model).call('read',[ids,fields],context);
+                        } else {
+                            var records = new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                        }
+                        records.then(function(result){
                                 try{    // catching exceptions in model.loaded(...)
                                     $.when(model.loaded(self,result,tmp))
                                         .then(function(){ load_model(index + 1); },
