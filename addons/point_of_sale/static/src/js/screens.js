@@ -1130,7 +1130,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 paymentlines.bind('change:selected', this.rerender_paymentline, this);
                 paymentlines.bind('change:amount', function(line){
                         if(!line.selected && line.node){
-                            line.node.value = line.amount.toFixed(2);
+                            line.node.value = line.amount.toFixed(this.pos.currency.decimals);
                         }
                         this.update_payment_summary();
                     },this);

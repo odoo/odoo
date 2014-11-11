@@ -1,5 +1,8 @@
 function openerp_pos_basewidget(instance, module){ //module is instance.point_of_sale
 
+    var round_di = instance.web.round_decimals;
+    var round_pr = instance.web.round_precision
+
     // This is a base class for all Widgets in the POS. It exposes relevant data to the 
     // templates : 
     // - widget.currency : { symbol: '$' | '€' | ..., position: 'before' | 'after }
@@ -25,12 +28,10 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                 this.currency = {symbol: '$', position: 'after', rounding: 0.01};
             }
 
-            var decimals = Math.max(0,Math.ceil(Math.log(1.0 / this.currency.rounding) / Math.log(10)));
 
             this.format_currency = function(amount){
                 if(typeof amount === 'number'){
-                    amount = Math.round(amount*100)/100;
-                    amount = amount.toFixed(decimals);
+                    amount = round_di(amount,this.currency.decimals).toFixed(this.currency.decimals);
                 }
                 if(this.currency.position === 'after'){
                     return amount + ' ' + (this.currency.symbol || '');

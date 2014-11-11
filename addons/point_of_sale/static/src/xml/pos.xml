@@ -873,7 +873,7 @@
             <div class='paymentline-name'>
                 <t t-esc="line.name"/>
             </div>
-            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount_str()" />
             <span  class='paymentline-delete'>
                 <img src="/point_of_sale/static/src/img/search_reset.gif" />
             </span>
@@ -886,7 +886,7 @@
                 <t t-esc="line.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+                <input type="number" step="0.01" t-att-value="line.get_amount_str()" />
                 <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
             </td>
         </tr>
