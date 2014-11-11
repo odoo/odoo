@@ -139,6 +139,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
+            model:  'decimal.precision',
+            fields: ['name','digits'],
+            loaded: function(self,dps){
+                self.dp  = {};
+                for (var i = 0; i < dps.length; i++) {
+                    self.dp[dps[i].name] = dps[i].digits;
+                }
+            },
+        },{ 
             model:  'product.uom',
             fields: [],
             domain: null,
@@ -795,12 +804,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            this.price = round_di(parseFloat(price) || 0, this.pos.currency.decimals);
+            this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            var rounding = this.pos.currency.rounding;
-            return round_pr(this.price,rounding);
+            return this.price;
         },
         get_display_price: function(){
             var rounding = this.pos.currency.rounding;
