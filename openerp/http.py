@@ -499,9 +499,7 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            # If we got a session expired exception, it's not necessary to log.
-            if not isinstance(exception, SessionExpiredException):
-                _logger.exception("Exception during JSON request handling.")
+            _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
                     'message': "OpenERP Server Error",
@@ -510,9 +508,6 @@ class JsonRequest(WebRequest):
             if isinstance(exception, AuthenticationError):
                 error['code'] = 100
                 error['message'] = "OpenERP Session Invalid"
-            if isinstance(exception, SessionExpiredException):
-                error['code'] = 100
-                error['message'] = "Odoo Session Expired"
             return self._json_response(error=error)
 
     def dispatch(self):
