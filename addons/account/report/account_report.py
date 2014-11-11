@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import time
 import datetime
@@ -28,9 +9,8 @@ from openerp import models, fields, api
 
 @api.model
 def _code_get(self):
-    acc_type_obj = self.env['account.account.type']
-    account_type = acc_type_obj.search([])
-    return [(r.code, r.name) for r in account_type]
+    account_types = self.env['account.account.type'].search([])
+    return [(r.code, r.name) for r in account_types]
 
 
 class report_account_receivable(models.Model):
@@ -38,7 +18,7 @@ class report_account_receivable(models.Model):
     _description = "Receivable accounts"
     _auto = False
 
-    name = fields.Char(string='Week of Year', size=7, readonly=True)
+    name = fields.Char(string='Week of Year', readonly=True)
     type = fields.Selection(_code_get, string='Account Type', required=True)
     balance = fields.Float(string='Balance', readonly=True)
     debit = fields.Float(string='Debit', readonly=True)
@@ -71,9 +51,8 @@ class report_account_receivable(models.Model):
 class temp_range(models.Model):
     _name = 'temp.range'
     _description = 'A Temporary table used for Dashboard view'
-    
+
     name = fields.Char(string='Range')
-    
 
 
 class report_aged_receivable(models.Model):
@@ -113,7 +92,7 @@ class report_aged_receivable(models.Model):
 
     name = fields.Char(string='Month Range', size=24, readonly=True)
     balance = fields.Float(string='Balance', compute='_calc_bal', readonly=True)
-    
+
     @api.model
     def _init(self): 
         """ This view will be used in dashboard
@@ -157,10 +136,10 @@ class report_invoice_created(models.Model):
 
     name = fields.Char(string='Description', readonly=True)
     type = fields.Selection([
-        ('out_invoice','Customer Invoice'),
-        ('in_invoice','Supplier Invoice'),
-        ('out_refund','Customer Refund'),
-        ('in_refund','Supplier Refund'),
+        ('out_invoice', 'Customer Invoice'),
+        ('in_invoice', 'Supplier Invoice'),
+        ('out_refund', 'Customer Refund'),
+        ('in_refund', 'Supplier Refund'),
         ],'Type', readonly=True)
     number = fields.Char(string='Invoice Number', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
@@ -171,12 +150,12 @@ class report_invoice_created(models.Model):
     date_due = fields.Date(string='Due Date', readonly=True)
     residual = fields.Float(string='Residual', readonly=True)
     state = fields.Selection([
-        ('draft','Draft'),
-        ('proforma','Pro-forma'),
-        ('proforma2','Pro-forma'),
-        ('open','Open'),
-        ('paid','Done'),
-        ('cancel','Cancelled')
+        ('draft', 'Draft'),
+        ('proforma', 'Pro-forma'),
+        ('proforma2', 'Pro-forma'),
+        ('open', 'Open'),
+        ('paid', 'Done'),
+        ('cancel', 'Cancelled')
     ],'Status', readonly=True)
     origin = fields.Char(string='Source Document', readonly=True, help="Reference of the document that generated this invoice report.")
     create_date = fields.Datetime(string='Create Date', readonly=True)
@@ -214,8 +193,8 @@ class report_account_type_sales(models.Model):
     user_type = fields.Many2one('account.account.type', string='Account Type', readonly=True)
     amount_total = fields.Float(string='Total', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    month = fields.Selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], string='Month', readonly=True)
+    month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                              ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', readonly=True)
 
     _order = 'name desc,amount_total desc'
 
@@ -255,8 +234,8 @@ class report_account_sales(models.Model):
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     amount_total = fields.Float(string='Total', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    month = fields.Selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                              ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], string='Month', readonly=True)
+    month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                              ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', readonly=True)
 
     _order = 'name desc'
 
@@ -282,5 +261,3 @@ class report_account_sales(models.Model):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

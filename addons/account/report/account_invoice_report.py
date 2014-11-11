@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
@@ -37,7 +18,7 @@ class account_invoice_report(models.Model):
         currency_obj = self.env['res.currency']
         currency_rate_obj = self.env['res.currency.rate']
         user_currency_id = self.env.user.company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search([('rate', '=', 1)], limit=1)[0]
+        currency_rate_id = currency_rate_obj.search([('rate', '=', 1)], limit=1)
         res = {}
         context = self._context.copy()
         context['date'] = item.date
@@ -45,13 +26,12 @@ class account_invoice_report(models.Model):
         self.user_currency_price_average = currency_obj.with_context(context).compute(currency_rate_id, user_currency_id)
         self.user_currency_residual = currency_obj.with_context(context).compute(currency_rate_id, user_currency_id)
 
-
     date = fields.Date(string='Date', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_qty = fields.Float(string='Product Quantity', readonly=True)
-    uom_name = fields.Char(string='Reference Unit of Measure', size=128, readonly=True)
+    uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
     payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
-    period_id = fields.Many2one('account.period', string='Force Period', domain=[('state','<>','done')], readonly=True)
+    period_id = fields.Many2one('account.period', string='Force Period', domain=[('state', '!=', 'done')], readonly=True)
     fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Category of Product', readonly=True)
@@ -67,23 +47,23 @@ class account_invoice_report(models.Model):
     currency_rate = fields.Float(string='Currency Rate', readonly=True)
     nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
-        ('out_invoice','Customer Invoice'),
-        ('in_invoice','Supplier Invoice'),
-        ('out_refund','Customer Refund'),
-        ('in_refund','Supplier Refund'),
+        ('out_invoice', 'Customer Invoice'),
+        ('in_invoice', 'Supplier Invoice'),
+        ('out_refund', 'Customer Refund'),
+        ('in_refund', 'Supplier Refund'),
         ],'Type', readonly=True)
     state = fields.Selection([
-        ('draft','Draft'),
-        ('proforma','Pro-forma'),
-        ('proforma2','Pro-forma'),
-        ('open','Open'),
-        ('paid','Done'),
-        ('cancel','Cancelled')
+        ('draft', 'Draft'),
+        ('proforma', 'Pro-forma'),
+        ('proforma2', 'Pro-forma'),
+        ('open', 'Open'),
+        ('paid', 'Done'),
+        ('cancel', 'Cancelled')
         ], string='Invoice Status', readonly=True)
     date_due = fields.Date(string='Due Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Account',readonly=True, domain=[('deprecated', '=', False)])
-    account_line_id = fields.Many2one('account.account', string='Account Line',readonly=True, domain=[('deprecated', '=', False)])
-    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',readonly=True)
+    account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
+    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     residual = fields.Float(string='Total Residual', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
@@ -221,5 +201,3 @@ class account_invoice_report(models.Model):
                     self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:   

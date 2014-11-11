@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
@@ -28,7 +9,7 @@ class account_entries_report(models.Model):
     _description = "Journal Items Analysis"
     _auto = False
     _rec_name = 'date'
-    
+
     date = fields.Date(string='Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
     date_created = fields.Date(string='Date Created', readonly=True)
     date_maturity = fields.Date(string='Date Maturity', readonly=True)
@@ -45,8 +26,8 @@ class account_entries_report(models.Model):
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', readonly=True)
-    move_state = fields.Selection([('draft','Unposted'), ('posted','Posted')], string='Status', readonly=True)
-    move_line_state = fields.Selection([('draft','Unbalanced'), ('valid','Valid')], string='State of Move Line', readonly=True)
+    move_state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status', readonly=True)
+    move_line_state = fields.Selection([('draft', 'Unbalanced'), ('valid', 'Valid')], string='State of Move Line', readonly=True)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconciliation number', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
@@ -65,7 +46,6 @@ class account_entries_report(models.Model):
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations), closed for depreciated accounts.")
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    
 
     _order = 'date desc'
 
@@ -76,19 +56,19 @@ class account_entries_report(models.Model):
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
                 current_period = period_obj.find()[0]
-                args.append(['period_id','in',[current_period]])
+                args.append(['period_id', 'in', [current_period]])
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
                 current_year = fiscalyear_obj.find()
-                fiscalyear = fiscalyear_obj.browse([current_year]).period_fiscalyear
+                fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
                 args.append(['period_id','in',fiscalyear])
-        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+        for a in [['period_id', 'in', 'current_year'], ['period_id', 'in', 'current_period']]:
             if a in args:
                 args.remove(a)
         return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False,lazy=True):
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
         period_obj = self.env['account.period']
         if self._context.get('period', False) == 'current_period':
@@ -96,8 +76,8 @@ class account_entries_report(models.Model):
             domain.append(['period_id','in',[current_period]])
         elif self._context.get('year', False) == 'current_year':
             current_year = fiscalyear_obj.find()
-            fiscalyear = fiscalyear_obj.browse([current_year]).period_fiscalyear
-            domain.append(['period_id','in',fiscalyear])
+            fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
+            domain.append(['period_id', 'in', fiscalyear])
         return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
@@ -139,5 +119,3 @@ class account_entries_report(models.Model):
                 where l.state != 'draft'
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
