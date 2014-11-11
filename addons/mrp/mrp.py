@@ -67,7 +67,7 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'note': fields.text('Description', help="Description of the Work Center. Explain here what's a cycle according to this Work Center."),
+        'note': fields.text('Description', help="A 'workcenter' is used to define properties of a machine or department for costing and resource planning. A workcenter can produce any number of products per 'cycle', where a cycle defines the minimal resources required to produce a whole number of products."),
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this Work Center can do in parallel. If this Work Center represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
@@ -81,7 +81,7 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','!=','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
+        'product_id': fields.many2one('product.product','Work Center Product', help="A product of type 'service', which can be used to store and review costs associated with this workcenter's operation."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
