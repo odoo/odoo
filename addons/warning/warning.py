@@ -76,7 +76,8 @@ class sale_order(osv.osv):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 class purchase_order(osv.osv):
@@ -104,7 +105,8 @@ class purchase_order(osv.osv):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 
@@ -136,14 +138,15 @@ class account_invoice(osv.osv):
                 return {'value': {'partner_id': False}, 'warning': warning}
 
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice=date_invoice, payment_term=payment_term, 
+            date_invoice=date_invoice, payment_term=payment_term,
             partner_bank_id=partner_bank_id, company_id=company_id, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 class stock_picking(osv.osv):
@@ -171,7 +174,8 @@ class stock_picking(osv.osv):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 class product_product(osv.osv):
@@ -221,7 +225,8 @@ class sale_order_line(osv.osv):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 class purchase_order_line(osv.osv):
@@ -251,8 +256,8 @@ class purchase_order_line(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
-
-        return {'value': result.get('value',{}), 'warning':warning}
+        result['warning'] = warning
+        return result
 
 
 
