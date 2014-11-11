@@ -689,8 +689,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = round_pr(quant, unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    if (unit.rounding) {
+                        this.quantity    = round_pr(quant, unit.rounding);
+                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    } else {
+                        this.quantity    = round_pr(quant, 1);
+                        this.quantityStr = this.quantity.toFixed(0);
+                    }
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
