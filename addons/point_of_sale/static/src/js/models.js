@@ -231,6 +231,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             fields: ['name','pos_security_pin','groups_id','barcode'],
             domain: null,
             loaded: function(self,users){ 
+                // we attribute a role to the user, 'cashier' or 'manager', depending
+                // on the group the user belongs. 
                 var pos_users = [];
                 for (var i = 0; i < users.length; i++) {
                     var user = users[i];
@@ -245,6 +247,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     if (user.role) {
                         pos_users.push(user);
+                    }
+                    // replace the current user with its updated version
+                    if (user.id === self.user.id) {
+                        self.user = user;
                     }
                 }
                 self.users = pos_users; 
@@ -496,6 +502,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
 
+        // returns the user who is currently the cashier for this point of sale
+        get_cashier: function(){
+            return this.cashier || this.user;
+        },
+        // changes the current cashier
+        set_cashier: function(user){
+            this.cashier = user;
+        },
         //creates a new empty order and sets it as the current order
         add_new_order: function(){
             var order = new module.Order({},{pos:this});

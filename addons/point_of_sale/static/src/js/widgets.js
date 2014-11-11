@@ -592,44 +592,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         click_username: function(){
             var self = this;
-            
-            var list = [];
-            for (var i = 0; i < this.pos.users.length; i++) {
-                list.push({
-                    'label':this.pos.users[i].name,
-                    'item': this.pos.users[i],
-                });
-            }
-
-            this.pos_widget.screen_selector.show_popup('selection',{
-                'message': _t('Change Cashier'),
-                list: list,
-                confirm: function(cashier){
-                    self.set_cashier(cashier);
-                },
+            this.pos_widget.select_user({
+                'security':     true,
+                'current_user': this.pos.get_cashier(),
+                'message':      _t('Change Cashier'),
+            }).then(function(user){
+                self.pos.set_cashier(user);
+                self.renderElement();
             });
-
-        },
-        set_cashier: function(cashier){
-            var self = this;
-            if (cashier.pos_security_pin) {
-                this.pos_widget.screen_selector.show_popup('password',{
-                    'message': _t('Password'),
-                    confirm: function(password) {
-                        if (password === cashier.pos_security_pin) {
-                            self.pos.cashier = cashier;
-                            self.renderElement();
-                        } else {
-                            this.pos_widget.screen_selector.show_popup('error',{
-                                'message':_t('Password Incorrect'),
-                            });
-                        }
-                    },
-                });
-            } else {
-                this.pos.cashier = cashier;
-                this.renderElement();
-            }
         },
         get_name: function(){
             var user = this.pos.cashier || this.pos.user;
@@ -1034,6 +1004,82 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         loading_show: function(){
             this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
         },
+
+        // A Generic UI that allow to select a user from a list.
+        // It returns a deferred that resolves with the selected user 
+        // upon success. Several options are available :
+        // - security: passwords will be asked
+        // - only_managers: restricts the list to managers
+        // - current_user: password will not be asked if this 
+        //                 user is selected.
+        // - message: The title of the user selection list. 
+        select_user: function(options){
+            options = options || {};
+            var self = this;
+            var def  = new $.Deferred();
+
+            var list = [];
+            for (var i = 0; i < this.pos.users.length; i++) {
+                var user = this.pos.users[i];
+                if (!options.only_managers || user.role === 'manager') {
+                    list.push({
+                        'label': user.name,
+                        'item':  user,
+                    });
+                }
+            }
+
+            this.pos_widget.screen_selector.show_popup('selection',{
+                'message': options.message || _t('Select User'),
+                list: list,
+                confirm: function(user){ def.resolve(user); },
+                cancel:  function(){ def.reject(); },
+            });
+
+            return def.then(function(user){
+                if (options.security && user !== options.current_user && user.pos_security_pin) {
+                    var ret = new $.Deferred();
+
+                    self.pos_widget.screen_selector.show_popup('password',{
+                        'message': _t('Password'),
+                        confirm: function(password) {
+                            if (password !== user.pos_security_pin) {
+                                this.pos_widget.screen_selector.show_popup('error',{
+                                    'message':_t('Password Incorrect'),
+                                });
+                                ret.reject();
+                            } else {
+                                ret.resolve(user);
+                            }
+                        },
+                        cancel: function(){ ret.reject(); },
+                    });
+
+                    return ret;
+                } 
+            });
+        },
+
+        // checks if the current user (or the user provided) has manager
+        // access rights. If not, a popup is shown allowing the user to
+        // temporarily login as an administrator. 
+        // This method returns a defferred, that succeeds with the 
+        // manager user when the login is successfull.
+        sudo: function(user){
+            var def = new $.Deferred();
+            user = user || this.pos.get_cashier();
+
+            if (user.role === 'manager') {
+                return new $.Deferred().resolve(user);
+            } else {
+                return this.select_user({
+                    security:       true, 
+                    only_managers:  true
+                    message:       _t('Login as a Manager'),
+                })
+            }
+        },
+
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
         build_widgets: function() {
