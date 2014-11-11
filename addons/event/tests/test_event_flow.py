@@ -21,6 +21,7 @@ class TestEventFlow(TestEventCommon):
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 2,
+            'seats_availability': 'limited',
         })
         self.assertEqual(test_event.state, 'confirm', 'Event: auto_confirmation of event failed')
 

@@ -49,8 +49,12 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Registrations']" position="after">
+                    <xpath expr="//page[@string='Registrations']" position="replace">
                         <page string="Ticket Types">
+                            <group>
+                                <field name="auto_confirm" invisible="1"/>
+                                <field name="seats_min" attrs="{'readonly':[('auto_confirm','=', True)]}"/>
+                            </group>
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Payments" editable="bottom">
                                     <field name="name"/>
@@ -75,8 +79,12 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook" position="inside">
+                    <xpath expr="//page[@string='Registrations']" position="replace">
                         <page string="Ticket Types">
+                            <group>
+                                <field name="auto_confirm" invisible="1"/>
+                                <field name="seats_min" attrs="{'readonly':[('auto_confirm','=', True)]}"/>
+                            </group>
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Payments" editable="bottom">
                                     <field name="name"/>
