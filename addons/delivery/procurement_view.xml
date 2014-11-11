@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+
+<record id="procurement_group_form_view" model="ir.ui.view">
+    <field name="name">delivery.procurement.group.form.inherit</field>
+    <field name="model">procurement.group</field>
+    <field name="inherit_id" ref="procurement.procurement_group_form_view" />
+    <field name="arch" type="xml">
+        <field name="move_type" position="after">
+            <field name="carrier_id"/>
+        </field>
+    </field>
+</record>
+
+
+</data>
+</openerp>

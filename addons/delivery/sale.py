@@ -53,10 +53,12 @@ class sale_order(osv.Model):
                 result['value']['carrier_id'] = dtype
         return result
 
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        result = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-        result.update(carrier_id=order.carrier_id.id)
-        return result
+    def _prepare_procurement_group(self, cr, uid, order, context=None):
+        '''Copy carrier_id from sale.order to procurement.group'''
+        res = super(sale_order, self)._prepare_procurement_group(
+            cr, uid, order, context=context)
+        res.update({'carrier_id': order.carrier_id.id or False})
+        return res
 
     def _delivery_unset(self, cr, uid, ids, context=None):
         sale_obj = self.pool['sale.order.line']

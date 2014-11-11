@@ -1999,6 +1999,16 @@ class stock_move(osv.osv):
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
 
+    def _prepare_picking_assign(self, cr, uid, move, context=None):
+        values = {
+            'origin': move.origin,
+            'company_id': move.company_id and move.company_id.id or False,
+            'move_type': move.group_id and move.group_id.move_type or 'direct',
+            'partner_id': move.partner_id.id or False,
+            'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+        }
+        return values
+
     @api.cr_uid_ids_context
     def _picking_assign(self, cr, uid, move_ids, procurement_group, location_from, location_to, context=None):
         """Assign a picking on the given move_ids, which is a list of move supposed to share the same procurement_group, location_from and location_to
@@ -2014,13 +2024,7 @@ class stock_move(osv.osv):
             pick = picks[0]
         else:
             move = self.browse(cr, uid, move_ids, context=context)[0]
-            values = {
-                'origin': move.origin,
-                'company_id': move.company_id and move.company_id.id or False,
-                'move_type': move.group_id and move.group_id.move_type or 'direct',
-                'partner_id': move.partner_id.id or False,
-                'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
-            }
+            values = self._prepare_picking_assign(cr, uid, move, context=context)
             pick = pick_obj.create(cr, uid, values, context=context)
         return self.write(cr, uid, move_ids, {'picking_id': pick}, context=context)
 
