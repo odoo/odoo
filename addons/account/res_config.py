@@ -324,7 +324,7 @@ class account_config_settings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-            }, context)
+            })
             wizard.execute()
 
     @api.multi
