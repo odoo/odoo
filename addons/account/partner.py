@@ -163,7 +163,7 @@ class res_partner(models.Model):
             partner.credit = 0
         for pid, type, val in self._cr.fetchall():
             if val is None: val=0
-            value = (type=='receivable') and val or -val
+            value = {maps[type]: (type=='receivable') and val or -val}
             self.browse(pid).write(value)
 
     @api.multi
