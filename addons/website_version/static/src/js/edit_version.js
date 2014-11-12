@@ -29,14 +29,14 @@
                     openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': 0 }).then(function (result) {
                         $('html').data('version_id', result);
                         
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:_t("You are actually working on "+name+ " version.")}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.o_confirm', function(){
                             self.save();
                             location.reload();
                         });
                     }).fail(function(){
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"This name already exists."}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     });
                 });
@@ -50,7 +50,7 @@
                 }
                 else
                 {
-                    self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish your modifications."}));
+                    self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:_t("Are you sure you want to publish your modifications.")}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     self.wizard.on('click','.o_confirm', function(){
                         self.save();
