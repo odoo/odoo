@@ -97,7 +97,6 @@ class Experiment(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         li = vals.get('experiment_version_ids')
-        print vals
         if li:
             for l in li:
                 #l[0] is the magic number

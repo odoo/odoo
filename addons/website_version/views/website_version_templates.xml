@@ -58,9 +58,9 @@
                         var view_id = $('html').attr('data-view-xmlid');
                         openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
                                 var exp = result['ExpId'];
-                                var snap = result['VarId'];
+                                var ver = result['VarId'];
                                 ga('set', 'expId', exp); 
-                                ga('set', 'expVar', snap);
+                                ga('set', 'expVar', ver);
                                 ga('send', 'pageview');
                             });       
                     }
