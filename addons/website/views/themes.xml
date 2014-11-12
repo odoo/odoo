@@ -11,9 +11,14 @@
     <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
 </template>
 
-<!-- Bootstrap Less File layout -->
+<!-- Bootstrap Less File layout
 
-<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="True">
+Each theme module must override the following view to active bootstrap:
+    <record id="website.option_bootstrap_less" model="ir.ui.view">
+      <field name="active" eval='True'/>
+    </record>
+ -->
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[@id='bootstrap_css']" position="replace">
         <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
         <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>

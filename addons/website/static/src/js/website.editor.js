@@ -668,7 +668,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         events: {
             'mousedown a.dropdown-toggle': 'load_menu',
-            'click li:not(#html_editor):not(#theme_customize):not(#install_apps) a': 'do_customize',
+            'click ul a[data-view-id]': 'do_customize',
         },
         start: function() {
             var self = this;

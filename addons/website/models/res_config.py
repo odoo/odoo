@@ -40,3 +40,18 @@ class website_config_settings(osv.osv_memory):
     _defaults = {
         'website_id': lambda self,cr,uid,c: self.pool.get('website').search(cr, uid, [], context=c)[0],
     }
+
+    def toggle_less_bootswatch_themes(self, cr, uid, ids, context=None):
+        website = self.pool['website'].browse(cr, uid, 1, context=context)
+        imd_obj = self.pool['ir.model.data']
+        view_obj = self.pool['ir.ui.view']
+        view_model, view_id = imd_obj.get_object_reference(cr, uid, 'website', 'theme')
+        view = view_obj.browse(cr, uid, view_id, context=context)
+        if view.exists():
+            for inheriting_view in view.inherit_children_ids:
+                if inheriting_view.name == 'option_bootstrap_less':
+                    continue
+                inheriting_view.write({'active': False})
+
+        less_view_model, less_view_id = imd_obj.get_object_reference(cr, uid, 'website', 'option_bootstrap_less')
+        view_obj.write(cr, uid, less_view_id, {'active': website.option_bootstrap_less is False}, context=context)
