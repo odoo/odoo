@@ -5,9 +5,8 @@
 <!--
      Theme
 -->
-
-    <template id="website.themes" name="Themes">
-        <t t-call="website.layout">
+    <template id="website.theme">
+        <!-- Theme customizer breaking the theme choser -->
 
           <!-- Boostrap Fallback if server can't compute less files -->
           <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
@@ -88,7 +87,11 @@
           <link href="/web/static/lib/bootstrap/less/responsive-utilities.less" rel="stylesheet" type="text/less"/>
 
           <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
+    </template>
 
+    <template id="website.themes" name="Themes">
+      <!-- Old theme choser -->
+        <t t-call="website.layout">
           <div id="wrap" groups="base.group_website_publisher">
             <div class="container">
     
@@ -368,7 +371,7 @@
 
 <!-- Option layout -->
 
-<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" optional="disabled">
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after">
         <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
     </xpath>
@@ -376,26 +379,26 @@
 
 <!-- Option color -->
 
-<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" optional="disabled">
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" optional="disabled">
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" optional="disabled">
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" optional="disabled">
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" optional="disabled">
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" optional="disabled">
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
 
-<template id="option_font" name="option_font" inherit_id="website.theme" optional="disabled">
+<template id="option_font" name="option_font" inherit_id="website.theme" active="False" customize_show="True">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
 
