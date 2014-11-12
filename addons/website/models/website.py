@@ -146,6 +146,19 @@ class website(osv.osv):
         menu = menus and menus[0] or False
         return dict( map(lambda x: (x, menu), ids) )
 
+    def _option_bootstrap_less(self, cr, uid, ids, name, arg, context=None):
+        use_less = False
+        try:
+            less_view_model, less_view_id = self.pool['ir.model.data'].get_object_reference(
+                cr, uid, 'website', 'option_bootstrap_less'
+            )
+            less_view = self.pool[less_view_model].browse(cr, uid, less_view_id, context=context)
+            if less_view.exists():
+                use_less = less_view.active
+        except ValueError:
+            pass
+        return dict(map(lambda x: (x, use_less), ids))
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -166,7 +179,8 @@ class website(osv.osv):
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
-            })
+            }),
+        'option_bootstrap_less': fields.function(_option_bootstrap_less, type='boolean', string='Activated Less'),
     }
 
     _defaults = {
