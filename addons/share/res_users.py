@@ -59,7 +59,8 @@ class res_groups(osv.osv):
 
     def init(self, cr):
         # force re-generation of the user groups view without the shared groups
-        self.update_user_groups_view(cr, SUPERUSER_ID)
+        context = self.pool['res.users'].context_get(cr, SUPERUSER_ID)
+        self.update_user_groups_view(cr, SUPERUSER_ID, context)
         parent_class = super(res_groups, self)
         if hasattr(parent_class, 'init'):
             parent_class.init(cr)
