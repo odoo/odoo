@@ -77,8 +77,8 @@ class account_installer(models.TransientModel):
         """ get the list of companies that have not been configured yet
         but don't care about the demo chart of accounts """
         company_ids = self.env['res.company'].search([])
-        account_ids = self.env['account.account'].search([('deprecated', '=', False), ('name', '!=', 'Chart For Automated Tests')])
-        configured_cmp = [account.company_id.id for account in account_ids]
+        self._cr.execute("SELECT company_id FROM account_account WHERE deprecated = 'f' AND name != 'Chart For Automated Tests' AND name NOT LIKE '%(test)'")
+        configured_cmp = [r[0] for r in self._cr.fetchall()]
         return list(set(company_ids.ids) - set(configured_cmp))
 
     @api.model

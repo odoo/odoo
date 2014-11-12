@@ -2369,8 +2369,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         companies = CompanyObj.search([])
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
-        account_ids = self.env['account.account'].search([('deprecated', '=', False), ('name', '!=', 'Chart For Automated Tests')])
-        configured_cmp = [account.company_id.id for account in account_ids]
+        self._cr.execute("SELECT company_id FROM account_account WHERE deprecated = 'f' AND name != 'Chart For Automated Tests' AND name NOT LIKE '%(test)'")
+        configured_cmp = [r[0] for r in self._cr.fetchall()]
         unconfigured_cmp = list(set(companies.ids) - set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
