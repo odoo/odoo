@@ -205,6 +205,18 @@ class account_analytic_account(osv.osv):
             }, string='Currency', type='many2one', relation='res.currency'),
     }
 
+    def create(self, cr, uid, vals, context=None):
+        context = dict(context or {}, mail_create_nolog=True)
+        if vals.get('type') == 'template' or vals.get('type') == 'contract':
+            body = _('Contract Created')
+        elif vals.get('type') == 'view':
+            body = _('Analytic View Created')
+        else:
+            body = _('Analytic Account Created')
+        analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [analytic_account_id], body=body, context=context)
+        return analytic_account_id
+
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}
