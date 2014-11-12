@@ -336,6 +336,12 @@
 
     <t t-name="manual_reconciliation_move_line" t-extend="reconciliation_move_line">
         <t t-jquery=".cell_account_code" t-operation="replace"></t>
+<!--         <t t-jquery=".cell_debit" t-operation="replace"><td class="cell_debit"><t t-if="line.debit !== 0"><t t-esc="line.amount_str"/>
+            <t t-if="line.amount_currency_str">&#xA0;(<t t-esc="line.amount_currency_str" />)</t>
+        </t></td></t>
+        <t t-jquery=".cell_credit" t-operation="replace"><td class="cell_credit"><t t-if="line.credit !== 0"><t t-esc="line.amount_str"/>
+            <t t-if="line.amount_currency_str">&#xA0;(<t t-esc="line.amount_currency_str" />)</t>
+        </t></td></t> -->
     </t>
 
 </templates>

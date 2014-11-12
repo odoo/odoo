@@ -945,21 +945,21 @@ class account_move_line(osv.osv):
         else:
             return []
 
-    def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
+    def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False, context=None):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
         # Complete domain
         additional_domain = [('reconcile_id', '=', False), ('account_id','=',account_id)]
         if partner_id:
             additional_domain.append(('partner_id','=',partner_id))
 
-        # Fetch lines or lines number
-        res = self.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=additional_domain, context=context)
-        if count:
-            return res
+        # Fetch lines
+        lines = self.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, additional_domain=additional_domain, context=context)
+        if target_currency_id:
+            target_currency = self.pool.get('res.currency').browse(cr, uid, target_currency_id, context=context)
         else:
             account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
             target_currency = account.currency_id or account.company_currency_id
-            return self.prepare_move_lines_for_reconciliation_widget(cr, uid, res, target_currency=target_currency, context=context)
+        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, context=context)
 
     def _domain_move_lines_for_reconciliation(self, cr, uid, excluded_ids=None, str=False, additional_domain=None, context=None):
         if excluded_ids is None:
@@ -1036,6 +1036,12 @@ class account_move_line(osv.osv):
         else:
             return lines
 
+    def prepare_move_lines_for_reconciliation_widget_by_ids(self, cr, uid, line_ids, target_currency_id=False, context=None):
+        """ Bridge for reconciliation widget """
+        lines = self.browse(cr, uid, line_ids, context=context)
+        target_currency = target_currency_id and self.pool.get('res.currency').browse(cr, uid, target_currency_id, context=context) or False
+        return self.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, context=context)
+
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, skip_partial_reconciliation_siblings=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
@@ -1076,6 +1082,7 @@ class account_move_line(osv.osv):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'partial_reconciliation_siblings': partial_reconciliation_siblings,
+                'currency_id': line.currency_id.id or company_currency.id,
             }
 
             # Amount residual can be negative
@@ -1105,6 +1112,8 @@ class account_move_line(osv.osv):
                 credit = credit > 0 and amount or 0.0
             if line_currency != target_currency:
                 amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
+                ret_line['credit_currency'] = credit
+                ret_line['debit_currency'] = debit
                 ctx = context.copy()
                 if target_date:
                     ctx.update({'date': target_date})
@@ -1148,6 +1157,7 @@ class account_move_line(osv.osv):
         if len(new_mv_line_dicts) > 0:
             am_obj = self.pool.get('account.move')
             currency_obj = self.pool.get('res.currency')
+            partner_id = self.browse(cr, uid, mv_line_ids[0], context=context).partner_id.id
             account = self.browse(cr, uid, mv_line_ids[0], context=context).account_id
             account_id = account.id
             company_currency_id = account.company_id.currency_id.id
@@ -1177,6 +1187,7 @@ class account_move_line(osv.osv):
                 # Writeoff line in account being reconciled
                 second_line_dict = mv_line_dict.copy()
                 second_line_dict['account_id'] = account_id
+                second_line_dict['partner_id'] = partner_id
                 second_line_dict['debit'] = mv_line_dict['credit']
                 second_line_dict['credit'] = mv_line_dict['debit']
                 if account_currency_id != company_currency_id:

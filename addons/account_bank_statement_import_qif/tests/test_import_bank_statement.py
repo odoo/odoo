@@ -19,7 +19,7 @@ class TestQifFile(TransactionCase):
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
             data_file=qif_file,
         ))
-        self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
+        self.statement_import_model.import_file(cr, uid, [bank_statement_id])
         line_id = self.bank_statement_line_model.search(cr, uid, [('name', '=', 'YOUR LOCAL SUPERMARKET')])[0]
         statement_id = self.bank_statement_line_model.browse(cr, uid, line_id).statement_id.id
         bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)

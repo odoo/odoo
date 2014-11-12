@@ -20,7 +20,7 @@ class TestCodaFile(TransactionCase):
 
     def test_coda_file_import(self):
         cr, uid = self.cr, self.uid
-        self.statement_import_model.parse_file(cr, uid, [self.bank_statement_id])
+        self.statement_import_model.import_file(cr, uid, [self.bank_statement_id])
         statement_id = self.bank_statement_model.search(cr, uid, [('name', '=', '135')])[0]
         bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)
         self.assertEqual(float_compare(bank_st_record.balance_start, 11812.70, precision_digits=2), 0)
@@ -28,9 +28,9 @@ class TestCodaFile(TransactionCase):
 
     def test_coda_file_import_twice(self):
         cr, uid = self.cr, self.uid
-        self.statement_import_model.parse_file(cr, uid, [self.bank_statement_id])
+        self.statement_import_model.import_file(cr, uid, [self.bank_statement_id])
         with self.assertRaises(Exception):
-            self.statement_import_model.parse_file(cr, uid, [self.bank_statement_id])
+            self.statement_import_model.import_file(cr, uid, [self.bank_statement_id])
 
     def test_coda_file_wrong_journal(self):
         """ The demo account used by the CODA file is linked to the demo bank_journal """
@@ -40,4 +40,4 @@ class TestCodaFile(TransactionCase):
             journal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'check_journal')[1]
         ))
         with self.assertRaises(Exception):
-            self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
+            self.statement_import_model.import_file(cr, uid, [bank_statement_id])
