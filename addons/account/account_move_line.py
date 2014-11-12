@@ -757,23 +757,23 @@ class account_move_line(osv.osv):
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
-    def get_partner_data_for_manual_reconciliation(self, cr, uid, partner_id=None, context=None):
-        """ Returns the data required for the  manual reconciliation of a partner (customer and/or supplier).
-            If no id is passed, returns data for all partners that can be reconciled. """
+    def get_data_for_manual_reconciliation(self, cr, uid, res_type, res_id=None, context=None):
+        """ Returns the data required for the  manual reconciliation of a given partner/account.
+            If no id is passed, returns data for all partners/accounts that can be reconciled.
+            :param res_type: either 'partner' or 'account' """
 
-        partner_id_condition = partner_id and 'AND p.id = '+str(partner_id) or ''
+        is_partner = res_type == 'partner'
+        res_id_condition = res_id and 'AND r.id = '+str(res_id) or ''
         cr.execute(
-             """SELECT partner_id, partner_name, to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, account_id, account_name, account_code FROM (
-                    SELECT partner_id, partner_name, last_time_entries_checked, account_id, account_name, account_code,
+            """ SELECT %s to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, account_id, account_name, account_code FROM (
+                    SELECT %s last_time_entries_checked, account_id, account_name, account_code,
                         MAX(max_date) AS max_date,
                         SUM(debit) AS debit,
                         SUM(credit) AS credit
                     FROM (
                         -- The first subrequest is required in order for all lines in a partial reconciliations
                         -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
-                        SELECT p.id AS partner_id,
-                            p.last_time_entries_checked,
-                            p.name AS partner_name,
+                        SELECT %s
                             a.id AS account_id,
                             a.name AS account_name,
                             a.code AS account_code,
@@ -782,19 +782,18 @@ class account_move_line(osv.osv):
                             CASE WHEN SUM(l.credit) - SUM(l.debit) > 0 THEN SUM(l.credit) - SUM(l.debit) ELSE 0 END AS credit
                         FROM account_move_line l
                         RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        %s
                         WHERE a.reconcile IS TRUE
                         AND l.reconcile_id IS NULL
                         AND l.state <> 'draft'
+                        %s
                         AND l.reconcile_partial_id IS NOT NULL
                         %s
-                        GROUP BY l.reconcile_partial_id, l.partner_id, p.id, a.id
+                        GROUP BY %s a.id, l.reconcile_partial_id,
 
                         UNION
 
-                        SELECT p.id AS partner_id,
-                            p.last_time_entries_checked,
-                            p.name AS partner_name,
+                        SELECT %s
                             a.id AS account_id,
                             a.name AS account_name,
                             a.code AS account_code,
@@ -803,111 +802,54 @@ class account_move_line(osv.osv):
                             SUM(l.credit) AS credit
                         FROM account_move_line l
                         RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        %s
                         WHERE a.reconcile IS TRUE
                         AND l.reconcile_id IS NULL
                         AND l.state <> 'draft'
-                        AND reconcile_partial_id IS NULL
                         %s
-                        GROUP BY l.partner_id, p.id, a.id
+                        AND l.reconcile_partial_id IS NULL
+                        %s
+                        GROUP BY %s a.id
                     ) AS s 
-                    GROUP BY partner_id, partner_name, last_time_entries_checked, account_id, account_name, account_code
+                    GROUP BY %s last_time_entries_checked, account_id, account_name, account_code
                 ) AS s
                 WHERE debit > 0
                 AND credit > 0
                 AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
                 ORDER BY last_time_entries_checked
-            """ % (partner_id_condition, partner_id_condition))
+            """ % (
+                is_partner and "partner_id, partner_name," or "",
+                is_partner and "partner_id, partner_name," or "",
+                is_partner and "p.id AS partner_id, p.last_time_entries_checked, p.name AS partner_name," or "a.last_time_entries_checked,",
+                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or "",
+                not is_partner and "AND a.type <> 'payable' AND a.type <> 'receivable'" or "",
+                res_id_condition,
+                is_partner and "l.partner_id, p.id," or "",
+                is_partner and "p.id AS partner_id, p.last_time_entries_checked, p.name AS partner_name," or "a.last_time_entries_checked,",
+                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or "",
+                not is_partner and "AND a.type <> 'payable' AND a.type <> 'receivable'" or "",
+                res_id_condition,
+                is_partner and "l.partner_id, p.id," or "",
+                is_partner and "partner_id, partner_name," or "",
+            ))
 
-        
-        # Apply ir_rules by filtering out
-        rows = cr.dictfetchall()
-        ids = [x['partner_id'] for x in rows]
-        allowed_ids = set(self.pool.get('res.partner').search(cr, uid, [('id', 'in', ids)], context=context))
-        rows = [row for row in rows if row['partner_id'] in allowed_ids]
-        ids = [x['account_id'] for x in rows]
-        allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
-        rows = [row for row in rows if row['account_id'] in allowed_ids]
-
-        # Fetch other data
-        for row in rows:
-            account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
-            row['currency_id'] = account.currency_id.id or account.company_currency_id.id
-            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], context=context)
-
-        return rows
-    
-    def get_account_data_for_manual_reconciliation(self, cr, uid, account_id=None, context=None):
-        """ Returns the data required for the  manual reconciliation of an account of type 'other'.
-            If no id is passed, returns data for all accounts of type 'other' that can be reconciled. """
-
-        account_id_condition = account_id and 'AND a.id = '+str(account_id) or ''
-        cr.execute(
-            """SELECT to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, account_id, account_name, account_code FROM (
-                    SELECT last_time_entries_checked, account_id, account_name, account_code,
-                        MAX(max_date) AS max_date,
-                        SUM(debit) AS debit,
-                        SUM(credit) AS credit
-                    FROM (
-                        -- The first subrequest is required in order for all lines in a partial reconciliations
-                        -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
-                        SELECT a.last_time_entries_checked,
-                            a.id AS account_id,
-                            a.name AS account_name,
-                            a.code AS account_code,
-                            MAX(l.create_date) AS max_date,
-                            CASE WHEN SUM(l.debit) - SUM(l.credit) > 0 THEN SUM(l.debit) - SUM(l.credit) ELSE 0 END AS debit,
-                            CASE WHEN SUM(l.credit) - SUM(l.debit) > 0 THEN SUM(l.credit) - SUM(l.debit) ELSE 0 END AS credit
-                        FROM account_move_line l
-                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        WHERE a.reconcile IS TRUE
-                        AND l.reconcile_id IS NULL
-                        AND l.state <> 'draft'
-                        AND a.type <> 'payable' -- ?
-                        AND a.type <> 'receivable' -- ?
-                        AND l.reconcile_partial_id IS NOT NULL
-                        %s
-                        GROUP BY l.reconcile_partial_id, a.id
-
-                        UNION
-
-                        SELECT a.last_time_entries_checked,
-                            a.id AS account_id,
-                            a.name AS account_name,
-                            a.code AS account_code,
-                            MAX(l.create_date) AS max_date,
-                            SUM(l.debit) AS debit,
-                            SUM(l.credit) AS credit
-                        FROM account_move_line l
-                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        WHERE a.reconcile IS TRUE
-                        AND l.reconcile_id IS NULL
-                        AND l.state <> 'draft'
-                        AND a.type <> 'payable' -- ?
-                        AND a.type <> 'receivable' -- ?
-                        AND reconcile_partial_id IS NULL
-                        %s
-                        GROUP BY l.reconcile_partial_id, a.id
-                    ) AS s 
-                    GROUP BY last_time_entries_checked, account_id, account_name, account_code
-                ) AS s
-                WHERE debit > 0
-                AND credit > 0
-                AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-                ORDER BY last_time_entries_checked
-            """ % (account_id_condition, account_id_condition))
         
         # Apply ir_rules by filtering out
         rows = cr.dictfetchall()
         ids = [x['account_id'] for x in rows]
         allowed_ids = set(self.pool.get('account.account').search(cr, uid, [('id', 'in', ids)], context=context))
         rows = [row for row in rows if row['account_id'] in allowed_ids]
+        if is_partner:
+            ids = [x['partner_id'] for x in rows]
+            allowed_ids = set(self.pool.get('res.partner').search(cr, uid, [('id', 'in', ids)], context=context))
+            rows = [row for row in rows if row['partner_id'] in allowed_ids]
 
         # Fetch other data
         for row in rows:
             account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
-            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], context=context)
+            partner_id = is_partner and row['partner_id'] or False
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], partner_id=partner_id, context=context)
 
         return rows
 
@@ -962,6 +904,8 @@ class account_move_line(osv.osv):
         return self.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, context=context)
 
     def _domain_move_lines_for_reconciliation(self, cr, uid, excluded_ids=None, str=False, additional_domain=None, context=None):
+        if context is None:
+            context = []
         if excluded_ids is None:
             excluded_ids = []
         if additional_domain is None:

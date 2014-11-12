@@ -17,21 +17,16 @@ $aestetic_animation_speed: 300ms;
     user-select: none;
     cursor: default;
     height: 100%;
-
-    .clearer {
-        clear: both;
-    }
+    overflow: auto;
 
     .oe_form_sheetbg {
         border-bottom: 0;
-        padding: 0;
-        height: 100%;
+        padding-top: 0;
 
         .oe_form_sheet {
             position: relative;
-            padding: 20px 15px 30px 15px;
+            padding: 20px 15px 20px 15px;
             border-top: 0;
-            border-bottom: 0;
             height: 100%;
         }
     }
@@ -42,6 +37,10 @@ $aestetic_animation_speed: 300ms;
     //     outline-offset: 2px;
     //     outline-color: invert;
     // }
+
+    .clearer {
+        clear: both;
+    }
 
     .oe_view_nocontent {
         max-width: none;

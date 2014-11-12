@@ -2117,12 +2117,12 @@ openerp.account = function (instance) {
                 // Get data for a partner, an account or all partners/accounts that can be reconciled
                 var deferred_partner, deferred_account;
                 if (self.partner_id !== undefined)
-                    deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation", [self.partner_id]);
+                    deferred_partner = self.model_aml.call("get_data_for_manual_reconciliation", ['partner', self.partner_id]);
                 if (self.account_id !== undefined)
-                    deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation", [self.account_id]);
+                    deferred_account = self.model_aml.call("get_data_for_manual_reconciliation", ['account', self.account_id]);
                 if (self.partner_id === undefined && self.account_id === undefined) {
-                    deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation");
-                    deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation");
+                    deferred_partner = self.model_aml.call("get_data_for_manual_reconciliation", ['partner']);
+                    deferred_account = self.model_aml.call("get_data_for_manual_reconciliation", ['account']);
                 }
 
                 return $.when(deferred_partner, deferred_account).then(function(data_partner, data_account){
@@ -2132,12 +2132,6 @@ openerp.account = function (instance) {
                     // If nothing to reconcile, stop here
                     if (data_partner_len + data_account_len === 0) {
                         self.$el.prepend(QWeb.render("manual_reconciliation_nothing_to_reconcile"));
-                        // And if reconciling a given item, update its last_time_entries_checked
-                        var id = self.partner_id || self.account_id;
-                        if (id) {
-                            var model = (self.partner_id ? self.model_partner : self.model_account);
-                            model.call("mark_as_reconciled", [[id]]);
-                        }
                         return;
                     }
 

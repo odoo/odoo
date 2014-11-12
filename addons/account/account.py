@@ -3513,7 +3513,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             code_digits = self.pool.get('account.chart.template').browse(cr, uid, 1, context=context).code_digits
 
         # Seek the next available number for the account code
-        bank_account_code_char = company.bank_account_code_char
+        bank_account_code_char = company.bank_account_code_char or ''
         while True:
             new_code = str(bank_account_code_char.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
             ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company.id)])
@@ -3568,6 +3568,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
+        print '\n'
+        print '_create_bank_journals_from_o2m'
+        print ref_acc_bank.code
+        print '\n'
         self.pool.get('res.company').write(cr, uid, [company.id], {'bank_account_code_char': ref_acc_bank.code}, context=context)
 
         current_num = 1
