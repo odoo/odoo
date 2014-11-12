@@ -126,7 +126,7 @@ class view(osv.Model):
         for k in keys:
             #The view to take depends of the context
             if context.get('version_id'):
-                #priority:3 take the view which is in the same version
+                #priority:1 take the view which is in the same version
                 if k['version_id'] and k['version_id'][0] == context.get('version_id'):
                     right_ids[k['key']] = k['id']
                     priority[k['key']] = 3
@@ -135,17 +135,17 @@ class view(osv.Model):
                     if not priority.get(k['key']) or priority.get(k['key']) < 3:
                         right_ids[k['key']] = k['id']
                         priority[k['key']] = 2
-                #priority:1 take the original view
+                #priority:3 take the original view
                 elif k['version_id'] == False and k['website_id'] == False:
                     if not priority.get(k['key']) or priority.get(k['key']) < 2:
                         right_ids[k['key']] = k['id']
                         priority[k['key']] = 1
             else:
-                #priority:2 take the view which is just in the same website
+                #priority:1 take the view which is just in the same website
                 if k['version_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id'):
                     right_ids[k['key']] = k['id']
                     priority[k['key']] = 2
-                #priority:1 take the original view
+                #priority:2 take the original view
                 elif k['version_id'] == False and k['website_id'] == False:
                     if not priority.get(k['key']) or priority.get(k['key']) < 2:
                         right_ids[k['key']] = k['id']

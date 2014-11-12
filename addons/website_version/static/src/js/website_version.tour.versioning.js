@@ -148,10 +148,10 @@
             },
 
             {
-                title:     _t("Confirm Yes"),
-                waitFor:   '.modal button[type="button"]:contains("Publish")',
+                title:     _t("Click on Publish button"),
+                //waitFor:   '.modal button[type="button"]:contains("Publish")',
                 element:   '.modal button[type="button"]:contains("Publish")',
-                popover:   { fixed: true },
+                placement: 'left',
             },
 
             {
@@ -183,7 +183,7 @@
             },
 
             {
-                title:     _t("Confirm Yes"),
+                title:     _t("Click on delete version button"),
                 waitFor:   '.modal button[type="button"]:contains("Delete Version")',
                 element:   '.modal button[type="button"]:contains("Delete Version")',
                 popover:   { fixed: true },
