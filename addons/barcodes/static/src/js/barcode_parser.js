@@ -1,6 +1,101 @@
-function openerp_barcode_reader(instance,module){
+function openerp_barcode_parser(instance,module){
 
-    module.BarcodeReader = instance.web.Class.extend({
+    module.BarcodeParser = instance.web.Class.extend({
+        init: function(attributes) {
+            var self = this;
+            this.nomenclature_id = attributes.nomenclature_id;
+            this.load_server_data();
+        },
+
+        models: [
+        {
+            model: 'barcode.nomenclature',
+            fields: ['name','rule_ids'],
+            domain: function(self){ return [] },
+            loaded: function(self,nomenclatures){
+                if (self.nomenclature_id) {
+                    for (var i = 0; i < nomenclatures.length; i++) {
+                        if (nomenclatures[i].id === self.nomenclature_id[0]) {
+                            self.nomenclature = nomenclatures[i];
+                        }
+                    }
+                }
+                self.nomenclature = self.nomenclature || null;
+            },
+        }, {
+            model: 'barcode.rule',
+            fields: ['name','sequence','type','encoding','pattern','alias'],
+            domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
+            loaded: function(self,rules){
+                if (self.nomenclature) {
+                    rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
+                    self.nomenclature.rules = rules;
+                }
+            },
+        },
+        ],
+
+        // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
+        load_server_data: function(){
+            var self = this;
+            var loaded = new $.Deferred();
+            var progress = 0;
+            var progress_step = 1.0 / self.models.length;
+            var tmp = {}; // this is used to share a temporary state between models loaders
+
+            function load_model(index){
+                if(index >= self.models.length){
+                    loaded.resolve();
+                }else{
+                    var model = self.models[index];
+                    //self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+
+                    var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
+                    if (!cond) {
+                        load_model(index+1);
+                        return;
+                    }
+
+                    var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
+                    var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
+                    var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    progress += progress_step;
+                    
+                    if( model.model ){
+                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                            .then(function(result){
+                                try{    // catching exceptions in model.loaded(...)
+                                    $.when(model.loaded(self,result,tmp))
+                                        .then(function(){ load_model(index + 1); },
+                                              function(err){ loaded.reject(err); });
+                                }catch(err){
+                                    console.error(err.stack);
+                                    loaded.reject(err);
+                                }
+                            },function(err){
+                                loaded.reject(err);
+                            });
+                    }else if( model.loaded ){
+                        try{    // catching exceptions in model.loaded(...)
+                            $.when(model.loaded(self,tmp))
+                                .then(  function(){ load_model(index +1); },
+                                        function(err){ loaded.reject(err); });
+                        }catch(err){
+                            loaded.reject(err);
+                        }
+                    }else{
+                        load_model(index + 1);
+                    }
+                }
+            }
+
+            try{
+                load_model(0);
+            }catch(err){
+                loaded.reject(err);
+            }
+            return loaded;
+        },
  
         // returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
         ean_checksum: function(ean){
@@ -40,7 +135,7 @@ function openerp_barcode_reader(instance,module){
         // - value  : if the barcode encodes a numerical value, it will be put there
         // - base_code : the barcode with all the encoding parts set to zero; the one put on
         //               the product in the backend
-        parse_barcode: function(barcode, nomenclature){
+        parse_barcode: function(barcode){
             var self = this;
             var parsed_result = {
                 encoding: '',
@@ -49,8 +144,7 @@ function openerp_barcode_reader(instance,module){
                 base_code: barcode,
                 value: 0,
             };
-            
-            if (!nomenclature) {
+            if (!self.nomenclature) {
                 return parsed_result;
             }
 
@@ -131,7 +225,7 @@ function openerp_barcode_reader(instance,module){
                 return base;
             }
 
-            var rules = nomenclature.rules;
+            var rules = self.nomenclature.rules;
             for (var i = 0; i < rules.length; i++) {
                 if (match_pattern(barcode,rules[i].pattern)) {
                     if(rules[i].type === 'alias') {

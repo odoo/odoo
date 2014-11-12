@@ -3,7 +3,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
-    var barcode_reader_module = instance.barcode_reader;
+    var barcode_parser_module = instance.barcode_parser;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -27,8 +27,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos_widget = attributes.pos_widget;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
-
-            this.barcode_reader = new barcode_reader_module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
+            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});
 
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
@@ -81,6 +80,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             this.ready = this.load_server_data()
                 .then(function(){
+                    var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
+                    self.barcode_reader.set_barcode_parser(barcode_parser);
+                    
                     if(self.config.use_proxy){
                         return self.connect_to_proxy();
                     }
@@ -366,31 +368,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                 return logo_loaded;
             },
-        }, {
-            model: 'barcode.nomenclature',
-            fields: ['name','rule_ids'],
-            domain: function(self){ return [] },
-            loaded: function(self,nomenclatures){
-                if (self.config.barcode_nomenclature_id) {
-                    for (var i = 0; i < nomenclatures.length; i++) {
-                        if (nomenclatures[i].id === self.config.barcode_nomenclature_id[0]) {
-                            self.nomenclature = nomenclatures[i];
-                        }
-                    }
-                }
-                self.nomenclature = self.nomenclature || null;
-            },
-        }, {
-            model: 'barcode.rule',
-            fields: ['name','sequence','type','encoding','pattern','alias'],
-            domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
-            loaded: function(self,rules){
-                if (self.nomenclature) {
-                    rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
-                    self.nomenclature.rules = rules;
-                }
-            },
-        },
+        }, 
         ],
 
         // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 

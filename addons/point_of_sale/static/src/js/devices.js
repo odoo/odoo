@@ -3,7 +3,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     "use strict";
 
 	var _t = instance.web._t;
-    var barcode_reader_module = instance.barcode_reader;
 
     // the JobQueue schedules a sequence of 'jobs'. each job is
     // a function returning a deferred. the queue waits for each job to finish 
@@ -442,8 +441,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     // is set-up to act like  a keyboard. Use connect() and disconnect() to activate 
     // and deactivate the barcode reader. Use set_action_callbacks to tell it
     // what to do when it reads a barcode.
-    //module.BarcodeReader = instance.web.Class.extend({
-    barcode_reader_module.BarcodeReader.include({
+    module.BarcodeReader = instance.web.Class.extend({
         actions:[
             'product',
             'cashier',
@@ -457,7 +455,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.remote_scanning = false;
             this.remote_active = 0;
 
+            this.barcode_parser = attributes.barcode_parser;
+
             this.action_callback_stack = [];
+        },
+
+        set_barcode_parser: function(barcode_parser) {
+            this.barcode_parser = barcode_parser;
         },
 
         save_callbacks: function(){
@@ -504,8 +508,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
 
         scan: function(code){
-            var parsed_result = this.pos.barcode_reader.parse_barcode(code, this.pos.nomenclature);
-
+            if(this.barcode_parser) {
+                var parsed_result = this.barcode_parser.parse_barcode(code);
+            }
+            else{
+                console.error("Barcode Parser not yet initialized!");
+            }
             if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parsed_result);
