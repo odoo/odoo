@@ -28,6 +28,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
     _order = 'name'
