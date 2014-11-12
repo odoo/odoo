@@ -347,30 +347,36 @@ class Field(object):
         # traverse the class hierarchy upwards, and take the first field
         # definition with a default or _defaults for self
         for klass in cls.__mro__:
-            field = klass.__dict__.get(name, self)
-            if not isinstance(field, type(self)):
-                return      # klass contains another value overridden by self
+            if name in klass.__dict__:
+                field = klass.__dict__[name]
+                if not isinstance(field, type(self)):
+                    # klass contains another value overridden by self
+                    return
 
-            if 'default' in field._attrs:
-                # take the default in field, and adapt it for cls._defaults
-                value = field._attrs['default']
-                if callable(value):
-                    self.default = value
-                    cls._defaults[name] = lambda model, cr, uid, context: \
-                        self.convert_to_write(value(model.browse(cr, uid, [], context)))
-                else:
-                    self.default = lambda recs: value
-                    cls._defaults[name] = value
-                return
+                if 'default' in field._attrs:
+                    # take the default in field, and adapt it for cls._defaults
+                    value = field._attrs['default']
+                    if callable(value):
+                        from openerp import api
+                        self.default = value
+                        cls._defaults[name] = api.model(
+                            lambda recs: self.convert_to_write(value(recs))
+                        )
+                    else:
+                        self.default = lambda recs: value
+                        cls._defaults[name] = value
+                    return
 
             defaults = klass.__dict__.get('_defaults') or {}
             if name in defaults:
                 # take the value from _defaults, and adapt it for self.default
                 value = defaults[name]
-                value_func = value if callable(value) else lambda *args: value
+                if callable(value):
+                    func = lambda recs: value(recs._model, recs._cr, recs._uid, recs._context)
+                else:
+                    func = lambda recs: value
                 self.default = lambda recs: self.convert_to_cache(
-                    value_func(recs._model, recs._cr, recs._uid, recs._context),
-                    recs, validate=False,
+                    func(recs), recs, validate=False,
                 )
                 cls._defaults[name] = value
                 return
@@ -617,7 +623,8 @@ class Field(object):
 
     def _description_string(self, env):
         if self.string and env.lang:
-            name = "%s,%s" % (self.model_name, self.name)
+            field = self.base_field
+            name = "%s,%s" % (field.model_name, field.name)
             trans = env['ir.translation']._get_source(name, 'field', env.lang)
             return trans or self.string
         return self.string

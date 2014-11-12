@@ -324,7 +324,7 @@ class Post(models.Model):
         for post in self:
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
-                             post.create_uid.login)
+                             post.create_uid)
                 # TODO: in master, consider making this a tunable karma parameter
                 post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * -5)
 
@@ -340,7 +340,7 @@ class Post(models.Model):
         if reason_id in (reason_offensive, reason_spam):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
-                             post.create_uid.login)
+                             post.create_uid)
                 # TODO: in master, consider making this a tunable karma parameter
                 post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
 

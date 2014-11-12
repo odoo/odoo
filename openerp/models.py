@@ -4679,6 +4679,8 @@ class BaseModel(object):
         trans_obj = self.pool.get('ir.translation')
 
         for field_name, field in self._fields.iteritems():
+            if not field.copy:
+                continue
             # removing the lang to compare untranslated values
             context_wo_lang = dict(context, lang=None)
             old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)

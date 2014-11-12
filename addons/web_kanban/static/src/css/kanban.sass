@@ -54,6 +54,9 @@
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
     height: 100%
+    &.oe_background_grey
+        > table.oe_kanban_groups
+            background-color: #eee
     .oe_kanban_column_higlight
         background: #eeddf6 !important
     .oe_view_nocontent
@@ -475,7 +478,6 @@
     .oe_kanban_column, .oe_kanban_group_header
         padding: 0px
         background: #ffffff
-
 .openerp
     .oe_popup_form
         .oe_kanban_buttons

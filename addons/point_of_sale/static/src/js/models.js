@@ -131,14 +131,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         {
             model:  'res.users',
             fields: ['name','company_id'],
-            domain: function(self){ return [['id','=',self.session.uid]]; },
+            ids:    function(self){ return [self.session.uid]; },
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
             fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
-            domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
+            ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
+            model:  'decimal.precision',
+            fields: ['name','digits'],
+            loaded: function(self,dps){
+                self.dp  = {};
+                for (var i = 0; i < dps.length; i++) {
+                    self.dp[dps[i].name] = dps[i].digits;
+                }
+            },
+        },{ 
             model:  'product.uom',
             fields: [],
             domain: null,
@@ -222,19 +231,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model: 'stock.location',
             fields: [],
-            domain: function(self){ return [['id','=', self.config.stock_location_id[0]]]; },
+            ids:    function(self){ return [self.config.stock_location_id[0]]; },
             loaded: function(self, locations){ self.shop = locations[0]; },
         },{
             model:  'product.pricelist',
             fields: ['currency_id'],
-            domain: function(self){ return [['id','=',self.config.pricelist_id[0]]]; },
+            ids:    function(self){ return [self.config.pricelist_id[0]]; },
             loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
         },{
             model: 'res.currency',
             fields: ['symbol','position','rounding','accuracy'],
-            domain: function(self){ return [['id','=',self.pricelist.currency_id[0]]]; },
+            ids:    function(self){ return [self.pricelist.currency_id[0]]; },
             loaded: function(self, currencies){
                 self.currency = currencies[0];
+                if (self.currency.rounding > 0) {
+                    self.currency.decimals = Math.ceil(Math.log(1.0 / self.currency.rounding) / Math.log(10));
+                } else {
+                    self.currency.decimals = 0;
+                }
+
             },
         },{
             model: 'product.packaging',
@@ -363,11 +378,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     progress += progress_step;
                     
+
                     if( model.model ){
-                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
-                            .then(function(result){
+                        if (model.ids) {
+                            var records = new instance.web.Model(model.model).call('read',[ids,fields],context);
+                        } else {
+                            var records = new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                        }
+                        records.then(function(result){
                                 try{    // catching exceptions in model.loaded(...)
                                     $.when(model.loaded(self,result,tmp))
                                         .then(function(){ load_model(index + 1); },
@@ -684,8 +705,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = round_pr(quant, unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    if (unit.rounding) {
+                        this.quantity    = round_pr(quant, unit.rounding);
+                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    } else {
+                        this.quantity    = round_pr(quant, 1);
+                        this.quantityStr = this.quantity.toFixed(0);
+                    }
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -779,12 +805,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            this.price = round_di(parseFloat(price) || 0, 2);
+            this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            var rounding = this.pos.currency.rounding;
-            return round_pr(this.price,rounding);
+            return this.price;
         },
         get_display_price: function(){
             var rounding = this.pos.currency.rounding;
@@ -864,15 +889,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.cashregister = options.cashregister;
             this.name = this.cashregister.journal_id[1];
             this.selected = false;
+            this.pos = options.pos;
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
-            this.amount = round_di(parseFloat(value) || 0, 2);
+            this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
             this.trigger('change:amount',this);
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
             return this.amount;
+        },
+        get_amount_str: function(){
+            return this.amount.toFixed(this.pos.currency.decimals);
         },
         set_selected: function(selected){
             if(this.selected !== selected){
@@ -999,7 +1028,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         addPaymentline: function(cashregister) {
             var paymentLines = this.get('paymentLines');
-            var newPaymentline = new module.Paymentline({},{cashregister:cashregister});
+            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos:this.pos});
             if(cashregister.journal.type !== 'cash'){
                 newPaymentline.set_amount( Math.max(this.getDueLeft(),0) );
             }
