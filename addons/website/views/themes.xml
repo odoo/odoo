@@ -5,17 +5,20 @@
 <!--
      Theme
 -->
-    <template id="website.theme" name="Theme">
-        <!-- Boostrap Fallback if server can't compute less files -->
-        <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+<template id="website.theme" name="Theme">
+    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+    <!-- Boostrap Fallback if server can't compute less files -->
+    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+</template>
 
-        <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+<!-- Bootstrap Less File layout -->
 
-        <!-- Boostrap -->
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[@id='bootstrap_css']" position="replace">
         <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-
-        <link rel="stylesheet" href='/website/static/src/less/colors.less'/>
-    </template>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
+    </xpath>
+</template>
 
     <template id="website.themes" name="Themes">
       <!-- Old theme choser -->
