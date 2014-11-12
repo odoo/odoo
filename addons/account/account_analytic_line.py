@@ -20,12 +20,6 @@ class account_analytic_line(models.Model):
     amount_currency = fields.Float(related='move_id.amount_currency', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
-# NOTE: Commented the code because 'company_id' field is not there and its comes from inherited model. Here field inheritance is not supported
-# company_id = fields.Many2one(default=lambda self: self.env['res.company']._company_default_get('account.analytic.line')) 
-#     _defaults = {
-#         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-#     }
-
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
     @api.v7
