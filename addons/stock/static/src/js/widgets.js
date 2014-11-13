@@ -174,12 +174,12 @@ function openerp_picking_widgets(instance){
             this.$('.js_plus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,true,op_id);
+                self.getParent().scan_product_id(id,1,op_id);
             });
             this.$('.js_minus').click(function(){
                 var id = $(this).data('product-id');
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                self.getParent().scan_product_id(id,false,op_id);
+                self.getParent().scan_product_id(id,-1,op_id);
             });
             this.$('.js_unfold').click(function(){
                 var op_id = $(this).parent().data('id');
@@ -859,7 +859,7 @@ function openerp_picking_widgets(instance){
                     }
                 });
         },
-        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead
+        scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead, increment is the value to increment (-1 or 1)
             var self = this;
             return new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id, op_id, increment])
