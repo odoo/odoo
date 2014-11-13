@@ -32,7 +32,7 @@ class account_bank_statement_import(osv.TransientModel):
             header = header.split(":")[1]
         except:
             raise osv.except_osv(_('Import Error!'), _('Could not decipher the QIF file.'))
-        line_ids = []
+        transactions = []
         vals_line = {}
         total = 0
         if header == "Bank":
@@ -43,26 +43,21 @@ class account_bank_statement_import(osv.TransientModel):
                     continue
                 if line[0] == 'D':  # date of transaction
                     vals_line['date'] = dateutil.parser.parse(line[1:], fuzzy=True).date()
-                    if vals_line.get('date') and not vals_bank_statement.get('period_id'):
-                        period_ids = self.pool.get('account.period').find(cr, uid, vals_line['date'], context=context)
-                        vals_bank_statement.update({'period_id': period_ids and period_ids[0] or False})
                 elif line[0] == 'T':  # Total amount
                     total += float(line[1:].replace(',', ''))
                     vals_line['amount'] = float(line[1:].replace(',', ''))
                 elif line[0] == 'N':  # Check number
                     vals_line['ref'] = line[1:]
                 elif line[0] == 'P':  # Payee
-                    bank_account_id, partner_id = self._detect_partner(cr, uid, line[1:], identifying_field='owner_name', context=context)
-                    vals_line['partner_id'] = partner_id
-                    vals_line['bank_account_id'] = bank_account_id
+                    vals_line['counterparty_identification_string'] = line[1:]
                     vals_line['name'] = 'name' in vals_line and line[1:] + ': ' + vals_line['name'] or line[1:]
                 elif line[0] == 'M':  # Memo
                     vals_line['name'] = 'name' in vals_line and vals_line['name'] + ': ' + line[1:] or line[1:]
                 elif line[0] == '^':  # end of item
-                    line_ids.append(vals_line)
+                    transactions.append(vals_line)
                     vals_line = {}
                 elif line[0] == '\n':
-                    line_ids = []
+                    transactions = []
                 else:
                     pass
         else:
@@ -70,10 +65,8 @@ class account_bank_statement_import(osv.TransientModel):
         
         vals_bank_statement.update({
             'balance_end_real': total,
-            'line_ids': line_ids
+            'transactions': transactions
         })
-        return {
-            'bank_statement_vals': [vals_bank_statement],
-        }
+        return None, None, 'owner_name', [vals_bank_statement]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

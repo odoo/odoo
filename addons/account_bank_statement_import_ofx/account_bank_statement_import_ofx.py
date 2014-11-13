@@ -44,39 +44,31 @@ class account_bank_statement_import(osv.TransientModel):
             os.remove(path)
             raise osv.except_osv(_('Import Error!'), _('Could not decipher the OFX file.'))
 
-        line_ids = []
+        transactions = []
         total_amt = 0.00
         try:
             for transaction in ofx.account.statement.transactions:
-                bank_account_id, partner_id = self._detect_partner(cr, uid, transaction.payee, identifying_field='owner_name', context=context)
                 vals_line = {
                     'date': transaction.date,
                     'name': transaction.payee + (transaction.memo and ': ' + transaction.memo or ''),
                     'ref': transaction.id,
                     'amount': transaction.amount,
-                    'partner_id': partner_id,
-                    'bank_account_id': bank_account_id,
                     'unique_import_id': transaction.id,
+                    'counterparty_identification_string': transaction.payee,
                 }
                 total_amt += float(transaction.amount)
-                line_ids.append(vals_line)
+                transactions.append(vals_line)
         except Exception, e:
             os.remove(path)
             raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
 
         vals_bank_statement = {
             'name': ofx.account.routing_number,
-            'line_ids': line_ids,
+            'transactions': transactions,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
-            'statement_start_date': ofx.account.statement.start_date or False,
-            'statement_end_date': ofx.account.statement.end_date or False,
         }
         os.remove(path)
-        return {
-            'currency_code': ofx.account.statement.currency,
-            'account_number': ofx.account.number,
-            'bank_statement_vals': [vals_bank_statement],
-        }
+        return ofx.account.statement.currency, ofx.account.number, 'owner_name', [vals_bank_statement]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

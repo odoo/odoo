@@ -195,8 +195,6 @@ class account_bank_statement_import(osv.TransientModel):
                 'date': statement['date'],
                 'balance_start': statement['balance_start'],
                 'balance_end_real': statement['balance_end_real'],
-                # TODO : 'statement_start_date' ?
-                'statement_end_date': statement['balance_end_realDate'],
             }
             for line in statement['lines']:
                 if line['type'] == 'information':
@@ -225,10 +223,7 @@ class account_bank_statement_import(osv.TransientModel):
                     structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
-                    bank_account_id = False
-                    partner_id = False
-                    if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), identifying_field='acc_number', context=context)
+                    counterparty_identification_string = 'counterpartyNumber' in line and line['counterpartyNumber'] or None
                     if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
                     line_data = {
@@ -236,23 +231,20 @@ class account_bank_statement_import(osv.TransientModel):
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
-                        'partner_id': partner_id,
                         'partner_name': line['counterpartyName'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],
-                        'bank_account_id': bank_account_id,
                         'unique_import_id': line['transactionRef'],
+                        'counterparty_identification_string': counterparty_identification_string,
                     }
                     statement_line.append(line_data)
             if statement['coda_note'] != '':
                 statement_data.update({'coda_note': statement['coda_note']})
-            statement_data.update({'line_ids': statement_line})
+            statement_data.update({'transactions': statement_line})
             ret_statements.append(statement_data)
-        return {
-            'currency_code': statement['currency'],
-            'account_number': statements[0] and statements[0]['acc_number'] or False,
-            'bank_statement_vals': ret_statements,
-        }
+        currency_code = statement['currency']
+        acc_number = statements[0] and statements[0]['acc_number'] or False
+        return currency_code, acc_number, 'acc_number', ret_statements
 def rmspaces(s):
     return " ".join(s.split())
 

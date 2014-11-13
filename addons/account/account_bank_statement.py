@@ -32,7 +32,6 @@ class account_bank_statement(osv.osv):
             journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
             vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
         if 'line_ids' in vals:
-            vals['line_ids'] = [[0, False, line] for line in vals['line_ids'] if isinstance(line, dict)]
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
