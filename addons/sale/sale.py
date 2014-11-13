@@ -1045,7 +1045,7 @@ class sale_order_line(osv.osv):
         lang = lang or context.get('lang', False)
         if not partner_id:
             raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
-        warning = False
+        warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
