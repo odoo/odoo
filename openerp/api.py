@@ -815,6 +815,24 @@ class Environment(object):
             env.computed.clear()
             env.dirty.clear()
 
+    def clear(self):
+        """ Clear all record caches, and discard all fields to recompute.
+            This may be useful when recovering from a failed ORM operation.
+        """
+        self.invalidate_all()
+        self.all.todo.clear()
+
+    @contextmanager
+    def clear_upon_failure(self):
+        """ Context manager that clears the environments (caches and fields to
+            recompute) upon exception.
+        """
+        try:
+            yield
+        except Exception:
+            self.clear()
+            raise
+
     def field_todo(self, field):
         """ Check whether `field` must be recomputed, and returns a recordset
             with all records to recompute for `field`.

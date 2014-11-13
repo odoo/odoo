@@ -185,6 +185,9 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(Exception):
             self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
+        # make sure that assertRaises() does not leave fields to recompute
+        self.assertFalse(self.env.has_todo())
+
         # put back oneself into discussion participants: now we can create
         # messages in discussion
         discussion.participants += self.env.user

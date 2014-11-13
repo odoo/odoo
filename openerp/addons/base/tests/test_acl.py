@@ -111,11 +111,9 @@ class TestACL(common.TransactionCase):
         # accessing fields must no raise exceptions...
         part.name
         # ... except if they are restricted
-        with self.assertRaises(openerp.osv.orm.except_orm) as cm:
+        with self.assertRaises(openerp.exceptions.AccessError):
             with mute_logger('openerp.models'):
                 part.email
-
-        self.assertEqual(cm.exception.args[0], 'AccessError')
 
 if __name__ == '__main__':
     unittest2.main()
