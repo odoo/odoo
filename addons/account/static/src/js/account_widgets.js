@@ -1802,11 +1802,11 @@ openerp.account = function (instance) {
             // Special case hack : no identified partner or rapprochement
             if (self.st_line.has_no_partner || self.is_rapprochement) {
                 if (Math.abs(balance).toFixed(4) === "0.0000") {
-                    self.$(".button_ok").addClass("oe_highlight");
+                    self.$(".button_ok").addClass("btn-primary");
                     self.$(".button_ok").text("OK");
                     self.is_valid = true;
                 } else {
-                    self.$(".button_ok").removeClass("oe_highlight");
+                    self.$(".button_ok").removeClass("btn-primary");
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
@@ -1826,10 +1826,10 @@ openerp.account = function (instance) {
             }
     
             if (Math.abs(balance).toFixed(4) === "0.0000") {
-                self.$(".button_ok").addClass("oe_highlight");
+                self.$(".button_ok").addClass("btn-primary");
                 self.$(".button_ok").text("OK");
             } else {
-                self.$(".button_ok").removeClass("oe_highlight");
+                self.$(".button_ok").removeClass("btn-primary");
                 self.$(".button_ok").text("Keep open");
                 var debit = (balance > 0 ? self.formatCurrencies(balance, self.get("currency_id")) : "");
                 var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.get("currency_id")) : "");
@@ -2410,14 +2410,14 @@ openerp.account = function (instance) {
             var self = this;
             var balance = self.get("balance");
 
-            self.$(".button_reconcile").removeClass("oe_highlight");
+            self.$(".button_reconcile").removeClass("btn-primary");
             self.$(".button_reconcile").text(_t("Reconcile"));
             self.persist_action = "reconcile";
             if (self.get("mv_lines_selected").length < 2) {
                 self.$(".button_reconcile").text(_t("Done"));
                 self.persist_action = "mark_as_reconciled";
             } else if (Math.abs(balance).toFixed(4) === "0.0000") {
-                self.$(".button_reconcile").addClass("oe_highlight");
+                self.$(".button_reconcile").addClass("btn-primary");
             }
 
             self.$(".tbody_open_balance").empty();

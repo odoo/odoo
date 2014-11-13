@@ -10,7 +10,6 @@
   overflow: auto;
   /* icons */ }
   .openerp .oe_reconciliation .oe_form_sheetbg {
-    border-bottom: 0;
     padding-top: 0; }
     .openerp .oe_reconciliation .oe_form_sheetbg .oe_form_sheet {
       position: relative;
@@ -43,6 +42,9 @@
     .openerp .oe_reconciliation .change_statement_name_container td:last-child {
       width: 1%;
       padding-left: 3px; }
+      .openerp .oe_reconciliation .change_statement_name_container td:last-child button {
+        height: 100%;
+        box-sizing: content-box; }
   .openerp .oe_reconciliation h2 {
     font-size: 1.8em; }
   .openerp .oe_reconciliation .progress {
@@ -244,7 +246,9 @@
         height: 26px;
         margin: 0 15px 4px 15px; }
         .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view caption button {
-          float: right; }
+          float: right;
+          position: relative;
+          top: -4px; }
           .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view caption button:disabled {
             opacity: 0.5; }
         .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view caption > span, .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view caption > input {

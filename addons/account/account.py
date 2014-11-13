@@ -3568,10 +3568,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
-        print '\n'
-        print '_create_bank_journals_from_o2m'
-        print ref_acc_bank.code
-        print '\n'
         self.pool.get('res.company').write(cr, uid, [company.id], {'bank_account_code_char': ref_acc_bank.code}, context=context)
 
         current_num = 1

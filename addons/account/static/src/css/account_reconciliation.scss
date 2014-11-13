@@ -20,7 +20,6 @@ $aestetic_animation_speed: 300ms;
     overflow: auto;
 
     .oe_form_sheetbg {
-        border-bottom: 0;
         padding-top: 0;
 
         .oe_form_sheet {
@@ -78,6 +77,11 @@ $aestetic_animation_speed: 300ms;
         td:last-child {
             width: 1%;
             padding-left: 3px;
+
+            button {
+                height: 100%;
+                box-sizing: content-box;
+            }
         }
     }
 
@@ -420,6 +424,8 @@ $aestetic_animation_speed: 300ms;
 
                 button {
                     float: right;
+                    position: relative;
+                    top: -4px;
 
                     &:disabled {
                         opacity: 0.5;

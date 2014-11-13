@@ -789,7 +789,7 @@ class account_move_line(osv.osv):
                         %s
                         AND l.reconcile_partial_id IS NOT NULL
                         %s
-                        GROUP BY %s a.id, l.reconcile_partial_id,
+                        GROUP BY %s a.id, l.reconcile_partial_id
 
                         UNION
 
