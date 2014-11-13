@@ -278,16 +278,6 @@ function openerp_picking_widgets(instance){
                 self.$('#js_loc_select').data('op-id',op_id);
                 self.$el.siblings('#js_LocationChooseModal').modal();
             });
-            /*this.$('.js_send_to_scrap').click(function(){
-                var op_id = $(this).parents("[data-id]:first").data('id');
-                var scrap_location = new instance.web.Model("stock.location")
-                    .query(["id"])
-                    .filter([['usage','!=','view'],['scrap_location','=',true]])
-                    .first()
-                    .then(function(result) {
-                        self.getParent().change_location(op_id, result.id, false);
-                    })
-            });*/
             this.$('.js_pack_change_dst').click(function(){
                 var op_id = $(this).parents("[data-id]:first").data('id');
                 self.$('#js_loc_select').addClass('pack');
