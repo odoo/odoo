@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='module_inter_company_rules']" position='after'>
                     <div name="module_inter_company_rules_company_id" attrs="{'invisible': [('module_inter_company_rules', '=', False)]}">
-                        <field name="company_id" widget="selection" class="oe_inline" on_change="onchange_company_id(company_id, context)"/>
-                        <field name="set_type" widget="radio" on_change="onchange_set_type(set_type, context)"/>
+                        <field name="company_id" widget="selection" class="oe_inline"/>
+                        <field name="set_type" widget="radio"/>
                     </div>
                     <div name="module_inter_company_rules_set_so_po" attrs="{'invisible': ['|', ('set_type', '!=', 'so_and_po'), ('module_inter_company_rules', '=', False)]}">
                         <field name="so_from_po"/>
