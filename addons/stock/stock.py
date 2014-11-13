@@ -2697,7 +2697,7 @@ class stock_move(osv.osv):
             context = {}
 
         complete, too_many, too_few = [], [], []
-        move_product_qty = {}
+        move_product_qty ,product_uoms,uos_qty = {},{},{}
         prodlot_ids = {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):
@@ -2710,6 +2710,7 @@ class stock_move(osv.osv):
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             prodlot_ids[move.id] = partial_data.get('prodlot_id')
+            uos_qty[move.id] = move.product_id._compute_uos_qty(product_uom, product_qty, move.product_uos) if product_qty else 0.0
             if move.product_qty == product_qty:
                 complete.append(move)
             elif move.product_qty > product_qty:
@@ -2750,7 +2751,7 @@ class stock_move(osv.osv):
             if product_qty != 0:
                 defaults = {
                             'product_qty' : product_qty,
-                            'product_uos_qty': product_qty,
+                            'product_uos_qty': uos_qty[move.id],
                             'picking_id' : move.picking_id.id,
                             'state': 'assigned',
                             'move_dest_id': False,
@@ -2764,17 +2765,20 @@ class stock_move(osv.osv):
             self.write(cr, uid, [move.id],
                     {
                         'product_qty': move.product_qty - product_qty,
-                        'product_uos_qty': move.product_qty - product_qty,
+                        'product_uos_qty': move.product_uos_qty - uos_qty[move.id],
                         'prodlot_id': False,
                         'tracking_id': False,
                     })
 
 
         for move in too_many:
+            product_qty = move_product_qty[move.id]
+            product_uoms[move.id] = product_uom
             self.write(cr, uid, [move.id],
                     {
-                        'product_qty': move.product_qty,
-                        'product_uos_qty': move.product_qty,
+                        'product_qty': product_qty,
+                        'product_uos_qty': uos_qty[move.id],
+                        'product_uom': product_uoms[move.id]
                     })
             complete.append(move)
 
