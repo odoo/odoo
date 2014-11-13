@@ -518,6 +518,22 @@ class res_partner(osv.osv, format_address):
         self._handle_first_contact_creation(cr, uid, partner, context)
         return new_id
 
+    def unlink(self, cr, uid, ids, context=None):
+        update_child_ids = []  # Partner ids to set use_parent_address to False
+        for each in self.browse(cr, uid, ids, context=context):
+            update_child_ids.extend(
+                [child.id for child in each.child_ids if
+                 child.use_parent_address]
+            )
+
+        if update_child_ids:
+            self.write(
+                cr, uid, update_child_ids, {'use_parent_address': False},
+                context=context
+            )
+
+        return super(res_partner, self).unlink(cr, uid, ids, context)
+
     def open_commercial_entity(self, cr, uid, ids, context=None):
         """ Utility method used to add an "Open Company" button in partner views """
         partner = self.browse(cr, uid, ids[0], context=context)
