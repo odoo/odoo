@@ -23,29 +23,30 @@ import logging
 import time
 
 import openerp
-from openerp.osv import osv
-from openerp.tools.translate import _
+from datetime import datetime
+from openerp import _, api, fields, models
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
 
-class ir_sequence_type(openerp.osv.osv.osv):
+class ir_sequence_type(models.Model):
     _name = 'ir.sequence.type'
     _order = 'name'
-    _columns = {
-        'name': openerp.osv.fields.char('Name', required=True),
-        'code': openerp.osv.fields.char('Code', size=32, required=True),
-    }
+
+    name = fields.Char('Name', required=True)
+    code = fields.Char('Code', size=32, required=True)
 
     _sql_constraints = [
         ('code_unique', 'unique(code)', '`code` must be unique.'),
     ]
 
-def _code_get(self, cr, uid, context=None):
-    cr.execute('select code, name from ir_sequence_type')
-    return cr.fetchall()
+def _code_get(self):
+    self.cr.execute('select code, name from ir_sequence_type')
+    return self.cr.fetchall()
 
-class ir_sequence(openerp.osv.osv.osv):
+
+class ir_sequence(models.Model):
     """ Sequence model.
 
     The sequence model allows to define and use so-called sequence objects.
@@ -55,13 +56,14 @@ class ir_sequence(openerp.osv.osv.osv):
     """
     _name = 'ir.sequence'
     _order = 'name'
-    
-    def _get_number_next_actual(self, cr, user, ids, field_name, arg, context=None):
+
+    @api.multi
+    def _get_number_next_actual(self, field_name, arg):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
-        res = dict.fromkeys(ids)
-        for element in self.browse(cr, user, ids, context=context):
-            if  element.implementation != 'standard':
+        res = dict.fromkeys(self._ids)
+        for element in self:
+            if element.implementation != 'standard':
                 res[element.id] = element.number_next
             else:
                 # get number from postgres sequence. Cannot use
@@ -71,112 +73,104 @@ class ir_sequence(openerp.osv.osv.osv):
                     "SELECT last_value, increment_by, is_called"
                     " FROM ir_sequence_%03d"
                     % element.id)
-                cr.execute(statement)
-                (last_value, increment_by, is_called) = cr.fetchone()
+                self.cr.execute(statement)
+                (last_value, increment_by, is_called) = self.cr.fetchone()
                 if is_called:
                     res[element.id] = last_value + increment_by
                 else:
                     res[element.id] = last_value
         return res
 
-    def _set_number_next_actual(self, cr, uid, id, name, value, args=None, context=None):
-        return self.write(cr, uid, id, {'number_next': value or 0}, context=context)
+    @api.multi
+    def _set_number_next_actual(self, name, value, args=None):
+        return self.write({'number_next': value or 0})
 
+    name = fields.Char('Name', size=64, required=True)
+    code = fields.Selection(_code_get, 'Sequence Type', size=64)
+    implementation = fields.Selection(  # TODO update the view
+        [('standard', 'Standard'), ('no_gap', 'No gap')],
+        'Implementation', required=True, default='standard',
+        help="Two sequence object implementations are offered: Standard "
+        "and 'No gap'. The later is slower than the former but forbids any"
+        " gap in the sequence (while they are possible in the former).")
+    active = fields.Boolean('Active', default=True)
+    prefix = fields.Char('Prefix', help="Prefix value of the record for the sequence")
+    suffix = fields.Char('Suffix', help="Suffix value of the record for the sequence")
+    number_next = fields.Integer('Next Number', required=True, default=1, help="Next number of this sequence")
+    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
+                                        required=True, string='Next Number', default=1,
+                                        help="Next number that will be used. This number can be incremented "
+                                        "frequently so the displayed value might already be obsolete")
+    number_increment = fields.Integer('Increment Number', required=True, default=1,
+                                      help="The next number of the sequence will be incremented by this number")
+    padding = fields.Integer('Number Padding', required=True, default=0,
+                             help="Odoo will automatically adds some '0' on the left of the "
+                             "'Next Number' to get the required padding size.")
+    company_id = fields.Many2one('res.company', 'Company',
+                                 default=lambda s: s.env['res.company']._company_default_get('ir.sequence'))
+    use_date_range = fields.Boolean('Use subsequences per date_range')
+    date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_main_id', 'Subsequences')
 
-    _columns = {
-        'name': openerp.osv.fields.char('Name', size=64, required=True),
-        'code': openerp.osv.fields.selection(_code_get, 'Sequence Type', size=64),
-        'implementation': openerp.osv.fields.selection( # TODO update the view
-            [('standard', 'Standard'), ('no_gap', 'No gap')],
-            'Implementation', required=True,
-            help="Two sequence object implementations are offered: Standard "
-            "and 'No gap'. The later is slower than the former but forbids any"
-            " gap in the sequence (while they are possible in the former)."),
-        'active': openerp.osv.fields.boolean('Active'),
-        'prefix': openerp.osv.fields.char('Prefix', help="Prefix value of the record for the sequence"),
-        'suffix': openerp.osv.fields.char('Suffix', help="Suffix value of the record for the sequence"),
-        'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
-        'number_next_actual': openerp.osv.fields.function(_get_number_next_actual, fnct_inv=_set_number_next_actual, type='integer', required=True, string='Next Number', help='Next number that will be used. This number can be incremented frequently so the displayed value might already be obsolete'),
-        'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
-        'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
-        'use_date_range': openerp.osv.fields.boolean('Use subsequences per date_range'),
-        'date_range_ids': openerp.osv.fields.one2many('ir.sequence.date_range', 'sequence_main_id', 'Subsequences'),
-    }
-    _defaults = {
-        'implementation': 'standard',
-        'active': True,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
-        'number_increment': 1,
-        'number_next': 1,
-        'number_next_actual': 1,
-        'padding' : 0,
-    }
-
-    def init(self, cr):
-        return # Don't do the following index yet.
+    def init(self):
+        return  # Don't do the following index yet.
         # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
         # only support field names in constraint definitions, and we need a function here:
         # we need to special-case company_id to treat all NULL company_id as equal, otherwise
         # we would allow duplicate (code, NULL) ir_sequences.
-        cr.execute("""
+        self.cr.execute("""
             SELECT indexname FROM pg_indexes WHERE indexname =
             'ir_sequence_unique_code_company_id_idx'""")
-        if not cr.fetchone():
-            cr.execute("""
+        if not self.cr.fetchone():
+            self.cr.execute("""
                 CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
                 ON ir_sequence (code, (COALESCE(company_id,-1)))""")
 
-    def _create_sequence(self, cr, uid, id, number_increment, number_next, seq_date_id=False):
+    @api.one
+    def _create_sequence(self, number_increment, number_next, seq_date_id=False):
         """ Create a PostreSQL sequence.
 
         There is no access rights check.
         """
         if number_increment == 0:
-             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
-        assert isinstance(id, (int, long))
+            raise Warning(_('Increment number must not be zero.'))
         if seq_date_id:
-            sql = "CREATE SEQUENCE ir_sequence_%03d_%03d INCREMENT BY %%s START WITH %%s" % (id, seq_date_id)
+            sql = "CREATE SEQUENCE ir_sequence_%03d_%03d INCREMENT BY %%s START WITH %%s" % (self.id, seq_date_id.id)
         else:
-            sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
-        cr.execute(sql, (number_increment, number_next))
+            sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % self.id
+        self.cr.execute(sql, (number_increment, number_next))
 
-    def _drop_sequence(self, cr, uid, ids):
+    @api.multi
+    def _drop_sequence(self):
         """ Drop the PostreSQL sequence if it exists.
 
         There is no access rights check.
         """
-
-        ids = ids if isinstance(ids, (list, tuple)) else [ids]
-        assert all(isinstance(i, (int, long)) for i in ids), \
-            "Only ids in (int, long) allowed."
-        names =[]
-        for id in ids:
-            for seq_date_id in self.browse(cr, uid, id).date_range_ids:
-                names.append('ir_sequence_%03d_%03d' % (id, seq_date_id))
-            names.append('ir_sequence_%03d' % id)
+        names = []
+        for seq in self:
+            for seq_date_id in seq.date_range_ids:
+                names.append('ir_sequence_%03d_%03d' % (seq.id, seq_date_id))
+            names.append('ir_sequence_%03d' % seq.id)
         names = ','.join(names)
 
         # RESTRICT is the default; it prevents dropping the sequence if an
         # object depends on it.
-        cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
+        self.cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
-    def _alter_sequence(self, cr, uid, id, number_increment=None, number_next=None, seq_date_id=False):
+    @api.one
+    def _alter_sequence(self, number_increment=None, number_next=None, seq_date_id=False):
         """ Alter a PostreSQL sequence.
 
         There is no access rights check.
         """
         if number_increment == 0:
-            raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
-        assert isinstance(id, (int, long))
+            raise Warning(_("Increment number must not be zero."))
         if seq_date_id:
-            assert isinstance(seq_date_id, (int, long))
-            seq_name = 'ir_sequence_%03d_%03d' % (id, seq_date_id)
+            seq_name = 'ir_sequence_%03d_%03d' % (self.id, seq_date_id.id)
         else:
-            seq_name = 'ir_sequence_%03d' % (id,)
-        cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
-        if not cr.fetchone():
+            seq_name = 'ir_sequence_%03d' % (self.id)
+        self.cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
+        if not self.cr.fetchone():
             # sequence is not created yet, we're inside create() so ignore it, will be set later
             return
         statement = "ALTER SEQUENCE %s" % (seq_name, )
@@ -184,16 +178,16 @@ class ir_sequence(openerp.osv.osv.osv):
             statement += " INCREMENT BY %d" % (number_increment, )
         if number_next is not None:
             statement += " RESTART WITH %d" % (number_next, )
-        cr.execute(statement)
+        self.cr.execute(statement)
 
-    def create(self, cr, uid, values, context=None):
+    def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
-        values = self._add_missing_default_values(cr, uid, values, context)
-        values['id'] = super(ir_sequence, self).create(cr, uid, values, context)
+        values = self._add_missing_default_values(values)
+        seq = super(ir_sequence, self).create(values)
         if values['implementation'] == 'standard':
-            self._create_sequence(cr, uid, values['id'], values['number_increment'], values['number_next'])
-        return values['id']
+            self._create_sequence(seq, values['number_increment'], values['number_next'])
+        return seq
 
     def unlink(self, cr, uid, ids, context=None):
         self._drop_sequence(cr, uid, ids)
@@ -302,8 +296,11 @@ class ir_sequence(openerp.osv.osv.osv):
         return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
 
     def _create_date_range_seq(self, cr, uid, ids, date, context=None):
+        """ Creates a new sequence_date_range
+        date : UTC-formatted string of the current date
+        """
         for seq in self.browse(cr, uid, ids, context):
-            year = date[0:4]
+            year = datetime.strptime(date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT).strftime('%Y')
             date_from = '{}-01-01'.format(year)
             date_to = '{}-12-31'.format(year)
             for line in seq.date_range_ids:
@@ -315,9 +312,9 @@ class ir_sequence(openerp.osv.osv.osv):
             vals['date_from'] = date_from
             vals['date_to'] = date_to
             vals['sequence_main_id'] = seq.id
-            seq_date_id = self.pool.get('ir.sequence.date_range').create(cr, uid, vals, context=context)
+            seq_date_id = self.pool.get('ir.sequence.date_range').create(cr, openerp.SUPERUSER_ID, vals, context=context)
             if seq.implementation == 'standard':
-                self._create_sequence(cr, seq.id, seq.number_increment, seq.number_next, seq_date_id=seq_date_id)
+                self._create_sequence(cr, seq.id, seq.number_increment, 1, seq_date_id=seq_date_id)
             return seq_date_id
 
     def _next(self, cr, uid, ids, context=None):

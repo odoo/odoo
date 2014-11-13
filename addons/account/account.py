@@ -820,10 +820,9 @@ class account_journal(osv.osv):
             'use_date_range': True,
         }
 
-        seq_obj = self.pool.get('ir.sequence')
-        main_seq = seq_obj.create(cr, uid, seq, context=context)
-
-        return main_seq
+        if 'company_id' in vals:
+            seq['company_id'] = vals['company_id']
+        return self.pool.get('ir.sequence').create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
         # We just need to create the relevant sequences according to the chosen options
@@ -890,9 +889,6 @@ class account_fiscalyear(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    _sql_constraints = [
-        ('code_company_uniq', 'unique (name, company_id)', 'The name of the fiscal year must be unique per company !'),
-    ]
 
     _order = "date_start, id"
 
