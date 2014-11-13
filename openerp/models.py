@@ -516,7 +516,7 @@ class BaseModel(object):
         """
         def add(name, field):
             """ add `field` with the given `name` if it does not exist yet """
-            if name not in cls._columns and name not in cls._fields:
+            if name not in cls._fields:
                 cls._add_field(name, field)
 
         # cyclic import
@@ -811,8 +811,7 @@ class BaseModel(object):
         cls._fields = {}
         above = cls.__bases__[0]
         for attr, field in getmembers(above, Field.__instancecheck__):
-            if not field.inherited:
-                cls._add_field(attr, field.new())
+            cls._add_field(attr, field.new())
 
         # introduce magic fields
         cls._add_magic_fields()
