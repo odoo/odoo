@@ -267,7 +267,6 @@ class stock_move(osv.osv):
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
