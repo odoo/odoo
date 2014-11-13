@@ -241,7 +241,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="survey"/>
@@ -551,11 +551,12 @@
                     <group>
                         <field name="name"/>
                         <field name="department_id"/>
+                        <field name="sequence"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                     <group>
-                        <field name="sequence"/>
                         <field name="fold"/>
-                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                        <field name="legend_priority"/>
                     </group>
                 </group>
                 <separator string="Requirements"/>
