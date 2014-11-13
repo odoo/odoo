@@ -1074,7 +1074,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             } else {
                 return this.select_user({
                     security:       true, 
-                    only_managers:  true
+                    only_managers:  true,
                     message:       _t('Login as a Manager'),
                 })
             }
