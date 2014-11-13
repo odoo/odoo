@@ -18,7 +18,7 @@ openerp.barcodes = function(instance) {
         models: [
         {
             model: 'barcode.nomenclature',
-            fields: ['name','rule_ids'],
+            fields: ['name','rule_ids', 'strict_ean'],
             domain: function(self){ return [] },
             loaded: function(self,nomenclatures){
                 if (self.nomenclature_id) {
@@ -122,6 +122,12 @@ openerp.barcodes = function(instance) {
             }
             total = oddsum * 3 + evensum;
             return Number((10 - total % 10) % 10);
+        },
+
+        // returns true if the ean is a valid EAN barcode number by checking the control digit.
+        // ean must be a string
+        check_ean: function(ean){
+            return /^\d+$/.test(ean) && this.ean_checksum(ean) === Number(ean[ean.length-1]);
         },
 
         // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
@@ -233,9 +239,19 @@ openerp.barcodes = function(instance) {
                 return base;
             }
 
+            // If the nomenclature does not use strict EAN, prepend the barcode with a 0 if it seems
+            // that it has been striped by the barcode scanner, when trying to match an EAN13 rule
+            var prepend_zero = false;
+            if(!self.strict_ean && barcode.length === 12 && self.check_ean("0"+barcode)){
+                prepend_zero = true;
+            }
             var rules = self.nomenclature.rules;
             for (var i = 0; i < rules.length; i++) {
-                if (match_pattern(barcode,rules[i].pattern)) {
+                var cur_barcode = barcode;
+                if (prepend_zero && rules[i].encoding == 'ean13'){
+                    cur_barcode = '0'+cur_barcode;
+                }
+                if (match_pattern(cur_barcode,rules[i].pattern)) {
                     if(rules[i].type === 'alias') {
                         barcode = rules[i].alias;
                         parsed_result.code = barcode;
@@ -244,8 +260,9 @@ openerp.barcodes = function(instance) {
                     else {
                         parsed_result.encoding  = rules[i].encoding;
                         parsed_result.type      = rules[i].type;
-                        parsed_result.value     = get_value(barcode,rules[i].pattern);
-                        parsed_result.base_code = get_basecode(barcode,rules[i].pattern,parsed_result.encoding);
+                        parsed_result.value     = get_value(cur_barcode,rules[i].pattern);
+                        parsed_result.code      = cur_barcode;
+                        parsed_result.base_code = get_basecode(cur_barcode,rules[i].pattern,parsed_result.encoding);
                         return parsed_result;
                     }
                 }
