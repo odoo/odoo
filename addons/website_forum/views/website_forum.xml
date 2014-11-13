@@ -421,9 +421,9 @@
     <t t-call="website_forum.header">
         <t t-set="head">
             <script type="text/javascript">
-                $(function () {
+                window.onload = function() {
                     $("[data-toggle='popover']").popover();
-                });
+                };
             </script>
         </t>
         <h1 class="mt0">Ask Your Question</h1>

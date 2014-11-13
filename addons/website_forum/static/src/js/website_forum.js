@@ -152,6 +152,10 @@ $(document).ready(function () {
             set_tags(tags);
         };
 
+        function htmlEntities(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
         function set_tags(tags) {
             $("input.load_tags").textext({
                 plugins: 'tags focus autocomplete ajax',
@@ -169,11 +173,11 @@ $(document).ready(function () {
                                 val  = self.val();
                             self.clearItems();
                             $.each(suggestions || [], function(index, item) {
-                                self.addSuggestion(item);
+                                self.addSuggestion(htmlEntities(item));
                             });
                             var lowerCasesuggestions = $.map(suggestions, function(n,i){return n.toLowerCase();});
                             if(jQuery.inArray(val.toLowerCase(), lowerCasesuggestions) ==-1) {
-                                self.addSuggestion("Create '" + val + "'");
+                                self.addSuggestion("Create '" + htmlEntities(val) + "'");
                             }
                         },
                     },
