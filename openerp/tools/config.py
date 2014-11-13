@@ -509,7 +509,7 @@ class configmanager(object):
         if opt.server_wide_modules:
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
-            openerp.conf.server_wide_modules = ['web','web_kanban','auth_signup']
+            openerp.conf.server_wide_modules = ['web','web_kanban']
 
     def _generate_pgpassfile(self):
         """
