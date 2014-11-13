@@ -1,10 +1,18 @@
-function openerp_barcode_parser(instance,module){
+openerp.barcodes = function(instance) {
+    "use strict";
+
+    instance.barcodes = {};
+    var module = instance.barcodes;
 
     module.BarcodeParser = instance.web.Class.extend({
         init: function(attributes) {
             var self = this;
             this.nomenclature_id = attributes.nomenclature_id;
-            this.load_server_data();
+            this.loaded = this.load_server_data();
+        },
+
+        is_loaded: function() {
+            return self.loaded;
         },
 
         models: [

@@ -912,26 +912,6 @@
         </div>
     </t>
 
-    <t t-name="ErrorAliasBarcodePopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-barcode">
-                <p class="message">Unknown Barcode
-                    <br />
-                    <span class='barcode'><t t-esc="widget.barcode" /></span>
-                </p>
-                <p class="comment">
-                    The Point of Sale could not find any product, client, employee
-                    or action associated with the scanned alias <t t-esc="widget.alias" />.
-                </p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ConfirmPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-confirm">

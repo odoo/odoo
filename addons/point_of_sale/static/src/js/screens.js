@@ -212,11 +212,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 last_orderline.set_discount(code.value)
             }
         },
-        // What happens when an alias barcode is scanned, but the barcode referenced 
-        // in the alias finds no match : shows an error popup.
-        barcode_alias_action: function(code){
-            this.pos_widget.screen_selector.show_popup('error-alias-barcode',code);
-        },
         // What happens when an invalid barcode is scanned : shows an error popup.
         barcode_error_action: function(code){
             this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
@@ -243,7 +238,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
                 'client' : self.barcode_client_action ?  function(code){ self.barcode_client_action(code);  } : undefined ,
                 'discount': self.barcode_discount_action ? function(code){ self.barcode_discount_action(code); } : undefined,
-                'alias': self.barcode_alias_action ? function(code){ self.barcode_alias_action(code); } : undefined,
                 'error'   : self.barcode_error_action ?  function(code){ self.barcode_error_action(code);   } : undefined,
             });
         },
@@ -349,15 +343,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.ErrorTracebackPopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorTracebackPopupWidget',
-    });
-
-    module.ErrorAliasBarcodePopupWidget = module.ErrorPopupWidget.extend({
-        template:'ErrorAliasBarcodePopupWidget',
-        show: function(barcode){
-            this.barcode = barcode.code;
-            this.alias = barcode.base_code;
-            this._super();
-        },
     });
 
     module.ErrorBarcodePopupWidget = module.ErrorPopupWidget.extend({

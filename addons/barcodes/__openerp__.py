@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Advanced Barcodes',
+    'name': 'Barcodes',
     'version': '1.0',
     'category': '',
     'sequence': 6,

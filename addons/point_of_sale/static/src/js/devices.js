@@ -508,21 +508,20 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
 
         scan: function(code){
-            if(this.barcode_parser) {
-                var parsed_result = this.barcode_parser.parse_barcode(code);
-            }
-            else{
-                console.error("Barcode Parser not yet initialized!");
-            }
+            var parsed_result = this.barcode_parser.parse_barcode(code);
+            
             if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parsed_result);
                 }
             }
-            else{
+            else if (parsed_result.type in {'cashier':'', 'client':''}){ 
                 if(this.action_callback[parsed_result.type]){
                     this.action_callback[parsed_result.type](parsed_result);
                 }
+            }
+            else{
+                this.action_callback['error'](parsed_result);
             }
         },
 

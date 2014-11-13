@@ -395,24 +395,6 @@ class res_partner(osv.Model, format_address):
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
-    # def _check_ean_key(self, cr, uid, ids, context=None):
-    #     for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['barcode',]):
-    #         thisean=partner_o['barcode']
-    #         if thisean and thisean!='':
-    #             if len(thisean)!=13:
-    #                 return False
-    #             sum=0
-    #             for i in range(12):
-    #                 if not (i % 2):
-    #                     sum+=int(thisean[i])
-    #                 else:
-    #                     sum+=3*int(thisean[i])
-    #             if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-    #                 return False
-    #     return True
-
-#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
-
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}

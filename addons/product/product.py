@@ -55,18 +55,6 @@ def ean_checksum(eancode):
     check = int(10 - math.ceil(total % 10.0)) %10
     return check
 
-# def check_ean(eancode):
-#     """returns True if eancode is a valid ean13 string, or null"""
-#     if not eancode:
-#         return True
-#     if len(eancode) != 13:
-#         return False
-#     try:
-#         int(eancode)
-#     except:
-#         return False
-#     return ean_checksum(eancode) == int(eancode[-1])
-
 def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
     if not ean13:
@@ -1176,14 +1164,6 @@ class product_packaging(osv.osv):
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
     }
-
-    # def _check_ean_key(self, cr, uid, ids, context=None):
-    #     for pack in self.browse(cr, uid, ids, context=context):
-    #         if not check_ean(pack.ean):
-    #             return False
-    #     return True
-
-    # _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

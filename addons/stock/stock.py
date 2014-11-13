@@ -1452,12 +1452,11 @@ class stock_picking(osv.osv):
         answer = {'filter_loc': False, 'operation_id': False}
 
         # Barcode Nomenclatures
+        #this_picking ==? self
         this_picking = self.search(cr, uid, [('id', '=', picking_id)], context=context)
-        rec = self.browse(cr, uid, this_picking, context=context)
-        if not rec:
-            return answer # TODO: return specific error?
-        else:
-            barcode_nom = rec.barcode_nomenclature_id
+        #this_picking = self.read(cr, uid, picking_id, context=context)
+        rec = self.browse(cr, uid, self, context=context)
+        barcode_nom = rec.barcode_nomenclature_id
         parsed_result = barcode_nom.parse_barcode(barcode_str)
 
         #check if the barcode is a weighted barcode or simply a product

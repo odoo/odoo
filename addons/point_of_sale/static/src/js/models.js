@@ -3,7 +3,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
-    var barcode_parser_module = instance.barcode_parser;
+    var barcode_parser_module = instance.barcodes;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -80,9 +80,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             this.ready = this.load_server_data()
                 .then(function(){
-                    var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
-                    self.barcode_reader.set_barcode_parser(barcode_parser);
-                    
                     if(self.config.use_proxy){
                         return self.connect_to_proxy();
                     }
@@ -368,7 +365,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                 return logo_loaded;
             },
-        }, 
+        }, {
+            label: 'barcodes',
+            loaded: function(self) {
+                var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
+                self.barcode_reader.set_barcode_parser(barcode_parser);
+                return barcode_parser.is_loaded();
+            },
+        }
         ],
 
         // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
@@ -695,11 +699,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         scan_product: function(parsed_code){
             var self = this;
             var selectedOrder = this.get_order();       
-            //if(parsed_code.encoding === 'barcode'){
-                var product = this.db.get_product_by_barcode(parsed_code.base_code);
-            /*}else if(parsed_code.encoding === 'reference'){
-                var product = this.db.get_product_by_reference(parsed_code.code);
-            }*/
+            var product = this.db.get_product_by_barcode(parsed_code.base_code);
 
             if(!product){
                 return false;
