@@ -3,10 +3,30 @@
 <data>
 
 <!--
-     Theme Selector
+     Theme
 -->
+<template id="website.theme" name="Theme">
+    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+    <!-- Boostrap Fallback if server can't compute less files -->
+    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+</template>
+
+<!-- Bootstrap Less File layout
+
+Each theme module must override the following view to active bootstrap:
+    <record id="website.option_bootstrap_less" model="ir.ui.view">
+      <field name="active" eval='True'/>
+    </record>
+ -->
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[@id='bootstrap_css']" position="replace">
+        <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
+    </xpath>
+</template>
 
     <template id="website.themes" name="Themes">
+      <!-- Old theme choser -->
         <t t-call="website.layout">
           <div id="wrap" groups="base.group_website_publisher">
             <div class="container">
@@ -284,6 +304,39 @@
             <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.fix.css' t-ignore="true"/>
         </xpath>
     </template>
+
+<!-- Option layout -->
+
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after">
+        <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
+    </xpath>
+</template>
+
+<!-- Option color -->
+
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+
+<template id="option_font" name="option_font" inherit_id="website.theme" active="False" customize_show="True">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
 
 </data>
 </openerp>
