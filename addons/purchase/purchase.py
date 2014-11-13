@@ -149,9 +149,13 @@ class purchase_order(osv.osv):
         return res and res[0] or False  
 
     def _get_picking_in(self, cr, uid, context=None):
-        obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
-
+        #[FIX] Error default picking type (Deliver to) in multi company
+        #warehouse ir.model.data (first warehouse) company_id not same with user company_id 
+        picking_type_obj = self.pool.get('stock.picking.type')
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        picking_type_ids = picking_type_obj.search(cr,uid,[('code','=','incoming'),('warehouse_id.company_id','=',user.company_id.id)])
+        return picking_type_ids and picking_type_ids[0] or False
+        
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         for po_id in ids:
