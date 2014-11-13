@@ -47,7 +47,7 @@
                 </div>
                 <div t-if="o.payment_term" class="col-xs-3">
                     <strong>Payment Term:</strong>
-                    <p t-field="o.payment_term"/>
+                    <p t-field="o.payment_term.name"/>
                 </div>
             </div>
 
@@ -119,7 +119,7 @@
             <p t-field="o.note" />
             <p t-if="o.payment_term">
                 <strong>Payment Term:</strong>
-                <span t-field="o.payment_term"/>
+                <span t-field="o.payment_term.note"/>
             </p>
             <div class="oe_structure"/>
         </div>
