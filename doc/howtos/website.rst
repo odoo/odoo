@@ -457,7 +457,7 @@ though they may have to be looked for.
     * to extend a model in-place, it's :attr:`inherited
       <openerp.models.Model._inherit>` without giving it a new
       :attr:`~openerp.models.Model._name`
-    * ``product.template`` already uses the discussions system, so we don't
+    * ``product.template`` already uses the discussions system, so we
       can remove it from our extension model
     * we're creating our courses as *published* by default so they can be
       seen without having to log in
