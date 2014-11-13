@@ -426,7 +426,7 @@ class fleet_vehicle_odometer(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
-            if record.date:
+            if name and record.date:
                 name = name+ ' / '+ str(record.date)
             res[record.id] = name
         return res
