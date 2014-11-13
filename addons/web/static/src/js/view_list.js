@@ -2148,6 +2148,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.boolean': 'instance.web.list.Boolean',
     'field.binary': 'instance.web.list.Binary',
     'field.char': 'instance.web.list.Char',
+    'field.url': 'instance.web.list.Url',
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
@@ -2329,6 +2330,24 @@ instance.web.list.Char = instance.web.list.Column.extend({
             return value.replace(/[\s\S]/g, _.escape(this.replacement));
         }
         return this._super(row_data, options);
+    }
+});
+instance.web.list.Url = instance.web.list.Column.extend({
+    /**
+     * Return a link to the value of field
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        var text = $.trim(row_data[this.id].value);
+	var target = this.target || '_blank';
+        if(/^www\./i.test(text))
+            text = 'http://'+text;
+        return _.template('<a href="<%-href%>" target="<%-target%>"><%-text%></a>', {
+            text: text,
+            href: text,
+	    target: target,
+        });
     }
 });
 instance.web.list.ProgressBar = instance.web.list.Column.extend({
