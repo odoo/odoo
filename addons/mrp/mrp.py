@@ -1184,7 +1184,7 @@ class mrp_production(osv.osv):
                     self._make_service_procurement(cr, uid, line, context=context)
             if stock_moves:
                 self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
-            production.write({'state': 'confirmed'}, context=context)
+            production.write({'state': 'confirmed'})
         return 0
 
     def action_assign(self, cr, uid, ids, context=None):

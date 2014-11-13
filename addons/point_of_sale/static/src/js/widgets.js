@@ -972,7 +972,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $('.oe_web_client').off();
                 $('.openerp_webclient_container').off();
 
-                self.build_currency_template();
                 self.renderElement();
                 
                 self.$('.neworder-button').click(function(){

@@ -182,6 +182,7 @@ class website_sale(http.Controller):
         if search:
             post["search"] = search
         if category:
+            category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
