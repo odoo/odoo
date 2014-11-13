@@ -2,7 +2,7 @@
 from openerp.osv import osv, fields
 from openerp.exceptions import Warning
 from openerp.http import request
-
+from openerp.tools.translate import _
 
 class version(osv.Model):
     _name = "website_version.version"
@@ -15,7 +15,7 @@ class version(osv.Model):
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique(name, website_id)', 'You cannot have multiple versions with the same name in the same domain!'),
+        ('name_uniq', 'unique(name, website_id)', _('You cannot have multiple versions with the same name in the same domain!')),
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -23,7 +23,7 @@ class version(osv.Model):
         for id in ids:
             result = Exp.search(cr, uid, [('state','=','running'),('experiment_version_ids.version_id', '=', id)],context=context)
             if result:
-                raise Warning("You cannot delete a version which is in a running experiment.")
+                raise Warning(_("You cannot delete a version which is in a running experiment."))
             #To avoid problem when we delete versions in Backend
             if request:
                 request.session['version_id'] = 0

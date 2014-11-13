@@ -5,6 +5,7 @@ from openerp import SUPERUSER_ID
 from datetime import datetime, timedelta
 from openerp.osv import osv, fields
 import simplejson
+from openerp.tools.translate import _
 
 
 class Experiment_version(osv.Model):
@@ -91,7 +92,7 @@ class Experiment(osv.Model):
                 exp['variations'].append({'name':name, 'url': 'http://localhost/'+name})
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
-            raise Warning("Please verify you give the authorizations to use google analytics api ...")
+            raise Warning(_("Please verify you give the authorizations to use google analytics api ..."))
         vals['google_id'] = google_id
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
@@ -101,11 +102,11 @@ class Experiment(osv.Model):
             for l in li:
                 #l[0] is the magic number
                 if not (l[0] == 4 or l[0] == 1):
-                    raise Warning("You cannot modify the number of versions.")
+                    raise Warning(_("You cannot modify the number of versions."))
         state = vals.get('state')
         for exp in self.browse(cr, uid, ids, context=context):
             if state and exp.state == 'ended':
-                raise Warning("You cannot modify an ended experiment.")
+                raise Warning(_("You cannot modify an ended experiment."))
             elif state == 'ended':
                 #temp is the data to send to Googe
                 temp={}
@@ -162,8 +163,8 @@ class Experiment(osv.Model):
         return True
 
     _constraints = [
-        (_check_view, 'This experiment contains a view which is already used in another running experience', ['state']),
-        (_check_website, 'This experiment must have versions which are in the same website', ['website_id', 'experiment_version_ids']),
+        (_check_view, _('This experiment contains a view which is already used in another running experience'), ['state']),
+        (_check_website, _('This experiment must have versions which are in the same website'), ['website_id', 'experiment_version_ids']),
     ]
 
     _order = 'sequence'
@@ -192,11 +193,11 @@ class google_management(osv.AbstractModel):
         website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
         webPropertyId = website.google_analytics_key
         if not webPropertyId:
-            raise Warning("You must give a Google Analytics Key.")
+            raise Warning(_("You must give a Google Analytics Key."))
         accountId = webPropertyId.split('-')[1] 
         profileId = website.google_analytics_view_id
         if not profileId:
-            raise Warning("You must give a Google view ID.")
+            raise Warning(_("You must give a Google view ID."))
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
@@ -269,7 +270,7 @@ class google_management(osv.AbstractModel):
         validity = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE)
         token = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE)
         if not (validity and token):
-            raise Warning("You must configure your account.")
+            raise Warning(_("You must configure your account."))
         if datetime.strptime(validity.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) < (datetime.now() + timedelta(minutes=3)):
             token = self.do_refresh_token(cr, uid, context=context)
         return token
