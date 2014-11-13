@@ -171,14 +171,13 @@ class pos_config(osv.osv):
         print company_id
         return company_id
 
-<<<<<<< HEAD
     def _get_default_nomenclature(self, cr, uid, context=None):
         nom_obj = self.pool.get('barcode.nomenclature')
         res = nom_obj.search(cr, uid, [], limit=1, context=context)
         if res and res[0]:
             return nom_obj.browse(cr, uid, res[0], context=context).id
         return False
-=======
+
     def _get_group_pos_manager(self, cr, uid, context=None):
         group = self.pool.get('ir.model.data').get_object_reference(cr,uid,'point_of_sale','group_pos_manager')
         if group:

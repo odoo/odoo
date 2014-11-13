@@ -229,7 +229,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model:  'res.users',
             fields: ['name','pos_security_pin','groups_id','barcode'],
-            domain: null,
+            domain: function(self){ return ['|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
             loaded: function(self,users){ 
                 // we attribute a role to the user, 'cashier' or 'manager', depending
                 // on the group the user belongs. 
