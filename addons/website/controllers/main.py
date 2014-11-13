@@ -178,6 +178,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):
+        # This controller has been kept back for retrocompatibility with
+        # `old` bootswtach themes system.
         imd = request.registry['ir.model.data']
         Views = request.registry['ir.ui.view']
 
@@ -386,6 +388,58 @@ class Website(openerp.addons.web.controllers.main.Home):
             return []
         xmlroot = ET.fromstring(request.read())
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
+
+    #------------------------------------------------------
+    # Themes
+    #------------------------------------------------------
+
+    def get_view_ids(self, xml_ids):
+        ids = []
+        imd = request.registry['ir.model.data']
+        for xml_id in xml_ids:
+            if "." in xml_id:
+                xml = xml_id.split(".")
+                view_model, id = imd.get_object_reference(request.cr, request.uid, xml[0], xml[1])
+            else:
+                id = int(xml_id)
+            ids.append(id)
+        return ids
+
+    @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
+    def theme_customize_get(self, xml_ids):
+        view = request.registry["ir.ui.view"]
+        enable = []
+        disable = []
+        ids = self.get_view_ids(xml_ids)
+        context = dict(request.context or {}, active_test=True)
+        for v in view.browse(request.cr, request.uid, ids, context=context):
+            if v.active:
+                enable.append(v.xml_id)
+            else:
+                disable.append(v.xml_id)
+        return [enable, disable]
+
+    @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
+    def theme_customize(self, enable, disable):
+        """ enable or Disable lists of ``xml_id`` of the inherit templates
+        """
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        view = pool["ir.ui.view"]
+        context = dict(request.context or {}, active_test=True)
+
+        def set_active(ids, active):
+            if ids:
+                view.write(cr, uid, self.get_view_ids(ids), {'active': active}, context=context)
+
+        set_active(disable, False)
+        set_active(enable, True)
+
+        return True
+
+    @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
+    def theme_customize_reload(self, href, enable, disable):
+        self.theme_customize(enable and enable.split(",") or [],disable and disable.split(",") or [])
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
 
     #------------------------------------------------------
     # Helpers
