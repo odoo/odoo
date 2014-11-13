@@ -23,9 +23,10 @@ import logging
 import re
 
 import openerp
-from openerp import tools, models, fields
+from openerp import tools, models, fields, api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -177,3 +178,14 @@ class barcode_rule(models.Model):
         'encoding': 'any',
         'alias': "0",
     }
+
+    @api.one
+    @api.constrains('pattern')
+    def _check_pattern(self):
+        p = self.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
+        findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
+        if len(findall) == 2:
+            if not re.search("[{][N]*[D]*[}]", p) or re.search("[{][}]", p):
+                raise ValidationError(_("There is a syntax error in the barcode pattern") + " %s." % self.pattern)
+        elif len(findall) != 0:
+            raise ValidationError(_("There is a syntax error in the barcode pattern") + " %s." % self.pattern)
