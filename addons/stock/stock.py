@@ -2640,8 +2640,7 @@ class stock_inventory(osv.osv):
     def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
-            #clean the existing inventory lines before redoing an inventory proposal
-            # INSTEAD: if there are already inventory lines, respect those
+            # If there are inventory lines already (e.g. from import), respect those and set their theoretical qty
             line_ids = [line.id for line in inventory.line_ids]
             if not line_ids:
                 #compute the inventory lines and create them
@@ -2652,17 +2651,15 @@ class stock_inventory(osv.osv):
                 # On import calculate theoretical quantity
                 quant_obj = self.pool.get("stock.quant")
                 for line in inventory.line_ids:
-                    dom = [('location_id', 'child_of', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
+                    dom = [('company_id', '=', line.company_id.id), ('location_id', 'child_of', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
                         ('product_id','=', line.product_id.id), ('owner_id', '=', line.partner_id.id)]
                     if line.package_id:
                         dom += [('package_id', '=', line.package_id.id)]
-                    if line.company_id:
-                        dom += [('company_id', '=', line.company_id.id)]
                     quants = quant_obj.search(cr, uid, dom, context=context)
                     tot_qty = 0
                     for quant in quant_obj.browse(cr, uid, quants, context=context):
                         tot_qty += quant.qty
-                    inventory_line_obj.write(cr, uid, [line.id],{'theoretical_qty': tot_qty}, context=context)
+                    inventory_line_obj.write(cr, uid, [line.id], {'theoretical_qty': tot_qty}, context=context)
 
         return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
