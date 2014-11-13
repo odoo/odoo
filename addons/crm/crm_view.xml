@@ -107,7 +107,7 @@
 
         <menuitem action="crm_tracking_source_action" id="menu_crm_tracking_source" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
 
-        <!-- CRM Stage Tree View -->
+        <!-- CRM STAGE VIEWS -->
 
         <record model="ir.ui.view" id="crm_stage_tree">
             <field name="name">crm.stage.tree</field>
@@ -122,8 +122,6 @@
             </field>
         </record>
 
-        <!-- CRM Stage Form View -->
-
         <record model="ir.ui.view" id="crm_stage_form">
             <field name="name">crm.stage.form</field>
             <field name="model">crm.stage</field>
@@ -136,13 +134,13 @@
                             <field name="sequence"/>
                             <field name="type"/>
                             <field name="probability"/>
+                            <field name="case_default" groups="base.group_multi_salesteams"/>
                         </group>
                         <group>
                             <field name="fold"/>
                             <field name="on_change"/>
-                            <field name="case_default" groups="base.group_multi_salesteams"/>
+                            <field name="legend_priority"/>
                         </group>
-
                     </group>
                     <separator string="Requirements"/>
                     <field name="requirements" nolabel="1"/>
