@@ -56,7 +56,7 @@
                 <div class="oe_im_chatview_bubble_item"><t t-raw="m.message"/></div>
             </t>
         </div>
-        <div class="oe_im_chatview_time"><t t-esc="moment((_.last(messages).create_date)).parse('LT')"/></div>
+        <div class="oe_im_chatview_time"><t t-esc="moment((_.last(messages).create_date)).format('LT')"/></div>
     </div>
 </t>
 <t t-name="im_chat.Conversation_technical_bubble">
@@ -67,7 +67,7 @@
                 <div><t t-raw="m.message"/></div>
             </t>
         </div>
-        <div class="oe_im_chatview_time"><t t-esc="moment((_.last(messages).create_date)).parse('LT')"/></div>
+        <div class="oe_im_chatview_time"><t t-esc="moment((_.last(messages).create_date)).format('LT')"/></div>
     </div>
 </t>
 

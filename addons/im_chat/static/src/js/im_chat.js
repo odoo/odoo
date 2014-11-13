@@ -342,8 +342,6 @@
                 if(!m.from_id){
                     m.from_id = [false, get_anonymous_name()];
                 }
-                m.message = self.escape_keep_url(m.message);
-                m.message = self.smiley(m.message);
                 m.create_date = moment.utc(m.create_date).format('YYYY-MM-DD HH:mm:ss');
                 return m;
             });
