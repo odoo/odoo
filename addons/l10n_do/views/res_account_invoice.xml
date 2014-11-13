@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <record id="account_invoice_form_do" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+            		<field string="RNC Cliente" name="x_partner_rnc" />
+                    <field string="NCF" name="number" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
