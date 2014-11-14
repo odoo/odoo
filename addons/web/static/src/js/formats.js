@@ -289,6 +289,10 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             }), date_pattern);
             if (date !== null)
                 return instance.web.date_to_str(date);
+            //check if date is without dots as separator
+            date = Date.parseExact(value, date_pattern.replace(/\./g, ''));
+            if (date !== null)
+                return instance.web.date_to_str(date);
             date = Date.parse(value);
             if (date !== null)
                 return instance.web.date_to_str(date);
