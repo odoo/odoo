@@ -1572,10 +1572,18 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         return instance.web.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
+        var d;
         try {
-            var d = instance.web.str_to_date(instance.web.parse_value(needle, {'widget': 'date'}));
+            var t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
+            var v = instance.web.parse_value(needle, {'widget': t});
+            if (t === 'datetime'){
+                d = instance.web.str_to_datetime(v);
+            }
+            else{
+                d = instance.web.str_to_date(v);
+            }
         } catch (e) {
-            return false;
+            // pass
         }
         if (!d) { return $.when(null); }
         var date_string = instance.web.format_value(d, this.attrs);
