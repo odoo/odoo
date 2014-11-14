@@ -132,17 +132,6 @@ class hr_applicant(osv.Model):
     _description = "Applicant"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
-
-    _track = {
-        'emp_id': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.emp_id,
-        },
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
-            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
-        },
-    }
     _mail_mass_mailing = _('Applicants')
 
     def _get_default_department_id(self, cr, uid, context=None):
@@ -427,6 +416,16 @@ class hr_applicant(osv.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
         return action
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'emp_id' in init_values and record.emp_id:
+            return 'hr_recruitment.mt_applicant_hired'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
+            return 'hr_recruitment.mt_applicant_new'
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence > 1:
+            return 'hr_recruitment.mt_applicant_stage_changed'
+        return super(hr_applicant, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """

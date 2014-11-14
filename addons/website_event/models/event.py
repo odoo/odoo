@@ -10,14 +10,9 @@ from openerp.addons.website.models.website import slug
 class event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
-    _track = {
-        'website_published': {
-            'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
-            'website_event.mt_event_unpublished': lambda self, cr, uid, obj, ctx=None: not obj.website_published
-        },
-    }
 
     twitter_hashtag = fields.Char('Twitter Hashtag', default=lambda self: self._default_hashtag())
+    website_published = fields.Boolean(track_visibility='onchange')
     # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
@@ -89,3 +84,12 @@ class event(models.Model):
         if event.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
         return None
+
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'website_published' in init_values and self.website_published:
+            return 'website_event.mt_event_published'
+        elif 'website_published' in init_values and not self.website_published:
+            return 'website_event.mt_event_unpublished'
+        return super(event, self)._track_subtype(init_values)

@@ -31,12 +31,6 @@ class stock_landed_cost(osv.osv):
     _description = 'Stock Landed Cost'
     _inherit = 'mail.thread'
 
-    _track = {
-        'state': {
-            'stock_landed_costs.mt_stock_landed_cost_open': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-        },
-    }
-
     def _total_amount(self, cr, uid, ids, name, args, context=None):
         result = {}
         for cost in self.browse(cr, uid, ids, context=context):
@@ -272,6 +266,12 @@ class stock_landed_cost(osv.osv):
             for key, value in towrite_dict.items():
                 line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
         return True
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'done':
+            return 'stock_landed_costs.mt_stock_landed_cost_open'
+        return super(stock_landed_cost, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
 
 class stock_landed_cost_lines(osv.osv):

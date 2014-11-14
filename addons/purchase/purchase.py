@@ -197,13 +197,7 @@ class purchase_order(osv.osv):
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
-    _track = {
-        'state': {
-            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirmed',
-            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'approved',
-            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-        },
-    }
+
     _columns = {
         'name': fields.char('Order Reference', required=True, select=True, copy=False,
                             help="Unique number of the purchase order, "
@@ -343,6 +337,16 @@ class purchase_order(osv.osv):
         self.signal_workflow(cr, uid, unlink_ids, 'purchase_cancel')
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'approved':
+            return 'purchase.mt_rfq_approved'
+        elif 'state' in init_values and record.state == 'confirmed':
+            return 'purchase.mt_rfq_confirmed'
+        elif 'state' in init_values and record.state == 'done':
+            return 'purchase.mt_rfq_done'
+        return super(purchase_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')

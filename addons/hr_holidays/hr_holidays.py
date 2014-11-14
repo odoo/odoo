@@ -138,14 +138,6 @@ class hr_holidays(osv.osv):
     _description = "Leave"
     _order = "type desc, date_from asc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _track = {
-        'state': {
-            'hr_holidays.mt_holidays_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
-            'hr_holidays.mt_holidays_first_validated': lambda self, cr, uid, obj, ctx=None: obj.state == 'validate1',
-            'hr_holidays.mt_holidays_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'validate',
-            'hr_holidays.mt_holidays_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'refuse',
-        },
-    }
 
     def _employee_get(self, cr, uid, context=None):
         emp_id = context.get('default_employee_id', False)
@@ -487,6 +479,18 @@ class hr_holidays(osv.osv):
         ids_to_set_true = self.search(cr, uid, [('id', 'in', ids), ('payslip_status', '=', False)], context=context)
         ids_to_set_false = list(set(ids) - set(ids_to_set_true))
         return self.write(cr, uid, ids_to_set_true, {'payslip_status': True}, context=context) and self.write(cr, uid, ids_to_set_false, {'payslip_status': False}, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'validate':
+            return 'hr_holidays.mt_holidays_approved'
+        elif 'state' in init_values and record.state == 'validate1':
+            return 'hr_holidays.mt_holidays_first_validated'
+        elif 'state' in init_values and record.state == 'confirm':
+            return 'hr_holidays.mt_holidays_confirmed'
+        elif 'state' in init_values and record.state == 'refuse':
+            return 'hr_holidays.mt_holidays_refused'
+        return super(hr_holidays, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
 
 class resource_calendar_leaves(osv.osv):

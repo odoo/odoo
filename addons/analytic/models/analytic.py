@@ -32,13 +32,6 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
-    _track = {
-        'state': {
-            'analytic.mt_account_pending': lambda self, cr, uid, obj, ctx=None: obj.state == 'pending',
-            'analytic.mt_account_closed': lambda self, cr, uid, obj, ctx=None: obj.state == 'close',
-            'analytic.mt_account_opened': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
-        },
-    }
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
         currency_obj = self.pool.get('res.currency')
@@ -315,6 +308,17 @@ class account_analytic_account(osv.osv):
         else:
             account_ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account_ids, context=context)
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'state' in init_values and record.state == 'open':
+            return 'analytic.mt_account_opened'
+        elif 'state' in init_values and record.state == 'close':
+            return 'analytic.mt_account_closed'
+        elif 'state' in init_values and record.state == 'pending':
+            return 'analytic.mt_account_pending'
+        return super(account_analytic_account, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
 
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'

@@ -72,16 +72,6 @@ class crm_lead(format_address, osv.osv):
     _description = "Lead/Opportunity"
     _order = "priority desc,date_action,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
-
-    _track = {
-        'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence <= 1,
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: (obj.stage_id and obj.stage_id.sequence > 1) and obj.probability < 100,
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100 and obj.stage_id and obj.stage_id.fold,
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
-        },
-    }
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
@@ -978,6 +968,18 @@ class crm_lead(format_address, osv.osv):
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
+
+    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        if 'stage_id' in init_values and record.probability == 100 and record.stage_id and record.stage_id.fold:
+            return 'crm.mt_lead_won'
+        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.fold and record.stage_id.sequence > 1:
+            return 'crm.mt_lead_lost'
+        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.sequence <= 1:
+            return 'crm.mt_lead_create'
+        elif 'stage_id' in init_values:
+            return 'crm.mt_lead_stage'
+        return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
