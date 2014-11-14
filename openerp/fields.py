@@ -1451,7 +1451,7 @@ class Many2one(_Relational):
         records._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
-        if isinstance(value, (NoneType, int)):
+        if isinstance(value, (NoneType, int, long)):
             return record.env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
@@ -1462,7 +1462,7 @@ class Many2one(_Relational):
         elif isinstance(value, dict):
             return record.env[self.comodel_name].new(value)
         else:
-            return record.env[self.comodel_name].browse(value)
+            return self.null(record.env)
 
     def convert_to_read(self, value, use_name_get=True):
         if use_name_get and value:
@@ -1475,19 +1475,19 @@ class Many2one(_Relational):
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
-            return value.id
+            return value.id if value else False
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return value.id
+        return value.id if value else False
 
     def convert_to_onchange(self, value):
-        return value.id
+        return value.id if value else False
 
     def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
-        return ustr(value.display_name)
+        return ustr(value.display_name) if value else False
 
 
 class UnionUpdate(SpecialValue):
