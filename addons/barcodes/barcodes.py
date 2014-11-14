@@ -88,6 +88,12 @@ class barcode_nomenclature(osv.osv):
             'base_code': barcode, 
             'value': 0}
 
+        # Checks if barcode matches the pattern
+        # Additionnaly retrieves the optional numerical content in barcode
+        # Returns an object containing:
+        # - value: the numerical value encoded in the barcode (0 if no value encoded)
+        # - base_code: the barcode in which numerical content is replaced by 0's
+        # - match: boolean
         def match_pattern(barcode, pattern):
             match = {
                 "value": 0,
@@ -96,24 +102,24 @@ class barcode_nomenclature(osv.osv):
             }
 
             barcode = barcode.replace("\\", "\\\\").replace("{", '\{').replace("}", "\}").replace(".", "\.")
-            numerical_content = re.search("[{][N]*[D]*[}]", pattern)
+            numerical_content = re.search("[{][N]*[D]*[}]", pattern) # look for numerical content in pattern
 
-            if numerical_content:
-                num_start = numerical_content.start()
-                num_end = numerical_content.end()
-                value_string = barcode[num_start:num_end-2]
+            if numerical_content: # the pattern encodes a numerical content
+                num_start = numerical_content.start() # start index of numerical content
+                num_end = numerical_content.end() # end index of numerical content
+                value_string = barcode[num_start:num_end-2] # numerical content in barcode
 
-                whole_part_match = re.search("[{][N]*[D}]", numerical_content.group())
-                decimal_part_match = re.search("[{N][D]*[}]", numerical_content.group())
-                whole_part = value_string[:whole_part_match.end()-2]
-                decimal_part = "0." + value_string[decimal_part_match.start():decimal_part_match.end()-1]
+                whole_part_match = re.search("[{][N]*[D}]", numerical_content.group()) # looks for whole part of numerical content
+                decimal_part_match = re.search("[{N][D]*[}]", numerical_content.group()) # looks for decimal part
+                whole_part = value_string[:whole_part_match.end()-2] # retrieve whole part of numerical content in barcode
+                decimal_part = "0." + value_string[decimal_part_match.start():decimal_part_match.end()-1] # retrieve decimal part
                 if whole_part == '':
                     whole_part = '0'
                 match['value'] = int(whole_part) + float(decimal_part)
 
-                match['base_code'] = barcode[:num_start] + (num_end-num_start-2)*"0" + barcode[num_end-2:] 
+                match['base_code'] = barcode[:num_start] + (num_end-num_start-2)*"0" + barcode[num_end-2:] # replace numerical content by 0's in barcode
                 match['base_code'] = match['base_code'].replace("\\\\", "\\").replace("\{", "{").replace("\}","}").replace("\.",".")
-                pattern = pattern[:num_start] + (num_end-num_start-2)*"0" + pattern[num_end:] 
+                pattern = pattern[:num_start] + (num_end-num_start-2)*"0" + pattern[num_end:] # replace numerical content by 0's in pattern to match
 
             match['match'] = re.match(pattern, match['base_code'][:len(pattern)])
 
