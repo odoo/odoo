@@ -51,7 +51,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/send_validation_email', type='json', auth='user', website=True)
     def send_validation_email(self, forum_id=None, **kwargs):
-        request.env['res.users'].send_forum_validation_email(request.uid, forum_id=forum_id)
+        if request.env.uid != request.website.user_id.id:
+            request.env.user.send_forum_validation_email(forum_id=forum_id)
         request.session['validation_email_sent'] = True
         return True
 
@@ -62,7 +63,7 @@ class WebsiteForum(http.Controller):
                 forum_id = int(forum_id)
             except ValueError:
                 forum_id = None
-        done = request.env['res.users'].process_forum_validation_token(token, int(id), email, forum_id=forum_id)
+        done = request.env['res.users'].sudo().browse(int(id)).process_forum_validation_token(token, email, forum_id=forum_id)[0]
         if done:
             request.session['validation_email_done'] = True
         if forum_id:

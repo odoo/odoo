@@ -57,9 +57,11 @@ class Users(models.Model):
 
     @api.one
     def send_forum_validation_email(self, forum_id=None):
+        if not self.email:
+            return False
         token = self._generate_forum_token(self.id, self.email)
-        activation_template_id = self.env['ir.model.data'].xmlid_to_res_id('website_forum.validation_email')
-        if activation_template_id:
+        activation_template = self.env.ref('website_forum.validation_email')
+        if activation_template:
             params = {
                 'token': token,
                 'id': self.id,
@@ -68,7 +70,7 @@ class Users(models.Model):
                 params['forum_id'] = forum_id
             base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             token_url = base_url + '/forum/validate_email?%s' % urlencode(params)
-            self.env['email.template'].sudo().with_context(token_url=token_url).send_mail(activation_template_id, self.id, force_send=True)
+            activation_template.sudo().with_context(token_url=token_url).send_mail(self.id, force_send=True)
         return True
 
     @api.one
