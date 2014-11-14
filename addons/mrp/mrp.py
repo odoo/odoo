@@ -334,6 +334,11 @@ class mrp_bom(osv.osv):
             res['value'].update({'product_uom': product.uom_id.id})
         return res
 
+    def unlink(self, cr, uid, ids, context=None):
+        if self.pool['mrp.production'].search(cr, uid, [('bom_id', 'in', ids), ('state', 'not in', ['done', 'cancel'])], context=context):
+            raise osv.except_osv(_('Warning!'), _('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+        return super(mrp_bom, self).unlink(cr, uid, ids, context=context)
+
     def onchange_product_tmpl_id(self, cr, uid, ids, product_tmpl_id, product_qty=0, context=None):
         """ Changes UoM and name if product_id changes.
         @param product_id: Changed product_id
