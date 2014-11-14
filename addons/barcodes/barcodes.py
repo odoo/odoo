@@ -88,69 +88,37 @@ class barcode_nomenclature(osv.osv):
             'base_code': barcode, 
             'value': 0}
 
-        def match_pattern(barcode,pattern):
-            if(len(barcode) < len(pattern.replace('{','').replace('}',''))):
-                return False # match of this pattern is impossible
-            numerical_content  = False
-            j=0
-            for i in range(len(pattern)):
-                p = pattern[i]
-                if p == '{' or p == '}':
-                    numerical_content = not numerical_content
-                    continue
+        def match_pattern(barcode, pattern):
+            match = {
+                "value": 0,
+                "base_code": barcode,
+                "match": False,
+            }
 
-                if not numerical_content and p != '*' and p != barcode[j]:
-                    return False
-                j+=1
-            return True
+            barcode = barcode.replace("\\", "\\\\").replace("{", '\{').replace("}", "\}").replace(".", "\.")
+            numerical_content = re.search("[{][N]*[D]*[}]", pattern)
 
-        def get_value(barcode,pattern):
-            value = 0
-            decimals = 0
-            numerical_content = False
-            j = 0
-            for i in range(len(pattern)):
-                p = pattern[i]
-                if not numerical_content and p != "{":
-                    j+=1
-                    continue
-                elif p == "{":
-                    numerical_content = True
-                    continue
-                elif p == "}":
-                    break;
+            if numerical_content:
+                num_start = numerical_content.start()
+                num_end = numerical_content.end()
+                value_string = barcode[num_start:num_end-2]
 
-                v = int(barcode[j])
-                if p == 'N':
-                    value *= 10
-                    value += v
-                elif p == 'D':  #FIXME precision ....
-                    decimals += 1
-                    value += v * pow(10,-decimals)
-                j+=1
-            return value
+                whole_part_match = re.search("[{][N]*[D}]", numerical_content.group())
+                decimal_part_match = re.search("[{N][D]*[}]", numerical_content.group())
+                whole_part = value_string[:whole_part_match.end()-2]
+                decimal_part = "0." + value_string[decimal_part_match.start():decimal_part_match.end()-1]
+                if whole_part == '':
+                    whole_part = '0'
+                match['value'] = int(whole_part) + float(decimal_part)
 
-        def get_basecode(barcode,pattern,encoding):
-            base = ''
-            numerical_content = False
-            j = 0
-            for i in range(len(pattern)):
-                p = pattern[i]
-                if p == '{' or p == '}':
-                    numerical_content = not numerical_content
-                    continue
+                match['base_code'] = barcode[:num_start] + (num_end-num_start-2)*"0" + barcode[num_end-2:] 
+                match['base_code'] = match['base_code'].replace("\\\\", "\\").replace("\{", "{").replace("\}","}").replace("\.",".")
+                pattern = pattern[:num_start] + (num_end-num_start-2)*"0" + pattern[num_end:] 
 
-                if numerical_content:
-                    base += '0'
-                else:
-                    base += barcode[j]
-                j+=1
+            match['match'] = re.match(pattern, match['base_code'][:len(pattern)])
 
-            for i in range(j, len(barcode)): # Read the rest of the barcode
-                base += barcode[i]
-            if encoding == "ean13":
-                base = self.sanitize_ean(base)
-            return base
+            return match
+
 
         rules = []
         for rule in self.rule_ids:
@@ -166,16 +134,21 @@ class barcode_nomenclature(osv.osv):
             cur_barcode = barcode
             if prepend_zero and rule['encoding'] == "ean13":
                 cur_barcode = '0'+cur_barcode
-            if match_pattern(cur_barcode, rule['pattern']):
+
+            match = match_pattern(cur_barcode, rule['pattern'])
+            if match['match']:
                 if rule['type'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
                 else:
                     parsed_result['encoding'] = rule['encoding']
                     parsed_result['type'] = rule['type']
-                    parsed_result['value'] = get_value(cur_barcode, rule['pattern'])
+                    parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
-                    parsed_result['base_code'] = get_basecode(cur_barcode, rule['pattern'], parsed_result['encoding'])
+                    if rule['encoding'] == "ean13":
+                        parsed_result['base_code'] = self.sanitize_ean(match['base_code'])
+                    else:
+                        parsed_result['base_code'] = match['base_code']
                     return parsed_result
 
         return parsed_result
@@ -193,7 +166,6 @@ class barcode_rule(models.Model):
         'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
         'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
         'encoding': fields.selection([('any','Any'),('ean13','EAN-13')],'Encoding',required=True,help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        #'type':     fields.selection([('alias','Alias'),('product','Unit Product')],'Type', required=True),
         'type':     fields.selection('_get_type_selection','Type', required=True),
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
         'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode',required=True),      

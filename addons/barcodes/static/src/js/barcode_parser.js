@@ -162,81 +162,41 @@ openerp.barcodes = function(instance) {
                 return parsed_result;
             }
 
-            function match_pattern(barcode,pattern){
-                if(barcode.length < pattern.replace(/[{}]/g, '').length){
-                    return false; // Match of this pattern is impossible
-                }
-                var numerical_content = false; // Used to detect when we are between { }
-                for(var i = 0, j = 0; i < pattern.length; i++, j++){
-                    var p = pattern[i];
-                    if(p === "{" || p === "}"){
-                        numerical_content = !numerical_content;
-                        j--;
-                        continue;
-                    }
-                    
-                    if(!numerical_content && p !== '*' && p !== barcode[j]){
-                        return false;
-                    }
-                }
-                return true;
-            }
-            
-            function get_value(barcode,pattern){
-                var value = 0;
-                var decimals = 0;
-                var numerical_content = false;
-                for(var i = 0, j = 0; i < pattern.length; i++, j++){
-                    var p = pattern[i];
-                    if(!numerical_content && p !== "{"){
-                        continue;
-                    }
-                    else if(p === "{"){
-                        numerical_content = true;
-                        j--;
-                        continue;
-                    }
-                    else if(p === "}"){
-                        break;
-                    }
+            function match_pattern(barcode, pattern){
+                var match = {
+                    value: 0,
+                    base_code: barcode,
+                    match: false,
+                };
+                barcode = barcode.replace("\\", "\\\\").replace("{", '\{').replace("}", "\}").replace(".", "\.");
 
-                    var v = parseInt(barcode[j]);
-                    if(p === 'N'){
-                        value *= 10;
-                        value += v;
-                    }else if(p === 'D'){   // FIXME precision ....
-                        decimals += 1;
-                        value += v * Math.pow(10,-decimals);
+                var numerical_content = pattern.match(/[{][N]*[D]*[}]/);
+                var base_pattern = pattern;
+                if(numerical_content){
+                    var num_start = numerical_content.index;
+                    var num_length = numerical_content[0].length;
+                    var value_string = barcode.substr(num_start, num_length-2);
+                    var whole_part_match = numerical_content[0].match("[{][N]*[D}]");
+                    var decimal_part_match = numerical_content[0].match("[{N][D]*[}]");
+                    var whole_part = value_string.substr(0, whole_part_match.index+whole_part_match[0].length-2);
+                    var decimal_part = "0." + value_string.substr(decimal_part_match.index, decimal_part_match[0].length-1);
+                    if (whole_part === ''){
+                        whole_part = '0';
                     }
+                    match['value'] = parseInt(whole_part) + parseFloat(decimal_part);
+                    match['base_code'] = barcode.substr(0,num_start);
+                    var base_pattern = pattern.substr(0,num_start);
+                    for(var i=0;i<(num_length-2);i++) {
+                       match['base_code'] += "0";
+                       base_pattern += "0";
+                    }
+                    match['base_code'] += barcode.substr(num_start+num_length-2,barcode.length-1);
+                    base_pattern += pattern.substr(num_start+num_length,pattern.length-1);
+                    match['base_code'] = match['base_code'].replace("\\\\", "\\").replace("\{", "{").replace("\}","}").replace("\.",".");
                 }
-                return value;
-            }
 
-            function get_basecode(barcode,pattern,encoding){
-                var base = '';
-                var numerical_content = false;
-                for(var i = 0, j = 0; i < pattern.length; i++, j++){
-                    var p = pattern[i];
-                    if(p === "{" || p === "}"){
-                        numerical_content = !numerical_content;
-                        j--;
-                        continue;
-                    }
-
-                    if(numerical_content){
-                        base += '0';
-                    }
-                    else{
-                        base += barcode[j];
-                    }
-                }
-                for(i=j; i<barcode.length; i++){ // Read the rest of the barcode
-                    base += barcode[i];
-                }
-                if(encoding === "ean13"){
-                    base = self.sanitize_ean(base);
-                }
-                return base;
+                match['match'] = match['base_code'].substr(0,base_pattern.length).match(base_pattern);
+                return match;
             }
 
             // If the nomenclature does not use strict EAN, prepend the barcode with a 0 if it seems
@@ -251,7 +211,8 @@ openerp.barcodes = function(instance) {
                 if (prepend_zero && rules[i].encoding == 'ean13'){
                     cur_barcode = '0'+cur_barcode;
                 }
-                if (match_pattern(cur_barcode,rules[i].pattern)) {
+                var match = match_pattern(cur_barcode,rules[i].pattern);
+                if (match.match) {
                     if(rules[i].type === 'alias') {
                         barcode = rules[i].alias;
                         parsed_result.code = barcode;
@@ -260,9 +221,14 @@ openerp.barcodes = function(instance) {
                     else {
                         parsed_result.encoding  = rules[i].encoding;
                         parsed_result.type      = rules[i].type;
-                        parsed_result.value     = get_value(cur_barcode,rules[i].pattern);
+                        parsed_result.value     = match.value
                         parsed_result.code      = cur_barcode;
-                        parsed_result.base_code = get_basecode(cur_barcode,rules[i].pattern,parsed_result.encoding);
+                        if (rules[i].encoding === "ean13"){
+                            parsed_result.base_code = this.sanitize_ean(match.base_code);
+                        }
+                        else{
+                            parsed_result.base_code = match.base_code;
+                        }
                         return parsed_result;
                     }
                 }

@@ -515,7 +515,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     this.action_callback['product'](parsed_result);
                 }
             }
-            else if (parsed_result.type in {'cashier':'', 'client':''}){ 
+            else if (parsed_result.type in {'cashier':'', 'client':'', 'discount':''}){ 
                 if(this.action_callback[parsed_result.type]){
                     this.action_callback[parsed_result.type](parsed_result);
                 }
