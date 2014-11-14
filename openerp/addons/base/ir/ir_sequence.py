@@ -22,7 +22,7 @@
 import logging
 import time
 
-import openerp
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import datetime
 from openerp import _, api, fields, models
 from openerp.exceptions import Warning
@@ -41,9 +41,10 @@ class ir_sequence_type(models.Model):
         ('code_unique', 'unique(code)', '`code` must be unique.'),
     ]
 
+
 def _code_get(self):
-    self.cr.execute('select code, name from ir_sequence_type')
-    return self.cr.fetchall()
+    self.env.cr.execute('select code, name from ir_sequence_type')
+    return self.env.cr.fetchall()
 
 
 class ir_sequence(models.Model):
@@ -73,8 +74,8 @@ class ir_sequence(models.Model):
                     "SELECT last_value, increment_by, is_called"
                     " FROM ir_sequence_%03d"
                     % element.id)
-                self.cr.execute(statement)
-                (last_value, increment_by, is_called) = self.cr.fetchone()
+                self.env.cr.execute(statement)
+                (last_value, increment_by, is_called) = self.env.cr.fetchone()
                 if is_called:
                     res[element.id] = last_value + increment_by
                 else:
@@ -111,18 +112,18 @@ class ir_sequence(models.Model):
     use_date_range = fields.Boolean('Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_main_id', 'Subsequences')
 
-    def init(self):
+    def init(self, cr):
         return  # Don't do the following index yet.
-        # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
+        # CONSTRAINT/UNIQUE INDEX on (code, company_id)
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
         # only support field names in constraint definitions, and we need a function here:
         # we need to special-case company_id to treat all NULL company_id as equal, otherwise
         # we would allow duplicate (code, NULL) ir_sequences.
-        self.cr.execute("""
+        self.env.cr.execute("""
             SELECT indexname FROM pg_indexes WHERE indexname =
             'ir_sequence_unique_code_company_id_idx'""")
-        if not self.cr.fetchone():
-            self.cr.execute("""
+        if not self.env.cr.fetchone():
+            self.env.cr.execute("""
                 CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
                 ON ir_sequence (code, (COALESCE(company_id,-1)))""")
 
@@ -138,7 +139,7 @@ class ir_sequence(models.Model):
             sql = "CREATE SEQUENCE ir_sequence_%03d_%03d INCREMENT BY %%s START WITH %%s" % (self.id, seq_date_id.id)
         else:
             sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % self.id
-        self.cr.execute(sql, (number_increment, number_next))
+        self.env.cr.execute(sql, (number_increment, number_next))
 
     @api.multi
     def _drop_sequence(self):
@@ -155,7 +156,7 @@ class ir_sequence(models.Model):
 
         # RESTRICT is the default; it prevents dropping the sequence if an
         # object depends on it.
-        self.cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
+        self.env.cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
     @api.one
     def _alter_sequence(self, number_increment=None, number_next=None, seq_date_id=False):
@@ -169,8 +170,8 @@ class ir_sequence(models.Model):
             seq_name = 'ir_sequence_%03d_%03d' % (self.id, seq_date_id.id)
         else:
             seq_name = 'ir_sequence_%03d' % (self.id)
-        self.cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
-        if not self.cr.fetchone():
+        self.env.cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
+        if not self.env.cr.fetchone():
             # sequence is not created yet, we're inside create() so ignore it, will be set later
             return
         statement = "ALTER SEQUENCE %s" % (seq_name, )
@@ -178,60 +179,60 @@ class ir_sequence(models.Model):
             statement += " INCREMENT BY %d" % (number_increment, )
         if number_next is not None:
             statement += " RESTART WITH %d" % (number_next, )
-        self.cr.execute(statement)
+        self.env.cr.execute(statement)
 
+    @api.model
     def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
         values = self._add_missing_default_values(values)
         seq = super(ir_sequence, self).create(values)
         if values['implementation'] == 'standard':
-            self._create_sequence(seq, values['number_increment'], values['number_next'])
+            seq._create_sequence(values['number_increment'], values['number_next'])
         return seq
 
-    def unlink(self, cr, uid, ids, context=None):
-        self._drop_sequence(cr, uid, ids)
-        super(ir_sequence, self).unlink(cr, uid, ids, context)
+    @api.multi
+    def unlink(self):
+        self._drop_sequence()
+        super(ir_sequence, self).unlink()
         return True
 
-    def write(self, cr, uid, ids, values, context=None):
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
+    @api.multi
+    def write(self, values):
         new_implementation = values.get('implementation')
-        rows = self.read(cr, uid, ids, ['implementation', 'number_increment', 'number_next', 'date_range_ids'], context)
-        super(ir_sequence, self).write(cr, uid, ids, values, context)
+        super(ir_sequence, self).write(values)
 
-        for row in rows:
+        for seq in self:
             # 4 cases: we test the previous impl. against the new one.
-            i = values.get('number_increment', row['number_increment'])
-            n = values.get('number_next', row['number_next'])
-            if row['implementation'] == 'standard':
+            i = values.get('number_increment', seq.number_increment)
+            n = values.get('number_next', seq.number_next)
+            if seq.implementation == 'standard':
                 if new_implementation in ('standard', None):
                     # Implementation has NOT changed.
                     # Only change sequence if really requested.
-                    if row['number_next'] != n:
-                        self._alter_sequence(cr, uid, row['id'], number_next=n)
-                    if row['number_increment'] != i:
-                        self._alter_sequence(cr, uid, row['id'], number_increment=i)
-                        for seq_date_id in row['date_range_ids']:
-                            self._alter_sequence(cr, uid, row['id'], number_increment=i, seq_date_id=seq_date_id)
+                    if seq.number_next != n:
+                        seq._alter_sequence(number_next=n)
+                    if seq.number_increment != i:
+                        seq._alter_sequence(number_increment=i)
+                        for seq_date_id in seq.date_range_ids:
+                            seq._alter_sequence(number_increment=i, seq_date_id=seq_date_id)
                 else:
-                    self._drop_sequence(cr, uid, row['id'])
+                    seq._drop_sequence()
             else:
                 if new_implementation in ('no_gap', None):
                     pass
                 else:
-                    self._create_sequence(cr, uid, row['id'], i, n)
+                    seq._create_sequence(i, n)
 
         return True
 
     def _interpolate(self, s, d):
         if s:
             return s % d
-        return  ''
+        return ''
 
     def _interpolation_dict(self):
-        t = time.localtime() # Actually, the server is always in UTC.
+        t = time.localtime()  # Actually, the server is always in UTC.
         return {
             'year': time.strftime('%Y', t),
             'month': time.strftime('%m', t),
@@ -246,61 +247,41 @@ class ir_sequence(models.Model):
             'sec': time.strftime('%S', t),
         }
 
-    def _next_do(self, cr, uid, ids, seq_date_id=False, context=None):
-        if not ids:
-            return False
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        force_company = context.get('force_company')
-        if not force_company:
-            force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, ids,
-                              ['name', 'company_id', 'implementation', 'number_next',
-                               'prefix', 'suffix', 'padding', 'number_increment']
-                              )
-        if seq_date_id:#if we have a seq_date_id it is not possible to have many ids
-            assert len(ids) == 1
-            seq = sequences[0]
-        else:
-            preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
-            seq = preferred_sequences[0] if preferred_sequences else sequences[0]
-        if seq['implementation'] == 'standard':
+    @api.one
+    def _next_do(self, seq_date_id=False):
+        cr = self.env.cr
+        if self.implementation == 'standard':
             if seq_date_id:
-                assert isinstance(seq_date_id, (int, long))
-                sql = "SELECT nextval('ir_sequence_%03d_%03d')" % (seq['id'], seq_date_id)
+                sql = "SELECT nextval('ir_sequence_%03d_%03d')" % (self.id, seq_date_id.id)
             else:
-                sql = "SELECT nextval('ir_sequence_%03d')" % seq['id']
+                sql = "SELECT nextval('ir_sequence_%03d')" % self.id
             cr.execute(sql)
-            seq['number_next'] = cr.fetchone()
+            number_next = cr.fetchone()
         else:
             if seq_date_id:
                 model_name = 'ir_sequence_date_range'
-                model_obj = self.pool.get('ir.sequence.date_range')
+                model_obj = self.env['ir.sequence.date_range']
                 id = seq_date_id
             else:
                 model_name = 'ir_sequence'
                 model_obj = self
-                id = seq['id']
-            cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (model_name, id))
-            cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (model_name, seq['number_increment'], id))
-            model_obj.invalidate_cache(cr, uid, ['number_next'], [id], context=context)
-            seq['number_next'] = model_obj.browse(cr, uid, id).number_next
+                id = self
+            number_next = id.number_next
+            cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (model_name, id.id))
+            cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (model_name, self.number_increment, id.id))
+            model_obj.invalidate_cache(['number_next'], [id.id])
         d = self._interpolation_dict()
         try:
-            interpolated_prefix = self._interpolate(seq['prefix'], d)
-            interpolated_suffix = self._interpolate(seq['suffix'], d)
+            interpolated_prefix = self._interpolate(self.prefix, d)
+            interpolated_suffix = self._interpolate(self.suffix, d)
         except ValueError:
-            raise osv.except_osv(_('Warning'), _('Invalid prefix or suffix for sequence \'%s\'') % (seq.get('name')))
-        return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
+            raise Warning(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
+        return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
-    def _create_date_range_seq(self, cr, uid, ids, date, context=None):
-        """ Creates a new sequence_date_range
-        date : UTC-formatted string of the current date
-        """
-        for seq in self.browse(cr, uid, ids, context):
-            year = datetime.strptime(date, openerp.tools.DEFAULT_SERVER_DATE_FORMAT).strftime('%Y')
+    @api.multi
+    def _create_date_range_seq(self, date):
+        for seq in self:
+            year = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).strftime('%Y')
             date_from = '{}-01-01'.format(year)
             date_to = '{}-12-31'.format(year)
             for line in seq.date_range_ids:
@@ -308,40 +289,48 @@ class ir_sequence(models.Model):
                     date_to = line.date_from
                 elif line.date_to > date_from and line.date_to < date:
                     date_from = line.date_to
-            vals = {}
-            vals['date_from'] = date_from
-            vals['date_to'] = date_to
-            vals['sequence_main_id'] = seq.id
-            seq_date_id = self.pool.get('ir.sequence.date_range').create(cr, openerp.SUPERUSER_ID, vals, context=context)
+            seq_date_id = self.env['ir.sequence.date_range'].sudo().create({
+                'date_from': date_from,
+                'date_to': date_to,
+                'sequence_main_id': seq.id,
+            })
             if seq.implementation == 'standard':
-                self._create_sequence(cr, seq.id, seq.number_increment, 1, seq_date_id=seq_date_id)
+                seq._create_sequence(seq.number_increment, 1, seq_date_id=seq_date_id)
             return seq_date_id
 
-    def _next(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for seq in self.browse(cr, uid, ids, context):
-            if seq.use_date_range:
-                dt = context.get('date', openerp.osv.fields.date.today())
-                seq_date_id = False
-                for line in seq.date_range_ids:
-                    if line.date_from < dt and line.date_to > dt:
-                        seq_date_id = line.id
-                        break
-                if not seq_date_id:
-                    seq_date_id = self._create_date_range_seq(cr, uid, seq.id, dt, context=context)
-                return self._next_do(cr, uid, seq.id, seq_date_id=seq_date_id, context=context)
-            else:
-                return self._next_do(cr, uid, ids, context=context)
+    @api.multi
+    def _next(self):
+        """ Returns the next number in the preferred sequence in all the ones given in self.
+        """
+        if len(list(self)) == 0:
+            return False
+        force_company = self.env.context.get('force_company')
+        if not force_company:
+            force_company = self.env['res.users'].browse(self.env.uid).company_id
+        preferred_sequences = [s for s in self if s.company_id and s.company_id == force_company]
+        seq = preferred_sequences[0] if preferred_sequences else self[0]
 
-    def next_by_id(self, cr, uid, sequence_id, context=None):
+        if seq.use_date_range:
+            dt = self.env.context.get('date', fields.Date.today())
+            seq_date_id = False
+            for line in seq.date_range_ids:
+                if line.date_from < dt and line.date_to > dt:
+                    seq_date_id = line
+                    break
+            if not seq_date_id:
+                seq_date_id = seq._create_date_range_seq(dt)
+            return seq._next_do(seq_date_id=seq_date_id)[0]
+        else:
+            return seq._next_do()[0]
+
+    @api.multi
+    def next_by_id(self):
         """ Draw an interpolated string using the specified sequence."""
-        self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
-        ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
-        return self._next(cr, uid, ids, context)
+        self.check_access_rights('read')
+        return self._next()
 
-    def next_by_code(self, cr, uid, sequence_code, context=None):
+    @api.model
+    def next_by_code(self, sequence_code):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
             (multi-company cases), the one from the user's current company will
@@ -351,14 +340,15 @@ class ir_sequence(models.Model):
                 ``force_company`` key with the ID of the company to
                 use instead of the user's current company for the
                 sequence selection. A matching sequence for that
-                specific company will get higher priority. 
+                specific company will get higher priority.
         """
-        self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
-        ids = self.search(cr, uid, ['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
-        return self._next(cr, uid, ids, context)
+        self.check_access_rights('read')
+        company_ids = self.env['res.company'].search([]).ids + [False]
+        seq_ids = self.search(['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
+        return seq_ids._next()
 
-    def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):
+    @api.model
+    def get_id(self, sequence_code_or_id, code_or_id='id'):
         """ Draw an interpolated string using the specified sequence.
 
         The sequence to use is specified by the ``sequence_code_or_id``
@@ -367,47 +357,40 @@ class ir_sequence(models.Model):
         """
         # TODO: bump up to warning after 6.1 release
         _logger.debug("ir_sequence.get() and ir_sequence.get_id() are deprecated. "
-            "Please use ir_sequence.next_by_code() or ir_sequence.next_by_id().")
+                      "Please use ir_sequence.next_by_code() or ir_sequence.next_by_id().")
         if code_or_id == 'id':
-            return self.next_by_id(cr, uid, sequence_code_or_id, context)
+            return self.browse(sequence_code_or_id).next_by_id()
         else:
-            return self.next_by_code(cr, uid, sequence_code_or_id, context)
+            return self.next_by_code(sequence_code_or_id)
 
-    def get(self, cr, uid, code, context=None):
+    @api.model
+    def get(self, code):
         """ Draw an interpolated string using the specified sequence.
 
         The sequence to use is specified by its code. This method is
         deprecated.
         """
-        return self.get_id(cr, uid, code, 'code', context)
+        return self.get_id(code, 'code')
 
 
-class ir_sequence_date_range(openerp.osv.osv.osv):
+class ir_sequence_date_range(models.Model):
     _name = 'ir.sequence.date_range'
     _rec_name = "sequence_main_id"
 
-    _columns = {
-        'date_from': openerp.osv.fields.date('From', required=True),
-        'date_to': openerp.osv.fields.date('To', required=True),
-        'sequence_main_id': openerp.osv.fields.many2one("ir.sequence", 'Main Sequence',
-                                                        required=True, ondelete='cascade'),
-        'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
-    }
-    _defaults = {
-        'number_next': 1,
-    }
+    date_from = fields.Date('From', required=True)
+    date_to = fields.Date('To', required=True)
+    sequence_main_id = fields.Many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade')
+    number_next = fields.Integer('Next Number', required=True, default=1, help="Next number of this sequence")
 
-    def write(self, cr, uid, ids, values, context=None):
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
-        rows = self.read(cr, uid, ids, ['sequence_main_id', 'number_next'], context)
-        super(ir_sequence_date_range, self).write(cr, uid, ids, values, context)
+    @api.multi
+    def write(self, values):
+        super(ir_sequence_date_range, self).write(values)
 
-        for row in rows:
-            n = values.get('number_next', row['number_next'])
-            if self.pool.get('ir.sequence').browse(cr, uid, row['sequence_main_id'], context=context).implementation == 'standard':
-                if row['number_next'] != n:
-                    self._alter_sequence(cr, uid, row['sequence_main_id'], number_next=n, seq_date_id=rows['id'])
+        for seq_date_id in self:
+            n = values.get('number_next', seq_date_id.number_next)
+            if seq_date_id.sequence_main_id.implementation == 'standard':
+                if seq_date_id.number_next != n:
+                    seq_date_id.sequence_main_id._alter_sequence(number_next=n, seq_date_id=seq_date_id)
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
