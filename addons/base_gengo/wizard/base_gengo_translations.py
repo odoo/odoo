@@ -46,7 +46,7 @@ class base_gengo_translations(osv.osv_memory):
     _columns = {
         'sync_type': fields.selection([('send', 'Send New Terms'),
                                        ('receive', 'Receive Translation'),
-                                       ('both', 'Both')], "Sync Type"),
+                                       ('both', 'Both')], "Sync Type", required=True),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
         'sync_limit': fields.integer("No. of terms to sync"),
     }
