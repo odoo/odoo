@@ -87,7 +87,12 @@ class stock_picking(osv.osv):
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.purchase_line_id:
             if move_line.purchase_line_id.order_id.invoice_method == 'picking':
-                return move_line.price_unit
+                pur_currency = move_line.purchase_line_id.order_id.currency_id.id
+                company_currency = move_line.purchase_line_id.company_id.currency_id.id
+                price_unit = move_line.price_unit
+                if pur_currency != company_currency:
+                    price_unit = self.pool.get('res.currency').compute(cursor, user, company_currency, pur_currency, price_unit)
+                return price_unit
             else:
                 return move_line.purchase_line_id.price_unit
         return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
@@ -144,8 +149,18 @@ class stock_partial_picking(osv.osv_memory):
                 pur_currency = purchase_line.order_id.currency_id.id
                 company_currency = purchase_line.company_id.currency_id.id
                 cost = self.pool.get('res.currency').compute(cr, uid, pur_currency, company_currency, purchase_line.price_unit, round=False, context={'date': purchase_line.date_order})
-                return {'cost': cost, 'currency': company_currency}
+                return {'cost': cost, 'currency': pur_currency}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
+    
+    def _partial_move_for(self, cr, uid, move):
+        purchase_line = move.purchase_line_id
+        partial_move = super(stock_partial_picking, self)._partial_move_for(cr, uid, move)
+        if move.picking_id.purchase_id and purchase_line:
+            pur_currency = move.purchase_line_id.order_id.currency_id.id
+            if move.picking_id.type == 'in':
+                partial_move.update({'currency': pur_currency})
+        return partial_move
+
 
     def _partial_move_for(self, cr, uid, move, context=None):
         partial_move = super(stock_partial_picking, self)._partial_move_for(cr, uid, move, context=context)
