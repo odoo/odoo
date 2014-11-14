@@ -691,7 +691,7 @@ class product_product(osv.osv):
                 ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
+                    ids.update(self.search(cr, user, args + [('name',operator,name), ('id', 'not in', list(ids))], limit=(limit and (limit-len(ids)) or False) , context=context))
                 ids = list(ids)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)

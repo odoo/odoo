@@ -3894,7 +3894,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         if (!this.fields_view || !this.editable()){
             return true;
         }
-        this.o2m._dirty_flag = true;
         var r;
         return _.every(this.records.records, function(record){
             r = record;

@@ -2400,6 +2400,9 @@ class stock_move(osv.osv):
                 context = {}
             src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
             dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id)
+            # do not take the company of the one of the user
+            # used to select the correct period
+            company_ctx = dict(context, company_id=move.company_id.id)
             account_moves = []
             # Outgoing moves (or cross-company output part)
             if move.location_id.company_id \
@@ -2431,7 +2434,8 @@ class stock_move(osv.osv):
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name}, context=context)
+                         'company_id': move.company_id.id,
+                         'ref': move.picking_id and move.picking_id.name}, context=company_ctx)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
