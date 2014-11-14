@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="website_contact_editor" inherit_id="website.snippets" name="Snippet Contact Editor">
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='contact_editor'
+            data-selector="[data-oe-field][data-oe-type='contact']"
+            data-no-check="true">
+
+          <li class='dropdown-submenu'>
+            <a tabindex="-1" href="#">Search</a>
+          </li>
+        </div>
+    </xpath>
+
+</template>
+</data>
+</openerp>
