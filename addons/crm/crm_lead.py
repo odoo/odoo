@@ -386,7 +386,7 @@ class crm_lead(format_address, osv.osv):
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('fold', '=', True), ('sequence', '>', 1)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
                 if stages_leads.get(stage_id):
                     stages_leads[stage_id].append(lead.id)
@@ -406,7 +406,7 @@ class crm_lead(format_address, osv.osv):
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('fold', '=', True)], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True)], context=context)
             if stage_id:
                 if stages_leads.get(stage_id):
                     stages_leads[stage_id].append(lead.id)
