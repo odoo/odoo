@@ -305,9 +305,10 @@
                 </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
                     <div>
-                        <field name="use_issues" class="oe_inline" string="Use Issues"
+                        <field name="use_issues" class="oe_inline"
                                 on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                        <label for="use_issues" class="oe_inline"/> as <field name="label_issues" class="oe_inline"/>
+                        <label for="use_issues" class="oe_inline oe_edit_only" string="Use Issues"/><span class="oe_edit_only">as</span>
+                        <field name="label_issues" class="oe_inline"/>
                     </div>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
