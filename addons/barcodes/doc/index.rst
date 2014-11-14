@@ -3,10 +3,11 @@ Barcodes module documentation
 
 The Barcodes module defines barcode nomenclatures whose rules identify specific type 
 of items e.g. products, locations. It contains the following features:
+
 - Barcode patterns to identify barcodes containing a numerical value (e.g. weight, price)
 - Definitin of barcode aliases that allow to identify the same product with different barcodes
-- Unlimited barcode patterns and definitions. 
-- Barcode EAN13 encoding supported
+- Unlimited barcode patterns and definitions,
+- Barcode EAN13 encoding supported.
 
 Barcode nomenclatures and rules
 -------------------------------
