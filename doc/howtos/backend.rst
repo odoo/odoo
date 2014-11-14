@@ -1384,7 +1384,7 @@ access rights are limited.
 
 Here is an example of a rule that prevents the deletion of leads that are not
 in state ``cancel``. Notice that the value of the field ``groups`` must follow
-the same convention as the method ``write`` of the ORM.
+the same convention as the method :meth:`~openerp.models.Model.write` of the ORM.
 
 .. code-block:: xml
 
