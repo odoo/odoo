@@ -188,6 +188,7 @@ var Tour = {
         $element.data("tour", state.id);
         $element.data("tour-step", step.id);
         $element.popover({
+            selector: "xxx", // to fix 'data-original-title'
             placement: step.placement || "auto",
             animation: true,
             trigger: "manual",
