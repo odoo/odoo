@@ -170,9 +170,18 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
-    def tag_read(self, **post):
-        tags = request.registry['forum.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
-        data = [tag['name'] for tag in tags]
+    def tag_read(self, q='', l=25, t='texttext', **post):
+        data = request.registry['forum.tag'].search_read(
+            request.cr,
+            request.uid,
+            domain=[('name', '=ilike', (q or '') + "%")],
+            fields=['id', 'name'],
+            limit=int(l),
+            context=request.context
+        )
+        if t == 'texttext':
+            # old tag with texttext - Retro for V8 - #TODO Remove in master
+            data = [tag['name'] for tag in data]
         return simplejson.dumps(data)
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
@@ -195,7 +204,7 @@ class WebsiteForum(http.Controller):
     def question_ask(self, forum, **post):
         if not request.session.uid:
             return login_redirect()
-        values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
+        values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
         return request.website.render("website_forum.ask_question", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/new', type='http', auth="user", methods=['POST'], website=True)
@@ -203,14 +212,23 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
         question_tag_ids = []
-        if post.get('question_tags').strip('[]'):
-            tags = post.get('question_tags').strip('[]').replace('"', '').split(",")
+        tag_version = post.get('tag_type', 'texttext')
+        if tag_version == "texttext":  # TODO Remove in master
+            if post.get('question_tags').strip('[]'):
+                tags = post.get('question_tags').strip('[]').replace('"', '').split(",")
+                for tag in tags:
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                    if tag_ids:
+                        question_tag_ids.append((4, tag_ids[0]))
+                    else:
+                        question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+        elif tag_version == "select2":
+            tags = filter(None, post.get('question_tags', '').split(','))
             for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-                if tag_ids:
-                    question_tag_ids.append((4, tag_ids[0]))
+                if tag.startswith('_'):  # it's a new tag
+                    question_tag_ids.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
                 else:
-                    question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+                    question_tag_ids.append((4, int(tag)))
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
@@ -357,10 +375,16 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
-        tags = ""
-        for tag_name in post.tag_ids:
-            tags += tag_name.name + ","
+        tag_version = kwargs.get('tag_type', 'texttext')
+        if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
+            tags = ""
+            for tag_name in post.tag_ids:
+                tags += tag_name.name + ","
+        elif tag_version == "select2":  # new version
+            tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
+            tags = simplejson.dumps(tags)
         values = self._prepare_forum_values(forum=forum)
+
         values.update({
             'tags': tags,
             'post': post,
@@ -369,20 +393,46 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.edit_post", values)
 
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edition', type='http', auth="user", website=True)
+    def post_edit_retro(self, forum, post, **kwargs):
+        # This function is only there for retrocompatibility between old template using texttext and template using select2
+        # It should be removed into master  #TODO JKE: remove in master all condition with tag_type
+        kwargs.update(tag_type="select2")
+        return self.post_edit(forum, post, **kwargs)
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         question_tags = []
-        if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
-            Tag = request.registry['forum.tag']
-            tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-                if tag_ids:
-                    question_tags += tag_ids
+        User = request.registry['res.users']
+        Tag = request.registry['forum.tag']
+        tag_version = kwargs.get('tag_type', 'texttext')
+        if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
+            if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
+                tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
+                for tag in tags:
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                    if tag_ids:
+                        question_tags += tag_ids
+                    else:
+                        new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
+                        question_tags.append(new_tag)
+        elif tag_version == "select2":  # new version
+            for tag in filter(None, kwargs.get('question_tag', '').split(',')):
+                if tag.startswith('_'):  # it's a new tag
+                # check if user have Karma needed to create need tag
+                    user = User.browse(cr, SUPERUSER_ID, uid, context=context)
+                    if user.exists() and user.karma >= forum.karma_retag:
+                        # check that not arleady created meanwhile and maybe excluded by the limit on the search
+                        tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
+                        if tag_ids:
+                            new_tag = tag_ids
+                        else:
+                            new_tag = Tag.create(cr, uid, {'name': tag[1:], 'forum_id': forum.id}, context=context)
+                        question_tags.append(new_tag)
                 else:
-                    new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
-                    question_tags.append(new_tag)
+                    question_tags += [int(tag)]
+
         vals = {
             'tag_ids': [(6, 0, question_tags)],
             'name': kwargs.get('question_name'),
