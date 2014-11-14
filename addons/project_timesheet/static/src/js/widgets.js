@@ -245,7 +245,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         renderElement: function() {
             this.activities = this.project_timesheet_db.get_activities();
             this.activities = _.filter(this.activities, function(activity) {return activity.command != 2;});
-            console.log("this.activities are ::: ", this.activities);
             this.replaceElement(QWeb.render(this.template, {widget: this, activities: this.activities}));
         },
         format_duration: function(field_val) {

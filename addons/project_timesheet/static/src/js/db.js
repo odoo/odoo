@@ -107,6 +107,15 @@ function odoo_project_timesheet_db(project_timesheet) {
             });
             this.save("timer_activity", current_timer_activity);
         },
+        add_project_timesheet_session: function(project_timesheet_session) {
+            this.save("project_timesheet_session", project_timesheet_session);
+        },
+        get_project_timesheet_session: function() {
+            return this.load("project_timesheet_session", {});
+        },
+        flush_project_timesheet_session: function() {
+            this.save('project_timesheet_session',{});
+        },
         flush_activities: function() {
             this.save('activities',[]);
         },
@@ -121,6 +130,23 @@ function odoo_project_timesheet_db(project_timesheet) {
             if (virtual_ids.length) {
                 var max_virtual_id = _.max(virtual_ids, function(virtual_id) {return parseInt(virtual_id.substr(11));});
                 this.unique_id_counter = parseInt(max_virtual_id.substr(11));
+            }
+        },
+        initialize_reference_sequence: function() {
+            var self = this;
+            this.sequence = 0;
+            var activities = this.load("activities");
+            var virtual_activity_id_list = _.map(
+                                _.filter(
+                                _.pluck(activities, 'reference_id'), function(reference_id) { 
+                                    return reference_id && reference_id.toString().match(self.virtual_id_regex);;
+                                }), function(reference_id) {
+                                    var splitted_values = reference_id.split("-");
+                                    return parseInt(splitted_values[splitted_values.length-1]) || 0;
+                                });
+            console.log("virtual_activity_id_list is ::: ", virtual_activity_id_list);
+            if (!_.isEmpty(virtual_activity_id_list)) {
+                this.sequence = _.max(virtual_activity_id_list);
             }
         },
         get_unique_id: function() {

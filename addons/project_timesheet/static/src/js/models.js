@@ -166,11 +166,9 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         //TODO: Change name, save_activity or set_activity, this method is used in different context, like it is also used for set delete activity(rewrite)
         add_activity: function(data) {
-            console.log("data inside add_activity ::: ", data);
             var activity_collection = this.get("activities");
             if(activity_collection.get(data.id)) {
                 var activity_model = activity_collection.get(data.id);
-                console.log("activity_model is ::: ", activity_model);
                 _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], unit_amount: data['unit_amount'], command: data['command']});
             } else {
                 var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], reference_id: data['reference_id'], command: data['command'] });
@@ -223,6 +221,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 self.add_project(record);
             });
             this.project_timesheet_db.initialize_unique_id();
+            this.project_timesheet_db.initialize_reference_sequence();
         },
         load_server_data: function() {
             var self = this;
@@ -276,45 +275,72 @@ function odoo_project_timesheet_models(project_timesheet) {
         get_screen_data: function(key){
             return this.screen_data[key];
         },
+        check_session: function(){
+            var self = this;
+            if (_.isEmpty(this.project_timesheet_db.get_project_timesheet_session())) {
+                return new project_timesheet.Model(project_timesheet.session, "project.timesheet.session").call("get_session", []).done(function(project_timesheet_session) {
+                    self.project_timesheet_db.add_project_timesheet_session(project_timesheet_session);
+                }).promise();
+            }
+        },
         save_to_server: function() {
             //TODO: Load model data in JSON format, check whether project is to create, task is to create, and activity is to create, write or delete
             //Once we done with data collection from model, save each record by calling project's create method, remove record from localstorage and then in last reload last 30 days data, that is call load_server_data
             //If record is failed in record creation then do not remove it from localstorage and keep it's state = pending'
             var self = this;
             this.defs = [];
+            var defer = $.Deferred();
             var records = [];
             project_timesheet.blockUI();
-            var activity_collection = this.get('activities');
-            var activity_models = activity_collection.models;
-            for (var i = 0; i < activity_models.length; i++) {
-                //TODO: Export only those row which has been modified i.e. having some command, so sync data do not need to sync all data
-                var json_data = activity_models[i].export_as_JSON();
-                console.log("IS command undefined ::: ", _.isUndefined(json_data.command));
-                if (!_.isUndefined(json_data.command)) {
-                    //If reference_id is not there then create unique Reference ID
-                    if (json_data.command == 0 && !json_data.reference_id) {
-                        json_data['reference_id'] = json_data.user_id.toString() + json_data.project_id[0].toString() + json_data.date;
+            var generate_reference_id = function() { //May be move this function in db
+                var project_timesheet_session = self.project_timesheet_db.get_project_timesheet_session();
+                console.log("project_timesheet_session is ::: ", project_timesheet_session);
+                console.log("Sequence ::: ", self.project_timesheet_db.sequence);
+                return project_timesheet_session.session_id.toString() + "-" + project_timesheet_session.login_number.toString() + "-" + (self.project_timesheet_db.sequence+1);
+            };
+            console.log("stored project timesheet session is ::: ", this.project_timesheet_db.get_project_timesheet_session());
+            $.when(self.check_session()).done(function(){
+                var activity_collection = self.get('activities');
+                var activity_models = activity_collection.models;
+                for (var i = 0; i < activity_models.length; i++) {
+                    var json_data = activity_models[i].export_as_JSON();
+                    if (!_.isUndefined(json_data.command)) {
+                        //If reference_id is not there then create unique Reference ID
+                        if (!json_data.reference_id) {
+                            //json_data['reference_id'] = json_data.user_id.toString() + json_data.project_id[0].toString() + json_data.date;
+                            var reference_id = generate_reference_id();
+                            _.extend(activity_models[i], {'reference_id': reference_id});
+                            json_data['reference_id'] = reference_id;
+                            self.project_timesheet_db.add_activity(json_data);
+                        }
+                        records.push(json_data);
                     }
-                    records.push(json_data);
                 }
-            }
-            var momObj = new moment();
-            var end_date = project_timesheet.datetime_to_str(momObj._d);
-            var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
-            var load_data_domain = [["date", ">=", start_date], ["date", "<=", end_date]];
-            self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records, load_data_domain]).then(function(result) {
-                console.log("After Sync data ::: ", result);
-                self.sync_complete(result);
-            }).always(function() {
-                project_timesheet.unblockUI();
-            }));
-            return $.when.apply($, this.defs).then(function(){
-                self.load_stored_data();
+                //Load data domain sent in sync_data so that it returns fresh data of last 30 days
+                var momObj = new moment();
+                var end_date = project_timesheet.datetime_to_str(momObj._d);
+                var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
+                var load_data_domain = [["date", ">=", start_date], ["date", "<=", end_date]];
+                self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records, load_data_domain]).then(function(result) {
+                    console.log("11111111111111111", result);
+                    self.sync_complete(result);
+                }).always(function() {
+                    project_timesheet.unblockUI();
+                }));
+                return $.when.apply($, self.defs).then(function() {
+                    console.log("222222222222222222");
+                    self.load_stored_data();
+                    defer.resolve();
+                });
             });
+            return defer;
         },
         sync_complete: function(sync_result) {
             //This method will flush localstorage data once it has been sync
+            //TODO: Remove project_timesheet_session and reload with new fetched session, if session is new then we should also start sequence from 0
             this.project_timesheet_db.flush_activities();
+            this.project_timesheet_db.flush_project_timesheet_session();
+            this.project_timesheet_db.initialize_reference_sequence();
             this.project_timesheet_db.add_activities(sync_result.activities);
         },
         get_pending_records: function() {

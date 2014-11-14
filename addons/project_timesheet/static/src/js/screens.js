@@ -897,12 +897,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
         },
         on_logout: function() {
+            //TODO: Close the project_timesheet_session(write session state to closed), then when same user access project timesheet next time he will be given new session
             console.log("Inside Logout :::: ");
         },
         on_sync: function() {
             var self = this;
-            this.project_timesheet_model.save_to_server().then(function() { //May be user always
-                console.log("Inside save to server completed ::: ");
+            this.project_timesheet_model.save_to_server().done(function() { //May be use always
+                console.log("333333333333333333333333333333333333 ");
                 //TODO: Show dialog sync related detail
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
