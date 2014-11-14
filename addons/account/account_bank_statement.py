@@ -459,15 +459,17 @@ class account_bank_statement_line(osv.osv):
         bs_obj = self.pool.get('account.bank.statement')
 
         # Get statement lines
+        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
+        # this is why we filter out statements lines where account_id is set
         st_lines_filter = [('journal_entry_id', '=', False), ('account_id', '=', False)]
         if statement_ids:
             st_lines_filter += [('statement_id', 'in', statement_ids)]
-        st_lines = self.search(cr, uid, st_lines_filter, order='statement_id, id')
+        st_lines = self.search(cr, uid, st_lines_filter, order='statement_id, id', context=context)
 
         # Try to automatically reconcile statement lines
         automatic_reconciliation_entries = []
         st_lines_left = []
-        for st_line in self.browse(cr, uid, st_lines):
+        for st_line in self.browse(cr, uid, st_lines, context=context):
             counterpart = self.get_unambiguous_reconciliation_proposition(cr, uid, st_line, context=context)
             counterpart_amount = sum(line['debit'] for line in counterpart) - sum(line['credit'] for line in counterpart)
             st_line_amount = st_line.amount_currency if st_line.currency_id else st_line.amount
@@ -520,7 +522,7 @@ class account_bank_statement_line(osv.osv):
             statement_name = bs_obj.browse(cr, uid, statement_ids[0]).name
 
         return {
-            'st_lines_ids': self.search(cr, uid, st_lines_filter, order='statement_id, id'),
+            'st_lines_ids': self.search(cr, uid, st_lines_filter, order='statement_id, id', context=context),
             'notifications': notifications,
             'statement_name': statement_name,
             'num_already_reconciled_lines': num_already_reconciled_lines,
@@ -595,11 +597,10 @@ class account_bank_statement_line(osv.osv):
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
         sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
+        amount_field = 'debit'
         if statement_currency == company_currency:
-            amount_field = 'credit'
-            if st_line.amount > 0:
-                amount_field = 'debit'
-            else:
+            if st_line.amount < 0:
+                amount_field = 'credit'
                 sign = -1
         else:
             amount_field = 'amount_currency'
@@ -610,7 +611,7 @@ class account_bank_statement_line(osv.osv):
             domain = [('ref', '=', st_line.name), (amount_field, '=', (sign * st_line.amount))]
             match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
-                return [match_ids[0]]
+                return match_ids
 
         # Look for a single move line with the same partner, the same amount
         if st_line.partner_id.id:
@@ -637,11 +638,10 @@ class account_bank_statement_line(osv.osv):
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
         sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
+        amount_field = 'debit'
         if statement_currency == company_currency:
-            amount_field = 'credit'
-            if st_line.amount > 0:
-                amount_field = 'debit'
-            else:
+            if st_line.amount < 0:
+                amount_field = 'credit'
                 sign = -1
         else:
             amount_field = 'amount_currency'
@@ -680,6 +680,7 @@ class account_bank_statement_line(osv.osv):
         return self.get_move_lines_for_bank_reconciliation(cr, uid, st_line=st_line, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, context=context)
 
     def _domain_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, additional_domain=None, overlook_partner=False, context=None):
+        """ Create domain criteria that are relevant to bank statement reconciliation. It is typically AND'ed with _domain_move_lines_for_reconciliation """
         if excluded_ids is None:
             excluded_ids = []
         if additional_domain is None:
@@ -901,7 +902,7 @@ class account_bank_statement_line(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
-        'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
+        'account_id': fields.many2one('account.account', 'Counterpart Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='restrict'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),

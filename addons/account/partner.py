@@ -24,6 +24,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp import api
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -278,7 +279,7 @@ class res_partner(osv.osv):
         return False
 
     def mark_as_reconciled(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'last_time_entries_checked': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        return self.write(cr, uid, ids, {'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
     _columns = {
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."),

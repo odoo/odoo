@@ -49,8 +49,13 @@ class account_bank_statement_import(osv.TransientModel):
                 elif line[0] == 'N':  # Check number
                     vals_line['ref'] = line[1:]
                 elif line[0] == 'P':  # Payee
-                    vals_line['counterparty_identification_string'] = line[1:]
                     vals_line['name'] = 'name' in vals_line and line[1:] + ': ' + vals_line['name'] or line[1:]
+                    # Since QIF doesn't provide account numbers, we'll have to find res.partner and res.partner.bank here
+                    # (normal behavious is to provide 'account_number', which the generic module uses to find partner/bank)
+                    ids = self.pool.get('res.partner.bank').search(cr, uid, [('owner_name', '=', line[1:])], context=context)
+                    if ids:
+                        vals_line['bank_account_id'] = bank_account_id = ids[0]
+                        vals_line['partner_id'] = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
                 elif line[0] == 'M':  # Memo
                     vals_line['name'] = 'name' in vals_line and vals_line['name'] + ': ' + line[1:] or line[1:]
                 elif line[0] == '^':  # end of item
@@ -67,6 +72,6 @@ class account_bank_statement_import(osv.TransientModel):
             'balance_end_real': total,
             'transactions': transactions
         })
-        return None, None, 'owner_name', [vals_bank_statement]
+        return None, None, [vals_bank_statement]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

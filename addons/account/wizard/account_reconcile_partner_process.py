@@ -22,6 +22,7 @@
 import time
 
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class account_partner_reconcile_process(osv.osv_memory):
     _name = 'account.partner.reconcile.process'
@@ -80,7 +81,7 @@ class account_partner_reconcile_process(osv.osv_memory):
 
         partner_id = move_line_obj.read(cr, uid, context['active_id'], ['partner_id'])['partner_id']
         if partner_id:
-            res_partner_obj.write(cr, uid, partner_id[0], {'last_time_entries_checked': time.strftime('%Y-%m-%d')}, context)
+            res_partner_obj.write(cr, uid, partner_id[0], {'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context)
         #TODO: we have to find a way to update the context of the current tab (we could open a new tab with the context but it's not really handy)
         #TODO: remove that comments when the client side dev is done
         return {'type': 'ir.actions.act_window_close'}

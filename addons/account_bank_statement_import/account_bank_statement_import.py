@@ -23,7 +23,7 @@ class account_bank_statement_import(osv.TransientModel):
         data_file = self.browse(cr, uid, ids[0], context=context).data_file
 
         # The appropriate implementation module returns the required data
-        currency_code, account_number, counterparty_identifying_field, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=context)
+        currency_code, account_number, stmts_vals = self._parse_file(cr, uid, base64.b64decode(data_file), context=context)
         # Check raw data
         self._check_parsed_data(cr, uid, stmts_vals, context=context)
         # Try to find the bank account and currency in odoo
@@ -34,7 +34,7 @@ class account_bank_statement_import(osv.TransientModel):
         if not bank_account_id and account_number:
             self._create_bank_account(cr, uid, account_number, journal_id=journal_id, partner_id=uid, context=context)
         # Prepare statement data to be used for bank statements creation
-        stmts_vals = self._complete_stmts_vals(cr, uid, stmts_vals, journal_id, account_number, counterparty_identifying_field, context=context)
+        stmts_vals = self._complete_stmts_vals(cr, uid, stmts_vals, journal_id, account_number, context=context)
         # Create the bank statements
         statement_ids, notifications = self._create_bank_statements(cr, uid, stmts_vals, context=context)
         
@@ -54,13 +54,11 @@ class account_bank_statement_import(osv.TransientModel):
     def _parse_file(self, cr, uid, data_file=None, context=None):
         """ Each module adding a file support must extends this method. It processes the file if it can, returns super otherwise, resulting in a chain of responsability.
             This method parses the given file and returns the data required by the bank statement import process, as specified below.
-            rtype: quadriplet (if a value can't be retrieved, use None)
+            rtype: triplet (if a value can't be retrieved, use None)
                 - currency code: string (e.g: 'EUR')
                     The ISO 4217 currency code, case insensitive
                 - account number: string (e.g: 'BE1234567890')
                     The number of the bank account which the statement belongs to
-                - transactions counterparty identifying field: string (eg: 'acc_number' or 'owner_name')
-                    The field of the object res.partner.bank to use in order to find the counterparty bank account / partner of the transactions
                 - bank statements data: list of dict containing (optional items marked by o) :
                     - 'name': string (e.g: '000000123')
                     - 'date': date (e.g: 2013-06-26)
@@ -71,7 +69,8 @@ class account_bank_statement_import(osv.TransientModel):
                         - 'date': date
                         - 'amount': float
                         - 'unique_import_id': string
-                        -o 'counterparty_identification_string': string
+                        -o 'account_number': string
+                            Will be used to find/create the res.partner.bank in odoo
                         -o 'note': string
                         -o 'partner_name': string
                         -o 'ref': string
@@ -87,6 +86,7 @@ class account_bank_statement_import(osv.TransientModel):
         for vals in stmts_vals:
             if vals['transactions'] and len(vals['transactions']) > 0:
                 no_st_line = False
+                break
         if no_st_line:
             raise osv.except_osv(_('Error'), _('This file doesn\'t contain any transaction.'))
 
@@ -116,7 +116,7 @@ class account_bank_statement_import(osv.TransientModel):
         bank_pool = self.pool.get('res.partner.bank')
 
         # Find the journal from context or bank account
-        journal_id = 'journal_id' in context and context['journal_id'] or None
+        journal_id = context.get('journal_id')
         if bank_account_id:
             bank_account = bank_pool.browse(cr, uid, bank_account_id, context=context)
             if journal_id:
@@ -150,9 +150,11 @@ class account_bank_statement_import(osv.TransientModel):
         """ Create a journal and its account """
         wmca_pool = self.pool.get('wizard.multi.charts.accounts')
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+        
         vals_account = {'currency_id': currency_id, 'acc_name': account_number, 'account_type': 'bank', 'currency_id': currency_id }
         vals_account = wmca_pool._prepare_bank_account(cr, uid, company, vals_account, context=context)
         account_id = self.pool.get('account.account').create(cr, uid, vals_account, context=context)
+        
         vals_journal = {'currency_id': currency_id, 'acc_name': _('Bank') + ' ' + account_number, 'account_type': 'bank' }
         vals_journal = wmca_pool._prepare_bank_journal(cr, uid, company, vals_journal, account_id, context=context)
         return self.pool.get('account.journal').create(cr, uid, vals_journal, context=context)
@@ -173,28 +175,30 @@ class account_bank_statement_import(osv.TransientModel):
         }
         return self.pool.get('res.partner.bank').create(cr, uid, vals_acc, context=context)
 
-    def _complete_stmts_vals(self, cr, uid, stmts_vals, journal_id, account_number, counterparty_identifying_field, context=None):
+    def _complete_stmts_vals(self, cr, uid, stmts_vals, journal_id, account_number, context=None):
         for st_vals in stmts_vals:
             st_vals['journal_id'] = journal_id
 
             for line_vals in st_vals['transactions']:
-                if 'unique_import_id' in line_vals and line_vals['unique_import_id']:
-                    line_vals['unique_import_id'] = (account_number and account_number + '-' or '') + line_vals['unique_import_id']
+                unique_import_id = line_vals.get('unique_import_id', False)
+                if unique_import_id:
+                    line_vals['unique_import_id'] = (account_number and account_number + '-' or '') + unique_import_id
                 
-                # Find the partner and his bank account or create the bank account. The partner selected during the
-                # reconciliation process will be linked to the bank when the statement is closed.
-                partner_id = False
-                bank_account_id = False
-                identifying_string = 'counterparty_identification_string' in line_vals and line_vals['counterparty_identification_string'] or False
-                if identifying_string:
-                    ids = self.pool.get('res.partner.bank').search(cr, uid, [(counterparty_identifying_field, '=', identifying_string)], context=context)
-                    if ids:
-                        bank_account_id = ids[0]
-                        partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
-                    elif counterparty_identifying_field == 'acc_number' and identifying_string:
-                        bank_account_id = self._create_bank_account(cr, uid, identifying_string, context=context)
-                line_vals['partner_id'] = partner_id
-                line_vals['bank_account_id'] = bank_account_id
+                if not 'bank_account_id' in line_vals or not line_vals['bank_account_id']:
+                    # Find the partner and his bank account or create the bank account. The partner selected during the
+                    # reconciliation process will be linked to the bank when the statement is closed.
+                    partner_id = False
+                    bank_account_id = False
+                    identifying_string = line_vals.get('account_number', False)
+                    if identifying_string:
+                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', identifying_string)], context=context)
+                        if ids:
+                            bank_account_id = ids[0]
+                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+                        else:
+                            bank_account_id = self._create_bank_account(cr, uid, identifying_string, context=context)
+                    line_vals['partner_id'] = partner_id
+                    line_vals['bank_account_id'] = bank_account_id
 
         return stmts_vals
 
@@ -211,7 +215,7 @@ class account_bank_statement_import(osv.TransientModel):
             for line_vals in st_vals['transactions']:
                 if not 'unique_import_id' in line_vals \
                    or not line_vals['unique_import_id'] \
-                   or not bool(bsl_obj.search(cr, SUPERUSER_ID, [('unique_import_id', '=', line_vals['unique_import_id'])], context=context)):
+                   or not bool(bsl_obj.search(cr, SUPERUSER_ID, [('unique_import_id', '=', line_vals['unique_import_id'])], limit=1, context=context)):
                     filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])

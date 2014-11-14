@@ -48,13 +48,21 @@ class account_bank_statement_import(osv.TransientModel):
         total_amt = 0.00
         try:
             for transaction in ofx.account.statement.transactions:
+                # Since ofxparse doesn't provide account numbers, we'll have to find res.partner and res.partner.bank here
+                # (normal behavious is to provide 'account_number', which the generic module uses to find partner/bank)
+                bank_account_id = partner_id = False
+                ids = self.pool.get('res.partner.bank').search(cr, uid, [('owner_name', '=', transaction.payee)], context=context)
+                if ids:
+                    bank_account_id = bank_account_id = ids[0]
+                    partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
                 vals_line = {
                     'date': transaction.date,
                     'name': transaction.payee + (transaction.memo and ': ' + transaction.memo or ''),
                     'ref': transaction.id,
                     'amount': transaction.amount,
                     'unique_import_id': transaction.id,
-                    'counterparty_identification_string': transaction.payee,
+                    'bank_account_id': bank_account_id,
+                    'partner_id': partner_id,
                 }
                 total_amt += float(transaction.amount)
                 transactions.append(vals_line)
@@ -69,6 +77,6 @@ class account_bank_statement_import(osv.TransientModel):
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
         }
         os.remove(path)
-        return ofx.account.statement.currency, ofx.account.number, 'owner_name', [vals_bank_statement]
+        return ofx.account.statement.currency, ofx.account.number, [vals_bank_statement]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

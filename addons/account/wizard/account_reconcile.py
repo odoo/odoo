@@ -41,7 +41,7 @@ class account_move_line_reconcile(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(account_move_line_reconcile, self).default_get(cr, uid, fields, context=context)
-        data = self.trans_rec_get(cr, uid, context['active_ids'], context)
+        data = self.trans_rec_get(cr, uid, context.get('active_ids', []), context)
         if 'trans_nbr' in fields:
             res.update({'trans_nbr':data['trans_nbr']})
         if 'credit' in fields:
@@ -56,7 +56,7 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         credit = debit = 0
-        lines = self.pool.get('account.move.line').browse(cr, uid, context['active_ids'], context=context)
+        lines = self.pool.get('account.move.line').browse(cr, uid, context.get('active_ids', []), context=context)
         for line in lines:
             credit += line['credit']
             debit += line['debit']
@@ -75,7 +75,7 @@ class account_move_line_reconcile(osv.osv_memory):
     def trans_rec_reconcile_full(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        self.pool.get('account.move.line').reconcile(cr, uid, context['active_ids'], 'manual', context=context)
+        self.pool.get('account.move.line').reconcile(cr, uid, context.get('active_ids', []), 'manual', context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -118,7 +118,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         account_move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
-        account_move_line_obj.reconcile_partial(cr, uid, context['active_ids'], 'manual', context=context)
+        account_move_line_obj.reconcile_partial(cr, uid, context.get('active_ids', []), 'manual', context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def trans_rec_reconcile(self, cr, uid, ids, context=None):
@@ -140,7 +140,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if ids:
             period_id = ids[0]
 
-        account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
+        account_move_line_obj.reconcile(cr, uid, context.get('active_ids', []), 'manual', account_id,
                 period_id, journal_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

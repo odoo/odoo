@@ -195,14 +195,14 @@
                         <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
-                            <field name="last_time_entries_checked" readonly="1" attrs="{'invisible':['|',('reconcile','=',False),('last_time_entries_checked','=',False)]}"/>
+                            <field name="last_time_entries_checked" readonly="1" attrs="{'invisible':['|',('reconcile','=',False),('type','in',['payable', 'receivable'])]}"/>
                             <field name="child_consol_ids"
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
                         <button string="Reconcile" type="action" class="oe_highlight"
                             name="%(action_reconcile_account)d"
-                            attrs="{'invisible':['|',('reconcile','=',False),'|',('type','=','payable'),('type','=','receivable')]}"/>
+                            attrs="{'invisible':['|',('reconcile','=',False),('type','in',['payable', 'receivable'])]}"/>
                         <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>

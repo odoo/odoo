@@ -223,7 +223,6 @@ class account_bank_statement_import(osv.TransientModel):
                     structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
-                    counterparty_identification_string = 'counterpartyNumber' in line and line['counterpartyNumber'] or None
                     if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
                     line_data = {
@@ -231,11 +230,11 @@ class account_bank_statement_import(osv.TransientModel):
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
+                        'account_number': 'counterpartyNumber' in line and line['counterpartyNumber'] or None,
                         'partner_name': line['counterpartyName'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],
                         'unique_import_id': line['transactionRef'],
-                        'counterparty_identification_string': counterparty_identification_string,
                     }
                     statement_line.append(line_data)
             if statement['coda_note'] != '':
@@ -244,7 +243,7 @@ class account_bank_statement_import(osv.TransientModel):
             ret_statements.append(statement_data)
         currency_code = statement['currency']
         acc_number = statements[0] and statements[0]['acc_number'] or False
-        return currency_code, acc_number, 'acc_number', ret_statements
+        return currency_code, acc_number, ret_statements
 def rmspaces(s):
     return " ".join(s.split())
 
