@@ -393,7 +393,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var el_str  = openerp.qweb.render(this.template, {widget: this});
             var el_node = document.createElement('div');
                 el_node.innerHTML = el_str;
-                el_node = el_node.childNodes[1];
+                el_node = el_node.childNodes[0];
 
             if(this.el && this.el.parentNode){
                 this.el.parentNode.replaceChild(el_node,this.el);
@@ -512,7 +512,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     });
                 var product_node = document.createElement('div');
                 product_node.innerHTML = product_html;
-                product_node = product_node.childNodes[1];
+                product_node = product_node.childNodes[0];
                 this.product_cache.cache_node(product.id,product_node);
                 return product_node;
             }
@@ -526,13 +526,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var el_str  = openerp.qweb.render(this.template, {widget: this});
             var el_node = document.createElement('div');
                 el_node.innerHTML = el_str;
-                el_node = el_node.childNodes[1];
+                el_node = el_node.childNodes[0];
 
             if(this.el && this.el.parentNode){
                 this.el.parentNode.replaceChild(el_node,this.el);
             }
             this.el = el_node;
-
             var list_container = el_node.querySelector('.product-list');
             for(var i = 0, len = this.product_list.length; i < len; i++){
                 var product_node = this.render_product(this.product_list[i]);

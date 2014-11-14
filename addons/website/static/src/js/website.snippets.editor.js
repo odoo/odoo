@@ -180,7 +180,7 @@
 
             openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
-                    var $html = $(html);
+                    var $html = $($.parseHTML(html));
 
                     var selector = [];
                     var $styles = $html.find("[data-js], [data-selector]");

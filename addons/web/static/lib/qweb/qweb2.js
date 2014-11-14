@@ -382,7 +382,7 @@ QWeb2.Engine = (function() {
             /*if (this.debug && window['console'] !== undefined) {
                 console.timeEnd("QWeb render template " + template);
             }*/
-            return r;
+            return r.trim();
         },
         _render : function(template, dict) {
             if (this.compiled_templates[template]) {
