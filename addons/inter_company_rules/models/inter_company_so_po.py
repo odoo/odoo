@@ -65,16 +65,11 @@ class sale_order(models.Model):
         price = line.price_unit - (line.price_unit * (line.discount / 100))
 
         #Computing Default taxes of lines. It may not affect because of parallel company relation
-        taxes_ids = [x.id for x in line.tax_id]
+        taxes = line.tax_id
         if line.product_id:
-            onchange_lines = self.env['purchase.order.line'].onchange_product_id(False, 
-                                            line.product_id and line.product_id.id or False, line.product_uom_qty, 
-                                            line.product_id and line.product_id.uom_po_id.id or False, company_partner.id)
-            if onchange_lines.get('value') and onchange_lines['value'].get('taxes_id'):
-                taxes_ids = onchange_lines['value']['taxes_id']
+            taxes = line.product_id.supplier_taxes_id
 
         #Fetch taxes by company not by inter-company user
-        taxes = self.env['account.tax'].sudo().browse(taxes_ids)
         company_taxes = [tax_rec.id for tax_rec in taxes if tax_rec.company_id.id == company.id]
 
         return {
@@ -93,7 +88,7 @@ class sale_order(models.Model):
     def _po_vals(self, company, this_company_partner):
         """ @return : Purchase values dictionary """
         #To find location and warehouse,pick warehouse from company object
-        warehouse = company.warehouse_id and company.warehouse_id.company_id.id == company.id and company.warehouse_id.id or False
+        warehouse = company.warehouse_id and company.warehouse_id.company_id.id == company.id and company.warehouse_id or False
         if not warehouse:
             raise Warning(_('Configure correct warehouse for company(%s) from Menu: Settings/companies/companies' % (company.name)))
 
@@ -136,7 +131,7 @@ class sale_order(models.Model):
 
         #create the PO
         po_vals = self.sudo(update_uid)._po_vals(company, this_company_partner)
-        purchase = purchase_obj.sudo(update_uid).create(po_vals)
+        purchase = purchase_obj.sudo(update_uid).create(po_vals[0])
         for line in self.order_line:
             po_line_vals = self.sudo(update_uid)._po_line_vals(line, this_company_partner, self.date_order, purchase.id, company)
             self.env['purchase.order.line'].sudo(update_uid).create(po_line_vals)
@@ -171,16 +166,10 @@ class purchase_order(models.Model):
     @api.model
     def _so_line_vals(self, line, partner, company, sale_id):
         #It may not affected because of parallel company relation
-        taxes_ids = [x.id for x in line.taxes_id]
         price = line.price_unit or 0.0
+        taxes = line.taxes_id
         if line.product_id:
-            soline_onchange = self.env['sale.order.line'].product_id_change(False, line.product_id.id, qty=line.product_qty,
-                                            uom = line.product_id.uom_id.id, partner_id=partner.id)
-            if soline_onchange.get('value') and soline_onchange['value'].get('tax_id'):
-                taxes_ids = soline_onchange['value']['tax_id']
-
-        #Fetch taxes by company not by inter-company user
-        taxes = self.env['account.tax'].sudo().browse(taxes_ids)
+            taxes = line.product_id.taxes_id
         company_taxes = [tax_rec.id for tax_rec in taxes if tax_rec.company_id.id == company.id]
 
         return {
@@ -195,8 +184,8 @@ class purchase_order(models.Model):
             'tax_id': [(6, 0, company_taxes)],
         }
 
-    @api.model
-    def _so_vals(self, name, purchase_id, partner, company, direct_delivery_address):
+    @api.one
+    def _so_vals(self, name, partner, company, direct_delivery_address):
         partner_addr = partner.sudo().address_get(['default', 'invoice', 'delivery', 'contact'])
         return {
             'name': self.env['ir.sequence'].sudo().get('sale.order') or '/',
@@ -205,11 +194,11 @@ class purchase_order(models.Model):
             'partner_id': partner.id,
             'pricelist_id': partner.property_product_pricelist.id,
             'partner_invoice_id': partner_addr['invoice'],
-            'date_order': fields.date.context_today(),
+            'date_order': self.date_order,
             'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
             'user_id': False,
             'auto_generated': True,
-            'auto_po_id': purchase_id,
+            'auto_po_id': self.id,
             'partner_shipping_id': direct_delivery_address or partner_addr['delivery']
         }
 
@@ -221,7 +210,7 @@ class purchase_order(models.Model):
         if not update_uid:
             raise Warning(_('Provide at least one user for inter company relation for % ') % company.name)
 
-        if not sale_obj.sudo(update_uid).check_access_rights(cr, update_uid, 'create', raise_exception=False):
+        if not sale_obj.sudo(update_uid).check_access_rights('create', raise_exception=False):
             raise Warning(_("Inter company user of company %s doesn't have enough access rights") % company.name)
 
         #Check pricelist currency should be same with SO/PO document
@@ -229,9 +218,9 @@ class purchase_order(models.Model):
             raise Warning(_('You cannot create SO from PO because sale price list currency is different than purchase price list currency.'))
 
         #create the SO
-        so_vals = self.sudo(update_uid)._so_vals(self.name, self.id, self.company_id.partner_id, 
+        so_vals = self.sudo(update_uid)._so_vals(self.name, self.company_id.partner_id, 
                                 company, self.dest_address_id and self.dest_address_id.id or False)
-        sale = sale_obj.sudo(update_uid).create(so_vals)
+        sale = sale_obj.sudo(update_uid).create(so_vals[0])
         for line in self.order_line:
             so_line_vals = self.sudo(update_uid)._so_line_vals(line, self.company_id.partner_id, company, sale.id)
             self.env['sale.order.line'].sudo(update_uid).create(so_line_vals)
