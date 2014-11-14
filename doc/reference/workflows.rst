@@ -284,6 +284,8 @@ defined (in addition to the Odoo ``safe_eval`` environment):
 - all the model column names, and
 - all the browse record's attributes.
 
+.. _reference/workflows/signals:
+
 Signals
 '''''''
 
