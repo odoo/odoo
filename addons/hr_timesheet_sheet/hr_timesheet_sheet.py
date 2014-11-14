@@ -184,6 +184,10 @@ class hr_timesheet_sheet(osv.osv):
     }
 
     def _default_date_from(self, cr, uid, context=None):
+        #FIXME: timesheet ranges of month, week and year don't respect the user timezone
+        # timesheets will probably get created on the first day of the new range
+        # for example, suppose a user is in +8 timezone, and creates a new timesheet at 07:59 local time
+        # the default date_from will be for the previous range, rather than for the current range
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
@@ -192,9 +196,10 @@ class hr_timesheet_sheet(osv.osv):
             return (datetime.today() + relativedelta(weekday=0, days=-6)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-01-01')
-        return time.strftime('%Y-%m-%d')
+        return fields.date.context_today(self, cr, uid, context)
 
     def _default_date_to(self, cr, uid, context=None):
+        #FIXME: timesheet ranges of month, week and year don't respect the user timezone
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
@@ -203,7 +208,7 @@ class hr_timesheet_sheet(osv.osv):
             return (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
         elif r=='year':
             return time.strftime('%Y-12-31')
-        return time.strftime('%Y-%m-%d')
+        return fields.date.context_today(self, cr, uid, context)
 
     def _default_employee(self, cr, uid, context=None):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
@@ -406,8 +411,13 @@ class hr_attendance(osv.osv):
                                INNER JOIN resource_resource r
                                        ON (e.resource_id = r.id)
                             ON (a.employee_id = e.id)
-                        WHERE %(date_to)s >= date_trunc('day', a.name)
-                              AND %(date_from)s <= a.name
+                         LEFT JOIN ((
+                             SELECT u.id AS user_id, coalesce(p.tz, current_setting('TIMEZONE')) AS tz
+                             FROM res_users AS u
+                             LEFT JOIN res_partner AS p ON p.id=u.partner_id
+                         )) AS z ON z.user_id=r.user_id
+                         WHERE %(date_to)s >= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE z.tz)
+                              AND %(date_from)s <= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE z.tz)
                               AND %(user_id)s = r.user_id
                          GROUP BY a.id""", {'date_from': ts.date_from,
                                             'date_to': ts.date_to,
@@ -581,17 +591,25 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             group by l.date::date, s.id
                         ) union (
                             select
-                                -min(a.id) as id,
-                                a.name::date as name,
-                                s.id as sheet_id,
-                                0.0 as total_timesheet,
-                                SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
-                            from
-                                hr_attendance a
-                                LEFT JOIN hr_timesheet_sheet_sheet s
-                                ON s.id = a.sheet_id
-                            WHERE action in ('sign_in', 'sign_out')
-                            group by a.name::date, s.id
+                                -min(a.id) AS id,
+                                a.tzname::date AS name,
+                                s.id AS sheet_id,
+                                0.0 AS total_timesheet,
+                                SUM(((EXTRACT(hour FROM a.tzname) * 60) + EXTRACT(minute FROM a.tzname)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
+                            FROM ((
+                                SELECT a.*, (a.name AT TIME ZONE 'UTC' AT TIME ZONE z.tz) AS tzname
+                                FROM hr_attendance as a
+                                LEFT JOIN ((
+                                    SELECT e.id AS employee_id, coalesce(p.tz, current_setting('TIMEZONE')) AS tz
+                                    FROM res_users AS u
+                                    LEFT JOIN res_partner AS p ON p.id=u.partner_id
+                                    LEFT JOIN resource_resource AS r ON r.user_id=u.id
+                                    LEFT JOIN hr_employee AS e ON e.resource_id=r.id
+                                )) AS z ON z.employee_id=a.employee_id
+                            )) AS a
+                            LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = a.sheet_id
+                            WHERE action IN ('sign_in', 'sign_out')
+                            GROUP BY a.tzname::date, s.id
                         )) AS foo
                         GROUP BY name, sheet_id
                 )) AS bar""")
