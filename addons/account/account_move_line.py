@@ -708,7 +708,7 @@ class account_move_line(models.Model):
                 'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
                 'date': date,
                 'state': 'draft',
-                'line_id': writeoff_lines,
+                'line_id': writeoff_lines
             })
 
             writeoff_line_ids = self.search([('move_id', '=', writeoff_move_id.id), ('account_id', '=', account_id)]).ids

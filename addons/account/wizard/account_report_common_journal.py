@@ -23,7 +23,7 @@ class account_common_journal_report(models.TransientModel):
     def pre_print_report(self, data):
         data['form'].update(self.read(['amount_currency'])[0])
         fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')]).ids
-        date_account = data['form']['date_account']
+        date_account = fields.Date.context_today
         # TODO : account_journal_period has been removed
 #         data['form']['active_ids'] = self.env['account.journal.period'].search([('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)])
         return data

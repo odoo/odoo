@@ -3,7 +3,7 @@
 <data>
 <template id="report_generaljournal">
     <t t-call="report.html_container">
-        <t t-foreach="periods(docs)" t-as="o">
+        <t t-foreach="fiscalyears(docs)" t-as="o">
             <t t-call="report.internal_layout">
                 <div class="page">
                     <h2>General Journal</h2>
@@ -28,8 +28,8 @@
                                 <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
                                 <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
                                 <p t-if="data['form']['filter'] == 'filter_period'">
-                                    Start Period: <span t-esc="get_start_period(data)"/>
-                                    End Period: <span t-esc="get_end_period(data)"/>
+                                    Start Period: <span/>
+                                    End Period: <span/>
                                 </p>
                                 <p t-if="data['form']['filter'] == 'filter_date'">
                                     Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
@@ -68,12 +68,12 @@
                             <tr style="font-weight: bold;">
                                 <td><span t-field="o.name"/>:</td>
                                 <td></td>
-                                <td><span t-esc="formatLang(sum_debit_period(o.id))"/></td>
-                                <td><span t-esc="formatLang(sum_credit_period(o.id))"/></td>
-                                <td><span t-esc="formatLang(sum_credit_period(o.id) - sum_debit_period(o.id), currency_obj=res_company.currency_id)"/></td>
+                                <td><span t-esc="formatLang(sum_debit_period(o.date_start,o.date_stop))"/></td>
+                                <td><span t-esc="formatLang(sum_credit_period(o.date_start,o.date_stop))"/></td>
+                                <td><span t-esc="formatLang(sum_credit_period(o.date_start,o.date_stop) - sum_debit_period(o.date_start, o.date_stop), currency_obj=res_company.currency_id)"/></td>
                                 <td t-if="display_currency(data)"></td>
                             </tr>
-                            <tr t-foreach="lines(o.id)" t-as="line">
+                            <tr t-foreach="lines(o.date_start, o.date_stop)" t-as="line">
                                 <td><span t-esc="line['code']"/></td>
                                 <td><span t-esc="line['name']"/></td>
                                 <td><span t-esc="line['debit']"/></td>

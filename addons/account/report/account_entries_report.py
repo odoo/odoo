@@ -20,7 +20,7 @@ class account_entries_report(models.Model):
     balance = fields.Float(string='Balance', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     amount_currency = fields.Float(string='Amount Currency', digits=dp.get_precision('Account'), readonly=True)
-    date_account = fields.Date(string='Acount Date', readonly=True, default=fields.Date.context_today)
+    date_account = fields.Date(string='Acount Date', readonly=True)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
@@ -53,14 +53,14 @@ class account_entries_report(models.Model):
     def search(self, args, offset=0, limit=None, order=None, count=False):
         fiscalyear_obj = self.env['account.fiscalyear']
         current_year = fiscalyear_obj.find()
-        fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
+        fiscalyear = fiscalyear_obj.browse(current_year)
         for arg in args:
-            if arg[0] == 'date_account' and arg[2] == 'current_period':
-                args.append(['date_account', 'in', [current_period]])
+            if arg[0] == 'date_account' and arg[2] == 'current_period_date':
+                args.append([('date_account', '>=', fiscalyear.date_start), ('date_account', '<=', fiscalyear.date_stop)])
                 break
             elif arg[0] == 'date_account' and arg[2] == 'current_year':
-                args.append(['date_account','=',fiscalyear.date_start])
-        for a in [['date_account', '=', fiscalyear.date_start], ['date_account', '=', fiscalyear.date_start]]:
+                args.append(('date_account', '>=', current_year.date_start), ('date_account', '<=', current_year.date_stop))
+        for a in [['date_account', '=', 'current_period_date']]:
             if a in args:
                 args.remove(a)
         return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
@@ -69,11 +69,11 @@ class account_entries_report(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
         current_year = fiscalyear_obj.find()
-        fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
-        if self._context.get('date_account', False) == 'current_period':
-            domain.append(['date_account','=',[current_period]])
+        fiscalyear = fiscalyear_obj.browse(current_year)
+        if self._context.get('date_account', False) == 'current_period_date':
+            domain.append(['date_account', '=', current_period_date])
         elif self._context.get('year', False) == 'current_year':
-            domain.append(['date_account', '=', fiscalyear.date_start])
+            domain.append([('date_account', '>=', fiscalyear.date_start), ('date_account', '<=', fiscalyear.date_stop)])
         return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
@@ -111,7 +111,7 @@ class account_entries_report(models.Model):
                 account_move_line l
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
-                left join account_fiscalyear f on (f.state = 'draft')
+                left join account_fiscalyear f on (f.date_start >= l.date_account and f.date_stop >= l.date_account)
                 where l.state != 'draft'
             )
         """)
