@@ -5320,15 +5320,12 @@ class BaseModel(object):
     def _dirty(self):
         """ Return whether any record in `self` is dirty. """
         dirty = self.env.dirty
-        return any(record in dirty for record in self)
+        return any(bool(dirty.get(record)) for record in self)
 
-    @_dirty.setter
-    def _dirty(self, value):
-        """ Mark the records in `self` as dirty. """
-        if value:
-            map(self.env.dirty.add, self)
-        else:
-            map(self.env.dirty.discard, self)
+    def _set_dirty_by(self, field_name):
+        dirty = self.env.dirty
+        for record in self:
+            dirty[record].add(field_name)
 
     #
     # "Dunder" methods
