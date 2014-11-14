@@ -49,8 +49,11 @@ class hr_holidays_status(osv.osv):
         for holiday in self.pool['hr.holidays'].browse(cr, uid, holiday_ids, context=context):
             status_dict = result[holiday.holiday_status_id.id]
             if holiday.type == 'add':
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
                 if holiday.state == 'validate':
+                    # note: add only validated allocation even for the virtual
+                    # count; otherwise pending then refused allocation allow
+                    # the employee to create more leaves than possible
+                    status_dict['virtual_remaining_leaves'] += holiday.number_of_days
                     status_dict['max_leaves'] += holiday.number_of_days
                     status_dict['remaining_leaves'] += holiday.number_of_days
             elif holiday.type == 'remove':  # number of days is negative
