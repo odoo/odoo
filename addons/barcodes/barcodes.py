@@ -183,8 +183,10 @@ class barcode_rule(models.Model):
     def _check_pattern(self):
         p = self.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
         findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
-        if len(findall) == 2:
-            if not re.search("[{][N]*[D]*[}]", p) or re.search("[{][}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern") + " %s." % self.pattern)
+        if len(findall) == 2: 
+            if not re.search("[{][N]*[D]*[}]", p):
+                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": braces can only contain N's followed by D's."))
+            elif re.search("[{][}]", p):
+                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": empty braces."))
         elif len(findall) != 0:
-            raise ValidationError(_("There is a syntax error in the barcode pattern") + " %s." % self.pattern)
+            raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": a rule can only contain one pair of braces."))
