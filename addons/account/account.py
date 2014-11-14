@@ -2022,7 +2022,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
