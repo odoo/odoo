@@ -787,17 +787,6 @@ class account_invoice(models.Model):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
-            if inv.payment_term:
-                total_fixed = total_percent = 0
-                for line in inv.payment_term.line_ids:
-                    if line.value == 'fixed':
-                        total_fixed += line.value_amount
-                    if line.value == 'percent':
-                        total_percent += line.value_amount
-                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
-                if (total_fixed + total_percent) > 100:
-                    raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
-
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
 
