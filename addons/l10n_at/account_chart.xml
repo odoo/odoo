@@ -8,14 +8,14 @@
           <field name="name">Forderungen/Debitoren</field>
           <field name="code">receivable</field>
           <field name="report_type">asset</field>
-          <field name="close_method">unreconciled</field>
+          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_payable" >
           <field name="name">Verbindlichkeiten/Kreditoren</field>
           <field name="code">payable</field>
           <field name="report_type">liability</field>
-          <field name="close_method">unreconciled</field>
+          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_view">
@@ -41,7 +41,7 @@
         <record model="account.account.type" id="account_type_tax">
           <field name="name">Steuer</field>
           <field name="code">tax</field>
-          <field name="close_method">unreconciled</field>
+          <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_cash">

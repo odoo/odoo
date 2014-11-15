@@ -14,7 +14,7 @@
     <record id="account_type_current_asset_rec" model="account.account.type">
         <field name="name">1. TÀI SẢN NGẮN HẠN - REC</field>
         <field name="code">current_asset</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
         <field name="report_type">asset</field>
     </record>
 
@@ -28,7 +28,7 @@
     <record id="account_type_liability" model="account.account.type">
         <field name="name">3. NỢ PHẢI TRẢ</field>
         <field name="code">liability</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
         <field name="report_type">liability</field>
     </record>
 

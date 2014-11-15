@@ -72,7 +72,7 @@ class account_payment_term(models.Model):
 class account_payment_term_line(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _order = "value desc,days"
+    _order = "days"
 
     value = fields.Selection([
             ('balance', 'Balance'),
@@ -101,13 +101,11 @@ class account_account_type(models.Model):
 
     name = fields.Char(string='Account Type', required=True, translate=True)
     code = fields.Char(string='Code', size=32, required=True, index=True)
-    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance'), ('unreconciled', 'Unreconciled')],
+    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
         string='Deferral Method', required=True, default='none',
         help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
         'None' means that nothing will be done.
-        'Balance' will generally be used for cash accounts.
-        'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
-        'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year.""")
+        'Balance' will generally be used for cash accounts.""")
     report_type = fields.Selection([
         ('none','/'),
         ('income', _('Profit & Loss (Income account)')),

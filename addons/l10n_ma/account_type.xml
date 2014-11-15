@@ -18,7 +18,7 @@
            <field name="name">Dettes à court terme</field>
            <field name="code">payable</field>
        <field name="report_type">liability</field>
-           <field name="close_method">unreconciled</field>
+           <field name="close_method">balance</field>
     </record>
     <record id="cpt_type_liq" model="account.account.type">
            <field name="name">Liquidité</field>
@@ -30,7 +30,7 @@
            <field name="name">Taxes</field>
            <field name="code">tax</field>
        <field name="report_type">asset</field>
-           <field name="close_method">unreconciled</field>
+           <field name="close_method">balance</field>
     </record>
     <record id="cpt_type_imm" model="account.account.type">
            <field name="name">Immobilisations</field>
@@ -42,7 +42,7 @@
            <field name="name">Créances</field>
            <field name="code">recevable</field>
        <field name="report_type">asset</field>
-           <field name="close_method">unreconciled</field>
+           <field name="close_method">balance</field>
     </record>
     <record id="cpt_type_stk" model="account.account.type">
            <field name="name">Stocks</field>

@@ -33,21 +33,21 @@
     <record id="type_third" model="account.account.type">
         <field name="name">Terceros</field>
         <field name="code">third</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record id="type_third_rec" model="account.account.type">
         <field name="name">Terceros A Cobrar</field>
         <field name="code">third-rec</field>
         <field name="report_type">asset</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record id="type_third_pay" model="account.account.type">
         <field name="name">Terceros A Pagar</field>
         <field name="code">third-pay</field>
         <field name="report_type">liability</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>    
     
     <record id="type_tax" model="account.account.type">
@@ -93,7 +93,7 @@
         <field name="name">Obligaciones</field>
         <field name="code">liability</field>
         <field name="report_type">asset</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record id="type_other" model="account.account.type">
