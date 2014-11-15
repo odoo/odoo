@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="blog_contact_search">
+        <ul class="dropdown-menu contact_menu" role="menu">
+            <t t-foreach="contacts" t-as="item">
+                <li><t t-esc="item.name"></t></li>
+            </t>
+        </ul>
+    </t>
+</templates>
