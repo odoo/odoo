@@ -33,9 +33,7 @@ import account_move_bank_reconcile
 import account_report_aged_partner_balance
 import account_report_partner_ledger
 import account_report_partner_balance
-import account_period_close
 import account_vat
-import account_open_closed_fiscalyear
 
 import account_invoice_state
 import account_tax_chart

@@ -518,77 +518,13 @@ class account_fiscalyear(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     date_start = fields.Date(string='Start Date', required=True)
     date_stop = fields.Date(string='End Date', required=True)
-    period_ids = fields.One2many('account.period', 'fiscalyear_id', string='Periods')
     state = fields.Selection([('draft','Open'), ('done','Closed')], string='Status', readonly=True, copy=False, default='draft')
-    end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
-        readonly=True, copy=False)
 
     @api.one
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop < self.date_start:
             raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
-
-    @api.multi
-    def create_period3(self):
-        return self.create_period(3)
-
-    @api.multi
-    #TO FIX: When this method is called by clicking 'Create Monthly Periods' button, 'interval' parameter gets wrong value.
-    # interval = {'lang': 'en_US', 'tz': 'Europe/Brussels', 'uid': 1}
-    def create_period(self, interval=1):
-        PeriodObj = self.env['account.period']
-        for fy in self:
-            ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
-            PeriodObj.create({
-                    'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
-                    'code': ds.strftime('00/%Y'),
-                    'date_start': ds,
-                    'date_stop': ds,
-                    'special': True,
-                    'fiscalyear_id': fy.id,
-                })
-            while ds.strftime('%Y-%m-%d') < fy.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
-
-                if de.strftime('%Y-%m-%d') > fy.date_stop:
-                    de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
-
-                PeriodObj.create({
-                    'name': ds.strftime('%m/%Y'),
-                    'code': ds.strftime('%m/%Y'),
-                    'date_start': ds.strftime('%Y-%m-%d'),
-                    'date_stop': de.strftime('%Y-%m-%d'),
-                    'fiscalyear_id': fy.id,
-                })
-                ds = ds + relativedelta(months=interval)
-        return True
-
-    @api.model
-    def find(self, dt=None, exception=True):
-        res = self.finds(dt, exception)
-        return res and res[0] or False
-
-    @api.model
-    def finds(self, dt=None, exception=True):
-        if not dt:
-            dt = fields.Date.context_today(self)
-        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if self._context.get('company_id', False):
-            company_id = self._context['company_id']
-        else:
-            company_id = self.env.user.company_id.id
-        args.append(('company_id', '=', company_id))
-        recs = self.search(args)
-        if not recs:
-            if exception:
-                action = self.env.ref('account.action_account_fiscalyear')
-                msg = _('No accounting period is covering this date: %s.') % dt
-                raise RedirectWarning(msg, action, _(' Configure Fiscal Year Now'))
-            else:
-                return []
-        # Temporary not returning 'recs' itself because it breaks other methods where it is called.
-        return recs.ids
 
 
 class account_period(models.Model):
