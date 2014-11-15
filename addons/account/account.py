@@ -311,20 +311,21 @@ class account_account(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
-    financial_report_ids = fields.Many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', string='Financial Reports')
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Balance')
     credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'), string='Credit')
     debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'), string='Debit')
     foreign_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Foreign Balance',
         help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
+
     adjusted_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Adjusted Balance',
         help="Total amount (in Company currency) for transactions held in secondary currency for this account.")
     unrealized_gain_loss = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Unrealized Gain or Loss',
         help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions.")
+    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
+
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows reconciliation of journal items.")
-    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
@@ -332,13 +333,6 @@ class account_account(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
     deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
-    currency_mode = fields.Selection([('current', 'At Date'), ('average', 'Average Rate')],
-        default='current', string='Outgoing Currencies Rate',
-        help='This will select how the current currency rate for outgoing transactions is computed. '\
-            'In most countries the legal method is "average" but only a few software systems are able to '\
-            'manage this. So if you import from another software system you may have to use the rate at date. ' \
-            'Incoming transactions always use the rate at date.', \
-        required=True)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -1787,8 +1781,6 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    financial_report_ids = fields.Many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id',
-        string='Financial Reports')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text(string='Note')
@@ -1843,7 +1835,6 @@ class account_account_template(models.Model):
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
-                'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
