@@ -320,6 +320,19 @@ def login_redirect():
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, request.context)
+    # persist values listed in the request.context['persist_values'] list, if any
+    if key2 == 'tree_but_open' and request.context.get('persist_values',[]):
+        values_to_persist = request.context.get('persist_values',[])
+        for a in actions:
+            action = len(a)> 2 and a[2] or {}
+            if not action:
+                continue
+            ctx = eval(str(action.get('context',{})))
+            for v in values_to_persist:
+                ctx.update({v:request.context.get(v,False)})
+            if ctx:
+                a[2].update({'context':unicode(ctx)})
+
 
     return [(id, name, clean_action(action))
             for id, name, action in actions]
