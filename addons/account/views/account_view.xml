@@ -209,9 +209,8 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="type"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -261,28 +260,7 @@
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
             src_model="account.account"/>
 
-        <record id="view_account_tree" model="ir.ui.view">
-            <field name="name">account.account.tree</field>
-            <field name="model">account.account</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation')" string="Chart of accounts" toolbar="1" >
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="debit"/>
-                    <field name="credit"/>
-                    <field name="balance"/>
-                    <field name="company_currency_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_account_tree" model="ir.actions.act_window">
-            <field name="name">Chart of Accounts</field>
-            <field name="res_model">account.account</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_account_tree"/>
-        </record>
+ 
         <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>

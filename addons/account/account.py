@@ -252,12 +252,6 @@ class account_account(models.Model):
                     account.adjusted_balance = sums[account.id][adjusted_balance]
                     account.unrealized_gain_loss = sums[account.id][unrealized_gain_loss]
 
-    @api.depends('company_id', 'company_id.currency_id')
-    @api.one
-    def _get_company_currency(self):
-        for account in self:
-            self.company_currency_id = (self.company_id.currency_id.id, self.company_id.currency_id.symbol)
-
     @api.one
     def _set_credit_debit(self, name, value):
         if self._context.get('config_invisible', True):
@@ -308,6 +302,7 @@ class account_account(models.Model):
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
+    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
@@ -332,7 +327,6 @@ class account_account(models.Model):
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute='_get_company_currency')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
-    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
