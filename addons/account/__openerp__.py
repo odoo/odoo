@@ -23,30 +23,6 @@
     'version' : '1.1',
     'author' : 'OpenERP SA',
     'category' : 'Accounting & Finance',
-    'description' : """
-Accounting and Financial Management.
-====================================
-
-Financial and accounting module that covers:
---------------------------------------------
-    * General Accounting
-    * Cost/Analytic accounting
-    * Third party accounting
-    * Taxes management
-    * Budgets
-    * Customer and Supplier Invoices
-    * Bank statements
-    * Reconciliation process by partner
-
-Creates a dashboard for accountants that includes:
---------------------------------------------------
-    * List of Customer Invoices to Approve
-    * Company Analysis
-    * Graph of Treasury
-
-Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) 
-for a particular financial year and for preparation of vouchers there is a module named account_voucher.
-    """,
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
@@ -56,7 +32,6 @@ for a particular financial year and for preparation of vouchers there is a modul
         'views/account_menuitem.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
-        'report/account_treasury_report_view.xml',
         'report/account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
