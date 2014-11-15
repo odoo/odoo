@@ -348,7 +348,7 @@ class account_account(models.Model):
     def name_get(self):
         result = []
         for account in self:
-            name = account.name + ' ' + account.code
+            name = account.code + ' ' + account.name
             result.append((account.id, name))
         return result
 
@@ -359,36 +359,24 @@ class account_account(models.Model):
         return super(account_account, self).copy(default)
 
     @api.multi
-    def _check_moves(self, method):
+    def write(self, vals):
+        # Dont allow changing the company_id when account_move_line already exist
+        if vals.get('company_id', False):
+            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
+            for account in self:
+                if (account.company_id.id <> vals['company_id']) and move_lines:
+                    raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
+        return super(account_account, self).write(vals)
+
+    @api.multi
+    def unlink(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
-            if method == 'write':
-                raise Warning(_('You cannot deactivate an account that contains journal items.'))
-            elif method == 'unlink':
-                raise Warning(_('You cannot remove an account that contains journal items.'))
+            raise Warning(_('You cannot do that on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
         if partner_prop_acc:
             raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
-        return True
-
-    @api.multi
-    def write(self, vals):
-        # Dont allow changing the company_id when account_move_line already exist
-        if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            if move_lines:
-                # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(['company_id'])]:
-                    if vals['company_id']!=i:
-                        raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
-        if 'deprecated' in vals and not vals['deprecated']:
-            self._check_moves('write')
-        return super(account_account, self).write(vals)
-
-    @api.multi
-    def unlink(self):
-        self._check_moves('unlink')
         return super(account_account, self).unlink()
 
 
