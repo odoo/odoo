@@ -221,7 +221,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
                     <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="user_type"/>
@@ -1632,7 +1632,6 @@
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="shortcut"/>
                         <field name="user_type"/>
 
                         <field name="currency_id" groups="base.group_multi_currency"/>

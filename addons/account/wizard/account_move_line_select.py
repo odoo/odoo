@@ -34,8 +34,6 @@ class account_move_line_select(models.TransientModel):
 
         if context['active_id']:
             acc_data = self.env['account.account'].browse(context['active_id']).child_consol_ids
-            if acc_data:
-                result['context'].update({'consolidate_children': True})
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 

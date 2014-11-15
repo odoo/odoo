@@ -136,35 +136,13 @@ class account_account(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         context = dict(self._context or {})
-        pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
-                    continue
-                jour = self.env['account.journal'].browse(args[pos][2])
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation',))
-                    continue
-                ids3 = map(lambda x: x.id, jour.type_control_ids)
-                ids1 = super(account_account, self).search([('user_type', 'in', ids3)])
-                ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
-            pos += 1
-
-        if context and context.has_key('consolidate_children'): #add consolidated children of accounts
-            ids = super(account_account, self).search(args, offset, limit,
-                order, count=count)
-            for consolidate_child in self.browse(context['account_id']).child_consol_ids:
-                ids.append(consolidate_child)
-            return ids
-
-        return super(account_account, self).search(args, offset, limit,
-                order, count=count)
+        if context.get('journal_id', False):
+            jour = self.env['account.journal'].browse(context['journal_id'])
+            if jour.account_control_ids:
+                args.append(('id', 'in', map(lambda x: x.id, jour.account_control_ids)))
+            if jour.type_control_ids:
+                args.append(('user_type', 'in',  map(lambda x: x.id, jour.type_control_ids)))
+        return super(account_account, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     def _get_children_and_consol(self):
@@ -347,7 +325,6 @@ class account_account(models.Model):
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows reconciliation of journal items.")
     exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
-    shortcut = fields.Char(string='Shortcut', size=12)
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
@@ -369,43 +346,13 @@ class account_account(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        if not args:
-            args = []
-        args = args[:]
-        try:
-            if name and str(name).startswith('partner:'):
-                part_id = int(name.split(':')[1])
-                part = self.env['res.partner'].browse(part_id)
-                args += [('id', 'in', (part.property_account_payable.id, part.property_account_receivable.id))]
-                name = False
-            if name and str(name).startswith('type:'):
-                type = name.split(':')[1]
-                args += [('type', '=', type)]
-                name = False
-        except:
-            pass
+        args = args or []
+        domain = []
         if name:
-            if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                plus_percent = lambda n: n+'%'
-                code_op, code_conv = {
-                    'ilike': ('=ilike', plus_percent),
-                    'like': ('=like', plus_percent),
-                }.get(operator, (operator, lambda n: n))
-
-                accounts = self.search(['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
-
-                if not accounts and len(name.split()) >= 2:
-                    #Separating code and name of account for searching
-                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
-            else:
-                accounts = self.search(['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
-                # as negation want to restric, do if already have results
-                if accounts and len(name.split()) >= 2:
-                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2), ('id', 'in', accounts.ids)]+ args, limit=limit)
-        else:
-            accounts = self.search(args, limit=limit)
+            domain = ['|', ('code', '=ilike', name+'%'), ('name', operator, name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                domain = ['!'] + domain
+        accounts = self.search(domain+args, limit=limit)
         return accounts.name_get()
 
     @api.multi
@@ -1844,7 +1791,6 @@ class account_account_template(models.Model):
         string='Financial Reports')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
-    shortcut = fields.Char(string='Shortcut', size=12)
     note = fields.Text(string='Note')
     tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
     nocreate = fields.Boolean(string='Optional Create', default=False,
@@ -1896,7 +1842,6 @@ class account_account_template(models.Model):
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
-                'shortcut': account_template.shortcut,
                 'note': account_template.note,
                 'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
                 'tax_ids': [(6,0,tax_ids)],
@@ -1946,7 +1891,6 @@ class account_add_tmpl_wizard(models.TransientModel):
             'type': account_template.type,
             'user_type': account_template.user_type and account_template.user_type.id or False,
             'reconcile': account_template.reconcile,
-            'shortcut': account_template.shortcut,
             'note': account_template.note,
             'parent_id': data['cparent_id'][0],
             'company_id': company_id,
