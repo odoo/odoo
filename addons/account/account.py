@@ -253,10 +253,10 @@ class account_account(models.Model):
                     account.unrealized_gain_loss = sums[account.id][unrealized_gain_loss]
 
     @api.depends('company_id', 'company_id.currency_id')
-    @api.multi
+    @api.one
     def _get_company_currency(self):
         for account in self:
-            account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
+            self.company_currency_id = (self.company_id.currency_id.id, self.company_id.currency_id.symbol)
 
     @api.one
     def _set_credit_debit(self, name, value):
