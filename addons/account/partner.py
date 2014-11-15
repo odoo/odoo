@@ -126,9 +126,9 @@ class account_fiscal_position_account(models.Model):
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     account_src_id = fields.Many2one('account.account', string='Account Source', 
-        domain=[('type', '!=', 'view'), ('deprecated', '=', False)], required=True)
+        domain=[('deprecated', '=', False)], required=True)
     account_dest_id = fields.Many2one('account.account', string='Account Destination',
-        domain=[('type', '!=', 'view'), ('deprecated', '=', False)], required=True)
+        domain=[('deprecated', '=', False)], required=True)
 
     _sql_constraints = [
         ('account_src_dest_uniq',

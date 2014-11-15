@@ -112,7 +112,6 @@ class account_account_type(models.Model):
         ],
         default='none',string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True)
     type = fields.Selection([
-        ('view', 'View'),
         ('other', 'Regular'),
         ('receivable', 'Receivable'),
         ('payable', 'Payable'),
@@ -120,7 +119,7 @@ class account_account_type(models.Model):
         ('consolidation', 'Consolidation'),
         ], string='Type', required=True, default='other',
         help="The 'Internal Type' is used for features available on "\
-        "different types of accounts: view can not have journal items, consolidation are accounts that "\
+        "different types of accounts: consolidation are accounts that "\
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations).")
     note = fields.Text(string='Description')
@@ -149,7 +148,7 @@ class account_account(models.Model):
                     continue
                 jour = self.env['account.journal'].browse(args[pos][2])
                 if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
+                    args[pos] = ('type','not in',('consolidation',))
                     continue
                 ids3 = map(lambda x: x.id, jour.type_control_ids)
                 ids1 = super(account_account, self).search([('user_type', 'in', ids3)])
@@ -331,10 +330,6 @@ class account_account(models.Model):
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
-    type = fields.Selection(
-        [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], string="Internal Type", default='view')
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
@@ -1845,9 +1840,6 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    type = fields.Selection([('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], string='Internal Type', default='view')
     financial_report_ids = fields.Many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id',
         string='Financial Reports')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
@@ -1895,7 +1887,7 @@ class account_account_template(models.Model):
 
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
+            if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals={
                 'name': company_name or account_template.name,
@@ -2230,8 +2222,8 @@ class account_fiscal_position_account_template(models.Model):
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account.template', string='Account Source', domain=[('type', '!=', 'view')], required=True)
-    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', domain=[('type', '!=', 'view')], required=True)
+    account_src_id = fields.Many2one('account.account.template', string='Account Source', required=True)
+    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', required=True)
 
 
 # ---------------------------------------------------------

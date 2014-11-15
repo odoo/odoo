@@ -235,7 +235,7 @@ class account_move_line(models.Model):
     debit = fields.Float(string='Debit', digits=dp.get_precision('Account'), default=0.0)
     credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
-        ondelete="cascade", domain=[('type', '!=', 'view'), ('type', '!=', 'closed'), ('deprecated', '=', False)],
+        ondelete="cascade", domain=[('deprecated', '=', False)],
         default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
         help="The move of this entry line.", index=True, required=True)
@@ -357,7 +357,7 @@ class account_move_line(models.Model):
     @api.constrains('account_id')
     def _check_no_view(self):
         for line in self:
-            if line.account_id.type in ('view', 'consolidation'):
+            if line.account_id.type == 'consolidation':
                 raise Warning(_('You cannot create journal items on an account of type view or consolidation.'))
 
     @api.multi
