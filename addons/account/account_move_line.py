@@ -66,38 +66,6 @@ class account_move_line(models.Model):
         query += company_clause
         return query
 
-    @api.multi
-    def _amount_residual(self):
-        """
-           This function returns the residual amount on a receivable or payable account.move.line.
-           By default, it returns an amount in the currency of this journal entry (maybe different
-           of the company currency), but if you pass 'residual_in_company_currency' = True in the
-           context then the returned amount will be in company currency.
-        """
-        context = dict(self._context or {})
-        for move_line in self:
-            move_line.amount_residual = 0.0
-            move_line.amount_residual_currency = 0.0
-
-            if move_line.reconcile_id:
-                continue
-            if not move_line.account_id.reconcile:
-                #this function does not suport to be used on move lines not related to a reconcilable account
-                continue
-
-            if move_line.currency_id:
-                move_line_total = move_line.amount_currency
-                sign = move_line.amount_currency < 0 and -1 or 1
-            else:
-                move_line_total = move_line.debit - move_line.credit
-                sign = (move_line.debit - move_line.credit) < 0 and -1 or 1
-            line_total_in_company_currency =  move_line.debit - move_line.credit
-            context_unreconciled = context.copy()
-
-            result = move_line_total
-            move_line.amount_residual_currency =  sign * (move_line.currency_id and move_line.currency_id.round(result) or result)
-            move_line.amount_residual = sign * line_total_in_company_currency
-
     @api.model
     def _prepare_analytic_line(self, obj_line):
         """
@@ -131,27 +99,6 @@ class account_move_line(models.Model):
                 vals_line = obj_line._prepare_analytic_line()
                 self.env['account.analytic.line'].create(vals_line)
 
-    @api.one
-    def on_create_write(self):
-        if not self:
-            return []
-        return map(lambda x: x.id, self.move_id.line_id)
-
-    @api.multi
-    def _balance(self):
-        context = dict(self._context or {})
-        context['initital_bal'] = True
-        sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
-                    FROM account_move_line l1 LEFT JOIN account_move_line l2
-                    ON (l1.account_id = l2.account_id
-                      AND l2.id <= l1.id
-                      AND """ + \
-                self.with_context(context)._query_get(obj='l2') + \
-                ") WHERE l1.id IN %s GROUP BY l1.id"
-
-        self._cr.execute(sql, [tuple(self.ids)])
-        return dict(self._cr.fetchall())
-
     @api.multi
     @api.depends('ref', 'move_id')
     def name_get(self):
@@ -161,20 +108,6 @@ class account_move_line(models.Model):
                 result.append((line.id, (line.move_id.name or '') + '(' + line.ref + ')'))
             else:
                 result.append((line.id, line.move_id.name))
-        return result
-
-    @api.multi
-    def _balance_search(self, args, domain=None):
-        result = []
-        if args:
-            where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
-            self._cr.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
-                         GROUP BY id, debit, credit having '+where)
-            data = self._cr.fetchall()
-            if data:
-                result = [('id', 'in', [x[0] for x in data])]
-            else:
-                result = [('id', '=', '0')]
         return result
 
     @api.multi
@@ -213,98 +146,56 @@ class account_move_line(models.Model):
     reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency',
-        help="The residual amount on a receivable or payable of a journal entry expressed "\
-        "in its currency (maybe different of the company currency).")
-    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount',
-        help="The residual amount on a receivable or payable of a journal entry expressed in the company currency.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._get_currency(), 
         help="The optional other currency if it is a multi-currency entry.")
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=lambda self: self._get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
+
     date_maturity = fields.Date(string='Due date', index=True ,
         help="This field is used for payable and receivable journal entries. "\
         "You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True,
         index=True, default=fields.Date.context_today, store=True)
-    date_created = fields.Date(string='Creation date', index=True, default=fields.Date.context_today)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
-    balance = fields.Float(compute='_balance', search=_balance_search, string='Balance')
-    state = fields.Selection([('draft','Unbalanced'), ('valid','Balanced')], 
-        string='Status', default='draft', readonly=True, copy=False)
+
+    # TODO: remove with the new tax engine
     tax_code_id = fields.Many2one('account.tax.code', string='Tax Account', 
         help="The Account can either be a base tax code or a tax code account.")
     tax_amount = fields.Float(string='Tax/Base Amount', digits=dp.get_precision('Account'), index=True, 
         help="If the Tax account is a tax code account, this field will contain the taxed amount."\
         "If the tax account is base tax code, this field will contain the basic amount(without tax).")
-    account_tax_id =fields.Many2one('account.tax', string='Tax', copy=False)
+
+    account_tax_id = fields.Many2many('account.tax', string='Tax', copy=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id',
         string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
+
+    # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
+    partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
 
     @api.model
     def _get_currency(self):
         currency = False
         context = dict(self._context or {})
-        if context.get('journal_id', False):
-            currency = self.env['account.journal'].browse(context['journal_id']).currency
+        if context.get('default_journal_id', False):
+            currency = self.env['account.journal'].browse(context['default_journal_id']).currency
         return currency
-
-    @api.model
-    def _get_journal(self):
-        """
-        Return journal based on the journal type
-        """
-        context = dict(self._context or {})
-        if context.get('journal_id', False):
-            return context['journal_id']
-        journal = False
-
-        if context.get('journal_type', False):
-            journal = self.env['account.journal'].search([('type','=', context.get('journal_type'))], limit=1)
-            if not journal:
-                action_id = self.env.ref('account.action_account_journal_form')
-                msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % context.get('journal_type').replace('_', ' ').title()
-                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
-        return journal
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
-    def _auto_init(self, cr, context=None):
-        res = super(account_move_line, self)._auto_init(cr, context=context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
-        return res
-
     @api.multi
     @api.constrains('account_id')
-    def _check_no_view(self):
+    def _check_account_type(self):
         for line in self:
             if line.account_id.type == 'consolidation':
                 raise Warning(_('You cannot create journal items on an account of type view or consolidation.'))
-
-    @api.multi
-    @api.constrains('account_id')
-    def _check_no_closed(self):
-        for line in self:
-            if line.account_id.type == 'closed':
-                raise Warning(_('You cannot create journal items on a closed account %s %s.') % (line.account_id.code, line.account_id.name))
-
-    @api.multi
-    @api.constrains('company_id')
-    def _check_company_id(self):
-        for line in self:
-            if line.company_id != line.account_id.company_id:
-                raise Warning(_('Account and Period must belong to the same company.'))
 
     @api.multi
     @api.constrains('currency_id')
@@ -329,40 +220,9 @@ class account_move_line(models.Model):
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise Warning(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
 
-    @api.multi
-    @api.constrains('currency_id')
-    def _check_currency_company(self):
-        for line in self:
-            if line.currency_id.id == line.company_id.currency_id.id:
-                raise Warning(_('You cannot provide a secondary currency if it is the same than the company one.'))
-
-    #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
-    #Not used in account module itself. Need to check in other modules.
-    @api.multi
-    def onchange_currency(self, account_id, amount, currency_id, date=False, journal=False):
-        if (not currency_id) or (not account_id):
-            return {}
-        result = {}
-        acc = self.env['account.account'].browse(account_id)
-        if (amount > 0) and journal:
-            x = self.env['account.journal'].browse(journal).default_credit_account_id
-            if x: acc = x
-        context = dict(self._context)
-        context.update({
-                'date': date,
-                'res.currency.compute.account': acc,
-            })
-        v = self.env['res.currency'].compute(currency_id, acc.company_id.currency_id.id, amount)
-        result['value'] = {
-            'debit': v > 0 and v or 0.0,
-            'credit': v < 0 and -v or 0.0
-        }
-        return result
-
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         self.date_maturity = False
-
         if self.partner_id:
             date = self.date or datetime.now().strftime('%Y-%m-%d')
             journal_type = self.journal_id.type
