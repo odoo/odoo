@@ -255,31 +255,9 @@ class account_move_line(models.Model):
     def onchange_account_id(self):
         if self.account_id:
             if self.account_id.tax_ids and self.partner_id:
-                self.account_tax_id = self.env['account.fiscal.position'].map_tax(self.partner_id and self.partner_id.property_account_position or False, self.account_id.tax_ids)[0]
+                self.account_tax_id = self.env['account.fiscal.position'].map_tax(self.partner_id and self.partner_id.property_account_position or False, self.account_id.tax_ids)
             else:
-                self.account_tax_id = self.account_id.tax_ids and self.account_id.tax_ids[0].id or False
-    #
-    # type: the type if reconciliation (no logic behind this field, for info)
-    #
-    # writeoff; entry generated for the difference between the lines
-    #
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        context = self._context
-        if context.get('fiscalyear_id'):
-            fiscalyear = self.env['account.fiscalyear'].browse(fiscalyear_id)
-            args.append(('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop))
-        if context.get('next_partner_only', False):
-            if not context.get('partner_id', False):
-                partner = self.list_partners_to_reconcile()
-                if partner:
-                    partner = partner[0]
-            else:
-                partner = context.get('partner_id', False)
-            if not partner:
-                return []
-            args.append(('partner_id', '=', partner[0]))
-        return super(account_move_line, self).search(args, offset, limit, order, count=count)
+                self.account_tax_id = self.account_id.tax_ids or False
 
     @api.multi
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
@@ -540,26 +518,6 @@ class account_move_line(models.Model):
         if partner and not partner.has_something_to_reconcile():
             partner.mark_as_reconciled()
         return r_id
-
-    @api.one
-    def view_header_get(self, view_type):
-        context = self._context
-#         context = self.convert_to_period(cr, user, context=context)
-        if context.get('account_id', False):
-            self._cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
-            res = self._cr.fetchone()
-            if res:
-                res = _('Entries: ')+ (res[0] or '')
-            return res
-        if (not context.get('journal_id', False)):
-            return False
-        if context.get('search_default_journal_id', False):
-            context['journal_id'] = context.get('search_default_journal_id')
-        self._cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
-        j = self._cr.fetchone()[0] or ''
-        if j:
-            return j
-        return False
 
     @api.multi
     def _remove_move_reconcile(self):
