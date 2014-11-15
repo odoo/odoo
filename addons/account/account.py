@@ -550,8 +550,15 @@ class account_move(models.Model):
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
+
+    # FP Note: we do not need two date fields, only one is enough!
+    # I propose to remove date_account and use date instead. Same for
+    # journal items. Only on supplier invoices, we have two dates
+    # account date and invoice date
+    date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     date_account = fields.Date(string='Account Date', required=True, states={'posted': [('readonly', True)]},
         default=fields.Date.context_today)
+
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
@@ -564,7 +571,6 @@ class account_move(models.Model):
         states={'posted': [('readonly', True)]}, copy=True)
     partner_id = fields.Many2one('res.partner', related='line_id.partner_id', string="Partner", store=True)
     amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), store=True)
-    date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
