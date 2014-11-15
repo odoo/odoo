@@ -330,7 +330,6 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -345,9 +344,7 @@
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
-                    <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                         <filter string="Company" context="{'group_by':'company_id'}" icon="terp-go-home" groups="base.group_multi_company"/>
                     </group>
@@ -379,13 +376,11 @@
                         <page string="Advanced Settings">
                             <group>
                                 <group>
-                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_user']}"/>
                                     <field name="sequence_id" required="0"/>
                                 </group>
                                 <group>
                                     <field name="centralisation"/>
                                     <field name="entry_posted"/>
-                                    <field name="allow_date"/>
                                     <field name="group_invoice_lines"/>
                                 </group>
                             </group>

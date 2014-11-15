@@ -375,14 +375,6 @@ class account_move_line(models.Model):
                 raise Warning(_('Account and Period must belong to the same company.'))
 
     @api.multi
-    @api.constrains('date')
-    def _check_date(self):
-        for line in self:
-            if line.journal_id.allow_date:
-                if not time.strptime(line.date[:10],'%Y-%m-%d') >= time.strptime(line.period_id.date_start, '%Y-%m-%d') or not time.strptime(line.date[:10], '%Y-%m-%d') <= time.strptime(line.period_id.date_stop, '%Y-%m-%d'):
-                    raise Warning(_('The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.'))
-
-    @api.multi
     @api.constrains('currency_id')
     def _check_currency(self):
         for line in self:

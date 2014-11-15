@@ -385,8 +385,6 @@ class account_journal(models.Model):
     _description = "Journal"
     _order = 'code'
 
-    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
-        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
@@ -420,26 +418,27 @@ class account_journal(models.Model):
         help="If this box is checked, the system will try to group the accounting lines when generating them from invoices.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
-    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user,
-        help="The user responsible for this journal")
+
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
     entry_posted = fields.Boolean(string='Autopost Created Moves',
         help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.')
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
-    allow_date = fields.Boolean(string='Check Date in Period',
-        help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period')
+
+    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+
+    # Fields related to bank or cash registers
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)])
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)])
     internal_account_id = fields.Many2one('account.account', string='Internal Transfers Account', index=True, domain=[('deprecated', '=', False)])
     cash_control = fields.Boolean(string='Cash Control', default=False,
         help='If you want the journal should be control at opening/closing, check this option')
-    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
+        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
-        ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
 
     @api.one
@@ -447,9 +446,9 @@ class account_journal(models.Model):
     def _check_currency(self):
         if self.currency:
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
+                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
+                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
 
     @api.one
     def copy(self, default=None):
@@ -463,19 +462,15 @@ class account_journal(models.Model):
     def write(self, vals):
         for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1)
-                if move_lines:
+                if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
 
     @api.model
-    def create_sequence(self, vals):
+    def _create_sequence(self, vals):
         """ Create new no_gap entry sequence for every new Joural
         """
-        # in account.journal code is actually the prefix of the sequence
-        # whereas ir.sequence code is a key to lookup global sequences.
-        prefix = vals['code'].upper()
-
+        prefix = vals['code'].upper()[:4]
         seq = {
             'name': vals['name'],
             'implementation':'no_gap',
@@ -489,10 +484,8 @@ class account_journal(models.Model):
 
     @api.model
     def create(self, vals):
-        if not 'sequence_id' in vals or not vals['sequence_id']:
-            # if we have the right to create a journal, we should be able to
-            # create it's sequence.
-            vals.update({'sequence_id': self.sudo().create_sequence(vals).id})
+        if not vals.get('sequence_id', False):
+            vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         return super(account_journal, self).create(vals)
 
     @api.multi
@@ -511,24 +504,10 @@ class account_journal(models.Model):
         """
         res = []
         for journal in self:
-            if journal.currency:
-                currency = journal.currency
-            else:
-                currency = journal.company_id.currency_id
+            currency = journal.currency or journal.company_id.currency_id
             name = "%s (%s)" % (journal.name, currency.name)
             res += [(journal.id, name)]
         return res
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        recs = self.search(expression.AND([domain, args]), limit=limit)
-        return recs.name_get()
-
 
 class account_fiscalyear(models.Model):
     _name = "account.fiscalyear"
