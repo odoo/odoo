@@ -248,8 +248,6 @@ class account_move_line(models.Model):
         index=True, default=fields.Date.context_today, store=True)
     date_created = fields.Date(string='Creation date', index=True, default=fields.Date.context_today)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
-    centralisation = fields.Selection([('normal','Normal'),('credit','Credit Centralisation'), ('debit','Debit Centralisation'),
-        ('currency','Currency Adjustment')], default='normal', string='Centralisation', size=8)
     balance = fields.Float(compute='_balance', search=_balance_search, string='Balance')
     state = fields.Selection([('draft','Unbalanced'), ('valid','Balanced')], 
         string='Status', default='draft', readonly=True, copy=False)
@@ -734,17 +732,6 @@ class account_move_line(models.Model):
             return j
         return False
 
-    @api.model
-    def _check_moves(self):
-        # use the first move ever created for this journal and period
-        self._cr.execute('SELECT id, state, name FROM account_move WHERE journal_id = %s AND date = %s ORDER BY id limit 1', (self._context['journal_id'],self._context['date']))
-        res = self._cr.fetchone()
-        if res:
-            if res[1] != 'draft':
-                raise Warning(_('The account move (%s) for centralisation ' \
-                                'has been confirmed.') % res[2])
-        return res
-
     @api.multi
     def _remove_move_reconcile(self, opening_reconciliation=False):
         # Function remove move rencocile ids related with moves
@@ -812,10 +799,6 @@ class account_move_line(models.Model):
                     ctx['date'] = line.move_id.date
                 else:
                     ctx['date'] = line.date
-            #Check for centralisation
-            journal = self.env['account.journal'].with_context(ctx).browse(ctx['journal_id'])
-            if journal.centralisation:
-                self.with_context(ctx)._check_moves()
         result = super(account_move_line, self).write(vals)
         if check:
             done = []
@@ -894,11 +877,6 @@ class account_move_line(models.Model):
         vals['date'] = vals.get('date') or context.get('date')
         vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
-            if journal.centralisation:
-                #Check for centralisation
-                res = self._check_moves()
-                if res:
-                    vals['move_id'] = res[0]
             if not vals.get('move_id', False):
                 if journal.sequence_id:
                     #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)

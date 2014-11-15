@@ -256,11 +256,11 @@ class account_account(models.Model):
     def _set_credit_debit(self, name, value):
         if self._context.get('config_invisible', True):
             return True
- 
-        journal = self.env['account.journal'].search([('type', '=', 'situation'), ('centralisation', '=', 1), ('company_id', '=', self.company_id.id)], limit=1)
+
+        journal = self.env['account.journal'].search([('type', '=', 'situation'), ('company_id', '=', self.company_id.id)], limit=1)
         if not journal:
-            raise Warning(_("You need an Opening journal with centralisation checked to set the initial balance."))
- 
+            raise Warning(_("You need an Opening journal to set the initial balance."))
+
         move_obj = self.env['account.move.line']
         move = move_obj.search([
             ('journal_id', '=', journal.id),
@@ -405,9 +405,6 @@ class account_journal(models.Model):
         domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount")
     default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
         domain=[('deprecated', '=', False)], help="It acts as a default account for debit amount")
-    centralisation = fields.Boolean(string='Centralized Counterpart',
-        help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart.\
-        This is used in fiscal year closing.")
     update_posted = fields.Boolean(string='Allow Cancelling Entries',
         help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal")
     group_invoice_lines = fields.Boolean(string='Group Invoice Lines',
@@ -567,14 +564,13 @@ class account_move(models.Model):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
 
+    # TODO: improve and use a refund sequence according to context
     @api.multi
     def post(self):
         SequenceObj = self.env['ir.sequence']
         invoice = self._context.get('invoice', False)
         valid_moves = self.validate()
 
-        if not valid_moves:
-            raise Warning(_('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
         for move in self.browse(valid_moves):
             if move.name =='/':
                 new_name = False
@@ -625,7 +621,6 @@ class account_move(models.Model):
         self.with_context(c)
         result = super(account_move, self).write(vals)
         self.with_context(context)
-        self.validate()
         return result
 
     #
@@ -696,104 +691,25 @@ class account_move(models.Model):
             amount += (line.debit - line.credit)
         return amount
 
-    @api.one
-    def _centralise(self, mode):
-        assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        cr = self._cr
-        currency_obj = self.env['res.currency']
-        account_move_line_obj = self.env['account.move.line']
-        context = dict(self._context or {})
-
-        if mode == 'credit':
-            account_id = move.journal_id.default_debit_account_id.id
-            mode2 = 'debit'
-            if not account_id:
-                raise Warning(_('There is no default debit account defined \n' \
-                                'on journal "%s".') % move.journal_id.name)
-        else:
-            account_id = move.journal_id.default_credit_account_id.id
-            mode2 = 'credit'
-            if not account_id:
-                raise Warning(_('There is no default credit account defined \n' \
-                                'on journal "%s".') % move.journal_id.name)
-
-        # find the first line of this move with the current mode
-        # or create it if it doesn't exist
-        self._cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode))
-        res = self._cr.fetchone()
-        if res:
-            line_id = res[0]
-        else:
-            context.update({'journal_id': move.journal_id.id, 'date': move.date}
-                )
-            line_id = account_move_line_obj.with_context(context).create({
-                'name': _(mode.capitalize()+' Centralisation'),
-                'centralisation': mode,
-                'partner_id': False,
-                'account_id': account_id,
-                'move_id': move.id,
-                'journal_id': move.journal_id.id,
-                'date': move.date,
-                'debit': 0.0,
-                'credit': 0.0,
-            })
-
-        # find the first line of this move with the other mode
-        # so that we can exclude it from our calculation
-        self._cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode2))
-        res = self._cr.fetchone()
-        if res:
-            line_id2 = res[0]
-        else:
-            line_id2 = 0
-
-        self._cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
-        result = self._cr.fetchone()[0] or 0.0
-        self._cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id.id))
-        account_move_line_obj.with_context(context).invalidate_cache([mode2], [line_id.id])
-
-        #adjust also the amount in currency if needed
-        self._cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
-        for row in self._cr.dictfetchall():
-            currency_id = currency_obj.with_context(context).browse(row['currency_id'])
-            if not currency_obj.is_zero(currency_id, row['amount_currency']):
-                amount_currency = row['amount_currency'] * -1
-                account_id = amount_currency > 0 and move.journal_id.default_debit_account_id.id or move.journal_id.default_credit_account_id.id
-                self._cr.execute('select id from account_move_line where move_id=%s and centralisation=\'currency\' and currency_id = %slimit 1', (move.id, row['currency_id']))
-                res = self._cr.fetchone()
-                if res:
-                    self._cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
-                    account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
-                else:
-                    context.update({'journal_id': move.journal_id.id, 'date': move.date})
-                    line_id = account_move_line_obj.with_context(context).create({
-                        'name': _('Currency Adjustment'),
-                        'centralisation': 'currency',
-                        'partner_id': False,
-                        'account_id': account_id,
-                        'move_id': move.id,
-                        'journal_id': move.journal_id.id,
-                        'date': move.date,
-                        'debit': 0.0,
-                        'credit': 0.0,
-                        'currency_id': row['currency_id'],
-                        'amount_currency': amount_currency,
-                    })
-
-        return True
-
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
     @api.multi
     def validate(self):
         context = dict(self._context or {})
-        if '__last_update' in context:
-            del context['__last_update']
-
         valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
         obj_move_line = self.env['account.move.line']
+
         for move in self:
+            amount = 0
+            for line in move.line_id:
+                amount += line.debit - line.credit
+            if abs(amount) < 10 ** -4:
+                raise Warning(_('You cannot validate a non-balanced entry.'))
+            if not move.company_id.id == line.account_id.company_id.id:
+                raise Warning(_("Cannot create moves for different companies."))
+
+
             journal = move.journal_id
             amount = 0
             lines = []
@@ -848,29 +764,13 @@ class account_move(models.Model):
                                 'tax_code_id': code,
                                 'tax_amount': amount
                             }, check=False)
-            elif journal.centralisation:
-                # If the move is not balanced, it must be centralised...
-
-                # Add to the list of valid moves
-                # (analytic lines will be created later for valid moves)
-                valid_moves.append(move)
-
-                #
-                # Update the move lines (set them as valid)
-                #
-                move.with_context(context)._centralise('debit')
-                move.with_context(context)._centralise('credit')
-                draft_lines.with_context(context).write({
-                    'state': 'valid'
+            # We can't validate it (it's unbalanced)
+            # Setting the lines as draft
+            not_draft_lines = list(set(lines) - set(draft_lines))
+            for line in not_draft_lines:
+                line.with_context(context).write({
+                    'state': 'draft'
                 }, check=False)
-            else:
-                # We can't validate it (it's unbalanced)
-                # Setting the lines as draft
-                not_draft_lines = list(set(lines) - set(draft_lines))
-                for line in not_draft_lines:
-                    line.with_context(context).write({
-                        'state': 'draft'
-                    }, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
             record.line_id.with_context(context).create_analytic_lines()
@@ -2093,7 +1993,6 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 'name': journal_names[journal_type],
                 'code': journal_codes[journal_type],
                 'company_id': company_id,
-                'centralisation': journal_type == 'situation',
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),

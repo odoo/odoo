@@ -847,10 +847,6 @@ class account_invoice(models.Model):
             line = inv.group_lines(iml, line)
 
             journal = inv.journal_id.with_context(ctx)
-            if journal.centralisation:
-                raise except_orm(_('User Error!'),
-                        _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
-
             line = inv.finalize_invoice_move_lines(line)
 
             move_vals = {
