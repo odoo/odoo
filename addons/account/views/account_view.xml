@@ -1226,7 +1226,6 @@
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="to_check"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1255,7 +1254,6 @@
                         <group>
                             <field name="ref"/>
                             <field name="date"/>
-                            <field name="to_check"/>
                             <field name="amount" invisible="1"/>
                         </group>
                     </group>
@@ -1361,7 +1359,6 @@
                     <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                     <separator/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" help="Journal Entries to Review"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="date_account"/>

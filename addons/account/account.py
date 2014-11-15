@@ -533,41 +533,20 @@ class account_move(models.Model):
         result = []
         for move in self:
             if move.state == 'draft':
-                name = '*' + str(move.id)
+                name = '* ' + str(move.id)
             else:
                 name = move.name
             result.append((move.id, name))
         return result
 
     @api.multi
-    @api.depends('line_id')
+    @api.depends('line_id.debit','line_id.credit')
     def _amount_compute(self):
         for move in self:
             total = 0.0
             for line in move.line_id:
                 total += line.debit
             move.amount = total
-
-    @api.model
-    def _search_amount(self, name, args):
-        ids = set()
-        for cond in args:
-            amount = cond[2]
-            if isinstance(cond[2],(list,tuple)):
-                if cond[1] in ['in','not in']:
-                    amount = tuple(cond[2])
-                else:
-                    continue
-            else:
-                if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
-                    continue
-
-            self._cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]),(amount,))
-            res_ids = set(id[0] for id in self._cr.fetchall())
-            ids = ids and (ids & res_ids) or res_ids
-        if ids:
-            return [('id', 'in', tuple(ids))]
-        return [('id', '=', '0')]
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
@@ -581,29 +560,14 @@ class account_move(models.Model):
            'In that case, they will behave as journal entries automatically created by the '
            'system on document validation (invoices, bank statements...) and will be created '
            'in \'Posted\' status.')
-    line_id = fields.One2many('account.move.line', 'move_id', string='Entries',
+    line_id = fields.One2many('account.move.line', 'move_id', string='Journal Items',
         states={'posted': [('readonly', True)]}, copy=True)
-    to_check = fields.Boolean(string='To Review',
-        help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
     partner_id = fields.Many2one('res.partner', related='line_id.partner_id', string="Partner", store=True)
-    amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), search='_search_amount')
+    amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), store=True)
     date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
-    balance = fields.Float(string='balance', digits=dp.get_precision('Account'),
-        help="This is a field only used for internal purpose and shouldn't be displayed")
-
-    @api.one
-    @api.constrains('date_account', 'journal_id')
-    def _check_centralisation(self):
-        if self.journal_id.centralisation:
-            moves = self.search([
-                ('date_account', '=', self.date_account),
-                ('journal_id', '=', self.journal_id.id),
-                ])
-            if len(moves) > 1:
-                raise Warning(_('You cannot create more than one move per period on a centralized journal.'))
 
     @api.multi
     def post(self):
