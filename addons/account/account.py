@@ -102,10 +102,7 @@ class account_account_type(models.Model):
     name = fields.Char(string='Account Type', required=True, translate=True)
     code = fields.Char(string='Code', size=32, required=True, index=True)
     close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
-        string='Deferral Method', required=True, default='none',
-        help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
-        'None' means that nothing will be done.
-        'Balance' will generally be used for cash accounts.""")
+        string='Deferral Method', required=True, default='none')
     report_type = fields.Selection([
         ('none','/'),
         ('income', _('Profit & Loss (Income account)')),
