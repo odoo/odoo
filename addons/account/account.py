@@ -387,10 +387,11 @@ class account_journal(models.Model):
             ('sale_refund','Sale Refund'),
             ('purchase', 'Purchase'),
             ('purchase_refund','Purchase Refund'),
-            ('cash', 'Cash'), ('bank', 'Bank and Checks'),
+            ('cash', 'Cash'),
+            ('bank', 'Bank and Checks'),
             ('general', 'General'),
             ('situation', 'Opening/Closing Situation')
-        ], string='Type', size=32, required=True,
+        ], string='Type', required=True,
         help="Select 'Sale' for customer invoices journals."\
         " Select 'Purchase' for supplier invoices journals."\
         " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -413,6 +414,8 @@ class account_journal(models.Model):
         help="If this box is checked, the system will try to group the accounting lines when generating them from invoices.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
+    sequence_refund_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
+        help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
 
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
@@ -462,10 +465,10 @@ class account_journal(models.Model):
         return super(account_journal, self).write(vals)
 
     @api.model
-    def _create_sequence(self, vals):
+    def _create_sequence(self, vals, prefix=False):
         """ Create new no_gap entry sequence for every new Joural
         """
-        prefix = vals['code'].upper()[:4]
+        prefix = prefix or vals['code'].upper()
         seq = {
             'name': vals['name'],
             'implementation':'no_gap',
@@ -481,22 +484,16 @@ class account_journal(models.Model):
     def create(self, vals):
         if not vals.get('sequence_id', False):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
+        if type in ('sale','sale_refund','purchase','purchase_refund'):
+            # If False, accepted has this field is not required
+            if 'sequence_refund_id' not in vals:
+                prefix = 'RF/'+vals.get('code', '')
+                vals.update({'sequence_refund_id': self.sudo()._create_sequence(vals, prefix=prefix).id})
         return super(account_journal, self).create(vals)
 
     @api.multi
     @api.depends('name', 'currency', 'company_id', 'company_id.currency_id')
     def name_get(self):
-        """
-        Returns a list of tuples containing id, name.
-        result format: {[(id, name), (id, name), ...]}
-
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param ids: list of ids for which name should be read
-        @param context: context arguments, like lang, time zone
-
-        @return: Returns a list of tuples containing id, name
-        """
         res = []
         for journal in self:
             currency = journal.currency or journal.company_id.currency_id
