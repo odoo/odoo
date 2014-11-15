@@ -41,19 +41,19 @@ if (rec2[0]['credit_last_fyear']-rec[0]['credit_new_fyear']!=0) or (rec2[0]['deb
         <field name="sequence">3</field>
         <field name="name">Test 3: Movement lines</field>
         <field name="desc">Check if movement lines are balanced and have the same date and period</field>
-        <field name="code_exec"><![CDATA[order_columns=['am_date','ml_date','am.date_account','ml.date_account','am.id']
+        <field name="code_exec"><![CDATA[order_columns=['am_date','ml_date','am.date','ml.date','am.id']
 sql="""SELECT
   am.id as move_id,
   sum(debit)-sum(credit) as balance,
-  am.date_account,
-  ml.date_account,
+  am.date,
+  ml.date,
   am.date as am_date,
   ml.date as ml_date
 FROM account_move am, account_move_line ml
 WHERE
   ml.move_id = am.id
-GROUP BY am.name, am.id, am.state, am.date_account, ml.date_account,am.date_account, ml.date_account,am.date, ml.date
-HAVING abs(sum(ml.debit-ml.credit)) <> 0 or am.date_account!=ml.date_account or (am.date!=ml.date)
+GROUP BY am.name, am.id, am.state, am.date, ml.date,am.date, ml.date,am.date, ml.date
+HAVING abs(sum(ml.debit-ml.credit)) <> 0 or am.date!=ml.date or (am.date!=ml.date)
 """
 cr.execute(sql)
 res = cr.dictfetchall()
@@ -72,7 +72,7 @@ result = res
 cr.execute("SELECT distinct reconcile_id from account_move_line where reconcile_id is not null")
 rec_ids = cr.dictfetchall()
 for record in rec_ids :
-  cr.execute("SELECT distinct r.name,r.id from account_journal j,account_period p, account_move_reconcile r,account_move m, account_move_line ml where m.journal_id=j.id and m.date_account=p.id and ml.reconcile_id=%s and ml.move_id=m.id and ml.reconcile_id=r.id group by r.id,r.name having sum(ml.debit)-sum(ml.credit)<>0", (record['reconcile_id'],))
+  cr.execute("SELECT distinct r.name,r.id from account_journal j,account_period p, account_move_reconcile r,account_move m, account_move_line ml where m.journal_id=j.id and m.date=p.id and ml.reconcile_id=%s and ml.move_id=m.id and ml.reconcile_id=r.id group by r.id,r.name having sum(ml.debit)-sum(ml.credit)<>0", (record['reconcile_id'],))
   reconcile_ids=cr.dictfetchall()
   if reconcile_ids:
     res.append(', '.join(["Reconcile name: %(name)s, id=%(id)s " % r for r in reconcile_ids]))

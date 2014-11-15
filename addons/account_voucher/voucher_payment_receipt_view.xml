@@ -9,16 +9,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
-                    <field name="date_account"/>
                     <group expand="0" string="Group By">
-                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_account','visible':True}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -32,16 +31,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
-                    <field name="date_account"/>
                     <group expand="0" string="Group By">
-                        <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'date_account','visible':True}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Supplier" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -227,7 +225,6 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="date_account"/>
                                 <field name="audit"/>
                                 <field name="number"/>
                             </group>
@@ -289,7 +286,7 @@
         </record>
 
 
-        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="4"
+        <menuitem action="action_vendor_payment" sequence="4"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
         <!-- Register Payment Form (old Pay Invoice wizard) -->
@@ -319,7 +316,6 @@
                         
                         <group>
                             <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                            <field name="date_account"/>
                             <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
                             <field name="name" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -511,7 +507,7 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="date_account"/>
+                                <field name="date"/>
                                 <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">
@@ -574,7 +570,7 @@
             <field name="act_window_id" ref="action_vendor_receipt"/>
         </record>
 
-        <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="12"
+        <menuitem action="action_vendor_receipt" sequence="12"
             id="menu_action_vendor_receipt"  parent="account.menu_finance_receivables"/>
 
     </data>

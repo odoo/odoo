@@ -54,7 +54,7 @@
         'company_id': ref('base.main_company'),
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
-        'date_account': time.strftime("%Y/%m/%d")
+        'date': time.strftime("%Y/%m/%d")
         'type': 'receipt',
     }
     if not res['value']['line_cr_ids']:

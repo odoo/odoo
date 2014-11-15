@@ -23,11 +23,10 @@ class account_treasury_report(models.Model):
         return res
 
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscalyear', readonly=True)
-    date_account = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
+    date = fields.Date(string='Account Date', readonly=True)
     debit = fields.Float(string='Debit', readonly=True)
     credit = fields.Float(string='Credit', readonly=True)
     balance = fields.Float(string='Balance', readonly=True)
-    date = fields.Date(string='Beginning of Period Date', readonly=True)
     starting_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Starting Balance')
     ending_balance = fields.Float(compute='_compute_balances', digits=dp.get_precision('Account'), string='Ending Balance')
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
@@ -39,7 +38,7 @@ class account_treasury_report(models.Model):
         cr.execute("""
             create or replace view account_treasury_report as (
             select
-                l.date as date_account,
+                l.date as date,
                 fs.id as fiscalyear_id,
                 sum(l.debit) as debit,
                 sum(l.credit) as credit,

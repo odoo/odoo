@@ -41,7 +41,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
     _columns = {
         'name': fields.char('File Name'),
-        'date_account': fields.date('Account Date', required=True),
+        'date': fields.date('Account Date', required=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', readonly=True),
         'file_save': fields.binary('Save File'),
@@ -90,7 +90,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id','child_of',data_tax.tax_code_id.id), ('company_id','=',obj_company.id)], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
-        ctx['date_account'] = data['date_account']
+        ctx['date'] = data['date']
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         default_address = obj_partner.address_get(cr, uid, [obj_company.partner_id.id])

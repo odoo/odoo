@@ -264,7 +264,7 @@ class account_account(models.Model):
         move_obj = self.env['account.move.line']
         move = move_obj.search([
             ('journal_id', '=', journal.id),
-            ('date_account', '=', date_account),
+            ('date', '=', time.strftime('%Y-%m-%d')),
             ('account_id', '=', self.id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
@@ -550,15 +550,7 @@ class account_move(models.Model):
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
-
-    # FP Note: we do not need two date fields, only one is enough!
-    # I propose to remove date_account and use date instead. Same for
-    # journal items. Only on supplier invoices, we have two dates
-    # account date and invoice date
     date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
-    date_account = fields.Date(string='Account Date', required=True, states={'posted': [('readonly', True)]},
-        default=fields.Date.context_today)
-
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
@@ -592,7 +584,7 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        ctx = {'fiscalyear_id': self.env['account.fiscalyear'].search([('date_start', '>=', move.date_account)])}
+                        ctx = {'fiscalyear_id': self.env['account.fiscalyear'].search([('date_start', '>=', move.date)])}
                         new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
@@ -648,26 +640,26 @@ class account_move(models.Model):
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
                 context['journal_id'] = vals['journal_id']
-            if 'date_account' in vals:
+            if 'date' in vals:
                 for l in vals['line_id']:
                     if not l[0]:
-                        l[2]['date_account'] = vals['date_account']
-                context['date_account'] = vals['date_account']
+                        l[2]['date'] = vals['date']
+                context['date'] = vals['date']
             else:
-                default_date_account = fields.Date.context_today(self)
+                default_date = fields.Date.context_today(self)
                 for l in vals['line_id']:
                     if not l[0]:
-                        l[2]['date_account'] = default_date_account
-                context['date_account'] = default_date_account
+                        l[2]['date'] = default_date
+                context['date'] = default_date
 
             c = context.copy()
             c['novalidate'] = True
-            c['date_account'] = vals['date_account'] if 'date_account' in vals else fields.Date.context_today(self)
+            c['date'] = vals['date'] if 'date' in vals else fields.Date.context_today(self)
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             self.with_context(c)
-            if not vals['date_account']:
-                vals.update(date_account = fields.Date.context_today(self)) 
+            if not vals['date']:
+                vals.update(date = fields.Date.context_today(self)) 
             if not vals['journal_id']:
                 vals.update(journal_id = self.env['ir.model.data'].xmlid_to_res_id('account.bank_journal')) 
             result = super(account_move, self).create(vals)
@@ -690,7 +682,7 @@ class account_move(models.Model):
             move_lines = move.line_id
             ctx = dict(context)
             ctx['journal_id'] = move.journal_id.id
-            ctx['date_account'] = move.date_account
+            ctx['date'] = move.date
             move_lines.with_context(ctx)._update_check()
             move_lines.with_context(ctx).unlink()
             toremove.append(move)
@@ -732,7 +724,7 @@ class account_move(models.Model):
         if res:
             line_id = res[0]
         else:
-            context.update({'journal_id': move.journal_id.id, 'date_account': move.date_account}
+            context.update({'journal_id': move.journal_id.id, 'date': move.date}
                 )
             line_id = account_move_line_obj.with_context(context).create({
                 'name': _(mode.capitalize()+' Centralisation'),
@@ -741,8 +733,7 @@ class account_move(models.Model):
                 'account_id': account_id,
                 'move_id': move.id,
                 'journal_id': move.journal_id.id,
-                'date_account': move.date_account,
-                'date': date_account,
+                'date': move.date,
                 'debit': 0.0,
                 'credit': 0.0,
             })
@@ -774,7 +765,7 @@ class account_move(models.Model):
                     self._cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
                     account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
                 else:
-                    context.update({'journal_id': move.journal_id.id, 'date_account': move.date_account})
+                    context.update({'journal_id': move.journal_id.id, 'date': move.date})
                     line_id = account_move_line_obj.with_context(context).create({
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
@@ -782,8 +773,7 @@ class account_move(models.Model):
                         'account_id': account_id,
                         'move_id': move.id,
                         'journal_id': move.journal_id.id,
-                        'date_account': move.date_account,
-                        'date': move.date_account,
+                        'date': move.date,
                         'debit': 0.0,
                         'credit': 0.0,
                         'currency_id': row['currency_id'],
@@ -1023,7 +1013,7 @@ class account_tax_code(models.Model):
             for fiscalyear in FiscalyearObj.browse(fiscalyear_id):
                 date_start = fiscalyear.date_start
                 date_stop = fiscalyear.date_stop
-                where = ' AND line.date_account >= %s AND line.date_account <= %s AND move.state IN %s '
+                where = ' AND line.date >= %s AND line.date <= %s AND move.state IN %s '
                 where_params = (date_start, date_stop, move_state)
         self._sum(name='sum', where=where, where_params=where_params)
 

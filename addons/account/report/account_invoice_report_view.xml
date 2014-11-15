@@ -7,7 +7,7 @@
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="pivot">
                  <field name="categ_id" type="row"/>
-                 <field name="date_account" type="col"/>
+                 <field name="date" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
@@ -78,7 +78,7 @@
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
-                    <filter string="Account Date" context="{'group_by':'date_account'}"/>
+                    <filter string="Date" context="{'group_by':'date'}"/>
                     <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
                 </group>
             </search>

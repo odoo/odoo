@@ -13,17 +13,17 @@ class account_common_journal_report(models.TransientModel):
         result = super(account_common_journal_report, self)._build_contexts(data)
 
         if data['form']['filter'] == 'filter_date':
-            self._cr.execute('SELECT date_account FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
-            result['date_account'] = map(lambda x: x[0], self._cr.fetchall())
+            self._cr.execute('SELECT date FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
+            result['date'] = map(lambda x: x[0], self._cr.fetchall())
         elif data['form']['filter'] == 'filter_period':
-            result['date_account'] = fields.Date.context_today
+            result['date'] = fields.Date.context_today
         return result
 
     @api.multi
     def pre_print_report(self, data):
         data['form'].update(self.read(['amount_currency'])[0])
         fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')]).ids
-        date_account = fields.Date.context_today
+        date = fields.Date.context_today
         # TODO : account_journal_period has been removed
 #         data['form']['active_ids'] = self.env['account.journal.period'].search([('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)])
         return data

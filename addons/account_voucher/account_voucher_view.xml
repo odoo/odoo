@@ -11,7 +11,6 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id" groups="account.group_account_user"/>
-                    <field name="date_account" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="audit" invisible="1"/>
@@ -88,7 +87,7 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="date_account"/>
+                                <field name="date"/>
                                 <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">
@@ -131,11 +130,10 @@
                     <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
-                    <field name="date_account"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_account','visible':True}"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date','visible':True}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>

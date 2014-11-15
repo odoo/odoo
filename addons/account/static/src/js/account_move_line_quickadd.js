@@ -42,8 +42,8 @@ openerp.account.quickadd = function (instance) {
                 self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
             });
             var mod = new instance.web.Model("account.move.line", self.dataset.context, self.dataset.domain);
-            defs.push(mod.call("default_get", [['journal_id','date_account'],self.dataset.context]).then(function(result) {
-                self.current_period_date = result['date_account'];
+            defs.push(mod.call("default_get", [['journal_id','date'],self.dataset.context]).then(function(result) {
+                self.current_period_date = result['date'];
                 self.current_journal = result['journal_id'];
             }));
             defs.push(mod.call("list_journals", []).then(function(result) {
@@ -83,10 +83,10 @@ openerp.account.quickadd = function (instance) {
             var self = this;
             var domain = [];
             if (self.current_journal !== null) domain.push(["journal_id", "=", self.current_journal]);
-            if (self.current_period_date !== null) domain.push(["date_account", "=", self.current_period_date]);
+            if (self.current_period_date !== null) domain.push(["date", "=", self.current_period_date]);
             self.last_context["journal_id"] = self.current_journal === null ? false : self.current_journal;
-            if (self.current_period_date === null) delete self.last_context["date_account"];
-            else self.last_context["date_account"] =  self.current_period_date;
+            if (self.current_period_date === null) delete self.last_context["date"];
+            else self.last_context["date"] =  self.current_period_date;
             self.last_context["journal_type"] = self.current_journal_type;
             self.last_context["currency"] = self.current_journal_currency;
             self.last_context["analytic_journal_id"] = self.current_journal_analytic;

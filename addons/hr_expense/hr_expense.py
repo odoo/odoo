@@ -162,7 +162,6 @@ class hr_expense_expense(osv.osv):
         journal_obj = self.pool.get('account.journal')
         expense = self.browse(cr, uid, expense_id, context=context)
         company_id = expense.company_id.id
-        date = expense.date_confirm
         ref = expense.name
         journal_id = False
         if expense.journal_id:
@@ -175,8 +174,7 @@ class hr_expense_expense(osv.osv):
 
         return {
             'journal_id': journal_id,
-            'date': date,
-            'date_account': fields.Date.context_today,
+            'date': fields.Date.context_today,
             'ref': ref,
             'company_id': company_id,
         }

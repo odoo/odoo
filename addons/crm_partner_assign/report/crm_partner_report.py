@@ -38,7 +38,7 @@ class crm_partner_report_assign(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'opp': fields.integer('# of Opportunity', readonly=True),  # TDE FIXME master: rename into nbr_opportunities
         'turnover': fields.float('Turnover', readonly=True),
-        'date_account': fields.date('Invoice Account Date', readonly=True),
+        'date': fields.date('Invoice Account Date', readonly=True),
     }
     def init(self, cr):
         """
@@ -60,7 +60,7 @@ class crm_partner_report_assign(osv.osv):
                     p.section_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
                     i.price_total as turnover,
-                    i.date_account
+                    i.date
                 FROM
                     res_partner p
                     left join account_invoice_report i

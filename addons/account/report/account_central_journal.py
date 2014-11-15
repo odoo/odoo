@@ -62,7 +62,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
-    def lines(self, date_account, journal_id):
+    def lines(self, date, journal_id):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
@@ -71,7 +71,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         from account_move_line l  \
                         LEFT JOIN account_move am ON (l.move_id=am.id) \
                         LEFT JOIN account_account a ON (l.account_id=a.id) \
-                        LEFT JOIN res_currency c on (l.currency_id=c.id) WHERE am.state IN %s AND l.date_account=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.symbol, a.currency_id,l.currency_id', (tuple(move_state), date_account, journal_id))
+                        LEFT JOIN res_currency c on (l.currency_id=c.id) WHERE am.state IN %s AND l.date=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.symbol, a.currency_id,l.currency_id', (tuple(move_state), date, journal_id))
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):

@@ -24,36 +24,36 @@ from openerp.tools.translate import _
 # Mixin to use with rml_parse, so self.pool will be defined.
 class common_report_header(object):
 
-    def _sum_debit(self, date_account=False, journal_id=False):
+    def _sum_debit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
-        if date_account and isinstance(date_account, int):
-            date_account = date_account
+        if date and isinstance(date, int):
+            date = date
         if not journal_id:
             journal_id = self.journal_ids
-        if not date_account:
-            date_account = self.date_account
-        if not (date_account and journal_id):
+        if not date:
+            date = self.date
+        if not (date and journal_id):
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE date_account = %s AND journal_id IN %s ' + self.query_get_clause + ' ',
-                        (date_account, tuple(journal_id)))
+                        'WHERE date = %s AND journal_id IN %s ' + self.query_get_clause + ' ',
+                        (date, tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit(self, date_account=False, journal_id=False):
+    def _sum_credit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
-        if date_account and isinstance(date_account, int):
-            date_account = date_account
+        if date and isinstance(date, int):
+            date = date
         if not journal_id:
             journal_id = self.journal_ids
-        if not date_account:
-            date_account = self.date_account
-        if not (date_account and journal_id):
+        if not date:
+            date = self.date
+        if not (date and journal_id):
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE date_account = %s AND journal_id IN %s '+ self.query_get_clause+'',
-                        (date_account, tuple(journal_id)))
+                        'WHERE date = %s AND journal_id IN %s '+ self.query_get_clause+'',
+                        (date, tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
     def _get_start_date(self, data):
@@ -89,23 +89,23 @@ class common_report_header(object):
                 return self._translate('Periods')
         return self._translate('No Filters')
 
-    def _sum_debit_period(self, date_account, journal_id=None):
+    def _sum_debit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE date_account=%s AND journal_id IN %s '+ self.query_get_clause +'',
-                        (date_account, tuple(journals)))
+                        'WHERE date=%s AND journal_id IN %s '+ self.query_get_clause +'',
+                        (date, tuple(journals)))
 
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit_period(self, date_account, journal_id=None):
+    def _sum_credit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE date_account=%s AND journal_id IN %s ' + self.query_get_clause +' ',
-                        (date_account, tuple(journals)))
+                        'WHERE date=%s AND journal_id IN %s ' + self.query_get_clause +' ',
+                        (date, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
     def _get_fiscalyear(self, data):

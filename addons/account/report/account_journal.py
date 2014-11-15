@@ -82,11 +82,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return not(self.last_move_id == move_id)
         return False
 
-    def tax_codes(self, date_account, journal_id):
+    def tax_codes(self, date, journal_id):
         self.cr.execute(
             'select distinct tax_code_id from account_move_line ' \
-            'where date_account=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
-            (date_account, journal_id)
+            'where date=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
+            (date, journal_id)
         )
         ids = map(lambda x: x[0], self.cr.fetchall())
         tax_code_ids = []
@@ -96,53 +96,49 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         tax_codes = self.pool.get('account.tax.code').browse(self.cr, self.uid, tax_code_ids)
         return tax_codes
 
-    def _sum_vat(self, date_account, journal_id, tax_code_id):
+    def _sum_vat(self, date, journal_id, tax_code_id):
         self.cr.execute('select sum(tax_amount) from account_move_line where ' \
-                        'date_account=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
-                        (date_account, journal_id, tax_code_id))
+                        'date=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
+                        (date, journal_id, tax_code_id))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_debit(self, date_account=False, journal_id=False):
+    def _sum_debit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
-        if date_account and isinstance(date_account, int):
-            date_account = date_account
         if not journal_id:
             journal_id = self.journal_ids
-        if not date_account:
-            date_account = self.date_account
-        if not (date_account and journal_id):
+        if not date:
+            date = self.date
+        if not (date and journal_id):
             return 0.0
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l, account_move am '
-                        'WHERE l.move_id=am.id AND am.state IN %s AND l.date_account = %s AND l.journal_id IN %s ' + self.query_get_clause + ' ',
-                        (tuple(move_state), date_account, tuple(journal_id)))
+                        'WHERE l.move_id=am.id AND am.state IN %s AND l.date = %s AND l.journal_id IN %s ' + self.query_get_clause + ' ',
+                        (tuple(move_state), date, tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit(self, date_account=False, journal_id=False):
+    def _sum_credit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
-        if date_account and isinstance(date_account, int):
-            date_account = date_account
         if not journal_id:
             journal_id = self.journal_ids
-        if not date_account:
-            date_account = self.date_account
-        if not (date_account and journal_id):
+        if not date:
+            date = self.date
+        if not (date and journal_id):
             return 0.0
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
         self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l, account_move am '
-                        'WHERE l.move_id=am.id AND am.state IN %s AND l.date_account = %s AND l.journal_id IN %s '+ self.query_get_clause+'',
-                        (tuple(move_state), date_account, tuple(journal_id)))
+                        'WHERE l.move_id=am.id AND am.state IN %s AND l.date = %s AND l.journal_id IN %s '+ self.query_get_clause+'',
+                        (tuple(move_state), date, tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-    def lines(self, date_account, journal_id=False):
+    def lines(self, date, journal_id=False):
         if not journal_id:
             journal_id = self.journal_ids
         else:
@@ -153,7 +149,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if self.target_move == 'posted':
             move_state = ['posted']
 
-        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.date_account=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + ', l.move_id',(tuple(move_state), date_account, tuple(journal_id) ))
+        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.date=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + ', l.move_id',(tuple(move_state), date, tuple(journal_id) ))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 

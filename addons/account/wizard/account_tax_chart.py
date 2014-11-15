@@ -7,7 +7,7 @@ class account_tax_chart(models.TransientModel):
     _name = "account.tax.chart"
     _description = "Account tax chart"
 
-    date_account = fields.Date(string='Account Date',
+    date = fields.Date(string='Account Date',
         default=fields.Date.context_today)
     target_move = fields.Selection([('posted', 'All Posted Entries'), ('all', 'All Entries'),],
         string='Target Moves', required=True, default='posted')
@@ -20,8 +20,8 @@ class account_tax_chart(models.TransientModel):
         """
         result = self.env.ref('account.action_tax_code_tree')
         result = result.read()[0]
-        if self.date_account:
-            result['context'] = str({'date_account': self.date_account, \
+        if self.date:
+            result['context'] = str({'date': self.date, \
                                       'state': self.target_move})
         else:
             result['context'] = str({'state': self.target_move})

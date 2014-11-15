@@ -53,7 +53,7 @@
     company_id: base.main_company
     currency_id: base.EUR
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
-    date_account: !eval time.strftime("%Y/%m/%d")
+    date: !eval time.strftime("%Y/%m/%d")
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -73,7 +73,6 @@
   !python {model: account.invoice}: |
     invoice = self.browse(cr, uid, ref("account_invoice_eur_usd"))
     assert invoice.state == 'open', "invoice state is not open"
-    assert invoice.date_account, "Period is not created for open invoice"
     assert invoice.move_id, "Move not created for open invoice"
     assert invoice.move_id.state == 'posted', "Move state is not posted"
     for move_line in invoice.move_id.line_id:
@@ -93,7 +92,6 @@
     journal_id: bank_journal_USD1
     name: 'payment: Case EUR/USD'
     partner_id: base.res_partner_19
-    date_account: !eval time.strftime("%Y/%m/%d")
     date: !eval time.strftime("%Y-02-01")
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense
@@ -135,7 +133,6 @@
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     assert voucher.move_ids, "Move line is not created for this voucher"
     assert (voucher.number == voucher.move_ids[0].move_id.name), "referance number is not created"
-    assert voucher.date_account, "period is not created"
     for move_line in voucher.move_ids:
         assert move_line.state == 'valid', "Voucher move is not valid"
 -

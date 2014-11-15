@@ -59,19 +59,19 @@
                             <tr>
                                 <th colspan="2">Total:</th>
                                 <th class="text-right">
-                                    <span t-esc="sum_debit(o.date_account, o.journal_id.id)"></span>
+                                    <span t-esc="sum_debit(o.date, o.journal_id.id)"></span>
                                 </th>
                                 <th class="text-right">
-                                    <span t-esc="sum_credit(o.date_account, o.journal_id.id)"></span>
+                                    <span t-esc="sum_credit(o.date, o.journal_id.id)"></span>
                                 </th>
                                 <th class="text-right">
-                                    <span t-esc="formatLang(sum_credit(o.date_account, o.journal_id.id) - sum_debit(o.date_account, o.journal_id.id), currency_obj=res_company.currency_id)" class="text-right"></span>
+                                    <span t-esc="formatLang(sum_credit(o.date, o.journal_id.id) - sum_debit(o.date, o.journal_id.id), currency_obj=res_company.currency_id)" class="text-right"></span>
                                 </th>
                                 <th t-if="display_currency(data)"/>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="lines(o.date_account, o.journal_id.id)" t-as="line">
+                            <tr t-foreach="lines(o.date, o.journal_id.id)" t-as="line">
                                 <td><span t-esc="line['code']"/></td>
                                 <td><span t-esc="line['name']"/></td>
                                 <td class="text-right"><span t-esc="line['debit']"/></td>

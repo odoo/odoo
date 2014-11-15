@@ -60,7 +60,7 @@ class account_bank_statement_import(osv.TransientModel):
             'name': ofx.account.routing_number,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
-            'date_account': fields.date.context_today or False,
+            'date': fields.date.context_today or False,
             'journal_id': journal_id
         }
         vals_bank_statement.update({'line_ids': line_ids})

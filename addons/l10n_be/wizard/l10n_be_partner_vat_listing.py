@@ -74,16 +74,16 @@ class partner_vat(osv.osv_memory):
                       LEFT JOIN account_tax_code c ON l.tax_code_id = c.id
                       WHERE c.code IN ('00','01','02','03','45','49')
                       AND l.partner_id IN %s
-                      AND l.date_account = %s
+                      AND l.date = %s
                       GROUP BY l.partner_id, p.name, p.vat) AS sub1
                 LEFT JOIN (SELECT l2.partner_id, SUM(CASE WHEN c2.code ='64' THEN -l2.tax_amount ELSE l2.tax_amount END) as vat_amount
                       FROM account_move_line l2
                       LEFT JOIN account_tax_code c2 ON l2.tax_code_id = c2.id
                       WHERE c2.code IN ('54','64')
                       AND l2.partner_id IN %s
-                      AND l2.date_account = %s
+                      AND l2.date = %s
                       GROUP BY l2.partner_id) AS sub2 ON sub1.partner_id = sub2.partner_id
-                    """,(tuple(partner_ids),date_account,tuple(partner_ids),date_account))
+                    """,(tuple(partner_ids),date,tuple(partner_ids),date))
         for record in cr.dictfetchall():
             record['vat'] = record['vat'].replace(' ','').upper()
             if record['turnover'] >= data['limit_amount']:

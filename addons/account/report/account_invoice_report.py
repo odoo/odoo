@@ -31,7 +31,6 @@ class account_invoice_report(models.Model):
     product_qty = fields.Float(string='Product Quantity', readonly=True)
     uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
     payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
-    date_account = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
     fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Category of Product', readonly=True)
@@ -75,7 +74,7 @@ class account_invoice_report(models.Model):
             'account_id', 'amount_total', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term',
-            'date_account', 'residual', 'state', 'type', 'user_id',
+            'residual', 'state', 'type', 'user_id',
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
@@ -91,7 +90,7 @@ class account_invoice_report(models.Model):
     def _select(self):
         select_str = """
             SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
-                sub.payment_term, sub.date_account, sub.uom_name, sub.currency_id, sub.journal_id,
+                sub.payment_term, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
@@ -103,7 +102,7 @@ class account_invoice_report(models.Model):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    ail.product_id, ai.partner_id, ai.payment_term, ai.date_account,
+                    ail.product_id, ai.partner_id, ai.payment_term, 
                     CASE
                      WHEN u.uom_type::text <> 'reference'::text
                         THEN ( SELECT product_uom.name
@@ -174,7 +173,7 @@ class account_invoice_report(models.Model):
     def _group_by(self):
         group_by_str = """
                 GROUP BY ail.product_id, ai.date_invoice, ai.id,
-                    ai.partner_id, ai.payment_term, ai.date_account, u.name, ai.currency_id, ai.journal_id,
+                    ai.partner_id, ai.payment_term, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
                     ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id

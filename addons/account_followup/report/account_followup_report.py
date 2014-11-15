@@ -39,14 +39,14 @@ class account_followup_stat(osv.osv):
         'credit':fields.float('Credit', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'blocked': fields.boolean('Blocked', readonly=True),
-        'date_account': fields.date('Account Date', readonly=True),
+        'date': fields.date('Account Date', readonly=True),
     }
     _order = 'date_move'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False):
         for arg in args:
-            if arg[0] == 'date_account' and arg[2] == 'current_year':
+            if arg[0] == 'date' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 # TODO account.period is now removed
                 # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
@@ -57,7 +57,7 @@ class account_followup_stat(osv.osv):
 
     def read_group(self, cr, uid, domain, *args, **kwargs):
         for arg in domain:
-            if arg[0] == 'date_account' and arg[2] == 'current_year':
+            if arg[0] == 'date' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 # TODO account.period is now removed
                 # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
@@ -81,7 +81,7 @@ class account_followup_stat(osv.osv):
                     sum(l.debit - l.credit) AS balance,
                     l.company_id AS company_id,
                     l.blocked as blocked,
-                    l.date_account AS date_account
+                    l.date AS date
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
@@ -91,7 +91,7 @@ class account_followup_stat(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
-                    l.id, l.partner_id, l.company_id, l.blocked, l.date_account
+                    l.id, l.partner_id, l.company_id, l.blocked, l.date
             )""")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

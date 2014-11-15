@@ -43,7 +43,7 @@ class base_report(report_sxw.rml_parse):
 
     def _load(self, name, form):
         fiscalyear.date_start = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
-        date_account=fiscalyear.date_start
+        date=fiscalyear.date_start
 
         if fiscalyear:
             self._set_variable('date_start', fiscalyear.date_start)
@@ -52,7 +52,7 @@ class base_report(report_sxw.rml_parse):
         self.cr.execute("SELECT l10n_fr_line.code,definition FROM l10n_fr_line LEFT JOIN l10n_fr_report ON l10n_fr_report.id=report_id WHERE l10n_fr_report.code=%s",(name,))
         datas = self.cr.dictfetchall()
         for line in datas:
-            self._load_accounts(form,line['code'],eval(line['definition']),fiscalyear,date_account)
+            self._load_accounts(form,line['code'],eval(line['definition']),fiscalyear,date)
 
     def _set_variable(self, variable, valeur):
         self.localcontext.update({variable: valeur})
@@ -60,7 +60,7 @@ class base_report(report_sxw.rml_parse):
     def _get_variable(self, variable):
         return self.localcontext[variable]
 
-    def _load_accounts(self, form, code, definition, fiscalyear, date_account):
+    def _load_accounts(self, form, code, definition, fiscalyear, date):
         accounts = {}
         for x in definition['load']:
             p = x.split(":")
@@ -81,13 +81,13 @@ class base_report(report_sxw.rml_parse):
 
             closed_cond = ""
             if fiscalyear.state == 'done':
-                closed_cond=" AND (aml.move_id NOT IN (SELECT account_move.id as move_id FROM account_move WHERE date_account = ANY(%s) AND journal_id=(SELECT res_id FROM ir_model_data WHERE name='closing_journal' AND module='l10n_fr')) OR (aa.type != 'income' AND aa.type !='expense'))"
-                query_params.append(date_account)
+                closed_cond=" AND (aml.move_id NOT IN (SELECT account_move.id as move_id FROM account_move WHERE date = ANY(%s) AND journal_id=(SELECT res_id FROM ir_model_data WHERE name='closing_journal' AND module='l10n_fr')) OR (aa.type != 'income' AND aa.type !='expense'))"
+                query_params.append(date)
 
             query = "SELECT aa.code AS code, SUM(debit) as debit, SUM(credit) as credit " \
                 " FROM account_move_line aml LEFT JOIN account_account aa ON aa.id=aml.account_id "\
-                " WHERE "+query_cond+closed_cond+" AND aml.state='valid' AND aml.date_account = ANY(%s) GROUP BY code"
-            query_params.append(date_account)
+                " WHERE "+query_cond+closed_cond+" AND aml.state='valid' AND aml.date = ANY(%s) GROUP BY code"
+            query_params.append(date)
             self.cr.execute(query, query_params)
 
             lines =self.cr.dictfetchall()

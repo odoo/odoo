@@ -28,7 +28,7 @@ class TestAccountFollowup(TransactionCase):
         self.account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "a_recv")[1]
         self.journal_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "bank_journal")[1]
         self.pay_account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "cash")[1]
-        self.date_account = time.strftime("%Y/%m/%d")
+        self.date = time.strftime("%Y/%m/%d")
         
         self.first_followup_line_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup_line1")[1]
         self.last_followup_line_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup_line3")[1]
@@ -138,8 +138,8 @@ class TestAccountFollowup(TransactionCase):
         delta = datetime.timedelta(days=1)
         result = current_date + delta
         self.invoice.pay_and_reconcile(cr, uid, [self.invoice_id], 1000.0, self.pay_account_id, 
-                                             self.date_account, self.journal_id, self.pay_account_id, 
-                                             self.date_account, self.journal_id, 
+                                             self.date, self.journal_id, self.pay_account_id, 
+                                             self.date, self.journal_id, 
                                              name = "Payment for test customer invoice follow-up") 
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id, "Level not empty")
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 

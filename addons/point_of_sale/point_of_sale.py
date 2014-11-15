@@ -1049,11 +1049,10 @@ class pos_order(osv.osv):
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
                 values.update({
-                    'date': order.date_order[:10],
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'date_account' : fields.Date.context_today,
+                    'date' : fields.Date.context_today,
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })

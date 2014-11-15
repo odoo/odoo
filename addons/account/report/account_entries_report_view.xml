@@ -25,7 +25,6 @@
                 <field name="journal_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
                 <field name="fiscalyear_id" invisible="1"/>
-                <field name="date_account" invisible="1"/>
                 <field name="user_type" invisible="1"/>
                 <field name="type" invisible="1"/>
            </tree>
@@ -37,7 +36,6 @@
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="pivot">
                 <field name="user_type" type="row"/>
-                <field name="date_account" type="col"/>
                 <field name="debit" type="measure"/>
                 <field name="credit" type="measure"/>
                 <field name="balance" type="measure"/>
@@ -74,7 +72,6 @@
                 <filter string="Reconciled" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
                 <field name="account_id"/>
                 <field name="journal_id"/>
-                <field name="date_account"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="fiscalyear_id"/>
                     <field name="product_id"/>

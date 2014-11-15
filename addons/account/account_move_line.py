@@ -238,8 +238,6 @@ class account_move_line(models.Model):
         help="The optional other currency if it is a multi-currency entry.")
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=lambda self: self._get_journal, required=True, index=True, store=True)
-    date_account = fields.Date(string='Account Date',
-        required=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
@@ -247,7 +245,7 @@ class account_move_line(models.Model):
         help="This field is used for payable and receivable journal entries. "\
         "You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True,
-        index=True, default=lambda self: self._get_date, store=True)
+        index=True, default=fields.Date.context_today, store=True)
     date_created = fields.Date(string='Creation date', index=True, default=fields.Date.context_today)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     centralisation = fields.Selection([('normal','Normal'),('credit','Credit Centralisation'), ('debit','Debit Centralisation'),
@@ -266,16 +264,6 @@ class account_move_line(models.Model):
         string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
     invoice = fields.Many2one('account.invoice', string='Invoice')
-
-    @api.model
-    def _get_date(self):
-        date = time.strftime('%Y-%m-%d')
-        context = dict(self._context or {})
-        if context.get('journal_id') and context.get('date_account'):
-            line = self.search([('journal_id', '=', context['journal_id']),('date_account', '=', context['date_account'])], order='id desc', limit=1)
-            if line:
-                date = line.date
-        return date
 
     @api.model
     def _get_currency(self):
@@ -695,7 +683,6 @@ class account_move_line(models.Model):
 
             
             writeoff_move_id = self.env['account.move'].create({
-                'date_account': fields.Date.context_today(self),
                 'journal_id': writeoff_journal_id,
                 'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
                 'date': date,
@@ -737,7 +724,7 @@ class account_move_line(models.Model):
             if res:
                 res = _('Entries: ')+ (res[0] or '')
             return res
-        if (not context.get('journal_id', False)) or (not context.get('date_account', False)):
+        if (not context.get('journal_id', False)):
             return False
         if context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
@@ -750,7 +737,7 @@ class account_move_line(models.Model):
     @api.model
     def _check_moves(self):
         # use the first move ever created for this journal and period
-        self._cr.execute('SELECT id, state, name FROM account_move WHERE journal_id = %s AND date_account = %s ORDER BY id limit 1', (self._context['journal_id'],self._context['date_account']))
+        self._cr.execute('SELECT id, state, name FROM account_move WHERE journal_id = %s AND date = %s ORDER BY id limit 1', (self._context['journal_id'],self._context['date']))
         res = self._cr.fetchone()
         if res:
             if res[1] != 'draft':
@@ -791,7 +778,7 @@ class account_move_line(models.Model):
         for line in self:
             moves.add(line.move_id)
             context['journal_id'] = line.journal_id.id
-            context['date_account'] = line.date
+            context['date'] = line.date
             result = super(account_move_line, line).with_context(context).unlink()
         moves = list(moves)
         if check and moves:
@@ -805,7 +792,7 @@ class account_move_line(models.Model):
         if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['deprecated'])['deprecated']:
             raise Warning(_('You cannot use deprecated account.'))
         if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('date_account' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
+            if ('account_id' in vals) or ('journal_id' in vals) or ('date' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check()
 
         todo_date = None
@@ -820,11 +807,11 @@ class account_move_line(models.Model):
                    ctx['journal_id'] = line.move_id.journal_id.id
                 else:
                     ctx['journal_id'] = line.journal_id.id
-            if not ctx.get('date_account'):
+            if not ctx.get('date'):
                 if line.move_id:
-                    ctx['date_account'] = line.move_id.date_account
+                    ctx['date'] = line.move_id.date
                 else:
-                    ctx['date_account'] = line.date_account
+                    ctx['date'] = line.date
             #Check for centralisation
             journal = self.env['account.journal'].with_context(ctx).browse(ctx['journal_id'])
             if journal.centralisation:
@@ -841,7 +828,7 @@ class account_move_line(models.Model):
         return result
 
     @api.model
-    def _update_journal_check(self, journal_id, date_account):
+    def _update_journal_check(self, journal_id, date):
         #account_journal_period have been removed
 #         self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
 #         result = self._cr.fetchall()
@@ -867,9 +854,9 @@ class account_move_line(models.Model):
                 raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
                 raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            t = (line.journal_id.id, line.date_account)
+            t = (line.journal_id.id, line.date)
             if t not in done:
-                self._update_journal_check(line.journal_id.id, line.date_account)
+                self._update_journal_check(line.journal_id.id, line.date)
                 done[t] = True
         return True
 
@@ -889,22 +876,22 @@ class account_move_line(models.Model):
             raise Warning(_('You cannot use deprecated account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
-        if 'date_account' in vals and vals['date_account']:
-            context['date_account'] = vals['date_account']
+        if 'date' in vals and vals['date']:
+            context['date'] = vals['date']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = MoveObj.browse(vals['move_id'])
             context['journal_id'] = m.journal_id.id
-            context['date_account'] = m.date_account
+            context['date'] = m.date
         #we need to treat the case where a value is given in the context for period_id as a string
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-        if 'date_account' not in context:
-            context['date_account'] = fields.Date.context_today(self)
-        self.with_context(context)._update_journal_check(context['journal_id'], context['date_account'])
+        if 'date' not in context:
+            context['date'] = fields.Date.context_today(self)
+        self.with_context(context)._update_journal_check(context['journal_id'], context['date'])
         move_id = vals.get('move_id', False)
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
-        vals['date_account'] = vals.get('date_account') or context.get('date_account')
+        vals['date'] = vals.get('date') or context.get('date')
         vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
             if journal.centralisation:
@@ -917,7 +904,6 @@ class account_move_line(models.Model):
                     #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
-                        'date_account': context['date_account'],
                         'journal_id': context['journal_id']
                     }
                     if vals.get('ref', ''):

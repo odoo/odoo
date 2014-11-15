@@ -6,7 +6,7 @@
   !python {model: account.bank.statement}: |
     import time
     journal = self._default_journal_id(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
-      'journal_type': 'bank', 'date_account': time.strftime("%Y/%m/%d"), 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
+      'journal_type': 'bank', 'date': time.strftime("%Y/%m/%d"), 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
     assert journal, 'Journal has not been selected'
 -
   I create a bank statement with Opening and Closing balance 0.

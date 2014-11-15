@@ -162,7 +162,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         else:
             sql_sort='l.date, l.move_id'
         sql = """
-            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.date_account AS ldate_account, l.partner_id AS lpartner_id,
+            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,
             c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
@@ -181,7 +181,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS ldate_account, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id,
                 '' AS currency_code,
                 NULL AS currency_id,

@@ -82,7 +82,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
-    date_account: !eval time.strftime("%Y/%m/%d")
+    date: !eval "'%s-01-01' %(datetime.now().year)"
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -116,7 +116,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
-    date_account: !eval time.strftime("%Y/%m/%d")
+    date: !eval time.strftime("%Y/%m/%d")
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -158,7 +158,6 @@
     journal_id: bank_journal_USD
     name: 'Payment: Case 1 USD/USD payment rate'
     partner_id: res_partner_mc_kay
-    date_account: time.strftime("%Y/%m/%d")
     date: !eval time.strftime("%Y-03-01")
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense

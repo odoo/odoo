@@ -87,7 +87,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
-                        'WHERE am.state IN %s AND l.date_account>=%s AND l.date_account<=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
+                        'WHERE am.state IN %s AND l.date>=%s AND l.date<=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
                         'GROUP BY j.id, j.code, j.name, l.amount_currency, c.symbol, l.currency_id ',
                         (tuple(move_state), date_start, date_stop, tuple(self.journal_ids)))
         return self.cr.dictfetchall()
@@ -123,7 +123,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             move_state = ['posted']
         self.cr.execute('SELECT SUM(l.debit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.date_account>=%s AND l.date_account<=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.date>=%s AND l.date<=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ' \
                         'AND l.state<>\'draft\'',
                         (tuple(move_state), date_start, date_stop, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
@@ -140,7 +140,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return 0.0
         self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.date_account>=%s AND l.date_account<=%s ANDl.journal_id IN %s '+ self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.date>=%s AND l.date<=%s ANDl.journal_id IN %s '+ self.query_get_clause + ' ' \
                         'AND l.state<>\'draft\'',
                         (tuple(move_state), date_start, date_stop, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0

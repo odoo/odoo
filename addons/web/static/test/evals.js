@@ -687,7 +687,7 @@ openerp.testing.section('eval.contexts', {
                                  "number": false, "type": "out_invoice",
                                  "currency_id": 1, "partner_id": 4,
                                  "fiscal_position": false,
-                                 "date_invoice": false, "date_account": false,
+                                 "date_invoice": false, "date": false,
                                  "payment_term": false, "reference_type": "none",
                                  "reference": false, "account_id": 440,
                                  "name": false, "invoice_line": [],
@@ -723,7 +723,7 @@ openerp.testing.section('eval.contexts', {
                         "id": false, "journal_id": 10, "number": false,
                         "type": "out_invoice", "currency_id": 1,
                         "partner_id": 4, "fiscal_position": false,
-                        "date_invoice": false, "date_account": false,
+                        "date_invoice": false, "date": false,
                         "payment_term": false, "reference_type": "none",
                         "reference": false, "account_id": 440, "name": false,
                         "tax_line": [], "amount_untaxed": 0, "amount_tax": 0,
@@ -740,7 +740,7 @@ openerp.testing.section('eval.contexts', {
         deepEqual(result, {type: 'out_invoice'});
     });
     test('return-input-value', function (instance) {
-        var date_account = new Date()
+        var date = new Date()
         var result = instance.web.pyeval.eval('contexts', [{
             __ref: 'compound_context',
             __contexts: ["{'line_id': line_id , 'journal_id': journal_id }"],
@@ -760,7 +760,7 @@ openerp.testing.section('eval.contexts', {
                     active_model: 'account.move',
                     amount: 0,
                     company_id: 1,
-                    date: date_account,
+                    date: date,
                     id: false,
                     journal_id: 14,
                     line_id: [
@@ -782,7 +782,7 @@ openerp.testing.section('eval.contexts', {
                     narration: false,
                     parent: {},
                     partner_id: false,
-                    date_account: '2011-01-1',
+                    date: '2011-01-1',
                     ref: false,
                     state: 'draft',
                     to_check: false,

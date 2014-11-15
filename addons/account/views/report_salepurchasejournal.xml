@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Account Date:</strong>
-                            <p t-field="o.date_account"/>
+                            <p t-field="o.date"/>
                         </div>
                     </div>
                     <div class="row mb32">
@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="lines(o.date_account, o.journal_id.id)" t-as="line">
+                            <tr t-foreach="lines(o.date, o.journal_id.id)" t-as="line">
                                 <td><span t-esc="line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id))"/></td>
                                 <td><span t-esc="formatLang(line.date,date=True)"/></td> 
                                 <td><span t-field="line.account_id.code"/></td>
@@ -74,8 +74,8 @@
                             <table class="table table-condensed">
                                 <tr>
                                     <td><strong>Total</strong></td>
-                                    <td><strong t-esc="formatLang(sum_debit(o.date_account, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
-                                    <td><strong t-esc="formatLang(sum_credit(o.date_account, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+                                    <td><strong t-esc="formatLang(sum_debit(o.date, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
+                                    <td><strong t-esc="formatLang(sum_credit(o.date, o.journal_id.id), currency_obj=res_company.currency_id)"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -88,9 +88,9 @@
                                     <tr><th colspan="3">Tax Declaration</th></tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="tax_codes(o.date_account ,o.journal_id.id)" t-as="tax">
+                                    <tr t-foreach="tax_codes(o.date ,o.journal_id.id)" t-as="tax">
                                         <td><span t-esc="tax.code"/> : </td>
-                                        <td><span t-esc="formatLang(sum_vat(o.date_account, o.journal_id.id, tax.id))"/></td>
+                                        <td><span t-esc="formatLang(sum_vat(o.date, o.journal_id.id, tax.id))"/></td>
                                         <td><span t-esc="tax.name"/></td>
                                     </tr>
                                 </tbody>

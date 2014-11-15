@@ -26,11 +26,11 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     _name = "asset.depreciation.confirmation.wizard"
     _description = "asset.depreciation.confirmation.wizard"
     _columns = {
-       'date_account': fields.date('Account Date', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
+       'date': fields.date('Account Date', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
     }
    
     _defaults = {
-        'date_account': fields.date.context_today,
+        'date': fields.date.context_today,
     }
 
     def asset_compute(self, cr, uid, ids, context):

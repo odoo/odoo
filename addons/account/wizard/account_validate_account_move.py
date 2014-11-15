@@ -7,11 +7,11 @@ class validate_account_move(models.TransientModel):
     _description = "Validate Account Move"
 
     journal_ids = fields.Many2many('account.journal', 'wizard_validate_account_move_journal', 'wizard_id', 'journal_id', string='Journal', required=True)
-    date_account = fields.Date(string='Account Date', required=True, default=fields.Date.context_today)
+    date = fields.Date(string='Account Date', required=True, default=fields.Date.context_today)
 
     @api.multi
     def validate_move(self):
-        moves = self.env['account.move'].search([('state', '=', 'draft'), ('journal_id', 'in', self.journal_ids.ids), ('date_account', '=', self.date_account)], order='date')
+        moves = self.env['account.move'].search([('state', '=', 'draft'), ('journal_id', 'in', self.journal_ids.ids), ('date', '=', self.date)], order='date')
         if not moves:
             raise Warning(_('Specified journals do not have any account move entries in draft state for the specified periods.'))
         moves.button_validate()

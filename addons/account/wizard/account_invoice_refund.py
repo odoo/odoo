@@ -11,9 +11,7 @@ class account_invoice_refund(models.TransientModel):
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
 
-    date = fields.Date(string='Date', help='This date will be used as the invoice date for credit note and period will be chosen accordingly!',
-        default=lambda *a: time.strftime('%Y-%m-%d'))
-    date_account = fields.Date(string='Account Date', default=fields.Date.context_today)
+    date = fields.Date(string='Account Date', default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Refund Journal', default=lambda self: self._get_journal(),
         help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.')
     description = fields.Char(string='Reason', required=True, default=lambda self: self._get_reason())
@@ -73,7 +71,6 @@ class account_invoice_refund(models.TransientModel):
         for form in self:
             created_inv = []
             date = False
-            date_account = False
             description = False
             company = self.env.user.company_id
             journal_id = form.journal_id.id
@@ -82,10 +79,10 @@ class account_invoice_refund(models.TransientModel):
                     raise Warning(_('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise Warning(_('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
-                if form.date_account:
-                    date_account = form.date_account
+                if form.date:
+                    date = form.date
                 else:
-                    date_account = inv.date_account or False
+                    date = inv.date or False
 
                 if not journal_id:
                     journal_id = inv.journal_id.id
@@ -99,7 +96,7 @@ class account_invoice_refund(models.TransientModel):
                 else:
                     description = inv.name
 
-                if not date_account:
+                if not date:
                     raise Warning(_('No period date found on the invoice.'))
 
                 refund = inv.refund(date, period_date, description, journal_id)
@@ -121,7 +118,7 @@ class account_invoice_refund(models.TransientModel):
                             to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
                     for account in to_reconcile_ids:
                         account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
-                                        writeoff_period_date=date_account,
+                                        writeoff_period_date=date,
                                         writeoff_journal_id = inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
                                         )
@@ -132,7 +129,7 @@ class account_invoice_refund(models.TransientModel):
                                     'partner_insite', 'partner_contact',
                                     'partner_ref', 'payment_term', 'account_id',
                                     'currency_id', 'invoice_line', 'tax_line',
-                                    'journal_id', 'date_account'], context=context)
+                                    'journal_id', 'date'], context=context)
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line'])
@@ -146,7 +143,7 @@ class account_invoice_refund(models.TransientModel):
                             'number': False,
                             'invoice_line': invoice_lines,
                             'tax_line': tax_lines,
-                            'date_account': date_account,
+                            'date': date,
                             'name': description
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',

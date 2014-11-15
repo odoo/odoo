@@ -85,7 +85,6 @@ class account_bank_statement(models.Model):
         select=True, copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True,
         readonly=True, states={'draft':[('readonly',False)]}, default=lambda self: self._default_journal_id())
-    date_account = fields.Date('Account Date', required=True, states={'confirm':[('readonly', True)]})
     balance_start = fields.Float(string='Starting Balance', digits=dp.get_precision('Account'), states={'confirm':[('readonly',True)]})
     balance_end_real = fields.Float('Ending Balance', digits=dp.get_precision('Account'),
         states={'confirm': [('readonly', True)]}, help="Computed using the cash control lines")
@@ -118,9 +117,7 @@ class account_bank_statement(models.Model):
         """
         ctx = dict(self._context or {})
         ctx['company_id'] = self.company_id.id
-        self.date_account = self.date
-            #todo: update date_account in context
-            #context = dict(self._context, date_account=date_account)
+        self.date = self.date
 
     @api.multi
     def button_dummy(self):
@@ -140,7 +137,6 @@ class account_bank_statement(models.Model):
         """
         return {
             'journal_id': st_line.statement_id.journal_id.id,
-            'date_account': st_line.statement_id.date_account,
             'date': st_line.date,
             'name': st_line_number,
             'ref': st_line.ref,
@@ -223,7 +219,6 @@ class account_bank_statement(models.Model):
             'debit': debit,
             'statement_id': st_line.statement_id.id,
             'journal_id': st_line.statement_id.journal_id.id,
-            'date_account': st_line.statement_id.date_account,
             'currency_id': amount_currency and cur_id,
             'amount_currency': amount_currency,
         }
@@ -544,7 +539,7 @@ class account_bank_statement_line(models.Model):
         return {
             'move_id': move_id,
             'name': _('change') + ': ' + (self.name or '/'),
-            'date_account': self.statement_id.date_account,
+            'date': self.statement_id.date,
             'journal_id': self.journal_id.id,
             'partner_id': self.partner_id.id,
             'company_id': self.company_id.id,
@@ -605,7 +600,7 @@ class account_bank_statement_line(models.Model):
                 continue
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move_id.id
-            mv_line_dict['date_account'] = self.statement_id.date_account
+            mv_line_dict['date'] = self.statement_id.date
             mv_line_dict['journal_id'] = self.journal_id.id
             mv_line_dict['company_id'] = self.company_id.id
             mv_line_dict['statement_id'] = self.statement_id.id

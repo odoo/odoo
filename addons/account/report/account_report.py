@@ -187,7 +187,7 @@ class report_account_type_sales(models.Model):
     _auto = False
 
     name = fields.Char(string='Year', required=False, readonly=True)
-    date_account = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
+    date = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     quantity = fields.Float(string='Quantity', readonly=True)
     user_type = fields.Many2one('account.account.type', string='Account Type', readonly=True)
@@ -207,7 +207,7 @@ class report_account_type_sales(models.Model):
                to_char(inv.date_invoice,'MM') as month,
                sum(inv_line.price_subtotal) as amount_total,
                inv.currency_id as currency_id,
-               inv.date_account,
+               inv.date,
                inv_line.product_id,
                sum(inv_line.quantity) as quantity,
                account.user_type
@@ -218,7 +218,7 @@ class report_account_type_sales(models.Model):
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.date_account, inv_line.product_id, account.user_type
+                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.date, inv_line.product_id, account.user_type
             )""")
 
 
@@ -228,7 +228,7 @@ class report_account_sales(models.Model):
     _auto = False
 
     name = fields.Char(string='Year', required=False, readonly=True, select=True)
-    date_account = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
+    date = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     quantity = fields.Float(string='Quantity', readonly=True)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
@@ -248,7 +248,7 @@ class report_account_sales(models.Model):
                to_char(inv.date_invoice,'MM') as month,
                sum(inv_line.price_subtotal) as amount_total,
                inv.currency_id as currency_id,
-               inv.date_account,
+               inv.date,
                inv_line.product_id,
                sum(inv_line.quantity) as quantity,
                account.id as account_id
@@ -259,5 +259,5 @@ class report_account_sales(models.Model):
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.date_account, inv_line.product_id, account.id
+                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.date, inv_line.product_id, account.id
             )""")

@@ -322,10 +322,10 @@ class account_asset_asset(osv.osv):
             res['value'] = {'prorata': False}
         return res
 
-    def _compute_entries(self, cr, uid, ids, date_account, context=None):
+    def _compute_entries(self, cr, uid, ids, date, context=None):
         result = []
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
-        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', date_account), ('move_check', '=', False)], context=context)
+        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', date), ('move_check', '=', False)], context=context)
         context = dict(context or {}, depreciation_date=time.strftime('%Y-%m-%d'))
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
@@ -390,9 +390,8 @@ class account_asset_depreciation_line(osv.osv):
             reference = line.name
             move_vals = {
                 'name': asset_name,
-                'date': depreciation_date,
                 'ref': reference,
-                'date_account': depreciation_date or False,
+                'date': depreciation_date or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
@@ -405,7 +404,6 @@ class account_asset_depreciation_line(osv.osv):
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': amount,
-                'date_account': False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
@@ -419,7 +417,6 @@ class account_asset_depreciation_line(osv.osv):
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
                 'debit': amount,
-                'date_account': depreciation_date or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,

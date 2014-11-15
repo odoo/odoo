@@ -229,7 +229,7 @@ class account_invoice(models.Model):
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
              "The payment term may compute several due dates, for example 50% now, 50% in one month.")
-    date_account = fields.Date(string='Account Date',
+    date = fields.Date(string='Valuation Date',
         copy=False,
         help="Keep empty to use the date of the validation(invoice) date.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -862,19 +862,19 @@ class account_invoice(models.Model):
                 'company_id': inv.company_id.id,
             }
             ctx['company_id'] = inv.company_id.id
-            date_account = inv.date_account
-            if not date_account:
-                date_account = fields.Date.context_today
-                move_vals['date_account'] = date_account
+            date = inv.date
+            if not date:
+                date = fields.Date.context_today
+                move_vals['date'] = date
                 for i in line:
-                    i[2]['date_account'] = date_account
+                    i[2]['date'] = date
 
             ctx['invoice'] = inv
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
-                'date_account': date_account,
+                'date': date,
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
@@ -1017,7 +1017,7 @@ class account_invoice(models.Model):
         return result
 
     @api.model
-    def _prepare_refund(self, invoice, date=None, date_account=None, description=None, journal_id=None):
+    def _prepare_refund(self, invoice, date=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new refund from the invoice.
             This method may be overridden to implement custom
             refund generation (making sure to call super() to establish
@@ -1025,7 +1025,7 @@ class account_invoice(models.Model):
 
             :param record invoice: invoice to refund
             :param string date: refund creation date from the wizard
-            :param integer date_account: force date_account from the wizard
+            :param integer date: force date from the wizard
             :param string description: description of the refund from the wizard
             :param integer journal_id: account.journal from the wizard
             :return: dict of value to create() the refund
@@ -1056,25 +1056,25 @@ class account_invoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
 
-        if date_account:
-            values['date_account'] = date_account
+        if date:
+            values['date'] = date
         if description:
             values['name'] = description
         return values
 
     @api.multi
     @api.returns('self')
-    def refund(self, date=None, date_account=None, description=None, journal_id=None):
+    def refund(self, date=None, date=None, description=None, journal_id=None):
         new_invoices = self.browse()
         for invoice in self:
             # create the new invoice
-            values = self._prepare_refund(invoice, date=date, date_account=date_account,
+            values = self._prepare_refund(invoice, date=date, date=date,
                                     description=description, journal_id=journal_id)
             new_invoices += self.create(values)
         return new_invoices
 
     @api.v8
-    def pay_and_reconcile(self, pay_amount, pay_account_id, date_account, pay_journal_id,
+    def pay_and_reconcile(self, pay_amount, pay_account_id, date, pay_journal_id,
                           writeoff_acc_id, writeoff_journal_id, name=''):
         # TODO check if we can use different period for payment and the writeoff line
         assert len(self)==1, "Can only pay one invoice at a time."
@@ -1128,7 +1128,6 @@ class account_invoice(models.Model):
             'ref': ref,
             'line_id': [(0, 0, l1), (0, 0, l2)],
             'journal_id': pay_journal_id,
-            'date_account': date_account,
             'date': date,
         })
 
@@ -1158,10 +1157,10 @@ class account_invoice(models.Model):
         return self.write({})
 
     @api.v7
-    def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, date_account, pay_journal_id,
+    def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, date, pay_journal_id,
                           writeoff_acc_id, writeoff_journal_id, context=None, name=''):
         recs = self.browse(cr, uid, ids, context)
-        return recs.pay_and_reconcile(pay_amount, pay_account_id, date_account, pay_journal_id,
+        return recs.pay_and_reconcile(pay_amount, pay_account_id, date, pay_journal_id,
                     writeoff_acc_id, writeoff_journal_id, name=name)
 
 class account_invoice_line(models.Model):
