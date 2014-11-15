@@ -10,22 +10,14 @@
         start: function () {
             var self = this;
             self.$target.attr('contentEditable', 'false');
-            var $btn = $('<a href="#" class="btn btn-default btn-sm search_contact" title="Search Contact">&nbsp;<i class="fa fa-search"></i>&nbsp;</a>');
+            var $btn = $('<div class="dropdown"><a href="#" class="btn btn-default btn-sm search_contact dropdown-toggle" data-toggle="dropdown" title="Search Contact">&nbsp;<i class="fa fa-search"></i>&nbsp;</a></div>');
             self.$overlay.find('.oe_options').after($btn);
-            var $input =$('<div class="dropdown"><input type="email"  class="xxx dropdown-toggle" data-toggle="dropdown" placeholder="Search contact"></div>');
-            self.$overlay.find('.oe_options').after($input);
-            $('.xxx').on('click', function () {
-                $('.xxx').focus();
+            
+            $('.search_contact').on('click', function () {
                 self.$el.find(".contact_menu").remove();
                 self.name = $('.xxx').val();
                 self.find_existing();
-
             });
-            // $('.search_contact').on('click', function () {
-            //     //console.log($('.xxx').val());
-            //     self.name = $('.xxx').val();
-            //     self.find_existing();
-            // });
         },
 
         find_existing: function () {
@@ -45,8 +37,10 @@
                 }
             }).then(function (result){
                 console.log(result);
-                $(".xxx").after(QWeb.render("blog_contact_search",{contacts:result}));
+                $(".search_contact").after(QWeb.render("blog_contact_search",{contacts:result}));
 
+            }).then(function (){
+                $('.xxx').focus();
             });
         }
 
