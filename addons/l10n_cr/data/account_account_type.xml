@@ -24,7 +24,7 @@
             <field name="code">Eq</field>
             <field name="name">Equity</field>
             <field name="report_type">liability</field>
-            <field name="close_method">detail</field>
+            <field name="close_method">balance</field>
         </record>
         <record id="account_account_type_expense" model="account.account.type">
             <field name="code">Ex</field>
@@ -44,17 +44,17 @@
         <record id="account_account_type_payable" model="account.account.type">
             <field name="code">Pay</field>
             <field name="name">Payable</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
         <record id="account_account_type_receivable" model="account.account.type">
             <field name="code">R</field>
             <field name="name">Receivable</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
         <record id="account_account_type_tax" model="account.account.type">
             <field name="code">T</field>
             <field name="name">Tax</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
         <record id="account_account_type_view" model="account.account.type">
             <field name="code">V</field>

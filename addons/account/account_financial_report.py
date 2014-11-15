@@ -52,7 +52,7 @@ class account_financial_report(models.Model):
             elif report.type == 'account_type':
                 # it's the sum the leaf accounts with such an account type
                 report_types = [x.id for x in report.account_type_ids]
-                account_ids = AccountObj.search([('user_type', 'in', report_types), ('type', '!=', 'view')])
+                account_ids = AccountObj.search([('user_type', 'in', report_types)])
                 for a in account_ids:
                     for field in field_names:
                         res[report.id][field] += getattr(a, field)

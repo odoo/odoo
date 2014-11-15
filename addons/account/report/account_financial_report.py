@@ -81,8 +81,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     #if there are accounts to display, we add them to the lines with a level equals to their level in
                     #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
                     #financial reports for Assets, liabilities...)
-                    if report.display_detail == 'detail_flat' and account.type == 'view':
-                        continue
                     flag = False
                     vals = {
                         'name': account.code + ' ' + account.name,

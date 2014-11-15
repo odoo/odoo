@@ -12,14 +12,14 @@
         <field name="name">A Receber</field>
         <field name="code">receivable</field>
         <field name="report_type">income</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record model="account.account.type" id="user_type_payable" >
         <field name="name">A Pagar</field>
         <field name="code">payable</field>
         <field name="report_type">expense</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record model="account.account.type" id="user_type_income" >
@@ -40,7 +40,7 @@
         <field name="name">Impostos</field>
         <field name="code">tax</field>
         <field name="report_type">expense</field>
-        <field name="close_method">unreconciled</field>
+        <field name="close_method">balance</field>
     </record>
 
     <record model="account.account.type" id="user_type_cash">

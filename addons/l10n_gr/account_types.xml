@@ -5,13 +5,13 @@
         <record model="account.account.type" id="account_type_receivable" >
             <field name="name">Εισπρακτέα</field>
             <field name="code">receivable</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_payable" >
             <field name="name">Πληρωτέα</field>
             <field name="code">payable</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_view">
@@ -35,7 +35,7 @@
         <record model="account.account.type" id="account_type_tax">
             <field name="name">Φόρος</field>
             <field name="code">tax</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_cash">
@@ -65,7 +65,7 @@
         <record model="account.account.type" id="account_type_other">
             <field name="name">Άλλο</field>
             <field name="code">other</field>
-            <field name="close_method">unreconciled</field>
+            <field name="close_method">balance</field>
         </record>
 
     </data>

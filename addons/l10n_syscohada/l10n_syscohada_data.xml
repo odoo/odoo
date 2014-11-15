@@ -29,13 +29,13 @@
   <field name="name">Receivable</field> 
   <field name="code">receivable</field> 
   <field name="report_type">asset</field>
-  <field name="close_method">unreconciled</field> 
+  <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_payable">
   <field name="name">Payable</field> 
   <field name="code">payable</field> 
   <field name="report_type">liability</field>
-  <field name="close_method">unreconciled</field> 
+  <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_view">
   <field name="name">View</field> 
@@ -57,7 +57,7 @@
  <record model="account.account.type" id="account_type_tax">
   <field name="name">Tax</field> 
   <field name="code">tax</field> 
-  <field name="close_method">unreconciled</field> 
+  <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_cash">
   <field name="name">Cash</field> 

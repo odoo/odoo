@@ -21,13 +21,13 @@
              <field name="name">Çek</field>
              <field name="code">tr_check</field>
              <field name="report_type">asset</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
         <record id="tr_equity" model="account.account.type">
              <field name="name">Öz sermaye</field>
              <field name="code">tr_equity</field>
              <field name="report_type">liability</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
         <record id="tr_expense" model="account.account.type">
              <field name="name">Gider</field>
@@ -50,23 +50,23 @@
         <record id="tr_payable" model="account.account.type">
              <field name="name">Borç</field>
              <field name="code">tr_payable</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
         <record id="tr_receivable" model="account.account.type">
              <field name="name">Alacak</field>
              <field name="code">tr_receivable</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
         <record id="tr_tax" model="account.account.type">
              <field name="name">Vergi</field>
              <field name="code">tr_tax</field>
              <field name="report_type">expense</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
         <record id="tr_view" model="account.account.type">
              <field name="name">Görünüm</field>
              <field name="code">tr_view</field>
-             <field name="close_method">unreconciled</field>
+             <field name="close_method">balance</field>
          </record>
     </data>
  </openerp>

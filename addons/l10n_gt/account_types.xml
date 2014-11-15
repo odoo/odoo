@@ -18,7 +18,7 @@
             <record model="account.account.type" id="cuenta_cxc" >
           <field name="name">Cuentas por Cobrar</field>
           <field name="code">cxc</field>
-          <field name="close_method">unreconciled</field>
+          <field name="close_method">balance</field>
               <field name="report_type">asset</field>
         </record>
 
@@ -32,7 +32,7 @@
         <record model="account.account.type" id="cuenta_cxp" >
           <field name="name">Cuentas por Pagar</field>
           <field name="code">cxp</field>
-          <field name="close_method">unreconciled</field>
+          <field name="close_method">balance</field>
               <field name="report_type">liability</field>
         </record>
 

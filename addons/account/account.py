@@ -40,15 +40,14 @@ class account_payment_term(models.Model):
 
     @api.one
     def compute(self, value, date_ref=False):
-        if not date_ref:
-            date_ref = datetime.now().strftime('%Y-%m-%d')
+        date_ref = date_ref or datetime.now().strftime('%Y-%m-%d')
         amount = value
         result = []
         prec = self.env['decimal.precision'].precision_get('Account')
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
-            elif line.value == 'procent':
+            elif line.value == 'percent':
                 amt = round(value * (line.value_amount / 100.0), prec)
             elif line.value == 'balance':
                 amt = round(amount, prec)
@@ -65,18 +64,19 @@ class account_payment_term(models.Model):
         amount = reduce(lambda x,y: x+y[1], result, 0.0)
         dist = round(value-amount, prec)
         if dist:
-            result.append( (time.strftime('%Y-%m-%d'), dist) )
+            last_date = result and result[-1][0] or time.strftime('%Y-%m-%d')
+            result.append( (last_date, dist) )
         return result
 
 
 class account_payment_term_line(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _order = "value desc,days"
+    _order = "days"
 
     value = fields.Selection([
             ('balance', 'Balance'),
-            ('procent', 'Percent'),
+            ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Computation', required=True, default='balance',
         help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated.""")
@@ -90,7 +90,7 @@ class account_payment_term_line(models.Model):
     @api.one
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
-        if self.value == 'procent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
+        if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
             raise Warning(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 
@@ -101,13 +101,8 @@ class account_account_type(models.Model):
 
     name = fields.Char(string='Account Type', required=True, translate=True)
     code = fields.Char(string='Code', size=32, required=True, index=True)
-    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance'), ('unreconciled', 'Unreconciled')],
-        string='Deferral Method', required=True, default='none',
-        help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
-        'None' means that nothing will be done.
-        'Balance' will generally be used for cash accounts.
-        'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
-        'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year.""")
+    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
+        string='Deferral Method', required=True, default='none')
     report_type = fields.Selection([
         ('none','/'),
         ('income', _('Profit & Loss (Income account)')),
@@ -117,7 +112,6 @@ class account_account_type(models.Model):
         ],
         default='none',string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True)
     type = fields.Selection([
-        ('view', 'View'),
         ('other', 'Regular'),
         ('receivable', 'Receivable'),
         ('payable', 'Payable'),
@@ -125,7 +119,7 @@ class account_account_type(models.Model):
         ('consolidation', 'Consolidation'),
         ], string='Type', required=True, default='other',
         help="The 'Internal Type' is used for features available on "\
-        "different types of accounts: view can not have journal items, consolidation are accounts that "\
+        "different types of accounts: consolidation are accounts that "\
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations).")
     note = fields.Text(string='Description')
@@ -142,35 +136,13 @@ class account_account(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         context = dict(self._context or {})
-        pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
-                    continue
-                jour = self.env['account.journal'].browse(args[pos][2])
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
-                    continue
-                ids3 = map(lambda x: x.id, jour.type_control_ids)
-                ids1 = super(account_account, self).search([('user_type', 'in', ids3)])
-                ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
-            pos += 1
-
-        if context and context.has_key('consolidate_children'): #add consolidated children of accounts
-            ids = super(account_account, self).search(args, offset, limit,
-                order, count=count)
-            for consolidate_child in self.browse(context['account_id']).child_consol_ids:
-                ids.append(consolidate_child)
-            return ids
-
-        return super(account_account, self).search(args, offset, limit,
-                order, count=count)
+        if context.get('journal_id', False):
+            jour = self.env['account.journal'].browse(context['journal_id'])
+            if jour.account_control_ids:
+                args.append(('id', 'in', map(lambda x: x.id, jour.account_control_ids)))
+            if jour.type_control_ids:
+                args.append(('user_type', 'in',  map(lambda x: x.id, jour.type_control_ids)))
+        return super(account_account, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     def _get_children_and_consol(self):
@@ -280,12 +252,6 @@ class account_account(models.Model):
                     account.adjusted_balance = sums[account.id][adjusted_balance]
                     account.unrealized_gain_loss = sums[account.id][unrealized_gain_loss]
 
-    @api.depends('company_id', 'company_id.currency_id')
-    @api.multi
-    def _get_company_currency(self):
-        for account in self:
-            account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
-
     @api.one
     def _set_credit_debit(self, name, value):
         if self._context.get('config_invisible', True):
@@ -331,42 +297,31 @@ class account_account(models.Model):
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
-    type = fields.Selection(
-        [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], string="Internal Type", default='view')
+    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
-    financial_report_ids = fields.Many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', string='Financial Reports')
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Balance')
     credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'), string='Credit')
     debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'), string='Debit')
     foreign_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Foreign Balance',
         help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
+
     adjusted_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Adjusted Balance',
         help="Total amount (in Company currency) for transactions held in secondary currency for this account.")
     unrealized_gain_loss = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Unrealized Gain or Loss',
         help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions.")
+    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
+
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows reconciliation of journal items.")
-    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
-    shortcut = fields.Char(string='Shortcut', size=12)
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute='_get_company_currency')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
-    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
-    currency_mode = fields.Selection([('current', 'At Date'), ('average', 'Average Rate')],
-        default='current', string='Outgoing Currencies Rate',
-        help='This will select how the current currency rate for outgoing transactions is computed. '\
-            'In most countries the legal method is "average" but only a few software systems are able to '\
-            'manage this. So if you import from another software system you may have to use the rate at date. ' \
-            'Incoming transactions always use the rate at date.', \
-        required=True)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -374,43 +329,13 @@ class account_account(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        if not args:
-            args = []
-        args = args[:]
-        try:
-            if name and str(name).startswith('partner:'):
-                part_id = int(name.split(':')[1])
-                part = self.env['res.partner'].browse(part_id)
-                args += [('id', 'in', (part.property_account_payable.id, part.property_account_receivable.id))]
-                name = False
-            if name and str(name).startswith('type:'):
-                type = name.split(':')[1]
-                args += [('type', '=', type)]
-                name = False
-        except:
-            pass
+        args = args or []
+        domain = []
         if name:
-            if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                plus_percent = lambda n: n+'%'
-                code_op, code_conv = {
-                    'ilike': ('=ilike', plus_percent),
-                    'like': ('=like', plus_percent),
-                }.get(operator, (operator, lambda n: n))
-
-                accounts = self.search(['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
-
-                if not accounts and len(name.split()) >= 2:
-                    #Separating code and name of account for searching
-                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
-            else:
-                accounts = self.search(['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
-                # as negation want to restric, do if already have results
-                if accounts and len(name.split()) >= 2:
-                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2), ('id', 'in', accounts.ids)]+ args, limit=limit)
-        else:
-            accounts = self.search(args, limit=limit)
+            domain = ['|', ('code', '=ilike', name+'%'), ('name', operator, name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                domain = ['!'] + domain
+        accounts = self.search(domain+args, limit=limit)
         return accounts.name_get()
 
     @api.multi
@@ -418,7 +343,7 @@ class account_account(models.Model):
     def name_get(self):
         result = []
         for account in self:
-            name = account.name + ' ' + account.code
+            name = account.code + ' ' + account.name
             result.append((account.id, name))
         return result
 
@@ -429,36 +354,24 @@ class account_account(models.Model):
         return super(account_account, self).copy(default)
 
     @api.multi
-    def _check_moves(self, method):
+    def write(self, vals):
+        # Dont allow changing the company_id when account_move_line already exist
+        if vals.get('company_id', False):
+            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
+            for account in self:
+                if (account.company_id.id <> vals['company_id']) and move_lines:
+                    raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
+        return super(account_account, self).write(vals)
+
+    @api.multi
+    def unlink(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
-            if method == 'write':
-                raise Warning(_('You cannot deactivate an account that contains journal items.'))
-            elif method == 'unlink':
-                raise Warning(_('You cannot remove an account that contains journal items.'))
+            raise Warning(_('You cannot do that on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
         if partner_prop_acc:
             raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
-        return True
-
-    @api.multi
-    def write(self, vals):
-        # Dont allow changing the company_id when account_move_line already exist
-        if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            if move_lines:
-                # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(['company_id'])]:
-                    if vals['company_id']!=i:
-                        raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
-        if 'deprecated' in vals and not vals['deprecated']:
-            self._check_moves('write')
-        return super(account_account, self).write(vals)
-
-    @api.multi
-    def unlink(self):
-        self._check_moves('unlink')
         return super(account_account, self).unlink()
 
 
@@ -467,8 +380,6 @@ class account_journal(models.Model):
     _description = "Journal"
     _order = 'code'
 
-    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
-        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
@@ -502,26 +413,27 @@ class account_journal(models.Model):
         help="If this box is checked, the system will try to group the accounting lines when generating them from invoices.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
-    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user,
-        help="The user responsible for this journal")
+
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
     entry_posted = fields.Boolean(string='Autopost Created Moves',
         help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.')
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
-    allow_date = fields.Boolean(string='Check Date in Period',
-        help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period')
+
+    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+
+    # Fields related to bank or cash registers
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)])
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)])
     internal_account_id = fields.Many2one('account.account', string='Internal Transfers Account', index=True, domain=[('deprecated', '=', False)])
     cash_control = fields.Boolean(string='Cash Control', default=False,
         help='If you want the journal should be control at opening/closing, check this option')
-    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
+        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
-        ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
 
     @api.one
@@ -529,9 +441,9 @@ class account_journal(models.Model):
     def _check_currency(self):
         if self.currency:
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
+                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
+                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
 
     @api.one
     def copy(self, default=None):
@@ -545,19 +457,15 @@ class account_journal(models.Model):
     def write(self, vals):
         for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1)
-                if move_lines:
+                if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
 
     @api.model
-    def create_sequence(self, vals):
+    def _create_sequence(self, vals):
         """ Create new no_gap entry sequence for every new Joural
         """
-        # in account.journal code is actually the prefix of the sequence
-        # whereas ir.sequence code is a key to lookup global sequences.
-        prefix = vals['code'].upper()
-
+        prefix = vals['code'].upper()[:4]
         seq = {
             'name': vals['name'],
             'implementation':'no_gap',
@@ -571,10 +479,8 @@ class account_journal(models.Model):
 
     @api.model
     def create(self, vals):
-        if not 'sequence_id' in vals or not vals['sequence_id']:
-            # if we have the right to create a journal, we should be able to
-            # create it's sequence.
-            vals.update({'sequence_id': self.sudo().create_sequence(vals).id})
+        if not vals.get('sequence_id', False):
+            vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         return super(account_journal, self).create(vals)
 
     @api.multi
@@ -593,24 +499,10 @@ class account_journal(models.Model):
         """
         res = []
         for journal in self:
-            if journal.currency:
-                currency = journal.currency
-            else:
-                currency = journal.company_id.currency_id
+            currency = journal.currency or journal.company_id.currency_id
             name = "%s (%s)" % (journal.name, currency.name)
             res += [(journal.id, name)]
         return res
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        recs = self.search(expression.AND([domain, args]), limit=limit)
-        return recs.name_get()
-
 
 class account_fiscalyear(models.Model):
     _name = "account.fiscalyear"
@@ -622,8 +514,6 @@ class account_fiscalyear(models.Model):
     date_start = fields.Date(string='Start Date', required=True)
     date_stop = fields.Date(string='End Date', required=True)
     state = fields.Selection([('draft','Open'), ('done','Closed')], string='Status', readonly=True, copy=False, default='draft')
-    end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
-        readonly=True, copy=False)
     freeze_date = fields.Date(string='Freeze Date')
 
     @api.one
@@ -631,33 +521,6 @@ class account_fiscalyear(models.Model):
     def _check_duration(self):
         if self.date_stop < self.date_start:
             raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
-
-    @api.model
-    def find(self, dt=None, exception=True):
-        res = self.finds(dt, exception)
-        return res and res[0] or False
-
-    @api.model
-    def finds(self, dt=None, exception=True):
-        if not dt:
-            dt = fields.Date.context_today(self)
-        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if self._context.get('company_id', False):
-            company_id = self._context['company_id']
-        else:
-            company_id = self.env.user.company_id.id
-        args.append(('company_id', '=', company_id))
-        recs = self.search(args)
-        if not recs:
-            if exception:
-                action = self.env.ref('account.action_account_fiscalyear')
-                msg = _('No accounting period is covering this date: %s.') % dt
-                raise RedirectWarning(msg, action, _(' Configure Fiscal Year Now'))
-            else:
-                return []
-        # Temporary not returning 'recs' itself because it breaks other methods where it is called.
-        return recs.ids
-
 
 #----------------------------------------------------------
 # Entries
@@ -1669,14 +1532,8 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    type = fields.Selection([('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], string='Internal Type', default='view')
-    financial_report_ids = fields.Many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id',
-        string='Financial Reports')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
-    shortcut = fields.Char(string='Shortcut', size=12)
     note = fields.Text(string='Note')
     tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
     nocreate = fields.Boolean(string='Optional Create', default=False,
@@ -1719,7 +1576,7 @@ class account_account_template(models.Model):
 
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
+            if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals={
                 'name': company_name or account_template.name,
@@ -1728,9 +1585,7 @@ class account_account_template(models.Model):
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
-                'shortcut': account_template.shortcut,
                 'note': account_template.note,
-                'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
@@ -1778,7 +1633,6 @@ class account_add_tmpl_wizard(models.TransientModel):
             'type': account_template.type,
             'user_type': account_template.user_type and account_template.user_type.id or False,
             'reconcile': account_template.reconcile,
-            'shortcut': account_template.shortcut,
             'note': account_template.note,
             'parent_id': data['cparent_id'][0],
             'company_id': company_id,
@@ -2054,8 +1908,8 @@ class account_fiscal_position_account_template(models.Model):
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account.template', string='Account Source', domain=[('type', '!=', 'view')], required=True)
-    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', domain=[('type', '!=', 'view')], required=True)
+    account_src_id = fields.Many2one('account.account.template', string='Account Source', required=True)
+    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', required=True)
 
 
 # ---------------------------------------------------------

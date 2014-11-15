@@ -94,7 +94,7 @@ class account_invoice(osv.osv, EDIMixin):
     def _edi_tax_account(self, cr, uid, invoice_type='out_invoice', context=None):
         #TODO/FIXME: should select proper Tax Account
         account_pool = self.pool.get('account.account')
-        account_ids = account_pool.search(cr, uid, [('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')])
+        account_ids = account_pool.search(cr, uid, [])
         tax_account = False
         if account_ids:
             tax_account = account_pool.browse(cr, uid, account_ids[0])

@@ -96,8 +96,8 @@ class account_analytic_profit(report_sxw.rml_parse):
                     price=price_obj.price_get(self.cr, self.uid, [pl], lid2.product_id.id, lid2.unit_amount or 1.0, lid2.account_id.partner_id.id)[pl]
                     tot += price * lid2.unit_amount * (1-(discount or 0.0))
                 if tot:
-                    procent = line.invoice_id.amount_untaxed / tot
-                    res[id]['amount'] +=  xxx * procent
+                    percent = line.invoice_id.amount_untaxed / tot
+                    res[id]['amount'] +=  xxx * percent
                 else:
                     res[id]['amount'] += xxx
             else:

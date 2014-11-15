@@ -787,17 +787,6 @@ class account_invoice(models.Model):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
-            if inv.payment_term:
-                total_fixed = total_percent = 0
-                for line in inv.payment_term.line_ids:
-                    if line.value == 'fixed':
-                        total_fixed += line.value_amount
-                    if line.value == 'procent':
-                        total_percent += line.value_amount
-                total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
-                if (total_fixed + total_percent) > 100:
-                    raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
-
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
 
@@ -1231,7 +1220,7 @@ class account_invoice_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='set null', index=True)
     account_id = fields.Many2one('account.account', string='Account',
-        required=True, domain=[('type', 'not in', ['view', 'closed']), ('deprecated', '=', False)],
+        required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
@@ -1452,7 +1441,7 @@ class account_invoice_tax(models.Model):
     name = fields.Char(string='Tax Description',
         required=True)
     account_id = fields.Many2one('account.account', string='Tax Account',
-        required=True, domain=[('type', 'not in', ['view', 'income', 'closed']), ('deprecated', '=', False)])
+        required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     base = fields.Float(string='Base', digits=dp.get_precision('Account'))
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
