@@ -90,7 +90,6 @@ class account_invoice(models.Model):
         'move_id.line_id.amount_residual',
         'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
-        'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
     )
     def _compute_residual(self):
         nb_inv_in_partial_rec = max_invoice_id = 0
@@ -103,14 +102,14 @@ class account_invoice(models.Model):
                     # ahem, shouldn't we use line.currency_id here?
                     from_currency = line.company_id.currency_id.with_context(date=line.date)
                     self.residual += from_currency.compute(line.amount_residual, self.currency_id)
-                # we check if the invoice is partially reconciled and if there
-                # are other invoices involved in this partial reconciliation
-                for pline in line.reconcile_partial_id.line_partial_ids:
-                    if pline.invoice and self.type == pline.invoice.type:
-                        nb_inv_in_partial_rec += 1
-                        # store the max invoice id as for this invoice we will
-                        # make a balance instead of a simple division
-                        max_invoice_id = max(max_invoice_id, pline.invoice.id)
+
+                # TODO: replace this by clean code based on partial payments
+                # for pline in line.reconcile_partial_id.line_partial_ids:
+                #     if pline.invoice and self.type == pline.invoice.type:
+                #         nb_inv_in_partial_rec += 1
+                #         # store the max invoice id as for this invoice we will
+                #         # make a balance instead of a simple division
+                #         max_invoice_id = max(max_invoice_id, pline.invoice.id)
         if nb_inv_in_partial_rec:
             # if there are several invoices in a partial reconciliation, we
             # split the residual by the number of invoices to have a sum of
@@ -130,7 +129,6 @@ class account_invoice(models.Model):
     @api.depends(
         'move_id.line_id.account_id',
         'move_id.line_id.reconcile_id.line_id',
-        'move_id.line_id.reconcile_partial_id.line_partial_ids',
     )
     def _compute_move_lines(self):
         # Give Journal Items related to the payment reconciled to this invoice.
@@ -143,8 +141,6 @@ class account_invoice(models.Model):
         for data_line in data_lines:
             if data_line.reconcile_id:
                 lines = data_line.reconcile_id.line_id
-            elif data_line.reconcile_partial_id:
-                lines = data_line.reconcile_partial_id.line_partial_ids
             else:
                 lines = self.env['account_move_line']
             partial_lines += data_line
@@ -153,7 +149,6 @@ class account_invoice(models.Model):
     @api.one
     @api.depends(
         'move_id.line_id.reconcile_id.line_id',
-        'move_id.line_id.reconcile_partial_id.line_partial_ids',
     )
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
@@ -162,8 +157,6 @@ class account_invoice(models.Model):
                 continue
             if line.reconcile_id:
                 lines |= line.reconcile_id.line_id
-            elif line.reconcile_partial_id:
-                lines |= line.reconcile_partial_id.line_partial_ids
             partial_lines += line
         self.payment_ids = (lines - partial_lines).sorted()
 
@@ -943,10 +936,9 @@ class account_invoice(models.Model):
         for inv in self:
             if inv.move_id:
                 moves += inv.move_id
-            if inv.payment_ids:
-                for move_line in inv.payment_ids:
-                    if move_line.reconcile_partial_id.line_partial_ids:
-                        raise except_orm(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+            # TODO: replace this by a clean code
+            # if has_partial_payments():
+            #     raise except_orm(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})

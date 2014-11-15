@@ -93,22 +93,6 @@ class account_move_line(models.Model):
                 sign = (move_line.debit - move_line.credit) < 0 and -1 or 1
             line_total_in_company_currency =  move_line.debit - move_line.credit
             context_unreconciled = context.copy()
-            if move_line.reconcile_partial_id:
-                for payment_line in move_line.reconcile_partial_id.line_partial_ids:
-                    if payment_line.id == move_line.id:
-                        continue
-                    if payment_line.currency_id and move_line.currency_id and payment_line.currency_id.id == move_line.currency_id.id:
-                            move_line_total += payment_line.amount_currency
-                    else:
-                        if move_line.currency_id:
-                            context_unreconciled.update({'date': payment_line.date})
-                            amount_in_foreign_currency = move_line.company_id.currency_id.with_context(context_unreconciled).compute(
-                                                                            move_line.currency_id.id, 
-                                                                            (payment_line.debit - payment_line.credit), round=False)
-                            move_line_total += amount_in_foreign_currency
-                        else:
-                            move_line_total += (payment_line.debit - payment_line.credit)
-                    line_total_in_company_currency += (payment_line.debit - payment_line.credit)
 
             result = move_line_total
             move_line.amount_residual_currency =  sign * (move_line.currency_id and move_line.currency_id.round(result) or result)
@@ -544,18 +528,6 @@ class account_move_line(models.Model):
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
                 raise Warning(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
-            if line.reconcile_partial_id:
-                for line2 in line.reconcile_partial_id.line_partial_ids:
-                    if line2.state != 'valid':
-                        raise Warning(_("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
-                    if not line2.reconcile_id:
-                        if line2.id not in merges:
-                            merges.append(line2)
-                        if line2.account_id.currency_id:
-                            total += line2.amount_currency
-                        else:
-                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
-                merges_rec.append(line.reconcile_partial_id)
             else:
                 unmerge.append(line)
                 if line.account_id.currency_id:
@@ -571,7 +543,6 @@ class account_move_line(models.Model):
         reconcile_context = dict(self._context, novalidate=True)
         r_id = move_rec_obj.with_context(reconcile_context).create({
             'type': type,
-            'line_partial_ids': map(lambda x: (4,x,False), [line.id for line in merges+unmerge])
         })
         recs = [r_id] + merges_rec
         recs.with_context(reconcile_context).reconcile_partial_check()
@@ -697,9 +668,7 @@ class account_move_line(models.Model):
         # to revalidate their moves completely.
         reconcile_context = dict(context, novalidate=True)
         r_id = self.env['account.move.reconcile'].with_context(reconcile_context).create({
-            'type': type,
             'line_id': map(lambda x: (4, x, False), self.ids),
-            'line_partial_ids': map(lambda x: (3, x, False), self.ids)
         })
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
@@ -733,7 +702,7 @@ class account_move_line(models.Model):
         return False
 
     @api.multi
-    def _remove_move_reconcile(self, opening_reconciliation=False):
+    def _remove_move_reconcile(self):
         # Function remove move rencocile ids related with moves
         obj_move_rec = self.env['account.move.reconcile']
         unlink_ids = []
@@ -748,9 +717,6 @@ class account_move_line(models.Model):
         all_moves = self.search(['|',('reconcile_id', 'in', unlink_ids),('reconcile_partial_id', 'in', unlink_ids)])
         all_moves = list(set(all_moves) - set(self))
         if unlink_ids:
-            if opening_reconciliation:
-                raise Warning(_('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
-                obj_move_rec.write(unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(unlink_ids)
             if len(all_moves) >= 2:
                 all_moves.reconcile_partial()

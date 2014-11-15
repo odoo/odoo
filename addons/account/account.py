@@ -569,9 +569,11 @@ class account_move(models.Model):
     def post(self):
         SequenceObj = self.env['ir.sequence']
         invoice = self._context.get('invoice', False)
-        valid_moves = self.validate()
+        self._post_validate()
 
-        for move in self.browse(valid_moves):
+        for move in self:
+            move.line_id.state = 'valid'
+            move.line_id.create_analytic_lines()
             if move.name =='/':
                 new_name = False
                 journal = move.journal_id
@@ -580,13 +582,12 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        ctx = {'fiscalyear_id': self.env['account.fiscalyear'].search([('date_start', '>=', move.date)])}
-                        new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
+                        new_name = SequenceObj.next_by_id(journal.sequence_id.id)
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
 
                 if new_name:
-                    move.write({'name':new_name})
+                    move.name = new_name
 
         self._cr.execute('UPDATE account_move '\
                    'SET state=%s '\
@@ -612,94 +613,17 @@ class account_move(models.Model):
         return True
 
     @api.multi
-    def write(self, vals):
-        context = dict(self._context or {})
-        c = context.copy()
-        c['novalidate'] = True
-        #Temporary workaround to get rid of Error: maximum recursion depth exceeded while calling a Python object.
-        # Not able directly write: super(account_move, self).with_context(c).write(vals)
-        self.with_context(c)
-        result = super(account_move, self).write(vals)
-        self.with_context(context)
-        return result
-
-    #
-    # TODO: Check if period is closed !
-    #
-    @api.model
-    def create(self, vals):
-        context = dict(self._context or {})
-        if vals.get('line_id'):
-            if vals.get('journal_id'):
-                for l in vals['line_id']:
-                    if not l[0]:
-                        l[2]['journal_id'] = vals['journal_id']
-                context['journal_id'] = vals['journal_id']
-            if 'date' in vals:
-                for l in vals['line_id']:
-                    if not l[0]:
-                        l[2]['date'] = vals['date']
-                context['date'] = vals['date']
-            else:
-                default_date = fields.Date.context_today(self)
-                for l in vals['line_id']:
-                    if not l[0]:
-                        l[2]['date'] = default_date
-                context['date'] = default_date
-
-            c = context.copy()
-            c['novalidate'] = True
-            c['date'] = vals['date'] if 'date' in vals else fields.Date.context_today(self)
-            c['journal_id'] = vals['journal_id']
-            if 'date' in vals: c['date'] = vals['date']
-            self.with_context(c)
-            if not vals['date']:
-                vals.update(date = fields.Date.context_today(self)) 
-            if not vals['journal_id']:
-                vals.update(journal_id = self.env['ir.model.data'].xmlid_to_res_id('account.bank_journal')) 
-            result = super(account_move, self).create(vals)
-            tmp = result.with_context(context).validate()
-            journal = self.env['account.journal'].with_context(context).browse(vals['journal_id'])
-            if journal.entry_posted and tmp:
-                result.with_context(context).button_validate()
-        else:
-            self.with_context(context)
-            result = super(account_move, self).create(vals)
-        return result
-
-    @api.multi
     def unlink(self, check=True):
-        context = dict(self._context or {})
-        toremove = []
         for move in self:
             if move['state'] != 'draft':
                 raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
-            move_lines = move.line_id
-            ctx = dict(context)
-            ctx['journal_id'] = move.journal_id.id
-            ctx['date'] = move.date
-            move_lines.with_context(ctx)._update_check()
-            move_lines.with_context(ctx).unlink()
-            toremove.append(move)
-        result = super(account_move, toremove).with_context(ctx).unlink()
-        return result
+            move_lines._update_check()
+            move_lines.unlink()
+        return super(account_move, self).unlink()
 
-    @api.one
-    def _compute_balance(self):
-        amount = 0
-        for line in self.line_id:
-            amount += (line.debit - line.credit)
-        return amount
-
-    #
-    # Validate a balanced move. If it is a centralised journal, create a move.
-    #
+    # TODO: check if date is not closed, otherwise raise exception
     @api.multi
-    def validate(self):
-        context = dict(self._context or {})
-        valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
-        obj_move_line = self.env['account.move.line']
-
+    def _post_validate(self):
         for move in self:
             amount = 0
             for line in move.line_id:
@@ -708,141 +632,24 @@ class account_move(models.Model):
                 raise Warning(_('You cannot validate a non-balanced entry.'))
             if not move.company_id.id == line.account_id.company_id.id:
                 raise Warning(_("Cannot create moves for different companies."))
-
-
-            journal = move.journal_id
-            amount = 0
-            lines = []
-            draft_lines = []
-            company_id = None
-            for line in move.line_id:
-                amount += line.debit - line.credit
-                lines.append(line)
-                if line.state=='draft':
-                    draft_lines.append(line)
-
-                if not company_id:
-                    company_id = line.account_id.company_id.id
-                if not company_id == line.account_id.company_id.id:
-                    raise Warning(_("Cannot create moves for different companies."))
-
-                if line.account_id.currency_id and line.currency_id:
-                    if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
-
-            if abs(amount) < 10 ** -4:
-                # If the move is balanced
-                # Add to the list of valid moves
-                # (analytic lines will be created later for valid moves)
-                valid_moves.append(move)
-
-                # Check whether the move lines are confirmed
-
-                if not draft_lines:
-                    continue
-                # Update the move lines (set them as valid)
-
-                # To get rid of Error : 'list' object has no attribute 'with_context'" while evaluating.
-                for line in draft_lines:
-                    line.with_context(context).write({'state': 'valid'}, check=False)
-
-                account = {}
-                account2 = {}
-
-                if journal.type in ('purchase','sale'):
-                    for line in move.line_id:
-                        code = amount = 0
-                        key = (line.account_id.id, line.tax_code_id.id)
-                        if key in account2:
-                            code = account2[key][0]
-                            amount = account2[key][1] * (line.debit + line.credit)
-                        elif line.account_id.id in account:
-                            code = account[line.account_id.id][0]
-                            amount = account[line.account_id.id][1] * (line.debit + line.credit)
-                        if (code or amount) and not (line.tax_code_id or line.tax_amount):
-                            line.with_context(context).write({
-                                'tax_code_id': code,
-                                'tax_amount': amount
-                            }, check=False)
-            # We can't validate it (it's unbalanced)
-            # Setting the lines as draft
-            not_draft_lines = list(set(lines) - set(draft_lines))
-            for line in not_draft_lines:
-                line.with_context(context).write({
-                    'state': 'draft'
-                }, check=False)
-        # Create analytic lines for the valid moves
-        for record in valid_moves:
-            record.line_id.with_context(context).create_analytic_lines()
-
-        valid_moves = [move.id for move in valid_moves]
-        return len(valid_moves) > 0 and valid_moves or False
-
+            if line.account_id.currency_id and line.currency_id:
+                if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
+                    raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
+        return True
 
 class account_move_reconcile(models.Model):
     _name = "account.move.reconcile"
     _description = "Account Reconciliation"
 
-    name = fields.Char(string='Name', required=True, default=lambda self: self.env['ir.sequence'].get('account.reconcile') or '/')
-    type = fields.Char(string='Type', required=True)
-    line_id = fields.One2many('account.move.line', 'reconcile_id', string='Entry Lines')
-    line_partial_ids = fields.One2many('account.move.line', 'reconcile_partial_id', string='Partial Entry lines')
-    create_date = fields.Date(string='Creation date', readonly=True)
-    opening_reconciliation = fields.Boolean(string='Opening Entries Reconciliation',
-        help="Is this reconciliation produced by the opening of a new fiscal year ?.")
+    name = fields.Char(string='Reconciliation Ref', required=True, default=lambda self: self.env['ir.sequence'].get('account.reconcile') or '/')
+    line_id = fields.One2many('account.move.line', 'reconcile_id', string='Journal Items')
 
-    # You cannot unlink a reconciliation if it is a opening_reconciliation one,
-    # you should use the generate opening entries wizard for that
-    @api.multi
-    def unlink(self):
-        for move_rec in self:
-            if move_rec.opening_reconciliation:
-                raise Warning(_('You cannot unreconcile journal items if they has been generated by the \
-                                                        opening/closing fiscal year process.'))
-        return super(account_move_reconcile, self).unlink()
-    
-    # Look in the line_id and line_partial_ids to ensure the partner is the same or empty
-    # on all lines. We allow that only for opening/closing period
     @api.one
     @api.constrains('line_id')
     def _check_same_partner(self):
-        for reconcile in self:
-            move_lines = []
-            if not reconcile.opening_reconciliation:
-                if reconcile.line_id:
-                    first_partner = reconcile.line_id[0].partner_id.id
-                    move_lines = reconcile.line_id
-                elif reconcile.line_partial_ids:
-                    first_partner = reconcile.line_partial_ids[0].partner_id.id
-                    move_lines = reconcile.line_partial_ids
-                if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
-                    raise Warning(_('You can only reconcile journal items with the same partner.'))
-
-    @api.multi
-    def reconcile_partial_check(self, type='auto'):
-        total = 0.0
-        for rec in self:
-            for line in rec.line_partial_ids:
-                if line.account_id.currency_id:
-                    total += line.amount_currency
-                else:
-                    total += (line.debit or 0.0) - (line.credit or 0.0)
-            if not total:
-                rec.line_partial_ids.write({'reconcile_id': rec.id })
-        return True
-
-    @api.multi
-    @api.depends('name', 'line_partial_ids')
-    def name_get(self):
-        result = []
-        for r in self:
-            total = reduce(lambda y, t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
-            if total:
-                name = '%s (%.2f)' % (r.name, total)
-                result.append((r.id, name))
-            else:
-                result.append((r.id, r.name))
-        return result
+        first_partner = self.line_id and self.line_id[0].partner_id.id or False
+        if any([(line.partner_id.id != first_partner) for line in move_lines]):
+            raise Warning(_('You can only reconcile journal items with the same partner.'))
 
 
 #----------------------------------------------------------
