@@ -64,7 +64,8 @@ class account_payment_term(models.Model):
         amount = reduce(lambda x,y: x+y[1], result, 0.0)
         dist = round(value-amount, prec)
         if dist:
-            result.append( (time.strftime('%Y-%m-%d'), dist) )
+            last_date = result and result[-1][0] or time.strftime('%Y-%m-%d')
+            result.append( (last_date, dist) )
         return result
 
 
