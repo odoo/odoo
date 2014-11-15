@@ -40,15 +40,14 @@ class account_payment_term(models.Model):
 
     @api.one
     def compute(self, value, date_ref=False):
-        if not date_ref:
-            date_ref = datetime.now().strftime('%Y-%m-%d')
+        date_ref = date_ref or datetime.now().strftime('%Y-%m-%d')
         amount = value
         result = []
         prec = self.env['decimal.precision'].precision_get('Account')
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
-            elif line.value == 'procent':
+            elif line.value == 'percent':
                 amt = round(value * (line.value_amount / 100.0), prec)
             elif line.value == 'balance':
                 amt = round(amount, prec)
@@ -76,7 +75,7 @@ class account_payment_term_line(models.Model):
 
     value = fields.Selection([
             ('balance', 'Balance'),
-            ('procent', 'Percent'),
+            ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Computation', required=True, default='balance',
         help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated.""")
@@ -90,7 +89,7 @@ class account_payment_term_line(models.Model):
     @api.one
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
-        if self.value == 'procent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
+        if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
             raise Warning(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 

@@ -792,7 +792,7 @@ class account_invoice(models.Model):
                 for line in inv.payment_term.line_ids:
                     if line.value == 'fixed':
                         total_fixed += line.value_amount
-                    if line.value == 'procent':
+                    if line.value == 'percent':
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
