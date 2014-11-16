@@ -2,10 +2,16 @@
 <templates id="template" xml:space="preserve">
     <t t-name="blog_contact_search">
         <ul class="dropdown-menu contact_menu" role="menu">
-            <li><input type="email"  class="xxx" placeholder="Search contact"/></li>
+            <li class="zzz"><input type="email"  class="xxx" placeholder="Search contact"/></li>
             <t t-foreach="contacts" t-as="item">
-                <li><t t-esc="item.name"></t></li>
+                <li class="yyy"><t t-esc="item.name"></t></li>
             </t>
         </ul>
+    </t>
+
+    <t t-name="blog_contact_search_update">
+        <t t-foreach="contacts" t-as="item">
+            <li class="yyy"><t t-esc="item.name"></t></li>
+        </t>
     </t>
 </templates>

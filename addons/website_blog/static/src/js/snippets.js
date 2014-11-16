@@ -14,10 +14,11 @@
             self.$overlay.find('.oe_options').after($btn);
             
             $('.search_contact').on('click', function () {
-                self.$el.find(".contact_menu").remove();
+                $(".contact_menu").remove();
                 self.name = $('.xxx').val();
                 self.find_existing();
             });
+
         },
 
         find_existing: function () {
@@ -36,13 +37,42 @@
                     context: website.get_context(),
                 }
             }).then(function (result){
-                console.log(result);
                 $(".search_contact").after(QWeb.render("blog_contact_search",{contacts:result}));
 
             }).then(function (){
                 $('.xxx').focus();
+            }).then(function (){
+                $( ".xxx" ).keyup(function(e) {
+                        
+                    self.name = $('.xxx').val();
+                    self.update_existing();
+                });
+            });
+        },
+
+        update_existing: function () {
+            var self = this;
+            var domain = [];
+            console.log(self.name);
+            if (self.name && self.name.length) {
+                domain.push(['name', 'ilike', self.name]);
+            }
+                openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'res.partner',
+                method: 'search_read',
+                args: [domain, ['name']],
+                kwargs: {
+                    order: 'id desc',
+                    limit: 3,
+                    context: website.get_context(),
+                }
+            }).then(function (result){
+                $(".yyy").remove();
+                $(".zzz").after(QWeb.render("blog_contact_search_update",{contacts:result}));
+
             });
         }
+
 
     });
 
