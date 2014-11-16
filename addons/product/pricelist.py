@@ -24,6 +24,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import except_orm
 
 import openerp.addons.decimal_precision as dp
 
@@ -251,8 +252,11 @@ class product_pricelist(osv.osv):
             price = False
             rule_id = False
             for rule in items:
-                if 'uom' in context:
-                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
+                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
+                    try:
+                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
+                    except except_orm:
+                        qty_in_product_uom = qty
                 else:
                     qty_in_product_uom = qty
                 if rule.min_quantity and qty_in_product_uom<rule.min_quantity:

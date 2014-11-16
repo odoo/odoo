@@ -6653,23 +6653,20 @@ div.section > h2 {
   word-break: normal;
   word-wrap: normal;
 }
+.switchable .highlight.with-btn-clipboard pre {
+  padding-right: 50px;
+}
 /*
  * ZeroClipboard styles
  */
-.zero-clipboard {
+.highlight {
   position: relative;
-  display: none;
-}
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
-  }
 }
 .btn-clipboard {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 3;
   display: block;
   padding: 5px 8px;
   font-size: 12px;
@@ -6679,10 +6676,14 @@ div.section > h2 {
   border: 1px solid #e1e1e8;
   border-radius: 0 4px 0 4px;
 }
-.btn-clipboard-hover {
-  color: #fff;
-  background-color: #a24689;
-  border-color: #a24689;
+.btn-clipboard:focus {
+  outline: none;
+}
+.btn-clipboard.active {
+  background-color: #ffffad;
+  -webkit-transition: background-color 0.5s linear;
+  -o-transition: background-color 0.5s linear;
+  transition: background-color 0.5s linear;
 }
 img.align-center {
   display: block;
@@ -6755,6 +6756,9 @@ td.field-body > ul {
     content: "";
     width: 0;
     border-left: 1px solid #777777;
+  }
+  .stripe .highlight pre {
+    white-space: pre-wrap;
   }
 }
 .stripe .switcher {

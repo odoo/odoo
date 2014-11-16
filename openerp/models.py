@@ -516,7 +516,7 @@ class BaseModel(object):
         """
         def add(name, field):
             """ add `field` with the given `name` if it does not exist yet """
-            if name not in cls._columns and name not in cls._fields:
+            if name not in cls._fields:
                 cls._add_field(name, field)
 
         # cyclic import
@@ -700,50 +700,46 @@ class BaseModel(object):
                     pool._store_function[model].sort(key=lambda x: x[4])
 
     @classmethod
-    def _init_manual_fields(cls, pool, cr):
+    def _init_manual_fields(cls, cr):
         # Check whether the query is already done
-        if pool.fields_by_model is not None:
-            manual_fields = pool.fields_by_model.get(cls._name, [])
+        if cls.pool.fields_by_model is not None:
+            manual_fields = cls.pool.fields_by_model.get(cls._name, [])
         else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (cls._name, 'manual'))
             manual_fields = cr.dictfetchall()
 
         for field in manual_fields:
-            if field['name'] in cls._columns:
+            if field['name'] in cls._fields:
                 continue
             attrs = {
+                'manual': True,
                 'string': field['field_description'],
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
-                'domain': eval(field['domain']) if field['domain'] else None,
-                'size': field['size'] or None,
-                'ondelete': field['on_delete'],
-                'translate': (field['translate']),
-                'manual': True,
-                '_prefetch': False,
-                #'select': int(field['select_level'])
             }
-            if field['serialization_field_id']:
-                cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
-                attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
-                if field['ttype'] in ['many2one', 'one2many', 'many2many']:
-                    attrs.update({'relation': field['relation']})
-                cls._columns[field['name']] = fields.sparse(**attrs)
-            elif field['ttype'] == 'selection':
-                cls._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
-            elif field['ttype'] == 'reference':
-                cls._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+            # FIXME: ignore field['serialization_field_id']
+            if field['ttype'] in ('char', 'text', 'html'):
+                attrs['translate'] = bool(field['translate'])
+                attrs['size'] = field['size'] or None
+            elif field['ttype'] in ('selection', 'reference'):
+                attrs['selection'] = eval(field['selection'])
             elif field['ttype'] == 'many2one':
-                cls._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+                attrs['comodel_name'] = field['relation']
+                attrs['ondelete'] = field['on_delete']
+                attrs['domain'] = eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'one2many':
-                cls._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+                attrs['comodel_name'] = field['relation']
+                attrs['inverse_name'] = field['relation_field']
+                attrs['domain'] = eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'many2many':
+                attrs['comodel_name'] = field['relation']
                 _rel1 = field['relation'].replace('.', '_')
                 _rel2 = field['model'].replace('.', '_')
-                _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                cls._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
-            else:
-                cls._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+                attrs['relation'] = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                attrs['column1'] = 'id1'
+                attrs['column2'] = 'id2'
+                attrs['domain'] = eval(field['domain']) if field['domain'] else None
+            cls._add_field(field['name'], Field.by_type[field['ttype']](**attrs))
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -756,12 +752,8 @@ class BaseModel(object):
         cls._onchange_methods = defaultdict(list)
         for attr, func in getmembers(cls, callable):
             if hasattr(func, '_constrains'):
-                if not all(name in cls._fields for name in func._constrains):
-                    _logger.warning("@constrains%r parameters must be field names", func._constrains)
                 cls._constraint_methods.append(func)
             if hasattr(func, '_onchange'):
-                if not all(name in cls._fields for name in func._onchange):
-                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
                 for name in func._onchange:
                     cls._onchange_methods[name].append(func)
 
@@ -815,38 +807,16 @@ class BaseModel(object):
         cls._fields = {}
         above = cls.__bases__[0]
         for attr, field in getmembers(above, Field.__instancecheck__):
-            if not field.inherited:
-                cls._add_field(attr, field.new())
+            cls._add_field(attr, field.new())
 
         # introduce magic fields
         cls._add_magic_fields()
 
         # register stuff about low-level function fields and custom fields
         cls._init_function_fields(pool, cr)
-        cls._init_manual_fields(pool, cr)
-
-        # process _inherits
-        cls._inherits_check()
-        cls._inherits_reload()
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
-
-        # check defaults
-        for k in cls._defaults:
-            assert k in cls._fields, \
-                "Model %s has a default for nonexiting field %s" % (cls._name, k)
-
-        # restart columns
-        for column in cls._columns.itervalues():
-            column.restart()
-
-        # validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
 
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
@@ -2890,46 +2860,33 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _inherits_reload_src(cls):
-        """ Recompute the _inherit_fields mapping on each _inherits'd child model."""
-        for model in cls.pool.values():
-            if cls._name in model._inherits:
-                model._inherits_reload()
-
-    @classmethod
     def _inherits_reload(cls):
-        """ Recompute the _inherit_fields mapping.
+        """ Recompute the _inherit_fields mapping, and inherited fields. """
+        struct = {}
+        fields = {}
+        for parent_model, parent_field in cls._inherits.iteritems():
+            parent = cls.pool[parent_model]
+            # old-api struct for _inherit_fields
+            for name, column in parent._columns.iteritems():
+                struct[name] = (parent_model, parent_field, column, parent_model)
+            for name, source in parent._inherit_fields.iteritems():
+                struct[name] = (parent_model, parent_field, source[2], source[3])
+            # new-api fields for _fields
+            for name, field in parent._fields.iteritems():
+                fields[name] = field.new(
+                    inherited=True,
+                    related=(parent_field, name),
+                    related_sudo=False,
+                )
 
-        This will also call itself on each inherits'd child model.
-
-        """
-        res = {}
-        for table in cls._inherits:
-            other = cls.pool[table]
-            for col in other._columns.keys():
-                res[col] = (table, cls._inherits[table], other._columns[col], table)
-            for col in other._inherit_fields.keys():
-                res[col] = (table, cls._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
-        cls._inherit_fields = res
+        # old-api stuff
+        cls._inherit_fields = struct
         cls._all_columns = cls._get_column_infos()
 
-        # interface columns with new-style fields
-        for attr, column in cls._columns.items():
-            if attr not in cls._fields:
-                cls._add_field(attr, column.to_field())
-
-        # interface inherited fields with new-style fields (note that the
-        # reverse order is for being consistent with _all_columns above)
-        for parent_model, parent_field in reversed(cls._inherits.items()):
-            for attr, field in cls.pool[parent_model]._fields.iteritems():
-                if attr not in cls._fields:
-                    cls._add_field(attr, field.new(
-                        inherited=True,
-                        related=(parent_field, attr),
-                        related_sudo=False,
-                    ))
-
-        cls._inherits_reload_src()
+        # add inherited fields that are not redefined locally
+        for name, field in fields.iteritems():
+            if name not in cls._fields:
+                cls._add_field(name, field)
 
     @classmethod
     def _get_column_infos(cls):
@@ -2969,33 +2926,71 @@ class BaseModel(object):
     @api.model
     def _prepare_setup_fields(self):
         """ Prepare the setup of fields once the models have been loaded. """
-        for field in self._fields.itervalues():
-            field.reset()
+        type(self)._setup_done = False
+        for name, field in self._fields.items():
+            if field.inherited:
+                del self._fields[name]
+            else:
+                field.reset()
 
     @api.model
-    def _setup_fields(self, partial=False):
+    def _setup_fields(self):
         """ Setup the fields (dependency triggers, etc). """
-        for field in self._fields.itervalues():
-            try:
-                field.setup(self.env)
-            except Exception:
-                if not partial:
-                    raise
+        cls = type(self)
+        if cls._setup_done:
+            return
+        cls._setup_done = True
 
-        # update columns (fields may have changed), and column_infos
-        for name, field in self._fields.iteritems():
+        # first make sure that parent models are all set up
+        for parent in self._inherits:
+            self.env[parent]._setup_fields()
+
+        # retrieve custom fields
+        if not self._context.get('_setup_fields_partial'):
+            cls._init_manual_fields(self._cr)
+
+        # retrieve inherited fields
+        cls._inherits_check()
+        cls._inherits_reload()
+
+        # set up fields
+        for field in cls._fields.itervalues():
+            field.setup(self.env)
+
+        # update columns (fields may have changed)
+        for name, field in cls._fields.iteritems():
             if field.column:
-                self._columns[name] = field.to_column()
-        self._inherits_reload()
+                cls._columns[name] = field.to_column()
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
-        for field in self._fields.itervalues():
+        for field in cls._fields.itervalues():
             if field.compute:
                 field.computed_fields = fields_by_compute[field.compute]
                 field.computed_fields.append(field)
             else:
                 field.computed_fields = []
+
+        # check constraints
+        for func in cls._constraint_methods:
+            if not all(name in cls._fields for name in func._constrains):
+                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+        for name in cls._onchange_methods:
+            if name not in cls._fields:
+                func = cls._onchange_methods[name]
+                _logger.warning("@onchange%r parameters must be field names", func._onchange)
+
+        # check defaults
+        for name in cls._defaults:
+            assert name in cls._fields, \
+                "Model %s has a default for nonexiting field %s" % (cls._name, name)
+
+        # validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ fields_get([fields])

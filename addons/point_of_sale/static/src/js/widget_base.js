@@ -1,5 +1,8 @@
 function openerp_pos_basewidget(instance, module){ //module is instance.point_of_sale
 
+    var round_di = instance.web.round_decimals;
+    var round_pr = instance.web.round_precision
+
     // This is a base class for all Widgets in the POS. It exposes relevant data to the 
     // templates : 
     // - widget.currency : { symbol: '$' | '€' | ..., position: 'before' | 'after }
@@ -15,30 +18,24 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             options = options || {};
             this.pos = options.pos || (parent ? parent.pos : undefined);
             this.pos_widget = options.pos_widget || (parent ? parent.pos_widget : undefined);
-            this.build_currency_template();
         },
-        build_currency_template: function(){
+        format_currency: function(amount,precision){
+            var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
+            var decimals = currency.decimals;
 
-            if(this.pos && this.pos.currency){
-                this.currency = this.pos.currency;
-            }else{
-                this.currency = {symbol: '$', position: 'after', rounding: 0.01};
+            if (precision && (typeof this.pos.dp[precision]) !== undefined) {
+                decimals = this.pos.dp[precision];
             }
 
-            var decimals = Math.max(0,Math.ceil(Math.log(1.0 / this.currency.rounding) / Math.log(10)));
-
-            this.format_currency = function(amount){
-                if(typeof amount === 'number'){
-                    amount = Math.round(amount*100)/100;
-                    amount = amount.toFixed(decimals);
-                }
-                if(this.currency.position === 'after'){
-                    return amount + ' ' + (this.currency.symbol || '');
-                }else{
-                    return (this.currency.symbol || '') + ' ' + amount;
-                }
+            if (typeof amount === 'number') {
+                amount = round_di(amount,decimals).toFixed(decimals);
             }
 
+            if (currency.position === 'after') {
+                return amount + ' ' + (currency.symbol || '');
+            } else {
+                return (currency.symbol || '') + ' ' + amount;
+            }
         },
         show: function(){
             this.$el.removeClass('oe_hidden');
