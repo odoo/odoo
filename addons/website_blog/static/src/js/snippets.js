@@ -9,13 +9,21 @@
     website.snippet.options.contact_editor = website.snippet.Option.extend({
         start: function () {
             var self = this;
+
+            // self.$el.on('click', 'a[data-action]', function(ev) {
+            //     ev.preventDefault();
+            //     self[$(this).data('action')](ev);
+            // });
+
             self.$target.attr('contentEditable', 'false');
-            var $btn = $('<div class="dropdown"><a href="#" class="btn btn-default btn-sm search_contact dropdown-toggle" data-toggle="dropdown" title="Search Contact">&nbsp;<i class="fa fa-search"></i>&nbsp;</a></div>');
+            var $btn = $('<div class="dropdown"><a href="#" class="btn btn-default btn-sm search_contact dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact">&nbsp;<i class="fa fa-search"></i>&nbsp;</a></div>');
             self.$overlay.find('.oe_options').after($btn);
             
             $('.search_contact').on('click', function (e) {
                 self.name = "";
                 self.find_existing();
+                console.log(self.$target[0].getAttribute('data-oe-id'));
+                //self.$target[0].innerHTML = 'OK';
 
             });
 
@@ -48,13 +56,17 @@
                     self.name = $('.xxx').val();
                     self.update_existing();
                 });
+                $('.yyy').on('click', function (e) {
+                var change_name = $(e.target).data("name");
+                    self.$target[0].innerHTML = change_name;
+
+                });
             });
         },
 
         update_existing: function () {
             var self = this;
             var domain = [];
-            console.log(self.name);
             if (self.name && self.name.length) {
                 domain.push(['name', 'ilike', self.name]);
             }
@@ -70,9 +82,21 @@
             }).then(function (result){
                 $(".yyy").remove();
                 $(".zzz").after(QWeb.render("blog_contact_search_update",{contacts:result}));
+                $('.yyy').on('click', function (e) {
+                    var change_name = $(e.target).data("name");
+                    self.$target[0].innerHTML = change_name;
+
+                });
 
             });
-        }
+        },
+
+        //'span .cke_widget_editable.cke_widget_element.oe_editable'
+
+        // change_name: function(event) {
+        //     var change_name = $(event.target).data("name");
+        //     console.log(change_name);
+        // },
 
 
     });
