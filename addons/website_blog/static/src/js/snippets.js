@@ -13,10 +13,11 @@
             var $btn = $('<div class="dropdown"><a href="#" class="btn btn-default btn-sm search_contact dropdown-toggle" data-toggle="dropdown" title="Search Contact">&nbsp;<i class="fa fa-search"></i>&nbsp;</a></div>');
             self.$overlay.find('.oe_options').after($btn);
             
-            $('.search_contact').on('click', function () {
-                $(".contact_menu").remove();
+            $('.search_contact').on('click', function (e) {
+                $('.contact_menu').remove();
                 self.name = $('.xxx').val();
                 self.find_existing();
+
             });
 
         },
@@ -37,13 +38,13 @@
                     context: website.get_context(),
                 }
             }).then(function (result){
-                $(".search_contact").after(QWeb.render("blog_contact_search",{contacts:result}));
+                $('div .dropdown.open').find('.search_contact').after(QWeb.render("blog_contact_search",{contacts:result}));
 
             }).then(function (){
                 $('.xxx').focus();
             }).then(function (){
                 $( ".xxx" ).keyup(function(e) {
-                        
+
                     self.name = $('.xxx').val();
                     self.update_existing();
                 });
