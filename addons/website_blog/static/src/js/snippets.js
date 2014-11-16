@@ -14,8 +14,7 @@
             self.$overlay.find('.oe_options').after($btn);
             
             $('.search_contact').on('click', function (e) {
-                $('.contact_menu').remove();
-                self.name = $('.xxx').val();
+                self.name = "";
                 self.find_existing();
 
             });
@@ -38,6 +37,7 @@
                     context: website.get_context(),
                 }
             }).then(function (result){
+                $('.contact_menu').remove();
                 $('div .dropdown.open').find('.search_contact').after(QWeb.render("blog_contact_search",{contacts:result}));
 
             }).then(function (){
