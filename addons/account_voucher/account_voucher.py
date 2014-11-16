@@ -29,18 +29,6 @@ from openerp.tools import float_compare
 from openerp.report import report_sxw
 import openerp
 
-class res_currency(osv.osv):
-    _inherit = "res.currency"
-
-    def _get_current_rate(self, cr, uid, ids, raise_on_no_rate=True, context=None):
-        if context is None:
-            context = {}
-        res = super(res_currency, self)._get_current_rate(cr, uid, ids, raise_on_no_rate, context=context)
-        if context.get('voucher_special_currency') in ids and context.get('voucher_special_currency_rate'):
-            res[context.get('voucher_special_currency')] = context.get('voucher_special_currency_rate')
-        return res
-
-
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -1538,5 +1526,3 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             results.append(result)
     return results
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
