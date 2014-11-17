@@ -440,6 +440,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
             });
             this.$el.find(".activity_row").on("click", this.on_row_click);
+            this.$el.find(".pt_duration_line").on("click", this.on_duration_click);
             this.$el.find(".pt_total").html(this.get_total());
         },
         hide: function() {
@@ -475,6 +476,49 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
             }
         },
+        on_duration_click: function(event) {
+            event.stopImmediatePropagation();
+            console.log("this.get_current_UTCDate() is ::: ", this.get_current_UTCDate());
+            console.log("Is hidden :::: ", this.$el.find(".pt_timer_start").hasClass("o_hidden"));
+            if (this.$el.find(".pt_timer_start").hasClass("o_hidden")) {
+                return;
+            }
+            var activity_id = $(event.currentTarget).data("activity_id");
+            var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
+            var hours = this.format_duration(activity.unit_amount);
+            console.log("hours is ::: ", hours);
+            var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
+            console.log("current_date is ::: ", current_date);
+            var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
+            this.project_timesheet_db.set_current_timer_activity(data_to_set);
+            this.$el.find(".pt_duration span.hours").text((hours[0] || 0));
+            this.$el.find(".pt_duration span.minutes").text((hours[1] || 0));
+            this.$el.find(".pt_duration span.seconds").text(0);
+            this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+            this.start_interval();
+            this.initialize_timer();
+            if (activity.project_id) {
+                var field_val = activity['project_id'];
+                this.project_m2o.set({display_string: field_val[1], value: field_val[0]});
+                this.project_m2o.display_string(field_val);
+            }
+            if (activity.task_id) {
+                var field_val = activity['task_id'];
+                this.task_m2o.set({display_string: field_val[1], value: field_val[0]});
+                this.task_m2o.display_string(field_val);
+            }
+        },
+        format_duration: function(field_val) {
+            var data = field_val.toString().split(".");
+            if (data[1]) {
+                data[1] = Math.round((field_val%1)*60);
+                if (data[1] == 60) {
+                    data[1] = 0;
+                    data[0] = parseInt(data[0]) + 1;
+                }
+            }
+            return data;
+        },
         get_pending_lines: function() {
             console.log("get_pending_lines are inside ActivityScreen ::: ");
             return this.project_timesheet_model.get_pending_records();
@@ -499,7 +543,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             console.log("Inside is_available_timer_activity ::: ", time_activity);
             if (time_activity && time_activity['date']) {
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
-                var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['date'])));
+                var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['timer_date'])));
                 console.log("difference is ::: ", durationObj, durationObj.asHours(), durationObj.asMinutes(), durationObj.asSeconds());
                 var hours = durationObj.asHours().toString().split('.')[0],
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
@@ -522,9 +566,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
             }
         },
-        //TODO: Save timer Current time when Start Timer is clicked in localstoprage as a separate entry
-        //When Activity list screen is displayed at that time read localstorage entry time and set timer value
-        //Also setInterval of 1 second
         initialize_timer: function() {
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Select a project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
@@ -553,7 +594,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             if ($(e.target).hasClass("pt_timer_start")) {
                 var current_date = this.get_current_UTCDate();
-                this.project_timesheet_db.set_current_timer_activity({date: current_date});
+                this.project_timesheet_db.set_current_timer_activity({date: current_date, timer_date: current_date});
                 this.start_interval();
                 this.initialize_timer();
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
@@ -564,13 +605,18 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
                 if (this.intervalTimer) { clearInterval(this.intervalTimer);}
                 var activity = this.project_timesheet_db.load("timer_activity");
-                //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
-                activity['id'] = this.project_timesheet_db.get_unique_id();
-                var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date) || 0.01;
+                var hours = this.get_date_diff(this.get_current_UTCDate(), activity.timer_date) || 0.01;
                 activity['unit_amount'] = hours;
-                activity['command'] = 0; //By default command = 0, activity which is to_create
+                console.log("activity.id is ::: ", activity.id);
+                if (!activity.id) {
+                    activity['id'] = this.project_timesheet_db.get_unique_id();
+                    activity['command'] = 0; //By default command = 0, activity which is to_create
+                } else {
+                    activity['command'] = 1;
+                }
                 this.project_timesheet_model.add_activity(activity);
                 this.project_timesheet_model.add_project(activity);
+                //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
                 this.reset_timer();
                 this.reload_activity_list();
