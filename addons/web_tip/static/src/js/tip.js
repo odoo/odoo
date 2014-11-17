@@ -90,13 +90,13 @@
             var model = formView.model;
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
-            formView.on('view_content_has_changed', self, function() {
+            formView.on('view_content_has_changed', self, _.once(function() {
                 self.eval_tip(null, model, mode, type);
-            });
+            }));
             if ($('.oe_chatter').length > 0) {
-                instance.web.bus.on('chatter_messages_fetched', this, function() {
+                instance.web.bus.on('chatter_messages_fetched', this, _.once(function () {
                     self.eval_tip(null, model, mode, type);
-                });
+                }));
             } else {
                 self.eval_tip(null, model, mode, type);
             }
