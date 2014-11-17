@@ -1201,6 +1201,7 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
+    type = fields.Selection(related='user_type.type', string='Type', store=True)
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text(string='Note')
