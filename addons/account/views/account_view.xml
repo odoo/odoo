@@ -981,7 +981,7 @@
                                         <field name="statement_id" readonly="True"/>
                                     </group>
                                     <group string="Dates">
-                                        <field name="date_created" readonly="True"/>
+                                        <field name="date" readonly="True"/>
                                         <field name="date_maturity"/>
                                     </group>
                                     <group string="Taxes">
@@ -989,7 +989,7 @@
                                         <field name="tax_amount"/>
                                         <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                     </group>
-                                    <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
+                                    <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </group>
@@ -998,7 +998,6 @@
                                         <field name="reconcile_partial_id"/>
                                     </group>
                                     <group string="States">
-                                        <field name="state"/>
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
@@ -1041,8 +1040,7 @@
                                 <field name="move_id" required="False"/>
                                 <newline/>
                                 <field name="date_maturity"/>
-                                <field name="date_created"/>
-                                <field name="date_created"/>
+                                <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
@@ -1051,7 +1049,6 @@
                                 <newline/>
                                 <field name="reconcile_id"/>
                                 <field name="reconcile_partial_id"/>
-                                <field name="state"/>
                             </group>
                         </page>
                         <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
@@ -1083,7 +1080,6 @@
                     <field name="reconcile_ref"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
-                    <field name="state" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -1164,7 +1160,7 @@
             <field eval="24" name="priority"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
+                <tree_account_reconciliation string="Journal Items to Reconcile" create="false">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1173,7 +1169,6 @@
                     <field name="account_id"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="reconcile_partial_id"/>
-                    <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                 </tree_account_reconciliation>
@@ -1271,7 +1266,7 @@
 
                                                 <group string="Dates">
                                                     <field name="date_maturity"/>
-                                                    <field name="date_created"/>
+                                                    <field name="date"/>
                                                 </group>
 
                                                 <group string="Taxes">
@@ -1291,7 +1286,6 @@
                                                 </group>
 
                                                 <group string="States">
-                                                    <field name="state"/>
                                                     <field name="blocked"/>
                                                 </group>
 
@@ -1307,7 +1301,7 @@
                                         </page>
                                     </notebook>
                                 </form>
-                                <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
+                                <tree editable="top" string="Journal Items">
                                     <field name="name"/>
                                     <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
                                     <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
@@ -1319,7 +1313,6 @@
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>
-                                    <field name="state"/>
                                     <field name="reconcile_id"/>
                                     <field name="reconcile_partial_id"/>
                                 </tree>
