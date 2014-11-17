@@ -56,8 +56,7 @@ class TableExporter(http.Controller):
     def get_all_versions(self, view_id):
         #To get all versions in the menu
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        view = request.registry['ir.ui.view']
-        v = view.browse(cr,uid, int(view_id), context=context)
+        v = request.registry['ir.ui.view'].browse(cr,uid, int(view_id), context=context)
         ver = request.registry['website_version.version']
         website_id = request.website.id
         ids = ver.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
@@ -86,19 +85,20 @@ class TableExporter(http.Controller):
     def publish_version(self, version_id, save_master, copy_master_name):
         #Info: there were some cache problems with browse, this is why the code is so long
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        obj_view = request.registry['ir.ui.view']
         obj = request.registry['website_version.version']
         version = obj.browse(cr, uid, int(version_id),context)
         del_l = []
         copy_l = []
         for view in version.view_ids:
-            master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
+            master_id = obj_view.search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             if master_id:
                 #Delete all the website views having a key which is in the version published
                 del_l += master_id
                 copy_l+= master_id
             else:
                 #Views that have no website_id, must be copied because they can be shared with another website
-                master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', False)],context=context)
+                master_id = obj_view.search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', False)],context=context)
                 copy_l+= master_id
         if copy_l:
             if save_master:
@@ -108,10 +108,10 @@ class TableExporter(http.Controller):
                 if check_id:
                     obj.unlink(cr, uid, check_id, context=context)
                 copy_version_id = obj.create(cr, uid, {'name' : copy_master_name, 'website_id' : version.website_id.id}, context=context)
-                for view in request.registry['ir.ui.view'].browse(cr, uid, copy_l, context=context):
+                for view in obj_view.browse(cr, uid, copy_l, context=context):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
             #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
-            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)
+            obj_view.unlink(cr, uid, del_l, context=context)
         #All the views in the version published are copied without version_id   
         for view in obj.browse(cr, uid, int(version_id),context).view_ids:
             view.copy({'version_id': None}, context=context)
@@ -157,7 +157,7 @@ class TableExporter(http.Controller):
 
         client_id = gs_obj.get_client_id(request.cr, request.uid, 'management', context=kw.get('local_context'))
         client_secret = gs_obj.get_client_secret(request.cr, request.uid, 'management', context=kw.get('local_context'))
-        if not client_id or client_id == '' or not client_secret or client_secret == '':
+        if not client_id or not client_secret:
             dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'website_version', 'action_config_settings_google_management')
             return {
                 "status": "need_config_from_admin",
