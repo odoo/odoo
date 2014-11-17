@@ -305,6 +305,7 @@ class account_account(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
+    type = fields.Selection(related='user_type.type', string='Type', store=True)
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Balance')
     credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'), string='Credit')
