@@ -421,10 +421,31 @@ added.
     is not written to the database, just used to know which value to send back
     to the client
 
+Low-level SQL
+-------------
+
+The :attr:`~openerp.api.Environment.cr` attribute on environments is the
+cursor for the current database transaction and allows executing SQL directly,
+either for queries which are difficult to express using the ORM (e.g. complex
+joins) or for performance reasons::
+
+    self.env.cr.execute("some_sql", param1, param2, param3)
+
+Because models use the same cursor and the :class:`~openerp.api.Environment`
+holds various caches, these caches must be invalidated when *altering* the
+database in raw SQL, or further uses of models may become incoherent. It is
+necessary to clear caches when using ``CREATE``, ``UPDATE`` or ``DELETE`` in
+SQL, but not ``SELECT`` (which simply reads the database).
+
+Clearing caches can be performed using the
+:meth:`~openerp.api.Environment.invalidate_all` method of the
+:class:`~openerp.api.Environment` object.
+
+
 .. _reference/orm/oldapi:
 
 Old API compatibility
----------------------
+=====================
 
 Odoo is currently transitioning from an older (less regular) API, it can be
 necessary to manually bridge from one to the other manually:
@@ -507,170 +528,6 @@ return lists of ids, there is also a decorator managing this:
         >>> old_style_model = pool['a.model']
         >>> old_style_model.some_method(cr, uid, [1, 2, 3], context=context)
         [1, 2, 3]
-
-Porting from the old API
-------------------------
-
-* methods still written in the old API should be automatically bridged by the
-  ORM, no need to switch to the old API, just call them as if they were a new
-  API method. See :ref:`reference/orm/oldapi/bridging` for more details.
-* ``search`` returns a recordset, no point in e.g. browsing its result
-* ``fields.related`` and ``fields.function`` are replaced by using a normal
-  field type with either a ``related`` or a ``compute`` parameter
-* ``depends`` on field compute methods **must be complete**, it must list
-  **all** the fields and sub-fields which the compute method uses. It is
-  better to have too many dependencies (will recompute the field in cases
-  where that is not needed) than not enough (will forget to recompute the
-  field and then values will be incorrect)
-* **remove** all ``onchange`` methods on computed fields. Computed fields are
-  automatically re-computed when one of their dependencies is changed, and
-  that is used to auto-generate ``onchange`` by the client
-* the decorators :func:`~openerp.api.model` and :func:`~openerp.api.multi` are
-  for bridging *when calling from the old API context*, for internal or pure
-  new-api (e.g. compute) they are useless
-* remove :attr:`~openerp.models.Model._default`, replace by ``default=``
-  parameter on corresponding fields
-* if a field's ``string`` is the titlecased version of the field name::
-
-    name = fields.Char(string="Name")
-
-  it is useless and should be removed
-* ``multi`` does not do anything on new API fields use the same ``compute``
-  methods on all relevant fields for the same result
-* provide ``compute``, ``inverse`` and ``search`` methods by name (as a
-  string), this makes them overridable (removes the need for an intermediate
-  "trampoline" function)
-* double check that all fields and methods have different names, there is no
-  warning in case of collision (because Python handles it before Odoo sees
-  anything)
-* the normal new-api import is ``from openerp import fields, models``. If
-  compatibility decorators are necessary, use ``from openerp import api,
-  fields, models``
-* avoid the :func:`~openerp.api.one` decorator, it probably does not do what
-  you expect
-* remove explicit definition of :attr:`~openerp.models.Model.create_uid`,
-  :attr:`~openerp.models.Model.create_date`,
-  :attr:`~openerp.models.Model.write_uid` and
-  :attr:`~openerp.models.Model.write_date` fields: they are now created as
-  regular "legitimate" fields, and can be read and written like any other
-  field out-of-the-box
-* when straight conversion is impossible (semantics can not be bridged) or the
-  "old API" version is not desirable and could be improved for the new API, it
-  is possible to use completely different "old API" and "new API"
-  implementations for the same method name using :func:`~openerp.api.v7` and
-  :func:`~openerp.api.v8`. The method should first be defined using the
-  old-API style and decorated with :func:`~openerp.api.v7`, it should then be
-  re-defined using the exact same name but the new-API style and decorated
-  with :func:`~openerp.api.v8`. Calls from an old-API context will be
-  dispatched to the first implementation and calls from a new-API context will
-  be dispatched to the second implementation. One implementation can call (and
-  frequently does) call the other by switching context.
-
-  .. danger:: using these decorators makes methods extremely difficult to
-              override and harder to understand and document
-* uses of :attr:`~openerp.models.Model._columns` or
-  :attr:`~openerp.models.Model._all_columns` should be replaced by
-  :attr:`~openerp.models.Model._fields`, which provides access to instances of
-  new-style :class:`openerp.fields.Field` instances (rather than old-style
-  :class:`openerp.osv.fields._column`).
-
-  Non-stored computed fields created using the new API style are *not*
-  available in :attr:`~openerp.models.Model._columns` and can only be
-  inspected through :attr:`~openerp.models.Model._fields`
-* reassigning ``self`` in a method is probably unnecessary and may break
-  translation introspection
-* :class:`~openerp.api.Environment` objects rely on some threadlocal state,
-  which has to be set up before using them. It is necessary to do so using the
-  :meth:`openerp.api.Environment.manage` context manager when trying to use
-  the new API in contexts where it hasn't been set up yet, such as new threads
-  or a Python interactive environment::
-
-    >>> from openerp import api, modules
-    >>> r = modules.registry.RegistryManager.get('test')
-    >>> cr = r.cursor()
-    >>> env = api.Environment(cr, 1, {})
-    Traceback (most recent call last):
-      ...
-    AttributeError: environments
-    >>> with api.Environment.manage():
-    ...     env = api.Environment(cr, 1, {})
-    ...     print env['res.partner'].browse(1)
-    ...
-    res.partner(1,)
-
-.. _reference/orm/oldapi/bridging:
-
-Automatic bridging of old API methods
-'''''''''''''''''''''''''''''''''''''
-
-When models are initialized, all methods are automatically scanned and bridged
-if they look like models declared in the old API style. This bridging makes
-them transparently callable from new-API-style methods.
-
-Methods are matched as "old-API style" if their second positional parameter
-(after ``self``) is called either ``cr`` or ``cursor``. The system also
-recognizes the third positional parameter being called ``uid`` or ``user`` and
-the fourth being called ``id`` or ``ids``. It also recognizes the presence of
-any parameter called ``context``.
-
-When calling such methods from a new API context, the system will
-automatically fill matched parameters from the current
-:class:`~openerp.api.Environment` (for :attr:`~openerp.api.Environment.cr`,
-:attr:`~openerp.api.Environment.user` and
-:attr:`~openerp.api.Environment.context`) or the current recordset (for ``id``
-and ``ids``).
-
-In the rare cases where it is necessary, the bridging can be customized by
-decorating the old-style method:
-
-* disabling it entirely, by decorating a method with
-  :func:`~openerp.api.noguess` there will be no bridging and methods will be
-  called the exact same way from the new and old API styles
-* defining the bridge explicitly, this is mostly for methods which are matched
-  incorrectly (because parameters are named in unexpected ways):
-
-  :func:`~openerp.api.cr`
-     will automatically prepend the current cursor to explicitly provided
-     parameters, positionally
-  :func:`~openerp.api.cr_uid`
-     will automatically prepend the current cursor and user's id to explictly
-     provided parameters
-  :func:`~openerp.api.cr_uid_ids`
-     will automatically prepend the current cursor, user's id and recordset's
-     ids to explicitly provided parameters
-  :func:`~openerp.api.cr_uid_id`
-     will loop over the current recordset and call the method once for each
-     record, prepending the current cursor, user's id and record's id to
-     explicitly provided parameters.
-
-     .. danger:: the result of this wrapper is *always a list* when calling
-                 from a new-API context
-
-  All of these methods have a ``_context``-suffixed version
-  (e.g. :func:`~openerp.api.cr_uid_context`) which also passes the current
-  context *by keyword*.
-* dual implementations using :func:`~openerp.api.v7` and
-  :func:`~openerp.api.v8` will be ignored as they provide their own "bridging"
-
-Low-level SQL
--------------
-
-The :attr:`~openerp.api.Environment.cr` attribute on environments is the
-cursor for the current database transaction and allows executing SQL directly,
-either for queries which are difficult to express using the ORM (e.g. complex
-joins) or for performance reasons::
-
-    self.env.cr.execute("some_sql", param1, param2, param3)
-
-Because models use the same cursor and the :class:`~openerp.api.Environment`
-holds various caches, these caches must be invalidated when *altering* the
-database in raw SQL, or further uses of models may become incoherent. It is
-necessary to clear caches when using ``CREATE``, ``UPDATE`` or ``DELETE`` in
-SQL, but not ``SELECT`` (which simply reads the database).
-
-Clearing caches can be performed using the
-:meth:`~openerp.api.Environment.invalidate_all` method of the
-:class:`~openerp.api.Environment` object.
 
 .. _reference/orm/model:
 
@@ -1168,3 +1025,147 @@ Domain criteria can be combined using logical operators in *prefix* form:
             (name is 'ABC')
         AND (language is NOT english)
         AND (country is Belgium OR Germany)
+
+Porting from the old API
+========================
+
+* methods still written in the old API should be automatically bridged by the
+  ORM, no need to switch to the old API, just call them as if they were a new
+  API method. See :ref:`reference/orm/oldapi/bridging` for more details.
+* ``search`` returns a recordset, no point in e.g. browsing its result
+* ``fields.related`` and ``fields.function`` are replaced by using a normal
+  field type with either a ``related`` or a ``compute`` parameter
+* ``depends`` on field compute methods **must be complete**, it must list
+  **all** the fields and sub-fields which the compute method uses. It is
+  better to have too many dependencies (will recompute the field in cases
+  where that is not needed) than not enough (will forget to recompute the
+  field and then values will be incorrect)
+* **remove** all ``onchange`` methods on computed fields. Computed fields are
+  automatically re-computed when one of their dependencies is changed, and
+  that is used to auto-generate ``onchange`` by the client
+* the decorators :func:`~openerp.api.model` and :func:`~openerp.api.multi` are
+  for bridging *when calling from the old API context*, for internal or pure
+  new-api (e.g. compute) they are useless
+* remove :attr:`~openerp.models.Model._default`, replace by ``default=``
+  parameter on corresponding fields
+* if a field's ``string`` is the titlecased version of the field name::
+
+    name = fields.Char(string="Name")
+
+  it is useless and should be removed
+* ``multi`` does not do anything on new API fields use the same ``compute``
+  methods on all relevant fields for the same result
+* provide ``compute``, ``inverse`` and ``search`` methods by name (as a
+  string), this makes them overridable (removes the need for an intermediate
+  "trampoline" function)
+* double check that all fields and methods have different names, there is no
+  warning in case of collision (because Python handles it before Odoo sees
+  anything)
+* the normal new-api import is ``from openerp import fields, models``. If
+  compatibility decorators are necessary, use ``from openerp import api,
+  fields, models``
+* avoid the :func:`~openerp.api.one` decorator, it probably does not do what
+  you expect
+* remove explicit definition of :attr:`~openerp.models.Model.create_uid`,
+  :attr:`~openerp.models.Model.create_date`,
+  :attr:`~openerp.models.Model.write_uid` and
+  :attr:`~openerp.models.Model.write_date` fields: they are now created as
+  regular "legitimate" fields, and can be read and written like any other
+  field out-of-the-box
+* when straight conversion is impossible (semantics can not be bridged) or the
+  "old API" version is not desirable and could be improved for the new API, it
+  is possible to use completely different "old API" and "new API"
+  implementations for the same method name using :func:`~openerp.api.v7` and
+  :func:`~openerp.api.v8`. The method should first be defined using the
+  old-API style and decorated with :func:`~openerp.api.v7`, it should then be
+  re-defined using the exact same name but the new-API style and decorated
+  with :func:`~openerp.api.v8`. Calls from an old-API context will be
+  dispatched to the first implementation and calls from a new-API context will
+  be dispatched to the second implementation. One implementation can call (and
+  frequently does) call the other by switching context.
+
+  .. danger:: using these decorators makes methods extremely difficult to
+              override and harder to understand and document
+* uses of :attr:`~openerp.models.Model._columns` or
+  :attr:`~openerp.models.Model._all_columns` should be replaced by
+  :attr:`~openerp.models.Model._fields`, which provides access to instances of
+  new-style :class:`openerp.fields.Field` instances (rather than old-style
+  :class:`openerp.osv.fields._column`).
+
+  Non-stored computed fields created using the new API style are *not*
+  available in :attr:`~openerp.models.Model._columns` and can only be
+  inspected through :attr:`~openerp.models.Model._fields`
+* reassigning ``self`` in a method is probably unnecessary and may break
+  translation introspection
+* :class:`~openerp.api.Environment` objects rely on some threadlocal state,
+  which has to be set up before using them. It is necessary to do so using the
+  :meth:`openerp.api.Environment.manage` context manager when trying to use
+  the new API in contexts where it hasn't been set up yet, such as new threads
+  or a Python interactive environment::
+
+    >>> from openerp import api, modules
+    >>> r = modules.registry.RegistryManager.get('test')
+    >>> cr = r.cursor()
+    >>> env = api.Environment(cr, 1, {})
+    Traceback (most recent call last):
+      ...
+    AttributeError: environments
+    >>> with api.Environment.manage():
+    ...     env = api.Environment(cr, 1, {})
+    ...     print env['res.partner'].browse(1)
+    ...
+    res.partner(1,)
+
+.. _reference/orm/oldapi/bridging:
+
+Automatic bridging of old API methods
+-------------------------------------
+
+When models are initialized, all methods are automatically scanned and bridged
+if they look like models declared in the old API style. This bridging makes
+them transparently callable from new-API-style methods.
+
+Methods are matched as "old-API style" if their second positional parameter
+(after ``self``) is called either ``cr`` or ``cursor``. The system also
+recognizes the third positional parameter being called ``uid`` or ``user`` and
+the fourth being called ``id`` or ``ids``. It also recognizes the presence of
+any parameter called ``context``.
+
+When calling such methods from a new API context, the system will
+automatically fill matched parameters from the current
+:class:`~openerp.api.Environment` (for :attr:`~openerp.api.Environment.cr`,
+:attr:`~openerp.api.Environment.user` and
+:attr:`~openerp.api.Environment.context`) or the current recordset (for ``id``
+and ``ids``).
+
+In the rare cases where it is necessary, the bridging can be customized by
+decorating the old-style method:
+
+* disabling it entirely, by decorating a method with
+  :func:`~openerp.api.noguess` there will be no bridging and methods will be
+  called the exact same way from the new and old API styles
+* defining the bridge explicitly, this is mostly for methods which are matched
+  incorrectly (because parameters are named in unexpected ways):
+
+  :func:`~openerp.api.cr`
+     will automatically prepend the current cursor to explicitly provided
+     parameters, positionally
+  :func:`~openerp.api.cr_uid`
+     will automatically prepend the current cursor and user's id to explictly
+     provided parameters
+  :func:`~openerp.api.cr_uid_ids`
+     will automatically prepend the current cursor, user's id and recordset's
+     ids to explicitly provided parameters
+  :func:`~openerp.api.cr_uid_id`
+     will loop over the current recordset and call the method once for each
+     record, prepending the current cursor, user's id and record's id to
+     explicitly provided parameters.
+
+     .. danger:: the result of this wrapper is *always a list* when calling
+                 from a new-API context
+
+  All of these methods have a ``_context``-suffixed version
+  (e.g. :func:`~openerp.api.cr_uid_context`) which also passes the current
+  context *by keyword*.
+* dual implementations using :func:`~openerp.api.v7` and
+  :func:`~openerp.api.v8` will be ignored as they provide their own "bridging"
