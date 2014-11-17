@@ -26,7 +26,6 @@ class account_entries_report(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', readonly=True)
     move_state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status', readonly=True)
-    move_line_state = fields.Selection([('draft', 'Unbalanced'), ('valid', 'Valid')], string='State of Move Line', readonly=True)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconciliation number', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
@@ -86,7 +85,6 @@ class account_entries_report(models.Model):
                 l.date as date_created,
                 am.ref as ref,
                 am.state as move_state,
-                l.state as move_line_state,
                 l.reconcile_id as reconcile_id,
                 l.partner_id as partner_id,
                 l.product_id as product_id,
@@ -111,6 +109,5 @@ class account_entries_report(models.Model):
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
                 left join account_fiscalyear f on (f.date_start >= l.date and f.date_stop >= l.date)
-                where l.state != 'draft'
             )
         """)
