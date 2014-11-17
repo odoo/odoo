@@ -1032,14 +1032,15 @@ Porting from the old API
 * methods still written in the old API should be automatically bridged by the
   ORM, no need to switch to the old API, just call them as if they were a new
   API method. See :ref:`reference/orm/oldapi/bridging` for more details.
-* ``search`` returns a recordset, no point in e.g. browsing its result
+* :meth:`~openerp.models.Model.search` returns a recordset, no point in e.g.
+  browsing its result
 * ``fields.related`` and ``fields.function`` are replaced by using a normal
-  field type with either a ``related`` or a ``compute`` parameter
-* ``depends`` on field compute methods **must be complete**, it must list
-  **all** the fields and sub-fields which the compute method uses. It is
-  better to have too many dependencies (will recompute the field in cases
-  where that is not needed) than not enough (will forget to recompute the
-  field and then values will be incorrect)
+  field type with either a ``related=`` or a ``compute=`` parameter
+* :func:`~openerp.api.depends` on ``compute=`` methods **must be complete**,
+  it must list **all** the fields and sub-fields which the compute method
+  uses. It is better to have too many dependencies (will recompute the field
+  in cases where that is not needed) than not enough (will forget to recompute
+  the field and then values will be incorrect)
 * **remove** all ``onchange`` methods on computed fields. Computed fields are
   automatically re-computed when one of their dependencies is changed, and
   that is used to auto-generate ``onchange`` by the client
@@ -1048,14 +1049,14 @@ Porting from the old API
   new-api (e.g. compute) they are useless
 * remove :attr:`~openerp.models.Model._default`, replace by ``default=``
   parameter on corresponding fields
-* if a field's ``string`` is the titlecased version of the field name::
+* if a field's ``string=`` is the titlecased version of the field name::
 
     name = fields.Char(string="Name")
 
   it is useless and should be removed
-* ``multi`` does not do anything on new API fields use the same ``compute``
-  methods on all relevant fields for the same result
-* provide ``compute``, ``inverse`` and ``search`` methods by name (as a
+* the ``multi=`` parameter does not do anything on new API fields use the same
+  ``compute=`` methods on all relevant fields for the same result
+* provide ``compute=``, ``inverse=`` and ``search=`` methods by name (as a
   string), this makes them overridable (removes the need for an intermediate
   "trampoline" function)
 * double check that all fields and methods have different names, there is no
