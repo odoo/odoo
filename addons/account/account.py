@@ -292,6 +292,10 @@ class account_account(models.Model):
     def _set_debit(self):
         self._set_credit_debit('debit', self.debit)
 
+    @api.multi
+    def _get_company_currency(self):
+        for account in self:
+            account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
 
     name = fields.Char(string='Name', required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
