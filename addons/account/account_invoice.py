@@ -1005,14 +1005,14 @@ class account_invoice(models.Model):
         return result
 
     @api.model
-    def _prepare_refund(self, invoice, date=None, date=None, description=None, journal_id=None):
+    def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new refund from the invoice.
             This method may be overridden to implement custom
             refund generation (making sure to call super() to establish
             a clean extension chain).
 
             :param record invoice: invoice to refund
-            :param string date: refund creation date from the wizard
+            :param string date_invoice: refund creation date from the wizard
             :param integer date: force date from the wizard
             :param string description: description of the refund from the wizard
             :param integer journal_id: account.journal from the wizard
@@ -1040,7 +1040,7 @@ class account_invoice(models.Model):
         values['journal_id'] = journal.id
 
         values['type'] = TYPE2REFUND[invoice['type']]
-        values['date_invoice'] = date or fields.Date.context_today(invoice)
+        values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
 
@@ -1052,11 +1052,11 @@ class account_invoice(models.Model):
 
     @api.multi
     @api.returns('self')
-    def refund(self, date=None, date=None, description=None, journal_id=None):
+    def refund(self, date_invoice=None, date=None, description=None, journal_id=None):
         new_invoices = self.browse()
         for invoice in self:
             # create the new invoice
-            values = self._prepare_refund(invoice, date=date, date=date,
+            values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
             new_invoices += self.create(values)
         return new_invoices
