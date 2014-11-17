@@ -108,9 +108,9 @@ class BaseCase(unittest2.TestCase):
     @contextmanager
     def _assertRaises(self, exception):
         """ Context manager that clears the environment upon failure. """
-        with super(BaseCase, self).assertRaises(exception):
+        with super(BaseCase, self).assertRaises(exception) as cm:
             with self.env.clear_upon_failure():
-                yield
+                yield cm
 
     def assertRaises(self, exception, func=None, *args, **kwargs):
         if func:
