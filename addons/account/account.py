@@ -812,7 +812,8 @@ class account_journal(osv.osv):
             'implementation':'no_gap',
             'prefix': prefix + "/%(year)s/",
             'padding': 4,
-            'number_increment': 1
+            'number_increment': 1,
+            'use_date_range': True,
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
@@ -1618,7 +1619,7 @@ class account_move_reconcile(osv.osv):
         'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
+        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').next_by_code(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
     
     # You cannot unlink a reconciliation if it is a opening_reconciliation one,

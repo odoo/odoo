@@ -44,7 +44,7 @@ class stock_picking_wave(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'picking.wave') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'picking.wave') or '/'
         return super(stock_picking_wave, self).create(cr, uid, vals, context=context)
 
     def done(self, cr, uid, ids, context=None):

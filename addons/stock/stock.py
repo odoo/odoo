@@ -681,7 +681,7 @@ class stock_picking(osv.osv):
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
             ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
-            vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
+            vals['name'] = self.pool.get('ir.sequence').next_by_id(cr, user, sequence_id, context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
 
     def _state_get(self, cr, uid, ids, field_name, arg, context=None):
@@ -1486,7 +1486,7 @@ class stock_production_lot(osv.osv):
         'create_date': fields.datetime('Creation Date'),
     }
     _defaults = {
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'stock.lot.serial'),
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
@@ -3678,7 +3678,7 @@ class stock_package(osv.osv):
                                     }, readonly=True, select=True),
     }
     _defaults = {
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
 
     def _check_location_constraint(self, cr, uid, packs, context=None):
@@ -4073,7 +4073,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'active': lambda *a: 1,
         'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.orderpoint') or '',
         'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }

@@ -187,7 +187,7 @@ class mrp_repair(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'draft',
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
         'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],

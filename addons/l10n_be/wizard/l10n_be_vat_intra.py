@@ -123,7 +123,7 @@ class partner_vat_intra(osv.osv_memory):
         if not p_id_list:
             raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number associated with him.'))
 
-        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        seq_declarantnum = obj_sequence.next_by_code(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
 
         addr = obj_partner.address_get(cr, uid, [data_company.partner_id.id], ['invoice'])

@@ -349,7 +349,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'sale.order') or '/'
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
             if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):

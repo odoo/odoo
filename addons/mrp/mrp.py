@@ -580,7 +580,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty': lambda *a: 1.0,
         'user_id': lambda self, cr, uid, c: uid,
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
         'location_src_id': _src_id_default,
         'location_dest_id': _dest_id_default

@@ -82,7 +82,7 @@ class account_bank_statement_line_global(osv.osv):
     }
     _rec_name = 'code'
     _defaults = {
-        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').get(c, u, 'account.bank.statement.line.global'),
+        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').next_by_code(c, u, 'account.bank.statement.line.global'),
         'name': '/',
     }
     _sql_constraints = [

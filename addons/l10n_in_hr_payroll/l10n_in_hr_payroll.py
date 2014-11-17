@@ -132,7 +132,7 @@ class payroll_advice(osv.osv):
                 raise osv.except_osv(_('Error!'), _('You can not confirm Payment advice without advice lines.'))
             advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
             advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
-            number = seq_obj.get(cr, uid, 'payment.advice')
+            number = seq_obj.next_by_code(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + advice_year + '/' + number
             self.write(cr, uid, [advice.id], {'number': sequence_num, 'state': 'confirm'}, context=context)
         return True
