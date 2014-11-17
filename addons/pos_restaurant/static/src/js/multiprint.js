@@ -162,12 +162,25 @@ function openerp_restaurant_multiprint(instance,module){
                 rem = _rem;
             }
 
+            var d = new Date();
+            var hours   = '' + d.getHours();
+                hours   = hours.length < 2 ? ('0' + hours) : hours;
+            var minutes = '' + d.getMinutes();
+                minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
+
+            console.log(hours,minutes);
+
+
             return {
                 'new': add,
                 'cancelled': rem,
                 'table': json.table || false,
                 'floor': json.floor || false,
                 'name': json.name  || 'unknown order',
+                'time': {
+                    'hours':   hours,
+                    'minutes': minutes,
+                },
             };
             
         },
