@@ -588,34 +588,56 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
+    def _get_domain_maker_move_line_amount(self, cr, uid, st_line, context=None):
+        """ Returns a lambda that can create the appropriate domain to search on move.line amount based on st_line currency/amount """
+        # TODO : search on amount_residual and amount_residual_currency once those fields are stored
+        # this will allow to match partial reconciliations and not bother about debit/credit sign
+        currency_id = st_line.currency_id.id
+        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
+        field = 'debit'
+        if currency_id == False:
+            if st_line.amount < 0:
+                field = 'credit'
+                sign = -1
+        else:
+            field = 'amount_currency'
+
+        def ret(comparator, amount, f=field, s=sign, c=currency_id):
+            if comparator == '<':
+                if f == 'amount_currency' and amount < 0:
+                    domain = [(f, '<', 0), (f, '>', (s * amount))]
+                else:
+                    domain = [(f, '>', 0), (f, '<', (s * amount))]
+            elif comparator == '=':
+                domain = [(f, comparator, (s * amount))]
+            else:
+                raise osv.except_osv(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
+            if currency_id:
+                domain += [('currency_id', '=', currency_id)]
+            return domain + [('reconcile_partial_id', '=', False)]
+
+        return ret
+
     def get_unambiguous_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
         """ Returns move lines that can without doubt be used to reconcile a statement line """
         if excluded_ids is None:
             excluded_ids = []
 
         # How to compare statement line amount and move lines amount
-        company_currency = st_line.journal_id.company_id.currency_id.id
-        statement_currency = st_line.journal_id.currency.id or company_currency
-        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
-        amount_field = 'debit'
-        if statement_currency == company_currency:
-            if st_line.amount < 0:
-                amount_field = 'credit'
-                sign = -1
-        else:
-            amount_field = 'amount_currency'
+        amount_domain_maker = self._get_domain_maker_move_line_amount(cr, uid, st_line, context=context)
+        equal_amount_domain = amount_domain_maker('=', st_line.amount)
 
         # Look for structured communication match
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
-            domain = [('ref', '=', st_line.name), (amount_field, '=', (sign * st_line.amount))]
+            domain = equal_amount_domain + [('ref', '=', st_line.name)]
             match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
                 return match_ids
 
         # Look for a single move line with the same partner, the same amount
         if st_line.partner_id.id:
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=equal_amount_domain)
             if match_ids and len(match_ids) == 1:
                 return match_ids
 
@@ -632,37 +654,26 @@ class account_bank_statement_line(osv.osv):
             domain = [('ref', '=', st_line.name)]
             match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids:
-                return [match_ids[0]]
+                return match_ids
 
         # How to compare statement line amount and move lines amount
-        company_currency = st_line.journal_id.company_id.currency_id.id
-        statement_currency = st_line.journal_id.currency.id or company_currency
-        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
-        amount_field = 'debit'
-        if statement_currency == company_currency:
-            if st_line.amount < 0:
-                amount_field = 'credit'
-                sign = -1
-        else:
-            amount_field = 'amount_currency'
+        amount_domain_maker = self._get_domain_maker_move_line_amount(cr, uid, st_line, context=context)
 
-        # Look for a single move line with the same partner, the same amount
-        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        # Look for a single move line with the same amount
+        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=1, additional_domain=amount_domain_maker('=', st_line.amount))
         if match_ids:
-            return [match_ids[0]]
+            return match_ids
 
         if not st_line.partner_id.id:
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
-        domain = []
-        if st_line.amount > 0:
+        domain = [('reconcile_id', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
+        if st_line.amount > 0: # Make sure we can't mix receivable and payable
             domain += [('account_id.type', '=', 'receivable')]
         else:
             domain += [('account_id.type', '=', 'payable')]
-        domain += [('reconcile_id', '=', False), (amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))]
-        if amount_field == 'amount_currency' and st_line.amount < 0:
-            domain = [(amount_field, '<', 0), (amount_field, '>', (sign * st_line.amount))]
+        domain += amount_domain_maker('<', st_line.amount) # Will also enforce > 0
         mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         ret = []
         total = 0

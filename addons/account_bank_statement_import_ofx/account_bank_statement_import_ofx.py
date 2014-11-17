@@ -22,10 +22,10 @@ class account_bank_statement_import(osv.TransientModel):
         if ofxparser is None:
             return False
         try:
-            ofxparser.parse(file)
+            ofx = ofxparser.parse(file)
         except:
             return False
-        return True
+        return ofx
 
     def _parse_file(self, cr, uid, data_file=None, context=None):
         try:
@@ -36,13 +36,10 @@ class account_bank_statement_import(osv.TransientModel):
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
         except:
             raise osv.except_osv(_('Import Error!'), _('File handling error.'))
-        if not self._check_ofx(cr, uid, file(path), context=context):
+        
+        ofx = self._check_ofx(cr, uid, file(path), context=context)
+        if not ofx:
             return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
-        try:
-            ofx = ofxparser.parse(file(path))
-        except:
-            os.remove(path)
-            raise osv.except_osv(_('Import Error!'), _('Could not decipher the OFX file.'))
 
         transactions = []
         total_amt = 0.00

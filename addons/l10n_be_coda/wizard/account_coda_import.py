@@ -34,6 +34,7 @@ class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
 
     def _check_coda(self, cr, uid, data_file, context=None):
+        # Matches the first 24 characters of a CODA file, as defined by the febelfin specifications
         return re.match('0{5}\d{9}05[ D] {7}', data_file) != None
 
     def _parse_file(self, cr, uid, data_file=None, context=None):
@@ -203,11 +204,11 @@ class account_bank_statement_import(osv.TransientModel):
                     statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' with Ref. ' + str(line['ref']), 'Ref: ', 'Communication: ' + line['communication'], ''])
                 elif line['type'] == 'normal':
                     note = []
-                    if 'counterpartyName' in line and line['counterpartyName'] != '':
+                    if line.get('counterpartyName'):
                         note.append(_('Counter Party') + ': ' + line['counterpartyName'])
                     else:
                         line['counterpartyName'] = False
-                    if 'counterpartyNumber' in line and line['counterpartyNumber'] != '':
+                    if line.get('counterpartyNumber'):
                         try:
                             if int(line['counterpartyNumber']) == 0:
                                 line['counterpartyNumber'] = False
@@ -218,7 +219,7 @@ class account_bank_statement_import(osv.TransientModel):
                     else:
                         line['counterpartyNumber'] = False
 
-                    if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
+                    if line.get('counterpartyAddress'):
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
@@ -230,7 +231,7 @@ class account_bank_statement_import(osv.TransientModel):
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
-                        'account_number': 'counterpartyNumber' in line and line['counterpartyNumber'] or None,
+                        'account_number': line.get('counterpartyNumber', None),
                         'partner_name': line['counterpartyName'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],

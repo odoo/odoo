@@ -1026,7 +1026,7 @@ class account_move_line(osv.osv):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'partial_reconciliation_siblings': partial_reconciliation_siblings,
-                'currency_id': line.currency_id.id or company_currency.id,
+                'currency_id': line.currency_id.id or False,
             }
 
             # Amount residual can be negative

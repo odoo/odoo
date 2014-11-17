@@ -2038,8 +2038,11 @@ openerp.account = function (instance) {
         persistAndBowOut: function() {
             var self = this;
             if (! this.is_consistent) return;
-            this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]).then(function() {
+            self.$(".button_ok").attr("disabled", "disabled");
+            this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]).done(function() {
                 self.bowOut(self.animation_speed, true);
+            }).always(function() {
+                self.$(".button_ok").removeAttr("disabled");
             });
         },
 
@@ -2497,7 +2500,8 @@ openerp.account = function (instance) {
             if (! self.is_consistent) return $.Deferred().rejectWith({reason: "Reconciliation widget is not in a consistent state."});
             var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
             var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
-            return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).then(function() {
+            self.$(".button_reconcile").attr("disabled", "disabled");
+            return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).done(function() {
                 self.initializeCreateForm();
                 self.loadReconciliationProposition();
                 self.set("lines_created", []);
@@ -2505,6 +2509,8 @@ openerp.account = function (instance) {
                 if (self.get("mode") != "match" && self.get("mv_lines").length >= 1)
                     self.set("mode", "match");
                 self.balanceChanged();
+            }).always(function() {
+                self.$(".button_reconcile").removeAttr("disabled");
             });
         },
 
