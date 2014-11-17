@@ -322,7 +322,7 @@ class payment_line(osv.osv):
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
-            ).get(cursor, user, 'payment.line'),
+            ).next_by_code(cursor, user, 'payment.line'),
         'state': 'normal',
         'currency': _get_currency,
         'company_currency': _get_currency,
