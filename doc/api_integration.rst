@@ -1,7 +1,7 @@
 :classes: stripe
 
 ===========
-Odoo as API
+Web Service
 ===========
 
 Odoo is mostly extended internally via modules, but much of its features and
@@ -250,8 +250,8 @@ the login.
 Calling methods
 ===============
 
-The second — and most generally useful — is ``xmlrpc/2/object`` which is used
-to call methods of odoo models via the ``execute_kw`` RPC function.
+The second endpoint is ``xmlrpc/2/object``, is used to call methods of odoo
+models via the ``execute_kw`` RPC function.
 
 Each call to ``execute_kw`` takes the following parameters:
 

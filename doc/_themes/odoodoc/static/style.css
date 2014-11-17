@@ -5902,8 +5902,10 @@ button.close {
 .panel-body:after,
 .modal-footer:before,
 .modal-footer:after,
-.document-super:before,
-.document-super:after,
+.document-super:not(.stripe):before,
+.document-super:not(.stripe):after,
+.document-super.stripe:before,
+.document-super.stripe:after,
 .document:before,
 .document:after {
   content: " ";
@@ -5924,7 +5926,8 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after,
-.document-super:after,
+.document-super:not(.stripe):after,
+.document-super.stripe:after,
 .document:after {
   clear: both;
 }
@@ -6181,35 +6184,53 @@ body {
   overflow: auto;
   position: relative;
 }
-.document-super {
+.document-super:not(.stripe) {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
 @media (min-width: 768px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 750px;
   }
 }
 @media (min-width: 992px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 970px;
   }
 }
 @media (min-width: 1200px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 1170px;
   }
 }
-.document-super > .navbar-header,
-.document-super > .navbar-collapse {
+.document-super:not(.stripe) > .navbar-header,
+.document-super:not(.stripe) > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
-  .document-super > .navbar-header,
-  .document-super > .navbar-collapse {
+  .document-super:not(.stripe) > .navbar-header,
+  .document-super:not(.stripe) > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+.document-super.stripe {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.document-super.stripe > .navbar-header,
+.document-super.stripe > .navbar-collapse {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+@media (min-width: 768px) {
+  .document-super.stripe > .navbar-header,
+  .document-super.stripe > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
@@ -6296,7 +6317,7 @@ body {
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
-.docs-nav .navbar-nav > li > a:after {
+.docs-nav .navbar-nav > li.dropdown > a:after {
   content: " ";
   display: inline-block;
   width: 0;
@@ -6307,7 +6328,7 @@ body {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-.docs-nav .navbar-nav > li .dropdown-menu > li.current > a.current {
+.docs-nav .navbar-nav > li.dropdown .dropdown-menu > li.current > a.current {
   background-color: #a24689;
   color: white;
 }
@@ -6708,6 +6729,74 @@ td.field-body > ul {
 }
 .descclassname {
   opacity: 0.5;
+}
+.index-tree ul,
+.index-tree li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.index-tree > ul > li {
+  margin-bottom: 0.5em;
+}
+.index-tree > ul > li > a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-size: 65%;
+}
+.index-tree > ul > li > ul {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.index-tree > ul > li > ul > li {
+  width: 50%;
+}
+.index-tree > ul > li > ul > li a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-size: 75%;
+}
+.index-tree > ul > li a {
+  display: block;
+  color: #a24689 !important;
+  padding: 0.3em 0;
+  margin: 3px !important;
+}
+.index-tree > ul > li a:hover {
+  background-color: #eeeeee;
 }
 .stripe .section {
   margin-bottom: 2em;
