@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupate="1">
+    <data noupdate="1">
         <record id="id_form_lead" model="website.form">
             <field name="model_id" ref="crm.model_crm_lead" />
             <field name="blacklist_field_ids" eval="[(6,0,[ref('crm.field_crm_lead_probability'),ref('crm.field_crm_lead_report_section_id')])]" />
