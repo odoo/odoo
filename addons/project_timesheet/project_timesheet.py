@@ -443,7 +443,6 @@ class hr_analytic_timesheet(osv.Model):
                 if pattern.match(str(record['project_id'][0])) and not is_submitted_id:
                     project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
                     new_project_id = True
-                    #replace_virtual_id('project_id', record['project_id'][0], project_id) #Call this method at last at successful of record if new_project_id is True
                 elif pattern.match(str(record['project_id'][0])) and is_submitted_id:
                     #Fetch project_id based on is_submitted_id -> account_id
                     analytic_account_id = submitted_line.account_id and submitted_line.account_id.id
@@ -459,19 +458,17 @@ class hr_analytic_timesheet(osv.Model):
                 if project_id in missing_project_id or not project_record:
                     missing_project_id.append(project_id)
                     continue
-                if record['task_id']:
+                if record.get('task_id'):
                     if pattern.match(str(record['task_id'][0])) and not is_submitted_id:
-                        #project_id = record['project_id'][0]
                         task_id = task_obj.create(cr, uid, {'name': record['task_id'][1], 'project_id': project_id}, context=context)
                         new_task_id = True
-                        #replace_virtual_id('task_id', record['task_id'][0], task_id)
                     elif pattern.match(str(record['task_id'][0])) and is_submitted_id:
                         #Fetch task_id based on is_submitted_id
                         task_id = submitted_line.task_id.id
                     else:
                         task_id = record['task_id'][0]
                     record['task_id'] = task_id
-                    if task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
+                    if task_id and task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
                         missing_task_id.append(task_id)
                         continue
 

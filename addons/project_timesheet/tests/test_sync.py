@@ -41,6 +41,7 @@ class TestSync(openerp.tests.TransactionCase):
             task_id = tasks[0]
         datas = [{'project_id': ['virtual_id_1', 'Test Project 1'], 'task_id': ['virtual_id_2', 'Test Task 1'], 'unit_amount': 10, 'command': 0, 'user_id': uid, 'date': '2014-11-10', 'name': 'Test Activity 1', 'reference_id': self.generate_reference()},
                  {'project_id': project_id, 'task_id': task_id, 'unit_amount': 12.5, 'command': 0, 'user_id': uid, 'date': '2014-11-10', 'name': 'Test Activity 2', 'reference_id': self.generate_reference()},
+                 {'project_id': ['virtual_id_3', 'Test Project 2'], 'unit_amount': 15.5, 'command': 0, 'user_id': uid, 'date': '2014-11-10', 'name': 'Test Activity 3', 'reference_id': self.generate_reference()},
                  ]
         sync_result = self.hr_analytic_timesheet_model.sync_data(cr, uid, datas)
         if sync_result.get('activities'):
