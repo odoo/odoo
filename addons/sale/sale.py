@@ -709,6 +709,7 @@ class sale_order(osv.osv):
                 if line.procurement_ids:
                     #first check them to see if they are in exception or not (one of the related moves is cancelled)
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
+                    line.refresh()
                     #run again procurement that are in exception in order to trigger another move
                     proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
                     procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)

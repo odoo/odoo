@@ -111,6 +111,7 @@ class procurement_order(osv.osv):
 
                 res[procurement.id] = produce_id
                 self.write(cr, uid, [procurement.id], {'production_id': produce_id})
+                procurement.refresh()
                 self.production_order_create_note(cr, uid, procurement, context=context)
                 production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
                 production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')

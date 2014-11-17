@@ -203,6 +203,7 @@ class procurement_order(osv.osv):
             if procurement.state not in ("running", "done"):
                 try:
                     if self._assign(cr, uid, procurement, context=context):
+                        procurement.refresh()
                         res = self._run(cr, uid, procurement, context=context or {})
                         if res:
                             self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)

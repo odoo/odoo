@@ -402,6 +402,7 @@ class stock_quant(osv.osv):
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to, context=context)
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
+                quant.refresh()
                 to_move_quants.append(quant)
             quants_reconcile.append(quant)
         if to_move_quants:
@@ -411,6 +412,7 @@ class stock_quant(osv.osv):
         if location_to.usage == 'internal':
             if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context):
                 for quant in quants_reconcile:
+                    quant.refresh()
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
@@ -518,6 +520,7 @@ class stock_quant(osv.osv):
             return False
         new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': quant.qty - qty}, context=context)
         self.write(cr, SUPERUSER_ID, quant.id, {'qty': qty}, context=context)
+        quant.refresh()
         return self.browse(cr, uid, new_quant, context=context)
 
     def _get_latest_move(self, cr, uid, quant, context=None):
@@ -861,6 +864,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
                 self.action_confirm(cr, uid, [pick.id], context=context)
+            pick.refresh()
             #skip the moves that don't need to be checked
             move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
             if not move_ids:
@@ -1337,7 +1341,9 @@ class stock_picking(osv.osv):
                 if not all_op_processed:
                     todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
 
+                picking.refresh()
                 #split move lines eventually
+
                 toassign_move_ids = []
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
@@ -1362,6 +1368,7 @@ class stock_picking(osv.osv):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
+            picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
             if toassign_move_ids:
                 stock_move_obj.action_assign(cr, uid, toassign_move_ids, context=context)
@@ -2163,6 +2170,7 @@ class stock_move(osv.osv):
         for move in todo_moves:
             if move.linked_move_operation_ids:
                 continue
+            move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
@@ -2563,6 +2571,7 @@ class stock_inventory(osv.osv):
                 if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.theoretical_qty:
                     raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             self.action_check(cr, uid, [inv.id], context=context)
+            inv.refresh()
             self.write(cr, uid, [inv.id], {'state': 'done'}, context=context)
             self.post_inventory(cr, uid, inv, context=context)
         return True
@@ -3308,6 +3317,7 @@ class stock_warehouse(osv.osv):
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
         warehouse = self.browse(cr, uid, new_id, context=context)
         self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
+        warehouse.refresh()
 
         #create routes and push/pull rules
         new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
@@ -3427,6 +3437,7 @@ class stock_warehouse(osv.osv):
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
                 # Check if we need to change something to resupply warehouses and associated MTO rules
                 self._check_resupply(cr, uid, warehouse, vals.get('reception_steps'), vals.get('delivery_steps'), context=context)
+                warehouse.refresh()
             if vals.get('code') or vals.get('name'):
                 name = warehouse.name
                 #rename sequence
@@ -3568,6 +3579,7 @@ class stock_location_path(osv.osv):
                 'date_expected': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
+            move.refresh()
             #avoid looping if a push rule is not well configured
             if rule.location_dest_id.id != old_dest_location:
                 #call again push_apply to see if a next step is defined
