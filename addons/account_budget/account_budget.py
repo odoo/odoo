@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import datetime
+from datetime import date, datetime
 
 from openerp.osv import fields, osv
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT
@@ -32,10 +32,10 @@ import openerp.addons.decimal_precision as dp
 # Utils
 # ---------------------------------------------------------
 def strToDate(dt):
-    return datetime.date(int(dt[0:4]), int(dt[5:7]), int(dt[8:10]))
+    return date(int(dt[0:4]), int(dt[5:7]), int(dt[8:10]))
 
 def strToDatetime(strdate):
-    return datetime.datetime.strptime(strdate, DEFAULT_SERVER_DATE_FORMAT)
+    return datetime.strptime(strdate, DEFAULT_SERVER_DATE_FORMAT)
 
 # ---------------------------------------------------------
 # Budgets
@@ -146,7 +146,7 @@ class crossovered_budget_lines(osv.osv):
 
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            today = datetime.datetime.now()
+            today = datetime.now()
 
             if line.paid_date:
                 if strToDate(line.date_to) <= strToDate(line.paid_date):
