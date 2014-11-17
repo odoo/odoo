@@ -854,7 +854,7 @@ class account_invoice(models.Model):
             ctx['company_id'] = inv.company_id.id
             date = inv.date
             if not date:
-                date = fields.Date.context_today
+                date = fields.Date.context_today(self)
                 move_vals['date'] = date
                 for i in line:
                     i[2]['date'] = date
