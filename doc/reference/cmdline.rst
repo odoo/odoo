@@ -71,7 +71,7 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 .. option:: -t <template>
 
     a template directory, files are passed through jinja2_ then copied to
-    the :option:`destination` directory
+    the ``destination`` directory
 
 .. option:: name
 

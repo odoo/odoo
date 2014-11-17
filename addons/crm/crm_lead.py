@@ -789,7 +789,7 @@ class crm_lead(format_address, osv.osv):
                 partner_id = self._create_lead_partner(cr, uid, lead, context)
                 self.pool['res.partner'].write(cr, uid, partner_id, {'team_id': lead.team_id and lead.team_id.id or False})
             if partner_id:
-                lead.write({'partner_id': partner_id}, context=context)
+                lead.write({'partner_id': partner_id})
             partner_ids[lead.id] = partner_id
         return partner_ids
 

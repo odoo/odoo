@@ -150,7 +150,20 @@ class purchase_order(osv.osv):
 
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
+        type_obj = self.pool.get('stock.picking.type')
+        user_obj = self.pool.get('res.users')
+        company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
+        pick_type = obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in')[1] or False
+        if pick_type:
+            type = type_obj.browse(cr, uid, pick_type, context=context)
+            if type and type.warehouse_id and type.warehouse_id.company_id.id == company_id:
+                return pick_type
+        types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)], context=context)
+        if not types:
+            types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
+            if not types:
+                raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+        return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}

@@ -847,7 +847,7 @@ class product_product(osv.osv):
                     context['uom'], value, uom.id)
         value =  value - product.price_extra
         
-        return product.write({'list_price': value}, context=context)
+        return product.write({'list_price': value})
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -898,8 +898,8 @@ class product_product(osv.osv):
         res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
         product = self.browse(cr, uid, id, context=context)
         if not product.product_tmpl_id.image:
-            product.write({'image_variant': None}, context=context)
-            product.product_tmpl_id.write({'image': image}, context=context)
+            product.write({'image_variant': None})
+            product.product_tmpl_id.write({'image': image})
         return res
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
@@ -1062,7 +1062,7 @@ class product_product(osv.osv):
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
+                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
                 ids = list(ids)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)

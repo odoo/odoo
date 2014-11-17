@@ -179,6 +179,7 @@ class website_sale(http.Controller):
         if search:
             post["search"] = search
         if category:
+            category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
 
         style_obj = pool['product.style']

@@ -16,6 +16,7 @@ import time
 import unittest2
 import urllib2
 import xmlrpclib
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 
 import werkzeug
@@ -104,6 +105,20 @@ class BaseCase(unittest2.TestCase):
         module, xid = xid.split('.')
         return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xid)
 
+    @contextmanager
+    def _assertRaises(self, exception):
+        """ Context manager that clears the environment upon failure. """
+        with super(BaseCase, self).assertRaises(exception) as cm:
+            with self.env.clear_upon_failure():
+                yield cm
+
+    def assertRaises(self, exception, func=None, *args, **kwargs):
+        if func:
+            with self._assertRaises(exception):
+                func(*args, **kwargs)
+        else:
+            return self._assertRaises(exception)
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
@@ -120,6 +135,8 @@ class TransactionCase(BaseCase):
         self.env = api.Environment(self.cr, self.uid, {})
 
     def tearDown(self):
+        # rollback and close the cursor, and reset the environments
+        self.env.reset()
         self.cr.rollback()
         self.cr.close()
 
@@ -139,8 +156,11 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def tearDownClass(cls):
+        # rollback and close the cursor, and reset the environments
+        cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
     """

@@ -1097,7 +1097,7 @@
                     </group>
                     <group string="Locations" groups="stock.group_locations">
                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                     </group>
                     <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
                         <field name="reserved_quant_ids"/>
@@ -1658,7 +1658,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Quants">
+                <form string="Quants" create="false" edit="false">
                     <div class="oe_right oe_button_box">
                         <button name="action_view_quant_history" type="object" string="Quant History"/>                            
                     </div>
