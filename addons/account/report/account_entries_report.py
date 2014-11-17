@@ -92,7 +92,6 @@ class account_entries_report(models.Model):
                 am.company_id as company_id,
                 am.journal_id as journal_id,
                 f.id as fiscalyear_id,
-                am.date as date,
                 l.account_id as account_id,
                 l.analytic_account_id as analytic_account_id,
                 a.type as type,
