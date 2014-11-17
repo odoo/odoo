@@ -325,3 +325,13 @@ class event_registration(models.Model):
                 self.name = self.name or contact.name
                 self.email = self.email or contact.email
                 self.phone = self.phone or contact.phone
+
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(event_registration, self).message_get_suggested_recipients()
+        for attendee in self:
+            if attendee.email:
+                self._message_add_suggested_recipient(recipients, attendee, email=attendee.email, reason=_('Customer Email'))
+            if attendee.partner_id:
+                self._message_add_suggested_recipient(recipients, attendee, partner=attendee.partner_id, reason=_('Customer'))
+        return recipients
