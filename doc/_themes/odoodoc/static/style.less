@@ -547,6 +547,44 @@ td.field-body {
   opacity: 0.5;
 }
 
+
+.index-tree {
+  ul, li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  > ul > li {
+    margin-bottom: 0.5em;
+    > a {
+      .h3();
+      text-align: center;
+    }
+    > ul {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+      > li {
+        width: 50%;
+        a {
+          .h4();
+          padding-left: 10%;
+          padding-right: 10%;
+        }
+      }
+    }
+    a {
+      display: block;
+      color: @link-color !important;
+      padding: 0.3em 0;
+      margin: 3px !important;
+      &:hover {
+        background-color: @gray-lighter;
+      }
+    }
+  }
+}
 // STRIPE-STYLE PAGES
 .stripe {
   .section {

@@ -6709,6 +6709,74 @@ td.field-body > ul {
 .descclassname {
   opacity: 0.5;
 }
+.index-tree ul,
+.index-tree li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.index-tree > ul > li {
+  margin-bottom: 0.5em;
+}
+.index-tree > ul > li > a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-size: 65%;
+}
+.index-tree > ul > li > ul {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.index-tree > ul > li > ul > li {
+  width: 50%;
+}
+.index-tree > ul > li > ul > li a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-size: 75%;
+}
+.index-tree > ul > li a {
+  display: block;
+  color: #a24689 !important;
+  padding: 0.3em 0;
+  margin: 3px !important;
+}
+.index-tree > ul > li a:hover {
+  background-color: #eeeeee;
+}
 .stripe .section {
   margin-bottom: 2em;
 }
