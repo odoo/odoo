@@ -68,7 +68,7 @@
         'views/account_invoice_workflow.xml',
         'views/partner_view.xml',
         'views/product_view.xml',
-        'views/account_assert_test.xml',
+#         'views/account_assert_test.xml',
         'views/account_analytic_view.xml',
         'views/ir_sequence_view.xml',
         'views/company_view.xml',
@@ -101,9 +101,9 @@
     'demo': [
         'demo/account_demo.xml',
         'demo/account_minimal.xml',
-        'demo/account_invoice_demo.xml',
+#         'demo/account_invoice_demo.xml',
         'demo/account_bank_statement.xml',
-        'views/account_unit_test.xml',
+#         'views/account_unit_test.xml',
     ],
     'test': [
 #         'test/account_test_users.yml',
