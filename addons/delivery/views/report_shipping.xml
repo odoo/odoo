@@ -1,6 +1,6 @@
 <openerp>
     <data>
-        <template id="report_shipping2" inherit_id="stock.report_picking">
+        <template id="report_shipping2" inherit_id="stock.report_picking_document">
             <xpath expr="//div[@name='partner_header']" position="after">
                 <div name="invoice_partner" t-if="o.picking_type_id.code == 'outgoing' and o.sale_id and o.sale_id.partner_invoice_id">
                     Will be invoiced to:
