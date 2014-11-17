@@ -502,10 +502,10 @@ class account_voucher(osv.osv):
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         account_id = False
         tr_type = False
-        if journal.type in ('sale','sale_refund'):
+        if journal.type == 'sale':
             account_id = partner.property_account_receivable.id
             tr_type = 'sale'
-        elif journal.type in ('purchase', 'purchase_refund','expense'):
+        elif journal.type in ('purchase','expense'):
             account_id = partner.property_account_payable.id
             tr_type = 'purchase'
         else:
@@ -601,9 +601,9 @@ class account_voucher(osv.osv):
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         account_id = False
-        if journal.type in ('sale','sale_refund'):
+        if journal.type == 'sale':
             account_id = partner.property_account_receivable.id
-        elif journal.type in ('purchase', 'purchase_refund','expense'):
+        elif journal.type in ('purchase', 'expense'):
             account_id = partner.property_account_payable.id
         else:
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
@@ -946,9 +946,9 @@ class account_voucher(osv.osv):
         if pay_now == 'pay_later':
             partner = partner_pool.browse(cr, uid, partner_id)
             journal = journal_pool.browse(cr, uid, journal_id)
-            if journal.type in ('sale','sale_refund'):
+            if journal.type == 'sale':
                 account_id = partner.property_account_receivable.id
-            elif journal.type in ('purchase', 'purchase_refund','expense'):
+            elif journal.type in ('purchase', 'expense'):
                 account_id = partner.property_account_payable.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
@@ -1526,10 +1526,10 @@ class account_voucher_line(osv.osv):
         journal = journal_pool.browse(cr, user, journal_id, context=context)
         account_id = False
         ttype = 'cr'
-        if journal.type in ('sale', 'sale_refund'):
+        if journal.type == 'sale':
             account_id = journal.default_credit_account_id and journal.default_credit_account_id.id or False
             ttype = 'cr'
-        elif journal.type in ('purchase', 'expense', 'purchase_refund'):
+        elif journal.type in ('purchase', 'expense'):
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             ttype = 'dr'
         elif partner_id:

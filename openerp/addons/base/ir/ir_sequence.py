@@ -276,25 +276,24 @@ class ir_sequence(models.Model):
             raise Warning(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
-    @api.multi
+    @api.one
     def _create_date_range_seq(self, date):
-        for seq in self:
-            year = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).strftime('%Y')
-            date_from = '{}-01-01'.format(year)
-            date_to = '{}-12-31'.format(year)
-            for line in seq.date_range_ids:
-                if line.date_from < date_to and line.date_from > date:
-                    date_to = line.date_from
-                elif line.date_to > date_from and line.date_to < date:
-                    date_from = line.date_to
-            seq_date_id = self.env['ir.sequence.date_range'].sudo().create({
-                'date_from': date_from,
-                'date_to': date_to,
-                'sequence_main_id': seq.id,
-            })
-            if seq.implementation == 'standard':
-                seq._create_sequence(seq.number_increment, 1, seq_date_id=seq_date_id)
-            return seq_date_id
+        year = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).strftime('%Y')
+        date_from = '{}-01-01'.format(year)
+        date_to = '{}-12-31'.format(year)
+        for line in self.date_range_ids:
+            if line.date_from < date_to and line.date_from > date:
+                date_to = line.date_from
+            elif line.date_to > date_from and line.date_to < date:
+                date_from = line.date_to
+        seq_date_id = self.env['ir.sequence.date_range'].sudo().create({
+            'date_from': date_from,
+            'date_to': date_to,
+            'sequence_main_id': self.id,
+        })
+        if self.implementation == 'standard':
+            self._create_sequence(self.number_increment, 1, seq_date_id=seq_date_id)
+        return seq_date_id
 
     @api.multi
     def _next(self):
@@ -316,7 +315,7 @@ class ir_sequence(models.Model):
                     seq_date_id = line
                     break
             if not seq_date_id:
-                seq_date_id = seq._create_date_range_seq(dt)
+                seq_date_id = seq._create_date_range_seq(dt)[0]
             return seq._next_do(seq_date_id=seq_date_id)[0]
         else:
             return seq._next_do()[0]
@@ -382,13 +381,13 @@ class ir_sequence_date_range(models.Model):
 
     @api.multi
     def write(self, values):
-        super(ir_sequence_date_range, self).write(values)
+        res = super(ir_sequence_date_range, self).write(values)
 
         for seq_date_id in self:
             n = values.get('number_next', seq_date_id.number_next)
             if seq_date_id.sequence_main_id.implementation == 'standard':
                 if seq_date_id.number_next != n:
                     seq_date_id.sequence_main_id._alter_sequence(number_next=n, seq_date_id=seq_date_id)
-        return True
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
