@@ -2,8 +2,21 @@
 /*       
  *	THIS CSS FILE IS FOR WEBSITE FORM BUILDER CONFIGURATION (NO THEME)
  */
+form .o_form-success, form .o_form-danger {
+    display:none;
+}
 
-label.light {
+form.o_send-success > div {
+    display:none;
+}
+
+form.o_send-success .o_form-success {
+    display:block;
+}
+form.o_send-failed .o_form-danger {
+    display:block;
+}
+label.o_light {
     font-weight: normal;
 }
 .modal-dialog input[type=checkbox] {
@@ -12,7 +25,7 @@ label.light {
 form .oe_drop_zone {
 	height: 1em !important;
 }
-.progress-size {
+.o_progress-size {
 	color: #777777;
 	font-size: x-small;
 	position: relative;
@@ -22,6 +35,10 @@ form .oe_drop_zone {
 
 .text-tag-const {
     color:#ffffff !important;
+}
+
+form .form-control-feedback {
+    left: 100%;
 }
 
 .form-action-mailto textarea,
@@ -37,7 +54,7 @@ form .oe_drop_zone {
 	height: 100% !important;
 	border: none;
 	font-size: 14px !important;
-	margin:0px !important;
+	margin: 0 !important;
 	
 	overflow-x: ellipsis; 
 	overflow-y: visible;

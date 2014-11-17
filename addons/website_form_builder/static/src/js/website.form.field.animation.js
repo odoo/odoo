@@ -143,24 +143,25 @@
                 };
 
                 var success_page = this.$target.data('success');
-                var fail_page = this.$target.data('fail');
-
                 openerp.post('/website_form/'+model,args)
                 .then(function(data) {
                         progress.modal('hide');
                         if(data) {
                             var len = (data.fail_required) ? data.fail_required.length:0;
-                            if(data.id) $(location).attr('href',success_page);
+                            if(data.id){
+                                if(success_page) $(location).attr('href',success_page);
+                                else self.$target.switchClass('o_send-failed', 'o_send-success');
+                            }
                             else {
-                                if(!len) $(location).attr('href',fail_page);
+                                if(!len) self.$target.switchClass('o_send-success', 'o_send-failed');
                                 else self.indicateRequired(data.fail_required, empty_field);
                             }
                         }
-                        else $(location).attr('href',fail_page);
+                        else self.$target.switchClass('o_send-success', 'o_send-failed');
                 })
                 .fail(function(data){
                     progress.modal('hide');
-                    $(location).attr('href',fail_page);
+                    self.$target.switchClass('o_send-success', 'o_send-failed');
                 })
                 .progress(function(data){
                     var label = (data.pcent == 100) ? 'Please wait ...':data.pcent+'%';

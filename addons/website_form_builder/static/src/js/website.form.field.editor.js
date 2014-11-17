@@ -306,6 +306,11 @@
 
                 this.getModel(model_sel).then(function(){
                     var mail = self.wizard.find('.form-action-mailto textarea').val();
+                    var selectedModelOption = self.wizard.find(':selected');
+
+                    self.$target.attr('data-model-name', selectedModelOption.data('model-name'));
+                    self.$target.attr('data-default-field', selectedModelOption.data('default-field'));
+
                     if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
                     else if(mail.length > 0) {
                         new openerp.Model(openerp.website.session,"res.partner")
@@ -325,7 +330,7 @@
                     }
 
                     $('a[href=#snippet_form]')
-                                    .parent()
+                                        .parent()
                                         .addClass('active');
                     $('button[data-action=snippet]').trigger('click');
                     self.wizard.modal('hide');
@@ -359,12 +364,12 @@
             var DefFormPopUp = $.Deferred();
             
             new openerp.Model(openerp.website.session,"website.form")
-            .call("search_read", [[],['model_name','name','metadata_field_id']], {context: website.get_context()})
+            .call("search_read", [[],['model_name','model_id','name','metadata_field_id']], {context: website.get_context()})
 
             .then(function(options_list) {
                 var options = '';
                 $.each(options_list, function(i,elem) {
-                    options += '<option value="'+elem.model_name+'" data-default-field="'+elem.metadata_field_id[1]+'">'+elem.name+'</option>';
+                    options += '<option value="'+elem.model_name+'" data-model-name="'+elem.model_id[1]+'" data-default-field="'+elem.metadata_field_id[1]+'">'+elem.name+'</option>';
                 });
                 self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
                 self.wizard.appendTo('body').modal({"keyboard" :true});
@@ -775,8 +780,8 @@
             this.$target.find('.form-data').attr('name',name);
             this.$target.find('.form-data').attr('data-cke-saved-name',name);
             this.$target.find('.form-data').prop('required',required);
-            if(required)    this.$target.find('label').removeClass('light');
-            else            this.$target.find('label').addClass('light');
+            if(required)    this.$target.find('label').removeClass('o_light');
+            else            this.$target.find('label').addClass('o_light');
 
             
             if(help.length > 0) {
@@ -806,7 +811,8 @@
          
             var fieldWizardTemplate;
             var type = this.$target.attr('data-form');
-            
+            var form = this.$target.closest('form');
+            var label_for_custom = (type == 'inputfile') ? _t('Attached to')+' '+ form.data('model-name') : _t('Concatenate to')+' '+form.data('default-field');
             this.model  = this.$target.closest('form[action*="/website_form/"]').data('model');
             this.fields = (this.$target.closest('form[action*="/website_form/"]').data('fields'));
             
@@ -834,9 +840,9 @@
                 this.validate = this.defaultValidate;
                 this.loadData = this.defaultLoadData;
             }
-            
-            this.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.default',{subTemplate: fieldWizardTemplate}));     // Load template
-            
+             // Load template
+            this.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.default',{custom_label: label_for_custom, subTemplate: fieldWizardTemplate}));
+
             //Load field datas  
             this.loadData();
 
@@ -886,12 +892,13 @@
             var form = $('main form');
             form.find('.form-builder-error-message').remove();
             var required_error = '';
-            if(!$('main form').data('model')) return this._super();
+            if(!form.data('model')) return this._super();
             if(!form.data('fields')) return this._super();
             
+            form.removeClass('o_send-failed o_send-success');
             $.each(form.data('fields').required,function(i,name){
                 var present = 0;
-                $('main form').find('.form-data').each(function(j,elem){
+                form.find('.form-data').each(function(j,elem){
                     present = present || ($(elem).prop('name') == name);
                     console.log($(elem).prop('name'), name,($(elem).prop('name') == name));
                 });
@@ -900,7 +907,7 @@
             });
             if(required_error) {
                 var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ') + required_error;
-                $('main form').prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));
+                form.prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));
    
                 return;
             }

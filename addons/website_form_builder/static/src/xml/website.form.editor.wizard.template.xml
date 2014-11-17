@@ -30,15 +30,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="success" class="col-md-3 col-sm-4 control-label">Success Page :</label>
+                                <label for="success" class="col-md-3 col-sm-4 control-label">Success Page (Optional) :</label>
                                 <div class="col-md-7 col-sm-8">
-                                    <input class="form-control form-data" type="text" name="success" id="success" value="page/success" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="fail" class="col-md-3 col-sm-4 control-label">Fail Page :</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <input class="form-control form-data" type="text" name="fail" id="fail" value="page/fail" />
+                                    <input class="form-control form-data" type="text" name="success" id="success" value="" />
                                 </div>
                             </div>
                         </form>
@@ -76,7 +70,7 @@
                                 <label for="formFieldEditor-select-action" class="col-md-3 col-sm-4 control-label">Field :</label>
                                 <div class="col-md-9 col-sm-8">
                                     <select class="form-control form-select-field" id="formFieldEditor-select-action">
-                                        <option value="custom">Custom</option>
+                                        <option value="custom"><t t-esc='custom_label' /></option>
                                     </select>
                                 </div>
                             </div>
@@ -368,7 +362,7 @@
                         <div class="progress">
                               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                         </div>
-                        <div class="progress-size"><span class="download-size">0</span> / <span class="total-size">0</span></div>
+                        <div class="o_progress-size"><span class="download-size">0</span> / <span class="total-size">0</span></div>
                     </div>
                 </div>
               </div>
