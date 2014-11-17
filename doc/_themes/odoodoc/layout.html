@@ -32,7 +32,7 @@
   <div class="sphinxsidebar">
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
-                 main_navbar=False, titles_only=False) }}
+                 navbar='side', titles_only=False) }}
       {% if github_link %}
         <p><a href="{{ github_link(mode='edit') }}" class="github">
           Edit on GitHub
@@ -72,7 +72,8 @@
       {% endif %}
     </div>
     <nav class="collapse navbar-collapse navbar-main" role="navigation">
-      {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False) }}
+      {{ toctree(titles_only=True, maxdepth=2, includehidden=True,
+                 collapse=False, navbar='main') }}
     </nav>
   </div>
 </header>
