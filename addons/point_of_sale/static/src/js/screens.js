@@ -180,8 +180,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var users = this.pos.users;
             for(var i = 0, len = users.length; i < len; i++){
                 if(users[i].barcode === code.code){
-                    this.pos.cashier = users[i];
-                    this.pos_widget.username.refresh();
+                    this.pos.set_cashier(users[i]);
+                    this.pos_widget.username.renderElement();
                     return true;
                 }
             }
