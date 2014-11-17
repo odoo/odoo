@@ -14,7 +14,7 @@ Welcome to the Odoo developer documentation.
 
     tutorials
     reference
-    modules
+    api_integration
 
 .. ifconfig:: todo_include_todos
 

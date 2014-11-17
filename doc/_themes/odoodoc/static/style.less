@@ -89,20 +89,22 @@ body {
       opacity: 0;
       .transition(all 0.3s ease-out);
     }
-    > a:after {
-      content: " ";
-      display: inline-block;
-      width: 0;
-      height: 0;
-      margin-left: 5px;
-      vertical-align: middle;
-      border-top: 4px solid @gray-light;
-      border-right: 4px solid transparent;
-      border-left: 4px solid transparent;
-    }
-    .dropdown-menu > li.current > a.current {
-      background-color: @brand-primary;
-      color: white;
+    &.dropdown {
+      > a:after {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 5px;
+        vertical-align: middle;
+        border-top: 4px solid @gray-light;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+      }
+      .dropdown-menu > li.current > a.current {
+        background-color: @brand-primary;
+        color: white;
+      }
     }
   }
   /* version switcher */

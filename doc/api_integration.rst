@@ -1,7 +1,7 @@
 :classes: stripe
 
 ===========
-Odoo as API
+Web Service
 ===========
 
 Odoo is mostly extended internally via modules, but much of its features and

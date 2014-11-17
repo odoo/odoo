@@ -48,6 +48,10 @@ def navbarify(node, navbar=None):
             #             list_item
             #                 compact_paragraph
             #                     reference
+            # no bullet_list.list_item -> don't dropdownify
+            if not list_item.children[1].children:
+                return
+
             list_item['classes'].append('dropdown')
             # list_item.compact_paragraph.reference
             link = list_item.children[0].children[0]
