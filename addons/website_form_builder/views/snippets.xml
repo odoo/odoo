@@ -7,56 +7,52 @@
 			</xpath>	
 
 			<xpath expr="//div[@id='snippet_feature']" position="inside" >
-				<div>
-					<div class="oe_snippet_thumbnail">
-						<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
-						<span class="oe_snippet_thumbnail_title">Form Builder</span>
-					</div>
-							<form action="/website_form/crm.lead/" method="post" class="oe_snippet_body editForm form-horizontal mt32" enctype="multipart/form-data">
-								<div class="form-group form-field form-init" data-form="input">
-									<label for="contact_name" class="light col-md-3 col-sm-4 control-label">Your Name</label>
-									<div class="col-md-7 col-sm-8">
-										<div class="wrap-unwrap">
-											<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
-										</div>
-									</div>
+				<div name="Form Builder" class="o_block_text_block">
+					<form action="/website_form/crm.lead/" method="post" class="editForm form-horizontal mt32" enctype="multipart/form-data">
+						<div class="form-group form-field form-init" data-form="input">
+							<label for="contact_name" class="light col-md-3 col-sm-4 control-label">Your Name</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
 								</div>
-								<div class="form-group form-field form-init" data-form="input">
-									<label for="phone" class="light col-md-3 col-sm-4 control-label">Phone Number</label>
-									<div class="col-md-7 col-sm-8">
-										<div class="wrap-unwrap">
-											<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
-										</div>
-									</div>
+							</div>
+						</div>
+						<div class="form-group form-field form-init" data-form="input">
+							<label for="phone" class="light col-md-3 col-sm-4 control-label">Phone Number</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
 								</div>
-								<div class="form-group form-field form-init" data-form="input">
-									<label for="email_from" class="light col-md-3 col-sm-4 control-label">Email</label>
-									<div class="col-md-7 col-sm-8">
-										<div class="wrap-unwrap">
-											<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
-										</div>
-									</div>
+							</div>
+						</div>
+						<div class="form-group form-field form-init" data-form="input">
+							<label for="email_from" class="light col-md-3 col-sm-4 control-label">Email</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
 								</div>
-								<div class="form-group form-field form-init" data-form="input">
-									<label for="name" class="light col-md-3 col-sm-4 control-label">Subject</label>
-									<div class="col-md-7 col-sm-8">
-										<div class="wrap-unwrap">
-											<input type="text" class="form-control form-data" name="name" id="name" placeholder="" />
-										</div>
-									</div>
+							</div>
+						</div>
+						<div class="form-group form-field form-init" data-form="input">
+							<label for="name" class="light col-md-3 col-sm-4 control-label">Subject</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<input type="text" class="form-control form-data" name="name" id="name" placeholder="" />
 								</div>
-								<div class="form-group form-field form-init" data-form="textarea">
-									<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
-									<div class="col-md-7 col-sm-8">
-										<textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-										<button class="btn btn-primary btn-lg">Send</button>
-									</div>
-								</div>
-							</form>
+							</div>
+						</div>
+						<div class="form-group form-field form-init" data-form="textarea">
+							<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
+							<div class="col-md-7 col-sm-8">
+								<textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+								<button class="btn btn-primary btn-lg">Send</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</xpath>
 	
@@ -65,12 +61,8 @@
 	
 			<xpath expr="//div[@id='snippet_effect']" position="after">
 				<div id="snippet_form" class="tab-pane">
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png" />
-							<span class="oe_snippet_thumbnail_title">Input Text</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field" data-form="input">
+					<div name="Input Text" class="o_block_parallax">
+						<div class="form-group  form-field" data-form="input">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-unwrap">
@@ -80,12 +72,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png" />
-							<span class="oe_snippet_thumbnail_title">Input Hidden</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field css_non_editable_mode_hidden" data-form="hidden">
+					<div name="Input Hidden" class="o_block_parallax">
+						<div class="form-group  form-field css_non_editable_mode_hidden" data-form="hidden">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-unwrap">
@@ -95,12 +83,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Textarea</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field" data-form="textarea">
+					<div name="Textarea" class="o_block_parallax">
+						<div class="form-group  form-field" data-form="textarea">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<textarea  class="form-control form-data" name="" style="min-height: 120px"></textarea>
@@ -108,12 +92,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Checkbox</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field" data-form="checkbox">
+					<div name="Checkbox" class="o_block_parallax">
+						<div class="form-group  form-field" data-form="checkbox">
 							<label for="checkbox" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-options form-data multivalues">
@@ -140,12 +120,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Radios</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field" data-form="radio">
+					<div name="Radios" class="o_block_parallax">
+						<div class="form-group  form-field" data-form="radio">
 							<label for="radio" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-options form-data multivalues">
@@ -172,12 +148,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Select</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field" data-form="select">
+					<div name="Select" class="o_block_parallax">
+						<div class="form-group  form-field" data-form="select">
 							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<select id="select" class="form-control form-data wrap-options">
@@ -189,12 +161,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Autocomplete</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field form-field-search" data-form="search">
+					<div name="Autocomplete" class="o_block_parallax">
+						<div class="form-group  form-field form-field-search" data-form="search">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="form-control form-data">
@@ -209,12 +177,8 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div class="oe_snippet_thumbnail">
-							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Upload Field</span>
-						</div>
-						<div class="form-group oe_snippet_body form-field input-file" data-form="inputfile">
+					<div name="Upload Field" class="o_block_parallax">
+						<div class="form-group  form-field input-file" data-form="inputfile">
 							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="input-group">

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urlparse
+from openerp import tools
 from openerp.http import request
 from openerp.osv import fields, osv
 
@@ -15,14 +16,14 @@ class website_form(osv.Model):
         'blacklist_field_ids'   : fields.many2many('ir.model.fields', string='Black List', help="Select all fields that cannot be used on the Form Builder"),
         'name'                  : fields.char("Kind of action", help="Label to describe the action",translate=True),
         'metadata_field_id'     : fields.many2one('ir.model.fields', 'Default Field', ondelete='cascade', help="Specify the field wich will contain meta and custom datas"),
-        'model_name'            : fields.related('model_id','model',type="char",string="Model reference", readonly=True),
-        'metadata_field_name'   : fields.related('metadata_field_id', 'name', type="char", string="Default Field Name", readonly=True),
+        'model_name'            : fields.related('model_id','model',type="char",string="Model reference", readonly=True)
     }
     _defaults = {
         'blacklist_field_ids': [],
     }
     
-    # filter all fields to get all authorized fields            
+    # filter all fields to get all authorized fields
+    @tools.ormcache(skiparg=3)        
     def get_authorized_fields(self, cr, uid, model, context=None):
         print 'get authorizeed fields \n'
         output = self.pool[model].fields_get(cr,uid,context=context)
@@ -41,6 +42,7 @@ class website_form(osv.Model):
         return output
         
     # get all required fields from field model
+    @tools.ormcache(skiparg=3)
     def get_required(self, cr, uid, model, context=None):
         output = []
         filter = [('model', '=', model),('required','=',True),]  

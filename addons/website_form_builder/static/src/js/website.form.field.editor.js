@@ -25,15 +25,15 @@
 			this.notLock = 0;
 			
     		this.fields = {all:{},required:{}};
-    		new openerp.Model(new openerp.Session(),"website.form")
+    		new openerp.Model(openerp.website.session,"website.form")
     		.call("get_authorized_fields", [this.ref], {context: website.get_context()}).then(function(data) {
     			var i = 0;
     			var j = 0;
 
 				$.each(data, function(n, val) {
-					var sel = (val.selection === undefined) ? null : val.selection;
-					var rel = (val.relation === undefined)  ? null : val.relation;
-					if(self.fields[val.type] === undefined) self.fields[val.type] = {};
+					var sel = val.selection || null;
+					var rel = val.relation  || null;
+					if(!self.fields[val.type]) self.fields[val.type] = {};
 					self.fields[val.type][n] = {name: n, label : val.string,relation : rel,selection : sel, type: val.type, required: val.required, help: val.help};
 					self.fields.all[n] = self.fields[val.type][n];
 					if(val.required) self.fields.required[j++] = n; 
@@ -75,7 +75,7 @@
         			var mail = self.wizard.find('.form-action-mailto textarea').val();
         			if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
     				else if(mail.length > 0) {
-    					new openerp.Model(new openerp.Session(),"res.partner")
+    					new openerp.Model(openerp.website.session,"res.partner")
     					.call("find_or_create",[mail], {context: website.get_context()}).then(function(id) {
     						console.log(id);
     						if(id) {
@@ -125,16 +125,14 @@
             var self = this;
             var DefFormPopUp = $.Deferred();
             
-            new openerp.Model(new openerp.Session(),"website.form")
-    		.call("search_read", [[],['model_name','name','metadata_field_name']], {context: website.get_context()})
+            new openerp.Model(openerp.website.session,"website.form")
+    		.call("search_read", [[],['model_name','name','metadata_field_id']], {context: website.get_context()})
 
             .then(function(options_list) {
-                console.log(options_list);
     			var options = '';
     			$.each(options_list, function(i,elem) {
-    				options += '<option value="'+elem.model_name+'" data-default-field="'+elem.metadata_field_name+'">'+elem.name+'</option>';
+    				options += '<option value="'+elem.model_name+'" data-default-field="'+elem.metadata_field_id[1]+'">'+elem.name+'</option>';
     			});
-    			
     			self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
 				self.wizard.appendTo('body').modal({"keyboard" :true});
                 self.loadData();
@@ -150,7 +148,7 @@
                                 }})
                     .bind('getSuggestions', function(e,data) {
                         var _this = this;
-                        new openerp.Model(new openerp.Session(),"res.partner")
+                        new openerp.Model(openerp.website.session,"res.partner")
                         .call("search_read",[[['email', '=like', $(this).val()+'%']],['email']], { limit: 5, context: website.get_context()}).then(function(tlist) {
                             $(_this).trigger('setSuggestions', {result: tlist});
                         });

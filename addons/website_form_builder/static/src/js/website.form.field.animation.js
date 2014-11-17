@@ -49,7 +49,7 @@
 			}
         };
 
-	website.snippet.animationRegistry.editForm = website.snippet.Animation.extend({
+	website.snippet.animationRegistry.form_builder_send = website.snippet.Animation.extend({
 		selector: 'form[action*="/website_form/"]',
 		start: function() {
 			var self = this;
@@ -78,19 +78,21 @@
 				empty_field    	= empty_fields.indexOf(name);
 				fail_required   = _.without(fail_required,name);
 				empty_fields    = _.without(empty_fields,name);
-			
+				$(elem)	.removeClass('has-error has-warning has-success has-feedback')
+						.find('i').remove();
+
 			    if(field_required >= 0){
 					$(elem)	.addClass('has-error has-feedback').children('div')
-				    		.append('<span class="glyphicon glyphicon-remove form-control-feedback"></span>');
+				    		.append('<i class="fa fa-close form-control-feedback"></i>');
 				    i= i+1;
 				}
 				else if(empty_field >= 0){
 					$(elem)	.addClass('has-warning has-feedback').children('div')
-				    		.append('<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>');
+				    		.append('<i class="fa fa-exclamation-triangle form-control-feedback"></i>');
 				    j= j+1;
 				}
 				else $(elem).addClass('has-success has-feedback').children('div')
-				    		.append('<span class="glyphicon glyphicon-ok form-control-feedback"></span>');
+				    		.append('<i class="fa fa-check form-control-feedback"></i>');
 				    				
 			});
 		},
@@ -133,21 +135,18 @@
 				var progress = $(openerp.qweb.render('website.form.editor.progress'))
 									.appendTo('body')
 									.modal({"keyboard" :true});
+
 				var display_size = function(size) {
-					var i=0;
-					var newsize = size;
-					while((newsize > 0) && (i < 4)) {
-						i++;
-						newsize = newsize >> 10;
-					}
-					newsize = size >> (i*10-10);
-					switch(i) {
-						case 2 : return newsize+' Ko';
-						case 3 : return newsize+' Mo'; 
-						case 4 : return newsize+' Go'; 
-						default: return newsize+' o'; 
-					}
-				};
+				
+					var order   = ['o', 'Ko', 'Mo', 'Go', 'To'];
+					var log1000 = Math.floor(Math.log(size)/Math.log(1000));
+					var integer = Math.floor(size/Math.pow(1000,log1000));
+					var decimal = Math.round((size - integer*Math.pow(1000,log1000))/(100*Math.pow(1000,log1000-1)));
+					var result  = integer+Math.round(decimal/10);
+					var order_l = order[Math.min(4,log1000)];
+					return result*Math.max(log1000-4, 1)+((result == integer) ? '.'+decimal:'')+order_l;
+
+				}
 
 				var success_page = this.$target.data('success');
 				var fail_page = this.$target.data('fail');
@@ -184,7 +183,7 @@
 		}
 	});
 	
-	website.snippet.animationRegistry.inputFile =  website.snippet.Animation.extend({
+	website.snippet.animationRegistry.form_builder_input_file =  website.snippet.Animation.extend({
 		selector: ".input-file",
 		start: function () {
 			
@@ -210,7 +209,7 @@
 		}
 	});
 	
-	website.snippet.animationRegistry.inputSearch =  website.snippet.Animation.extend({
+	website.snippet.animationRegistry.form_builder_autocomplete =  website.snippet.Animation.extend({
 
 		selector:'.form-field-search',
 		start: function() { 
