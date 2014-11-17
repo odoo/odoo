@@ -2235,7 +2235,7 @@ instance.web.list.Column = instance.web.Class.extend({
         }
         if (attrs.invisible) { return ''; }
 
-        if (!row_data[this.id]) {
+        if (!(row_data[this.id] && row_data[this.id].value)) {
             return options.value_if_empty === undefined
                     ? ''
                     : options.value_if_empty;
