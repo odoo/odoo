@@ -20,6 +20,27 @@ class TestUom(TransactionCase):
         price = self.uom._compute_price(cr, uid, gram_id, 2, tonne_id)
         self.assertEquals(price, 2000000.0, "Converted price does not correspond.")
 
+    def test_11_conversion(self):
+        """compute qty must return qty if uom_from_id and uom_to_id
+        are identical."""
+        cr, uid = self.cr, self.uid
+        categ_kg_id = self.imd.get_object_reference(
+            cr, uid, 'product', 'product_uom_categ_kgm')[1]
+        uom_6kg_id = self.uom.create(cr, uid, {
+            'name': '6 kg',
+            'factor': 6,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+            'category_id': categ_kg_id,
+        })
+        input_qty = 1
+        computed_qty = self.uom._compute_qty(
+            cr, uid, uom_6kg_id, input_qty, uom_6kg_id)
+        self.assertEquals(
+            input_qty, computed_qty,
+            "Converting quantity if 'from' and 'to' units are identical must"
+            " return initial quantity")
+
     def test_20_rounding(self):
         cr, uid = self.cr, self.uid
         unit_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
