@@ -11,6 +11,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.unit_amount = options.unit_amount || null;
             this.reference_id = options.reference_id || null;
             this.command = options.command;
+            this.__last_update = options.__last_update || false;
         },
         export_as_JSON: function() {
             return {
@@ -23,6 +24,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 project_id: this.project_id,
                 reference_id: this.reference_id,
                 user_id: project_timesheet.session.uid,
+                __last_update: this.__last_update,
                 
             };
         },
@@ -171,7 +173,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 var activity_model = activity_collection.get(data.id);
                 _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], unit_amount: data['unit_amount'], command: data['command']});
             } else {
-                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], reference_id: data['reference_id'], command: data['command'] });
+                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'], reference_id: data['reference_id'], command: data['command'], __last_update: data['__last_update'] });
                 this.get('activities').add(activity);
             }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
@@ -255,7 +257,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             */
            return new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("load_data", {
                domain: [["date", ">=", start_date], ["date", "<=", end_date]],
-               fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id']
+               fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id', '__last_update']
            }).then(function(work_activities) {
                self.project_timesheet_db.add_activities(work_activities);
            }).promise();

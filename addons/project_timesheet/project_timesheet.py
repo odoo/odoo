@@ -400,7 +400,7 @@ class hr_analytic_timesheet(osv.Model):
         This method synchronized the data given by Project Timesheet UI,
         the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
         """
-        print "\n\ndatas are inside hr_analytic_timesheet ::: ", datas
+        print "\n\ndatas are inside hr_analytic_timesheet ::: ", context, datas
         result = {}
         if not context:
             context = {}
@@ -504,6 +504,7 @@ class hr_analytic_timesheet(osv.Model):
                 record.pop('project_id')
                 if record.get('command') == 0 and not is_submitted_id:
                     context = dict(context, recompute=True)
+                    print "\n\ncontext in create ::: ", context
                     timeline_id = self.create(cr, uid, vals_line, context=context) #Handle fail, if fail add into failed record
                     # Compute based on pricetype
                     amount_unit = self.on_change_unit_amount(cr, uid, timeline_id,
@@ -526,7 +527,10 @@ class hr_analytic_timesheet(osv.Model):
     
                     if amount_unit and 'amount' in amount_unit.get('value',{}):
                         vals_line['amount'] = amount_unit['value']['amount']
-                    self.write(cr, uid, id, vals_line, context=context) #Handle fail and MissingError, if fail add into failed record
+                    ctx = copy.deepcopy(context)
+                    ctx['__last_update'] = record.get('__last_update')
+                    print "\n\ncontext in write ::: ", context
+                    self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
                 elif record.get('command') == 2:
                     self.delete(cr, uid, record.get('id'), context=context) #Handle fail and MissingError, if fail add into failed record
 
@@ -543,6 +547,7 @@ class hr_analytic_timesheet(osv.Model):
                 #May be add to failed record
                 pass
             except Exception, e:
+                #Here we can have except_orm, if there is ConcurrencyException, the we are raising except_orm 
                 #import traceback
                 #traceback.print_exc()
                 print "\n\neeeeeeee is >>> ", e
