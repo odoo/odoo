@@ -41,8 +41,10 @@
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
-                    <div>--------------------------------</div>
-                    <div>Served by <t t-esc='receipt.cashier' /></div>
+                    <div class='cashier'>
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc='receipt.cashier' /></div>
+                    </div>
                 </t>
             </div>
             <br /><br />

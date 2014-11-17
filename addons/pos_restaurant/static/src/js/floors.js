@@ -615,6 +615,12 @@ function openerp_restaurant_floors(instance,module){
             this.table = this.pos.tables_by_id[json.table_id];
             this.floor = this.table ? this.pos.floors_by_id[json.floor_id] : undefined;
         },
+        export_for_printing: function() {
+            var json = _super_order.export_for_printing.apply(this,arguments);
+            json.table = this.table ? this.table.name : undefined;
+            json.floor = this.table ? this.table.floor.name : undefined;
+            return json;
+        },
     });
 
     // We need to modify the OrderSelector to hide itself when we're on
