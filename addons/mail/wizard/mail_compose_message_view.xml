@@ -37,7 +37,7 @@
                                 <span attrs="{'invisible': [('use_active_domain', '=', True)]}">the selected records</span>
                                 <span attrs="{'invisible': [('use_active_domain', '=', False)]}">the current search filter</span>.
                             </span>
-                            <span attrs="{'invisible':[('composition_mode', '!=', 'comment')]}">Followers of the document and</span>
+                            <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">Followers of the document and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"
                                 attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
