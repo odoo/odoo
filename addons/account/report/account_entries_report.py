@@ -83,7 +83,7 @@ class account_entries_report(models.Model):
                 l.id as id,
                 am.date as date,
                 l.date_maturity as date_maturity,
-                l.date_created as date_created,
+                l.date as date_created,
                 am.ref as ref,
                 am.state as move_state,
                 l.state as move_line_state,
