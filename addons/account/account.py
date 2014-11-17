@@ -2058,13 +2058,14 @@ class account_tax(osv.osv):
         return res
 
 
-    def _check_tax_amount_with_taxincluded_prices(self, tax_mnt, prx_mnt, quantity, precision, totalin):
-        totht = round(prx_mnt * quantity, precision)
-        if tax_mnt != 0 and totht != totalin - round(tax_mnt , precision):
-            #We've to change the tax_amount to avoid having a total different from the sum of tax included prices due to tax rounding:
-            diff = totalin - round(tax_mnt , precision) - totht
-            return tax_mnt + diff
-        return tax_mnt
+    def _check_tax_amount_with_taxincluded_prices(self, tax_amount, unit_price, quantity, precision, total_in):
+        if tax_amount != 0:
+            total_ex = round(unit_price * quantity, precision)
+            diff = total_in - round(tax_amount , precision) - total_ex
+            if diff:
+                #We've to change the tax_amount to avoid having a total different from the sum of tax included prices due to tax rounding
+                return tax_amount + diff
+        return tax_amount
 
     def compute_for_bank_reconciliation(self, cr, uid, tax_id, amount, context=None):
         """ Called by RPC by the bank statement reconciliation widget """
