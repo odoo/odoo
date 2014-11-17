@@ -197,7 +197,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var partner = this.pos.db.get_partner_by_barcode(code.code);
             if(partner){
                 this.pos.get_order().set_client(partner);
-                this.pos_widget.username.refresh();
                 return true;
             }
             this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
