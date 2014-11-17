@@ -25,6 +25,7 @@ import datetime
 import dateutil.relativedelta as relativedelta
 import logging
 import lxml
+import re
 import urlparse
 
 import openerp
@@ -585,5 +586,13 @@ class email_template(osv.osv):
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
         return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
+
+
+class HTMLConverter(osv.AbstractModel):
+    _inherit = 'ir.qweb.field.html'
+
+    def value_to_html(self, cr, uid, value, field, options=None, context=None):
+        value = re.sub(re.compile('^(\s*\%\s*(?:if.*:|endif|elif.*:|else.*:|for.*:|endfor|set).*)$', re.MULTILINE), r'<jinja2>\1</jinja2>', value)
+        return super(HTMLConverter, self).value_to_html(cr, uid, value, field, options=options, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
