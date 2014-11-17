@@ -650,14 +650,25 @@ class product_template(osv.osv):
         for tmpl_id in tmpl_ids:
 
             # list of values combination
+            variant_alone = []
             all_variants = [[]]
             for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) > 1:
-                    temp_variants = []
+                if len(variant_id.value_ids) == 1:
+                    variant_alone.append(variant_id.value_ids[0])
+                temp_variants = []
+                for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        for variant in all_variants:
-                            temp_variants.append(variant + [int(value_id)])
-                    all_variants = temp_variants
+                        temp_variants.append(variant + [int(value_id)])
+                all_variants = temp_variants
+
+            # adding an attribute with only one value should not recreate product
+            # write this attribute on every product to make sure we don't lose them
+            for variant_id in variant_alone:
+                product_ids = []
+                for product_id in tmpl_id.product_variant_ids:
+                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                        product_ids.append(product_id.id)
+                product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
             # check product
             variant_ids_to_active = []
