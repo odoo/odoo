@@ -32,8 +32,7 @@ class account_move_reversal(models.TransientModel):
 
     def _next_period_first_date(self):
         res = False
-        period_obj = self.env['account.period']
-        today_period_id = period_obj.with_context({'account_period_prefer_normal': True}).find()
+        today_period_id = self.env['account.period'].with_context(account_period_prefer_normal=True).find()
         if today_period_id:
             today_period = today_period_id[0]
             next_period_id = today_period.next(1)[0]
@@ -75,12 +74,8 @@ class account_move_reversal(models.TransientModel):
     def action_reverse(self):
         assert 'active_ids' in self.env.context, "active_ids missing in context"
 
-        move_obj = self.env['account.move']
         active_ids = self.env.context['active_ids']
-
-        move_ids = move_obj.browse(active_ids)
-
-        reversed_move_ids = move_ids.create_reversals(
+        self.env['account.move'].browse(active_ids).create_reversals(
             self.date,
             reversal_period_id=self.period_id,
             reversal_journal_id=self.journal_id,

@@ -47,18 +47,17 @@ class account_move(models.Model):
 
         :return: Returns the created reversal move
         """
-        context_update = {
-            'company_id': self.company_id.id,
-            'account_period_prefer_normal': True,
-        }
-        period_obj = self.env['account.period'].with_context(context_update)
+        period_obj = self.env['account.period'].with_context(
+            company_id=self.company_id.id,
+            account_period_prefer_normal=True
+        )
 
         if not reversal_period_id:
             reversal_period_id = period_obj.find(reversal_date)
         if not reversal_journal_id:
             reversal_journal_id = self.journal_id
 
-        reversal_ref = ''.join([x for x in [move_prefix, self.ref] if x])
+        reversal_ref = ''.join(filter(None, [move_prefix, self.ref]))
         reversal_move_id = self.copy(default={
             'date': reversal_date,
             'period_id': reversal_period_id.id,
@@ -97,7 +96,7 @@ class account_move(models.Model):
         :param move_prefix: prefix for the move name
         :param move_line_prefix: prefix for the move lines names
 
-        :return: Returns a list of ids of the created reversal moves
+        :return: Returns a list of browse records of the created reversal moves
         """
         reversed_move_ids = []
         for src_move in self:
@@ -110,9 +109,8 @@ class account_move(models.Model):
                 reversal_journal_id=reversal_journal_id,
                 move_prefix=move_prefix,
                 move_line_prefix=move_line_prefix,
-            )[0]
+            )
 
-            if reversal_move_id:
-                reversed_move_ids.append(reversal_move_id)
+            reversed_move_ids.append(reversal_move_id)
 
         return reversed_move_ids
