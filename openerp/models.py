@@ -2991,6 +2991,8 @@ class BaseModel(object):
                 "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
         elif 'name' in cls._fields:
             cls._rec_name = 'name'
+        elif 'x_name' in cls._fields:
+            cls._rec_name = 'x_name'
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ fields_get([fields])

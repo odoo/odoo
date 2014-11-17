@@ -228,12 +228,7 @@ class ir_model(osv.osv):
             _module = False
             _custom = True
 
-        obj = CustomModel._build_model(self.pool, cr)
-        obj._rec_name = CustomModel._rec_name = (
-            'x_name' if 'x_name' in obj._columns else
-            list(obj._columns)[0] if obj._columns else
-            'id'
-        )
+        CustomModel._build_model(self.pool, cr)
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
