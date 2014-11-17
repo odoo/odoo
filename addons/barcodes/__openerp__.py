@@ -38,7 +38,7 @@ It contains the following features:
 - Barcode EAN13 encoding supported
 """,
     'author': 'OpenERP SA',
-    'depends': [],
+    'depends': ['web'],
     'website': '',
     'data': [
         'data/barcodes_data.xml',
