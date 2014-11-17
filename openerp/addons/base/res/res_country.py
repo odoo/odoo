@@ -20,24 +20,27 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import api
 
-def location_name_search(self, cr, user, name='', args=None, operator='ilike',
+@api.model
+def location_name_search(self, name='', args=None, operator='ilike',
                          context=None, limit=100):
     if not args:
         args = []
 
     ids = []
     if len(name) == 2:
-        ids = self.search(cr, user, [('code', 'ilike', name)] + args,
+        ids = self.search([('code', 'ilike', name)] + args,
                           limit=limit, context=context)
 
     search_domain = [('name', operator, name)]
     if ids: search_domain.append(('id', 'not in', ids))
-    ids.extend(self.search(cr, user, search_domain + args,
+    ids.extend(self.search(search_domain + args,
                            limit=limit, context=context))
 
-    locations = self.name_get(cr, user, ids, context)
-    return sorted(locations, key=lambda (id, name): ids.index(id))
+    self._ids = [x.id for x in ids]
+    locations = self.name_get()
+    return sorted(locations, key=lambda (id, name): self._ids.index(id))
 
 class Country(osv.osv):
     _name = 'res.country'
