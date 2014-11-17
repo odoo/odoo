@@ -85,8 +85,7 @@ class account_invoice_refund(osv.osv_memory):
         active_id = context and context.get('active_id', False)
         if active_id:
             return self.pool.get('account.invoice').browse(cr, uid, active_id, context=context)
-        else:
-            return False
+        return False
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')

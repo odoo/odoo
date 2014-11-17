@@ -88,7 +88,7 @@ class ir_sequence(models.Model):
 
     name = fields.Char('Name', size=64, required=True)
     code = fields.Selection(_code_get, 'Sequence Type', size=64)
-    implementation = fields.Selection(  # TODO update the view
+    implementation = fields.Selection(
         [('standard', 'Standard'), ('no_gap', 'No gap')],
         'Implementation', required=True, default='standard',
         help="Two sequence object implementations are offered: Standard "
@@ -194,13 +194,11 @@ class ir_sequence(models.Model):
     @api.multi
     def unlink(self):
         self._drop_sequence()
-        super(ir_sequence, self).unlink()
-        return True
+        return super(ir_sequence, self).unlink()
 
     @api.multi
     def write(self, values):
         new_implementation = values.get('implementation')
-        super(ir_sequence, self).write(values)
 
         for seq in self:
             # 4 cases: we test the previous impl. against the new one.
@@ -224,7 +222,7 @@ class ir_sequence(models.Model):
                 else:
                     seq._create_sequence(i, n)
 
-        return True
+        return super(ir_sequence, self).write(values)
 
     def _interpolate(self, s, d):
         if s:

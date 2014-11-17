@@ -809,7 +809,7 @@ class account_journal(osv.osv):
         # whereas ir.sequence code is a key to lookup global sequences.
         prefix = vals['code'].upper()
         if refund:
-            prefix = prefix + 'R'
+            prefix = 'R' + prefix
 
         seq = {
             'name': vals['name'],
@@ -826,9 +826,9 @@ class account_journal(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         # We just need to create the relevant sequences according to the chosen options
-        if not 'sequence_id' in vals or not vals['sequence_id']:
+        if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context=context)})
-        if 'refund_sequence' in vals and vals['refund_sequence']:
+        if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refund=True, context=context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
@@ -1312,10 +1312,9 @@ class account_move(osv.osv):
                 else:
                     if journal.sequence_id:
                         # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
-                        if invoice and invoice.type in ['out_refund', 'in_refund']:
-                            sequence = journal.refund_sequence and journal.refund_sequence_id.id or journal.sequence_id.id
-                        else:
-                            sequence = journal.sequence_id.id
+                        sequence = journal.sequence_id.id
+                        if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                            sequence = journal.refund_sequence_id.id
                         c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
                         new_name = obj_sequence.next_by_id(cr, uid, sequence, c)
                     else:
