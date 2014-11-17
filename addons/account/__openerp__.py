@@ -33,7 +33,6 @@
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
-        'wizard/account_move_bank_reconcile_view.xml',
         'views/account_installer.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
