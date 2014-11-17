@@ -23,10 +23,10 @@ class form_builder(http.Controller):
 
     # List of filters following type of field to be fault tolerent
     def get_int(self,x):
-        return int(''.join(ele for ele in x if ele.isdigit()))
+        return int(''.join(ele for ele in x if ele.isdigit()) or 0)
 
     def get_float(self,x):
-        return float(''.join(ele for ele in x if ele.isdigit() or ele == '.'))
+        return float(''.join(ele for ele in x if ele.isdigit() or ele == '.') or 0.0)
 
     def char(self, label, input):
         return input
@@ -35,13 +35,13 @@ class form_builder(http.Controller):
         return input
     
     def many2one(self, label, input):
-        return int(self.get_int(input) or 0)
+        return int(self.get_int(input))
     
     def one2many(self, label, input):
         output = []
         input = input.split(',')
         for elem in input:
-            input_int = int(self.get_int(elem) or 0)
+            input_int = int(self.get_int(elem))
             if input_int :
                 output.append(input_int)     
         return output
@@ -53,16 +53,16 @@ class form_builder(http.Controller):
         return [op + (output,)]
     
     def selection(self, label, input):
-        return int(self.get_int(input) or 0)
+        return int(self.get_int(input))
     
     def boolean(self, label, input):
         return (input != 0)
     
     def integer(self, label, input):
-        return int(self.get_int(input) or 0)
+        return int(self.get_int(input))
     
     def float(self, label, input):
-        return float(self.get_float(input) or 0)
+        return float(self.get_float(input))
 
     # Extract all data sent by the form and sort its on several properties
     def extractData(self, model, **kwargs):
