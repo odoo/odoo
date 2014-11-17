@@ -37,7 +37,7 @@ class TableExporter(http.Controller):
     def delete_version(self, version_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         ver = request.registry['website_version.version']
-        version_name = ver.browse(cr, uid, [int(version_id)], context=context)[0].name
+        version_name = ver.browse(cr, uid, int(version_id), context=context).name
         ver.unlink(cr, uid, [int(version_id)], context=context)
         current_id = request.context.get('version_id')
         if int(version_id)== current_id:
@@ -57,7 +57,7 @@ class TableExporter(http.Controller):
         #To get all versions in the menu
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         view = request.registry['ir.ui.view']
-        v = view.browse(cr,uid,[int(view_id)],context=context)
+        v = view.browse(cr,uid, int(view_id), context=context)
         ver = request.registry['website_version.version']
         website_id = request.website.id
         ids = ver.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
@@ -72,13 +72,13 @@ class TableExporter(http.Controller):
                 x['bold'] = 0 
         #To always show in the menu the current version
         if not check and version_id:
-            result.append({'id':version_id, 'name':ver.browse(cr, uid, [version_id],context=context)[0].name, 'bold':1})
+            result.append({'id':version_id, 'name':ver.browse(cr, uid, version_id, context=context).name, 'bold':1})
         return result
 
     @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
     def has_experiments(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        v = request.registry['ir.ui.view'].browse(cr, uid, [int(view_id)],context)[0]
+        v = request.registry['ir.ui.view'].browse(cr, uid, int(view_id),context)
         website_id = context.get('website_id')
         return bool(request.registry["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)], context=context))
 
@@ -87,7 +87,7 @@ class TableExporter(http.Controller):
         #Info: there were some cache problems with browse, this is why the code is so long
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         obj = request.registry['website_version.version']
-        version = obj.browse(cr, uid, [int(version_id)],context)[0]
+        version = obj.browse(cr, uid, int(version_id),context)
         del_l = []
         copy_l = []
         for view in version.view_ids:
@@ -113,7 +113,7 @@ class TableExporter(http.Controller):
             #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
             request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)
         #All the views in the version published are copied without version_id   
-        for view in obj.browse(cr, uid, [int(version_id)],context).view_ids:
+        for view in obj.browse(cr, uid, int(version_id),context).view_ids:
             view.copy({'version_id': None}, context=context)
         request.session['version_id'] = 0
         request.session['master'] = 1
@@ -123,7 +123,7 @@ class TableExporter(http.Controller):
     def diff_version(self, version_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         mod_version = request.registry['website_version.version']
-        version = mod_version.browse(cr, uid, [int(version_id)],context)[0]
+        version = mod_version.browse(cr, uid, int(version_id),context)
         name_list = []
         for view in version.view_ids:
             name_list.append(view.name)
@@ -135,17 +135,17 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         result = {'ExpId':False, 'VarId': 0}
         obj_v = request.registry['ir.ui.view']
-        view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
+        view = obj_v.browse(cr, uid, int(view_id), context)
         #search all the running experiments with the key of view
         exp_ids = request.registry['website_version.experiment'].search(cr, uid, [('experiment_version_ids.version_id.view_ids.key', '=', view.key),('state','=','running'),('experiment_version_ids.version_id.website_id', '=',request.context['website_id'])],context=context)
         if exp_ids:
             #No overlap between running experiments then we can take the first one
-            x = request.registry['website_version.experiment'].browse(cr, uid, [exp_ids[0]],context)[0]
+            x = request.registry['website_version.experiment'].browse(cr, uid, exp_ids[0],context)
             result['ExpId'] = x.google_id
             if view.version_id:
                 exp_ver_ids = request.registry['website_version.experiment_version'].search(cr, uid, [('experiment_id','=',exp_ids[0]),('version_id','=',view.version_id.id)],context=context)
                 if exp_ver_ids:
-                    y = request.registry['website_version.experiment_version'].browse(cr, uid, [exp_ver_ids[0]],context)[0]
+                    y = request.registry['website_version.experiment_version'].browse(cr, uid, exp_ver_ids[0],context)
                     result['VarId'] = y.google_index  
         return result
 
@@ -189,7 +189,7 @@ class TableExporter(http.Controller):
         version = request.registry['website_version.version']
         goal = request.registry['website_version.goals']
         icp = request.registry['ir.config_parameter']
-        v = view.browse(cr,uid,[int(view_id)],context=context)
+        v = view.browse(cr,uid, int(view_id), context=context)
         website_id = request.website.id
         version_ids = version.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
         r1 = version.read(cr, uid, version_ids,['id','name'],context=context)
