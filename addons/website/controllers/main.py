@@ -67,6 +67,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             # page not found
             if request.website.is_publisher():
                 page = 'website.page_404'
+                return request.registry['ir.http']._handle_exception(e, 404)
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
 
