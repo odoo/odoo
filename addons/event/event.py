@@ -113,13 +113,6 @@ class event_event(models.Model):
     registration_ids = fields.One2many(
         'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
-    count_registrations = fields.Integer(string='Registrations', compute='_count_registrations')
-
-    @api.one
-    @api.depends('registration_ids')
-    def _count_registrations(self):
-        self.count_registrations = len(self.registration_ids)
-
     # Date fields
     date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
