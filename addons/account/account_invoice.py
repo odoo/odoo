@@ -86,9 +86,10 @@ class account_invoice(models.Model):
     @api.one
     @api.depends(
         'state', 'currency_id', 'invoice_line.price_subtotal',
-        'move_id.line_id.account_id.type',
-        'move_id.line_id.amount_residual',
-        'move_id.line_id.amount_residual_currency',
+#TODO: Need to refactor the code of '_compute_residual' method
+#         'move_id.line_id.account_id.type',
+#         'move_id.line_id.amount_residual',
+#         'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
     )
     def _compute_residual(self):
