@@ -26,7 +26,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, float_compare, float_is_zero
 from openerp import SUPERUSER_ID, api
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
@@ -363,7 +363,8 @@ class stock_quant(osv.osv):
         reserved_availability = move.reserved_availability
         #split quants if needed
         for quant, qty in quants:
-            if qty <= 0.0 or (quant and quant.qty <= 0.0):
+            if float_compare(qty, 0.0, precision_rounding=move.product_uom.rounding) <= 0 \
+                    or (quant and float_compare(quant.qty, 0.0, precision_rounding=move.product_uom.rounding) <= 0):
                 raise osv.except_osv(_('Error!'), _('You can not reserve a negative quantity or a negative quant.'))
             if not quant:
                 continue
@@ -559,7 +560,7 @@ class stock_quant(osv.osv):
             solving_qty = qty
             solved_quant_ids = []
             for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
-                if solving_qty <= 0:
+                if float_compare(solving_qty, 0.0, precision_rounding=to_solve_quant.product_id.uom_id.rounding) <= 0:
                     continue
                 solved_quant_ids.append(to_solve_quant.id)
                 self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
@@ -607,16 +608,16 @@ class stock_quant(osv.osv):
             domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
         res = []
         offset = 0
-        while quantity > 0:
+        while float_compare(quantity, 0.0, precision_rounding=product.uom_id.rounding) > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
                 res.append((None, quantity))
                 break
             for quant in self.browse(cr, uid, quants, context=context):
-                if quantity >= abs(quant.qty):
+                if float_compare(quantity, abs(quant.qty), precision_rounding=quant.product_id.uom_id.rounding) >= 0:
                     res += [(quant, abs(quant.qty))]
                     quantity -= abs(quant.qty)
-                elif quantity != 0:
+                elif not float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
                     res += [(quant, quantity)]
                     quantity = 0
                     break
@@ -1023,7 +1024,7 @@ class stock_picking(osv.osv):
         quants_suggested_locations = {}
         product_putaway_strats = {}
         for quant in quants:
-            if quant.qty <= 0:
+            if float_compare(quant.qty, 0.0, precision_rounding=quant.product_id.uom_id.rounding) <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(quant.product_id)
             quants_suggested_locations[quant] = suggested_location_id
@@ -1055,7 +1056,7 @@ class stock_picking(osv.osv):
 
         # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
         for product, qty in forced_qties.items():
-            if qty <= 0:
+            if float_compare(qty, 0.0, precision_rounding=product.uom_id.rounding) <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
             key = (product.id, False, False, False, picking.location_id.id, suggested_location_id)
@@ -1214,7 +1215,7 @@ class stock_picking(osv.osv):
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
-                        if not qty_to_assign > 0:
+                        if not float_compare(qty_to_assign, 0.0, precision_rounding=ops.product_uom_id.rounding) > 0:
                             break
                         if quant.id in quants_in_package_done:
                             continue
@@ -1230,7 +1231,7 @@ class stock_picking(osv.osv):
                             max_qty_on_link = min(quant.qty, qty_to_assign)
                             qty_on_link = _create_link_for_quant(ops.id, quant, max_qty_on_link)
                             qty_to_assign -= qty_on_link
-                if qty_to_assign > 0:
+                if float_compare(qty_to_assign, 0.0, precision_rounding=ops.product_uom_id.rounding) > 0:
                     #qty reserved is less than qty put in operations. We need to create a link but it's deferred after we processed
                     #all the quants (because they leave no choice on their related move and needs to be processed with higher priority)
                     still_to_do += [(ops, ops.product_id.id, qty_to_assign)]
@@ -1950,7 +1951,8 @@ class stock_move(osv.osv):
             'product_uom_qty': 0.00
         }
 
-        if (not product_id) or (product_uos_qty <= 0.0):
+        uos_rounding = product_uos and self.pool.get('product.uom').read(cr, uid, product_uos, ['rounding']) or None
+        if (not product_id) or (uos_rounding is None) or (float_compare(product_uos_qty, 0.0, precision_rounding=uos_rounding) <= 0):
             result['product_uos_qty'] = 0.0
             return {'value': result}
 
