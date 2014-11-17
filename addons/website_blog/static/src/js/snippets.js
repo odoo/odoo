@@ -22,8 +22,6 @@
             $('.search_contact').on('click', function (e) {
                 self.name = "";
                 self.find_existing();
-                console.log(self.$target[0].getAttribute('data-oe-id'));
-                //self.$target[0].innerHTML = 'OK';
 
             });
 
@@ -57,7 +55,8 @@
                     self.update_existing();
                 });
                 $('.yyy').on('click', function (e) {
-                var change_name = $(e.target).data("name");
+                    var change_name = $(e.target).data("name");
+                    var id_name = $(e.target).data("id");
                     self.$target[0].innerHTML = change_name;
 
                 });
@@ -84,6 +83,7 @@
                 $(".zzz").after(QWeb.render("blog_contact_search_update",{contacts:result}));
                 $('.yyy').on('click', function (e) {
                     var change_name = $(e.target).data("name");
+                    var id_name = $(e.target).data("id");
                     self.$target[0].innerHTML = change_name;
 
                 });

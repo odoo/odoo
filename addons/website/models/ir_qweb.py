@@ -445,6 +445,27 @@ class Contact(orm.AbstractModel):
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
     def from_html(self, cr, uid, model, field, element, context=None):
+        #from pudb import set_trace; set_trace()
+        # FIXME: layering violations all the things
+        Model = self.pool[element.get('data-oe-model')]
+        M2O = self.pool[field.comodel_name]
+        field_name = element.get('data-oe-field')
+        name = html_to_text(element)
+        id = int(element.get('data-oe-id'))
+        m2o_id = M2O.search(cr, uid,[('name', '=', name)], context=context)[0]
+        # FIXME: weird things are going to happen for char-type _rec_name
+        value = html_to_text(element)
+
+        # if anything blows up, just ignore it and bail
+        try:
+            Model.write(cr, uid, [id], {
+                field_name: m2o_id
+            }, context=context)
+        except:
+            logger.exception("Could not save %r to m2o field %s of model %s",
+                             value, field_name, Model._name)
+
+        # not necessary, but might as well be explicit about it
         return None
 
 class QwebView(orm.AbstractModel):

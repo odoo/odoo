@@ -4,14 +4,14 @@
         <ul class="dropdown-menu contact_menu" role="menu">
             <li class="zzz"><a><input href="#" type="email"  class="xxx" placeholder="Search contact"/></a></li>
             <t t-foreach="contacts" t-as="item">
-                <li class="yyy"><a href="#" t-att-data-name="item.name" data-action="change_name"><t t-esc="item.name"></t></a></li>
+                <li class="yyy"><a href="#" t-att-data-id="item.id" t-att-data-name="item.name" data-action="change_name"><t t-esc="item.name"></t></a></li>
             </t>
         </ul>
     </t>
 
     <t t-name="blog_contact_search_update">
         <t t-foreach="contacts" t-as="item">
-            <li class="yyy"><a href="#" t-att-data-name="item.name" data-action="change_name"><t t-esc="item.name"></t></a></li>
+            <li class="yyy"><a href="#" t-att-data-id="item.id" t-att-data-name="item.name" data-action="change_name"><t t-esc="item.name"></t></a></li>
         </t>
     </t>
 </templates>
