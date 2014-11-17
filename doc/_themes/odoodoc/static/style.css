@@ -5902,8 +5902,10 @@ button.close {
 .panel-body:after,
 .modal-footer:before,
 .modal-footer:after,
-.document-super:before,
-.document-super:after,
+.document-super:not(.stripe):before,
+.document-super:not(.stripe):after,
+.document-super.stripe:before,
+.document-super.stripe:after,
 .document:before,
 .document:after {
   content: " ";
@@ -5924,7 +5926,8 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after,
-.document-super:after,
+.document-super:not(.stripe):after,
+.document-super.stripe:after,
 .document:after {
   clear: both;
 }
@@ -6181,35 +6184,53 @@ body {
   overflow: auto;
   position: relative;
 }
-.document-super {
+.document-super:not(.stripe) {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
 @media (min-width: 768px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 750px;
   }
 }
 @media (min-width: 992px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 970px;
   }
 }
 @media (min-width: 1200px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 1170px;
   }
 }
-.document-super > .navbar-header,
-.document-super > .navbar-collapse {
+.document-super:not(.stripe) > .navbar-header,
+.document-super:not(.stripe) > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
-  .document-super > .navbar-header,
-  .document-super > .navbar-collapse {
+  .document-super:not(.stripe) > .navbar-header,
+  .document-super:not(.stripe) > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+.document-super.stripe {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.document-super.stripe > .navbar-header,
+.document-super.stripe > .navbar-collapse {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+@media (min-width: 768px) {
+  .document-super.stripe > .navbar-header,
+  .document-super.stripe > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
