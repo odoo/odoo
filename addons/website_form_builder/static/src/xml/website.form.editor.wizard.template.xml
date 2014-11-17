@@ -1,378 +1,378 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- MODAL DEFAULT WIZARD FORM FOR FORM EDITOR -->
 <templates xml:space="preserve">
-	<t t-name="website.form.editor.wizard.template.modelSelection">
-		<div class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">
-							<span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span>
-						</button>
-						<h4 class="modal-title">Add a New Form</h4>
-					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" role="form">
-							<div class="form-group">
-								<label for="formEditor-select-action" class="col-md-3 col-sm-4 control-label">Action : </label>
-								<div class="col-md-9 col-sm-8">
-									<select class="form-control form-select-action" id="formEditor-select-action">
-										<t t-raw="options" />
-									</select>
-								</div>
-							</div>
-							<div class="form-group form-action-mailto hidden">						
-								<label for="search" class="col-md-3 col-sm-4 control-label">E-mail :</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="form-control form-data">
-										<textarea class="search" rows="1"></textarea>
-									</div>
-								</div>								
-							</div>
-							<div class="form-group">
-								<label for="success" class="col-md-3 col-sm-4 control-label">Success Page :</label>
-								<div class="col-md-7 col-sm-8">
-									<input class="form-control form-data" type="text" name="success" id="success" value="page/success" />
-								</div>								
-							</div>
-							<div class="form-group">
-								<label for="fail" class="col-md-3 col-sm-4 control-label">Fail Page :</label>
-								<div class="col-md-7 col-sm-8">
-									<input class="form-control form-data" type="text" name="fail" id="fail" value="page/fail" />
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary validate">
-							Continue
-						</button>
-						<button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">
-							Cancel
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</t>
+    <t t-name="website.form.editor.wizard.template.modelSelection">
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Add a New Form</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="formEditor-select-action" class="col-md-3 col-sm-4 control-label">Action : </label>
+                                <div class="col-md-9 col-sm-8">
+                                    <select class="form-control form-select-action" id="formEditor-select-action">
+                                        <t t-raw="options" />
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group form-action-mailto hidden">
+                                <label for="search" class="col-md-3 col-sm-4 control-label">E-mail :</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <div class="form-control form-data">
+                                        <textarea class="search" rows="1"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="success" class="col-md-3 col-sm-4 control-label">Success Page :</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input class="form-control form-data" type="text" name="success" id="success" value="page/success" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fail" class="col-md-3 col-sm-4 control-label">Fail Page :</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input class="form-control form-data" type="text" name="fail" id="fail" value="page/fail" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary validate">
+                            Continue
+                        </button>
+                        <button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 
 <!-- MODAL DEFAULT WIZARD FORM FOR FIELDS EDITOR -->
 
 
-	<t t-name="website.form.editor.wizard.template.default">
-		<div class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">
-							<span aria-hidden="true">&amp;times;</span>
-							<span class="sr-only">Close</span>
-						</button>
-						<h4 class="modal-title">Configure a New <span class="field_name">Field</span></h4>
-					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" role="form">
-							<div class="form-group">
-								<label for="formFieldEditor-select-action" class="col-md-3 col-sm-4 control-label">Field :</label>
-								<div class="col-md-9 col-sm-8">
-									<select class="form-control form-select-field" id="formFieldEditor-select-action">
-										<option value="custom">Custom</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="formFieldEditor-label" class="col-md-3 col-sm-4 control-label">Label :</label>
-								<div class="col-md-9 col-sm-8">
-									<input type="text" class="form-control form-field-label" id="formFieldEditor-label" />
-								</div>
-							</div>
-							<t t-raw="subTemplate" />
-							<div class="form-group">
-								<label for="formFieldEditor-help" class="col-md-3 col-sm-4 control-label">Help :</label>
-								<div class="col-md-9 col-sm-8">
-									<input type="text" class="form-control form-field-help" id="formFieldEditor-help" />
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Required :</label>
-								<div class="col-md-9 col-sm-8">
-									<input type="checkbox" class="form-field-required" id="formFieldEditor-required" />
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary validate">Continue</button>
-						<button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</t>
+    <t t-name="website.form.editor.wizard.template.default">
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&amp;times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Configure a New <span class="field_name">Field</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="formFieldEditor-select-action" class="col-md-3 col-sm-4 control-label">Field :</label>
+                                <div class="col-md-9 col-sm-8">
+                                    <select class="form-control form-select-field" id="formFieldEditor-select-action">
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="formFieldEditor-label" class="col-md-3 col-sm-4 control-label">Label :</label>
+                                <div class="col-md-9 col-sm-8">
+                                    <input type="text" class="form-control form-field-label" id="formFieldEditor-label" />
+                                </div>
+                            </div>
+                            <t t-raw="subTemplate" />
+                            <div class="form-group">
+                                <label for="formFieldEditor-help" class="col-md-3 col-sm-4 control-label">Help :</label>
+                                <div class="col-md-9 col-sm-8">
+                                    <input type="text" class="form-control form-field-help" id="formFieldEditor-help" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Required :</label>
+                                <div class="col-md-9 col-sm-8">
+                                    <input type="checkbox" class="form-field-required" id="formFieldEditor-required" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary validate">Continue</button>
+                        <button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 
-	<!-- MODAL INPUT WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.input">
-			<div>
-				
-				<div class="form-group">
-					<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-					<div class="col-md-9 col-sm-8">
-						<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-					</div>
-				</div>
-				
-				<div class="form-group">
-					<label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Prefix :</label>
-					<div class="col-md-9 col-sm-8">
-						<input type="text"  class="form-control form-field-prepend" id="formFieldEditor-prepend" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Sufix :</label>
-					<div class="col-md-9 col-sm-8">
-						<input type="text"  class="form-control form-field-append" id="formFieldEditor-append" />
-					</div>
-				</div>
-				
-			</div>
-		</t>
-	
-	<!-- MODAL TEXTAREA WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.textarea">
-		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-				</div>
-			</div>
-		</div>
-	</t>
-	
-	<!-- MODAL HIDDEN WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.hidden">
-		<div>
-			<div class="form-group form-composit-value">
-				<label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Composit Value :</label>
-				<div class="col-md-9 col-sm-8">
-					<div class="form-control form-data">
-						<textarea class="form-field-value" id="formFieldEditor-value" row="1"></textarea>
-					</div>
-				</div> 
-			</div> 
-		</div>
-	</t>
-		<!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.checkbox">
-		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
-				<div class="col-md-9 col-sm-8 form-editor-table">
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th>Option</th>
-								<th>Value</th>
-								<th class="tb-actions"><input type="checkbox" /></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>	
-			</div>
-			<div class="form-group">
-				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
-				</div>
-			</div>
-		</div>
-	</t>
-	
-	<!-- MODAL MULTI-CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.radio">
-		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
-				<div class="col-md-9 col-sm-8 form-editor-table">
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th>Option</th>
-								<th>Value</th>
-								<th class="tb-actions"><input type="checkbox" /></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>	
-			</div>
-			<div class="form-group">
-				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
-				</div>
-			</div>
-		</div>
-	</t>	
-	<!-- MODAL SELECT WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.select">
-		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
-				<div class="col-md-9 col-sm-8 form-editor-table">
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th>Option</th>
-								<th>Value</th>
-								<th class="tb-actions"><input type="checkbox" /></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
-				</div>
-			</div>
-		</div>
-	</t>
-	<!-- MODAL SEARCH WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.search">
-		
-			<div>
-				<div class="form-group">
-					<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-					<div class="col-md-9 col-sm-8">
-						<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
-					<div class="col-md-9 col-sm-8 form-editor-table">
-						<table class="table table-condensed">
-							<thead>
-								<tr>
-									<th>Option</th>
-									<th>Value</th>
-									<th class="tb-actions"><input type="checkbox" /></th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
-					<div class="col-md-9 col-sm-8">
-						<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
-					</div>
-				</div>
-			</div>
-	</t>
-	<!-- MODAL UPLOAD WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.inputfile">
-		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-button-label" class="col-md-3 col-sm-4 control-label">Button label :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="text" class="form-control form-button-label" id="formFieldEditor-button-label" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
-				<div class="col-md-9 col-sm-8">
-					<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
-				</div>
-			</div>
-		</div>
-	</t>
-		
-	<!-- OPTION TEMPLATE FOR CHECKBOX -->
-	<t t-name="website.form.editor.template.option.checkbox">
-		<div t-att-class="visible">
-			<div class="checkbox">
-				<label t-att-for="id">
-					<input type="checkbox" t-att-id="id" t-att-name="id_label" t-att-value="value" />
-					<span class="option"><t t-raw="label" /></span>
-				</label>
-			</div>
-		</div>
-	</t>
-	<!-- OPTION TEMPLATE FOR CHECKBOX -->
-	<t t-name="website.form.editor.template.option.radio">
-		<div t-att-class="visible">
-			<div class="radio">
-				<label t-att-for="id">
-					<input type="radio" t-att-id="id" t-att-name="id_label" t-att-value="value" />
-					<span class="option"><t t-raw="label" /></span>
-				</label>
-			</div>
-		</div>
-	</t>
-		
-		<!-- OPTION TEMPLATE FOR SELECT -->
-	<t t-name="website.form.editor.template.option.select">
-			<option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
-	</t>		
-	
-		<!-- OPTION TEMPLATE FOR SEARCH -->
-	<t t-name="website.form.editor.template.option.search">
-			<option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
-	</t>
-	
-		<!-- OPTION TEMPLATE FOR OPTION WIZARD -->
-	<t t-name="webiste.form.editor.wizard.option.template">
-		<tr class="last">
-			<td contenteditable="true" class="option-label">New Option Label</td>
-			<td contenteditable="true" class="option-value">New Option Value</td>
-			<td class="option-trash">
-				<a class="delete" href="#"><i class="fa fa-trash-o"></i></a>
-				<input type="checkbox" class="delete" />
-			</td>
-		</tr>
-		<tr class="form-editor-add">
-			<td colspan="3"><input type="button" class="btn btn-default" value="+" /></td>
-		</tr>
-	</t>
-	
-		<!-- ALERT MESSAGE FOR FORM BUILDER --> 
-		
-	<t t-name="website.form.editor.error">
-		<div class="alert alert-danger form-builder-error-message" role="alert">
-		  <t t-raw="message"/>
-		</div>	
-	</t>
+    <!-- MODAL INPUT WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.input">
+            <div>
+                
+                <div class="form-group">
+                    <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+                    <div class="col-md-9 col-sm-8">
+                        <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Prefix :</label>
+                    <div class="col-md-9 col-sm-8">
+                        <input type="text"  class="form-control form-field-prepend" id="formFieldEditor-prepend" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Sufix :</label>
+                    <div class="col-md-9 col-sm-8">
+                        <input type="text"  class="form-control form-field-append" id="formFieldEditor-append" />
+                    </div>
+                </div>
+                
+            </div>
+        </t>
+    
+    <!-- MODAL TEXTAREA WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.textarea">
+        <div>
+            <div class="form-group">
+                <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                </div>
+            </div>
+        </div>
+    </t>
+    
+    <!-- MODAL HIDDEN WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.hidden">
+        <div>
+            <div class="form-group form-composit-value">
+                <label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Composit Value :</label>
+                <div class="col-md-9 col-sm-8">
+                    <div class="form-control form-data">
+                        <textarea class="form-field-value" id="formFieldEditor-value" row="1"></textarea>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </t>
+        <!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.checkbox">
+        <div>
+            <div class="form-group">
+                <label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
+                <div class="col-md-9 col-sm-8 form-editor-table">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Value</th>
+                                <th class="tb-actions"><input type="checkbox" /></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>    
+            </div>
+            <div class="form-group">
+                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
+                </div>
+            </div>
+        </div>
+    </t>
+    
+    <!-- MODAL MULTI-CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.radio">
+        <div>
+            <div class="form-group">
+                <label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
+                <div class="col-md-9 col-sm-8 form-editor-table">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Value</th>
+                                <th class="tb-actions"><input type="checkbox" /></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>    
+            </div>
+            <div class="form-group">
+                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
+                </div>
+            </div>
+        </div>
+    </t>    
+    <!-- MODAL SELECT WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.select">
+        <div>
+            <div class="form-group">
+                <label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
+                <div class="col-md-9 col-sm-8 form-editor-table">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Value</th>
+                                <th class="tb-actions"><input type="checkbox" /></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- MODAL SEARCH WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.search">
+        
+            <div>
+                <div class="form-group">
+                    <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+                    <div class="col-md-9 col-sm-8">
+                        <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
+                    <div class="col-md-9 col-sm-8 form-editor-table">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Value</th>
+                                    <th class="tb-actions"><input type="checkbox" /></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
+                    <div class="col-md-9 col-sm-8">
+                        <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+                    </div>
+                </div>
+            </div>
+    </t>
+    <!-- MODAL UPLOAD WIZARD ADD-ON FORM FOR FORM EDITOR -->
+    <t t-name="website.form.editor.wizard.template.inputfile">
+        <div>
+            <div class="form-group">
+                <label for="formFieldEditor-button-label" class="col-md-3 col-sm-4 control-label">Button label :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="text" class="form-control form-button-label" id="formFieldEditor-button-label" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+                </div>
+            </div>
+        </div>
+    </t>
+        
+    <!-- OPTION TEMPLATE FOR CHECKBOX -->
+    <t t-name="website.form.editor.template.option.checkbox">
+        <div t-att-class="visible">
+            <div class="checkbox">
+                <label t-att-for="id">
+                    <input type="checkbox" t-att-id="id" t-att-name="id_label" t-att-value="value" />
+                    <span class="option"><t t-raw="label" /></span>
+                </label>
+            </div>
+        </div>
+    </t>
+    <!-- OPTION TEMPLATE FOR CHECKBOX -->
+    <t t-name="website.form.editor.template.option.radio">
+        <div t-att-class="visible">
+            <div class="radio">
+                <label t-att-for="id">
+                    <input type="radio" t-att-id="id" t-att-name="id_label" t-att-value="value" />
+                    <span class="option"><t t-raw="label" /></span>
+                </label>
+            </div>
+        </div>
+    </t>
+        
+        <!-- OPTION TEMPLATE FOR SELECT -->
+    <t t-name="website.form.editor.template.option.select">
+            <option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
+    </t>        
+    
+        <!-- OPTION TEMPLATE FOR SEARCH -->
+    <t t-name="website.form.editor.template.option.search">
+            <option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
+    </t>
+    
+        <!-- OPTION TEMPLATE FOR OPTION WIZARD -->
+    <t t-name="webiste.form.editor.wizard.option.template">
+        <tr class="last">
+            <td contenteditable="true" class="option-label">New Option Label</td>
+            <td contenteditable="true" class="option-value">New Option Value</td>
+            <td class="option-trash">
+                <a class="delete" href="#"><i class="fa fa-trash-o"></i></a>
+                <input type="checkbox" class="delete" />
+            </td>
+        </tr>
+        <tr class="form-editor-add">
+            <td colspan="3"><input type="button" class="btn btn-default" value="+" /></td>
+        </tr>
+    </t>
+    
+        <!-- ALERT MESSAGE FOR FORM BUILDER --> 
+        
+    <t t-name="website.form.editor.error">
+        <div class="alert alert-danger form-builder-error-message" role="alert">
+          <t t-raw="message"/>
+        </div>
+    </t>
 
-			<!-- PROGRESS BAR POPUP --> 
-		
-	<t t-name="website.form.editor.progress">
-		<div class="modal fade">
-			<div class="modal-dialog">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
-		        		<h4 class="modal-title">Uploading File &amp;hellip;</h4>
-		      		</div>
-				    <div class="modal-body">
-				        <div class="progress">
-  							<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>	
-						</div>
-						<div class="progress-size"><span class="download-size">0</span> / <span class="total-size">0</span></div>
-				    </div>
-		    	</div>
-		  	</div>
-		</div>
-	</t>
+            <!-- PROGRESS BAR POPUP --> 
+        
+    <t t-name="website.form.editor.progress">
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Uploading File &amp;hellip;</h4>
+                      </div>
+                    <div class="modal-body">
+                        <div class="progress">
+                              <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                        <div class="progress-size"><span class="download-size">0</span> / <span class="total-size">0</span></div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </t>
 
 </templates>
