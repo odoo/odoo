@@ -1422,13 +1422,13 @@ class Action(openerpweb.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.read([action_id], ['type'], req.context)
+        base_action = Actions.read([action_id], ['type'], req.session.get_context())
         if base_action:
-            ctx = {}
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report.xml':
-                ctx.update({'bin_size': True})
-            ctx.update(req.context)
+                ctx = dict(req.context, bin_size=True)
+            else:
+                ctx = req.session.get_context()
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0])
