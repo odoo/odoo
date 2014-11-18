@@ -276,7 +276,7 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return login_redirect()
 
-        post_tag_ids = forum.tag_to_write_vals(post.get('post_tags', False))
+        post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', False))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
             'name': post.get('post_name', ''),
@@ -336,7 +336,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        post_tags = forum.tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),

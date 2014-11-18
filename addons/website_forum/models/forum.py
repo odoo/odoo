@@ -105,7 +105,7 @@ class Forum(models.Model):
         return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
 
     @api.model
-    def tag_to_write_vals(self, tags=''):
+    def _tag_to_write_vals(self, tags=''):
         User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
