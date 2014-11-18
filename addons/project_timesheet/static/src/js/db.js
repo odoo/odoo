@@ -138,7 +138,9 @@ function odoo_project_timesheet_db(project_timesheet) {
             this.sequence = 0;
             var activities = this.load("activities");
             var activity_id_list = _.map(
-                                _.pluck(activities, 'reference_id'), function(reference_id) {
+                                _.filter(_.pluck(activities, 'reference_id'), function(reference_id) {
+                                    return !_.isUndefined(reference_id);
+                                }), function(reference_id) {
                                     var splitted_values = reference_id.split("-");
                                     return parseInt(splitted_values[splitted_values.length-1]) || 0;
                                 });

@@ -405,14 +405,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.ActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "ActivityScreen",
+        events: {
+            "click .pt_timer_button button": "on_timer",
+            "click .activity_row": "on_row_click",
+            "click .pt_duration_line": "on_duration_click",
+        },
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.activities = [];
-        },
-        start: function() {
-            var self = this;
-            this._super.apply(this, arguments);
         },
         show: function() {
             var self = this;
@@ -428,7 +429,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
 
             this.is_available_timer_activity();
-            this.$el.find(".pt_timer_button button").off("click").on("click", this.on_timer);
             //When Cancel is clicked it should move user to Activity List screen
             this.$el.find(".pt_add_activity").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
@@ -439,8 +439,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync", {}, {}, false, true);
             });
-            this.$el.find(".activity_row").on("click", this.on_row_click);
-            this.$el.find(".pt_duration_line").on("click", this.on_duration_click);
             this.$el.find(".pt_total").html(this.get_total());
         },
         hide: function() {
@@ -478,15 +476,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_duration_click: function(event) {
             event.stopImmediatePropagation();
-            console.log("this.get_current_UTCDate() is ::: ", this.get_current_UTCDate());
-            console.log("Is hidden :::: ", this.$el.find(".pt_timer_start").hasClass("o_hidden"));
+            //FIXME: Remove this o_hidden class based condition
             if (this.$el.find(".pt_timer_start").hasClass("o_hidden")) {
                 return;
             }
             var activity_id = $(event.currentTarget).data("activity_id");
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var hours = this.format_duration(activity.unit_amount);
-            console.log("hours is ::: ", hours);
             var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
             console.log("current_date is ::: ", current_date);
             var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
@@ -520,7 +516,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return data;
         },
         get_pending_lines: function() {
-            console.log("get_pending_lines are inside ActivityScreen ::: ");
             return this.project_timesheet_model.get_pending_records();
         },
         get_total: function() {
@@ -540,11 +535,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         is_available_timer_activity: function() {
             var time_activity = this.project_timesheet_db.get_current_timer_activity();
-            console.log("Inside is_available_timer_activity ::: ", time_activity);
             if (time_activity && time_activity['date']) {
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
                 var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['timer_date'])));
-                console.log("difference is ::: ", durationObj, durationObj.asHours(), durationObj.asMinutes(), durationObj.asSeconds());
                 var hours = durationObj.asHours().toString().split('.')[0],
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
                     seconds = (durationObj.asSeconds() % 60).toString().split(".")[0];
@@ -607,7 +600,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 var activity = this.project_timesheet_db.load("timer_activity");
                 var hours = this.get_date_diff(this.get_current_UTCDate(), activity.timer_date) || 0.01;
                 activity['unit_amount'] = hours;
-                console.log("activity.id is ::: ", activity.id);
                 if (!activity.id) {
                     activity['id'] = this.project_timesheet_db.get_unique_id();
                     activity['command'] = 0; //By default command = 0, activity which is to_create
@@ -672,19 +664,20 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "AddActivityScreen",
+        events: {
+            "click .pt_btn_add_activity": "on_activity_add",
+            "click .pt_btn_edit_activity": "on_activity_edit",
+            "click .pt_btn_remove_activity": "on_activity_remove",
+        },
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
             this.mode = options.mode || 'create';
             this.current_id = null;
             this.project_timesheet_widget = project_timesheet_widget;
-            this._drop_shown = false;
         },
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
-            this.$el.find(".pt_btn_edit_activity").on("click", this.on_activity_edit);
-            this.$el.find(".pt_btn_remove_activity").on("click", this.on_activity_remove);
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
@@ -692,7 +685,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         get_form_data: function() {
             var self = this;
             var project_activity_data = {};
-            //$form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val() || 0) * 100) / 60))/100)) || 0;
             project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
             project_activity_data['task_id'] = self.task_m2o.get("value") ? ([self.task_m2o.get("value"), self.task_m2o.get("display_string")]) : false;
@@ -720,7 +712,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 return;
             }
             var project_activity_data = this.get_form_data();
-            console.log("project_activity_data after edit ::: ", project_activity_data);
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             if (!(this.project_timesheet_db.virtual_id_regex.test(project_activity_data['id']))) {
                 project_activity_data['command'] = 1;
@@ -771,13 +762,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
-                console.log("Inside project m2o value changed :::: ");
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
             this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
-            console.log("project m2o before change bind ::: ", this.project_m2o.$el.find("textarea"));
             this.project_m2o.$el.find("textarea").on("change", function() {
                 self.task_m2o.set({display_string: false, value: false});
                 self.task_m2o.display_string(false);
@@ -826,7 +815,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var project_id = this.project_m2o.get('value');
             var projects_collection = this.project_timesheet_model.get('projects');
             var project_model = projects_collection.get(project_id);
-            console.log("Inside set_project_model ::: ", project_model);
             this.task_m2o.model = project_model;
         },
         format_duration: function(field_val) {
@@ -875,9 +863,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
     });
 
-    //TODO: We can override show method, when user document's cookie is already set with session_id then do not ask for server name, db, username, and password, directy give Synchronize button
-    //When Sync screen is displayed check session first whether session_id exist then call reload session and do not display db, username, password elements
-    //May be give message in template that you are already logged in, login with other user ?
     project_timesheet.SyncScreen = project_timesheet.ScreenWidget.extend({
         template: "SyncScreen",
         events: {
@@ -1165,6 +1150,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 });
                 graph_data = _.sortBy(graph_data, function(record) {return record.date;});
             }
+            console.log("Inside draw_chart after adding missing dates ::: ", graph_data);
 
             _.each(graph_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
@@ -1184,7 +1170,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     }
                 });
             });
-            console.log("Before rendering actual data :::: ", this.$el.find(".pt_stat_table"), table_data);
             this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
             chart.parse(graph_data,"json");
         },

@@ -61,6 +61,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.label = options.label;
             this.id_for_input = options.id_for_input;
             this.project_timesheet_db = project_timesheet.project_timesheet_model.project_timesheet_db;
+            this._drop_shown = false;
             this._super.apply(this, arguments);
             this.set({value: false, display_string: false, effective_readonly: false});
         },

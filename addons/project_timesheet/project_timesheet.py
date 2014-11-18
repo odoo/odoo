@@ -528,7 +528,8 @@ class hr_analytic_timesheet(osv.Model):
                     if amount_unit and 'amount' in amount_unit.get('value',{}):
                         vals_line['amount'] = amount_unit['value']['amount']
                     ctx = copy.deepcopy(context)
-                    ctx['__last_update'] = record.get('__last_update')
+                    #TODO: To check, pass __last_update in context
+                    #ctx['__last_update'] = record.get('__last_update')
                     print "\n\ncontext in write ::: ", context
                     self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
                 elif record.get('command') == 2:
