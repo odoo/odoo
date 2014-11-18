@@ -38,6 +38,12 @@ class account_analytic_journal(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({'line_ids': False})
+        return super(account_analytic_journal, self).copy_data(cr, uid, id, default, context)
+
 account_analytic_journal()
 
 class account_journal(osv.osv):
