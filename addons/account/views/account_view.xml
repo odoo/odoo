@@ -968,7 +968,7 @@
                             <page string="Information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                         <field name="debit"/>
                                         <field name="credit"/>
                                         <field name="quantity"/>
@@ -1024,7 +1024,7 @@
                                 <field name="name"/>
                                 <field name="date"/>
                                 <field name="journal_id" readonly="False"/>
-                                <field name="account_id" domain="[('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
+                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                                 <newline/>
                                 <field name="debit"/>
@@ -1060,14 +1060,14 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" editable="top">
+                <tree string="Journal Items" create="true" editable="top">
                     <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                     <field name="move_id" required="0"/>
@@ -1099,7 +1099,6 @@
                 <search string="Search Journal Items">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
-                    <filter string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                     <separator/>
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
