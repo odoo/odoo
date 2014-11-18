@@ -166,6 +166,12 @@ html_sidebars = {
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
 
+latex_elements = {
+    'papersize': r'a4paper',
+    'preamble': u'''\\setcounter{tocdepth}{2}
+''',
+}
+
 # default must be set otherwise ifconfig blows up
 todo_include_todos = False
 

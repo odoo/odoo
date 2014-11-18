@@ -16,6 +16,7 @@ from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
+
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
     pass
@@ -102,6 +103,26 @@ class Forum(models.Model):
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
+
+    @api.model
+    def tag_to_write_vals(self, tags=''):
+        User = self.env['res.users']
+        Tag = self.env['forum.tag']
+        post_tags = []
+        for tag in filter(None, tags.split(',')):
+            if tag.startswith('_'):  # it's a new tag
+                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                tag_ids = Tag.search([('name', '=', tag[1:])])
+                if tag_ids:
+                    post_tags.append((4, int(tag_ids[0])))
+                else:
+                    # check if user have Karma needed to create need tag
+                    user = User.sudo().browse(self._uid)
+                    if user.exists() and user.karma >= self.karma_retag:
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+            else:
+                post_tags.append((4, int(tag)))
+        return post_tags
 
 
 class Post(models.Model):
