@@ -108,6 +108,12 @@
         Partners Extension
         -->
 
+        <record id="action_reconcile_partner" model="ir.actions.client">
+            <field name="name">Reconciliation on Partner</field>
+            <field name="tag">manual_reconciliation_view</field>
+            <field name="context">{'partner_id': active_id}</field>
+        </record>
+
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.property.form.inherit</field>
             <field name="model">res.partner</field>
@@ -132,7 +138,10 @@
                         <group string="Accounting Entries" name="accounting_entries">
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
-                            <field name="last_reconciliation_date"/>
+                            <field name="last_time_entries_checked"/>
+                            <button string="Reconcile" type="action" class="oe_highlight"
+                                name="%(action_reconcile_partner)d"
+                                attrs="{'invisible':[('is_company','=',False),('parent_id','=',False)]}"/>
                         </group>
                     </group>
                     <group string="Bank Accounts" name="bank_accounts">

@@ -4,6 +4,7 @@ from operator import itemgetter
 import time
 
 from openerp import models, fields, api
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class account_fiscal_position(models.Model):
     _name = 'account.fiscal.position'
@@ -228,7 +229,7 @@ class res_partner(models.Model):
             WHERE a.reconcile IS TRUE
             AND p.id = %s
             AND l.reconcile_id IS NULL
-            AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
+            AND (p.last_time_entries_checked IS NULL OR l.date > p.last_time_entries_checked)
             GROUP BY l.partner_id''', (self.id,))
         res = self._cr.dictfetchone()
         if res:
@@ -237,7 +238,7 @@ class res_partner(models.Model):
 
     @api.multi
     def mark_as_reconciled(self):
-        return self.write({'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
 
     vat_subjected = fields.Boolean('VAT Legal Statement', 
@@ -272,18 +273,15 @@ class res_partner(models.Model):
          string ='Supplier Payment Term',
          help="This payment term will be used instead of the default one for purchase orders and supplier invoices")
     ref_companies = fields.One2many('res.company', 'partner_id',
-        'Companies that refers to partner')
-    last_reconciliation_date = fields.Datetime(
-        'Latest Full Reconciliation Date', copy=False,
-        help='Date on which the partner accounting entries were fully reconciled last time. '
-             'It differs from the last date where a reconciliation has been made for this partner, '
-             'as here we depict the fact that nothing more was to be reconciled at this date. '
-             'This can be achieved in 2 different ways: either the last unreconciled debit/credit '
-             'entry of this partner was reconciled, either the user pressed the button '
-             '"Nothing more to reconcile" during the manual reconciliation process.')
+        string='Companies that refers to partner')
+    last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date'
+        string='Latest Manual Reconciliation Date', readonly=True, copy=False,
+        help='Last time the manual reconciliation was performed for this partner. '
+             'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
+             'or if you click the "Done" button.')
 
     @api.model
     def _commercial_fields(self):
         return super(res_partner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
-             'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
+             'property_payment_term', 'property_supplier_payment_term', 'last_time_entries_checked']

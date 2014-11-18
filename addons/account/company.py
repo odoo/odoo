@@ -6,6 +6,8 @@ class res_company(models.Model):
     _inherit = "res.company"
 
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
+    bank_account_code_char = fields.Char(string='Code of the main bank account')
+    accounts_code_digits = fields.Integer(string='Number of digits in an account code')
     tax_calculation_rounding_method = fields.Selection([
             ('round_per_line', 'Round per Line'),
             ('round_globally', 'Round Globally'),
