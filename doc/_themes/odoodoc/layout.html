@@ -87,7 +87,7 @@
           {%- if show_copyright %}
             <li>
               {%- if hasdoc('copyright') %}
-                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>{% endtrans %}
               {%- else %}
                 {% trans copyright=copyright|e %}&copy; Copyright <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
               {%- endif %}
