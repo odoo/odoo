@@ -10,6 +10,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import openerp.addons.decimal_precision as dp
 
@@ -297,18 +298,18 @@ class account_account(models.Model):
         for account in self:
             account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
 
-    name = fields.Char(string='Name', required=True, index=True)
+    name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
-    code = fields.Char(string='Code', size=64, required=True, index=True)
-    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
+    code = fields.Char(size=64, required=True, index=True)
+    deprecated = fields.Boolean(index=True, default=False)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
-    balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Balance')
-    credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'), string='Credit')
-    debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'), string='Debit')
+    balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'))
+    credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'))
+    debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'))
     foreign_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Foreign Balance',
         help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
 
@@ -317,6 +318,9 @@ class account_account(models.Model):
     unrealized_gain_loss = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Unrealized Gain or Loss',
         help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions.")
     exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
+    last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
+        help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
+        'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.'),
 
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows reconciliation of journal items.")
@@ -377,6 +381,28 @@ class account_account(models.Model):
         if partner_prop_acc:
             raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return super(account_account, self).unlink()
+
+    @api.one
+    def has_something_to_reconcile(self):
+        ''' at least a debit, a credit and a line older than the last reconciliation date of the account '''
+        self.env.cr.execute('''
+            SELECT l.account_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
+            FROM account_move_line l
+            RIGHT JOIN account_account a ON (a.id = l.account_id)
+            WHERE a.reconcile IS TRUE
+            AND a.id = %s
+            AND l.reconcile_id IS NULL
+            AND (a.last_time_entries_checked IS NULL OR l.date > a.last_time_entries_checked)
+            AND l.state <> 'draft'
+            GROUP BY l.account_id''', (self.id,))
+        res = self.env.cr.dictfetchone()
+        if res:
+            return bool(res['debit'] and res['credit'])
+        return False
+
+    @api.multi
+    def mark_as_reconciled(self):
+        return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
 
 class account_journal(models.Model):
@@ -1986,6 +2012,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         company_id = self.company_id.id
 
         self.company_id.write({'currency_id': self.currency_id.id})
+        self.company_id.write({'accounts_code_digits': self.code_digits})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
@@ -2012,74 +2039,77 @@ class wizard_multi_charts_accounts(models.TransientModel):
         return {}
 
     @api.model
-    def _prepare_bank_journal(self, line, current_num, default_account_id, company_id):
+    def _prepare_bank_journal(self, company, line, default_account_id):
         '''
         This function prepares the value to use for the creation of a bank journal created through the wizard of
         generating COA from templates.
 
         :param line: dictionary containing the values encoded by the user related to his bank account
-        :param current_num: integer corresponding to a counter of the already created bank journals through this wizard.
         :param default_account_id: id of the default debit.credit account created before for this journal.
         :param company_id: id of the company for which the wizard is running
         :return: mapping of field names and values
         :rtype: dict
         '''
 
-        # we need to loop again to find next number for journal code
-        # because we can't rely on the value current_num as,
-        # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank)
-        # and the next number for account code might have been already used before for journal
-        for num in xrange(current_num, 100):
+        # we need to loop to find next number for journal code
+        for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)], limit=1)
+            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
             if not Journals:
                 break
         else:
             raise Warning(_('Cannot generate an unused journal code.'))
 
-        vals = {
+        return = {
                 'name': line['acc_name'],
                 'code': journal_code,
                 'type': line['account_type'] == 'cash' and 'cash' or 'bank',
-                'company_id': company_id,
+                'company_id': company.id,
                 'analytic_journal_id': False,
-                'currency': False,
+                'currency': line['currency_id'] or False,
                 'default_credit_account_id': default_account_id,
                 'default_debit_account_id': default_account_id,
         }
-        if line['currency_id']:
-            vals['currency'] = line['currency_id']
-        
-        return vals
 
     @api.model
-    def _prepare_bank_account(self, line, new_code, acc_template_ref, ref_acc_bank, company_id):
+    def _prepare_bank_account(self, company, line, acc_template_ref=False, ref_acc_bank=False):
         '''
         This function prepares the value to use for the creation of the default debit and credit accounts of a
         bank journal created through the wizard of generating COA from templates.
 
+        :param company: company for which the wizard is running
         :param line: dictionary containing the values encoded by the user related to his bank account
-        :param new_code: integer corresponding to the next available number to use as account code
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
         :param ref_acc_bank: browse record of the account template set as root of all bank accounts for the chosen
             template
-        :param company_id: id of the company for which the wizard is running
         :return: mapping of field names and values
         :rtype: dict
         '''
+
+        # Seek the next available number for the account code
+        code_digits = company.accounts_code_digits or 0
+        bank_account_code_char = company.bank_account_code_char or ''
+        available_digits = code_digits - len(bank_account_code_char)
+        for num in xrange(1, pow(10, available_digits)):
+            new_code = str(bank_account_code_char.ljust(code_digits-len(str(num)), '0')) + str(num)
+            recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])
+            if not recs:
+                break
+        else:
+            raise Warning(_('Error!'), _('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
         cash_type = self.env.ref('account.data_account_type_cash') or False
         bank_type = self.env.ref('account.data_account_type_bank') or False
         return {
                 'name': line['acc_name'],
-                'currency_id': line['currency_id'],
+                'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
                 'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
-                'company_id': company_id,
+                'company_id': company.id,
         }
 
     @api.one
@@ -2093,8 +2123,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             of the accounts that have been generated from them.
         :return: True
         '''
-        AccountObj = self.env['account.account']
-        code_digits = self.code_digits
+        company = self.env['res.company'].search(company_id)
 
         # Build a list with all the data to process
         journal_data = []
@@ -2109,25 +2138,16 @@ class wizard_multi_charts_accounts(models.TransientModel):
         ref_acc_bank = self.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
+        company.write({'bank_account_code_char': ref_acc_bank.code})
 
-        current_num = 1
         for line in journal_data:
-            # Seek the next available number for the account code
-            while True:
-                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
-                Account = AccountObj.search([('code', '=', new_code), ('company_id', '=', company_id)], limit=1)
-                if not Account:
-                    break
-                else:
-                    current_num += 1
             # Create the default debit/credit accounts for this bank journal
-            vals = self._prepare_bank_account(line, new_code, acc_template_ref, ref_acc_bank, company_id)
-            default_account  = AccountObj.create(vals)
+            vals = self._prepare_bank_account(company, line, acc_template_ref, ref_acc_bank)
+            default_account  = self.env['account.account'].create(vals)
 
             #create the bank journal
-            vals_journal = self._prepare_bank_journal(line, current_num, default_account.id, company_id)
+            vals_journal = self._prepare_bank_journal(company, line, default_account.id)
             self.env['account.journal'].create(vals_journal)
-            current_num += 1
         return True
 
 
@@ -2139,3 +2159,26 @@ class account_bank_accounts_wizard(models.TransientModel):
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
     account_type = fields.Selection([('cash', 'Cash'), ('check', 'Check'), ('bank', 'Bank')], string='Account Type')
+
+
+class account_operation_template(models.Model):
+    _name = "account.operation.template"
+    _description = "Preset to create journal entries during a reconciliation"
+
+    name = fields.Char(string='Button Label', required=True)
+    sequence = fields.Integer(required=True, default=10)
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    label = fields.Char(string='Journal Item Label')
+    amount_type = fields.Selection(selection=[('fixed', 'Fixed'),('percentage','Percentage of amount')], string='Amount type', required=True, default='percentage')
+    amount = fields.Float(digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')
+    has_second_line = fields.boolean(string='Second line', default=False)
+    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    second_label = fields.Char(string='Label')
+    second_amount_type = fields.Selection(selection=[('fixed', 'Fixed'),('percentage','Percentage of amount')], string='Amount type', required=True, default='percentage')
+    second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')

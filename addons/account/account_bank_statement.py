@@ -2,7 +2,7 @@
 
 import time
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api, expression, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
@@ -689,25 +689,3 @@ class account_bank_statement_line(models.Model):
     amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.",
         digits=dp.get_precision('Account'))
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
-
-
-class account_statement_operation_template(models.Model):
-    _name = "account.statement.operation.template"
-    _description = "Preset for the lines that can be created in a bank statement reconciliation"
-
-    name = fields.Char(string='Button Label', required=True)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain=[('deprecated', '=', False)])
-    label = fields.Char(string='Label')
-    amount_type = fields.Selection([
-            ('fixed', 'Fixed'),
-            ('percentage_of_total', 'Percentage of total amount'),
-            ('percentage_of_balance', 'Percentage of open balance')
-        ],
-        string='Amount type', required=True, default='percentage_of_balance')
-    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'),
-        help='''The amount will count as a debit if it is negative, as a credit if it is positive 
-        (except if amount type is 'Percentage of open balance').''',
-        required=True, default=100.0)
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')

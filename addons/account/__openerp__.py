@@ -93,9 +93,8 @@
         'views/account.xml',
     ],
     'qweb' : [
-        "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
-        "static/src/xml/account_bank_statement_reconciliation.xml",
+        "static/src/xml/account_reconciliation.xml",
     ],
     'demo': [
         'demo/account_demo.xml',
