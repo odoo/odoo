@@ -22,7 +22,7 @@ import logging
 import time
 
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from datetime import datetime
+from datetime import datetime, timedelta
 from openerp import _, api, fields, models
 from openerp.exceptions import Warning
 
@@ -271,9 +271,11 @@ class ir_sequence(models.Model):
         date_to = '{}-12-31'.format(year)
         for line in self.date_range_ids:
             if date < line.date_from < date_to:
-                date_to = line.date_from
+                date_to = datetime.strptime(line.date_from, '%Y-%m-%d') + timedelta(days=-1)
+                date_to = date_to.strftime('%Y-%m-%d')
             elif date_from < line.date_to < date:
-                date_from = line.date_to
+                date_from = datetime.strptime(line.date_to, '%Y-%m-%d') + timedelta(days=1)
+                date_from = date_from.strftime('%Y-%m-%d')
         seq_date_id = self.env['ir.sequence.date_range'].sudo().create({
             'date_from': date_from,
             'date_to': date_to,
@@ -290,7 +292,7 @@ class ir_sequence(models.Model):
             dt = self.env.context.get('date', fields.Date.today())
             seq_date_id = False
             for line in self.date_range_ids:
-                if line.date_from < dt < line.date_to:
+                if line.date_from <= dt <= line.date_to:
                     seq_date_id = line
                     break
             if not seq_date_id:
