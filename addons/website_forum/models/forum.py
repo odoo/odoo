@@ -119,6 +119,25 @@ class Forum(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         return super(Forum, self).create(cr, uid, values, context=create_context)
 
+    def _tag_to_write_vals(self, cr, uid, tags='', context=None):
+        User = self.pool['res.users']
+        Tag = self.pool['forum.tag']
+        post_tags = []
+        for tag in filter(None, tags.split(',')):
+            if tag.startswith('_'):  # it's a new tag
+                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
+                if tag_ids:
+                    post_tags.append((4, int(tag_ids[0])))
+                else:
+                    # check if user have Karma needed to create need tag
+                    user = User.browse(cr, uid, uid, context=context)
+                    if user.exists() and user.karma >= self.karma_retag:
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+            else:
+                post_tags.append((4, int(tag)))
+        return post_tags
+
 
 class Post(osv.Model):
     _name = 'forum.post'

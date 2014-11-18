@@ -223,12 +223,7 @@ class WebsiteForum(http.Controller):
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
         elif tag_version == "select2":
-            tags = filter(None, post.get('question_tags', '').split(','))
-            for tag in tags:
-                if tag.startswith('_'):  # it's a new tag
-                    question_tag_ids.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
-                else:
-                    question_tag_ids.append((4, int(tag)))
+            question_tag_ids = forum._tag_to_write_vals(cr, uid, post.get('question_tags', ''), context=context)
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
@@ -404,7 +399,6 @@ class WebsiteForum(http.Controller):
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         question_tags = []
-        User = request.registry['res.users']
         Tag = request.registry['forum.tag']
         tag_version = kwargs.get('tag_type', 'texttext')
         if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
@@ -417,24 +411,12 @@ class WebsiteForum(http.Controller):
                     else:
                         new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
                         question_tags.append(new_tag)
+            tags_val = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            for tag in filter(None, kwargs.get('question_tag', '').split(',')):
-                if tag.startswith('_'):  # it's a new tag
-                # check if user have Karma needed to create need tag
-                    user = User.browse(cr, SUPERUSER_ID, uid, context=context)
-                    if user.exists() and user.karma >= forum.karma_retag:
-                        # check that not arleady created meanwhile and maybe excluded by the limit on the search
-                        tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
-                        if tag_ids:
-                            new_tag = tag_ids
-                        else:
-                            new_tag = Tag.create(cr, uid, {'name': tag[1:], 'forum_id': forum.id}, context=context)
-                        question_tags.append(new_tag)
-                else:
-                    question_tags += [int(tag)]
+            tags_val = forum._tag_to_write_vals(cr, uid, kwargs.get('question_tag', ''), context=context)
 
         vals = {
-            'tag_ids': [(6, 0, question_tags)],
+            'tag_ids': tags_val,
             'name': kwargs.get('question_name'),
             'content': kwargs.get('content'),
         }
