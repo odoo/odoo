@@ -373,6 +373,9 @@
                 }
             });
             // render and set the content of the chatview
+            // TODO jem : when refactoring this, don't forget to pre-process date in this function before render quweb template
+            // since, moment will not be define in qweb on the website pages, because the helper (see csn) is in core.js and cannot be
+            // imported in the frontend.
             this.$('.oe_im_chatview_content_bubbles').html($(openerp.qweb.render("im_chat.Conversation_content", {"list": res})));
             this._go_bottom();
         },
