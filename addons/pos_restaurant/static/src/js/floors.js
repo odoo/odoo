@@ -18,8 +18,8 @@ function openerp_restaurant_floors(instance,module){
             // Make sure they display in the correct order
             self.floors = self.floors.sort(function(a,b){ return a.sequence - b.sequence; });
 
-            // Ignore floorplan features if no floor specified, or feature deactivated
-            self.config.iface_floorplan = self.config.iface_floorplan && !!self.floors.length;
+            // Ignore floorplan features if no floor specified.
+            self.config.iface_floorplan = !!self.floors.length;
         },
     });
 
