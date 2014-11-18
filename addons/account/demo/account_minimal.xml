@@ -19,7 +19,6 @@
         <record id="chart0" model="account.account">
             <field name="code">X0</field>
             <field name="name">Chart For Automated Tests</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
 
@@ -28,14 +27,12 @@
         <record id="bal" model="account.account">
             <field name="code">X1</field>
             <field name="name">Balance Sheet - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
 
         <record model="account.account" id="assets_view">
             <field name="name">Assets - (test)</field>
             <field name="code">X10</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -43,42 +40,36 @@
         <record id="fas" model="account.account">
             <field name="code">X100</field>
             <field name="name">Fixed Assets - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="xfa" model="account.account">
             <field name="code">X1000</field>
             <field name="name">Fixed Asset Account - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="nca" model="account.account">
             <field name="code">X101</field>
             <field name="name">Net Current Assets - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="cas" model="account.account">
             <field name="code">X1100</field>
             <field name="name">Current Assets - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="stk" model="account.account">
             <field name="code">X11001</field>
             <field name="name">Purchased Stocks - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="a_recv" model="account.account">
             <field name="code">X11002</field>
             <field name="name">Debtors - (test)</field>
-            <field name="type">receivable</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_receivable"/>
         </record>
@@ -86,34 +77,29 @@
         <record id="ova" model="account.account">
             <field name="code">X11003</field>
             <field name="name">Output VAT - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="bnk" model="account.account">
             <field name="code">X11004</field>
             <field name="name">Bank Current Account - (test)</field>
-            <field name="type">liquidity</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="cash" model="account.account">
             <field name="code">X11005</field>
             <field name="name">Cash - (test)</field>
-            <field name="type">liquidity</field>
             <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="o_income" model="account.account">
             <field name="code">X11006</field>
             <field name="name">Opening Income - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
         </record>
         <record id="usd_bnk" model="account.account">
             <field name="code">X11007</field>
             <field name="name">USD Bank Account - (test)</field>
-            <field name="type">liquidity</field>
             <field name="user_type" ref="data_account_type_asset"/>
             <field name="currency_id" ref="base.USD"/>
         </record>
@@ -121,7 +107,6 @@
         <record model="account.account" id="liabilities_view">
             <field name="name">Liabilities - (test)</field>
             <field name="code">X11</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -129,14 +114,12 @@
         <record id="cli" model="account.account">
             <field name="code">X110</field>
             <field name="name">Current Liabilities - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="a_pay" model="account.account">
             <field name="code">X1111</field>
             <field name="name">Creditors - (test)</field>
-            <field name="type">payable</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_payable"/>
         </record>
@@ -144,21 +127,18 @@
         <record id="iva" model="account.account">
             <field name="code">X1112</field>
             <field name="name">Input VAT - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="rsa" model="account.account">
             <field name="code">X1113</field>
             <field name="name">Reserve and Profit/Loss - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="o_expense" model="account.account">
             <field name="code">X1114</field>
             <field name="name">Opening Expense - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
@@ -167,14 +147,12 @@
         <record id="gpf" model="account.account">
             <field name="code">X2</field>
             <field name="name">Profit and Loss - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
 
         <record model="account.account" id="income_view">
             <field name="name">Income - (test)</field>
             <field name="code">X20</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -182,7 +160,6 @@
         <record model="account.account" id="income_fx_income">
             <field name="name">Foreign Exchange Gain - (test)</field>
             <field name="code">X201</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -190,21 +167,18 @@
         <record id="rev" model="account.account">
             <field name="code">X200</field>
             <field name="name">Revenue - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
         </record>
 
         <record id="a_sale" model="account.account">
             <field name="code">X2001</field>
             <field name="name">Product Sales - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
         </record>
 
         <record model="account.account" id="expense_view">
             <field name="name">Expense - (test)</field>
             <field name="code">X21</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -213,35 +187,30 @@
         <record id="cos" model="account.account">
             <field name="code">X210</field>
             <field name="name">Cost of Sales - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="cog" model="account.account">
             <field name="code">X2100</field>
             <field name="name">Cost of Goods Sold - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="ovr" model="account.account">
             <field name="code">X211</field>
             <field name="name">Overheads - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="a_expense" model="account.account">
             <field name="code">X2110</field>
             <field name="name">Expenses - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
             <field name="code">X2111</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
         </record>
@@ -249,7 +218,6 @@
         <record id="a_salary_expense" model="account.account">
             <field name="code">X2112</field>
             <field name="name">Salary Expenses - (test)</field>
-            <field name="type">other</field>
             <field name="user_type" ref="data_account_type_expense"/>
         </record>
 

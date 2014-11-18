@@ -94,7 +94,7 @@ class account_entries_report(models.Model):
                 f.id as fiscalyear_id,
                 l.account_id as account_id,
                 l.analytic_account_id as analytic_account_id,
-                a.type as type,
+                at.type as type,
                 a.user_type as user_type,
                 1 as nbr,
                 l.quantity as quantity,
@@ -108,5 +108,6 @@ class account_entries_report(models.Model):
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
                 left join account_fiscalyear f on (f.date_start >= l.date and f.date_stop >= l.date)
+                left join account_account_type at on (a.user_type = at.id)
             )
         """)
