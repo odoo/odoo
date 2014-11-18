@@ -464,7 +464,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(!product || !this.pos){
                 return defaultstr;
             }
-            var unit_id = product.uos_id || product.uom_id;
+            var unit_id = product.uom_id;
             if(!unit_id){
                 return defaultstr;
             }

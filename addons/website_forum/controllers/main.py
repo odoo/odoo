@@ -276,7 +276,7 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return login_redirect()
 
-        post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', False))
+        post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
             'name': post.get('post_name', ''),

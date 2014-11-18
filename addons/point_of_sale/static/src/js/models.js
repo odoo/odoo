@@ -736,7 +736,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // return the unit of measure of the product
         get_unit: function(){
-            var unit_id = (this.product.uos_id || this.product.uom_id);
+            var unit_id = this.product.uom_id;
             if(!unit_id){
                 return undefined;
             }

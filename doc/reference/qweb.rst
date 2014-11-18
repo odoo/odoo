@@ -129,7 +129,9 @@ value), a mapping (the current item will be the current key) or an integer
 integer exclusive).
 
 In addition to the name passed via ``t-as``, ``foreach`` provides a few other
-variables for various data points (``$as`` is the name passed to ``t-as``):
+variables for various data points:
+
+.. warning:: ``$as`` will be replaced by the name passed to ``t-as``
 
 :samp:`{$as}_all`
     the object being iterated over
