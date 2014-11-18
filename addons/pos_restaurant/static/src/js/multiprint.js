@@ -168,9 +168,6 @@ function openerp_restaurant_multiprint(instance,module){
             var minutes = '' + d.getMinutes();
                 minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
 
-            console.log(hours,minutes);
-
-
             return {
                 'new': add,
                 'cancelled': rem,
