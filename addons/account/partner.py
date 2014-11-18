@@ -229,7 +229,6 @@ class res_partner(models.Model):
             AND p.id = %s
             AND l.reconcile_id IS NULL
             AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
-            AND l.state != 'draft'
             GROUP BY l.partner_id''', (self.id,))
         res = self._cr.dictfetchone()
         if res:

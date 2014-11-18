@@ -24,6 +24,7 @@ class account_move_line(models.Model):
         context = dict(self._context or {})
         initial_bal = context.get('initial_bal', False)
         company_clause = " "
+        query = ''
         if context.get('company_id', False):
             company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
         if not context.get('fiscalyear', False):

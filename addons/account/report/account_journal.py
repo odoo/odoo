@@ -85,7 +85,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def tax_codes(self, date, journal_id):
         self.cr.execute(
             'select distinct tax_code_id from account_move_line ' \
-            'where date=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
+            'where date=%s and journal_id=%s and tax_code_id is not null',
             (date, journal_id)
         )
         ids = map(lambda x: x[0], self.cr.fetchall())
@@ -98,7 +98,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
 
     def _sum_vat(self, date, journal_id, tax_code_id):
         self.cr.execute('select sum(tax_amount) from account_move_line where ' \
-                        'date=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
+                        'date=%s and journal_id=%s and tax_code_id=%s',
                         (date, journal_id, tax_code_id))
         return self.cr.fetchone()[0] or 0.0
 

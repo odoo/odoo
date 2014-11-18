@@ -3,6 +3,7 @@
 from openerp import tools
 import openerp.addons.decimal_precision as dp
 from openerp import models, fields, api
+import time
 
 class account_entries_report(models.Model):
     _name = "account.entries.report"
@@ -50,8 +51,9 @@ class account_entries_report(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         fiscalyear_obj = self.env['account.fiscalyear']
-        current_year = fiscalyear_obj.find()
-        fiscalyear = fiscalyear_obj.browse(current_year)
+        current_date = time.strftime('%Y-%m-%d')
+        current_year = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)])
+        fiscalyear = fiscalyear_obj.browse(current_year.id)
         for arg in args:
             if arg[0] == 'date' and arg[2] == 'current_period_date':
                 args.append([('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop)])
@@ -66,8 +68,9 @@ class account_entries_report(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
-        current_year = fiscalyear_obj.find()
-        fiscalyear = fiscalyear_obj.browse(current_year)
+        current_date = time.strftime('%Y-%m-%d')
+        current_year = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)])
+        fiscalyear = fiscalyear_obj.browse(current_year.id)
         if self._context.get('date', False) == 'current_period_date':
             domain.append(['date', '=', current_period_date])
         elif self._context.get('year', False) == 'current_year':

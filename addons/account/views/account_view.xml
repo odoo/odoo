@@ -99,7 +99,6 @@
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
                             <field name="child_consol_ids"
-                                attrs="{'invisible':[('user_type.type', '!=', 'consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
                         <group groups="base.group_multi_currency">
@@ -804,7 +803,7 @@
         <act_window
             id="action_tax_code_line_open"
             name="Journal Items"
-            domain="[('tax_code_id','child_of',active_id),('state','&lt;&gt;','draft')]"
+            domain="[('tax_code_id','child_of',active_id)]"
             res_model="account.move.line"
             src_model="account.tax.code"/>
 
@@ -812,7 +811,7 @@
         <act_window
             id="action_tax_code_items"
             name="Journal Items"
-            domain="[('tax_code_id','child_of',active_id),('state','!=','draft')]"
+            domain="[('tax_code_id','child_of',active_id)]"
             res_model="account.move.line"
             src_model="account.tax.code"
             key2="tree_but_open"/>
@@ -978,7 +977,6 @@
                                         <field name="statement_id" readonly="True"/>
                                     </group>
                                     <group string="Dates">
-                                        <field name="date" readonly="True"/>
                                         <field name="date_maturity"/>
                                     </group>
                                     <group string="Taxes">
@@ -1127,7 +1125,7 @@
             <field name="view_mode">tree_account_move_line_quickadd,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Select the period and the journal you want to fill.
+                Select the journal you want to fill.
               </p><p>
                 This view can be used by accountants in order to quickly record
                 entries in Odoo. If you want to record a supplier invoice,

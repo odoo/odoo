@@ -37,8 +37,8 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
         ass_obj = self.pool.get('account.asset.asset')
         asset_ids = ass_obj.search(cr, uid, [('state','=','open')], context=context)
         data = self.browse(cr, uid, ids, context=context)
-        date_account = data[0].date_account
-        created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, date_account, context=context)
+        date = data[0].date
+        created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, date, context=context)
         return {
             'name': _('Created Asset Moves'),
             'view_type': 'form',
