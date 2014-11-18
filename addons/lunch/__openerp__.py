@@ -57,4 +57,6 @@ If you want to save your employees' time and avoid them to always have coins in 
     'website': 'https://www.odoo.com/page/employees',
     'application' : True,
     'certificate' : '001292377792581874189',
+    'images': [],
+    'qweb': ['static/src/xml/lunch.xml', ],
 }

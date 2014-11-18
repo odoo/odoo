@@ -379,9 +379,8 @@
                                 <field name='date'/>
                             </group>
                         </group>
-                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline oe_lunch_alert"/> 
-                        <div name="preferences">
-                        </div>
+                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline oe_lunch_alert alert alert-danger"/>
+                        <widget type="lunch_previous_order_widget"></widget>
                         <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>
