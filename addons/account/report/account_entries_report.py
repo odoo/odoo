@@ -51,9 +51,8 @@ class account_entries_report(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         fiscalyear_obj = self.env['account.fiscalyear']
-        current_date = time.strftime('%Y-%m-%d')
-        current_year = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)])
-        fiscalyear = fiscalyear_obj.browse(current_year.id)
+        current_date = fields.Date.context_today(self)
+        fiscalyear = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)], limit=1)
         for arg in args:
             if arg[0] == 'date' and arg[2] == 'current_period_date':
                 args.append([('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop)])
@@ -69,8 +68,7 @@ class account_entries_report(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
         current_date = time.strftime('%Y-%m-%d')
-        current_year = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)])
-        fiscalyear = fiscalyear_obj.browse(current_year.id)
+        fiscalyear = fiscalyear_obj.search([('date_start', '<=', current_date), ('date_stop', '>=', current_date)], limit=1)
         if self._context.get('date', False) == 'current_period_date':
             domain.append(['date', '=', current_period_date])
         elif self._context.get('year', False) == 'current_year':
