@@ -75,13 +75,10 @@
         
         change_version: function(event) {
             var version_id = $(event.target).parent().data("version_id");
+            if(! version_id){
+                version_id = 0;
+            }
             openerp.jsonRpc( '/website_version/change_version', 'call', { 'version_id':version_id }).then(function (result) {
-                    location.reload();
-                });
-        },
-
-        master: function(event) {
-            openerp.jsonRpc( '/website_version/master', 'call', {}).then(function (result) {
                     location.reload();
                 });
         },

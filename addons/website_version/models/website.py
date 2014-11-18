@@ -56,9 +56,9 @@ class NewWebsite(osv.Model):
 
         request.context['website_id'] = website.id
 
-        if request.session.get('version_id'):
+        if 'version_id' in request.session:
             request.context['version_id'] = request.session.get('version_id')
-        elif request.session.get('master') or self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+        elif self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
             request.context['version_id'] = 0
         else:
             request.context['experiment_id'] = 1

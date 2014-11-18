@@ -6,7 +6,7 @@
             <li class="o_version_choice" t-att-data-version_id="item.id">
                 <a href="#" data-action="delete_version" style="position: absolute; right: 0px;" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
                 <t t-if="item.bold == 0 ">
-                    <a href="#" data-action="change_version"><t t-esc="item.name"></t> </a>
+                    <a href="#" data-action="change_version" t-att-data-version_id="item.id"><t t-esc="item.name"></t> </a>
                 </t>
                 <t t-if="item.bold == 1 ">
                     <a href="#" data-action="change_version" t-att-data-version_id="item.id"> <b><t t-esc="item.name"></t></b> </a>

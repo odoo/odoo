@@ -44,8 +44,7 @@ class Versioning_Controller(Website):
         v = request.env['ir.ui.view'].browse(int(view_id))
         ver = request.env['website_version.version']
         website_id = request.website.id
-        ids = ver.search([('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')])
-        result = ver.read(ids,['id','name'])
+        result = ver.search_read([('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],['id','name'])
         version_id = request.context.get('version_id')
         check = False
         for x in result:
@@ -62,7 +61,7 @@ class Versioning_Controller(Website):
     @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
     def has_experiments(self, view_id):
         v = request.env['ir.ui.view'].browse(int(view_id))
-        website_id = context.get('website_id')
+        website_id = request.context.get('website_id')
         return bool(request.env["website_version.experiment_version"].search([('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)]))
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
@@ -74,22 +73,23 @@ class Versioning_Controller(Website):
         del_l = []
         copy_l = []
         for view in version.view_ids:
-            master_id = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)])
-            if master_id:
+            master = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)])
+            if master:
                 #Delete all the website views having a key which is in the version published
-                del_l += master_id
-                copy_l+= master_id
+                del_l += [master.id]
+                copy_l+= [master.id]
             else:
                 #Views that have no website_id, must be copied because they can be shared with another website
-                master_id = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', False)])
-                copy_l+= master_id
+                master = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', False)])
+                copy_l+= [master.id]
         if copy_l:
             if save_master:
                 #To check if the name of the version to copy master already exists
-                check_id = obj.search([('name','=', copy_master_name),('website_id', '=', version.website_id.id)])
+                check = obj.search([('name','=', copy_master_name),('website_id', '=', version.website_id.id)])
                 #If it already exists, we delete the old to make the new
-                if check_id:
-                    obj.unlink(check_id)
+                if check:
+                    obj.unlink(check.id)
+                from pudb import set_trace; set_trace()
                 copy_version_id = obj.create({'name' : copy_master_name, 'website_id' : version.website_id.id})
                 for view in obj_view.browse(copy_l):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
