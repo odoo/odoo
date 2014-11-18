@@ -170,15 +170,6 @@
                                     attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                             </div>
                             <div>
-                                <label for="sale_refund_sequence_next"/>
-                                <field name="sale_refund_sequence_prefix"
-                                    class="oe_inline"
-                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
-                                <field name="sale_refund_sequence_next"
-                                    class="oe_inline"
-                                    attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
-                            </div>
-                            <div>
                                 <field name="group_proforma_invoices" class="oe_inline"/>
                                 <label for="group_proforma_invoices"/>
                             </div>
@@ -213,15 +204,6 @@
                                 <field name="purchase_sequence_next"
                                     class="oe_inline"
                                     attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
-                            </div>
-                            <div>
-                                <label for="purchase_refund_sequence_next"/>
-                                <field name="purchase_refund_sequence_prefix"
-                                    class="oe_inline"
-                                    help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
-                                <field name="purchase_refund_sequence_next"
-                                    class="oe_inline"
-                                    attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
                             </div>
                             <div>
                                 <field name="module_account_payment" class="oe_inline"/>
@@ -275,9 +257,7 @@
                         <div/>
                     </group>
                     <field name="sale_journal_id" invisible="1"/>
-                    <field name="sale_refund_journal_id" invisible="1"/>
                     <field name="purchase_journal_id" invisible="1"/>
-                    <field name="purchase_refund_journal_id" invisible="1"/>
                 </form>
             </field>
         </record>

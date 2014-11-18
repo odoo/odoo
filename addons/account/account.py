@@ -727,7 +727,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
         'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
                                  " Select 'Purchase' for supplier invoices journals."\
                                  " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -740,7 +740,8 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False),
+        'sequence_id': fields.many2one('ir.sequence', 'Invoice Entry Sequence', help="This field contains the information related to the numbering of the invoice journal entries of this journal.", required=True, copy=False),
+        'refund_sequence_id': fields.many2one('ir.sequence', 'Refunds Entry Sequence', help="This field contains the information related to the numbering of the refunds journal entries of this journal.", copy=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -752,6 +753,7 @@ class account_journal(osv.osv):
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
+        'refund_sequence': fields.boolean('Use a different sequence for refunds'),
     }
 
     _defaults = {
@@ -800,30 +802,34 @@ class account_journal(osv.osv):
                     raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, vals, context=None):
+    def create_sequence(self, cr, uid, vals, refund=False, context=None):
         """ Create new no_gap entry sequence for every new Joural
         """
         # in account.journal code is actually the prefix of the sequence
         # whereas ir.sequence code is a key to lookup global sequences.
         prefix = vals['code'].upper()
+        if refund:
+            prefix = 'R' + prefix
 
         seq = {
             'name': vals['name'],
-            'implementation':'no_gap',
-            'prefix': prefix + "/%(year)s/",
+            'implementation': 'no_gap',
+            'prefix': prefix + '/%(year)s/',
             'padding': 4,
             'number_increment': 1,
             'use_date_range': True,
         }
+
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
         return self.pool.get('ir.sequence').create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
-        if not 'sequence_id' in vals or not vals['sequence_id']:
-            # if we have the right to create a journal, we should be able to
-            # create it's sequence.
-            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context)})
+        # We just need to create the relevant sequences according to the chosen options
+        if not vals.get('sequence_id'):
+            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context=context)})
+        if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
+            vals.update({'refund_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refund=True, context=context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):
@@ -883,6 +889,7 @@ class account_fiscalyear(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+
     _order = "date_start, id"
 
 
@@ -1304,8 +1311,12 @@ class account_move(osv.osv):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
+                        # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
+                        sequence = journal.sequence_id.id
+                        if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                            sequence = journal.refund_sequence_id.id
                         c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
+                        new_name = obj_sequence.next_by_id(cr, uid, sequence, c)
                     else:
                         raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
 
@@ -2318,7 +2329,7 @@ class account_model(osv.osv):
                                                                 "\nPlease define partner on it!")%(line.name, model.name))
 
                     payment_term_id = False
-                    if model.journal_id.type in ('purchase', 'purchase_refund') and line.partner_id.property_supplier_payment_term:
+                    if model.journal_id.type == 'purchase' and line.partner_id.property_supplier_payment_term:
                         payment_term_id = line.partner_id.property_supplier_payment_term.id
                     elif line.partner_id.property_payment_term:
                         payment_term_id = line.partner_id.property_payment_term.id
@@ -3147,9 +3158,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             # Get the analytic journal
             data = False
             try:
-                if journal_type in ('sale', 'sale_refund'):
+                if journal_type == 'sale':
                     data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
-                elif journal_type in ('purchase', 'purchase_refund'):
+                elif journal_type == 'purchase':
                     data = obj_data.get_object_reference(cr, uid, 'account', 'exp')
                 elif journal_type == 'general':
                     pass
@@ -3160,9 +3171,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
             default_account = False
-            if journal_type in ('sale', 'sale_refund'):
+            if journal_type == 'sale':
                 default_account = acc_template_ref.get(template.property_account_income_categ.id)
-            elif journal_type in ('purchase', 'purchase_refund'):
+            elif journal_type == 'purchase':
                 default_account = acc_template_ref.get(template.property_account_expense_categ.id)
             elif journal_type == 'situation':
                 if type == 'debit':
@@ -3174,16 +3185,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
-            'sale_refund': _('Sales Refund Journal'),
-            'purchase_refund': _('Purchase Refund Journal'),
             'general': _('Miscellaneous Journal'),
             'situation': _('Opening Entries Journal'),
         }
         journal_codes = {
             'sale': _('SAJ'),
             'purchase': _('EXJ'),
-            'sale_refund': _('SCNJ'),
-            'purchase_refund': _('ECNJ'),
             'general': _('MISC'),
             'situation': _('OPEJ'),
         }
@@ -3193,7 +3200,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
 
         journal_data = []
-        for journal_type in ['sale', 'purchase', 'sale_refund', 'purchase_refund', 'general', 'situation']:
+        for journal_type in ['sale', 'purchase', 'general', 'situation']:
             vals = {
                 'type': journal_type,
                 'name': journal_names[journal_type],
@@ -3203,6 +3210,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
+                'refund_sequence': True,
             }
             journal_data.append(vals)
         return journal_data

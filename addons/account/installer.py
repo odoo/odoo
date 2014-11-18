@@ -163,6 +163,8 @@ class account_installer(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
+                    journal_ids = self.pool.get('account.journal').search(cr, uid, [('restart_sequence', '=', 'True')])
+                    fy_obj.restart_sequences(cr, uid, fiscal_id, journal_ids, context=context)
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
