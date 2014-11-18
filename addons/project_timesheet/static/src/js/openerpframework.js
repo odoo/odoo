@@ -1037,6 +1037,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
      */
     session_reload: function () {
         var self = this;
+        console.log("Inside session_reload :::: ");
         return self.rpc("/web/session/get_session_info", {}).then(function(result) {
             delete result.session_id;
             _.extend(self, result);
@@ -1097,7 +1098,6 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
         options = _.clone(options || {});
         var shadow = options.shadow || false;
         delete options.shadow;
-
         return self.check_session_id().then(function() {
             // TODO: remove
             if (! _.isString(url)) {
@@ -1109,6 +1109,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
                 self.trigger('request');
             var fct;
             if (self.origin_server) {
+                console.log("Headers are ::: ", options.headers);
                 fct = openerp.jsonRpc;
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
@@ -1119,6 +1120,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
                 fct = openerp.jsonRpc;
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
+                console.log("Headers are ::: ", options.headers);
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
                         "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''

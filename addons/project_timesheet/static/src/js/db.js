@@ -113,6 +113,7 @@ function odoo_project_timesheet_db(project_timesheet) {
         get_project_timesheet_session: function() {
             return this.load("project_timesheet_session", {});
         },
+        //TO REMOVE, We will use clear method
         flush_project_timesheet_session: function() {
             this.save('project_timesheet_session',{});
         },
@@ -136,17 +137,14 @@ function odoo_project_timesheet_db(project_timesheet) {
             var self = this;
             this.sequence = 0;
             var activities = this.load("activities");
-            var virtual_activity_id_list = _.map(
-                                _.filter(
-                                _.pluck(activities, 'reference_id'), function(reference_id) { 
-                                    return reference_id && reference_id.toString().match(self.virtual_id_regex);;
-                                }), function(reference_id) {
+            var activity_id_list = _.map(
+                                _.pluck(activities, 'reference_id'), function(reference_id) {
                                     var splitted_values = reference_id.split("-");
                                     return parseInt(splitted_values[splitted_values.length-1]) || 0;
                                 });
-            console.log("virtual_activity_id_list is ::: ", virtual_activity_id_list);
-            if (!_.isEmpty(virtual_activity_id_list)) {
-                this.sequence = _.max(virtual_activity_id_list);
+            console.log("virtual_activity_id_list is ::: ", activity_id_list);
+            if (!_.isEmpty(activity_id_list)) {
+                this.sequence = _.max(activity_id_list);
             }
         },
         get_unique_id: function() {

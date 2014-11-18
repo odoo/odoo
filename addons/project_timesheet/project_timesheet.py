@@ -596,4 +596,7 @@ class project_timesheet_session(osv.Model):
         session_id = self.create(cr, uid, {'user_id': uid, 'login_number': 1, 'state': 'opened'}, context=context)
         return {'session_id': session_id, 'login_number': 1}
 
+    def close_session(self, cr, uid, session_id, context=None):
+        return self.write(cr, uid, session_id, {'state': 'close'}, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

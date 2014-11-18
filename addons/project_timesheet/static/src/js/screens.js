@@ -437,7 +437,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("stat", {}, {}, true, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
-                self.project_timesheet_widget.screen_selector.set_current_screen("sync");
+                self.project_timesheet_widget.screen_selector.set_current_screen("sync", {}, {}, false, true);
             });
             this.$el.find(".activity_row").on("click", this.on_row_click);
             this.$el.find(".pt_duration_line").on("click", this.on_duration_click);
@@ -877,13 +877,22 @@ function odoo_project_timesheet_screens(project_timesheet) {
     //May be give message in template that you are already logged in, login with other user ?
     project_timesheet.SyncScreen = project_timesheet.ScreenWidget.extend({
         template: "SyncScreen",
+        events: {
+            "click .pt_btn_logout": "on_logout",
+            "click .pt_btn_cancel": "on_cancel",
+            "click .pt_btn_synchronize_existing_account": "on_sync",
+            "click .pt_btn_synchronize": "on_authenticate_and_sync",
+        },
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
         },
         start: function() {
-            var self = this;
             this._super.apply(this, arguments);
+        },
+        show: function() {
+            var self = this;
+            this._super();
             this.$el.find(".pt_select_protocol").on("click", function() {
                 self.$el.find(".pt_button_protocol span:first").text($(this).text());
             });
@@ -891,12 +900,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.$el.find(".o_new_account").toggleClass("o_active");
                 self.$el.find(".o_existing_account").toggleClass("o_active");
             });
-            this.$el.find(".pt_btn_synchronize_existing_account").on("click", this.on_sync);
-            this.$el.find(".pt_btn_synchronize").on("click", this.on_authenticate_and_sync);
-            $(".pt_btn_cancel").on("click", function() {
-                self.project_timesheet_widget.screen_selector.set_current_screen("activity");
-            });
-            this.$el.find(".pt_btn_logout").on("click", this.on_logout);
+        },
+        on_cancel: function() {
+            this.project_timesheet_widget.screen_selector.set_current_screen("activity");
         },
         renderElement: function() {
             this.replaceElement(QWeb.render(this.template, {widget: this, project_timesheet: project_timesheet}));
@@ -914,7 +920,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 return;
             }
             //TODO: Check whether we already having session, if yes then use it by just reloading session
-            var session = new openerp.Session(undefined, origin);
+            var session = new openerp.Session(undefined, origin, {use_cors: true});
             project_timesheet.session = session;
             //if (!openerp.get_cookie("session_id")) { //use check_session_id
                 def = session.session_authenticate(db, username, password).done(function() {
@@ -944,7 +950,33 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_logout: function() {
             //TODO: Close the project_timesheet_session(write session state to closed), then when same user access project timesheet next time he will be given new session
-            console.log("Inside Logout :::: ");
+            var self = this;
+            var def = $.Deferred();
+            this.project_timesheet_model.save_to_server().done(function() {
+                if (!_.isEmpty(self.project_timesheet_db.get_project_timesheet_session())) {
+                    def = self.project_timesheet_model.close_project_timesheet_session();
+                } else {
+                    def.resolve().promise();
+                }
+                def.done(function() {
+                    var url;
+                    var window_origin = location.protocol + "//" + location.host;
+                    if (window_origin == project_timesheet.session.origin) {
+                        url = "";
+                    } else {
+                        url = project_timesheet.session.origin;
+                    }
+                    project_timesheet.jsonRpc(url + "/web/session/destroy", 'call', {}).then(function() {
+                        self.project_timesheet_db.clear("activities");
+                        self.project_timesheet_db.clear("project_timesheet_session");
+                        self.project_timesheet_db.clear("session");
+                        self.project_timesheet_db.clear("timer_activity");
+                        project_timesheet.session.session_reload();
+                        self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
+                    });
+                });
+            });
+            
         },
         on_sync: function() {
             var self = this;
@@ -999,7 +1031,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
-                self.project_timesheet_widget.screen_selector.set_current_screen("sync");
+                self.project_timesheet_widget.screen_selector.set_current_screen("sync", {}, {}, false, true);
             });
         },
         hide: function() {

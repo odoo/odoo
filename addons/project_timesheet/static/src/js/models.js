@@ -116,7 +116,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             if(!project_timesheet.session && !_.isEmpty(this.project_timesheet_db.load("session", {}))) {
                 var stored_session = this.project_timesheet_db.load("session", {});
                 //project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {session_id: stored_session['session_id']});
-                project_timesheet.session = new openerp.Session(undefined, stored_session['origin']);
+                project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {use_cors: true});
             }
             //If we have stored session then replace project_timesheet.session with new Session object with stored session origin
             if (!_.isEmpty(project_timesheet.session)) {
@@ -143,7 +143,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                     this.def.reject();
                 } else {
                     var window_origin = location.protocol + "//" + location.host;
-                    var session = new openerp.Session(undefined, window_origin);
+                    var session = new openerp.Session(undefined, window_origin, {use_cors: true});
                     this.def = session.session_reload();
                 }
             }
@@ -281,7 +281,8 @@ function odoo_project_timesheet_models(project_timesheet) {
             var self = this;
             if (_.isEmpty(this.project_timesheet_db.get_project_timesheet_session())) {
                 return new project_timesheet.Model(project_timesheet.session, "project.timesheet.session").call("get_session", []).done(function(project_timesheet_session) {
-                    self.project_timesheet_db.add_project_timesheet_session(project_timesheet_session);
+                    console.log("project_timesheet_session is ::: ", project_timesheet_session);
+                    self.project_timesheet_db.add_project_timesheet_session({session_id: project_timesheet_session.session_id, login_number: project_timesheet_session.login_number});
                 }).promise();
             }
         },
@@ -341,9 +342,13 @@ function odoo_project_timesheet_models(project_timesheet) {
             //This method will flush localstorage data once it has been sync
             //TODO: Remove project_timesheet_session and reload with new fetched session, if session is new then we should also start sequence from 0
             this.project_timesheet_db.flush_activities();
-            this.project_timesheet_db.flush_project_timesheet_session();
-            this.project_timesheet_db.initialize_reference_sequence();
+            //this.project_timesheet_db.flush_project_timesheet_session();
+            //this.project_timesheet_db.initialize_reference_sequence();
             this.project_timesheet_db.add_activities(sync_result.activities);
+        },
+        close_project_timesheet_session: function() {
+            var project_timesheet_session = this.project_timesheet_db.get_project_timesheet_session();
+            return new project_timesheet.Model(project_timesheet.session, "project.timesheet.session").call("close_session", [project_timesheet_session.session_id]).promise();
         },
         get_pending_records: function() {
            return this.project_timesheet_db.get_pending_records();

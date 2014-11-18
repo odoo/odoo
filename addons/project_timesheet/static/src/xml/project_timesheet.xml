@@ -163,7 +163,7 @@
             <div class="container-fluid" style="height: 100%;">
               <div class="row well" style="height: 100%;">
                 <h4><strong>Synchronize your tasks online</strong></h4>
-                <div t-if="!project_timesheet.session">
+                <div t-if="!project_timesheet.session or !project_timesheet.session.uid">
                     <div>
                         <input type="radio" name="pt_radio" id="pt_new_user"/> <span>I'm a new Odoo user</span>
                     </div>
@@ -238,7 +238,7 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="project_timesheet.session">
+                <div t-if="project_timesheet.session and project_timesheet.session.uid">
                     <h4>You are already login with <t t-esc="project_timesheet.session.origin" ></t>, You can directly synchronize your data</h4>
                     <button class="btn btn-default pt_btn pt_btn_synchronize_existing_account">Synchronize Now</button>
                     or
