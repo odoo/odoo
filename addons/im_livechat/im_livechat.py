@@ -85,6 +85,13 @@ class im_livechat_channel(osv.Model):
                 "/im_livechat/support/%s/%i" % (cr.dbname, record.id)
         return res
 
+    def _compute_nbr_session(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = len(record.session_ids)
+        return res
+
+
     _columns = {
         'name': fields.char(string="Channel Name", size=200, required=True),
         'user_ids': fields.many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string="Users"),
@@ -114,6 +121,8 @@ class im_livechat_channel(osv.Model):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
+        'session_ids' : fields.one2many('im_chat.session', 'channel_id', 'Sessions'),
+        'nbr_session' : fields.function(_compute_nbr_session, type='integer', string='Number of session', store=False),
     }
 
     def _default_user_ids(self, cr, uid, context=None):
