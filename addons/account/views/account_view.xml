@@ -86,7 +86,6 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="type" invisible="1"/>
                             <field name="user_type"/>
                             <field name="deprecated"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -139,7 +138,6 @@
                     <field name="user_type"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
-                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
@@ -183,7 +181,6 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type" invisible="1"/>
-                    <field name="type" invisible="1"/>
                     <field name="currency_id"/>
                     <field name="exchange_rate"/>
                     <field name="foreign_balance"/>
