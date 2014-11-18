@@ -351,7 +351,7 @@ class PaymentTxOgone(osv.Model):
             'USERID': tx.acquirer_id.ogone_userid,
             'PSWD': tx.acquirer_id.ogone_password,
             'OrderID': tx.reference,
-            'amount':  '%d' % int(float_round(tx.amount, 2) * 100),  # tde check amount or str * 100 ?
+            'amount':  '%d' % float_round(tx_values['amount'], 2),  # tde check amount or str * 100 ?
             'CURRENCY': tx.currency_id.name,
             'LANGUAGE': tx.partner_lang,
             'OPERATION': 'SAL',
