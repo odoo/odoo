@@ -285,7 +285,7 @@ class account_move_line(models.Model):
                 'ref': line.move_id.ref,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
-                'account_type': line.account_id.type,
+                'account_type': line.account_id.user_type.type,
                 'date_maturity': line.date_maturity,
                 'date': line.date,
                 'journal_name': line.journal_id.name,

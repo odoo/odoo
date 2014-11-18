@@ -491,10 +491,10 @@ class account_bank_statement_line(models.Model):
         domain = additional_domain + [('reconcile_id', '=', False)]
         if self.partner_id:
             domain += [('partner_id', '=', self.partner_id.id),
-                '|', ('account_id.type', '=', 'receivable'),
-                ('account_id.type', '=', 'payable')]
+                '|', ('account_id.user_type.type', '=', 'receivable'),
+                ('account_id.user_type.type', '=', 'payable')]
         else:
-            domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+            domain += [('account_id.reconcile', '=', True), ('account_id.user_type.type', '=', 'other')]
             if str:
                 domain += [('partner_id.name', 'ilike', str)]
         if excluded_ids:
