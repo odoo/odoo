@@ -303,6 +303,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         }
                     }
                 }
+                bankstatements.sort(function(obj1, obj2) {
+                    return obj1.journal.pos_sequence - obj2.journal.pos_sequence;
+                });
                 self.cashregisters = bankstatements;
             },
         },{
