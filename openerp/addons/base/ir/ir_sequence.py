@@ -124,7 +124,6 @@ class ir_sequence(models.Model):
                 CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
                 ON ir_sequence (code, (COALESCE(company_id,-1)))""")
 
-    @api.one
     def _create_sequence(self, number_increment, number_next, seq_date_id=False):
         """ Create a PostreSQL sequence.
 
