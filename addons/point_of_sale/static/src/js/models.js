@@ -45,7 +45,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.partners = [];
             this.cashier = null;
             this.cashregisters = [];
-            this.bankstatements = [];
             this.taxes = [];
             this.pos_session = null;
             this.config = null;
@@ -306,11 +305,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             model:  'account.bank.statement',
             fields: ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
             domain: function(self){ return [['state', '=', 'open'],['pos_session_id', '=', self.pos_session.id]]; },
-            loaded: function(self, bankstatements, tmp){
-                self.bankstatements = bankstatements;
+            loaded: function(self, cashregisters, tmp){
+                self.cashregisters = cashregisters;
 
                 tmp.journals = [];
-                _.each(bankstatements,function(statement){
+                _.each(cashregisters,function(statement){
                     tmp.journals.push(statement.journal_id[0]);
                 });
             },
@@ -322,19 +321,24 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.journals = journals;
 
                 // associate the bank statements with their journals. 
-                var bankstatements = self.bankstatements;
-                for(var i = 0, ilen = bankstatements.length; i < ilen; i++){
+                var cashregisters = self.cashregisters;
+                for(var i = 0, ilen = cashregisters.length; i < ilen; i++){
                     for(var j = 0, jlen = journals.length; j < jlen; j++){
-                        if(bankstatements[i].journal_id[0] === journals[j].id){
-                            bankstatements[i].journal = journals[j];
+                        if(cashregisters[i].journal_id[0] === journals[j].id){
+                            cashregisters[i].journal = journals[j];
                         }
                     }
                 }
-                self.cashregisters = bankstatements;
+
                 self.cashregisters_by_id = {};
                 for (var i = 0; i < self.cashregisters.length; i++) {
                     self.cashregisters_by_id[self.cashregisters[i].id] = self.cashregisters[i];
                 }
+
+                self.cashregisters = self.cashregisters.sort(function(a,b){ 
+                    return a.journal.sequence - b.journal.sequence; 
+                });
+
             },
         },  {
             label: 'fonts',
