@@ -35,6 +35,11 @@ class restaurant_floor(osv.osv):
         'pos_config_id':    fields.many2one('pos.config','Point of Sale'),
         'background_image': fields.binary('Background Image', help='A background image used to display a floor layout in the point of sale interface'),  
         'table_ids':        fields.one2many('restaurant.table','floor_id','Tables', help='The list of tables in this floor'),
+        'sequence':         fields.integer('Sequence',help='Used to sort Floors'),
+    }
+
+    _defaults = {
+        'sequence': 1,
     }
 
 class restaurant_table(osv.osv):

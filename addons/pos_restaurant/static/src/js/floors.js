@@ -5,7 +5,7 @@ function openerp_restaurant_floors(instance,module){
     // At POS Startup, load the floors, and add them to the pos model
     module.PosModel.prototype.models.push({
         model: 'restaurant.floor',
-        fields: ['name','background_image','table_ids'],
+        fields: ['name','background_image','table_ids','sequence'],
         domain: function(self){ return [['pos_config_id','=',self.config.id]] },
         loaded: function(self,floors){
             self.floors = floors;
@@ -14,6 +14,10 @@ function openerp_restaurant_floors(instance,module){
                 floors[i].tables = [];
                 self.floors_by_id[floors[i].id] = floors[i];
             }
+
+            // Make sure they display in the correct order
+            self.floors = self.floors.sort(function(a,b){ return a.sequence - b.sequence; });
+
             // Ignore floorplan features if no floor specified, or feature deactivated
             self.config.iface_floorplan = self.config.iface_floorplan && !!self.floors.length;
         },
