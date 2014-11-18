@@ -430,7 +430,7 @@ class account_bank_statement_line(models.Model):
 
         # Look for structured communication
         if self.name:
-            structured_com_match_domain = [('ref', '=', self.name), ('reconcile_id', '=', False), ('state', '=', 'valid'),
+            structured_com_match_domain = [('ref', '=', self.name), ('reconcile_id', '=', False),
                 ('account_id.reconcile', '=', True), ('id', 'not in', excluded_ids)]
             move_line = self.env['account.move.line'].search(structured_com_match_domain, limit=1)
             if move_line:
@@ -488,7 +488,7 @@ class account_bank_statement_line(models.Model):
             additional_domain = []
 
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
+        domain = additional_domain + [('reconcile_id', '=', False)]
         if self.partner_id:
             domain += [('partner_id', '=', self.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
