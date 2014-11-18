@@ -304,8 +304,8 @@ class account_move_line(models.Model):
                 amount_currency_str = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
             else:
-                debit = line.debit > 0 and line.amount_residual or 0.0
-                credit = line.credit > 0 and line.amount_residual or 0.0
+                debit = line.debit
+                credit = line.credit
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
                 if target_currency and target_currency != company_currency:
                     amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
