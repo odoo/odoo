@@ -9,6 +9,7 @@ project_timesheet = _.clone(openerp);;
     odoo_project_timesheet_models(project_timesheet); //Import model.js
     odoo_project_timesheet_screens(project_timesheet); // Import screens.js
     odoo_project_timesheet_widgets(project_timesheet); //Import widget.js
+    odoo_project_timesheet_utils(project_timesheet); //Import utils.js
 
     project_timesheet.App = (function() {
     

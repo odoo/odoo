@@ -260,6 +260,9 @@ function odoo_project_timesheet_models(project_timesheet) {
                fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id', '__last_update']
            }).then(function(work_activities) {
                self.project_timesheet_db.add_activities(work_activities);
+               return new project_timesheet.Model(project_timesheet.session, "res.users").call("name_get", [project_timesheet.session.uid]).then(function(result) {
+                   project_timesheet.session.display_username = result ? result[0][1] : project_timesheet.session.username;
+               });
            }).promise();
         },
         //TO REMOVE: If not necessary

@@ -665,6 +665,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if (this.activity_list) {this.activity_list.destroy();}
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, true, true);
         },
+        get_sync_label: function() {
+            return project_timesheet.get_sync_label();
+        },
     });
 
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
@@ -1016,6 +1019,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
+            console.log("Inside start ::: ", this);
         },
         show: function() {
             var self = this;
@@ -1207,6 +1211,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         get_pending_lines: function() {
             return this.project_timesheet_model.get_pending_records();
-        }
+        },
+        get_sync_label: function() {
+            return project_timesheet.get_sync_label();
+        },
     });
 }
