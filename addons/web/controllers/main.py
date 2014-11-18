@@ -1016,19 +1016,6 @@ class View(http.Controller):
         }, request.context)
         return {'result': True}
 
-    @http.route('/web/view/undo_custom', type='json', auth="user")
-    def undo_custom(self, view_id, reset=False):
-        CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id' ,'=', view_id)],
-                                    0, False, False, request.context)
-        if vcustom:
-            if reset:
-                CustomView.unlink(vcustom, request.context)
-            else:
-                CustomView.unlink([vcustom[0]], request.context)
-            return {'result': True}
-        return {'result': False}
-
 class TreeView(View):
 
     @http.route('/web/treeview/action', type='json', auth="user")

@@ -9,7 +9,6 @@ if (!instance.board) {
 
 instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     events: {
-        'click .oe_dashboard_link_reset': 'on_reset',
         'click .oe_dashboard_link_change_layout': 'on_change_layout',
         'click h2.oe_header span.oe_header_txt': function (ev) {
             if(ev.target === ev.currentTarget)
@@ -77,12 +76,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 span.show();
             }
         });
-    },
-    on_reset: function() {
-        this.rpc('/web/view/undo_custom', {
-            view_id: this.view.fields_view.view_id,
-            reset: true
-        }).done(this.do_reload);
     },
     on_change_layout: function() {
         var self = this;
