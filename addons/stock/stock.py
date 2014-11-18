@@ -819,15 +819,13 @@ class stock_picking(osv.osv):
                   'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
                   'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
               }),
-        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required="True"),
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required=True),
     }
 
     def _get_default_nomenclature(self, cr, uid, context=None):
         nom_obj = self.pool.get('barcode.nomenclature')
         res = nom_obj.search(cr, uid, [], limit=1, context=context)
-        if res and res[0]:
-            return nom_obj.browse(cr, uid, res[0], context=context).id
-        return False
+        return res and res[0] or False
 
     _defaults = {
         'name': '/',
