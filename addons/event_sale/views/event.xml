@@ -32,8 +32,14 @@
             <field name="arch" type="xml">
                 <field name="event_id" position="after">
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
-                    <field name="origin"/>
                 </field>
+                <group name="event" position="after">
+                    <group string="Origin">
+                        <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
+                        <field name="sale_order_id"/>
+                        <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+                    </group>
+                </group>
             </field>
         </record>
         
@@ -43,7 +49,7 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook" position="inside">
+                    <xpath expr="//page[@string='Registrations']" position="after">
                         <page string="Ticket Types">
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Payments" editable="bottom">

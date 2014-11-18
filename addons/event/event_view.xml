@@ -305,13 +305,13 @@
                     </header>
                     <sheet string="Registration">
                         <group>
-                            <group string="Attendee Information">
+                            <group string="Attendee Information" name="attendee">
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <field name="email"/>
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             </group>
-                            <group string="Event Information">
+                            <group string="Event Information" name="event">
                                 <field name="event_id" readonly="1"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>

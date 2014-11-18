@@ -277,13 +277,15 @@ class event_registration(models.Model):
         if self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
             raise Warning(_('No more seats available for this event.'))
 
-    @api.one
+    @api.multi
     def _check_auto_confirmation(self):
         if self._context.get('registration_force_draft'):
             return False
-        if self.event_id and self.event_id.state == 'confirm' and self.event_id.auto_confirm and self.event_id.seats_available:
-            return True
-        return False
+        if any(registration.event_id.state != 'confirm' or
+               not registration.event_id.auto_confirm or
+               not registration.event_id.seats_available for registration in self):
+            return False
+        return True
 
     @api.model
     def create(self, vals):

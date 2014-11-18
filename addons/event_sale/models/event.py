@@ -11,7 +11,7 @@ class event_event(models.Model):
 
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket',
-            default=lambda rec: rec._default_tickets(), copy=True)
+        default=lambda rec: rec._default_tickets(), copy=True)
     seats_max = fields.Integer(
         string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
@@ -149,7 +149,11 @@ class event_registration(models.Model):
     _inherit = 'event.registration'
 
     event_ticket_id = fields.Many2one('event.event.ticket', 'Event Ticket')
-    # sale_order_line_id = fields.Many2one('sale.order.line', 'Sale Order Line', ondelete='cascade')
+    # in addition to origin generic fields, add real relational fields to correctly
+    # handle attendees linked to sale orders and their lines
+    # TDE FIXME: maybe add an onchange on sale_order_id + origin
+    sale_order_id = fields.Many2one('sale.order', 'Source Sale Order', ondelete='cascade')
+    sale_order_line_id = fields.Many2one('sale.order.line', 'Sale Order Line', ondelete='cascade')
 
     @api.one
     @api.constrains('event_ticket_id', 'state')
@@ -157,22 +161,22 @@ class event_registration(models.Model):
         if self.event_ticket_id.seats_max and self.event_ticket_id.seats_available < 0:
             raise Warning('No more available seats for this ticket')
 
-    @api.one
+    @api.multi
     def _check_auto_confirmation(self):
-        res = super(event_registration, self)._check_auto_confirmation()[0]
-        if res and self.origin:
-            orders = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
-            if orders and orders[0].state == 'draft':
+        res = super(event_registration, self)._check_auto_confirmation()
+        if res:
+            orders = self.env['sale.order'].search([('state', '=', 'draft'), ('id', 'in', self.mapped('sale_order_id').ids)], limit=1)
+            if orders:
                 res = False
         return res
 
     @api.model
     def create(self, vals):
         res = super(event_registration, self).create(vals)
-        if res.origin:
+        if res.origin or res.sale_order_id:
             message = _("The registration has been created for event %(event_name)s%(ticket)s from sale order %(order)s") % ({
                 'event_name': '<i>%s</i>' % res.event_id.name,
                 'ticket': res.event_ticket_id and _(' with ticket %s') % (('<i>%s</i>') % res.event_ticket_id.name) or '',
-                'order': res.origin})
+                'order': res.origin or res.sale_order_id.name})
             res.message_post(body=message)
         return res

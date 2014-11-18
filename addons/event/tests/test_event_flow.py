@@ -74,4 +74,15 @@ class TestEventFlow(TestEventCommon):
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 10,
         })
-        self.assertEqual(test_event.state, 'draft', 'Event: new event should be in draft state, no auto confirmation')
+        self.assertEqual(
+            test_event.state, 'draft',
+            'Event: new event should be in draft state, no auto confirmation')
+
+        # EventUser create registrations for this event -> no auto confirmation
+        test_reg1 = self.Registration.sudo(self.user_eventuser).create({
+            'name': 'TestReg1',
+            'event_id': test_event.id,
+        })
+        self.assertEqual(
+            test_reg1.state, 'draft',
+            'Event: new registration should not be confirmed with auto_confirmation parameter being False')
