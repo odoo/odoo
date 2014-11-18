@@ -26,7 +26,7 @@ if os.name == 'posix':
     import resource
 else:
     # Windows shim
-    signal.SIGHUP = 0
+    signal.SIGHUP = -1
 
 # Optional process names for workers
 try:
