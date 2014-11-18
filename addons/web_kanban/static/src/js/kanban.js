@@ -43,6 +43,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        this.group_by_fields_to_read = [];
         if (!this.options.$buttons || !this.options.$buttons.length) {
             this.options.$buttons = false;
         }
@@ -217,18 +218,20 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var form = am.dialog_widget.views.form.controller;
         form.on("on_button_cancel", am.dialog, am.dialog.close);
         form.on('record_created', self, function(r) {
-            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).done(function(new_record) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).read_ids([r], _.union(['display_name'], this.group_by_fields_to_read)).done(function(new_record) {
+                new_record = new_record && new_record[0];
                 am.dialog.close();
                 var domain = self.dataset.domain.slice(0);
-                domain.push([self.group_by, '=', new_record[0][0]]);
+                domain.push([self.group_by, '=', new_record['id']]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), domain);
                 var datagroup = {
                     get: function(key) {
                         return this[key];
                     },
-                    value: new_record[0],
+                    value: [new_record['id'], new_record['display_name']],
                     length: 0,
                     aggregates: {},
+                    values: new_record
                 };
                 var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
                 self.do_add_groups([new_group]).done(function() {
@@ -274,7 +277,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         // Data for the group tooltip (group_by_tooltip) and to display stage-related
         // legends for kanban state management (states_legend) are fetched in
         // one call.
-        var group_by_fields_to_read = [];
         var recurse = function(node) {
             if (node.tag === "field" && node.attrs && node.attrs.options) {
                 var options = instance.web.py_eval(node.attrs.options);
@@ -284,8 +286,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 var tooltip_fields_to_read = _.map(
                     options && options.group_by_tooltip || {},
                     function (value, key, list) { return key; });
-                group_by_fields_to_read = _.union(
-                    group_by_fields_to_read,
+                self.group_by_fields_to_read = _.union(
+                    self.group_by_fields_to_read,
                     states_fields_to_read,
                     tooltip_fields_to_read);
             }
@@ -295,10 +297,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         };
         recurse(this.fields_view.arch);
         var group_ids = _.map(groups, function (elem) { return elem.attributes.value[0]});
-        if (this.grouped_by_m2o && group_ids.length && group_by_fields_to_read.length) {
+        if (this.grouped_by_m2o && group_ids.length && this.group_by_fields_to_read.length) {
             var group_data = new instance.web.DataSet(
                 this,
-                this.group_by_field.relation).read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read));
+                this.group_by_field.relation).read_ids(group_ids, _.union(['display_name'], this.group_by_fields_to_read));
         }
         else { var group_data = $.Deferred().resolve({}); }
 
