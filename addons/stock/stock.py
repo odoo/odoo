@@ -819,13 +819,7 @@ class stock_picking(osv.osv):
                   'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
                   'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
               }),
-        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required=True),
     }
-
-    def _get_default_nomenclature(self, cr, uid, context=None):
-        nom_obj = self.pool.get('barcode.nomenclature')
-        res = nom_obj.search(cr, uid, [], limit=1, context=context)
-        return res and res[0] or False
 
     _defaults = {
         'name': '/',
@@ -835,7 +829,6 @@ class stock_picking(osv.osv):
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c),
         'recompute_pack_op': True,
-        'barcode_nomenclature_id': _get_default_nomenclature,
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -1450,9 +1443,10 @@ class stock_picking(osv.osv):
         answer = {'filter_loc': False, 'operation_id': False}
 
         # Barcode Nomenclatures
-        barcode_nom = self.browse(cr, uid, [picking_id], context=context).barcode_nomenclature_id
+        picking_type_id = self.browse(cr, uid, [picking_id], context=context).picking_type_id.id
+        barcode_nom = self.pool.get('stock.picking.type').browse(cr, uid, [picking_type_id], context=context).barcode_nomenclature_id
         parsed_result = barcode_nom.parse_barcode(barcode_str)
-
+        
         #check if the barcode is a weighted barcode or simply a product
         if parsed_result['type'] in ['weight', 'product', 'package']:
             weight=1
@@ -4294,10 +4288,19 @@ class stock_picking_type(osv.osv):
         'rate_picking_backorders': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
 
+        # Barcode nomenclature
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required=True),
     }
+
+    def _get_default_nomenclature(self, cr, uid, context=None):
+        nom_obj = self.pool.get('barcode.nomenclature')
+        res = nom_obj.search(cr, uid, [], limit=1, context=context)
+        return res and res[0] or False
+
     _defaults = {
         'warehouse_id': _default_warehouse,
         'active': True,
+        'barcode_nomenclature_id': _get_default_nomenclature,
     }
 
 class barcode_rule(models.Model):
