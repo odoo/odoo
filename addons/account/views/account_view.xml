@@ -1248,7 +1248,7 @@
                                         <page string="Information">
                                             <group>
                                                 <group string="Amount">
-                                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('type','&lt;&gt;','consolidation')]"/>
+                                                    <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
                                                     <field name="debit"/>
                                                     <field name="credit"/>
                                                     <field name="quantity"/>
@@ -1299,8 +1299,8 @@
                                 </form>
                                 <tree editable="top" string="Journal Items">
                                     <field name="name"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
-                                    <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
+                                    <field name="partner_id"/>
+                                    <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
