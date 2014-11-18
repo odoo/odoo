@@ -632,7 +632,7 @@ class account_move(models.Model):
             amount = 0
             for line in move.line_id:
                 amount += line.debit - line.credit
-            if abs(amount) < 10 ** -4:
+            if abs(amount) > 10 ** -4:
                 raise Warning(_('You cannot validate a non-balanced entry.'))
             if not move.company_id.id == line.account_id.company_id.id:
                 raise Warning(_("Cannot create moves for different companies."))
