@@ -153,7 +153,6 @@ class ir_sequence(models.Model):
         # object depends on it.
         self.env.cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
-    @api.one
     def _alter_sequence(self, number_increment=None, number_next=None, seq_date_id=False):
         """ Alter a PostreSQL sequence.
 
