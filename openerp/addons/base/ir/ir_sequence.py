@@ -57,31 +57,27 @@ class ir_sequence(models.Model):
     _name = 'ir.sequence'
     _order = 'name'
 
-    def _get_number_next_actual(self, field_name, arg):
+    def _get_number_next_actual(self):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
         res = {}
         for element in self:
             if element.implementation != 'standard':
-                res[element.id] = element.number_next
+                element.number_next_actual = element.number_next
             else:
-                # get number from postgres sequence. Cannot use
-                # currval, because that might give an error when
+                # get number from postgres sequence. Cannot use currval, because that might give an error when
                 # not having used nextval before.
-                statement = (
-                    "SELECT last_value, increment_by, is_called"
-                    " FROM ir_sequence_%03d"
-                    % element.id)
-                self.env.cr.execute(statement)
+                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d" % element.id
+                self.env.cr.execute(query)
                 (last_value, increment_by, is_called) = self.env.cr.fetchone()
                 if is_called:
-                    res[element.id] = last_value + increment_by
+                    element.number_next_actual = last_value + increment_by
                 else:
-                    res[element.id] = last_value
-        return res
+                    element.number_next_actual = last_value
 
-    def _set_number_next_actual(self, name, value, args=None):
-        return self.write({'number_next': value or 0})
+    def _set_number_next_actual(self):
+        for record in self:
+            record.write({'number_next': record.number_next_actual or 0})
 
     name = fields.Char(size=64, required=True)
     code = fields.Selection(_code_get, 'Sequence Type', size=64)
@@ -363,10 +359,35 @@ class ir_sequence_date_range(models.Model):
     _name = 'ir.sequence.date_range'
     _rec_name = "sequence_main_id"
 
+    def _get_number_next_actual(self):
+        '''Return number from ir_sequence row when no_gap implementation,
+        and number from postgres sequence when standard implementation.'''
+        for element in self:
+            if element.sequence_main_id.implementation != 'standard':
+                element.number_next_actual = element.number_next
+            else:
+                # get number from postgres sequence. Cannot use currval, because that might give an error when
+                # not having used nextval before.
+                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d_%03d" % (element.sequence_main_id, element.id)
+                self.env.cr.execute(query)
+                (last_value, increment_by, is_called) = self.env.cr.fetchone()
+                if is_called:
+                    element.number_next_actual = last_value + increment_by
+                else:
+                    element.number_next_actual = last_value
+
+    def _set_number_next_actual(self):
+        for record in self:
+            record.write({'number_next': record.number_next_actual or 0})
+
     date_from = fields.Date('From', required=True)
     date_to = fields.Date('To', required=True)
     sequence_main_id = fields.Many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade')
     number_next = fields.Integer('Next Number', required=True, default=1, help="Next number of this sequence")
+    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
+                                        required=True, string='Next Number', default=1,
+                                        help="Next number that will be used. This number can be incremented "
+                                        "frequently so the displayed value might already be obsolete")
 
     @api.multi
     def write(self, values):
