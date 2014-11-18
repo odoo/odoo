@@ -206,8 +206,7 @@ class TableExporter(http.Controller):
     def create_experiment(self, name, version_ids, objectives):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         tab = []
-        for x in version_ids:
-            tab.append([0, False, {'frequency': '50', 'version_id': int(x)}])
+        tab = [[0, False, {'frequency': '50', 'version_id': int(x)}] for x in version_ids]
         vals = {'name':name, 'google_id': False, 'state': 'draft', 'website_id':context.get('website_id'), 'experiment_version_ids':tab, 'objectives': int(objectives)}
         exp_obj = request.registry['website_version.experiment']
         exp_obj.create(cr, uid, vals, context=None)
@@ -215,10 +214,7 @@ class TableExporter(http.Controller):
     def check_view(self, version_ids):
         #Check if version_ids don't overlap with running experiments
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        version_keys = set()
-        for version in request.registry['website_version.version'].browse(cr, uid, version_ids,context):
-            for v in version.view_ids:
-                version_keys.add(v.key)
+        version_keys = set([v['key'] for v in request.registry['ir.ui.view'].search_read(cr, uid, [('version_id', 'in', version_ids)], ['key'], context=context)])
         exp_mod = request.registry['website_version.experiment']
         exp_ids = exp_mod.search(cr,uid,[('state','=','running'),('website_id','=',context.get('website_id'))],context=context)
         exps = exp_mod.browse(cr,uid,exp_ids,context=context)
@@ -244,9 +240,9 @@ class TableExporter(http.Controller):
 
     @http.route('/website_version/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, xml_id, full=False, bundles=False):
-        """ Lists the templates customizing ``xml_id``. By default, only
-        returns optional templates (which can be toggled on and off), if
-        ``full=True`` returns all templates customizing ``xml_id``
+        """ Get inherit view's informations of the template ``xml_id``. By default, only
+        returns ``customize_show`` templates (which can be active or not), if
+        ``full=True`` returns inherit view's informations of the template ``xml_id``.
         ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
