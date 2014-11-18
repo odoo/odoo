@@ -32,7 +32,8 @@ openerp.account = function (instance) {
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
             this.formatCurrency; // Method that formats the currency ; loaded from the server
-    
+            this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
+
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
@@ -479,23 +480,17 @@ openerp.account = function (instance) {
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
+                    var breadcrumbs = self.action_manager.get_widgets();
+                    var widget = _.find(breadcrumbs, function(widget){
+                        return widget.action && widget.action.id === action_id;
+                    });
+                    if (widget) {
+                        self.action_manager.select_widget(widget, 0);
+                    } else {
+                        self.action_manager.do_action(action_id, {
+                            clear_breadcrumbs: true
+                        });
                     }
-                    if (!found)
-                        instance.web.Home(self);
                 });
         },
     
@@ -1254,12 +1249,12 @@ openerp.account = function (instance) {
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
                 if (Math.abs(balance).toFixed(3) === "0.000") {
-                    self.$(".button_ok").addClass("oe_highlight");
+                    self.$(".button_ok").addClass("btn-primary");
                     self.$(".button_ok").removeAttr("disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = true;
                 } else {
-                    self.$(".button_ok").removeClass("oe_highlight");
+                    self.$(".button_ok").removeClass("btn-primary");
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
@@ -1277,10 +1272,10 @@ openerp.account = function (instance) {
             }
     
             if (Math.abs(balance).toFixed(3) === "0.000") {
-                self.$(".button_ok").addClass("oe_highlight");
+                self.$(".button_ok").addClass("btn-primary");
                 self.$(".button_ok").text("OK");
             } else {
-                self.$(".button_ok").removeClass("oe_highlight");
+                self.$(".button_ok").removeClass("btn-primary");
                 self.$(".button_ok").text("Keep open");
                 var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
                 var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
