@@ -95,7 +95,7 @@ class account_invoice(models.Model):
         nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
         for line in self.sudo().move_id.line_id:
-            if line.account_id.type in ('receivable', 'payable'):
+            if line.account_id.user_type.type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
                     self.residual += line.amount_residual_currency
                 else:

@@ -194,8 +194,8 @@ class account_move_line(models.Model):
     @api.constrains('account_id')
     def _check_account_type(self):
         for line in self:
-            if line.account_id.type == 'consolidation':
-                raise Warning(_('You cannot create journal items on an account of type view or consolidation.'))
+            if line.account_id.user_type.type == 'consolidation':
+                raise Warning(_('You cannot create journal items on an account of type consolidation.'))
 
     @api.multi
     @api.constrains('currency_id')
