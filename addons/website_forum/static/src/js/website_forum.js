@@ -1,4 +1,3 @@
-$(document).ready(function () {
     openerp.website.if_dom_contains('.website_forum', function () {
         $('.karma_required').on('click', function (ev) {
             var karma = $(ev.currentTarget).data('karma');
@@ -218,7 +217,7 @@ $(document).ready(function () {
             editor.on('instanceReady', CKEDITORLoadComplete);
         }
 
-        IsKarmaValid = function(eventNumber, minKarma){
+        function IsKarmaValid(eventNumber, minKarma){
             "use strict";
             if(parseInt($("#karma").val()) >= minKarma){
                 CKEDITOR.tools.callFunction(eventNumber,this);
@@ -226,15 +225,12 @@ $(document).ready(function () {
             } else {
                 alert("Sorry you need more than " + minKarma + " Karma.");
             }
-        };
+        }
 
-        CKEDITORLoadComplete = function(){
+        function CKEDITORLoadComplete(){
             "use strict";
-            $('.cke_button__link').attr('onclick','IsKarmaValid(33,30)');
-            $('.cke_button__unlink').attr('onclick','IsKarmaValid(37,30)');
-            $('.cke_button__image').attr('onclick','IsKarmaValid(41,30)');
-        };
+            $('.cke_button__link').on('click', function() { IsKarmaValid(33,30); });
+            $('.cke_button__unlink').on('click', function() { IsKarmaValid(37,30); });
+            $('.cke_button__image').on('click', function() { IsKarmaValid(41,30); });
+        }
     });
-});
-
-
