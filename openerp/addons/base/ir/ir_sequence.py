@@ -60,6 +60,7 @@ class ir_sequence(models.Model):
     def _get_number_next_actual(self, field_name, arg):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
+        res = {}
         for element in self:
             if element.implementation != 'standard':
                 res[element.id] = element.number_next
