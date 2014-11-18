@@ -223,7 +223,7 @@ class WebsiteForum(http.Controller):
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
         elif tag_version == "select2":
-            question_tag_ids = forum._tag_to_write_vals(cr, uid, post.get('question_tags', ''), context=context)
+            question_tag_ids = forum._tag_to_write_vals(post.get('question_tags', ''))
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
@@ -413,7 +413,7 @@ class WebsiteForum(http.Controller):
                         question_tags.append(new_tag)
             tags_val = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            tags_val = forum._tag_to_write_vals(cr, uid, kwargs.get('question_tag', ''), context=context)
+            tags_val = forum._tag_to_write_vals(kwargs.get('question_tag', ''))
 
         vals = {
             'tag_ids': tags_val,
