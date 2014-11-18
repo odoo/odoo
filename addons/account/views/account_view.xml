@@ -99,7 +99,7 @@
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
                             <field name="child_consol_ids"
-                                attrs="{'invisible':[('type','!=','consolidation')]}"
+                                attrs="{'invisible':[('user_type.type', '!=', 'consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
                         <group groups="base.group_multi_currency">
@@ -115,7 +115,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation')" string="Chart of accounts" toolbar="1" >
+                <tree string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type" invisible="1"/>
@@ -133,8 +133,8 @@
             <field name="arch" type="xml">
                 <search string="Accounts">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
-                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
-                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
+                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('user_type.type','=','receivable')]"/>
+                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('user_type.type','=','payable')]"/>
                     <field name="user_type"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
@@ -277,8 +277,8 @@
                             <field name="type"/>
                         </group>
                         <group>
-                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','consolidation')]"/>
-                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','consolidation')]"/>
+                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('user_type.type', '!=;', 'consolidation')]"/>
+                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('user_type.type', '!=;', 'consolidation')]"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -566,7 +566,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('type', 'not in', ['view', 'consolidation'])]"/>
+                                <field name="account_id" domain="[('user_type.type', 'not in', ['view', 'consolidation'])]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
                             </group>
@@ -884,8 +884,8 @@
                                 <field name="child_depend"/>
                             </group>
                             <group string="Invoices">
-                                  <field name="account_collected_id" domain="[('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_collected_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
+                                  <field name="account_analytic_collected_id" domain="[('user_type.type', '!=','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -894,8 +894,8 @@
 
                             </group>
                             <group string="Refunds">
-                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_paid_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
+                                  <field name="account_analytic_paid_id" domain="[('user_type.type', '!=', 'view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>

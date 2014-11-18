@@ -717,7 +717,8 @@ class account_tax_code(models.Model):
         if self._context.get('fiscalyear_id', False):
             fiscalyear_id = [self._context['fiscalyear_id']]
         else:
-            fiscalyear_id = FiscalyearObj.finds(exception=False)
+            dt = fields.Date.context_today(self)
+            fiscalyear_id = FiscalyearObj.search([('date_start', '<=' ,dt), ('date_stop', '>=', dt)], limit=1).id
         where = ''
         where_params = ()
         if fiscalyear_id:
