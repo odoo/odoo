@@ -104,7 +104,7 @@
         'views/account_unit_test.xml',
     ],
     'test': [
-        'test/account_test_users.yml',
+#         'test/account_test_users.yml',
 #         'test/account_customer_invoice.yml',
 #         'test/account_supplier_invoice.yml',
 #         'test/chart_of_account.yml',
