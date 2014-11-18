@@ -103,14 +103,14 @@
             self.table.find('.last .option-label')  .on('keydown', self.tabEvent());
             self.table.find('td')                   .on('keyup', self.deleteIfEmpty);
             self.table.find('.last .option-value')  .on('keydown', self.addField(false));
-            self.table.find('.form-editor-add')     .on('click',self.addField(true));
+            self.table.find('.o_form-editor-add')     .on('click',self.addField(true));
         },
         //disable events
         offAddField: function() {
             var self = this;
             self.table.find('.last .option-value')  .off('keydown');
             self.table.find('.last .option-value')  .on('keydown', self.tabEvent());
-            self.table.find('.form-editor-add')     .off('click');
+            self.table.find('.o_form-editor-add')     .off('click');
             self.table.find('td')                   .off('td');
         },
         //check if the line is empty before delete it
@@ -161,7 +161,7 @@
                     tb_line.find('input.delete').remove();
                     self.offAddField();
                     
-                    self.table.find('.form-editor-add').remove();
+                    self.table.find('.o_form-editor-add').remove();
                     self.table.find('.last').removeClass('last');
                     tb_line.find('a.delete').on('click',function(e) {
                             $(this).parent().parent().remove();
@@ -216,7 +216,7 @@
             tb_line.find('a.delete').on('click',function(e) {
                     $(this).parent().parent().remove();
             });
-            this.table.find('.tb-actions input').addClass('hidden');
+            this.table.find('.o_tb-actions input').addClass('hidden');
             $(this.table.find('th')[1]).removeClass('hidden');
             parent.html('');
             parent.append(tb_line);
@@ -232,13 +232,13 @@
                 tb_line.find('a.delete').remove();
                 tb_line.find('.option-value').addClass('hidden');
                 $(this.table.find('th')[1]).addClass('hidden');
-                this.table.find('.tb-actions input').removeClass('hidden');
+                this.table.find('.o_tb-actions input').removeClass('hidden');
             }
             else{
                 tb_line.find('input.delete').remove();
                 tb_line.find('.option-value').removeClass('hidden');
                 $(this.table.find('th')[1]).removeClass('hidden');
-                this.table.find('.tb-actions input').addClass('hidden');
+                this.table.find('.o_tb-actions input').addClass('hidden');
             }
             var tb_last = tb_line.clone();
             var tb_append;
@@ -277,7 +277,7 @@
                 parent.append(tb_append);
             
             });
-            this.table.find('.tb-actions input').prop('checked',true)
+            this.table.find('.o_tb-actions input').prop('checked',true)
                                                 .on('click',this.checkAll(this));
             this.table.find('input.delete').on('click',this.checkAllStates(this));
             this.checkAllStates(this)();
@@ -305,7 +305,7 @@
                 this.$target.attr('data-fail',this.wizard.find('#fail').val());
 
                 this.getModel(model_sel).then(function(){
-                    var mail = self.wizard.find('.form-action-mailto textarea').val();
+                    var mail = self.wizard.find('.o_form-action-mailto textarea').val();
                     var selectedModelOption = self.wizard.find(':selected');
 
                     self.$target.attr('data-model-name', selectedModelOption.data('model-name'));
@@ -344,9 +344,9 @@
         },
         organizeForm: function() {
             if(this.wizard.find('select').val() == 'mail.mail')
-                this.wizard.find('.form-action-mailto').removeClass('hidden');
+                this.wizard.find('.o_form-action-mailto').removeClass('hidden');
             else
-                this.wizard.find('.form-action-mailto').addClass('hidden');
+                this.wizard.find('.o_form-action-mailto').addClass('hidden');
         },
         
         execute: function (type, value, $li) {
@@ -375,7 +375,7 @@
                 self.wizard.appendTo('body').modal({"keyboard" :true});
                 self.loadData();
                 
-                self.wizard.find('.form-action-mailto').find('textarea')
+                self.wizard.find('.o_form-action-mailto').find('textarea')
                     .textext({  plugins: 'autocomplete arrow',
                                 ext: {
                                     itemManager: {
@@ -685,7 +685,7 @@
 
             this.$target.find('.form-data').attr('data-multiple',multiple);
             this.optionEditor.addOptions(optionsSelector,'search',{id_label:''})();
-            this.$target.find('.form-data').html('<textarea class="form-input-search" name="'+name+'" rows="1"></textarea>');
+            this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
         },
         selectValidate: function() {
             var optionsSelector = this.$target.find('.wrap-options');
@@ -883,7 +883,7 @@
                         .find('.form-control-feedback').remove();
             if(this.$target.data('form') == 'hidden') this.$target.removeClass('website-form-editor-hidden-under-edit');
             if(type == 'search')
-                  this.$target.find('.form-data').html('<textarea class="form-input-search" name="'+name+'" rows="1"></textarea>');
+                  this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
         },
     });
 
