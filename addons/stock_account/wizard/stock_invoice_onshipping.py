@@ -25,11 +25,11 @@ from openerp.tools.translate import _
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
         journal_obj = self.pool.get('account.journal')
-        journal_type = self._get_journal_type(cr, uid, context=context)
+        journal_type = self._get_journal_type(cr, uid, [0], ['journal_type'], [], context=context)[0]['journal_type']
         journals = journal_obj.search(cr, uid, [('type', '=', journal_type)])
         return journals and journals[0] or False
     
-    def _get_journal_type(self, cr, uid, field_name, context=None):
+    def _get_journal_type(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
         res_ids = context and context.get('active_ids', [])
@@ -37,7 +37,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         pickings = pick_obj.browse(cr, uid, res_ids, context=context)
         pick = pickings and pickings[0]
         if not pick or not pick.move_lines:
-            return 'sale'
+            return {'journal_type': 'sale', 'invoice_type': 'out_invoice'}
         src_usage = pick.move_lines[0].location_id.usage
         dest_usage = pick.move_lines[0].location_dest_id.usage
         type = pick.picking_type_id.code
@@ -56,22 +56,26 @@ class stock_invoice_onshipping(osv.osv_memory):
         else:
             journal_type = 'sale'
             invoice_type = 'out_invoice'
-        return {'journal_type': journal_type, 'invoice_type': invoice_type}
+        return {id: {'journal_type': journal_type, 'invoice_type': invoice_type} for id in ids}
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
-        'journal_type': fields.selection([('purchase', 'Create Supplier Invoice'), ('sale', 'Create Customer Invoice')], 'Journal Type', readonly=True),
+        'journal_type': fields.function(_get_journal_type, type='selection', selection=[
+            ('purchase', 'Create Supplier Invoice'),
+            ('sale', 'Create Customer Invoice')
+        ], string='Journal Type', readonly=True, multi=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoice Date'),
-        'invoice_type': fields.selection([
-            ('invoice', 'Invoice'),
-            ('refund', 'Refund'),
-        ], string='Invoice type'),
+        'invoice_type': fields.function(_get_journal_type, type='selection', selection=[
+            ('out_invoice', 'Customer Invoice'),
+            ('in_invoice', 'Supplier Invoice'),
+            ('out_refund', 'Customer Refund'),
+            ('in_refund', 'Supplier Refund'),
+        ], string='Invoice type', readonly=True, multi=True),
     }
     _defaults = {
-        'journal_type': _get_journal_type,
         'journal_id' : _get_journal,
     }
 
@@ -89,16 +93,6 @@ class stock_invoice_onshipping(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _('None of these picking lists require invoicing.'))
         return res
 
-    def _get_inv_type(self, cr, uid, data, context=None):
-        if data.journal_type == 'purchase' and data.invoice_type == 'invoice':
-            return 'in_invoice'
-        elif data.journal_type == 'sale' and data.invoice_type == 'refund':
-            return 'out_refund'
-        elif data.journal_type == 'purchase' and data.invoice_type == 'refund':
-            return 'in_refund'
-        else:
-            return 'out_invoice'
-
     def open_invoice(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -107,12 +101,10 @@ class stock_invoice_onshipping(osv.osv_memory):
         if not invoice_ids:
             raise osv.except_osv(_('Error!'), _('No invoice created!'))
 
-        data = self.browse(cr, uid, ids[0], context=context)
-
         action_model = False
         action = {}
         
-        inv_type = self._get_inv_type(cr, uid, data, context=context)
+        inv_type = self.browse(cr, uid, ids[0], context=context).invoice_type
         data_pool = self.pool.get('ir.model.data')
         if inv_type == "out_invoice":
             action_id = data_pool.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
@@ -136,7 +128,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         data = self.browse(cr, uid, ids[0], context=context)
         context['date_inv'] = data.invoice_date
         acc_journal = self.pool.get("account.journal")
-        inv_type = self._get_inv_type(cr, uid, data, context=context)
+        inv_type = data.invoice_type
         context['inv_type'] = inv_type
 
         active_ids = context.get('active_ids', [])
