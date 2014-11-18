@@ -202,7 +202,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False, bundles=False):
+    def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``xml_id``. By default, only
         returns ``customize_show`` templates (which can be active or not), if
         ``full=True`` returns inherit view's informations of the template ``xml_id``.
@@ -217,7 +217,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
+            ._views_get(request.cr, request.uid, key, bundles=bundles, context=dict(request.context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
@@ -228,7 +228,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     result.append({
                         'name': v.inherit_id.name,
                         'id': v.id,
-                        'xml_id': v.xml_id,
+                        'key': v.key,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
@@ -237,7 +237,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 result.append({
                     'name': v.name,
                     'id': v.id,
-                    'xml_id': v.xml_id,
+                    'key': v.key,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
                     'active': v.active,

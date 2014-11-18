@@ -2,8 +2,9 @@ import openerp
 from openerp import http
 from openerp.http import request
 import datetime
+from openerp.addons.website.controllers.main import Website
 
-class TableExporter(http.Controller):
+class Versioning_Controller(Website):
         
     @http.route(['/website_version/change_version'], type = 'json', auth = "user", website = True)
     def change_version(self, version_id):
@@ -239,49 +240,15 @@ class TableExporter(http.Controller):
         return check
 
     @http.route('/website_version/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``xml_id``. By default, only
-        returns ``customize_show`` templates (which can be active or not), if
-        ``full=True`` returns inherit view's informations of the template ``xml_id``.
-        ``bundles=True`` returns also the asset bundles
-        """
-        imd = request.registry['ir.model.data']
-        view_model, view_theme_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'theme')
-
-        user = request.registry['res.users']\
-            .browse(request.cr, request.uid, request.uid, request.context)
-        user_groups = set(user.groups_id)
-
-        views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
-        done = set()
-        result = []
+    def customize_template_get(self, key, **kw):
+        result = Website.customize_template_get(self, key, full=False, bundles=False)
         check = []
-        for v in views:
-            if not user_groups.issuperset(v.groups_id):
-                continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id) and not v.key in check :
-                check.append(v.key)
-                if v.inherit_id not in done:
-                    result.append({
-                        'name': v.inherit_id.name,
-                        'id': v.id,
-                        'xml_id': v.xml_id,
-                        'inherit_id': v.inherit_id.id,
-                        'header': True,
-                        'active': False
-                    })
-                    done.add(v.inherit_id)
-                result.append({
-                    'name': v.name,
-                    'id': v.id,
-                    'xml_id': v.xml_id,
-                    'inherit_id': v.inherit_id.id,
-                    'header': False,
-                    'active': v.active,
-                })
-        return result
+        res = []
+        for data in result:
+            if data['name'] not in check:
+                check.append(data['name'])
+                res.append(data)
+        return res
         
 
 

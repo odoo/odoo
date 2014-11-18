@@ -690,10 +690,10 @@
             if(this.loaded) {
                 return;
             }
-            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': this.view_name }).then(
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'key': this.view_name }).then(
                 function(result) {
                     _.each(result, function (item) {
-                        if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                         if (item.header) {
                             self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
                         } else {
