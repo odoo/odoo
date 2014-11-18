@@ -40,11 +40,7 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-            website_id = self.pool['website']._get_current_website_id(request.cr, openerp.SUPERUSER_ID, domain_name, context=request.context)
-            if website_id:
-                request.uid = self.pool['website'].browse(request.cr, openerp.SUPERUSER_ID, website_id, request.context).user_id.id
-            else:
-                dummy, request.uid = self.pool['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
+            request.uid = self.pool['website']._get_current_website(request.cr, openerp.SUPERUSER_ID, domain_name, context=request.context).user_id.id
         else:
             request.uid = request.session.uid
 

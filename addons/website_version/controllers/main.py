@@ -9,14 +9,7 @@ class Versioning_Controller(Website):
     @http.route(['/website_version/change_version'], type = 'json', auth = "user", website = True)
     def change_version(self, version_id):
         request.session['version_id'] = int(version_id)
-        request.session['master'] = 0
         return version_id
-
-    @http.route(['/website_version/master'], type = 'json', auth = "user", website = True)
-    def master(self):
-        request.session['version_id'] = 0
-        request.session['master'] = 1
-        return 0
 
     @http.route(['/website_version/create_version'], type = 'json', auth = "user", website = True)
     def create_version(self,name,version_id):
@@ -30,8 +23,6 @@ class Versioning_Controller(Website):
         if version_id:
             iuv.copy_version(cr, uid, version_id,new_version_id,context=context)
         request.session['version_id'] = new_version_id
-        request.context['version_id'] = new_version_id
-        request.session['master'] = 0
         return new_version_id
 
     @http.route(['/website_version/delete_version'], type = 'json', auth = "user", website = True)
@@ -43,7 +34,6 @@ class Versioning_Controller(Website):
         current_id = request.context.get('version_id')
         if int(version_id)== current_id:
             request.session['version_id'] = 0
-            request.session['master'] = 1
         return version_name
 
     @http.route(['/website_version/check_version'], type = 'json', auth = "user", website = True)
@@ -117,7 +107,6 @@ class Versioning_Controller(Website):
         for view in obj.browse(cr, uid, int(version_id),context).view_ids:
             view.copy({'version_id': None}, context=context)
         request.session['version_id'] = 0
-        request.session['master'] = 1
         return version.name
 
     @http.route(['/website_version/diff_version'], type = 'json', auth = "public", website = True)
