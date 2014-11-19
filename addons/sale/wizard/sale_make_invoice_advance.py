@@ -25,6 +25,7 @@ import openerp.addons.decimal_precision as dp
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sales Advance Payment Invoice"
+    _rec_name = 'product_id'
 
     _columns = {
         'advance_payment_method':fields.selection(
