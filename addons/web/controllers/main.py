@@ -397,17 +397,26 @@ def set_cookie_and_redirect(req, redirect_url):
 def load_actions_from_ir_values(req, key, key2, models, meta):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, req.context)
-    # persist values listed in the req.context['persist_values'] list
+    # persist values listed in the req.context['persist_values'] list, if any
     if key2 == 'tree_but_open' and req.context.get('persist_values',[]):
         values_to_persist = req.context.get('persist_values',[])
         for a in actions:
             action = len(a)> 2 and a[2] or {}
             if not action:
                 continue
-            ctx = eval(str(action.get('context',{})))
+            ctx = {}
             for v in values_to_persist:
                 ctx.update({v:req.context.get(v,False)})
             if ctx:
+                if action.get('context',False):
+                    ctx2 = str(action.get('context',False))
+                    ctx2 = ctx2.find('{') >= 0 and ctx2[ctx2.find('{')+1:]
+                    if ctx2:
+                        ctx = str(ctx)
+                        ctx = ctx.rfind('}') > 0 and ctx[:ctx.rfind('}')]
+                        if ctx:
+                            a[2].update({'context':unicode(ctx + ', ' + ctx2)})
+                        continue
                 a[2].update({'context':unicode(ctx)})
 
     return [(id, name, clean_action(req, action))
