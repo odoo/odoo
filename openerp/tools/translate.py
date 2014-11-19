@@ -526,28 +526,6 @@ def trans_export(lang, modules, buffer, format, cr):
     _process(format, modules, translations, buffer, lang)
     del translations
 
-def trans_parse_xsl(de):
-    return list(set(trans_parse_xsl_aux(de, False)))
-
-def trans_parse_xsl_aux(de, t):
-    res = []
-
-    for n in de:
-        t = t or n.get("t")
-        if t:
-                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
-                    continue
-                if n.text:
-                    l = n.text.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-                if n.tail:
-                    l = n.tail.strip().replace('\n',' ')
-                    if len(l):
-                        res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl_aux(n, t))
-    return res
-
 def trans_parse_rml(de):
     res = []
     for n in de:
@@ -560,35 +538,6 @@ def trans_parse_rml(de):
                     res.append(s.encode("utf8"))
         res.extend(trans_parse_rml(n))
     return res
-
-def _push(callback, term, source_line):
-    """ Sanity check before pushing translation terms """
-    term = (term or "").strip().encode('utf8')
-    # Avoid non-char tokens like ':' '...' '.00' etc.
-    if len(term) > 8 or any(x.isalpha() for x in term):
-        callback(term, source_line)
-
-def trans_parse_view(element, callback):
-    """ Helper method to recursively walk an etree document representing a
-        regular view and call ``callback(term)`` for each translatable term
-        that is found in the document.
-
-        :param ElementTree element: root of etree document to extract terms from
-        :param callable callback: a callable in the form ``f(term, source_line)``,
-            that will be called for each extracted term.
-    """
-    for el in element.iter():
-        if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
-                and el.tag.lower() not in SKIPPED_ELEMENTS
-                and el.get("translation", '').strip() != "off"
-                and el.text):
-            _push(callback, el.text, el.sourceline)
-        if el.tail:
-            _push(callback, el.tail, el.sourceline)
-        for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
-            value = el.get(attr)
-            if value:
-                _push(callback, value, el.sourceline)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -723,19 +672,7 @@ def trans_generate(lang, modules, cr):
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
 
-        if model=='ir.ui.view':
-            d = etree.XML(encode(obj.arch))
-            if obj.type == 'qweb':
-                view_id = get_root_view(xml_name)
-                push_qweb = lambda t,l: push(module, 'view', 'website', view_id, t)
-                _extract_translatable_qweb_terms(d, push_qweb)
-            else:
-                push_view = lambda t,l: push(module, 'view', obj.model, xml_name, t)
-                trans_parse_view(d, push_view)
-        elif model=='ir.actions.wizard':
-            pass # TODO Can model really be 'ir.actions.wizard' ?
-
-        elif model=='ir.model.fields':
+        if model=='ir.model.fields':
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
@@ -747,25 +684,26 @@ def trans_generate(lang, modules, cr):
                 continue
             field_def = objmodel._columns[field_name]
 
+            # TODO: speed optimization
             name = "%s,%s" % (encode(obj.model), field_name)
-            push_translation(module, 'field', name, 0, encode(field_def.string))
-
-            if field_def.help:
-                push_translation(module, 'help', name, 0, encode(field_def.help))
-
             if field_def.translate:
                 ids = objmodel.search(cr, uid, [])
                 obj_values = objmodel.read(cr, uid, ids, [field_name])
+                t = lambda x: [encode(x)]
+                domain = [
+                    ('model', '=', model),
+                    ('res_id', '=', res_id),
+                ]
+                if field_def.translate is not True:
+                    # FIXME: field 'src' does not exist in ir.model.data
+                    domain.append(('src','=',term))
+                    t = field_def.translate
                 for obj_value in obj_values:
-                    res_id = obj_value['id']
-                    if obj.name in ('ir.model', 'ir.ui.menu'):
-                        res_id = 0
-                    model_data_ids = model_data_obj.search(cr, uid, [
-                        ('model', '=', model),
-                        ('res_id', '=', res_id),
-                        ])
-                    if not model_data_ids:
-                        push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
+                    for term in t(obj_value[field_name]):
+                        res_id = obj_value['id']
+                        model_data_ids = model_data_obj.search(cr, uid, domain)
+                        if not model_data_ids:
+                            push_translation(module, 'model', name, 0, term)
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
                 for dummy, val in field_def.selection:
@@ -779,9 +717,7 @@ def trans_generate(lang, modules, cr):
                 parse_func = trans_parse_rml
                 report_type = "report"
             elif obj.report_xsl:
-                fname = obj.report_xsl
-                parse_func = trans_parse_xsl
-                report_type = "xsl"
+                continue
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
                     report_file = misc.file_open(fname)
@@ -795,16 +731,17 @@ def trans_generate(lang, modules, cr):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name, field_def in obj._columns.items():
-            if model == 'ir.model' and field_name == 'name' and obj.name == obj.model:
-                # ignore model name if it is the technical one, nothing to translate
-                continue
             if field_def.translate:
                 name = model + "," + field_name
                 try:
                     term = obj[field_name] or ''
                 except:
-                    term = ''
-                push_translation(module, 'model', name, xml_name, encode(term))
+                    continue
+                if field_def.translate is True:
+                    push_translation(module, 'model', name, xml_name, encode(term))
+                else:
+                    for t in field_def.translate(term):
+                        push_translation(module, 'model', name, xml_name, encode(t))
 
         # End of data for ir.model.data query results
 

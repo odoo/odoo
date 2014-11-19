@@ -1130,7 +1130,10 @@ class _String(Field):
 
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
-    _description_translate = property(attrgetter('translate'))
+
+    def _description_translate(self, env):
+        # return False if self.translate is a callable
+        return self.translate is True
 
 
 class Char(_String):

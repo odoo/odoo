@@ -73,6 +73,12 @@ def keep_query(*keep_params, **additional_params):
                 params[param] = ','.join(request.httprequest.args.getlist(param))
     return werkzeug.urls.url_encode(params)
 
+def encode(s):
+    if isinstance(s, unicode):
+        return s.encode('utf8')
+    return s
+
+
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -136,6 +142,27 @@ def get_view_arch_from_file(filename, xmlid):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
+# TODO: move this method in tools for all XML fields?
+def xml_chunk(attr=['string', 'help', 'sum', 'avg', 'confirm', 'placeholder']):
+    def xml_chunk_translate(data):
+        def _xml_parse(de):
+            if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
+                yield de.text.strip()
+            if de.tail and de.tail.strip():
+                yield de.tail.strip()
+            if de.tag == 'attribute' and de.get("name") == 'string':
+                if de.text:
+                    yield de.text
+            for attr in ('string', 'help', 'sum', 'avg', 'confirm', 'placeholder'):
+                if de.get(attr):
+                    yield de.get(attr)
+            for n in de:
+                for val in _xml_parse(n):
+                    yield val
+        de = etree.XML(encode(data))
+        return _xml_parse(de)
+    return xml_chunk_translate
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
@@ -198,9 +225,7 @@ class view(osv.osv):
             ('kanban', 'Kanban'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
-        'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob', oldname='arch'),
-        'arch_fs': fields.char('Arch Filename'),
+        'arch': fields.text('View Architecture', required=True, translate=xml_chunk()),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
@@ -479,7 +504,6 @@ class view(osv.osv):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -653,11 +677,6 @@ class view(osv.osv):
             self.raise_view_error(cr, user, _('Model not found: %(model)s') % dict(model=model),
                                   view_id, context)
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
         def check_group(node):
             """Apply group restrictions,  may be set at view level or model level::
                * at view level this means the element should be made invisible to
@@ -751,46 +770,6 @@ class view(osv.osv):
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
         orm.transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
-
-        # TODO remove attrs counterpart in modifiers when invisible is true ?
-
-        # translate view
-        if 'lang' in context:
-            Translations = self.pool['ir.translation']
-            if node.text and node.text.strip():
-                term = node.text.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.text = node.text.replace(term, trans)
-            if node.tail and node.tail.strip():
-                term = node.tail.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.tail =  node.tail.replace(term, trans)
-
-            if node.get('string') and node.get('string').strip() and not result:
-                term = node.get('string').strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans == term:
-                    if 'base_model_name' in context:
-                        # If translation is same as source, perhaps we'd have more luck with the alternative model name
-                        # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                        trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
-                    else:
-                        inherit_model = self.browse(cr, user, view_id, context=context).inherit_id.model or model
-                        if inherit_model != model:
-                            # parent view has a different model, if the terms belongs to the parent view, the translation
-                            # should be checked on the parent model as well
-                            trans = Translations._get_source(cr, user, inherit_model, 'view', context['lang'], term)
-                if trans:
-                    node.set('string', trans)
-
-            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
-                attr_value = node.get(attr_name)
-                if attr_value and attr_value.strip():
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
-                    if trans:
-                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):

@@ -116,9 +116,11 @@ class view(osv.osv):
 
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+            ids = [int(el.get('data-oe-id'))]
+            Model.write(cr, uid, ids, {
                 field: value
             }, context=context)
+            self._translation_resync(cr, uid, el.get('data-oe-model'), ids, field, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
         # filter out meta-information inserted in the document
@@ -249,6 +251,7 @@ class view(osv.osv):
         self.write(cr, uid, res_id, {
             'arch': self._pretty_arch(arch)
         }, context=context)
+        self._translation_resync(cr, uid, 'ir.ui.view', [res_id], 'arch', context=context)
 
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
@@ -299,3 +302,33 @@ class view(osv.osv):
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
 
+    # When the English version of a field is modified, the algorithm tries to
+    # resync translation if the distance between modified strings is not too
+    # big. It allows to not retranslate data where a typo has been fixed in
+    # the English version.
+    def _translation_resync(self, cr, uid, model, ids, field, context=None):
+        context = context or {}
+        model_obj = self.pool.get(model)
+        trans_obj = self.pool.get('ir.translation')
+        translate = model_obj._all_columns[field].column.translate
+        if not translate:
+            return
+        chunk = (lambda x: [x]) if (translate is True) else translate
+
+        for record in model_obj.browse(cr, uid, ids, context=context):
+            val = getattr(record, field)
+            if not val: continue
+            origins = list(chunk(val))
+
+            trans_ids = trans_obj.search(cr, uid, [
+                            ('name','=',model+','+field),('type','=','model'),
+                            ('res_id', '=', record.id)], context=context)
+
+            for term in trans_obj.browse(cr, uid, trans_ids, context=context):
+                if term.src not in origins:
+                    newsrc = difflib.get_close_matches(term.src, origins, 1, 0.9)
+                    if newsrc:
+                        trans_obj.write(cr, uid, term.id, {'src': newsrc[0]}, context=context)
+                    elif translate is True:
+                        trans_obj.write(cr, uid, term.id, {'state': 'to_translate', 'src': val}, context=context)
+        return True

@@ -244,7 +244,7 @@ class ir_model_fields(osv.osv):
     _rec_name = 'field_description'
 
     _columns = {
-        'name': fields.char('Name', required=True, select=1),
+        'name': fields.char('Name', required=True, select=1, translate=True),
         'complete_name': fields.char('Complete Name', select=1),
         'model': fields.char('Object Name', required=True, select=1,
             help="The technical name of the model this field belongs to"),
@@ -260,6 +260,7 @@ class ir_model_fields(osv.osv):
             "specified as a Python expression defining a list of (key, label) pairs. "
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
+        'help': fields.text('Help', translate=True),
         'readonly': fields.boolean('Readonly'),
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
