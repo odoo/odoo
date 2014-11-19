@@ -296,7 +296,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
 
     def _get_account(self, data):
         if data['model'] == 'account.account':
-            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
+            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
         return super(general_ledger ,self)._get_account(data)
 
     def _get_sortby(self, data):
