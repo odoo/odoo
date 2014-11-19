@@ -57,20 +57,26 @@ class view(osv.Model):
         for view in version.view_ids:
             copy_id=self.copy(cr,uid,view.id,{'version_id':new_version_id},context=ctx)
 
-    #To publish a view
+    def publish(self, cr, uid, ids, context=None):
+        del_l = []
+        views = self.browse(cr, uid, ids, context)
+        for view in views:
+            #To delete and replace views which are in the website( in fact with website_id)
+            master_id = self.pool['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
+            del_l += master_id
+        if del_l:
+            self.pool['ir.ui.view'].unlink(cr, uid, del_l, context=context)        
+        for view in views:
+            view.copy({'version_id': None})
+
+
+    #To publish a view in backend
     def action_publish(self,cr,uid,ids,context=None):
         if context is None:
             context = {}
         ctx = dict(context, mykey=True)
         view_id = context.get('active_id')
-        view = self.browse(cr, uid, [view_id],context)[0]
-        key = view.key
-        #To check if the view is in a version
-        if view.website_id and view.version_id:
-            master_id = self.search(cr, uid, [('key','=',key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
-            if master_id:
-                self.unlink(cr, uid, master_id, context=context)
-            self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'version_id': None}, context=context)
+        self.publish(cr,uid, [view_id], context=None)
 
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
