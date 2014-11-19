@@ -66,39 +66,8 @@ class Versioning_Controller(Website):
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
     def publish_version(self, version_id, save_master, copy_master_name):
-        #Info: there were some cache problems with browse, this is why the code is so long
-        obj_view = request.env['ir.ui.view']
-        obj = request.env['website_version.version']
-        version = obj.browse(int(version_id))
-        del_l = []
-        copy_l = []
-        for view in version.view_ids:
-            master = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)])
-            if master:
-                #Delete all the website views having a key which is in the version published
-                del_l += [master.id]
-                copy_l+= [master.id]
-            else:
-                #Views that have no website_id, must be copied because they can be shared with another website
-                master = obj_view.search([('key','=',view.key),('version_id', '=', False),('website_id', '=', False)])
-                copy_l+= [master.id]
-        if copy_l:
-            if save_master:
-                #To check if the name of the version to copy master already exists
-                check = obj.search([('name','=', copy_master_name),('website_id', '=', version.website_id.id)])
-                #If it already exists, we delete the old to make the new
-                if check:
-                    check.unlink()
-                copy_version = obj.create({'name' : copy_master_name, 'website_id' : version.website_id.id})
-                for view in obj_view.browse(copy_l):
-                    view.copy({'version_id': copy_version.id, 'website_id' : version.website_id.id})
-            #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
-            obj_view.browse(del_l).unlink()
-        #All the views in the version published are copied without version_id   
-        for view in obj.browse(int(version_id)).view_ids:
-            view.copy({'version_id': None})
         request.session['version_id'] = 0
-        return version.name
+        return request.env['website_version.version'].publish_version(int(version_id), save_master, copy_master_name)
 
     @http.route(['/website_version/diff_version'], type = 'json', auth = "public", website = True)
     def diff_version(self, version_id):

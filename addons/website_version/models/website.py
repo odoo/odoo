@@ -29,7 +29,7 @@ class NewWebsite(osv.Model):
             EXP = request.context.get('website_version_experiment', {})
         else:
             EXP = json.loads(request.httprequest.cookies.get('website_version_experiment'))
-        #We have to check if all experiments are set in the cookie
+        #We have to check if all experiments are set in the cookie because it can change in the future
         exp_ids = self.pool["website_version.experiment"].search(cr, uid, [('state','=','running'),('website_id.id','=',website.id)], context=context)
         exps = self.pool["website_version.experiment"].browse(cr, uid, exp_ids, context=context)
         for exp in exps:
