@@ -7,13 +7,13 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         # I will create bank detail with using manager access rights
         # because account manager can only create bank details.
         self.res_partner_bank_0 = self.env['res.partner.bank'].sudo(self.account_manager).create(dict(
-            state="bank",
+            state='bank',
             company_id=self.main_company.id,
             partner_id=self.main_partner.id,
-            acc_number="123456789",
+            acc_number='123456789',
             footer=True,
             bank=self.main_bank.id,
-            bank_name="Reserve"
+            bank_name='Reserve'
         ))
 
         # Test with that user which have rights to make Invoicing and payment and who is accountant.
@@ -40,7 +40,8 @@ class TestAccountCustomerInvoive(AccountTestUsers):
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
-        )]
+             )
+        ]
 
         self.account_invoice_customer0 = self.account_invice_obj.sudo(self.account_user).create(dict(
             name="Test Customer Invoice",
@@ -51,4 +52,61 @@ class TestAccountCustomerInvoive(AccountTestUsers):
             partner_id=self.partner3_id.id,
             account_id=self.account_rec1_id.id,
             invoice_line=invoice_line_data
+        ))
+
+        # I manually assign tax on invoice
+        self.invoice_tax_obj = self.env['account.invoice.tax']
+        amt = self.invoice_tax_obj.amount_change(50.0, self.ref('base.EUR'), self.ref('base.main_company'), False)
+        base_amt = self.invoice_tax_obj.base_change(9000.0, self.ref('base.EUR'), self.ref('base.main_company'), False)
+        invoice_tax_line = {
+            'name':  'Test Tax for Customer Invoice',
+            'manual': 1,
+            'base': base_amt['value']['base_amount'],
+            'amount': amt['value']['tax_amount'],
+            'account_id': self.ref('account.ova'),
+            'invoice_id': self.account_invoice_customer0.id,
+        }
+        tax = self.invoice_tax_obj.create(invoice_tax_line)
+        assert tax, "Tax has not been assigned correctly"
+
+        # I check that Initially customer invoice is in the "Draft" state
+        self.assertEquals(self.account_invoice_customer0.state, 'draft')
+
+        # I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
+        self.account_invoice_customer0.signal_workflow('invoice_proforma2')
+
+        # I check that the invoice state is now "Proforma2"
+        self.assertEquals(self.account_invoice_customer0.state, 'proforma2')
+
+        # I check that there is no move attached to the invoice
+        self.assertEquals(len(self.account_invoice_customer0.move_id), 0)
+
+        # I create invoice by clicking on Create button
+        self.account_invoice_customer0.signal_workflow('invoice_open')
+
+        # I check that the invoice state is "Open"
+        self.assertEquals(self.account_invoice_customer0.state, 'open')
+
+        # I check that now there is a move attached to the invoice
+        assert self.account_invoice_customer0.move_id, "Move not created for open invoice"
+
+        # I pay the Invoice
+        pay = self.account_invoice_customer0.pay_and_reconcile(
+            9050.0, self.ref('cash'),
+            self.ref('account.period_10'), self.ref('bank_journal'),
+            self.ref('cash'), self.ref('account.period_10'),
+            self.ref('bank_journal'),
+            name='Payment for test customer invoice'
+        )
+        assert pay, "Incorrect Payment"
+
+        # I verify that invoice is now in Paid state
+        assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"
+
+        # I refund the invoice Using Refund Button
+        invoice_refund_obj = self.env['account.invoice.refund']
+        self.account_invoice_refund_0 = invoice_refund_obj.create(dict(
+            description='Refund To China Export',
+            period=self.ref('account.period_5'),
+            filter_refund='refund'
         ))
