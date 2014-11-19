@@ -29,8 +29,6 @@ class account_invoice(models.Model):
 
     @api.one
     def action_create_invoice(self, company, inv_type, journal_type):
-        inv_line_obj = self.env['account.invoice.line']
-
         #Find user for creating the invoice from company
         intercompany_uid = company.intercompany_user_id and company.intercompany_user_id.id or False
         if not intercompany_uid:
@@ -38,21 +36,20 @@ class account_invoice(models.Model):
 
         ctx = self._context.copy()
         ctx['force_company'] = company.id
-        this_company_partner = invoice.company_id.partner_id
+        this_company_partner = self.company_id.partner_id
         inv_lines = []
         for line in self.invoice_line:
             #To find lot of data from product onchanges because its already avail method in core.
             product_uom = line.product_id.uom_id and line.product_id.uom_id.id or False
-            line_data = inv_line_obj.with_context(ctx).sudo(intercompany_uid).product_id_change([line.id], line.product_id.id, 
+            line_data = line.with_context(ctx).sudo(intercompany_uid).product_id_change(line.product_id.id,
                                                 product_uom, qty=line.quantity, name='', type=inv_type, 
                                                 partner_id=this_company_partner.id, 
                                                 fposition_id=this_company_partner.property_account_position.id, company_id=company.id)
             inv_line_data = self._prepare_inv_line(line_data, line)
-            inv_line_id = inv_line_obj.with_context(ctx).sudo(intercompany_uid).create(inv_line_data)
+            inv_line_id = line.with_context(ctx).sudo(intercompany_uid).create(inv_line_data)
             inv_lines.append(inv_line_id.id)
-
         #create invoice
-        invoice_vals = self.with_context(ctx).sudo(intercompany_uid)._prepare_inv(inv_lines, inv_type, journal_type, company)
+        invoice_vals = self.with_context(ctx).sudo(intercompany_uid)._prepare_inv(inv_lines, inv_type, journal_type, company)[0]
         return self.with_context(ctx).sudo(intercompany_uid).create(invoice_vals)
 
     @api.model
@@ -76,14 +73,14 @@ class account_invoice(models.Model):
     @api.one
     def _prepare_inv(self, inv_lines, inv_type, jrnl_type, company):
         """ Generate invoice dictionary """
-
         #To find journal.
         journal = self.env['account.journal'].search([('type', '=', jrnl_type), ('company_id', '=', company.id)], limit=1)
         if not journal:
             raise Warning(_('Please define %s journal for this company: "%s" (id:%d).') % (jrnl_type, company.name, company.id))
 
         #To find periods of supplier company.
-        ctx = self._context.copy().update(company_id=company.id)
+        ctx = self._context.copy()
+        ctx['company_id'] = company.id
         period_ids = self.env['account.period'].with_context(ctx).find(self.date_invoice)
         #To find account,payment term,fiscal position,bank.
         partner_data = self.onchange_partner_id(inv_type, self.company_id.partner_id.id, company_id=company.id)
@@ -102,7 +99,7 @@ class account_invoice(models.Model):
             'fiscal_position': partner_data['value'].get('fiscal_position', False),
             'payment_term': partner_data['value'].get('payment_term', False),
             'company_id': company.id,
-            'period_id': period_ids and period_ids[0] or False,
+            'period_id': period_ids and period_ids[0].id or False,
             'partner_bank_id': partner_data['value'].get('partner_bank_id', False),
             'auto_generated': True,
             'auto_invoice_id': self.id,
