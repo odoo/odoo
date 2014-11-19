@@ -2061,7 +2061,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         else:
             raise Warning(_('Cannot generate an unused journal code.'))
 
-        return = {
+        return {
                 'name': line['acc_name'],
                 'code': journal_code,
                 'type': line['account_type'] == 'cash' and 'cash' or 'bank',
