@@ -696,28 +696,29 @@ class account_tax_code(models.Model):
     This code is used for some tax declarations.
     """
     @api.multi
-    def _sum(self, name, where ='', where_params=()):
+    def _sum(self, where ='', where_params=()):
         parent_ids = tuple(self.search([('parent_id', 'child_of', self.ids)]).ids)
-        if self._context.get('based_on', 'invoices') == 'payments':
-            self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                    FROM account_move_line AS line, \
+        if parent_ids:
+            if self._context.get('based_on', 'invoices') == 'payments':
+                self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+                        FROM account_move_line AS line, \
+                            account_move AS move \
+                            LEFT JOIN account_invoice invoice ON \
+                                (invoice.move_id = move.id) \
+                        WHERE line.tax_code_id IN %s '+where+' \
+                            AND move.id = line.move_id \
+                            AND ((invoice.state = \'paid\') \
+                                OR (invoice.id IS NULL)) \
+                                GROUP BY line.tax_code_id',
+                                    (parent_ids,) + where_params)
+            else:
+                self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+                        FROM account_move_line AS line, \
                         account_move AS move \
-                        LEFT JOIN account_invoice invoice ON \
-                            (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id IN %s '+where+' \
+                        WHERE line.tax_code_id IN %s '+where+' \
                         AND move.id = line.move_id \
-                        AND ((invoice.state = \'paid\') \
-                            OR (invoice.id IS NULL)) \
-                            GROUP BY line.tax_code_id',
-                                (parent_ids,) + where_params)
-        else:
-            self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                    FROM account_move_line AS line, \
-                    account_move AS move \
-                    WHERE line.tax_code_id IN %s '+where+' \
-                    AND move.id = line.move_id \
-                    GROUP BY line.tax_code_id',
-                       (parent_ids,) + where_params)
+                        GROUP BY line.tax_code_id',
+                           (parent_ids,) + where_params)
         res=dict(self._cr.fetchall())
         res2 = {}
         for record in self:
@@ -727,15 +728,10 @@ class account_tax_code(models.Model):
                     amount += _rec_get(rec) * rec.sign
                 return amount
             amount = round(_rec_get(record), self.env['decimal.precision'].precision_get('Account'))
-            if name == 'sum':
-                record.sum = amount
-            elif name == 'sum_period':
-                record.sum_period = amount
+            record.sum = amount
 
     @api.multi
     def _sum_year(self):
-        if not self:
-            return True
         move_state = ('posted', )
         FiscalyearObj = self.env['account.fiscalyear']
         if self._context.get('state', 'all') == 'all':
@@ -753,7 +749,7 @@ class account_tax_code(models.Model):
                 date_stop = fiscalyear.date_stop
                 where = ' AND line.date >= %s AND line.date <= %s AND move.state IN %s '
                 where_params = (date_start, date_stop, move_state)
-        self._sum(name='sum', where=where, where_params=where_params)
+        self._sum(where=where, where_params=where_params)
 
 
     _name = 'account.tax.code'
