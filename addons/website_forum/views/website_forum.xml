@@ -628,7 +628,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="social_share fa fa-share-square-o" data-social="['facebook', 'twitter']"> Share</a>
+                                <a href="#" class="social_share fa fa-share-square-o" data-social="['facebook', 'twitter', 'abc']" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{question.content}"> Share</a>
+                            </li>
+                            <li>
+                                <a href="#" class="social_share fa fa-share-square-o"> Share</a>
                             </li>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
