@@ -401,8 +401,6 @@ class account_move_line(models.Model):
                 raise Warning(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
         for line in unrec_lines:
-            if line.state != 'valid':
-                raise Warning(_('Entry "%s" is not valid !') % line.name)
             credit += line['credit']
             debit += line['debit']
             currency += line['amount_currency'] or 0.0
@@ -488,7 +486,6 @@ class account_move_line(models.Model):
                 })
             ]
 
-            
             writeoff_move_id = self.env['account.move'].create({
                 'journal_id': writeoff_journal_id,
                 'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
@@ -589,7 +586,7 @@ class account_move_line(models.Model):
             for line in self:
                 if line.move_id.id not in done:
                     done.append(line.move_id.id)
-                    line.move_id.validate()
+                    line.move_id._post_validate()
                     if todo_date:
                         line.move_id.write({'date': todo_date})
         return result

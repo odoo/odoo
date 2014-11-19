@@ -152,7 +152,7 @@ class account_account(models.Model):
         for rec in self:
             ids3 = [child.id for child in rec.child_consol_ids]
         if ids3:
-            ids3 = self._get_children_and_consol(ids3)
+            ids3 = ids3._get_children_and_consol()
         return ids3
 
     @api.multi
@@ -678,7 +678,7 @@ class account_move_reconcile(models.Model):
     @api.constrains('line_id')
     def _check_same_partner(self):
         first_partner = self.line_id and self.line_id[0].partner_id.id or False
-        if any([(line.partner_id.id != first_partner) for line in move_lines]):
+        if any([(line.partner_id.id != first_partner) for line in self.line_id]):
             raise Warning(_('You can only reconcile journal items with the same partner.'))
 
 

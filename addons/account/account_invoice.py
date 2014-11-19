@@ -1118,7 +1118,6 @@ class account_invoice(models.Model):
             'journal_id': pay_journal_id,
             'date': date,
         })
-
         move_ids = (move | self.move_id).ids
         self._cr.execute("SELECT id FROM account_move_line WHERE move_id IN %s",
                          (tuple(move_ids),))
@@ -1132,7 +1131,7 @@ class account_invoice(models.Model):
 
         inv_id, name = self.name_get()[0]
         if not round(total, self.env['decimal.precision'].precision_get('Account')) or writeoff_acc_id:
-            lines2rec.reconcile('manual', writeoff_acc_id, writeoff_journal_id)
+            lines2rec.reconcile('manual', writeoff_acc_id, fields.Date.context_today(self), writeoff_journal_id)
         else:
             code = self.currency_id.symbol
             # TODO: use currency's formatting function
