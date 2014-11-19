@@ -52,6 +52,20 @@ openerp.account = function (instance) {
             return mod.call("list_partners_to_reconcile", []).then(function(result) {
                 var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = result;
+                var partners_in_dom = _.filter(domain, function(dom) { return dom[0] == "partner_id"; });
+                var partner_ids = _.map(partners_in_dom, function(partner) { return partner[2]; });
+                if (partner_ids.length) {
+                    self.partners = _.filter(self.partners, function(partner) { return _.contains(partner_ids, partner[0]);});
+                }
+                var first_partner = partners_in_dom ? partners_in_dom[0] : null;
+                if (first_partner) {
+                    for (var index = 0; index < self.partners.length; index++) {
+                        if (self.partners[index][0] == first_partner[2]) {
+                            current = self.partners[index][0];
+                            break;
+                        }
+                    }
+                }
                 var index = _.find(_.range(self.partners.length), function(el) {
                     if (current === self.partners[el][0])
                         return true;
