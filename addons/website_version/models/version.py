@@ -27,7 +27,6 @@ class version(osv.Model):
             #To avoid problem when we delete versions in Backend
             if request:
                 request.session['version_id'] = 0
-                request.session['master'] = 1
         return super(version, self).unlink(cr, uid, ids, context=context)
 
     def action_publish(self,cr,uid,ids,context=None):
