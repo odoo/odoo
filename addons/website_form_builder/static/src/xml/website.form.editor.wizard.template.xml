@@ -147,11 +147,12 @@
     <t t-name="website.form.editor.wizard.template.hidden">
         <div>
             <div class="form-group o_form-composit-value">
-                <label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Composit Value :</label>
+                <label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Value :</label>
                 <div class="col-md-9 col-sm-8">
-                    <div class="form-control form-data">
+                    <!--<div class="form-control form-data">
                         <textarea class="form-field-value" id="formFieldEditor-value" row="1"></textarea>
-                    </div>
+                    </div>-->
+                    <input type="text" class="form-control form-field-value" id="formFieldEditor-value" />
                 </div> 
             </div> 
         </div>
@@ -336,7 +337,9 @@
             </td>
         </tr>
         <tr class="o_form-editor-add">
-            <td colspan="3"><input type="button" class="btn btn-default" value="+" /></td>
+            <td contenteditable="true">Add Row</td>
+            <td contenteditable="true">Value</td>
+            <td></td>
         </tr>
     </t>
     

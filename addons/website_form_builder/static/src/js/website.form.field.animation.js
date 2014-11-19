@@ -52,7 +52,7 @@
         selector: 'form[action*="/website_form/"]',
         start: function() {
             var self = this;
-            this.$target.find('button').on('click',function(e) {self.send(e);});
+            this.$target.find('.o_send_button').on('click',function(e) {self.send(e);});
         },
         stop: function() {
             this.$target.find('button').off('click');

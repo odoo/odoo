@@ -73,6 +73,13 @@ class form_builder(http.Controller):
             'custom'    : self.custom_label,
             'meta'      : self.meta_label,
             'error'     : '',
+            'message'   : { 
+                            'body'           : _('<p>Attatched files : </p>'),
+                            'model'          : model["name"],
+                            'type'           : 'comment',
+                            'no_auto_thread' : False,
+                            'attachment_ids' : [],
+                }
         }
 
         for field_name, field_value in kwargs.items():  
@@ -90,7 +97,7 @@ class form_builder(http.Controller):
                 data['custom'] += "%s : %s\n" % (field_name, field_value)
                 
                 
-        environ = request.httprequest.headers.environ 
+        environ = request.httprequest.headers.environ
         
         data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % ("IP"                , environ.get("REMOTE_ADDR"), 
                                                                   "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
@@ -101,35 +108,47 @@ class form_builder(http.Controller):
         
         return data
     
-    # Link all files attached on the form
-    def linkAttachment(self, model, data, id_record):
-        
-        for file in data['files']:
-            file.field_name = file.field_name.split('[')[0]
-            print file.field_name, '\n'
-            attachment_value = {
-                'name': file.filename,
-                'res_name': file.filename,
-                'res_model': model["name"],
-                'res_id': id_record,
-                'datas': base64.encodestring(file.read()),
-                'datas_fname': file.filename,
-            }
-            id_a = request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)  
-            if file.field_name in request.registry[model['name']]._all_columns and file.field_name not in model['blacklist']:
-                type = request.registry[model['name']]._all_columns[file.field_name].column._type;
-                values = {}
-                values[file.field_name] = self.filter[type](file.field_name, str(id_a), (4,));
-                print 'update file list : - id_attachment :', id_a, '; id_message : ', id_record, ' value: ', values
-                print 'reponse : ', request.registry[model['name']].write(request.cr, SUPERUSER_ID, [id_record], values, request.context);
-        
-    #insert form data into model
-    def insert(self, model, data):
+    def insertMessage(self, model, data, id_record):
+        if model['name'] == 'mail.mail': return True;
+        data['message']['res_id'] = id_record
+        print data['message']
+        return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context);
+
+    def insertRecord(self, model, data):
         values = data['post'];
         if model['default_field'] not in values : values[model['default_field']] = ''
         values[model['default_field']] += "\n\n" + data['custom'] + "\n\n" + data['meta']
         print 'INSERT :: ', values
         return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context);
+
+    # Link all files attached on the form
+    def insertAttachment(self, model, data):
+        id_list = []
+        for file in data['files']:
+            file.field_name = file.field_name.split('[')[0]
+            attachment_value = {
+                'name': file.filename,
+                'res_name': file.filename,
+                'datas': base64.encodestring(file.read()),
+                'datas_fname': file.filename,
+            }
+            id_file = request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
+            id_list.append(id_file)
+            if file.field_name in request.registry[model['name']]._all_columns and file.field_name not in model['blacklist']:
+
+                if file.field_name not in data['post'].keys(): 
+                    data['post'][file.field_name] = []
+                data['post'][file.field_name].append((4,id_file))
+
+            else:
+                data['message']['attachment_ids'].append((4,id_file))
+        return id_list
+
+    def insert(self, model, data):
+        id_list   = self.insertAttachment(model, data)
+        id_record = self.insertRecord(model, data)
+        self.insertMessage(model, data, id_record)  
+        return request.registry['ir.attachment'].write(request.cr, SUPERUSER_ID, id_list, {'res_id': id_record}, context=request.context)
         
     def authorized_fields(self, model):
         request.registry['website.form'].get_authorized_fields(request.cr, SUPERUSER_ID, model['name'])
@@ -144,7 +163,7 @@ class form_builder(http.Controller):
 
 
     @http.route('/website_form/<model>', type='http', auth="public", website=True)
-    def contactus(self,model, **kwargs):
+    def contactus(self,model, ** kwargs):
 
         obj_form = request.registry['website.form']
         id_model = obj_form.search(request.cr,SUPERUSER_ID,[('model_id', '=', model),],context=request.context)
@@ -165,19 +184,15 @@ class form_builder(http.Controller):
         
         print "error : ", data['error'], "\n\n"
         try:     
-            if(any(data['error'])) :    id_record = 0
-            else :                      id_record = self.insert(model, data)
+            if(any(data['error'])) :    success = 0
+            else :                      success = self.insert(model, data)
         except ValueError:
             print ValueError
-            id_record = 0
-        
-        
-        if id_record: 
-            self.linkAttachment(model, data, id_record)
+            success = 0
 
         if data['error'] : 
-            response = json.dumps({'id': id_record, 'fail_required' : data['error']});
+            response = json.dumps({'id': success, 'fail_required' : data['error']});
         else : 
-            response = json.dumps({'id': id_record, 'fail_required': None});
+            response = json.dumps({'id': success, 'fail_required': None});
 
         return request.website.render("website_form_builder.xmlresponse",{'response':response})

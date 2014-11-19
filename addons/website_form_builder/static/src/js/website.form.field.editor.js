@@ -103,14 +103,14 @@
             self.table.find('.last .option-label')  .on('keydown', self.tabEvent());
             self.table.find('td')                   .on('keyup', self.deleteIfEmpty);
             self.table.find('.last .option-value')  .on('keydown', self.addField(false));
-            self.table.find('.o_form-editor-add')     .on('click',self.addField(true));
+            self.table.find('.o_form-editor-add')   .on('click',self.addField(true));
         },
         //disable events
         offAddField: function() {
             var self = this;
             self.table.find('.last .option-value')  .off('keydown');
             self.table.find('.last .option-value')  .on('keydown', self.tabEvent());
-            self.table.find('.o_form-editor-add')     .off('click');
+            self.table.find('.o_form-editor-add')   .off('click');
             self.table.find('td')                   .off('td');
         },
         //check if the line is empty before delete it
@@ -448,10 +448,8 @@
             
             var field = form.data('fields').all[field_name];
             this.lockCheckboxMultiple(field);
-            options += ((field != undefined) && (field != null)) ?
-                    '<option selected="selected" value="'+field.name+'">'+field.label+'</option>':'';
-            
-            
+            options += (!!field) ? '<option selected="selected" value="'+field.name+'">'+field.label+'</option>':'';
+
             $.each(types, function (j,type) {
                 if(form.data('fields')[type]){
                     $.each(form.data('fields')[type], function(i, val) {
@@ -527,6 +525,9 @@
                 this.wizard.find('.form-field-required').prop('checked',field.required);
         },
         hiddenLoadData: function() {
+            this.getFields(['integer', 'date','char','text','float']);
+            this.wizard.find('.field_name').html(_t('Hidden Field'));
+            /*
             var field_list = [];
             var field_label_list = [];
             var label;
@@ -540,10 +541,6 @@
                     field_list.push(label);
                 }
             });
-          
-            this.wizard.find('.field_name').html(_t('Hidden Field'));
-            this.getFields(['integer', 'date','char','text','float']);
-            
             
             tagsZone.textext({
                 plugins : 'tags autocomplete arrow',
@@ -574,7 +571,7 @@
                 });
             });
 */
-            this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name')).parent().parent().addClass('hidden');
+            this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name'));
             this.wizard.find('.form-field-required').parent().parent().addClass('hidden');
             this.wizard.find('.form-field-help').parent().parent().addClass('hidden');
            
@@ -649,7 +646,7 @@
                                             return {label : elem.find('.option').html(), value : elem.find('input[type=radio]').val(), last: !$(elem).next().length};
                                         });
         },
-        defaultLoadData: function () {        
+        defaultLoadData: function () {
             this.wizard.find('.form-field-label')           .val(this.$target.find('label').html());                              // Load label on this.wizard
             this.wizard.find('.form-field-placeholder')     .val(this.$target.find('.form-data').prop('placeholder'));            // Load placeholder on wizard
             this.wizard.find('.form-field-help')            .val(this.$target.find('.help-block').html());                        // Load help text on this.wizard
@@ -666,7 +663,6 @@
         hiddenValidate: function() {
             this.$target.find('.form-data').val(this.wizard.find('input[type=hidden]').val());
             this.$target.find('.help-block').html('');
-            this.$target.find('label').html('');
         },
         textareaValidate: function() {
             this.$target.find('.form-data').prop('placeholder',this.wizard.find('.form-field-placeholder').val());
@@ -707,7 +703,7 @@
             else {
                 this.$target.find('.wrap-options label').removeClass('checkbox-inline');
                 this.$target.find('.wrap-options div').removeClass('div-inline');
-            }                                            
+            }
         },
         radioValidate: function () {
             var optionsSelector = this.$target.find('.wrap-options');
@@ -797,7 +793,7 @@
         
         confirm: function (DefferedForm) {
                 if(ValidOption) DefferedForm.resolve();
-                else             DefferedForm.reject();
+                else            DefferedForm.reject();
         },
         
         execute: function (type, value, $li) {
@@ -896,6 +892,8 @@
             if(!form.data('fields')) return this._super();
             
             form.removeClass('o_send-failed o_send-success');
+            form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
+
             $.each(form.data('fields').required,function(i,name){
                 var present = 0;
                 form.find('.form-data').each(function(j,elem){
