@@ -23,9 +23,9 @@ class res_company(models.Model):
     _inherit = "res.company"
 
     income_currency_exchange_account_id = fields.Many2one('account.account',
-        string="Gain Exchange Rate Account", domain=[('type', '=', 'other'), ('deprecated', '=', False)])
+        string="Gain Exchange Rate Account", domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account',
-        string="Loss Exchange Rate Account", domain=[('type', '=', 'other'), ('deprecated', '=', False)])
+        string="Loss Exchange Rate Account", domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)])
 
 
 class account_payment_term(models.Model):

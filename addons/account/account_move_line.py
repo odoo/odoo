@@ -123,6 +123,66 @@ class account_move_line(models.Model):
             else:
                 line.reconcile_ref = False
 
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'reconcile_id', 'reconcile_partial_id', 'account_id.reconcile')
+    def _amount_residual(self):
+        """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
+            This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
+            for unreconciled lines, and something in-between for partially reconciled lines. """
+        
+        for line in self:
+            if line.reconcile_id or not line.account_id.reconcile:
+                line.amount_residual = 0.0
+                line.amount_residual_currency = 0.0
+                continue
+            
+            amount = line.currency_id and line.amount_currency or line.debit - line.credit
+
+            if line.reconcile_partial_id:
+                payment_line = line.reconcile_partial_id
+                if payment_line.currency_id and line.currency_id and payment_line.currency_id.id == line.currency_id.id:
+                    amount += payment_line.amount_currency
+                elif not payment_line.currency_id and not line.currency_id:
+                    amount += (payment_line.debit - payment_line.credit)
+                else:
+                    payment_line_amount = payment_line.currency_id and payment_line.amount_currency or payment_line.debit - payment_line.credit
+                    from_currency = payment_line.currency_id or payment_line.company_id.currency_id
+                    from_currency = from_currency.with_context(date=payment_line.date)
+                    to_currency = line.currency_id or line.company_id.currency_id
+                    amount += from_currency.compute(payment_line_amount, to_currency)
+
+            if line.currency_id:
+                line.amount_residual = line.currency_id.compute(amount, line.company_id.currency_id)
+                line.amount_residual_currency = amount
+            else:
+                line.amount_residual = amount
+                line.amount_residual_currency = 0.0
+
+    @api.model
+    def _get_currency(self):
+        currency = False
+        context = dict(self._context or {})
+        if context.get('default_journal_id', False):
+            currency = self.env['account.journal'].browse(context['default_journal_id']).currency
+        return currency
+
+    @api.model
+    def _get_journal(self):
+        """ Return journal based on the journal type """
+        context = dict(self._context or {})
+        journal_id = context.get('journal_id', False)
+        if journal_id:
+            return journal_id
+
+        journal_type = context.get('journal_type', False)
+        if journal_type:
+            recs = self.env['account.journal'].search([('type','=',journal_type)])
+            if not recs:
+                action = self.env.ref('account.action_account_journal_form')
+                msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % journal_type.replace('_', ' ').title()
+                raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            journal_id = recs[0].id
+        return journal_id
+
     name = fields.Char(string='Name', required=True)
     quantity = fields.Float(string='Quantity', digits=(16,2), 
         help="The optional quantity expressed by this line, eg: number of product sold. "\
@@ -131,6 +191,14 @@ class account_move_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Float(string='Debit', digits=dp.get_precision('Account'), default=0.0)
     credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
+    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.")
+    currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency, 
+        help="The optional other currency if it is a multi-currency entry.")
+    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=dp.get_precision('Account'),
+        help="The residual amount on a journal item expressed in the company currency.")
+    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=dp.get_precision('Account'),
+        help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)],
         default=lambda self: self._context.get('account_id', False))
@@ -142,15 +210,12 @@ class account_move_line(models.Model):
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile', 
         readonly=True, ondelete='set null', index=True, copy=False)
+    # TODO : to become Many2one('account.move.line', … when we implement the new partail reconciliation mechanism 
     reconcile_partial_id = fields.Many2one('account.move.reconcile', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False)
     reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
-    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._get_currency(), 
-        help="The optional other currency if it is a multi-currency entry.")
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
-        default=lambda self: self._get_journal, required=True, index=True, store=True)
+        default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
 
@@ -177,14 +242,6 @@ class account_move_line(models.Model):
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
-
-    @api.model
-    def _get_currency(self):
-        currency = False
-        context = dict(self._context or {})
-        if context.get('default_journal_id', False):
-            currency = self.env['account.journal'].browse(context['default_journal_id']).currency
-        return currency
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),

@@ -81,7 +81,7 @@ class sale_receipt_report(osv.osv):
                     sum(av.amount)/(select count(l.id) from account_voucher_line as l
                             left join account_voucher as a ON (a.id=l.voucher_id)
                             where a.id=av.id) as price_total_tax,
-                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
+                    sum((select extract(epoch from avg(date_trunc('day',aml.create_date)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
                         left join account_voucher as a ON (a.move_id=aml.move_id)
                         left join account_voucher_line as l ON (a.id=l.voucher_id)

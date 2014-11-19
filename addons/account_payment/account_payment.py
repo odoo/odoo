@@ -287,7 +287,7 @@ class payment_line(osv.osv):
         res = {}
         for id in self.browse(cr, uid, ids):
             if id.move_line_id:
-                res[id.id] = id.move_line_id.date_created
+                res[id.id] = id.move_line_id.create_date
             else:
                 res[id.id] = False
         return res
