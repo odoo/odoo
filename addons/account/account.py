@@ -2174,7 +2174,7 @@ class account_operation_template(models.Model):
     amount = fields.Float(digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')
-    has_second_line = fields.boolean(string='Second line', default=False)
+    has_second_line = fields.Boolean(string='Second line', default=False)
     second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     second_label = fields.Char(string='Label')
