@@ -622,7 +622,7 @@ class account_move(models.Model):
         self._cr.execute('UPDATE account_move '\
                    'SET state=%s '\
                    'WHERE id IN %s',
-                   ('posted', tuple(valid_moves),))
+                   ('posted', tuple(self.ids),))
         self.invalidate_cache()
         return True
 
