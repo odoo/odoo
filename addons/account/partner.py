@@ -274,7 +274,7 @@ class res_partner(models.Model):
          help="This payment term will be used instead of the default one for purchase orders and supplier invoices")
     ref_companies = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
-    last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date'
+    last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
         string='Latest Manual Reconciliation Date', readonly=True, copy=False,
         help='Last time the manual reconciliation was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
