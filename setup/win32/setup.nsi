@@ -238,6 +238,10 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     File "start.bat"
     File "stop.bat"
 
+    SetOutPath "$INSTDIR\thirdparty"
+    File /r "${STATIC_PATH}\wkhtmltopdf\*"
+    File /r "${STATIC_PATH}\less\*"
+
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
@@ -324,7 +328,7 @@ Section "Uninstall"
 
     Rmdir /r "$INSTDIR\server"
     Rmdir /r "$INSTDIR\service"
-
+    Rmdir /r "$INSTDIR\thirdparty"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 
