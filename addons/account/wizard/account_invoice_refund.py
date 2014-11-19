@@ -99,7 +99,7 @@ class account_invoice_refund(models.TransientModel):
                 if not date:
                     raise Warning(_('No period date found on the invoice.'))
 
-                refund = inv.refund(date, period_date, description, journal_id)
+                refund = inv.refund(date, date, description, journal_id)
                 refund.write({'date_due': date, 'check_total': inv.check_total})
                 refund.button_compute()
 
