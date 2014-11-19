@@ -24,8 +24,9 @@ class Versioning_Controller(Website):
     @http.route(['/website_version/delete_version'], type = 'json', auth = "user", website = True)
     def delete_version(self, version_id):
         version_id = int(version_id)
-        name = request.env['website_version.version'].browse(version_id).name
-        request.env['website_version.version'].unlink([version_id])
+        x = request.env['website_version.version'].browse(version_id)
+        name = x.name
+        x.unlink()
         current_id = request.context.get('version_id')
         if version_id== current_id:
             request.session['version_id'] = 0
