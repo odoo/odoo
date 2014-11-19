@@ -2119,7 +2119,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             of the accounts that have been generated from them.
         :return: True
         '''
-        company = self.env['res.company'].search(company_id)
+        company = self.env['res.company'].browse(company_id)
 
         # Build a list with all the data to process
         journal_data = []

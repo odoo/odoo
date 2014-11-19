@@ -35,19 +35,16 @@ class account_move_line_reconcile(models.TransientModel):
     def trans_rec_get(self):
         context = dict(self._context or {})
         credit = debit = 0
-        account_id = False
-        count = 0
-        for line in self.env['account.move.line'].browse(context.get('active_ids', [])):
+        lines = self.env['account.move.line'].browse(context.get('active_ids', []))
+        for line in lines:
             if not line.reconcile_id and not line.reconcile_id.id:
-                count += 1
                 credit += line.credit
                 debit += line.debit
-                account_id = line.account_id.id
         precision = self.env['decimal.precision'].precision_get('Account')
         writeoff = float_round(debit-credit, precision_digits=precision)
         credit = float_round(credit, precision_digits=precision)
         debit = float_round(debit, precision_digits=precision)
-        return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': writeoff}
+        return {'trans_nbr': len(lines), 'credit': credit, 'debit': debit, 'writeoff': writeoff}
 
     @api.multi
     def trans_rec_addendum_writeoff(self):
@@ -59,9 +56,8 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.multi
     def trans_rec_reconcile_full(self):
-        date = time.strftime('%Y-%m-%d')
         move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
-        move_lines.reconcile('manual', writeoff_period_date=move_lines.date)
+        move_lines.reconcile('manual')
         return {'type': 'ir.actions.act_window_close'}
 
 
