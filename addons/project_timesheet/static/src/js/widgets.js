@@ -213,9 +213,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.set({display_string: name, value: id});
         },
         display_string: function(field_val) {
-            console.log("Inside display_string ::: ", field_val);
             if (this.get("effective_readonly")) {
-                console.log("this.$el.find(+this.id_for_input)",field_val, this,  this.$el.find("#"+this.id_for_input), this.id_for_input);
                 this.$el.find("#"+this.id_for_input).text(field_val[1]);
                 this.$el.find("#"+this.id_for_input).data("id", field_val[0]); //TO Remove: we use this.get('value') to check
             } else {

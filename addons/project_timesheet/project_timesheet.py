@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 import datetime
+from operator import itemgetter
 import re
 import copy
 
@@ -529,7 +530,7 @@ class hr_analytic_timesheet(osv.Model):
                         vals_line['amount'] = amount_unit['value']['amount']
                     ctx = copy.deepcopy(context)
                     #TODO: To check, pass __last_update in context
-                    #ctx['__last_update'] = record.get('__last_update')
+                    #ctx['__last_update'] = {("%s,%s"% (self._name,id)): record.get('__last_update')}
                     print "\n\ncontext in write ::: ", context
                     self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
                 elif record.get('command') == 2:
@@ -558,6 +559,10 @@ class hr_analytic_timesheet(osv.Model):
             finally:
                 cr.execute('RELEASE SAVEPOINT sync_record')
         print "\n\nfail_records is ::: ", fail_records
+        failed_ids = filter(lambda x: not pattern.match(str(x)), map(itemgetter('id'), fail_records))
+        print "\n\nfailed_ids and load_data_domain ::: ", failed_ids, load_data_domain
+        if failed_ids:
+            load_data_domain.append(['id', 'not in', failed_ids])
         res = self.load_data(cr, uid, load_data_domain, context=context)
         res += fail_records
         result['activities'] = res

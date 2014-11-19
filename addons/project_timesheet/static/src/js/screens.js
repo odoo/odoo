@@ -536,7 +536,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         is_available_timer_activity: function() {
             var time_activity = this.project_timesheet_db.get_current_timer_activity();
             if (time_activity && time_activity['date']) {
-                this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+                //this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+                this.$el.find(".pt_timer_start").addClass("o_hidden");
+                this.$el.find(".pt_timer_stop").removeClass("o_hidden");
                 var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['timer_date'])));
                 var hours = durationObj.asHours().toString().split('.')[0],
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
