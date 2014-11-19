@@ -58,7 +58,6 @@ class account_config_settings(models.TransientModel):
     has_fiscal_year = fields.Boolean(string='Company has a fiscal year')
     date_start = fields.Date(string='Start date', required=True)
     date_stop = fields.Date(string='End date', required=True)
-    period = fields.Selection([('month', 'Monthly'), ('3months','3 Monthly')], string='Periods', required=True)
 
     sale_journal_id = fields.Many2one('account.journal', string='Sale journal')
     sale_sequence_prefix = fields.Char(related='sale_journal_id.sequence_id.prefix', string='Invoice sequence')
@@ -162,11 +161,7 @@ class account_config_settings(models.TransientModel):
                  ('company_id', '=', company_id)], limit=1)
         if fiscalyear:
             # is in a current fiscal year, use this one
-            if len(fiscalyear.period_ids) == 5:  # 4 periods of 3 months + opening period
-                period = '3months'
-            else:
-                period = 'month'
-            return (fiscalyear.date_start, fiscalyear.date_stop, period)
+            return (fiscalyear.date_start, fiscalyear.date_stop)
         else:
             past_fiscalyear_ids = FiscalYearObj.search(
                 [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
@@ -174,13 +169,9 @@ class account_config_settings(models.TransientModel):
                 # use the latest fiscal, sorted by (start_date, id)
                 latest_year = past_fiscalyear_ids[-1]
                 latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
-                if len(latest_year.period_ids) == 5:
-                    period = '3months'
-                else:
-                    period = 'month'
-                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF), period)
+                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF))
             else:
-                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'), 'month')
+                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'))
 
 
     @api.model
@@ -205,7 +196,7 @@ class account_config_settings(models.TransientModel):
             fiscalyear_count = self.env['account.fiscalyear'].search_count(
                 [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
                  ('company_id', '=', self.company_id.id)])
-            date_start, date_stop, period = self._get_default_fiscalyear_data(self.company_id.id)
+            date_start, date_stop = self._get_default_fiscalyear_data(self.company_id.id)
             values = {
                 'expects_chart_of_accounts': self.company_id.expects_chart_of_accounts,
                 'currency_id': self.company_id.currency_id.id,
@@ -217,7 +208,6 @@ class account_config_settings(models.TransientModel):
                 'tax_calculation_rounding_method': self.company_id.tax_calculation_rounding_method,
                 'date_start': date_start,
                 'date_stop': date_stop,
-                'period': period,
             }
             # update journals and sequences
             for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
@@ -348,10 +338,6 @@ class account_config_settings(models.TransientModel):
                     'company_id': self.company_id.id,
                 }
                 fiscalyear = FiscalYearObj.create(vals)
-                if self.period == 'month':
-                    fiscalyear.create_period()
-                elif self.period == '3months':
-                    fiscalyear.create_period3()
 
     @api.model
     def get_default_dp(self, fields):

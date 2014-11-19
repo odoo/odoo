@@ -148,6 +148,10 @@ class res_partner(models.Model):
         ctx = dict(self._context or {})
         ctx['all_fiscalyear'] = True
         query = self.env['account.move.line'].with_context(ctx)._query_get()
+        if not self.ids:
+            self.debit = 0
+            self.credit = 0
+            return True
         self._cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
@@ -206,6 +210,9 @@ class res_partner(models.Model):
     @api.multi
     def _invoice_total(self):
         account_invoice_report = self.env['account.invoice.report']
+        if not self.ids:
+            self.total_invoiced = 0.0
+            return True
         for partner in self:
             invoices = account_invoice_report.search([('partner_id', 'child_of', partner.id)])
             partner.total_invoiced = sum(inv.user_currency_price_total for inv in invoices)

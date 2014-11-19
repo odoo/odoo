@@ -955,7 +955,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="ref"/>
-                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                <field name="partner_id"/>
                             </group>
                             <group>
                                 <field name="journal_id"/>
@@ -1023,7 +1023,7 @@
                                 <field name="date"/>
                                 <field name="journal_id" readonly="False"/>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
-                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                <field name="partner_id"/>
                                 <newline/>
                                 <field name="debit"/>
                                 <field name="credit"/>

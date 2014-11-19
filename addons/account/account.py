@@ -2087,7 +2087,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # Seek the next available number for the account code
         code_digits = company.accounts_code_digits or 0
         bank_account_code_char = company.bank_account_code_char or ''
-        available_digits = code_digits - len(bank_account_code_char)
+        available_digits = abs(code_digits - len(bank_account_code_char))
         for num in xrange(1, pow(10, available_digits)):
             new_code = str(bank_account_code_char.ljust(code_digits-len(str(num)), '0')) + str(num)
             recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])

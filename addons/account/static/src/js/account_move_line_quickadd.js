@@ -83,7 +83,6 @@ openerp.account.quickadd = function (instance) {
             var self = this;
             var domain = [];
             if (self.current_journal !== null) domain.push(["journal_id", "=", self.current_journal]);
-            if (self.current_period_date !== null) domain.push(["date", "=", self.current_period_date]);
             self.last_context["journal_id"] = self.current_journal === null ? false : self.current_journal;
             if (self.current_period_date === null) delete self.last_context["date"];
             else self.last_context["date"] =  self.current_period_date;
