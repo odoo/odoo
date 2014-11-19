@@ -88,9 +88,9 @@ class Versioning_Controller(Website):
                 #If it already exists, we delete the old to make the new
                 if check:
                     check.unlink()
-                copy_version_id = obj.create({'name' : copy_master_name, 'website_id' : version.website_id.id})
+                copy_version = obj.create({'name' : copy_master_name, 'website_id' : version.website_id.id})
                 for view in obj_view.browse(copy_l):
-                    view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
+                    view.copy({'version_id': copy_version.id, 'website_id' : version.website_id.id})
             #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
             obj_view.browse(del_l).unlink()
         #All the views in the version published are copied without version_id   
