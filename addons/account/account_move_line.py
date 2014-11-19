@@ -698,75 +698,74 @@ class account_move_line(models.Model):
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
         result = super(account_move_line, self).create(vals)
         # CREATE Taxes
-        if vals.get('account_tax_id', False):
-            for value in vals.get('account_tax_id', False):
-                for taxid in value[2]:
-                    tax_id = TaxObj.browse(taxid)
-                    total = vals['debit'] - vals['credit']
-                    base_code = 'base_code_id'
-                    tax_code = 'tax_code_id'
-                    account_id = 'account_collected_id'
-                    base_sign = 'base_sign'
-                    tax_sign = 'tax_sign'
-                    if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0):
-                        base_code = 'ref_base_code_id'
-                        tax_code = 'ref_tax_code_id'
-                        account_id = 'account_paid_id'
-                        base_sign = 'ref_base_sign'
-                        tax_sign = 'ref_tax_sign'
-                    tmp_cnt = 0
-                    for tax in TaxObj.compute_all([tax_id], total, 1.00, force_excluded=False).get('taxes'):
-                        #create the base movement
-                        if tmp_cnt == 0:
-                            if tax[base_code]:
-                                tmp_cnt += 1
-                                if tax_id.price_include:
-                                    total = tax['price_unit']
-                                newvals = {
-                                    'tax_code_id': tax[base_code],
-                                    'tax_amount': tax[base_sign] * abs(total),
-                                }
-                                if tax_id.price_include:
-                                    if tax['price_unit'] < 0:
-                                        newvals['credit'] = abs(tax['price_unit'])
-                                    else:
-                                        newvals['debit'] = tax['price_unit']
-                                result.with_context(context).write(newvals)
-                        else:
-                            data = {
-                                'move_id': vals['move_id'],
-                                'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
-                                'date': vals['date'],
-                                'partner_id': vals.get('partner_id', False),
-                                'ref': vals.get('ref', False),
-                                'statement_id': vals.get('statement_id', False),
-                                'account_tax_id': False,
-                                'tax_code_id': tax[base_code],
-                                'tax_amount': tax[base_sign] * abs(total),
-                                'account_id': vals['account_id'],
-                                'credit': 0.0,
-                                'debit': 0.0,
-                            }
-                            if data['tax_code_id']:
-                                self.with_context(context).create(data)
-                        #create the Tax movement
-                        data = {
-                            'move_id': vals['move_id'],
-                            'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
-                            'date': vals['date'],
-                            'partner_id': vals.get('partner_id',False),
-                            'ref': vals.get('ref',False),
-                            'statement_id': vals.get('statement_id', False),
-                            'account_tax_id': False,
-                            'tax_code_id': tax[tax_code],
-                            'tax_amount': tax[tax_sign] * abs(tax['amount']),
-                            'account_id': tax[account_id] or vals['account_id'],
-                            'credit': tax['amount']<0 and -tax['amount'] or 0.0,
-                            'debit': tax['amount']>0 and tax['amount'] or 0.0,
+        tax_ids = vals.get('account_tax_id') and vals.get('account_tax_id')[0][2] or []
+        for taxid in tax_ids:
+            tax_id = TaxObj.browse(taxid)
+            total = vals['debit'] - vals['credit']
+            base_code = 'base_code_id'
+            tax_code = 'tax_code_id'
+            account_id = 'account_collected_id'
+            base_sign = 'base_sign'
+            tax_sign = 'tax_sign'
+            if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0):
+                base_code = 'ref_base_code_id'
+                tax_code = 'ref_tax_code_id'
+                account_id = 'account_paid_id'
+                base_sign = 'ref_base_sign'
+                tax_sign = 'ref_tax_sign'
+            tmp_cnt = 0
+            for tax in TaxObj.compute_all([tax_id], total, 1.00, force_excluded=False).get('taxes'):
+                #create the base movement
+                if tmp_cnt == 0:
+                    if tax[base_code]:
+                        tmp_cnt += 1
+                        if tax_id.price_include:
+                            total = tax['price_unit']
+                        newvals = {
+                            'tax_code_id': tax[base_code],
+                            'tax_amount': tax[base_sign] * abs(total),
                         }
-                        if data['tax_code_id']:
-                            self.with_context(context).create(data)
-                    del vals['account_tax_id']
+                        if tax_id.price_include:
+                            if tax['price_unit'] < 0:
+                                newvals['credit'] = abs(tax['price_unit'])
+                            else:
+                                newvals['debit'] = tax['price_unit']
+                        result.with_context(context).write(newvals)
+                else:
+                    data = {
+                        'move_id': vals['move_id'],
+                        'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
+                        'date': vals['date'],
+                        'partner_id': vals.get('partner_id', False),
+                        'ref': vals.get('ref', False),
+                        'statement_id': vals.get('statement_id', False),
+                        'account_tax_id': False,
+                        'tax_code_id': tax[base_code],
+                        'tax_amount': tax[base_sign] * abs(total),
+                        'account_id': vals['account_id'],
+                        'credit': 0.0,
+                        'debit': 0.0,
+                    }
+                    if data['tax_code_id']:
+                        self.with_context(context).create(data)
+                #create the Tax movement
+                data = {
+                    'move_id': vals['move_id'],
+                    'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
+                    'date': vals['date'],
+                    'partner_id': vals.get('partner_id',False),
+                    'ref': vals.get('ref',False),
+                    'statement_id': vals.get('statement_id', False),
+                    'account_tax_id': False,
+                    'tax_code_id': tax[tax_code],
+                    'tax_amount': tax[tax_sign] * abs(tax['amount']),
+                    'account_id': tax[account_id] or vals['account_id'],
+                    'credit': tax['amount']<0 and -tax['amount'] or 0.0,
+                    'debit': tax['amount']>0 and tax['amount'] or 0.0,
+                }
+                if data['tax_code_id']:
+                    self.with_context(context).create(data)
+            del vals['account_tax_id']
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
             move = MoveObj.browse(vals['move_id'])
