@@ -553,7 +553,7 @@
 
         <record id="view_account_statement_operation_template_form" model="ir.ui.view">
             <field name="name">account.statement.operation.template.form</field>
-            <field name="model">account.statement.operation.template</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <form string="Statement Operation Templates">
                     <sheet>
@@ -585,7 +585,7 @@
         </record>
         <record id="view_account_statement_operation_template_tree" model="ir.ui.view">
             <field name="name">account.statement.operation.template.tree</field>
-            <field name="model">account.statement.operation.template</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <tree string="Bank Reconciliation Move Presets">
                     <field name="name"/>
@@ -596,7 +596,7 @@
         </record>
         <record id="view_account_statement_operation_template_search" model="ir.ui.view">
             <field name="name">account.statement.operation.template.search</field>
-            <field name="model">account.statement.operation.template</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
                         <filter string="With tax" domain="[('tax_id','!=',False)]"/>
@@ -606,7 +606,7 @@
         </record>
         <record id="action_account_statement_operation_template" model="ir.actions.act_window">
             <field name="name">Statement Operations</field>
-            <field name="res_model">account.statement.operation.template</field>
+            <field name="res_model">account.operation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_statement_operation_template_search"/>
