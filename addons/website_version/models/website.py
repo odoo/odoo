@@ -45,7 +45,7 @@ class NewWebsite(osv.Model):
                     #by default on master
                     #We set the google_id as key in the cookie to avoid problem when reinitializating the db
                     EXP[str(exp.google_id)] = str(0)
-                x = random.randint(pond_sum)
+                x = random.randint(0,pond_sum-1)
                 for res in result:
                     if x<res[0]:
                         EXP[str(exp.google_id)] = str(res[1])
