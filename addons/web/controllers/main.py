@@ -327,10 +327,19 @@ def load_actions_from_ir_values(key, key2, models, meta):
             action = len(a)> 2 and a[2] or {}
             if not action:
                 continue
-            ctx = eval(str(action.get('context',{})))
+            ctx = {}
             for v in values_to_persist:
                 ctx.update({v:request.context.get(v,False)})
             if ctx:
+                if action.get('context',False):
+                    ctx2 = str(action.get('context',False))
+                    ctx2 = ctx2.find('{') >= 0 and ctx2[ctx2.find('{')+1:]
+                    if ctx2:
+                        ctx = str(ctx)
+                        ctx = ctx.rfind('}') > 0 and ctx[:ctx.rfind('}')]
+                        if ctx:
+                            a[2].update({'context':unicode(ctx + ', ' + ctx2)})
+                        continue
                 a[2].update({'context':unicode(ctx)})
 
 
