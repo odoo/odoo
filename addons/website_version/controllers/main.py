@@ -1,4 +1,3 @@
-import openerp
 from openerp import http
 from openerp.http import request
 import datetime
@@ -88,13 +87,12 @@ class Versioning_Controller(Website):
                 check = obj.search([('name','=', copy_master_name),('website_id', '=', version.website_id.id)])
                 #If it already exists, we delete the old to make the new
                 if check:
-                    obj.unlink(check.id)
-                from pudb import set_trace; set_trace()
+                    check.unlink()
                 copy_version_id = obj.create({'name' : copy_master_name, 'website_id' : version.website_id.id})
                 for view in obj_view.browse(copy_l):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
             #Here, instead of deleting all the views we can just change the version_id BUT I've got some cache problems
-            obj_view.unlink(del_l)
+            obj_view.browse(del_l).unlink()
         #All the views in the version published are copied without version_id   
         for view in obj.browse(int(version_id)).view_ids:
             view.copy({'version_id': None})
@@ -120,12 +118,12 @@ class Versioning_Controller(Website):
         exp_ids = request.env['website_version.experiment'].search([('experiment_version_ids.version_id.view_ids.key', '=', view.key),('state','=','running'),('experiment_version_ids.version_id.website_id', '=',request.context['website_id'])])
         if exp_ids:
             #No overlap between running experiments then we can take the first one
-            x = request.env['website_version.experiment'].browse(exp_ids[0])
+            x = exp_ids[0]
             result['ExpId'] = x.google_id
             if view.version_id:
                 exp_ver_ids = request.env['website_version.experiment_version'].search([('experiment_id','=',exp_ids[0]),('version_id','=',view.version_id.id)])
                 if exp_ver_ids:
-                    y = request.env['website_version.experiment_version'].browse(exp_ver_ids[0])
+                    y = exp_ver_ids[0]
                     result['VarId'] = y.google_index  
         return result
 
@@ -154,7 +152,8 @@ class Versioning_Controller(Website):
     def set_google_access(self, ga_key, view_id, client_id, client_secret):
         #To set ga_key, view_id, client_id, client_secret
         website_id = request.context.get('website_id')
-        request.env['website'].write([website_id], {'google_analytics_key':ga_key, 'google_analytics_view_id':view_id})
+        web = request.env['website'].browse(website_id)
+        web.write({'google_analytics_key':ga_key, 'google_analytics_view_id':view_id})
         icp = request.env['ir.config_parameter']
         icp.set_param('google_management_client_id', client_id or '', groups=['base.group_system'])
         icp.set_param('google_management_client_secret', client_secret or '', groups=['base.group_system'])
@@ -169,10 +168,8 @@ class Versioning_Controller(Website):
         icp = request.env['ir.config_parameter']
         v = view.browse(int(view_id))
         website_id = request.website.id
-        version_ids = version.search([('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')])
-        r1 = version.read(version_ids,['id','name'])
-        goal_ids = goal.search([])
-        r2 = goal.read(goal_ids,['id','name'])
+        r1 = version.search_read([('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],['id','name'])
+        r2 = goal.search_read([],['id','name'])
         #Check if all the parameters are set to communicate with Google analytics
         if request.website.google_analytics_key and request.website.google_analytics_view_id and icp.get_param('google_%s_token' % 'management'):
             r3 = 1
@@ -191,9 +188,8 @@ class Versioning_Controller(Website):
     def check_view(self, version_ids):
         #Check if version_ids don't overlap with running experiments
         version_keys = set([v['key'] for v in request.env['ir.ui.view'].search_read([('version_id', 'in', version_ids)], ['key'])])
-        exp_mod = request.registry['website_version.experiment']
-        exp_ids = exp_mod.search([('state','=','running'),('website_id','=',request.context.get('website_id'))])
-        exps = exp_mod.browse(exp_ids)
+        exp_mod = request.env['website_version.experiment']
+        exps = exp_mod.search([('state','=','running'),('website_id','=',request.context.get('website_id'))])
         for exp in exps:
             for exp_ver in exp.experiment_version_ids:
                 for view in exp_ver.version_id.view_ids:
