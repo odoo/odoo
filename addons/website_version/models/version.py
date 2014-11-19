@@ -20,16 +20,15 @@ class version(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         Exp = self.pool['website_version.experiment']
-        for id in ids:
-            result = Exp.search(cr, uid, [('state','=','running'),('experiment_version_ids.version_id', '=', id)],context=context)
-            if result:
-                raise Warning(_("You cannot delete a version which is in a running experiment."))
-            #To avoid problem when we delete versions in Backend
-            if request:
-                request.session['version_id'] = 0
+        result = Exp.search(cr, uid, [('state','=','running'),('experiment_version_ids.version_id', 'in', ids)],context=context)
+        if result:
+            raise Warning(_("You cannot delete a version which is in a running experiment."))
+        #To avoid problem when we delete versions in Backend
+        if request:
+            request.session['version_id'] = 0
         return super(version, self).unlink(cr, uid, ids, context=context)
 
-    def action_publish(self,cr,uid,ids,context=None):
+    def action_publish(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         version_id = context.get('active_id')

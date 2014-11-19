@@ -55,6 +55,3 @@ class QWeb(orm.AbstractModel):
         qwebcontext['__stack__'] = stack
         qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
         return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
-
-
-        

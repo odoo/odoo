@@ -39,7 +39,7 @@ class Versioning_Controller(Website):
         return bool(Exp.search(['|',('state','=','running'),('state','=','paused'),('experiment_version_ids.version_id', '=', int(version_id))]))
     
     @http.route(['/website_version/all_versions'], type = 'json', auth = "public", website = True)
-    def get_all_versions(self, view_id):
+    def all_versions(self, view_id):
         #To get all versions in the menu
         v = request.env['ir.ui.view'].browse(int(view_id))
         ver = request.env['website_version.version']
@@ -161,7 +161,7 @@ class Versioning_Controller(Website):
 
 
     @http.route(['/website_version/all_versions_all_goals'], type = 'json', auth = "public", website = True)
-    def get_all_versions_all_goals(self, view_id):
+    def all_versions_all_goals(self, view_id):
         #To get all versions and all goals to create an experiment
         view = request.env['ir.ui.view']
         version = request.env['website_version.version']
@@ -221,7 +221,4 @@ class Versioning_Controller(Website):
                 res.append(data)
         return res
         
-
-
-
 
