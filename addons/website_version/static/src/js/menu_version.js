@@ -223,7 +223,7 @@
                     var website_id = $('html').attr('data-website-id');
                     window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
                 });
-                self.wizard.on('click','.o_validate', function(){
+                self.wizard.on('click','.o_validate_0', function(){
                     var website_id = $('html').attr('data-website-id');
                     var ga_key = self.wizard.find('.o_ga_key').val();
                     var view_id = self.wizard.find('.o_view_id').val();
@@ -252,6 +252,19 @@
                                   }
                                 }
                             }).always(function(o) { $('button.GoogleAccess').prop('disabled', false); });
+                        });
+                    }
+                });
+                self.wizard.on('click','.o_validate_2', function(){
+                    var website_id = $('html').attr('data-website-id');
+                    var ga_key = self.wizard.find('.o_ga_key').val();
+                    var view_id = self.wizard.find('.o_view_id').val();
+                    if(ga_key.length == 0 || view_id.length == 0){
+                        self.wizard.find(".o_configure_ab").after("<p class='o_message' style='color : red'> *"+_t("You must fill all the fields.")+"</p>");
+                    }
+                    else{
+                        openerp.jsonRpc( '/website_version/set_google_access', 'call', {'ga_key':ga_key, 'view_id':view_id, 'client_id':0, 'client_secret':0}).then(function (result) {
+                            
                         });
                     }
                 });

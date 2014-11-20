@@ -124,9 +124,10 @@ class Versioning_Controller(Website):
         website_id = request.context.get('website_id')
         web = request.env['website'].browse(website_id)
         web.write({'google_analytics_key':ga_key, 'google_analytics_view_id':view_id})
-        icp = request.env['ir.config_parameter']
-        icp.set_param('google_management_client_id', client_id or '', groups=['base.group_system'])
-        icp.set_param('google_management_client_secret', client_secret or '', groups=['base.group_system'])
+        if client_id and client_secret:
+            icp = request.env['ir.config_parameter']
+            icp.set_param('google_management_client_id', client_id or '', groups=['base.group_system'])
+            icp.set_param('google_management_client_secret', client_secret or '', groups=['base.group_system'])
 
 
     @http.route(['/website_version/all_versions_all_goals'], type = 'json', auth = "public", website = True)
@@ -141,8 +142,10 @@ class Versioning_Controller(Website):
         r1 = version.search_read([('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],['id','name'])
         r2 = goal.search_read([],['id','name'])
         #Check if all the parameters are set to communicate with Google analytics
-        if request.website.google_analytics_key and request.website.google_analytics_view_id and icp.get_param('google_%s_token' % 'management'):
-            r3 = 1
+        if icp.get_param('google_%s_token' % 'management'):
+            r3 = 2
+            if request.website.google_analytics_key and request.website.google_analytics_view_id:
+                r3 = 1
         else:
             r3 = 0
         return {'tab_version':r1, 'tab_goal':r2, 'check_conf': r3}

@@ -142,6 +142,27 @@
                         </div>
                     </t>
 
+                    <t t-if= "config == 2">
+                        <form id="productForm" class="form-horizontal" role="form">              
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">GA Key</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label o_ga_key o_required_field"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">View ID</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label o_view_id o_required_field"/>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="o_configure_ab">
+                            <p>You must configure your account.</p>
+                            <p>To configure your account, you must have a google analytics account.</p>
+                        </div>
+                    </t>
+
                 </div>
               <div class="modal-footer">
                 <t t-if="versions.length != 0 and config == 1"> 
@@ -149,9 +170,14 @@
                         <button type="button" class="btn btn-primary o_launch">Launch</button>
                     </div>
                 </t>
-                <t t-if= "config == 0">
+                <t t-if= "config == 0 or config == 2">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary o_validate">Validate</button>
+                        <t t-if= "config == 0">
+                            <button type="button" class="btn btn-primary o_validate_0">Validate</button>
+                        </t>
+                        <t t-if= "config == 2">
+                            <button type="button" class="btn btn-primary o_validate_2" data-dismiss="modal">Validate</button>
+                        </t>
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
