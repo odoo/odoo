@@ -421,7 +421,7 @@ class account_asset_depreciation_line(osv.osv):
                 'ref': reference,
                 'date': depreciation_date or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
-                'line_id': [(0, 0, move_line1), (0, 0, move_line2)],
+                'line_id': [(0, 0, move_line_1), (0, 0, move_line_2)],
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
