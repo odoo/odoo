@@ -316,9 +316,11 @@ class produce_price_history(osv.osv):
 class product_attribute(osv.osv):
     _name = "product.attribute"
     _description = "Product Attribute"
+    _order = 'sequence,id'
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
+        'sequence': fields.integer('Sequence', help="Determine the display order"),
     }
 
 class product_attribute_value(osv.osv):
