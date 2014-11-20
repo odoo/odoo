@@ -34,7 +34,9 @@ class QWeb(orm.AbstractModel):
                     exp_version = self.pool["website_version.experiment_version"].browse(cr, uid, [exp_ver_id[0]], context=context)
                     exp = exp_version.experiment_id
                     #We set the google_id as key in the dictionnary to avoid problem when reinitializating the db, exp.google_id is unique
-                    context['version_id'] = int(context.get('website_version_experiment')[str(exp.google_id)])
+                    version_id = context.get('website_version_experiment').get(str(exp.google_id))
+                    if version_id:
+                        context['version_id'] = int(version_id)
 
             if 'version_id' in context:
                 version_id=context.get('version_id')
