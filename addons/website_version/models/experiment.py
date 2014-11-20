@@ -90,6 +90,8 @@ class Experiment(osv.Model):
                 name = self.pool['website_version.version'].browse(cr, uid, [version[2]['version_id']],context)[0].name
                 #We must give a URL for each version in the experiment
                 exp['variations'].append({'name':name, 'url': 'http://localhost/'+name})
+        else:
+            raise Warning(_("You must select at least one version in your experiment."))
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
             raise Warning(_("Please verify you give the authorizations to use google analytics api ..."))
@@ -97,12 +99,6 @@ class Experiment(osv.Model):
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        li = vals.get('experiment_version_ids')
-        if li:
-            for l in li:
-                #l[0] is the magic number
-                if not (l[0] == 4 or l[0] == 1):
-                    raise Warning(_("You can just modify the frequency."))
         state = vals.get('state')
         for exp in self.browse(cr, uid, ids, context=context):
             if state and exp.state == 'ended':

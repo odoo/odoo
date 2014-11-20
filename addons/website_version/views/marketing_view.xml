@@ -76,25 +76,27 @@
                         <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
                             type="action" class="oe_stat_button pull-right" />
                         <div class="oe_title">
+                            <field name="google_id" invisible="1"/>
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" attrs="{'readonly' : [('name', '!=', False)] }"/>
+                                <field name="name" attrs="{'readonly' : [('google_id', '!=', False)] }"/>
                             </h1>
                         </div>
                         <group col="4">
-                            <field name="website_id" attrs="{'readonly' : [('website_id', '!=', False)] }"/>
+                            <field name="website_id" attrs="{'readonly' : [('google_id', '!=', False)] }"/>
                             <field name="google_id" readonly="1" groups="base.group_no_one"/>
                             <label for="objectives"/>
                             <div>
-                                <field name="objectives" class="oe_inline" widget="selection" attrs="{'readonly' : [('objectives', '!=', False)] }"/>
+                                <field name="objectives" class="oe_inline" widget="selection" attrs="{'readonly' : [('google_id', '!=', False)] }"/>
                                 <button name="update_goals" string="(Sync)" type="object" context="{'website_id': website_id}" class="oe_link oe_edit_only"/>
                             </div>
                         </group>
                         <notebook colspan="4">
                             <page string="Versions in experiment" colspan="4" >
-                                <field name="experiment_version_ids" colspan="4" context="{'website_id': website_id}">
+                                <field name="experiment_version_ids" colspan="4" context="{'website_id': website_id,
+                                    'google_id': google_id}" attrs="{'readonly' : [('google_id', '!=', False)] }">
                                     <tree string="PPP" editable="bottom"> 
-                                        <field name="version_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4" attrs="{'readonly' : [('version_id', '!=', False)] }"/>
+                                        <field name="version_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                                         <field name="frequency" colspan="4"/>
                                     </tree>
                                 </field>
