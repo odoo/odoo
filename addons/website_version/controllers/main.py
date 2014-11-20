@@ -91,10 +91,10 @@ class Versioning_Controller(Website):
             x = exp_ids[0]
             result['ExpId'] = x.google_id
             if view.version_id:
-                exp_ver_ids = request.env['website_version.experiment_version'].search([('experiment_id','=',exp_ids[0]),('version_id','=',view.version_id.id)])
+                exp_ver_ids = request.env['website_version.experiment_version'].search([('experiment_id','=',exp_ids[0].id),('version_id','=',view.version_id.id)])
                 if exp_ver_ids:
                     y = exp_ver_ids[0]
-                    result['VarId'] = y.google_index  
+                    result['VarId'] = y.google_index 
         return result
 
     @http.route(['/website_version/google_access'], type='json', auth="user")
