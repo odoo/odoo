@@ -699,6 +699,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         if (!this.action_manager) return;
         var breadcrumbs = this.action_manager.get_breadcrumbs();
+        if (!breadcrumbs.length) return;
         var $breadcrumbs = _.map(_.initial(breadcrumbs), function (bc) {
             var $link = $('<a>').text(bc.title);
             $link.click(function () {
