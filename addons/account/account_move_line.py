@@ -210,8 +210,7 @@ class account_move_line(models.Model):
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile', 
         readonly=True, ondelete='set null', index=True, copy=False)
-    # TODO : to become Many2one('account.move.line', … when we implement the new partail reconciliation mechanism 
-    reconcile_partial_id = fields.Many2one('account.move.reconcile', string='Partial Reconcile',
+    reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False)
     reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
@@ -576,22 +575,17 @@ class account_move_line(models.Model):
     @api.multi
     def _remove_move_reconcile(self):
         # Function remove move rencocile ids related with moves
-        obj_move_rec = self.env['account.move.reconcile']
-        unlink_ids = []
         if not self:
             return True
-        full_recs = filter(lambda x: x.reconcile_id, self)
-        rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
-        part_recs = filter(lambda x: x.reconcile_partial_id, self)
-        part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
-        unlink_ids += rec_ids
-        unlink_ids += part_rec_ids
-        all_moves = self.search(['|',('reconcile_id', 'in', unlink_ids),('reconcile_partial_id', 'in', unlink_ids)])
-        all_moves = list(set(all_moves) - set(self))
-        if unlink_ids:
-            obj_move_rec.unlink(unlink_ids)
-            if len(all_moves) >= 2:
-                all_moves.reconcile_partial()
+        full_recs = []
+        partial_recs = []
+        for account_move_line in self:
+            if account_move_line.reconcile_id:
+                full_recs.append(account_move_line.reconcile_id.id)
+            if account_move_line.reconcile_partial_id:
+                partial_recs.append(account_move_line.reconcile_partial_id.id)
+        self.env['account.move.reconcile'].browse(full_recs).unlink()
+        self.browse(partial_recs).write({'reconcile_partial_id': False})
         return True
 
     @api.multi

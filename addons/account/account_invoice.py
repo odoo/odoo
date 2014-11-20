@@ -86,43 +86,19 @@ class account_invoice(models.Model):
     @api.one
     @api.depends(
         'state', 'currency_id', 'invoice_line.price_subtotal',
-#TODO: Need to refactor the code of '_compute_residual' method
-#         'move_id.line_id.amount_residual',
-#         'move_id.line_id.amount_residual_currency',
+        'move_id.line_id.amount_residual',
+        'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
     )
     def _compute_residual(self):
-        nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
         for line in self.sudo().move_id.line_id:
             if line.account_id.user_type.type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
                     self.residual += line.amount_residual_currency
                 else:
-                    # ahem, shouldn't we use line.currency_id here?
-                    from_currency = line.company_id.currency_id.with_context(date=line.date)
+                    from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     self.residual += from_currency.compute(line.amount_residual, self.currency_id)
-
-                # TODO: replace this by clean code based on partial payments
-                # for pline in line.reconcile_partial_id.line_partial_ids:
-                #     if pline.invoice and self.type == pline.invoice.type:
-                #         nb_inv_in_partial_rec += 1
-                #         # store the max invoice id as for this invoice we will
-                #         # make a balance instead of a simple division
-                #         max_invoice_id = max(max_invoice_id, pline.invoice.id)
-        if nb_inv_in_partial_rec:
-            # if there are several invoices in a partial reconciliation, we
-            # split the residual by the number of invoices to have a sum of
-            # residual amounts that matches the partner balance
-            new_value = self.currency_id.round(self.residual / nb_inv_in_partial_rec)
-            if self.id == max_invoice_id:
-                # if it's the last the invoice of the bunch of invoices
-                # partially reconciled together, we make a balance to avoid
-                # rounding errors
-                self.residual = self.residual - ((nb_inv_in_partial_rec - 1) * new_value)
-            else:
-                self.residual = new_value
-        # prevent the residual amount on the invoice to be less than 0
         self.residual = max(self.residual, 0.0)
 
     @api.one
@@ -138,13 +114,17 @@ class account_invoice(models.Model):
             return
         data_lines = self.move_id.line_id.filtered(lambda l: l.account_id == self.account_id)
         partial_lines = self.env['account.move.line']
+        reconciled_lines = self.env['account.move.line']
         for data_line in data_lines:
             if data_line.reconcile_id:
                 lines = data_line.reconcile_id.line_id
+            elif data_line.reconcile_partial_id:
+                lines = data_line.reconcile_partial_id
             else:
-                lines = self.env['account_move_line']
+                continue
             partial_lines += data_line
-            self.move_lines = lines - partial_lines
+            reconciled_lines += lines
+        self.move_lines = reconciled_lines - partial_lines
 
     @api.one
     @api.depends(
