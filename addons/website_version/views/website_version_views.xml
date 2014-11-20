@@ -70,26 +70,13 @@
         </record>
 
         <record id="action_website_view" model="ir.actions.act_window">
-            <field name="name">Domains</field>
+            <field name="name">Websites</field>
             <field name="res_model">website</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Website" id="website_menu" sequence="10"
-            parent="base.marketing_menu" />
-        <menuitem action="action_website_view" id="menu_website_view" parent="website_version.website_menu"/>
-
-        <record id="action_website_view_b" model="ir.actions.act_window">
-            <field name="name">Website Form</field>
-            <field name="res_model">website</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem name="Website" id="website_menu_b" sequence="10"
-            parent="base.menu_administration" />
-        <menuitem action="action_website_view_b" id="menu_website_view_b" parent="website_version.website_menu_b"/>
+        <menuitem action="action_website_view" id="menu_website_view" parent="base.menu_res_company_global"/>
 
 
         <record model="ir.ui.view" id="view_view_form_extend"> 
