@@ -602,7 +602,6 @@ class account_move(models.Model):
         self._post_validate()
 
         for move in self:
-            move.line_id.state = 'valid'
             move.line_id.create_analytic_lines()
             if move.name =='/':
                 new_name = False
