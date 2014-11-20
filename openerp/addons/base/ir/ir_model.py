@@ -244,7 +244,7 @@ class ir_model_fields(osv.osv):
     _rec_name = 'field_description'
 
     _columns = {
-        'name': fields.char('Name', required=True, select=1, translate=True),
+        'name': fields.char('Name', required=True, select=1),
         'complete_name': fields.char('Complete Name', select=1),
         'model': fields.char('Object Name', required=True, select=1,
             help="The technical name of the model this field belongs to"),
@@ -254,7 +254,7 @@ class ir_model_fields(osv.osv):
             help="For one2many fields, the field on the target model that implement the opposite many2one relationship"),
         'model_id': fields.many2one('ir.model', 'Model', required=True, select=True, ondelete='cascade',
             help="The model this field belongs to"),
-        'field_description': fields.char('Field Label', required=True),
+        'field_description': fields.char('Field Label', required=True, translate=True),
         'ttype': fields.selection(_get_fields_type, 'Field Type', required=True),
         'selection': fields.char('Selection Options', help="List of options for a selection field, "
             "specified as a Python expression defining a list of (key, label) pairs. "
