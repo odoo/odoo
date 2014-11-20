@@ -1,4 +1,5 @@
 from openerp.addons.account.tests.account_test_users import AccountTestUsers
+import datetime
 
 
 class TestAccountCustomerInvoive(AccountTestUsers):
@@ -13,7 +14,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
             acc_number='123456789',
             footer=True,
             bank=self.main_bank.id,
-            bank_name='Reserve'
+            bank_name=self.main_bank.name,
         ))
 
         # Test with that user which have rights to make Invoicing and payment and who is accountant.
@@ -46,7 +47,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         self.account_invoice_customer0 = self.account_invice_obj.sudo(self.account_user).create(dict(
             name="Test Customer Invoice",
             reference_type="none",
-            partner_bank_id=self.res_partner_bank_0.id,
+            # partner_bank_id=self.res_partner_bank_0.id,
             payment_term=self.payment_term_id.id,
             journal_id=self.journalrec_id.id,
             partner_id=self.partner3_id.id,
@@ -92,11 +93,10 @@ class TestAccountCustomerInvoive(AccountTestUsers):
 
         # I pay the Invoice
         pay = self.account_invoice_customer0.pay_and_reconcile(
-            9050.0, self.ref('cash'),
-            self.ref('account.period_10'), self.ref('bank_journal'),
-            self.ref('cash'), self.ref('account.period_10'),
-            self.ref('bank_journal'),
-            name='Payment for test customer invoice'
+            9050.0, self.ref('account.cash'),
+            datetime.date.today(), self.ref('account.bank_journal'),
+            self.ref('account.cash'),
+            self.ref('account.bank_journal'),
         )
         assert pay, "Incorrect Payment"
 
@@ -107,6 +107,9 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         invoice_refund_obj = self.env['account.invoice.refund']
         self.account_invoice_refund_0 = invoice_refund_obj.create(dict(
             description='Refund To China Export',
-            period=self.ref('account.period_5'),
+            date=datetime.date.today(),
             filter_refund='refund'
         ))
+
+        # I clicked on refund button.
+        self.account_invoice_refund_0.invoice_refund()
