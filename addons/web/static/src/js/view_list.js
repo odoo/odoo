@@ -1575,7 +1575,6 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .filter(function (column) { return column.tag === 'field' })
                 .pluck('name').value(),
             function (groups) {
-                self.view.$pager.hide();
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
