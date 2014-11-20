@@ -539,6 +539,13 @@ def trans_parse_rml(de):
         res.extend(trans_parse_rml(n))
     return res
 
+def _push(callback, term, source_line):
+    """ Sanity check before pushing translation terms """
+    term = (term or "").strip().encode('utf8')
+    # Avoid non-char tokens like ':' '...' '.00' etc.
+    if len(term) > 8 or any(x.isalpha() for x in term):
+        callback(term, source_line)
+
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
     if 'all' in modules:
