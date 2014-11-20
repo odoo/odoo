@@ -64,7 +64,7 @@ class sale_order_line(osv.osv):
         and create new one for missing one. """
         registrations = self.env['event.registration'].search([('origin', 'in', list(set([so.name for line in self for so in line.order_id if line.event_id])))])
         for so_line in [l for l in self if l.event_id]:
-            existing_registrations = [r for r in registrations if r.event_id == so_line.event_id and r.origin == so_line.order_id.name]
+            existing_registrations = [r for r in registrations if r.event_id == so_line.event_id and r.origin == so_line.order_id.name and r.event_ticket_id == so_line.event_ticket_id]
             for registration in existing_registrations:
                 registration.write({'state': 'open'})
 
