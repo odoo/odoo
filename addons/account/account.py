@@ -1052,9 +1052,9 @@ class account_tax(models.Model):
         tex = []
         for tax in taxes:
             if not tax.price_include or force_excluded:
-                tex.append(tax)
+                tex.append(tax.id)
             else:
-                tin.append(tax)
+                tin.append(tax.id)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
         for r in tin:
             totalex -= r.get('amount', 0.0)
