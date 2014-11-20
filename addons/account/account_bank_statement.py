@@ -120,10 +120,6 @@ class account_bank_statement(models.Model):
         ctx['company_id'] = self.company_id.id
         self.date = self.date
 
-    @api.multi
-    def button_dummy(self):
-        return self.write({})
-
     @api.model
     def _prepare_move(self, st_line, st_line_number):
         """Prepare the dict of values to create the move from a

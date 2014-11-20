@@ -25,11 +25,6 @@
     statement_id: account_bank_statement_0
     name: 'EXT001'
 -
-  I compute bank statement using Compute button
--
-  !python {model: account.bank.statement}: |
-    self.button_dummy(cr, uid, [ref("account_bank_statement_0")])
--
   I modify the bank statement and set the Closing Balance.
 -
   !record {model: account.bank.statement, id: account_bank_statement_0}:

@@ -31,11 +31,6 @@
     vals.update(partner.get('value',{}))
     line_id = self.create(cr, uid, vals)
     assert line_id, "Account bank statement line has not been created"
--
-  I compute bank statement using Compute button
--
-  !python {model: account.bank.statement}: |
-    self.button_dummy(cr, uid, [ref("account_bank_statement_0")])
 
 -
   I modify the bank statement and set the Closing Balance.
