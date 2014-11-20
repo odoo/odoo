@@ -102,7 +102,7 @@ class Experiment(osv.Model):
             for l in li:
                 #l[0] is the magic number
                 if not (l[0] == 4 or l[0] == 1):
-                    raise Warning(_("You cannot modify the number of versions."))
+                    raise Warning(_("You can just modify the frequency."))
         state = vals.get('state')
         for exp in self.browse(cr, uid, ids, context=context):
             if state and exp.state == 'ended':
