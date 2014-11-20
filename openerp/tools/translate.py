@@ -685,34 +685,14 @@ def trans_generate(lang, modules, cr):
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            objmodel = registry.get(obj.model)
-            if (objmodel is None or field_name not in objmodel._columns
-                    or not objmodel._translate):
+            field_model = registry.get(obj.model)
+            if (field_model is None or not field_model._translate or
+                    field_name not in field_model._fields):
                 continue
-            field_def = objmodel._columns[field_name]
-
-            # TODO: speed optimization
-            name = "%s,%s" % (encode(obj.model), field_name)
-            if field_def.translate:
-                ids = objmodel.search(cr, uid, [])
-                obj_values = objmodel.read(cr, uid, ids, [field_name])
-                t = lambda x: [encode(x)]
-                domain = [
-                    ('model', '=', model),
-                    ('res_id', '=', res_id),
-                ]
-                if field_def.translate is not True:
-                    # FIXME: field 'src' does not exist in ir.model.data
-                    domain.append(('src','=',term))
-                    t = field_def.translate
-                for obj_value in obj_values:
-                    for term in t(obj_value[field_name]):
-                        res_id = obj_value['id']
-                        model_data_ids = model_data_obj.search(cr, uid, domain)
-                        if not model_data_ids:
-                            push_translation(module, 'model', name, 0, term)
+            field_def = field_model._fields[field_name]
 
             if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
+                name = "%s,%s" % (encode(obj.model), field_name)
                 for dummy, val in field_def.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
 
