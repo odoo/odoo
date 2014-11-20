@@ -388,19 +388,11 @@ class account_asset_depreciation_line(osv.osv):
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = line.asset_id.name
             reference = line.name
-            move_vals = {
-                'name': asset_name,
-                'ref': reference,
-                'date': depreciation_date or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                }
-            move_id = move_obj.create(cr, uid, move_vals, context=context)
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
-            move_line_obj.create(cr, uid, {
+            move_line_1 = {
                 'name': asset_name,
                 'ref': reference,
-                'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': amount,
@@ -409,11 +401,10 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
-            })
-            move_line_obj.create(cr, uid, {
+            }
+            move_line_2 = {
                 'name': asset_name,
                 'ref': reference,
-                'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
                 'debit': amount,
@@ -424,7 +415,15 @@ class account_asset_depreciation_line(osv.osv):
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
                 'asset_id': line.asset_id.id
-            })
+            }
+            move_vals = {
+                'name': asset_name,
+                'ref': reference,
+                'date': depreciation_date or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'line_id': [(0, 0, move_line1), (0, 0, move_line2)],
+                }
+            move_id = move_obj.create(cr, uid, move_vals, context=context)
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
             asset_ids.append(line.asset_id.id)
