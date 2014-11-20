@@ -646,8 +646,8 @@ class account_move(models.Model):
         for move in self:
             if move['state'] != 'draft':
                 raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
-            move_lines._update_check()
-            move_lines.unlink()
+            move.line_id._update_check()
+            move.line_id.unlink()
         return super(account_move, self).unlink()
 
     # TODO: check if date is not closed, otherwise raise exception
