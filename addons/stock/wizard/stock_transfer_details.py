@@ -161,7 +161,7 @@ class stock_transfer_details_items(models.TransientModel):
         for packop in self:
             if not packop.result_package_id:
                 if not newpack:
-                    newpack = self.pool['stock.quant.package'].create(self._cr, self._uid, {'location_id': packop.destinationloc_id.id if packop.destinationloc_id else False}, self._context)
+                    newpack = self.env['stock.quant.package'].create({'location_id': packop.destinationloc_id.id if packop.destinationloc_id else False})
                 packop.result_package_id = newpack
         if self and self[0]:
             return self[0].transfer_id.wizard_view()
