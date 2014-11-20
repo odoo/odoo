@@ -115,13 +115,10 @@ class account_invoice_refund(models.TransientModel):
                     refund.signal_workflow('invoice_open')
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
-                            to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
-                    for account in to_reconcile_ids:
-                        account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
-                                        writeoff_period_date=date,
-                                        writeoff_journal_id = inv.journal_id.id,
-                                        writeoff_acc_id=inv.account_id.id
-                                        )
+                            tmpline.reconcile(writeoff_period_date=date,
+                                            writeoff_journal_id = inv.journal_id.id,
+                                            writeoff_acc_id=inv.account_id.id
+                                            )
                     if mode == 'modify':
                         invoice = inv.read(
                                     ['name', 'type', 'number', 'reference',

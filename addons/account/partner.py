@@ -152,14 +152,15 @@ class res_partner(models.Model):
             self.debit = 0
             self.credit = 0
             return True
-        self._cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
+        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
-                      WHERE a.type IN ('receivable','payable')
+                      LEFT JOIN account_account_type act ON (a.user_type=act.id)
+                      WHERE act.type IN ('receivable','payable')
                       AND l.partner_id IN %s
                       AND l.reconcile_id IS NULL
-                      AND """ + query + """
-                      GROUP BY l.partner_id, a.type
+                      """ + query + """
+                      GROUP BY l.partner_id, act.type
                       """,
                    (tuple(self.ids),))
         maps = {'receivable':'credit', 'payable':'debit' }

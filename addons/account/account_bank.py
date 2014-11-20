@@ -48,7 +48,7 @@ class bank(models.Model):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                account = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
+                account = AccountObj.search([('user_type.type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
                 # No liquidity account exists, no template available
                 if not account: continue
 
