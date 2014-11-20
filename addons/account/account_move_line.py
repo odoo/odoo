@@ -598,16 +598,16 @@ class account_move_line(models.Model):
     def unlink(self, check=True):
         self._update_check()
         result = False
-        moves = set()
+        moves = self.env['account.move']
         context = dict(self._context or {})
         for line in self:
-            moves.add(line.move_id)
+            moves += line.move_id
             context['journal_id'] = line.journal_id.id
             context['date'] = line.date
-            result = super(account_move_line, line).with_context(context).unlink()
-        moves = list(moves)
+            line.with_context(context)
+            result = super(account_move_line, line).unlink()
         if check and moves:
-            moves.with_context(context).validate()
+            moves.with_context(context)._post_validate()
         return result
 
     @api.multi
