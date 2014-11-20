@@ -1415,7 +1415,7 @@ class account_chart_template(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete')
-    account_root_id = fields.Many2one('account.account.template', string='Root Account', domain=[('parent_id','=',False)])
+    account_root_id = fields.Many2one('account.account.template', string='Root Account')
     tax_code_root_id = fields.Many2one('account.tax.code.template', string='Root Tax Code', domain=[('parent_id','=',False)])
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
