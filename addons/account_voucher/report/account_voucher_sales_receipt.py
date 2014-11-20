@@ -95,7 +95,7 @@ class sale_receipt_report(osv.osv):
                 left join account_voucher as av on (av.id=avl.voucher_id)
                 left join res_partner as rp ON (rp.id=av.partner_id)
                 left join account_journal as aj ON (aj.id=av.journal_id)
-                where av.type='sale' and aj.type in ('sale','sale_refund')
+                where av.type='sale' and aj.type='sale'
                 group by
                     av.date,
                     av.id,

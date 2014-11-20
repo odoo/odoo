@@ -19,22 +19,33 @@
 #
 ##############################################################################
 
-import partner
-import account
-import installer
-import account_invoice
-import account_bank_statement
-import account_bank
-import account_cash_statement
-import account_move_line
-import account_analytic_line
-import account_financial_report
-import wizard
-import report
-import product
-import company
-import res_currency
-import edi
-import res_config
+from openerp.osv import fields, osv
+
+
+class account_restart_sequence(osv.osv_memory):
+    """
+        Restart Sequences
+    """
+
+    def _get_journal_ids(self, cr, uid, context=None):
+        return self.pool.get('account.journal').search(cr, uid, [('restart_sequence', '=', 'True')])
+
+    _name = "account.sequence.restart"
+    _description = "Restart Sequences"
+    _columns = {
+        'journal_ids': fields.many2many('account.journal'),
+    }
+
+    _defaults = {
+        'journal_ids': _get_journal_ids,
+    }
+
+    def restart_sequences(self, cr, uid, ids, context=None):
+        for form in self.read(cr, uid, ids, context=context):
+            if form['journal_ids']:
+                self.pool.get('account.fiscalyear').restart_sequences(cr, uid, context['active_ids'], form['journal_ids'], context=context)
+
+        return {'type': 'ir.actions.act_window_close'}
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

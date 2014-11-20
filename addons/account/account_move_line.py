@@ -694,7 +694,7 @@ class account_move_line(osv.osv):
         part = partner_obj.browse(cr, uid, partner_id, context=context)
 
         payment_term_id = False
-        if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
+        if jt and jt == 'purchase' and part.property_supplier_payment_term:
             payment_term_id = part.property_supplier_payment_term.id
         elif jt and part.property_payment_term:
             payment_term_id = part.property_payment_term.id
@@ -706,9 +706,9 @@ class account_move_line(osv.osv):
             id1 = part.property_account_payable.id
             id2 =  part.property_account_receivable.id
             if jt:
-                if jt in ('sale', 'purchase_refund'):
+                if jt == 'sale':
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
-                elif jt in ('purchase', 'sale_refund'):
+                elif jt == 'purchase':
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 elif jt in ('general', 'bank', 'cash'):
                     if part.customer:
@@ -1339,7 +1339,8 @@ class account_move_line(osv.osv):
             account_id = 'account_collected_id'
             base_sign = 'base_sign'
             tax_sign = 'tax_sign'
-            if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0):
+            # TODO not sure
+            if journal.type in ('cash', 'bank', 'purchase', 'sale') and total < 0:
                 base_code = 'ref_base_code_id'
                 tax_code = 'ref_tax_code_id'
                 account_id = 'account_paid_id'

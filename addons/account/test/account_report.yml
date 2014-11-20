@@ -57,7 +57,7 @@
   Print the Central Journal Report - From Account
 -
   !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),
                          ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
@@ -67,7 +67,7 @@
   Print the General Journal Report - From Journal
 -
   !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),
                          ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
@@ -93,7 +93,7 @@
   Print Journal Report - From Model
 -
   !python {model: account.journal.period}: |
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    journal_ids = [ref('account.sales_journal'),ref('account.expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0'), 'period_from':ref('period_1'), 'period_to':ref('period_12')}
     from openerp.tools import test_reports

@@ -69,15 +69,9 @@ class account_config_settings(osv.osv_memory):
         'sale_journal_id': fields.many2one('account.journal', 'Sale journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice sequence'),
         'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next invoice number'),
-        'sale_refund_journal_id': fields.many2one('account.journal', 'Sale refund journal'),
-        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit note sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next credit note number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier invoice sequence'),
         'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier invoice number'),
-        'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase refund journal'),
-        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
         'module_account_check_writing': fields.boolean('Pay your suppliers by check',
             help='This allows you to check writing and printing.\n'
@@ -227,13 +221,13 @@ class account_config_settings(osv.osv_memory):
                 'period': period,
             }
             # update journals and sequences
-            for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+            for journal_type in ('sale', 'purchase'):
                 for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
                     values[journal_type + suffix] = False
             journal_obj = self.pool.get('account.journal')
             journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
             for journal in journal_obj.browse(cr, uid, journal_ids):
-                if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                if journal.type in ('sale', 'purchase'):
                     values.update({
                         journal.type + '_journal_id': journal.id,
                         journal.type + '_sequence_prefix': journal.sequence_id.prefix,
