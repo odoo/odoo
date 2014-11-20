@@ -387,7 +387,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         this.filter_menu = undefined;
         this.groupby_menu = undefined;
-        this.favorite_menu = undefined
+        this.favorite_menu = undefined;
+        this.action_id = this.options && this.options.action && this.options.action.id;
     },    
     start: function() {
         if (this.headless) {
@@ -423,7 +424,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
             this.groupby_menu = new my.GroupByMenu(this, this.groupbys, fields_def);
             this.filter_menu = new my.FilterMenu(this, this.filters, fields_def);
-            this.favorite_menu = new my.FavoriteMenu(this, this.query, this.dataset.model);
+            this.favorite_menu = new my.FavoriteMenu(this, this.query, this.dataset.model, this.action_id);
 
             this.filter_menu.appendTo(this.$buttons);
             this.groupby_menu.appendTo(this.$buttons);
@@ -1581,7 +1582,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
             this.close_menus();
         },
     },
-    init: function (parent, query, target_model) {
+    init: function (parent, query, target_model, action_id) {
         this._super.apply(this,arguments);
         this.searchview = parent;
         this.query = query;
@@ -1589,8 +1590,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
         this.$filters = {};
-        var action = instance.client.action_manager.inner_action;
-        this.action_id = action && action.id;
+        this.action_id = action_id;
     },
     start: function () {
         var self = this;

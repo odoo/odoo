@@ -786,6 +786,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
             $buttons: this.$('.oe-search-options'),
+            action: this.action,
         };
         var SearchView = instance.web.SearchView;
         this.searchview = new SearchView(this, this.dataset, view_id, search_defaults, options);
