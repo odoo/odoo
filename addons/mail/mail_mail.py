@@ -123,7 +123,7 @@ class mail_mail(osv.Model):
         if context is None:
             context = {}
         if not ids:
-            filters = ['&', ('state', '=', 'outgoing'), ('type', '=', 'email')]
+            filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
@@ -273,6 +273,7 @@ class mail_mail(osv.Model):
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
+        notification_obj = self.pool['mail.notification']
         for mail in self.browse(cr, uid, ids, context=context):
             try:
                 # handle attachments
@@ -281,6 +282,8 @@ class mail_mail(osv.Model):
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
                 # specific behavior to customize the send email for notified partners
                 email_list = []
+                if mail.notification and not recipient_ids:
+                    recipient_ids = notification_obj.get_partners_to_notify(cr, uid, mail.mail_message_id, context=context)
                 if recipient_ids:
                     partner_obj = self.pool.get('res.partner')
                     existing_recipient_ids = partner_obj.exists(cr, SUPERUSER_ID, recipient_ids, context=context)
