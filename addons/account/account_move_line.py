@@ -1246,15 +1246,23 @@ class account_move_line(osv.osv):
                 base_sign = 'base_sign'
                 tax_sign = 'tax_sign'
             tmp_cnt = 0
-            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=True).get('taxes'):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=False).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
                         tmp_cnt += 1
-                        self.write(cr, uid,[result], {
+                        if tax_id.price_include:
+                            total = tax['price_unit']
+                        newvals = {
                             'tax_code_id': tax[base_code],
-                            'tax_amount': tax[base_sign] * abs(total)
-                        })
+                            'tax_amount': tax[base_sign] * abs(total),
+                        }
+                        if tax_id.price_include:
+                            if tax['price_unit'] < 0:
+                                newvals['credit'] = abs(tax['price_unit'])
+                            else:
+                                newvals['debit'] = tax['price_unit']
+                        self.write(cr, uid, [result], newvals, context=context)
                 else:
                     data = {
                         'move_id': vals['move_id'],
