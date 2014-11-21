@@ -6,15 +6,15 @@
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
-                    <span t-field="o.name"/><br/>
-                    <span t-raw="addresses[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
-                     <span t-field="o.vat"/>
+                    <div t-esc="o.id" 
+                        t-esc-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    <span t-field="o.vat"/>
                  </div>
             </div>
 
             <p>
                 Document: Customer account statement<br/>
-                Date: <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/><br/>
+                Date: <span t-esc="time.strftime('%Y-%m-%d')"/><br/>
                 Customer ref: <span t-field="o.ref"/>
             </p>
 
@@ -51,24 +51,24 @@
                         <span t-field="line.date_maturity"/>
                     </td>
                     <td class="text-right">
-                        <t t-if="line.account_id.type == 'receivable'">
-                            <span t-esc="formatLang(line.debit)"/>
+                        <t t-if="line.account_id.user_type.type == 'receivable'">
+                            <span t-esc="line.debit"/>
                         </t>
-                        <t t-if="line.account_id.type == 'payable'">
-                            <span t-esc="formatLang(line['credit'] * -1)"/>
+                        <t t-if="line.account_id.user_type.type == 'payable'">
+                            <span t-esc="(line['credit'] * -1)"/>
                         </t>
                     </td>
                     <td class="text-right">
-                        <t t-if="line.account_id.type == 'receivable'">
-                            <span t-esc="formatLang(line.credit)"/>
+                        <t t-if="line.account_id.user_type.type == 'receivable'">
+                            <span t-esc="line.credit"/>
                         </t>
-                        <t t-if="line.account_id.type == 'payable'">
-                            <span t-esc="formatLang(line.debit * -1)"/>
+                        <t t-if="line.account_id.user_type.type == 'payable'">
+                            <span t-esc="(line.debit * -1)"/>
                         </t>
                     </td>
                     <td class="text-right">
                         <t t-if="time.strftime('%Y-%m-%d') &gt; line['date_maturity']">
-                            <span t-esc="formatLang(line.debit - line.credit, currency_obj=res_company.currency_id)"/>
+                            <span t-esc="line.debit - line.credit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </t>
                     </td>
                     <td>
@@ -78,16 +78,16 @@
                 <tr>
                     <td colspan="3"></td>
                     <td><strong>Sub-Total :</strong></td>
-                    <td class="text-right"><span t-esc="formatLang(due[o.id])"/></td>
-                    <td class="text-right"><span t-esc="formatLang(paid[o.id])"/></td>
-                    <td class="text-right"><span t-esc="formatLang(mat[o.id])"/></td>
+                    <td class="text-right"><span t-esc="get_amount(o)['due_amount']"/></td>
+                    <td class="text-right"><span t-esc="get_amount(o)['paid_amount']"/></td>
+                    <td class="text-right"><span t-esc="get_amount(o)['mat_amount']"/></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan="3"></td>
                     <td><strong>Balance :</strong></td>
                     <td class="text-right">
-                        <span t-esc="formatLang(due[o.id] - paid[o.id], currency_obj=res_company.currency_id)"/>
+                        <span t-esc="(get_amount(o)['due_amount'] - get_amount(o)['paid_amount'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                     </td>
                     <td></td>
                     <td></td>
@@ -97,7 +97,7 @@
 
             <p t-if="getLines(o)">
                 Total amount due:
-                <span t-esc="formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=res_company.currency_id)"/>
+                <span t-esc="(reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
             </p>
 
             <p t-if="not getLines(o)">

@@ -102,7 +102,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                     "AND l.account_id = account.id " \
                     "AND am.id = l.move_id " \
                     "AND am.state IN %s"
-#                    "AND " + self.query +" " \
+                     "" + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
                     "AND account.active ", params)

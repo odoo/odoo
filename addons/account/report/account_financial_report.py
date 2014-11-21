@@ -44,7 +44,7 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
         for report in finance_report.browse(child_ids):
             vals = {
                 'name': report.name,
-                'balance': 0.0, # TODO : report.balance * report.sign or 0.0,
+                'balance': report.balance * report.sign or 0.0,
                 'type': 'report',
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
                 'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
