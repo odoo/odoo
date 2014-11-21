@@ -104,9 +104,6 @@
         'views/account_unit_test.xml',
     ],
     'test': [
-#         'test/account_supplier_invoice.yml',
-#         'test/chart_of_account.yml',
-#         'test/account_validate_account_move.yml',
 #         'test/test_edi_invoice.yml',
 #         'test/account_report.yml',
     ],
