@@ -110,13 +110,13 @@ class fleet_vehicle_state(osv.Model):
 
 class fleet_vehicle_model(osv.Model):
 
-    def _model_name_get_fnc(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
         for record in self.browse(cr, uid, ids, context=context):
-            name = record.modelname
+            name = record.name
             if record.brand_id.name:
-                name = record.brand_id.name + ' / ' + name
-            res[record.id] = name
+                name = record.brand_id.name + '/' + name
+            res.append((record.id, name))
         return res
 
     def on_change_brand(self, cr, uid, ids, model_id, context=None):
@@ -134,8 +134,7 @@ class fleet_vehicle_model(osv.Model):
     _order = 'name asc'
 
     _columns = {
-        'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
-        'modelname': fields.char('Model name', required=True), 
+        'name': fields.char('Model name', required=True),
         'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
@@ -189,7 +188,7 @@ class fleet_vehicle(osv.Model):
     def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.modelname + ' / ' + record.license_plate
+            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + record.license_plate
         return res
 
     def return_action_to_open(self, cr, uid, ids, context=None):

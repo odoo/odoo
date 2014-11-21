@@ -10,7 +10,7 @@
                     <div class="oe_title">
                         <label for="modelname" class="oe_edit_only"/>
                         <h1>
-                            <field name="modelname" />
+                            <field name="name"/>
                         </h1>
                         <label for="brand_id" class="oe_edit_only"/>
                         <h2>
@@ -48,7 +48,7 @@
             <field name="arch" type="xml">
                 <tree string="Models">
                     <field name="brand_id" />
-                    <field name="modelname" />
+                    <field name="name" />
                 </tree>
             </field>
         </record>
@@ -167,10 +167,10 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a vehicule status.
+                Click to create a vehicle status.
               </p><p>
                 You can customize available status to track the evolution of
-                each vehicule. Example: Active, Being Repaired, Sold.
+                each vehicle. Example: Active, Being Repaired, Sold.
               </p>
             </field>
         </record>
@@ -978,7 +978,7 @@
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="parent_id"/>
+                                <field name="parent_id" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </sheet>
