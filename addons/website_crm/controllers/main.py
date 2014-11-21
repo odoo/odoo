@@ -72,9 +72,8 @@ class contactus(http.Controller):
         # fields validation : Check that required field from model crm_lead exists
         error = set(field for field in _REQUIRED if not values.get(field))
 
-        values = dict(values, error=error)
         if error:
-            values.update(kwargs=kwargs.items())
+            values = dict(values, error=error, kwargs=kwargs.items())
             return request.website.render(kwargs.get("view_from", "website.contactus"), values)
 
         try:
