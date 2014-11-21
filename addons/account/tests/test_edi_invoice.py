@@ -41,7 +41,7 @@ class TestEdiInvoice(AccountTestUsers):
 
         # create invoice line
         self.invoice_line_obj.create(dict(
-            product_id=self.ref('product.product_product_3'),
+            product_id=self.env.ref('product.product_product_3').id,
             uos_id=1,
             quantity=1.0,
             price_unit=10.0,
@@ -51,7 +51,7 @@ class TestEdiInvoice(AccountTestUsers):
         ))
 
         self.invoice_line_obj.create(dict(
-            product_id=self.ref('product.product_product_5'),
+            product_id=self.env.ref('product.product_product_5').id,
             uos_id=1,
             quantity=5.0,
             price_unit=100.0,

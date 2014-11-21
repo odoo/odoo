@@ -35,9 +35,9 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         invoice_line_data = [
             (0, 0,
                 {
-                    'product_id': self.ref('product.product_product_5'),
+                    'product_id': self.env.ref('product.product_product_5').id,
                     'quantity': 10.0,
-                    'account_id': self.ref('account.a_sale'),
+                    'account_id': self.env.ref('account.a_sale').id,
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
@@ -57,14 +57,14 @@ class TestAccountCustomerInvoive(AccountTestUsers):
 
         # I manually assign tax on invoice
         self.invoice_tax_obj = self.env['account.invoice.tax']
-        amt = self.invoice_tax_obj.amount_change(50.0, self.ref('base.EUR'), self.ref('base.main_company'), False)
-        base_amt = self.invoice_tax_obj.base_change(9000.0, self.ref('base.EUR'), self.ref('base.main_company'), False)
+        amt = self.invoice_tax_obj.amount_change(50.0, self.env.ref('base.EUR').id, self.env.ref('base.main_company').id, False)
+        base_amt = self.invoice_tax_obj.base_change(9000.0, self.env.ref('base.EUR').id, self.env.ref('base.main_company').id, False)
         invoice_tax_line = {
             'name':  'Test Tax for Customer Invoice',
             'manual': 1,
             'base': base_amt['value']['base_amount'],
             'amount': amt['value']['tax_amount'],
-            'account_id': self.ref('account.ova'),
+            'account_id': self.env.ref('account.ova').id,
             'invoice_id': self.account_invoice_customer0.id,
         }
         tax = self.invoice_tax_obj.create(invoice_tax_line)
@@ -93,10 +93,10 @@ class TestAccountCustomerInvoive(AccountTestUsers):
 
         # I pay the Invoice
         pay = self.account_invoice_customer0.pay_and_reconcile(
-            9050.0, self.ref('account.cash'),
-            datetime.date.today(), self.ref('account.bank_journal'),
-            self.ref('account.cash'),
-            self.ref('account.bank_journal'),
+            9050.0, self.env.ref('account.cash').id,
+            datetime.date.today(), self.env.ref('account.bank_journal').id,
+            self.env.ref('account.cash').id,
+            self.env.ref('account.bank_journal').id,
         )
         assert pay, "Incorrect Payment"
 
