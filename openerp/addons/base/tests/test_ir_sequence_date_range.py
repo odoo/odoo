@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Run with one of these commands:
 #    > OPENERP_ADDONS_PATH='../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy PYTHONPATH=. python tests/test_ir_sequence.py
+#      OPENERP_DATABASE=yy PYTHONPATH=. python tests/test_ir_sequence_date_range.py
 #    > OPENERP_ADDONS_PATH='../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy nosetests tests/test_ir_sequence.py
+#      OPENERP_DATABASE=yy nosetests tests/test_ir_sequence_date_range.py
 #    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
-#      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
+#      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence_date_range
 # This assume an existing database.
 import psycopg2
 import psycopg2.errorcodes
@@ -13,12 +13,15 @@ import unittest2
 
 import openerp
 from openerp.tests import common
+from datetime import date
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
+
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
+
 
 def cursor():
     return openerp.modules.registry.RegistryManager.get(DB).cursor()
@@ -33,134 +36,121 @@ def drop_sequence(code):
     cr.commit()
     cr.close()
 
-class test_ir_sequence_standard(unittest2.TestCase):
+
+class test_ir_sequence_date_range_standard(unittest2.TestCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
-    def test_ir_sequence_create(self):
-        """ Try to create a sequence object. """
+    def test_ir_sequence_date_range_1_create(self):
+        """ Try to create a sequence object with date ranges enabled. """
         cr = cursor()
         d = dict(code='test_sequence_type', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-        d = dict(code='test_sequence_type', name='Test sequence')
+        d = dict(code='test_sequence_type', name='Test sequence', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
 
-    def test_ir_sequence_search(self):
-        """ Try a search. """
+    def test_ir_sequence_date_range_2_change_dates(self):
+        """ Try to draw a number to create a first subsequence then change its date range. Then, try to draw a new number. """
         cr = cursor()
-        ids = registry('ir.sequence').search(cr, ADMIN_USER_ID, [], {})
-        assert ids
+        year = str(int(date.today().strftime("%Y")) - 1)
+        dt = "{}-01-16".format(year)
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type', {'date': dt})
+        self.assertEqual(n, '1')
+        seq_id = registry('ir.sequence').search(cr, ADMIN_USER_ID, [['code', '=', 'test_sequence_type']], {})
+        seq_date_range_ids = registry('ir.sequence').browse(cr, ADMIN_USER_ID, seq_id, {}).date_range_ids
+        domain = [['id', 'in', seq_date_range_ids.ids], ['date_from', '=', '{}-01-01'.format(year)]]
+        seq_date_range_id = registry('ir.sequence.date_range').search(cr, ADMIN_USER_ID, domain, {})
+        registry('ir.sequence.date_range').write(cr, ADMIN_USER_ID, seq_date_range_id, {'date_to': '{}-01-14'.format(year)}, {})
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type', {'date': dt})
+        self.assertEqual(n, '1')
         cr.commit()
         cr.close()
-
-    def test_ir_sequence_draw(self):
-        """ Try to draw a number. """
-        cr = cursor()
-        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type', {})
-        assert n
-        cr.commit()
-        cr.close()
-
-    def test_ir_sequence_draw_twice(self):
-        """ Try to draw a number from two transactions. """
-        cr0 = cursor()
-        cr1 = cursor()
-        n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type', {})
-        assert n0
-        n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type', {})
-        assert n1
-        cr0.commit()
-        cr1.commit()
-        cr0.close()
-        cr1.close()
 
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type')
 
-class test_ir_sequence_no_gap(unittest2.TestCase):
+
+class test_ir_sequence_date_range_no_gap(unittest2.TestCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
-    def test_ir_sequence_create_no_gap(self):
+    def test_ir_sequence_date_range_1_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_2', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_2', name='Test sequence',
-            implementation='no_gap')
+                 implementation='no_gap', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
 
-    def test_ir_sequence_draw_no_gap(self):
+    def test_ir_sequence_date_range_2_change_dates(self):
         """ Try to draw a number. """
         cr = cursor()
-        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_2', {})
-        assert n
+        year = str(int(date.today().strftime("%Y")) - 1)
+        dt = "{}-01-16".format(year)
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_2', {'date': dt})
+        self.assertEqual(n, '1')
+        seq_id = registry('ir.sequence').search(cr, ADMIN_USER_ID, [['code', '=', 'test_sequence_type_2']], {})
+        seq_date_range_ids = registry('ir.sequence').browse(cr, ADMIN_USER_ID, seq_id, {}).date_range_ids
+        domain = [['id', 'in', seq_date_range_ids.ids], ['date_from', '=', '{}-01-01'.format(year)]]
+        seq_date_range_id = registry('ir.sequence.date_range').search(cr, ADMIN_USER_ID, domain, {})
+        registry('ir.sequence.date_range').write(cr, ADMIN_USER_ID, seq_date_range_id, {'date_to': '{}-01-14'.format(year)}, {})
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_2', {'date': dt})
+        self.assertEqual(n, '1')
         cr.commit()
         cr.close()
-
-    def test_ir_sequence_draw_twice_no_gap(self):
-        """ Try to draw a number from two transactions.
-        This is expected to not work.
-        """
-        cr0 = cursor()
-        cr1 = cursor()
-        cr1._default_log_exceptions = False # Prevent logging a traceback
-        with self.assertRaises(psycopg2.OperationalError) as e:
-            n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
-            assert n0
-            n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type_2', {})
-        self.assertEqual(e.exception.pgcode, psycopg2.errorcodes.LOCK_NOT_AVAILABLE, msg="postgresql returned an incorrect errcode")
-        cr0.close()
-        cr1.close()
 
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_2')
 
-class test_ir_sequence_change_implementation(unittest2.TestCase):
+
+class test_ir_sequence_date_range_change_implementation(unittest2.TestCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
-    def test_ir_sequence_1_create(self):
+    def test_ir_sequence_date_range_1_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_3', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-        d = dict(code='test_sequence_type_3', name='Test sequence')
+        d = dict(code='test_sequence_type_3', name='Test sequence', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence',
-            implementation='no_gap')
+                 implementation='no_gap', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
 
-    def test_ir_sequence_2_write(self):
+    def test_ir_sequence_date_range_2_write(self):
         cr = cursor()
-        ids = registry('ir.sequence').search(cr, ADMIN_USER_ID,
-            [('code', 'in', ['test_sequence_type_3', 'test_sequence_type_4'])], {})
+        ids = registry('ir.sequence').search(cr, ADMIN_USER_ID, [
+            ('code', 'in', ['test_sequence_type_3', 'test_sequence_type_4'])
+        ], {})
         registry('ir.sequence').write(cr, ADMIN_USER_ID, ids,
-            {'implementation': 'standard'}, {})
+                                      {'implementation': 'standard'}, {})
         registry('ir.sequence').write(cr, ADMIN_USER_ID, ids,
-            {'implementation': 'no_gap'}, {})
+                                      {'implementation': 'no_gap'}, {})
         cr.commit()
         cr.close()
 
-    def test_ir_sequence_3_unlink(self):
+    def test_ir_sequence_date_range_3_unlink(self):
         cr = cursor()
-        ids = registry('ir.sequence').search(cr, ADMIN_USER_ID,
-            [('code', 'in', ['test_sequence_type_3', 'test_sequence_type_4'])], {})
+        ids = registry('ir.sequence').search(cr, ADMIN_USER_ID, [
+            ('code', 'in', ['test_sequence_type_3', 'test_sequence_type_4'])
+        ], {})
         registry('ir.sequence').unlink(cr, ADMIN_USER_ID, ids, {})
         cr.commit()
         cr.close()
@@ -170,16 +160,17 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
         drop_sequence('test_sequence_type_3')
         drop_sequence('test_sequence_type_4')
 
-class test_ir_sequence_generate(unittest2.TestCase):
+
+class test_ir_sequence_date_range_generate(unittest2.TestCase):
     """ Create sequence objects and generate some values. """
 
-    def test_ir_sequence_create(self):
+    def test_ir_sequence_date_range_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_5', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-        d = dict(code='test_sequence_type_5', name='Test sequence')
+        d = dict(code='test_sequence_type_5', name='Test sequence', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
@@ -187,17 +178,18 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
-        assert all(str(x) == f() for x in xrange(1,10))
+        assert all(str(x) == f() for x in xrange(1, 10))
         cr.commit()
         cr.close()
 
-    def test_ir_sequence_create_no_gap(self):
+    def test_ir_sequence_date_range_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_6', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-        d = dict(code='test_sequence_type_6', name='Test sequence', implementation='no_gap')
+        d = dict(code='test_sequence_type_6', name='Test sequence',
+                 implementation='no_gap', use_date_range=True)
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
@@ -205,7 +197,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
-        assert all(str(x) == f() for x in xrange(1,10))
+        assert all(str(x) == f() for x in xrange(1, 10))
         cr.commit()
         cr.close()
 
@@ -217,6 +209,3 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
 if __name__ == '__main__':
     unittest2.main()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
