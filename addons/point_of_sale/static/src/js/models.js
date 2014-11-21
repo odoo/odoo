@@ -169,7 +169,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model:  'res.partner',
             fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','ean13','write_date'],
-            domain: null,
+            domain: function(self){ return [['customer','=',true]]; },
             loaded: function(self,partners){
                 self.partners = partners;
                 self.db.add_partners(partners);
