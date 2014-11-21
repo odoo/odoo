@@ -249,10 +249,10 @@ class account_config_settings(models.TransientModel):
             if self.chart_template_id.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('sale', 'all'))], limit=1,
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
                     order="sequence, id desc")
                 purchase_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('purchase', 'all'))], limit=1,
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
                     order="sequence, id desc")
                 res['value']['sale_tax'] = sale_tax and sale_tax.id or False
                 res['value']['purchase_tax'] = purchase_tax and purchase_tax.id or False

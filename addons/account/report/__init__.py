@@ -25,7 +25,6 @@ import account_general_ledger
 import account_partner_ledger
 import account_print_overdue
 import account_aged_partner_balance
-import report_vat
 import account_invoice_report
 import account_entries_report
 import account_analytic_entries_report

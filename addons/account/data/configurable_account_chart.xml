@@ -187,134 +187,9 @@
                 </record>
 
         <!-- Taxes -->
-        <!-- TAX Code Definitions -->
 
-        <!-- Invoiced TAX -->
+<!-- TODO : change apply model changes
 
-        <record id="tax_code_chart_root" model="account.tax.code.template">
-            <field name="name">Plan Fees </field>
-        </record>
-
-            <record id="tax_code_balance_net" model="account.tax.code.template">
-                <field name="name">Tax Balance to Pay</field>
-                <field name="parent_id" ref="tax_code_chart_root"/>
-            </record>
-
-            <!-- Input TAX -->
-            <record id="tax_code_input" model="account.tax.code.template">
-                <field name="name">Tax Received</field>
-                <field name="parent_id" ref="tax_code_balance_net"/>
-                <field eval="-1" name="sign"/>
-            </record>
-
-                <record id="tax_code_input_S" model="account.tax.code.template">
-                    <field name="name">Tax Received Rate S (15%)</field>
-                    <field name="parent_id" ref="tax_code_input"/>
-                </record>
-
-                <record id="tax_code_input_R" model="account.tax.code.template">
-                    <field name="name">Tax Received Rate R (5%)</field>
-                    <field name="parent_id" ref="tax_code_input"/>
-                </record>
-
-                <record id="tax_code_input_X" model="account.tax.code.template">
-                    <field name="name">Tax Received Rate X (Exempt)</field>
-                    <field name="parent_id" ref="tax_code_input"/>
-                </record>
-
-                <record id="tax_code_input_O" model="account.tax.code.template">
-                    <field name="name">Tax Received Rate O (Out of scope)</field>
-                    <field name="parent_id" ref="tax_code_input"/>
-                </record>
-
-            <!-- Output TAX -->
-
-            <record id="tax_code_output" model="account.tax.code.template">
-                <field name="name">Tax Paid</field>
-                <field name="parent_id" ref="tax_code_balance_net"/>
-            </record>
-
-                <record id="tax_code_output_S" model="account.tax.code.template">
-                    <field name="name">Tax Paid Rate S (15%)</field>
-                    <field name="parent_id" ref="tax_code_output"/>
-                </record>
-
-                <record id="tax_code_output_R" model="account.tax.code.template">
-                    <field name="name">Tax Paid Rate R (5%)</field>
-                    <field name="parent_id" ref="tax_code_output"/>
-                </record>
-
-                <record id="tax_code_output_X" model="account.tax.code.template">
-                    <field name="name">Tax Paid Rate X (Exempt)</field>
-                    <field name="parent_id" ref="tax_code_output"/>
-                </record>
-
-                <record id="tax_code_output_O" model="account.tax.code.template">
-                    <field name="name">Tax Paid Rate O (Out of scope)</field>
-                    <field name="parent_id" ref="tax_code_output"/>
-                </record>
-
-
-            <!-- Invoiced Base of TAX -->
-
-            <!-- Purchases -->
-
-            <record id="tax_code_base_net" model="account.tax.code.template">
-                <field name="name">Tax Bases</field>
-                <field name="parent_id" ref="tax_code_chart_root"/>
-            </record>
-
-                <record id="tax_code_base_purchases" model="account.tax.code.template">
-                    <field name="name">Taxable Purchases Base</field>
-                    <field name="parent_id" ref="tax_code_base_net"/>
-                </record>
-
-                    <record id="tax_code_purch_S" model="account.tax.code.template">
-                        <field name="name">Taxable Purchases Rated S (15%)</field>
-                        <field name="parent_id" ref="tax_code_base_purchases"/>
-                    </record>
-
-                    <record id="tax_code_purch_R" model="account.tax.code.template">
-                        <field name="name">Taxable Purchases Rated R (5%)</field>
-                        <field name="parent_id" ref="tax_code_base_purchases"/>
-                    </record>
-
-                    <record id="tax_code_purch_X" model="account.tax.code.template">
-                        <field name="name">Taxable Purchases Type X (Exempt)</field>
-                        <field name="parent_id" ref="tax_code_base_purchases"/>
-                    </record>
-
-                    <record id="tax_code_purch_O" model="account.tax.code.template">
-                        <field name="name">Taxable Purchases Type O (Out of scope)</field>
-                        <field name="parent_id" ref="tax_code_base_purchases"/>
-                    </record>
-
-                <!-- Sales -->
-
-                <record id="tax_code_base_sales" model="account.tax.code.template">
-                    <field name="name">Base of Taxable Sales</field>
-                    <field name="parent_id" ref="tax_code_base_net"/>
-                </record>
-
-                    <record id="tax_code_sales_S" model="account.tax.code.template">
-                        <field name="name">Taxable Sales Rated S (15%)</field>
-                        <field name="parent_id" ref="tax_code_base_sales"/>
-                    </record>
-
-                    <record id="tax_code_sales_R" model="account.tax.code.template">
-                        <field name="name">Taxable Sales Rated R (5%)</field>
-                        <field name="parent_id" ref="tax_code_base_sales"/>
-                    </record>
-
-                    <record id="tax_code_sales_X" model="account.tax.code.template">
-                        <field name="name">Taxable Sales Type X (Exempt)</field>
-                        <field name="parent_id" ref="tax_code_base_sales"/>
-                    </record>
-
-                    <record id="tax_code_sales_O" model="account.tax.code.template">
-                        <field name="name">Taxable Sales Type O (Out of scope)</field>
-                        <field name="parent_id" ref="tax_code_base_sales"/>
-                    </record>
 
         <record id="configurable_chart_template" model="account.chart.template">
             <field name="name">Configurable Account Chart Template</field>
@@ -329,10 +204,10 @@
             <field name="property_account_expense_opening" ref="conf_o_expense"/>
             <field name="complete_tax_set" eval="False"/>
         </record>
-
+ -->
          <!-- VAT Codes -->
         <!-- Purchases + Output VAT -->
-
+<!-- 
         <record id="otaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX S</field>
@@ -388,9 +263,9 @@
             <field name="ref_tax_code_id" ref="tax_code_output_O"/>
             <field name="type_tax_use">purchase</field>
         </record>
-
+-->
         <!-- Sales + Input VAT -->
-
+<!-- 
         <record id="itaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">ITAX S</field>
@@ -446,7 +321,7 @@
             <field name="ref_tax_code_id" ref="tax_code_input_O"/>
             <field name="type_tax_use">sale</field>
         </record>
-
+  -->
 
 
         <!-- = = = = = = = = = = = = = = = -->
@@ -454,7 +329,7 @@
         <!-- = = = = = = = = = = = = = = = -->
 
 
-        <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
+<!--         <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
             <field name="name">Normal Taxes</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
@@ -462,14 +337,14 @@
         <record id="fiscal_position_tax_exempt_template2" model="account.fiscal.position.template">
             <field name="name">Tax Exempt</field>
             <field name="chart_template_id" ref="configurable_chart_template"/>
-        </record>
+        </record> -->
 
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Tax Templates -->
         <!-- = = = = = = = = = = = = = = = -->
 
 
-        <record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
+<!--         <record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_normal_taxes_template1"/>
             <field name="tax_src_id" ref="itaxs"/>
             <field name="tax_dest_id" ref="otaxs"/>
@@ -480,11 +355,11 @@
             <field name="tax_src_id" ref="itaxx"/>
             <field name="tax_dest_id" ref="otaxx"/>
         </record>
-
+ -->
 
         <!--  Assigned Default Taxes For Different Account -->
 
-        <record id="conf_a_sale" model="account.account.template">
+<!--         <record id="conf_a_sale" model="account.account.template">
             <field name="tax_ids" eval="[(6,0,[ref('itaxs')])]"/>
         </record>
 
@@ -497,7 +372,7 @@
             <field name="action_id" ref="account.action_wizard_multi_chart"/>
             <field name="type">automatic</field>
         </record>
-
+ -->
 
     </data>
 </openerp>

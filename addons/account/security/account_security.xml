@@ -75,13 +75,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="tax_code_comp_rule" model="ir.rule">
-        <field name="name">Tax code multi-company</field>
-        <field name="model_id" ref="model_account_tax_code"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <record id="invoice_comp_rule" model="ir.rule">
         <field name="name">Invoice multi-company</field>
         <field name="model_id" ref="model_account_invoice"/>
