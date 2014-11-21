@@ -85,7 +85,8 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
             ctx['date_to'] =  data['form']['date_to']
         ctx['state'] = data['form']['target_move']
         parents = ids
-        child_ids = obj_account.with_context(ctx)._get_children_and_consol()
+        obj_account.with_context(ctx)
+        child_ids = obj_account._get_children_and_consol()
         if child_ids:
             ids = child_ids
         # accounts = obj_account.with_context(ctx).read_group([('id', 'in', ids)], ['type','code','name','debit','credit','balance','parent_id','level','child_id'])
@@ -98,7 +99,7 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
                 _process_child(accounts, data['form']['display_account'], parent)
         return self.result_acc
 
-    @api.multi
+    @api.model
     def _get_display_account(self, data):
         if data.get('form', False) and data['form'].get('display_account', False) == 'all':
             return 'All accounts'
@@ -108,7 +109,7 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
             return 'With balance not equal to zero'
         return ''
 
-    @api.multi
+    @api.model
     def _get_filter(self, data):
         return data.get('form', False) and data['form'].get('filter', False)
 

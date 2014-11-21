@@ -25,11 +25,11 @@ from common_report_header import common_report_header
 class PartnerBbalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_financial'
 
-    @api.multi
+    @api.model
     def _get_filter(self, data):
         return data.get('form', False) and data['form'].get('filter', False)
 
-    @api.multi
+    @api.model
     def _get_title(self, data):
         return data.get('form', False) and data['form'].get('account_report_id', False)[1]
 
@@ -37,9 +37,11 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
     def _get_lines(self, data):
         lines = []
         account_obj = self.env['account.account']
-        currency_obj = self.env['res.currency']
-        ids2 = self.pool.get('account.financial.report')._get_children_by_order(self._cr, self._uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
-        for report in self.pool.get('account.financial.report').browse(self._cr, self._uid, ids2, context=data['form']['used_context']):
+        finance_report = self.env['account.financial.report']
+        finance_report.with_context(data['form']['used_context'])
+        child_ids = finance_report.browse([data['form']['account_report_id'][0]])._get_children_by_order()
+
+        for report in finance_report.browse(child_ids):
             vals = {
                 'name': report.name,
                 'balance': 0.0, # TODO : report.balance * report.sign or 0.0,
@@ -51,53 +53,53 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
                 vals['debit'] = report.debit
                 vals['credit'] = report.credit
             if data['form']['enable_filter']:
-                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self._cr, self._uid, report.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
+                vals['balance_cmp'] = report.with_context(data['form']['comparison_context']).balance * report.sign or 0.0
             lines.append(vals)
             account_ids = []
             if report.display_detail == 'no_detail':
                 #the rest of the loop is used to display the details of the financial report, so it's not needed here.
                 continue
             if report.type == 'accounts' and report.account_ids:
-                account_ids = account_obj._get_children_and_consol(self._cr, self._uid, [x.id for x in report.account_ids])
+                account_ids = account_obj.search([x.id for x in report.account_ids])._get_children_and_consol()
             elif report.type == 'account_type' and report.account_type_ids:
-                account_ids = account_obj.search(self._cr, self._uid, [('user_type','in', [x.id for x in report.account_type_ids])])
-            if account_ids:
-                for account in account_obj.browse(self._cr, self._uid, account_ids, context=data['form']['used_context']):
-                    #if there are accounts to display, we add them to the lines with a level equals to their level in
-                    #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
-                    #financial reports for Assets, liabilities...)
-                    flag = False
-                    vals = {
-                        'name': account.code + ' ' + account.name,
-                        'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
-                        'type': 'account',
-                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
-                        'account_type': account.type,
-                    }
+                account_ids = account_obj.search([('user_type','in', [x.id for x in report.account_type_ids])])
 
-                    if data['form']['debit_credit']:
-                        vals['debit'] = account.debit
-                        vals['credit'] = account.credit
-                    if not currency_obj.is_zero(self._cr, self._uid, account.company_id.currency_id, vals['balance']):
+            for account in account_ids:
+                #if there are accounts to display, we add them to the lines with a level equals to their level in
+                #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
+                #financial reports for Assets, liabilities...)
+                flag = False
+                vals = {
+                    'name': account.code + ' ' + account.name,
+                    'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
+                    'type': 'account',
+                    'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
+                    'account_type': account.type,
+                }
+                if data['form']['debit_credit']:
+                    vals['debit'] = account.debit
+                    vals['credit'] = account.credit
+                if not account.company_id.currency_id.is_zero(vals['balance']):
+                    flag = True
+                if data['form']['enable_filter']:
+                    account_obj.with_context(data['form']['comparison_context'])
+                    vals['balance_cmp'] = account.balance * report.sign or 0.0
+                    if not account.company_id.currency_id.is_zero(vals['balance_cmp']):
                         flag = True
-                    if data['form']['enable_filter']:
-                        vals['balance_cmp'] = account_obj.browse(self._cr, self._uid, account.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
-                        if not currency_obj.is_zero(self._cr, self._uid, account.company_id.currency_id, vals['balance_cmp']):
-                            flag = True
-                    if flag:
-                        lines.append(vals)
+                if flag:
+                    lines.append(vals)
 
         return lines
 
-    @api.multi
+    @api.model
     def _get_debit_credit(self, data):
         return data.get('form', False) and data['form'].get('debit_credit', False)
 
-    @api.multi
+    @api.model
     def _get_enable_filter(self, data):
         return data.get('form', False) and data['form'].get('enable_filter', False)
 
-    @api.multi
+    @api.model
     def _get_label_filter(self, data):
         return data.get('form', False) and data['form'].get('label_filter', False)
 

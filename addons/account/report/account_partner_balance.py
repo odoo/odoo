@@ -267,7 +267,7 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
             i = i + 1
         return completearray
 
-    @api.multi
+    @api.model
     def _get_filter(self, data):
         return data.get('form', False) and data['form'].get('filter', False)
 

@@ -57,7 +57,7 @@ class common_report_header(object):
                         (date, tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-    @api.multi
+    @api.model
     def _get_start_date(self, data):
         if data.get('form', False) and data['form'].get('date_from', False):
             return data['form']['date_from']
@@ -65,7 +65,7 @@ class common_report_header(object):
             return data['form']['period_from']
         return ''
 
-    @api.multi
+    @api.model
     def _get_target_move(self, data):
         if data.get('form', False) and data['form'].get('target_move', False):
             if data['form']['target_move'] == 'all':
@@ -73,7 +73,7 @@ class common_report_header(object):
             return _('All Posted Entries')
         return ''
 
-    @api.multi
+    @api.model
     def _get_end_date(self, data):
         if data.get('form', False) and data['form'].get('date_to', False):
             return data['form']['date_to']
