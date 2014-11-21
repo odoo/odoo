@@ -127,7 +127,7 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
-        if not sale_order_id and (force_create or code):  
+        if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
 
@@ -158,7 +158,8 @@ class website(orm.Model):
                     pricelist_id = pricelist_ids[0]
                     request.session['sale_order_code_pricelist_id'] = pricelist_id
                     update_pricelist = True
-                request.session['sale_order_code_pricelist_id'] = False
+                else:
+                    request.session['sale_order_code_pricelist_id'] = False
 
             pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 
