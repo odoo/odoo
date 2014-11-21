@@ -1241,10 +1241,10 @@ Workflows are also used to track processes that evolve over time.
     In the session form, add a (read-only) field to
     visualize the state, and buttons to change it. The valid transitions are:
 
-    * Draft ➔ Confirmed
-    * Confirmed ➔ Draft
-    * Confirmed ➔ Done
-    * Done ➔ Draft
+    * Draft -> Confirmed
+    * Confirmed -> Draft
+    * Confirmed -> Done
+    * Done -> Draft
 
     .. only:: solutions
 

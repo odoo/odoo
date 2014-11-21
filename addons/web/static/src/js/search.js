@@ -2362,6 +2362,12 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 ev.preventDefault();
                 return;
             }
+            if (ev.which === $.ui.keyCode.ENTER) {
+                if (self.current_result && self.get_search_string().length) {
+                    self.select_item(ev);
+                }
+                return;
+            }
             if (!self.searching) {
                 self.searching = true;
                 return;
@@ -2377,7 +2383,6 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         this.$input.on('keydown', function (ev) {
             switch (ev.which) {
                 case $.ui.keyCode.TAB:
-                case $.ui.keyCode.ENTER:
                     if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }

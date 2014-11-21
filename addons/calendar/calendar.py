@@ -737,8 +737,10 @@ class calendar_event(osv.Model):
             ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
             if ids:
                 lang_params = res_lang.read(request.cr, uid, ids[0], ["date_format", "time_format"])
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
+
+        # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
+        format_date = lang_params.get("date_format", '%B-%d-%Y').encode('utf-8')
+        format_time = lang_params.get("time_format", '%I-%M %p').encode('utf-8')
         return (format_date, format_time)
 
     def get_display_time_tz(self, cr, uid, ids, tz=False, context=None):
@@ -761,6 +763,7 @@ class calendar_event(osv.Model):
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
             context['tz'] = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
             tz = context['tz']
+        tz = tools.ustr(tz).encode('utf-8') # make safe for str{p,f}time()
 
         format_date, format_time = self.get_date_formats(cr, uid, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)

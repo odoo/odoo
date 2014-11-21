@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-23 08:29+0000\n"
+"PO-Revision-Date: 2014-10-09 13:38+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:41+0000\n"
+"X-Launchpad-Export-Date: 2014-10-10 05:52+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: survey
@@ -34,6 +34,19 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
+"Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                    <p>Salve,</p>\n"
+"                    <p>Stiamo conducendo un sondaggio, e apprezzeremmo molto "
+"il tuo parere.</p>\n"
+"                    <p><a href=\"__URL__\">Fai click qui per iniziare il "
+"sondaggio</a></p>\n"
+"                    <p>Grazie per la partecipazione!</p>\n"
+"                </div>\n"
+"                \n"
+"            "
 
 #. module: survey
 #: view:survey.page:survey.survey_page_tree
@@ -64,6 +77,14 @@ msgid ""
 "email and analyse answers.</p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Fai click per aggiungere un "
+"sondaggio.</p>\n"
+"                <p>Puoi creare sondaggi con diversi obiettivi: sondaggi per "
+"i clienti, interviste per assunzioni, revisioni periodiche dei dipendenti, "
+"campagne di marketing, ecc.</p>\n"
+"                <p>Configura il tuo sondaggio, manda degli inviti via mail e "
+"analizza le risposte.</p>\n"
+"            "
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_1
@@ -76,6 +97,7 @@ msgstr "<p></p>"
 #: model:survey.page,description:survey.feedback_4
 msgid "<p>If you do not contribute or develop in Odoo, skip this page.</p>"
 msgstr ""
+"<p>Se non contribuisci o sviluppi Odoo, puoi saltare questa pagina.</p>"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
@@ -83,6 +105,8 @@ msgid ""
 "<p>Nobody has replied to your survey yet.</p>\n"
 "            "
 msgstr ""
+"<p>Nessuno ha ancora risposto al tuo sondaggio.</p>\n"
+"            "
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
@@ -90,6 +114,8 @@ msgid ""
 "<p>Nobody has replied to your surveys yet.</p>\n"
 "            "
 msgstr ""
+"<p>Nessuno ha ancora risposto ai tuoi sondaggi.</p>\n"
+"            "
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
@@ -98,16 +124,19 @@ msgid ""
 "remind your firsts days on Odoo and\n"
 "what have been your difficulties.</p>"
 msgstr ""
+"<p>Queste domande riguardano la facilità d'uso di Odoo. Prova a ricordare i "
+"primi giorni di utilizzo di Odoo e quali sono state \n"
+"le difficolta..</p>"
 
 #. module: survey
 #: model:survey.survey,description:survey.feedback_form
 msgid "<p>This survey should take less than five minutes.</p>"
-msgstr ""
+msgstr "<p>Questo sondaggio non dovrebbe durare più di 5 minuti.</p>"
 
 #. module: survey
 #: constraint:survey.label:0
 msgid "A label must be attached to one and only one question"
-msgstr ""
+msgstr "Un'etichetta deve essere allegata a una e una sola domanda"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -117,7 +146,7 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,description:0
 msgid "A long description of the purpose of the survey"
-msgstr ""
+msgstr "Una descrizione dello scopo del sondaggio"
 
 #. module: survey
 #: help:survey.label,quizz_mark:0
@@ -125,11 +154,13 @@ msgid ""
 "A positive score indicates a correct answer; a negative or null score "
 "indicates a wrong answer"
 msgstr ""
+"Un punteggio positivo indica una risposta corretta; un punteggio negativo o "
+"nullo, una risposta errata"
 
 #. module: survey
 #: view:website:survey.page
 msgid "A problem has occured"
-msgstr ""
+msgstr "Si è verificato un problema"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_4
@@ -174,32 +205,32 @@ msgstr ""
 #: model:survey.label,value:survey.fcol_2_5_3
 #: model:survey.label,value:survey.fcol_2_7_3
 msgid "Agree"
-msgstr ""
+msgstr "Accetto"
 
 #. module: survey
 #: view:website:survey.result_number
 msgid "All Data"
-msgstr ""
+msgstr "Tutti i dati"
 
 #. module: survey
 #: view:website:survey.result
 msgid "All surveys"
-msgstr ""
+msgstr "Tutti i sondaggi"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Allow Comments"
-msgstr ""
+msgstr "Permetti commenti"
 
 #. module: survey
 #: help:survey.page,description:0
 msgid "An introductory text to your page"
-msgstr ""
+msgstr "Un testo introduttivo per la tua pagina"
 
 #. module: survey
 #: view:survey.survey:survey.survey_kanban
 msgid "Analyze Answers"
-msgstr ""
+msgstr "Analizza le Risposte"
 
 #. module: survey
 #: view:website:survey.result_choice
@@ -236,17 +267,17 @@ msgstr ""
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
 msgid "Are you using Odoo on a daily basis?"
-msgstr ""
+msgstr "Usi Odoo giornalmente?"
 
 #. module: survey
 #: field:survey.mail.compose.message,attachment_ids:0
 msgid "Attachments"
-msgstr ""
+msgstr "Allegati"
 
 #. module: survey
 #: field:survey.mail.compose.message,author_id:0
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #. module: survey
 #: help:survey.mail.compose.message,author_id:0
@@ -273,7 +304,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -283,7 +314,7 @@ msgstr "Annulla"
 #. module: survey
 #: field:survey.survey,res_model:0
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #. module: survey
 #: field:survey.mail.compose.message,child_ids:0
@@ -293,7 +324,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.simple_choice
 msgid "Choose..."
-msgstr ""
+msgstr "Seleziona..."
 
 #. module: survey
 #: view:website:survey.result
@@ -305,7 +336,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_email_compose_message.py:51
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
+msgstr "Fai click qui per iniziare il sondaggio"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:109
@@ -317,18 +348,18 @@ msgstr ""
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 #: view:website:survey.page
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: survey
 #: field:survey.stage,closed:0
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
-msgstr ""
+msgstr "Chiuso"
 
 #. module: survey
 #: field:survey.survey,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Indice Colore"
 
 #. module: survey
 #: selection:survey.mail.compose.message,type:0
@@ -361,7 +392,7 @@ msgstr "Completato"
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
 msgid "Compose Email"
-msgstr ""
+msgstr "Componi Email"
 
 #. module: survey
 #: field:survey.mail.compose.message,composition_mode:0
@@ -376,12 +407,12 @@ msgstr ""
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Constraints"
-msgstr ""
+msgstr "Vincoli"
 
 #. module: survey
 #: field:survey.mail.compose.message,body:0
 msgid "Contents"
-msgstr ""
+msgstr "Contenuti"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -409,7 +440,7 @@ msgstr "Data creazione"
 #: field:survey.user_input,create_uid:0
 #: field:survey.user_input_line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: survey
 #: field:survey.label,create_date:0
@@ -421,12 +452,12 @@ msgstr ""
 #: field:survey.user_input,create_date:0
 #: field:survey.user_input_line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: survey
 #: field:survey.user_input,date_create:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data di Creazione"
 
 #. module: survey
 #: help:survey.mail.compose.message,starred:0
@@ -436,7 +467,7 @@ msgstr ""
 #. module: survey
 #: help:survey.mail.compose.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
-msgstr ""
+msgstr "L'utente attuale ha una notifica non letta legata a questo messaggio"
 
 #. module: survey
 #: view:website:survey.result_choice
@@ -468,12 +499,12 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data dell'ultimo messaggio postato per questo record"
 
 #. module: survey
 #: field:survey.user_input,deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Termine"
 
 #. module: survey
 #: help:survey.mail.compose.message,date_deadline:0
