@@ -436,7 +436,6 @@ class account_move_line(models.Model):
         recs = move_rec_obj.with_context(reconcile_context).create({
             'type': type,
         })
-        recs.with_context(reconcile_context).reconcile_partial_check()
         return recs
 
     @api.multi
