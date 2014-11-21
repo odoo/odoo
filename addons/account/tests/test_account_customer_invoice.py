@@ -7,7 +7,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
     def test_customer_invoice(self):
         # I will create bank detail with using manager access rights
         # because account manager can only create bank details.
-        self.res_partner_bank_0 = self.env['res.partner.bank'].sudo(self.account_manager).create(dict(
+        self.res_partner_bank_0 = self.env['res.partner.bank'].sudo(self.account_manager.id).create(dict(
             state='bank',
             company_id=self.main_company.id,
             partner_id=self.main_partner.id,
@@ -26,7 +26,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         self.partner3_id = self.env.ref('base.res_partner_3')
         account_user_type = self.env.ref('account.data_account_type_cash')
 
-        self.account_rec1_id = self.account_object.sudo(self.account_user).create(dict(
+        self.account_rec1_id = self.account_object.sudo(self.account_user.id).create(dict(
             code="cust_acc",
             name="customer account",
             user_type=account_user_type.id
@@ -44,7 +44,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
              )
         ]
 
-        self.account_invoice_customer0 = self.account_invice_obj.sudo(self.account_user).create(dict(
+        self.account_invoice_customer0 = self.account_invice_obj.sudo(self.account_user.id).create(dict(
             name="Test Customer Invoice",
             reference_type="none",
             # partner_bank_id=self.res_partner_bank_0.id,

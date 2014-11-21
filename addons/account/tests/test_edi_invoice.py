@@ -12,19 +12,19 @@ class TestEdiInvoice(AccountTestUsers):
     def test_edi_invoice(self):
         # First I create a draft customer invoice
         self.account_invice_obj = self.env['account.invoice']
-        self.partner2_id = self.env.ref('base.res_partner_2')
-        self.currency_id = self.env.ref('base.EUR')
-        self.account_id = self.env.ref('account.a_pay')
+        self.partner2 = self.env.ref('base.res_partner_2')
+        self.currency = self.env.ref('base.EUR')
+        self.account_pay = self.env.ref('account.a_pay')
         self.invoice_line_obj = self.env['account.invoice.line']
         tax_obj = self.env['account.invoice.tax']
         edi_obj = self.env['edi.edi']
 
         self.invoice_edi_1 = self.account_invice_obj.create(dict(
             journal_id=1,
-            partner_id=self.partner2_id.id,
-            currency_id=self.currency_id.id,
+            partner_id=self.partner2.id,
+            currency_id=self.currency.id,
             company_id=1,
-            account_id=self.account_id.id,
+            account_id=self.account_pay.id,
             date_invoice=time.strftime('%Y-%m-%d'),
             name='selling product',
             type='out_invoice',
@@ -33,7 +33,7 @@ class TestEdiInvoice(AccountTestUsers):
         # create invoice tax line
         tax_obj.create(dict(
             name='sale tax',
-            account_id=self.account_id.id,
+            account_id=self.account_pay.id,
             manual=True,
             amount=1000.00,
             invoice_id=self.invoice_edi_1.id
@@ -46,7 +46,7 @@ class TestEdiInvoice(AccountTestUsers):
             quantity=1.0,
             price_unit=10.0,
             name='basic pc',
-            account_id=self.account_id.id,
+            account_id=self.account_pay.id,
             invoice_id=self.invoice_edi_1.id
         ))
 
@@ -56,7 +56,7 @@ class TestEdiInvoice(AccountTestUsers):
             quantity=5.0,
             price_unit=100.0,
             name='PC on Demand',
-            account_id=self.account_id.id,
+            account_id=self.account_pay.id,
             invoice_id=self.invoice_edi_1.id
         ))
 
