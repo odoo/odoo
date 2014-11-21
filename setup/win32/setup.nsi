@@ -249,6 +249,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
     # Fix the addons path
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "addons_path" "$INSTDIR\server\openerp\addons"
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "bin_path" "$INSTDIR\thirdparty"
 
     # if we're going to install postgresql force it's path,
     # otherwise we consider it's always done and/or correctly tune by users

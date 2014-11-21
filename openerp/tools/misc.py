@@ -65,9 +65,13 @@ _logger = logging.getLogger(__name__)
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
+DEFAULT_PATH = os.environ.get('PATH', os.defpath).split(os.pathsep)
+if config.get('bin_path'):
+    DEFAULT_PATH.append(config['bin_path'])
+
 def find_in_path(name):
     try:
-        return which(name)
+        return which(name, path=os.pathsep.join(DEFAULT_PATH))
     except IOError:
         return None
 
