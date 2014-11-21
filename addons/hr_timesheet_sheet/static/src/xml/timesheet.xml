@@ -52,10 +52,10 @@
                         </thead>
                         <tr t-foreach="widget.accounts" t-as="account">
                             <td class="oe_timesheet_weekly_account">
-                                <a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)">
+                                <a t-if="!widget.get('effective_readonly')" class="account_m2o_placeholder" t-att-data-id="JSON.stringify(account.account)"></a>
+                                <a t-if="widget.get('effective_readonly')" href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)">
                                     <t t-esc="widget.account_names[account.account]"/>
                                 </a>
-                                <i class="fa fa-pencil-square-o oe_edit_account" t-att-data-id="JSON.stringify(account.account)" t-if="!widget.get('effective_readonly')"></i>
                             </td>
                             <t t-set="day_count" t-value="0"/>
                             <t t-foreach="account.days" t-as="day">
@@ -162,11 +162,13 @@
                                     <t t-if="!_.isEmpty(days.account_group)">
                                         <t t-foreach="days.account_group" t-as="data">
                                             <tr>
-                                                <td class="oe_timesheet_daily_account oe_timesheet_goto col-xs-5 col-md-5">
+                                                <td t-if="!widget.get('effective_readonly')" class="oe_timesheet_daily_account oe_timesheet_goto col-xs-5 col-md-5">
+                                                    <a class="account_m2o_placeholder" t-att-data-id="JSON.stringify(days.account_group[data][0].account_id)"></a>
+                                                </td>
+                                                <td t-if="widget.get('effective_readonly')" class="oe_timesheet_daily_account oe_timesheet_goto col-xs-5 col-md-5">
                                                     <a href="javascript:void(0)" t-att-data-id="JSON.stringify(days.account_group[data][0].account_id)" >
                                                         <t t-esc="widget.account_names[days.account_group[data][0].account_id]"></t>
                                                     </a>
-                                                    <i class="fa fa-pencil-square-o oe_edit_account" t-att-data-id="JSON.stringify(days.account_group[data][0].account_id)" t-if="!widget.get('effective_readonly')"></i>
                                                 </td>
                                                 <td t-if="!widget.get('effective_readonly')" class="col-xs-2 col-md-2">
                                                     <input class="form-control oe_edit_input" t-att-data-account="data" t-att-data-day-count="day_count" t-att-value="days.account_group[data][0].name"/>

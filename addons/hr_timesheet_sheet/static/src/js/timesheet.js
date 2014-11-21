@@ -16,6 +16,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.updating = false;
             this.defs = [];
             this.week = false;
+            this.dfms = [];
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
                 this.set({"date_from": instance.web.str_to_date(this.field_manager.get_field_value("date_from"))});
@@ -233,6 +234,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.dfm.destroy();
                 this.dfm = undefined;
             }
+            if (this.dfms.length) {
+                _.each(this.dfms, function(dfm) {
+                    dfm.destroy();
+                });
+            }
         },
         destroy: function () {
             this._super();
@@ -263,15 +269,14 @@ openerp.hr_timesheet_sheet = function(instance) {
             }
         },
         init_account: function(account_ids) {
-            if (this.dfm)
-                return;
-            this.dfm = new instance.web.form.DefaultFieldManager(this);
-            this.dfm.extend_field_desc({
+            var dfm = new instance.web.form.DefaultFieldManager(this);
+            dfm.extend_field_desc({
                 account: {
                     relation: "account.analytic.account",
                 },
             });
-            this.account_m2o = new instance.web.form.FieldMany2One(this.dfm, {
+            this.dfms.push(dfm);
+            return new instance.web.form.FieldMany2One(dfm, {
                 attrs: {
                     name: "account",
                     type: "many2one",
@@ -291,13 +296,17 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         init_add_account: function(current_date, account_ids) {
             var self = this;
-            this.init_account(account_ids);
+            if (this.dfm)
+                return;
+            this.new_account_m2o = this.init_account(account_ids);
+            this.dfm = this.new_account_m2o.field_manager;
+            console.log("this.account_m2o is :: ", this.new_account_m2o);
             this.$(".oe_timesheet_add_row").show();
-            this.account_m2o.prependTo(this.$(".oe_timesheet_add_row"));
+            this.new_account_m2o.prependTo(this.$(".oe_timesheet_add_row"));
             this.$(".oe_timesheet_add_row a").click(function() {
-                var id = self.account_m2o.get_value();
+                var id = self.new_account_m2o.get_value();
                 if (id === false) {
-                    self.dfm.set({display_invalid_fields: true});
+                    self.new_account_m2o.field_manager.set({display_invalid_fields: true});
                     return;
                 }
                 var ops = self.active_widget.generate_o2m_value();
@@ -313,22 +322,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
         },
-        on_edit_account: function($target_elem, account_id,  account_ids) {
-            var self = this;
-            this.init_account(account_ids);
-            this.account_m2o.replace($target_elem);
-            this.account_m2o.$el.append($("<button class='btn btn-primary btn-xs oe_change_account'>Change</button>"));
-            this.account_m2o.set_value(account_id);
-            this.account_m2o.current_value = this.account_m2o.old_value = account_id;
-            this.account_m2o.on("change:value", this, function() {
-                self.account_m2o.old_value = self.account_m2o.current_value;
-                //New record will set false in the current value and when new record is set old value = new value(i.e. false)
-                if (self.account_m2o.get('value')) {
-                    self.account_m2o.current_value = self.account_m2o.get('value');
-                }
-            });
-            this.account_m2o.$el.find(".oe_change_account").click(function() {self.active_widget.on_change_account(self.account_m2o.old_value, self.account_m2o.current_value);});
-        },
         do_switch_mode: function (event, options) {
             this.destroy_content();
             var $target = $(event.currentTarget);
@@ -337,6 +330,10 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         get_box: function(account, day_count) {
             return this.$('.oe_timesheet_box[data-account="' + account + '"][data-day-count="' + day_count + '"]');
+        },
+        get_account_placeholder: function(account_id) {
+            console.log("account_id is ::: ", account_id);
+            return this.$(".account_m2o_placeholder[data-id='"+account_id+"']");
         },
         sync: function() {
             this.setting = true;
@@ -364,7 +361,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         "click .oe_timesheet_switch": "do_switch_mode",
         "click .oe_copy_accounts a": "copy_accounts",
         "click .oe_timer": "timer",
-        "click .oe_edit_account": "on_edit_account",
         "click .oe_delete_line": "on_delete_line",
     },
     init: function (parent, options) {
@@ -398,7 +394,21 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         if (self.days && self.days.length) {
             var day_count = count;
              _.each(self.days[count].account_group, function(account){
-                if (!self.get('effective_readonly')){
+                if (!self.get('effective_readonly')) {
+                    var account_id = account[0].account_id;
+                    var account_m2o = self.parent.init_account(_.keys(self.days[self.get('count')].account_group));
+                    var placeholder_element = self.parent.get_account_placeholder(account_id);
+                    account_m2o.replace(placeholder_element);
+                    account_m2o.set_value(account_id);
+                    account_m2o.current_value = account_m2o.old_value = account_id;
+                    account_m2o.on("change:value", this, function() {
+                        account_m2o.old_value = account_m2o.current_value;
+                        //New record will set false in the current value and when new record is set old value = new value(i.e. false)
+                        if (account_m2o.get('value')) {
+                            account_m2o.current_value = account_m2o.get('value');
+                            self.on_change_account(account_m2o.old_value, account_m2o.current_value);
+                        }
+                    });
                     self.parent.get_box(account[0].account_id, day_count).val(self.sum_box(account, true)).change(function() {
                         var num = $(this).val();
                         if(self.parent.is_valid_value(num)){
@@ -741,12 +751,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var ops = this.generate_o2m_value();
         this.parent.unlink_sheets_records(initial_o2m_value, ops);
     },
-    on_edit_account: function(e) {
-        var day_count = this.get("count");
-        var account_id = parseInt($(e.target).data('id'));
-        var account_ids = _.keys(this.days[day_count].account_group);
-        this.parent.on_edit_account($(e.target).parent(), account_id, account_ids);
-    },
     on_change_account: function(old_account_id, current_account_id) {
         var self = this;
         var day_count = this.get("count");
@@ -766,7 +770,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     },
     navigateAll: function(e){
         var self = this;
-        if (this.parent.dfm)
+        if (this.parent.dfm || this.parent.dfms.length)
             this.parent.destroy_content();
         var navigate = $(e.target).data("navigate");
         if (navigate == "prev_day")
@@ -775,7 +779,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             this.navigateNext();
         else if (navigate == "to_day") {
             for(var i = 0; i < this.days.length; i++) {
-                if (_.isEqual(this.days[i].day.toString("yyyy/M/d"), new Date().toString("yyyy/M/d"))) {
+                if (_.isEqual(moment(this.days[i].day).format("YYYY/M/d"), moment(new Date()).format("YYYY/M/d"))) {
                     this.update_count(i);
                     break;
                 }
@@ -815,7 +819,6 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         "click .oe_timesheet_weekly_account a": "go_to",
         "click .oe_timesheet_switch, .oe_timesheet_weekly_day": "do_switch_mode",
         "click .oe_timesheet_weekly .oe_nav_button": "navigateAll",
-        "click .oe_edit_account": "on_edit_account",
         "click .oe_delete_line": "on_delete_account",
     },
     init: function (parent, options) {
@@ -854,6 +857,22 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     display_data: function() {
         var self = this;
         _.each(self.accounts, function(account) {
+            if (!self.parent.get('effective_readonly')) {
+                var account_id = account.account;
+                var account_m2o = self.parent.init_account(_.pluck(self.accounts, "account"));
+                var placeholder_element = self.parent.get_account_placeholder(account_id);
+                account_m2o.replace(placeholder_element);
+                account_m2o.set_value(account_id);
+                account_m2o.current_value = account_m2o.old_value = account_id;
+                account_m2o.on("change:value", this, function() {
+                    account_m2o.old_value = account_m2o.current_value;
+                    //New record will set false in the current value and when new record is set old value = new value(i.e. false)
+                    if (account_m2o.get('value')) {
+                        account_m2o.current_value = account_m2o.get('value');
+                        self.on_change_account(account_m2o.old_value, account_m2o.current_value);
+                    }
+                });
+            }
             _.each(account.days, function(day, day_count) {
                 if (!self.parent.get('effective_readonly')) {
                     self.parent.get_box(account.account, day.day_index).val(self.sum_box(account, day.day_index, true)).change(function() {
@@ -977,12 +996,6 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         var ops = this.generate_o2m_value();
         this.parent.unlink_sheets_records(initial_o2m_value, ops);
     },
-    on_edit_account: function(e) {
-        var self = this;
-        var account_ids = _.map(this.accounts, function(account) {return account.account;});
-        var account_id = parseInt($(e.target).data('id'));
-        this.parent.on_edit_account($(e.target).parent(), account_id, account_ids);
-    },
     on_change_account: function(old_account_id, current_account_id) {
         var self = this;
         if (old_account_id === current_account_id) {
@@ -1002,7 +1015,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     },
     navigateAll: function(e){
         var self = this;
-        if (this.parent.dfm)
+        if (this.parent.dfm || this.parent.dfms.length)
             this.parent.destroy_content();
         var navigate = $(e.target).data("navigate");
         if (navigate == "prev_week")
@@ -1011,7 +1024,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
             this.navigateNext();
         else if (navigate == "this_week") {
             for(var i = 0; i < this.days.length; i++) {
-                if (_.isEqual(this.days[i].week, new Date().getWeek())) {
+                if (_.isEqual(this.days[i].week, moment(new Date()).week())) {
                     this.update_count(this.days[i].week);
                     break;
                 }
