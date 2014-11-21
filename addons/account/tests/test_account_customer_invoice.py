@@ -29,7 +29,8 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         self.account_rec1_id = self.account_object.sudo(self.account_user.id).create(dict(
             code="cust_acc",
             name="customer account",
-            user_type=account_user_type.id
+            user_type=account_user_type.id,
+            reconcile=True,
         ))
 
         invoice_line_data = [
