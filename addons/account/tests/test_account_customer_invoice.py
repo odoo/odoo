@@ -21,9 +21,9 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         # Create a customer invoice
         self.account_invice_obj = self.env['account.invoice']
         self.account_object = self.env['account.account']
-        self.payment_term_id = self.env.ref('account.account_payment_term_advance')
-        self.journalrec_id = self.env.ref('account.sales_journal')
-        self.partner3_id = self.env.ref('base.res_partner_3')
+        self.payment_term = self.env.ref('account.account_payment_term_advance')
+        self.journalrec = self.env.ref('account.sales_journal')
+        self.partner3 = self.env.ref('base.res_partner_3')
         account_user_type = self.env.ref('account.data_account_type_cash')
 
         self.account_rec1_id = self.account_object.sudo(self.account_user.id).create(dict(
@@ -48,9 +48,9 @@ class TestAccountCustomerInvoive(AccountTestUsers):
             name="Test Customer Invoice",
             reference_type="none",
             # partner_bank_id=self.res_partner_bank_0.id,
-            payment_term=self.payment_term_id.id,
-            journal_id=self.journalrec_id.id,
-            partner_id=self.partner3_id.id,
+            payment_term=self.payment_term.id,
+            journal_id=self.journalrec.id,
+            partner_id=self.partner3.id,
             account_id=self.account_rec1_id.id,
             invoice_line=invoice_line_data
         ))
