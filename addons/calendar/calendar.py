@@ -6,6 +6,7 @@ import time
 import openerp
 import openerp.service.report
 import uuid
+import collections
 from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -1121,7 +1122,10 @@ class calendar_event(osv.Model):
                     name_get = browse_event[ord].name_get()
                     if len(name_get) and len(name_get[0]) >= 2:
                         sort_fields[ord] = name_get[0][1]
-
+        if r_date:
+            sort_fields['sort_start'] = r_date.strftime("%Y%m%d%H%M%S")
+        else:
+            sort_fields['sort_start'] = browse_event['display_start'].replace(' ', '').replace('-', '')
         return sort_fields
 
     def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
@@ -1201,6 +1205,8 @@ class calendar_event(osv.Model):
                 result_data.append(self.get_search_fields(ev, order_fields, r_date=r_date))
 
         if order_fields:
+            uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
             def comparer(left, right):
                 for fn, mult in comparers:
                     result = cmp(fn(left), fn(right))
@@ -1209,6 +1215,8 @@ class calendar_event(osv.Model):
                 return 0
 
             sort_params = [key.split()[0] if key[-4:].lower() != 'desc' else '-%s' % key.split()[0] for key in (order or self._order).split(',')]
+            sort_params = uniq([comp if comp not in ['start', 'start_date', 'start_datetime'] else 'sort_start' for comp in sort_params])
+            sort_params = uniq([comp if comp not in ['-start', '-start_date', '-start_datetime'] else '-sort_start' for comp in sort_params])
             comparers = [((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]
             ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
 
