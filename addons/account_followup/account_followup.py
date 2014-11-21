@@ -374,7 +374,7 @@ class res_partner(osv.osv):
                     WHERE account_id IN
                             (SELECT a.id FROM account_account a
                                 LEFT JOIN account_account_type act ON (a.user_type=act.id)
-                            WHERE act.type=\'receivable\' AND deprecated)
+                            WHERE act.type=\'receivable\' AND deprecated='f')
                     ''' + overdue_only_str + '''
                     AND reconcile_id IS NULL
                     AND company_id = %s
@@ -404,7 +404,7 @@ class res_partner(osv.osv):
                     'WHERE account_id IN '\
                         '(SELECT a.id FROM account_account a'\
                         'LEFT JOIN account_account_type act ON (a.user_type=act.id)'\
-                        'WHERE act.type=\'receivable\' AND deprecated) '\
+                        'WHERE act.type=\'receivable\' AND deprecated='f') '\
                     'AND l.company_id = %s '
                     'AND reconcile_id IS NULL '\
                     'AND '+query+' '\
@@ -450,7 +450,7 @@ class res_partner(osv.osv):
                                          "Can be practical to set manually e.g. to see if he keeps "
                                          "his promises."),
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
-                            ('account_id.deprecated','=', True), '&', ('account_id.user_type.type', '=', 'receivable')]), 
+                            ('account_id.deprecated','=', False), '&', ('account_id.user_type.type', '=', 'receivable')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
                             help="Latest date that the follow-up level of the partner was changed", 
                             store=False, multi="latest"), 

@@ -73,7 +73,7 @@ class account_followup_stat_by_partner(osv.osv):
                     LEFT JOIN account_account a ON (l.account_id = a.id)
                     LEFT JOIN account_account_type act ON (a.user_type = act.id)
                 WHERE
-                    a.deprecated AND
+                    a.deprecated='f' AND
                     act.type = 'receivable' AND
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
@@ -276,7 +276,7 @@ class account_followup_print(osv.osv_memory):
                 "AND (act.type='receivable') "\
                 "AND (l.state<>'draft') "\
                 "AND (l.partner_id is NOT NULL) "\
-                "AND (a.deprecated) "\
+                "AND (a.deprecated='f') "\
                 "AND (l.debit > 0) "\
                 "AND (l.company_id = %s) " \
                 "AND (l.blocked = False)" \

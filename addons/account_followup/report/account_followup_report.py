@@ -87,7 +87,7 @@ class account_followup_stat(osv.osv):
                     LEFT JOIN account_account a ON (l.account_id = a.id)
                     LEFT JOIN account_account_type act ON (a.user_type = act.id)
                 WHERE
-                    a.deprecated AND
+                    a.deprecated='f' AND
                     act.type = 'receivable' AND
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
