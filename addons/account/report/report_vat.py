@@ -19,49 +19,20 @@
 #
 ##############################################################################
 
-import time
-from openerp.osv import osv
-from openerp.report import report_sxw
+from openerp import models,api
 from common_report_header import common_report_header
 
 
-class tax_report(report_sxw.rml_parse, common_report_header):
+class AccountTaxReport(models.AbstractModel, common_report_header):
+    _name = 'report.account.report_vat'
 
-    def set_context(self, objects, data, ids, report_type=None):
-        new_ids = ids
-        res = {}
-        self.date = time.strftime("%Y/%m/%d")
-        self.display_detail = data['form']['display_detail']
-        res['periods'] = ''
-        res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
-        return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
+    @api.multi
+    def _get_basedon(self, data):
+        return data.get('form', False) and data['form'].get('based_on', False)
 
-    def __init__(self, cr, uid, name, context=None):
-        super(tax_report, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_codes': self._get_codes,
-            'get_general': self._get_general,
-            'get_currency': self._get_currency,
-            'get_lines': self._get_lines,
-            'get_fiscalyear': self._get_fiscalyear,
-            'get_account': self._get_account,
-            'get_basedon': self._get_basedon,
-        })
-
-    def _get_basedon(self, form):
-        return form['form']['based_on']
-
-    def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
-        date = self.date
-        res = self._get_codes(based_on, company_id, parent, level, date, context=context)
-        if date:
-            res = self._add_codes(based_on, res, date, context=context)
-        else:
-            self.cr.execute ("select id from account_fiscalyear")
-            fy = self.cr.fetchall()
-            date = time.strftime("%Y/%m/%d")
-            res = self._add_codes(based_on, res, date, context=context)
+    @api.multi
+    def _get_lines(self, based_on, company_id=False, parent=False, level=0):
+        res = self._get_codes(based_on, company_id, parent, level)
 
         i = 0
         top_result = []
@@ -71,14 +42,14 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 'name': res[i][1].name,
                 'debit': 0,
                 'credit': 0,
-                'tax_amount': res[i][1].sum_period,
+                'tax_amount': res[i][1].sum,
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, date, company_id, based_on, context=context)
+            res_general = self._get_general(res[i][1].id, company_id, based_on)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -89,14 +60,14 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             i+=1
         return top_result
 
-    def _get_general(self, tax_code_id, date, company_id, based_on, context=None):
-        if not self.display_detail:
+    @api.multi
+    def _get_general(self, tax_code_id, company_id, based_on):
+        if not self.data['form'].get('display_detail'):
             return []
         res = []
-        obj_account = self.pool.get('account.account')
-        date = date
+        obj_account = self.env['account.account']
         if based_on == 'payments':
-            self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+            self._cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
                         SUM(line.debit) AS debit, \
                         SUM(line.credit) AS credit, \
                         COUNT(*) AS count, \
@@ -108,19 +79,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
                             (invoice.move_id = move.id) \
-                    WHERE line.state<>%s \
-                        AND line.tax_code_id = %s  \
+                    WHERE line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND move.id = line.move_id \
                         AND line.date IN %s \
                         AND ((invoice.state = %s) \
                             OR (invoice.id IS NULL))  \
-                    GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, date, 'paid',))
+                    GROUP BY account.id,account.name,account.code', (tax_code_id,
+                        company_id, 'paid'))
 
         else:
-            self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+            self._cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
                         SUM(line.debit) AS debit, \
                         SUM(line.credit) AS credit, \
                         COUNT(*) AS count, \
@@ -129,99 +99,61 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         account.code AS code \
                     FROM account_move_line AS line, \
                         account_account AS account \
-                    WHERE line.state <> %s \
-                        AND line.tax_code_id = %s  \
+                    WHERE line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND line.date = %s\
-                        AND account.active \
-                    GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, date,))
-        res = self.cr.dictfetchall()
+                        AND NOT account.deprecated \
+                    GROUP BY account.id,account.name,account.code', (tax_code_id,
+                        company_id))
+        res = self._cr.dictfetchall()
 
         i = 0
         while i<len(res):
-            res[i]['account'] = obj_account.browse(self.cr, self.uid, res[i]['account_id'], context=context)
+            res[i]['account'] = obj_account.browse(res[i]['account_id'])
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, date=None, context=None):
-        obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
-
+    @api.multi
+    def _get_codes(self, based_on, company_id, parent=False, level=0):
+        obj_tc = self.env['account.tax.code']
+        codes = obj_tc.search([('parent_id','=',parent),('company_id','=',company_id)], order='sequence')
         res = []
-        for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
+        for code in codes:
             res.append(('.'*2*level, code))
-
-            res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
+            res += self._get_codes(based_on, company_id, code.id, level+1)
         return res
 
-    def _add_codes(self, based_on, account_list=None, date=None, context=None):
+    @api.multi
+    def _add_codes(self, based_on, account_list=None):
         if account_list is None:
             account_list = []
-        if date is None:
-            date = time.strftime("%Y/%m/%d")
         res = []
-        obj_tc = self.pool.get('account.tax.code')
+        obj_tc = self.env['account.tax.code']
         for account in account_list:
-            ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
             sum_tax_add = 0
-            for code in obj_tc.browse(self.cr, self.uid, ids, {'date':date,'based_on': based_on}):
-                sum_tax_add = sum_tax_add + code.sum_period
-
-            code.sum_period = sum_tax_add
-
-            res.append((account[0], code))
+            for code in obj_tc.browse([account[1].id]):
+                sum_tax_add = sum_tax_add + code.sum
+                code.sum = sum_tax_add
+                res.append((account[0], code))
         return res
 
-    def _get_currency(self, form, context=None):
-        return self.pool.get('res.company').browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
-
-    def sort_result(self, accounts, context=None):
-        # On boucle sur notre rapport
-        result_accounts = []
-        ind=0
-        old_level=0
-        while ind<len(accounts):
-            #
-            account_elem = accounts[ind]
-            #
-
-            #
-            # we will now check if the level is lower than the previous level, in this case we will make a subtotal
-            if (account_elem['level'] < old_level):
-                bcl_current_level = old_level
-                bcl_rup_ind = ind - 1
-
-                while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0 ):
-                    res_tot = { 'code': accounts[bcl_rup_ind]['code'],
-                        'name': '',
-                        'debit': 0,
-                        'credit': 0,
-                        'tax_amount': accounts[bcl_rup_ind]['tax_amount'],
-                        'type': accounts[bcl_rup_ind]['type'],
-                        'level': 0,
-                        'pos': 0
-                    }
-
-                    if res_tot['type'] == 1:
-                        # on change le type pour afficher le total
-                        res_tot['type'] = 2
-                        result_accounts.append(res_tot)
-                    bcl_current_level =  accounts[bcl_rup_ind]['level']
-                    bcl_rup_ind -= 1
-
-            old_level = account_elem['level']
-            result_accounts.append(account_elem)
-            ind+=1
-
-        return result_accounts
-
-
-class report_vat(osv.AbstractModel):
-    _name = 'report.account.report_vat'
-    _inherit = 'report.abstract_report'
-    _template = 'account.report_vat'
-    _wrapped_report_class = tax_report
+    @api.multi
+    def render_html(self, data=None):
+        self.data = data
+        report_obj = self.env['report']
+        module_report = report_obj._get_report_from_name('account.report_vat')
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': module_report.model,
+            'docs': [],
+            'get_account': self._get_account(data),
+            'get_fiscalyear': self._get_fiscalyear(data),
+            'get_start_date': self._get_start_date(data),
+            'get_end_date': self._get_end_date(data),
+            'get_basedon': self._get_basedon(data),
+            'get_lines': self._get_lines(data['form']['based_on'], data['form']['company_id'])
+        }
+        return report_obj.render('account.report_vat', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
