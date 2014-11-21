@@ -1808,7 +1808,8 @@
     </div>
     <div>
         <div class="col-md-3">
-            <div class="oe_comp_checkbox" title="Data will export in Import-Compatible mode. It can easily import with out any trouble.">
+            <div class="oe_input_margin radio" id="export_format"></div>
+            <div class="oe_input_margin" title="Data will export in Import-Compatible mode. It can easily import with out any trouble.">
                 <label>
                     <input type="checkbox" id="import_compat" value="yes" checked="true">Import-Compatible Export</input>
                 </label>
@@ -1816,14 +1817,7 @@
         </div>
         <div class="col-md-9">
             <form class="form">
-                <div class="col-md-3 export_format">
-                    <label class="oe_options_head" for="export_format">Export Formats </label>
-                    <div class="form-inline">
-                        <select class="form-control input-sm oe_options_input" id="export_format" name="export_format"></select>
-                    </div>
-                </div>
-                <div id="ExistsExportList"></div>
-                <div class="col-md-3" id="savenewlist">
+                <div class="col-md-4" id="savenewlist">
                     <div>
                         <label class="oe_options_head">Save as</label>
                         <div class="form-inline">
@@ -1832,6 +1826,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4" id="ExistsExportList"></div>
             </form>
         </div>
     </div>
@@ -1855,7 +1850,7 @@
 </div>
 <t t-name="Exists.ExportList" t-as="val">
     <t t-if="existing_exports.length > 0">
-        <div class="col-md-3" id="Exists.ExportList">
+        <div id="Exists.ExportList">
             <label class="oe_options_head">Available Exports List</label>
             <form class="form-inline">
                 <select class="form-control input-sm oe_options_input"  id="saved_export_list">

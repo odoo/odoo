@@ -133,17 +133,28 @@ var DataExport = Widget.extend({
     },
     do_setup_export_formats: function (formats) {
         var $fmts = this.$el.find('#export_format');
-        _(formats).each(function (format) {
-            var opt = new Option(format.label, format.tag);
+        _(formats).each(function (format, index) {
+            var radio_label = document.createElement("label");
+            radio_label.setAttribute("class","radio-inline");
+            var radio_button = document.createElement("input");
+
+            radio_button.setAttribute("type","radio");
+            radio_button.setAttribute("class","radio_formats");
+            radio_button.setAttribute("name","formats");
+            radio_button.setAttribute("value", format.tag);
+
+            radio_label.appendChild(radio_button);
+            radio_label.innerHTML += format.label;
             if (format.error) {
-                opt.disabled = true;
-                opt.replaceChild(
+                radio_label.disabled = true;
+                radio_label.replaceChild(
                     document.createTextNode(
                         _.str.sprintf("%s — %s", format.label, format.error)),
-                    opt.childNodes[0]);
+                    radio_label.childNodes[0]);
             }
-            $fmts.append(opt);
+            $fmts.append(radio_label);
         });
+        this.$el.find('#export_format input:first').attr("checked","checked");
     },
     show_exports_list: function() {
         var self = this;
@@ -436,7 +447,7 @@ var DataExport = Widget.extend({
         }
         exported_fields.unshift({name: 'id', label: 'External ID'});
 
-        var export_format = this.$el.find("#export_format").val();
+        var export_format = this.$el.find("input:radio[name=formats]:checked").val();
 
         framework.blockUI();
         this.session.get_file({
