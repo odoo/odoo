@@ -13,7 +13,7 @@ $(document).ready(function () {
                        context: openerp.website.get_context()
                     },
                 }).then(function (modal) {
-                    var $modal = $(modal);
+                    var $modal = $($.parseHTML(modal));
 
                     $modal.find('img:first').attr("src", "/website/image/product.product/" + product_id + "/image");
 

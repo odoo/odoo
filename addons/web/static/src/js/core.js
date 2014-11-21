@@ -13,7 +13,7 @@ if (typeof(console) === "undefined") {
 
 var instance = openerp;
 openerp.web.core = {};
-var msie;
+// var msie;
 
 var ControllerMixin = {
     /**
@@ -539,10 +539,10 @@ instance.web.TranslationDataBase.include({
 });
 
 // /** Custom jQuery plugins */
-// $.browser = $.browser || {};
-    if(navigator.appVersion.indexOf("MSIE") !== -1) {
-        msie = 1;
-    }
+// // $.browser = $.browser || {};
+//     if(navigator.appVersion.indexOf("MSIE") !== -1) {
+//         msie = 1;
+//     }
 $.fn.getAttributes = function() {
     var o = {};
     if (this.length) {
@@ -556,7 +556,7 @@ $.fn.getAttributes = function() {
 $.fn.openerpClass = function(additionalClass) {
     // This plugin should be applied on top level elements
     additionalClass = additionalClass || '';
-    if (!!msie) {
+    if (navigator.appVersion.indexOf("MSIE") !== -1) {
         additionalClass += ' openerp_ie';
     }
     return this.each(function() {
