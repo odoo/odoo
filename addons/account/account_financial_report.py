@@ -38,37 +38,38 @@ class account_financial_report(models.Model):
                'account_report' : it's the amount of the related report
                'sum' : it's the sum of the children of this record (aka a 'view' record)'''
         AccountObj = self.env['account.account']
-        field_names = ['balance', 'credit', 'debit']
+        balance = credit = debit = 0.0
         res = {}
         for report in self:
-            if report.id in res:
-                continue
-            res[report.id] = dict((fn, 0.0) for fn in field_names)
             if report.type == 'accounts':
                 # it's the sum of the linked accounts
                 for a in report.account_ids:
-                    for field in field_names:
-                        res[report.id][field] += getattr(a, field)
+                    balance += a.balance
+                    credit += a.credit
+                    debit += a.debit
             elif report.type == 'account_type':
                 # it's the sum the leaf accounts with such an account type
                 report_types = [x.id for x in report.account_type_ids]
                 account_ids = AccountObj.search([('user_type', 'in', report_types)])
                 for a in account_ids:
-                    for field in field_names:
-                        res[report.id][field] += getattr(a, field)
+                    balance += a.balance
+                    credit += a.credit
+                    debit += a.debit
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
-                res2 = report.account_report_id._get_balance()
-                for key, value in res2.items():
-                    for field in field_names:
-                        res[report.id][field] += value[field]
+                res2 = report.account_report_id
+                balance += res2.balance
+                credit += res2.credit
+                debit += res2.debit
             elif report.type == 'sum':
                 # it's the sum of the children of this account.report
-                res2 = report.children_ids._get_balance()
-                for key, value in res2.items():
-                    for field in field_names:
-                        res[report.id][field] += value[field]
-        return res
+                for a in report.children_ids:
+                    balance += a.balance
+                    credit += a.credit
+                    debit += a.debit
+            report.balance = balance
+            report.credit = credit
+            report.debit = debit
 
     name = fields.Char(string='Report Name', required=True, translate=True)
     parent_id = fields.Many2one('account.financial.report', string='Parent')

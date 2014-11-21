@@ -129,7 +129,7 @@
 
         <menuitem
              name="Reconcile Invoices &amp; Payments"
-             action="account.action_manual_reconcile"
+             action="account.action_account_manual_reconcile"
              parent="menu_finance_followup"
              sequence="3"
              id="menu_manual_reconcile_followup"/>
@@ -155,7 +155,6 @@
                     <field name="followup_date"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                    <field name="state"/>
                     <field name="date_maturity"/>
                 </tree>
             </field>
@@ -166,7 +165,7 @@
             <field name="model">account.move.line</field>
             <field name="inherit_id" ref="account.view_move_line_form"/>
             <field name="arch" type="xml">
-                <field name="create_date" position="after">
+                <field name="date" position="after">
                     <field name="followup_line_id"/>
                     <field name="followup_date"/>
                 </field>

@@ -51,9 +51,8 @@ class report_rappel(report_sxw.rml_parse):
         moveline_obj = self.pool['account.move.line']
         moveline_ids = moveline_obj.search(self.cr, self.uid, [
                             ('partner_id', '=', partner.id),
-                            ('account_id.type', '=', 'receivable'),
+                            ('account_id.user_type.type', '=', 'receivable'),
                             ('reconcile_id', '=', False),
-                            ('state', '!=', 'draft'),
                             ('company_id', '=', company_id),
                         ])
 

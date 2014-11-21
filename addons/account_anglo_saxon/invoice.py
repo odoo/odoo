@@ -177,7 +177,7 @@ class account_invoice_line(osv.osv):
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _prepare_refund(self, cr, uid, invoice, date=None, date=None, description=None, journal_id=None, context=None):
+    def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
         invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,
                                                                     description, journal_id, context=context)
         if invoice.type == 'in_invoice':

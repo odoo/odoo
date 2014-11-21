@@ -72,8 +72,8 @@ class Overdue(report_sxw.rml_parse):
         moveline_obj = self.pool['account.move.line']
         movelines = moveline_obj.search(self.cr, self.uid,
                 [('partner_id', '=', partner.id),
-                    ('account_id.type', 'in', ['receivable', 'payable']),
-                    ('state', '<>', 'draft'), ('reconcile_id', '=', False)])
+                    ('account_id.user_type.type', 'in', ['receivable', 'payable']),
+                    ('reconcile_id', '=', False)])
         movelines = moveline_obj.browse(self.cr, self.uid, movelines)
         return movelines
 

@@ -85,9 +85,10 @@ class account_followup_stat(osv.osv):
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
+                    LEFT JOIN account_account_type act ON (a.user_type = act.id)
                 WHERE
-                    a.active AND
-                    a.type = 'receivable' AND
+                    a.deprecated AND
+                    act.type = 'receivable' AND
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
