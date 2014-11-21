@@ -158,7 +158,6 @@ class website(orm.Model):
                     pricelist_id = pricelist_ids[0]
                     request.session['sale_order_code_pricelist_id'] = pricelist_id
                     update_pricelist = True
-                request.session['sale_order_code_pricelist_id'] = False
 
             pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 
