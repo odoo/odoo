@@ -21,116 +21,117 @@
 
 import time
 
-from openerp.osv import osv
-from openerp.report import report_sxw
+from openerp import models,api
 from common_report_header import common_report_header
 
 
-class account_balance(report_sxw.rml_parse, common_report_header):
-    _name = 'report.account.account.balance'
+class AccountBalanceReport(models.AbstractModel, common_report_header):
+    _name = 'report.account.report_trialbalance'
 
-    def __init__(self, cr, uid, name, context=None):
-        super(account_balance, self).__init__(cr, uid, name, context=context)
-        self.sum_debit = 0.00
-        self.sum_credit = 0.00
-        self.date_lst = []
-        self.date_lst_string = ''
-        self.result_acc = []
-        self.localcontext.update({
-            'time': time,
-            'lines': self.lines,
-            'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit,
-            'get_fiscalyear':self._get_fiscalyear,
-            'get_filter': self._get_filter,
-            'get_account': self._get_account,
-            'get_journal': self._get_journal,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
-            'get_target_move': self._get_target_move,
-        })
-        self.context = context
-
-    def set_context(self, objects, data, ids, report_type=None):
-        new_ids = ids
-        if (data['model'] == 'ir.ui.menu'):
-            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
-            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
-
-    def _get_account(self, data):
-        if data['model']=='account.account':
-            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
-        return super(account_balance ,self)._get_account(data)
-
-    def lines(self, form, ids=None, done=None):
+    @api.multi
+    def _lines(self, data, ids=None, done=None):
         def _process_child(accounts, disp_acc, parent):
-                account_rec = [acct for acct in accounts if acct['id']==parent][0]
-                currency_obj = self.pool.get('res.currency')
-                acc_id = self.pool.get('account.account').browse(self.cr, self.uid, account_rec['id'])
-                currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
-                res = {
-                    'id': account_rec['id'],
-                    'type': account_rec['type'],
-                    'code': account_rec['code'],
-                    'name': account_rec['name'],
-                    'level': account_rec['level'],
-                    'debit': account_rec['debit'],
-                    'credit': account_rec['credit'],
-                    'balance': account_rec['balance'],
-                    'parent_id': account_rec['parent_id'],
+            return []
+            account_recs = [acct for acct in accounts if acct.id == parent]
+            currency_obj = self.env['res.currency']
+            # acc_id = self.env['account.account'].browse(account_rec.id)
+            # currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
+            res = []
+            i = 0
+            for account_rec in account_recs:
+                res[i] = {
+                    'id': account_rec.id,
+                    'type': account_rec.type,
+                    'code': account_rec.code,
+                    'name': account_rec.name,
+                    'level': account_rec.level,
+                    'debit': account_rec.debit,
+                    'credit': account_rec.credit,
+                    'balance': account_rec.balance,
+                    'parent_id': account_rec.parent_id,
                     'bal_type': '',
                 }
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
                 if disp_acc == 'movement':
-                    if not currency_obj.is_zero(self.cr, self.uid, currency, res['credit']) or not currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) or not currency_obj.is_zero(self.cr, self.uid, currency, res['balance']):
-                        self.result_acc.append(res)
+                    if not currency_obj.is_zero(currency, res[i]['credit']) or not currency_obj.is_zero(currency, res[i]['debit']) or not currency_obj.is_zero(currency, res[i]['balance']):
+                        self.result_acc.append(res[i])
                 elif disp_acc == 'not_zero':
-                    if not currency_obj.is_zero(self.cr, self.uid, currency, res['balance']):
-                        self.result_acc.append(res)
+                    if not currency_obj.is_zero(currency, res[i]['balance']):
+                        self.result_acc.append(res[i])
                 else:
-                    self.result_acc.append(res)
-                if account_rec['child_id']:
-                    for child in account_rec['child_id']:
-                        _process_child(accounts,disp_acc,child)
+                    self.result_acc.append(res[i])
+                # if account_rec['child_id']:
+                    # for child in account_rec['child_id']:
+                        # _process_child(accounts,disp_acc,child)
+                i+=1
 
-        obj_account = self.pool.get('account.account')
-        if not ids:
-            ids = self.ids
-        if not ids:
+        obj_account = self.env['account.account']
+
+        if not data.get('ids'):
             return []
+        ids = data.get('ids')
         if not done:
             done={}
 
-        ctx = self.context.copy()
+        ctx = self._context.copy()
 
-        ctx['fiscalyear'] = form['fiscalyear_id']
-        if form['filter'] == 'filter_period':
-            ctx['period_from'] = form['period_from']
-            ctx['period_to'] = form['period_to']
-        elif form['filter'] == 'filter_date':
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
-        ctx['state'] = form['target_move']
+        ctx['fiscalyear'] = data['form']['fiscalyear_id']
+        if data['form']['filter'] == 'filter_period':
+            ctx['period_from'] = data['form']['period_from']
+            ctx['period_to'] = data['form']['period_to']
+        elif data['form']['filter'] == 'filter_date':
+            ctx['date_from'] = data['form']['date_from']
+            ctx['date_to'] =  data['form']['date_to']
+        ctx['state'] = data['form']['target_move']
         parents = ids
-        child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
+        child_ids = obj_account.with_context(ctx)._get_children_and_consol()
         if child_ids:
             ids = child_ids
-        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level','child_id'], ctx)
+        # accounts = obj_account.with_context(ctx).read_group([('id', 'in', ids)], ['type','code','name','debit','credit','balance','parent_id','level','child_id'])
+        accounts = obj_account.with_context(ctx).browse(ids)
 
         for parent in parents:
                 if parent in done:
                     continue
                 done[parent] = 1
-                _process_child(accounts,form['display_account'],parent)
+                _process_child(accounts, data['form']['display_account'], parent)
         return self.result_acc
 
+    @api.multi
+    def _get_display_account(self, data):
+        if data.get('form', False) and data['form'].get('display_account', False) == 'all':
+            return 'All accounts'
+        elif data.get('form', False) and data['form'].get('display_account', False) == 'movement':
+            return 'With movements'
+        elif data.get('form', False) and data['form'].get('display_account', False) == 'not_zero':
+            return 'With balance not equal to zero'
+        return ''
 
-class report_trialbalance(osv.AbstractModel):
-    _name = 'report.account.report_trialbalance'
-    _inherit = 'report.abstract_report'
-    _template = 'account.report_trialbalance'
-    _wrapped_report_class = account_balance
+    @api.multi
+    def _get_filter(self, data):
+        return data.get('form', False) and data['form'].get('filter', False)
+
+
+
+    @api.multi
+    def render_html(self, data=None):
+        report_obj = self.env['report']
+        report = report_obj._get_report_from_name('account.report_trialbalance')
+
+        docargs = {
+            'doc_ids': self._ids,
+            'doc_model': report.model,
+            'docs': [],
+            'get_account': self._get_account(data),
+            'get_fiscalyear': self._get_fiscalyear(data),
+            'get_display_account': self._get_display_account(data),
+            'get_filter': self._get_filter(data),
+            'get_target_move': self._get_target_move(data),
+            'get_start_date':self._get_start_date(data),
+            'get_end_date':self._get_end_date(data),
+            'lines': self._lines(data),
+        }
+        return report_obj.render('account.report_trialbalance', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
