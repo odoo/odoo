@@ -753,7 +753,7 @@ class account_journal(osv.osv):
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
-        'refund_sequence': fields.boolean('Use a different sequence for refunds'),
+        'refund_sequence': fields.boolean('Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal"),
     }
 
     _defaults = {
