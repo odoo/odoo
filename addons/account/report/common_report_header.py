@@ -65,6 +65,7 @@ class common_report_header(object):
             return data['form']['period_from']
         return ''
 
+    @api.multi
     def _get_target_move(self, data):
         if data.get('form', False) and data['form'].get('target_move', False):
             if data['form']['target_move'] == 'all':
@@ -128,11 +129,11 @@ class common_report_header(object):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
         return ''
 
+    @api.multi
     def _get_journal(self, data):
         codes = []
         if data.get('form', False) and data['form'].get('journal_ids', False):
-            self.cr.execute('select code from account_journal where id IN %s',(tuple(data['form']['journal_ids']),))
-            codes = [x for x, in self.cr.fetchall()]
+            codes = [x.code for x in self.env['account.journal'].browse(data['form']['journal_ids'])]
         return codes
 
     def _get_currency(self, data):
@@ -141,5 +142,3 @@ class common_report_header(object):
         return ''
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

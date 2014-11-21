@@ -62,7 +62,8 @@ class account_move_line(models.Model):
 
         if context.get('chart_account_id', False):
             child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
-            query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+            if child_ids:
+                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
         return query
