@@ -18,46 +18,31 @@
 #
 ##############################################################################
 
-import time
-
-from openerp.report import report_sxw
-from common_report_header import common_report_header
+from openerp import models,api
 from openerp.tools.translate import _
-from openerp.osv import osv
+from common_report_header import common_report_header
 
+class PartnerBbalanceReport(models.AbstractModel, common_report_header):
+    _name = 'report.account.report_financial'
 
-class report_account_common(report_sxw.rml_parse, common_report_header):
+    @api.multi
+    def _get_filter(self, data):
+        return data.get('form', False) and data['form'].get('filter', False)
 
-    def __init__(self, cr, uid, name, context=None):
-        super(report_account_common, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
-            'get_lines': self.get_lines,
-            'time': time,
-            'get_fiscalyear': self._get_fiscalyear,
-            'get_account': self._get_account,
-            'get_filter': self._get_filter,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
-            'get_target_move': self._get_target_move,
-        })
-        self.context = context
+    @api.multi
+    def _get_title(self, data):
+        return data.get('form', False) and data['form'].get('account_report_id', False)[1]
 
-    def set_context(self, objects, data, ids, report_type=None):
-        new_ids = ids
-        if (data['model'] == 'ir.ui.menu'):
-            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
-            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        return super(report_account_common, self).set_context(objects, data, new_ids, report_type=report_type)
-
-    def get_lines(self, data):
+    @api.multi
+    def _get_lines(self, data):
         lines = []
-        account_obj = self.pool.get('account.account')
-        currency_obj = self.pool.get('res.currency')
-        ids2 = self.pool.get('account.financial.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
-        for report in self.pool.get('account.financial.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
+        account_obj = self.env['account.account']
+        currency_obj = self.env['res.currency']
+        ids2 = self.pool.get('account.financial.report')._get_children_by_order(self._cr, self._uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
+        for report in self.pool.get('account.financial.report').browse(self._cr, self._uid, ids2, context=data['form']['used_context']):
             vals = {
                 'name': report.name,
-                'balance': report.balance * report.sign or 0.0,
+                'balance': 0.0, # TODO : report.balance * report.sign or 0.0,
                 'type': 'report',
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
                 'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
@@ -66,18 +51,18 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 vals['debit'] = report.debit
                 vals['credit'] = report.credit
             if data['form']['enable_filter']:
-                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
+                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self._cr, self._uid, report.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
             lines.append(vals)
             account_ids = []
             if report.display_detail == 'no_detail':
                 #the rest of the loop is used to display the details of the financial report, so it's not needed here.
                 continue
             if report.type == 'accounts' and report.account_ids:
-                account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
+                account_ids = account_obj._get_children_and_consol(self._cr, self._uid, [x.id for x in report.account_ids])
             elif report.type == 'account_type' and report.account_type_ids:
-                account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
+                account_ids = account_obj.search(self._cr, self._uid, [('user_type','in', [x.id for x in report.account_type_ids])])
             if account_ids:
-                for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
+                for account in account_obj.browse(self._cr, self._uid, account_ids, context=data['form']['used_context']):
                     #if there are accounts to display, we add them to the lines with a level equals to their level in
                     #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
                     #financial reports for Assets, liabilities...)
@@ -93,21 +78,51 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     if data['form']['debit_credit']:
                         vals['debit'] = account.debit
                         vals['credit'] = account.credit
-                    if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
+                    if not currency_obj.is_zero(self._cr, self._uid, account.company_id.currency_id, vals['balance']):
                         flag = True
                     if data['form']['enable_filter']:
-                        vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
-                        if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
+                        vals['balance_cmp'] = account_obj.browse(self._cr, self._uid, account.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
+                        if not currency_obj.is_zero(self._cr, self._uid, account.company_id.currency_id, vals['balance_cmp']):
                             flag = True
                     if flag:
                         lines.append(vals)
+
         return lines
 
+    @api.multi
+    def _get_debit_credit(self, data):
+        return data.get('form', False) and data['form'].get('debit_credit', False)
 
-class report_financial(osv.AbstractModel):
-    _name = 'report.account.report_financial'
-    _inherit = 'report.abstract_report'
-    _template = 'account.report_financial'
-    _wrapped_report_class = report_account_common
+    @api.multi
+    def _get_enable_filter(self, data):
+        return data.get('form', False) and data['form'].get('enable_filter', False)
+
+    @api.multi
+    def _get_label_filter(self, data):
+        return data.get('form', False) and data['form'].get('label_filter', False)
+
+    @api.multi
+    def render_html(self, data=None):
+        report_obj = self.env['report']
+        module_report = report_obj._get_report_from_name('account.report_financial')
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': module_report.model,
+            'docs': [],
+            'get_title': self._get_title(data),
+            'get_debit_credit': self._get_debit_credit(data),
+            'get_enable_filter': self._get_enable_filter(data),
+            'get_label_filter': self._get_label_filter(data),
+            'get_start_date': self._get_start_date(data),
+            'get_end_date': self._get_end_date(data),
+            'get_account': self._get_account(data),
+            'get_fiscalyear': self._get_fiscalyear(data),
+            'get_filter': self._get_filter(data),
+            'get_target_move': self._get_target_move(data),
+            'get_lines': self._get_lines(data)
+        }
+
+        return report_obj.render('account.report_financial', docargs)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
