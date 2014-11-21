@@ -261,8 +261,10 @@ class WebRequest(object):
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
-            raise werkzeug.exceptions.BadRequest("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" %
-                                                 (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
+            msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
+            params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
+            _logger.error(msg, *params)
+            raise werkzeug.exceptions.BadRequest(msg % params)
 
         kwargs.update(self.endpoint.arguments)
 
@@ -466,7 +468,9 @@ class JsonRequest(WebRequest):
         try:
             self.jsonrequest = simplejson.loads(request)
         except simplejson.JSONDecodeError:
-            raise werkzeug.exceptions.BadRequest('Invalid JSON data')
+            msg = 'Invalid JSON data: %r' % (request,)
+            _logger.error('%s: %s', self.httprequest.path, msg)
+            raise werkzeug.exceptions.BadRequest(msg)
 
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
