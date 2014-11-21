@@ -28,6 +28,7 @@ from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
 _logger = logging.getLogger(__name__)
+import psycopg2
 
 class CompanyLDAP(osv.osv):
     _name = 'res.company.ldap'
@@ -51,14 +52,19 @@ class CompanyLDAP(osv.osv):
         else:
             id_clause = ''
             args = []
-        cr.execute("""
-            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
-                   ldap_password, ldap_filter, ldap_base, "user", create_user,
-                   ldap_tls
-            FROM res_company_ldap
-            WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
-        """, args)
-        return cr.dictfetchall()
+        try:
+            cr.execute("""
+                SELECT id, company, ldap_server, ldap_server_port, ldap_bind_suffix, ldap_pre_bind, ldap_binddn,
+                       ldap_password, ldap_filter, ldap_base, "user", create_user,
+                       ldap_tls
+                FROM res_company_ldap
+                WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
+            """, args)
+            return cr.dictfetchall()
+        except psycopg2.ProgrammingError:
+            # Do not fail during upgrade, some fields may be missing
+            _logger.exception("Error in get_ldap_dicts")
+            return []
 
     def connect(self, conf):
         """ 
@@ -69,13 +75,16 @@ class CompanyLDAP(osv.osv):
         :return: an LDAP object
         """
 
-        uri = 'ldap://%s:%d' % (conf['ldap_server'],
+        if conf['ldap_tls']:
+            protocol = "ldaps"
+        else:
+            protocol = "ldap"
+
+        uri = '%s://%s:%d' % (protocol, conf['ldap_server'],
                                 conf['ldap_server_port'])
 
-        connection = ldap.initialize(uri)
-        if conf['ldap_tls']:
-            connection.start_tls_s()
-        return connection
+        _logger.debug("Using LDAP URI: %s" % repr(uri))
+        return ldap.initialize(uri)
 
     def authenticate(self, conf, login, password):
         """
@@ -84,7 +93,7 @@ class CompanyLDAP(osv.osv):
         In order to prevent an unintended 'unauthenticated authentication',
         which is an anonymous bind with a valid dn and a blank password,
         check for empty passwords explicitely (:rfc:`4513#section-6.3.1`)
-        
+
         :param dict conf: LDAP configuration
         :param login: username
         :param password: Password for the LDAP user
@@ -97,36 +106,53 @@ class CompanyLDAP(osv.osv):
 
         entry = False
         filter = filter_format(conf['ldap_filter'], (login,))
-        try:
-            results = self.query(conf, filter)
 
-            # Get rid of (None, attrs) for searchResultReference replies
-            results = [i for i in results if i[0]]
-            if results and len(results) == 1:
-                dn = results[0][0]
+        try:
+            conn = self.connect(conf)
+
+            if conf['ldap_pre_bind']:
+                if conf['ldap_binddn']:
+                    bind_dn = "%s%s" % (conf['ldap_binddn'], conf['ldap_bind_suffix'] or '')
+                else:
+                    bind_dn = ''
+                conn.simple_bind_s(bind_dn,
+                                   conf['ldap_password'] or '')
+                results = self.query(conn, conf['ldap_base'], filter)
+
+                if len(results) != 1:
+                    _logger.error("Filter %s on base %s returned %s entries" % (filter, conf['ldap_base'], len(results)))
+                    return False
+                bind_dn = results[0][0]
                 conn = self.connect(conf)
-                conn.simple_bind_s(dn, password)
+                conn.simple_bind_s(bind_dn, password.encode('utf-8'))
+                _logger.info("Successful login for %s" % repr(bind_dn))
                 conn.unbind()
                 entry = results[0]
-        except ldap.INVALID_CREDENTIALS:
+            else:
+                bind_dn = "%s%s" % (login, conf['ldap_bind_suffix'] or '')
+                conn.simple_bind_s(bind_dn, password.encode('utf-8'))
+                _logger.info("Successful login for %s" % repr(bind_dn))
+                results = self.query(conn, conf['ldap_base'], filter)
+                conn.unbind()
+
+                if len(results) != 1:
+                    _logger.error("Filter %s on base %s returned %s entries" % (filter, conf['ldap_base'], len(results)))
+                    return False
+
+                entry = results[0]
+        except ldap.INVALID_CREDENTIALS, e:
+            _logger.debug("Invalid credentials for %s: %s" % (repr(bind_dn), repr(e)))
             return False
-        except ldap.LDAPError, e:
-            _logger.error('An LDAP exception occurred: %s', e)
+        except ldap.LDAPError:
+            _logger.exception('An LDAP exception occurred')
+
+        _logger.debug("LDAP result: %s" % repr(entry))
+
         return entry
-        
-    def query(self, conf, filter, retrieve_attributes=None):
+
+    def query(self, conn, base, filter, retrieve_attributes=None):
         """ 
         Query an LDAP server with the filter argument and scope subtree.
-
-        Allow for all authentication methods of the simple authentication
-        method:
-
-        - authenticated bind (non-empty binddn + valid password)
-        - anonymous bind (empty binddn + empty password)
-        - unauthenticated authentication (non-empty binddn + empty password)
-
-        .. seealso::
-           :rfc:`4513#section-5.1` - LDAP: Simple Authentication Method.
 
         :param dict conf: LDAP configuration
         :param filter: valid LDAP filter
@@ -138,17 +164,14 @@ class CompanyLDAP(osv.osv):
         """
 
         results = []
-        try:
-            conn = self.connect(conf)
-            conn.simple_bind_s(conf['ldap_binddn'] or '',
-                               conf['ldap_password'] or '')
-            results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
-                                     filter, retrieve_attributes, timeout=60)
-            conn.unbind()
-        except ldap.INVALID_CREDENTIALS:
-            _logger.error('LDAP bind failed.')
-        except ldap.LDAPError, e:
-            _logger.error('An LDAP exception occurred: %s', e)
+        results = conn.search_st(base, ldap.SCOPE_SUBTREE,
+                                 filter, retrieve_attributes, timeout=60)
+
+        # Get rid of (None, attrs) for searchResultReference replies
+        results = [i for i in results if i[0]]
+
+        _logger.debug("LDAP search base=%s filter=%s returned %s results" % (repr(base), repr(filter), len(results)))
+
         return results
 
     def map_ldap_attributes(self, cr, uid, conf, login, ldap_entry):
@@ -207,6 +230,8 @@ class CompanyLDAP(osv.osv):
             ondelete='cascade'),
         'ldap_server': fields.char('LDAP Server address', size=64, required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
+        'ldap_bind_suffix': fields.char('LDAP bind suffix', size=64),
+        'ldap_pre_bind': fields.boolean('Perform two-step bind'),
         'ldap_binddn': fields.char('LDAP binddn', size=64,
             help=("The user account on the LDAP server that is used to query "
                   "the directory. Leave empty to connect anonymously.")),
