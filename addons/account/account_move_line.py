@@ -405,10 +405,9 @@ class account_move_line(models.Model):
     @api.multi
     def reconcile_partial(self, type='auto', writeoff_acc_id=False, writeoff_period_date=False, writeoff_journal_id=False):
         move_rec_obj = self.env['account.move.reconcile']
-        merges = []
-        unmerge = []
+        unmerge = self.env['account.move.line']
+        currency = self.env['res.currency']
         total = 0.0
-        merges_rec = []
         company_list = []
         for line in self:
             if company_list and not line.company_id.id in company_list:
@@ -417,30 +416,28 @@ class account_move_line(models.Model):
 
         for line in self:
             if line.account_id.currency_id:
-                currency_id = line.account_id.currency_id
+                currency = line.account_id.currency_id
             else:
-                currency_id = line.company_id.currency_id
+                currency = line.company_id.currency_id
             if line.reconcile_id:
                 raise Warning(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             else:
-                unmerge.append(line)
+                unmerge += line
                 if line.account_id.currency_id:
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
-        if currency_id.is_zero(total):
-            for line in merges+unmerge:
-                res = line.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
+        if currency.is_zero(total):
+            res = unmerge.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.
         reconcile_context = dict(self._context, novalidate=True)
-        r_id = move_rec_obj.with_context(reconcile_context).create({
+        recs = move_rec_obj.with_context(reconcile_context).create({
             'type': type,
         })
-        recs = [r_id] + merges_rec
         recs.with_context(reconcile_context).reconcile_partial_check()
-        return r_id
+        return recs
 
     @api.multi
     def reconcile(self, type='auto', writeoff_acc_id=False, writeoff_period_date=False, writeoff_journal_id=False):
