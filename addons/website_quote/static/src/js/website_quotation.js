@@ -91,7 +91,10 @@ website.if_dom_contains('div.o_website_quote', function () {
                         sub_ul = $("<ul class='nav'>").appendTo(sub_li);
                     }
                     $(this.parentNode).attr('id',id);
-                    $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(sub_ul);
+                    var header = $(this).hasClass("quote-menu");
+                    if(header){
+                        $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(sub_ul);
+                    }
                 }
                 break;
             }
