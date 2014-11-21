@@ -20,7 +20,7 @@
 ##############################################################################
 
 import openerp
-from openerp.addons.crm import crm
+from openerp.addons.crm.models import crm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _

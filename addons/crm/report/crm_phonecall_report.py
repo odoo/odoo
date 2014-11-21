@@ -1,27 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp import tools
-from openerp.addons.crm import crm
-from openerp.osv import fields, osv
+from openerp import fields, models, tools
+from openerp.addons.crm.models import crm
 
 AVAILABLE_STATES = [
     ('draft', 'Draft'),
@@ -31,30 +11,27 @@ AVAILABLE_STATES = [
     ('pending', 'Pending')
 ]
 
-
-class crm_phonecall_report(osv.osv):
+class CrmPhoneCallReport(models.Model):
     """ Phone calls by user and team """
 
     _name = "crm.phonecall.report"
     _description = "Phone calls by user and team"
     _auto = False
 
-    _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
-        'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
-        'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
-        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
-        'categ_id': fields.many2one('crm.phonecall.category', 'Category'),
-        'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'opening_date': fields.datetime('Opening Date', readonly=True, select=True),
-        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
-    }
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    team_id =fields.Many2one('crm.team', string='Sales Team', oldname='section_id', readonly=True)
+    priority = fields.Selection([('0','Low'), ('1','Normal'), ('2','High')])
+    nbr = fields.Integer(string='# of Cases', readonly=True)  # TDE FIXME master: rename into nbr_cases
+    state = fields.Selection(AVAILABLE_STATES, string='Status', readonly=True)
+    create_date = fields.Datetime(string='Create Date', readonly=True, index=True)
+    delay_close = fields.Float(string='Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case")
+    duration = fields.Float(digits=(16,2),readonly=True, group_operator="avg")
+    delay_open = fields.Float(string='Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case")
+    categ_id = fields.Many2one('crm.phonecall.category', string='Category')
+    partner_id = fields.Many2one('res.partner', string='Partner' , readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    opening_date = fields.Datetime(string='Opening Date', readonly=True, index=True)
+    date_closed = fields.Datetime(string='Close Date', readonly=True, index=True)
 
     def init(self, cr):
 
