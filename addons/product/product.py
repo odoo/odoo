@@ -142,7 +142,7 @@ class product_uom(osv.osv):
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'rounding': fields.float('Rounding Precision', digits=0, required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
