@@ -58,7 +58,7 @@ class purchase_order(osv.osv):
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context=None):
         if not value:
             return False
-        if type(ids) != type([]):
+        if not isinstance(ids, type([])):
             ids = [ids]
         for po in self.browse(cr, uid, ids, context=context):
             if po.order_line:

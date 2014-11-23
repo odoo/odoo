@@ -211,7 +211,7 @@ class account_move_line(osv.osv):
         # check if the period_id changed in the context from client side
         if context.get('period_id', False):
             period_id = context.get('period_id')
-            if type(period_id) == str:
+            if isinstance(period_id, str):
                 ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
                 context = dict(context, period_id=ids and ids[0] or False)
         return context

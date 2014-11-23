@@ -307,7 +307,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
         modules = self.pool['ir.module.module']
 
         selectable = [field for field in self._columns
-                      if type(self._columns[field]) is fields.boolean]
+                      if isinstance(self._columns[field], fields.boolean)]
         return modules.browse(
             cr, uid,
             modules.search(cr, uid,
@@ -338,7 +338,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
-                   if type(self._columns.get(module_name)) is fields.boolean
+                   if isinstance(self._columns.get(module_name), fields.boolean)
                    if to_install)
 
         hooks_results = set()

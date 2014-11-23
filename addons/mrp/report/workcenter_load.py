@@ -117,8 +117,7 @@ class report_custom(report_int):
         if not res['start']:
             res['start'] = time.strftime('%Y-%m-%d %H:%M:%S')
         dates = self._compute_dates(datas['form']['time_unit'], res['start'][:10], res['stop'][:10])
-        dates_list = dates.keys()
-        dates_list.sort()
+        dates_list = sorted(dates.keys())
         x_index = []
         for date in dates_list:
             x_index.append((dates[date]['name'], date))

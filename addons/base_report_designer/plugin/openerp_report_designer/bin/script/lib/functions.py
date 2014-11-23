@@ -48,8 +48,7 @@ def genTree(object, aList, insField, host, level=3, ending=None, ending_excl=Non
         sock = RPCSession(url)
         global passwd
         res = sock.execute(database, uid, passwd, object, 'fields_get')
-        key = res.keys()
-        key.sort()
+        key = sorted(res.keys())
         for k in key:
             if (not ending or res[k]['type'] in ending) and ((not ending_excl) or not (res[k]['type'] in ending_excl)):
                 insField.addItem(root + '/' + res[k]["string"], len(aList))

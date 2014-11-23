@@ -164,8 +164,7 @@ class AddLang(unohelper.Base, XJobExecutor):
         doc = desktop.getCurrentComponent()
         docinfo = doc.getDocumentInfo()
         res = sock.execute(database, uid, self.password, sObject, 'fields_get')
-        key = res.keys()
-        key.sort()
+        key = sorted(res.keys())
         myval = None
         if not sVar.find("/") == -1:
             myval = sVar[:sVar.find("/")]

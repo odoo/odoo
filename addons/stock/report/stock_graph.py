@@ -69,8 +69,7 @@ class stock_graph(object):
             f = fill_style.Plain()
             f.bgcolor = user_color[user]
             datas = self._datas[product_id].items()
-            datas = map(lambda x: (int(time.mktime(time.strptime(x[0], '%Y-%m-%d'))), x[1]), datas)
-            datas.sort()
+            datas = sorted(map(lambda x: (int(time.mktime(time.strptime(x[0], '%Y-%m-%d'))), x[1]), datas))
             datas2 = []
             val = 0
             for d in datas:

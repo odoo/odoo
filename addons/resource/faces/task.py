@@ -987,8 +987,7 @@ def _build_balancing_list(tasks):
 
     # first sort the list for attributes
     index = 0
-    balancing_list = [(-t.priority, t.balance, index, t) for index, t in enumerate(tasks)]
-    balancing_list.sort()
+    balancing_list = sorted([(-t.priority, t.balance, index, t) for index, t in enumerate(tasks)])
 
     # print
     # for p, b, i, t  in balancing_list:
@@ -1226,8 +1225,7 @@ class StrictAllocator(AllocationAlgorithm):
         # the load of this resource will be max_load(r), and the other
         # resources will have another (higher) norm_load
 
-        max_loads = map(lambda r: (_calc_maxload(task, r), r), resource)
-        max_loads.sort()
+        max_loads = sorted(map(lambda r: (_calc_maxload(task, r), r), resource))
 
         efficiency_sum = sum(map(lambda r: r.efficiency, resource))
         norm_load = sum_load / efficiency_sum
@@ -2124,7 +2122,7 @@ class Task(object):
 
     def __init__(self, func, name, parent=None, index=1):
 
-        assert(type(func) == types.FunctionType)
+        assert(isinstance(func, types.FunctionType))
 
         func_key = (func.func_code, func.func_closure and id(func.func_closure))
 
@@ -2314,8 +2312,7 @@ class Task(object):
     #@+node:all_resources
     def all_resources(self):
         result = self._all_resources_as_dict()
-        result = result.keys()
-        result.sort()
+        result = sorted(result.keys())
         return result
     #@-node:all_resources
     #@+node:get_task
@@ -2531,8 +2528,7 @@ class Task(object):
                             "performed")
 
         converted = dict(map(convert_item, range(len(performed))))
-        converted = converted.items()
-        converted.sort()
+        converted = sorted(converted.items())
 
         # check for overlapping items
         last_res = None
@@ -2789,7 +2785,7 @@ class Task(object):
             self._constraint = value
             return
 
-        if type(value) == types.FunctionType:
+        if isinstance(value, types.FunctionType):
             if value.func_code.co_argcount == 0:
                 #@            << add child task >>
                 #@+node:<< add child task >>
@@ -2815,7 +2811,7 @@ class Task(object):
         if set_method:
             #@        << set standard attribute >>
             #@+node:<< set standard attribute >>
-            if type(value) == types.DictionaryType:
+            if isinstance(value, types.DictionaryType):
                 self.root.all_scenarios.update(value.keys())
                 value = value.get(self.scenario, value["_default"])
 
@@ -3089,7 +3085,7 @@ class Task(object):
 
     def _set_working_days(self, value):
 
-        if type(value[0]) is str:
+        if isinstance(value[0], str):
             value = (value, )
 
         self.working_days = value
@@ -3906,9 +3902,8 @@ class BalancedProject(_AllocationPoject):
         project_id = self._idendity_()
         plen = len(project_id)
 
-        performed = filter(lambda item: item[0].startswith(project_id),
-                           performed)
-        performed.sort()
+        performed = sorted(filter(lambda item: item[0].startswith(project_id),
+                           performed))
 
         task = None
         for item in performed:

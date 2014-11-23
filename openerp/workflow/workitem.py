@@ -189,7 +189,7 @@ class WorkflowItem(object):
                     if not id_new:
                         cr.execute('delete from wkf_workitem where id=%s', (self.workitem['id'],))
                         return False
-                    assert type(id_new) == type(1) or type(id_new) == type(1L), 'Wrong return value: ' + str(id_new) + ' ' + str(type(id_new))
+                    assert isinstance(id_new, type(1)) or isinstance(id_new, type(1L)), 'Wrong return value: ' + str(id_new) + ' ' + str(type(id_new))
                     cr.execute('select id from wkf_instance where res_id=%s and wkf_id=%s', (id_new, activity['subflow_id']))
                     id_new = cr.fetchone()[0]
                 else:

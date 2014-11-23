@@ -419,8 +419,7 @@ class report_custom(report_int):
                         data[k] = fields_bar[idx][k]
                 data_cum = []
                 prev = 0.0
-                keys = data.keys()
-                keys.sort()
+                keys = sorted(data.keys())
                 # cumulate if necessary
                 for k in keys:
                     data_cum.append([k, float(data[k]) + float(prev)])
@@ -518,8 +517,7 @@ class report_custom(report_int):
                         data[k] = fields_bar[idx][k]
                 data_cum = []
                 prev = 0.0
-                keys = data.keys()
-                keys.sort()
+                keys = sorted(data.keys())
                 # cumulate if necessary
                 for k in keys:
                     data_cum.append([k, float(data[k]) + float(prev)])
@@ -531,8 +529,7 @@ class report_custom(report_int):
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
             idx0 += 1
-        abscissa = map(lambda x: [x, None], abscissa)
-        abscissa.sort()
+        abscissa = sorted(map(lambda x: [x, None], abscissa))
         ar.x_coord = category_coord.T(abscissa, 0)
         ar.draw(can)
 

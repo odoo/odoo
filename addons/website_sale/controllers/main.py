@@ -67,12 +67,10 @@ class table_compute(object):
             index += 1
 
         # Format table according to HTML needs
-        rows = self.table.items()
-        rows.sort()
+        rows = sorted(self.table.items())
         rows = map(lambda x: x[1], rows)
         for col in range(len(rows)):
-            cols = rows[col].items()
-            cols.sort()
+            cols = sorted(rows[col].items())
             x += len(cols)
             rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
 

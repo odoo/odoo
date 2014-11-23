@@ -74,7 +74,7 @@ class product_product(osv.osv):
 
         location_ids = []
         if context.get('location', False):
-            if type(context['location']) == type(1):
+            if isinstance(context['location'], type(1)):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
                 domain = [('complete_name', 'ilike', context['location'])]

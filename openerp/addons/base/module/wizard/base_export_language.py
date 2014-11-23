@@ -60,8 +60,7 @@ class base_language_export(osv.osv_memory):
     def act_getfile(self, cr, uid, ids, context=None):
         this = self.browse(cr, uid, ids)[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False
-        mods = map(lambda m: m.name, this.modules) or ['all']
-        mods.sort()
+        mods = sorted(map(lambda m: m.name, this.modules) or ['all'])
         buf = cStringIO.StringIO()
         tools.trans_export(lang, mods, buf, this.format, cr)
         filename = 'new'

@@ -102,7 +102,7 @@ class ConvertBracesToField(unohelper.Base, XJobExecutor):
                                 sTemp = "|-." + sTemp[sTemp.rfind(".") + 1:] + ".-|"
                                 oPar.Items = (sTemp.encode("utf-8"), oPar.Items[1].replace(' ', ""))
                                 oPar.update()
-                            elif type(res[0]) != type(u''):
+                            elif not isinstance(res[0], type(u'')):
 
                                 sObject = self.getRes(self.sock, docinfo.getUserFieldValue(3), res[0][0][res[0][0].find(".") + 1:].replace(".", "/"))
                                 r = self.sock.execute(database, uid, self.password, docinfo.getUserFieldValue(3), 'fields_get')
@@ -182,8 +182,7 @@ class ConvertBracesToField(unohelper.Base, XJobExecutor):
         doc = desktop.getCurrentComponent()
         docinfo = doc.getDocumentInfo()
         res = sock.execute(database, uid, self.password, sObject, 'fields_get')
-        key = res.keys()
-        key.sort()
+        key = sorted(res.keys())
         myval = None
         if not sVar.find("/") == -1:
             myval = sVar[:sVar.find("/")]

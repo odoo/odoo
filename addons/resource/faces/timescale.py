@@ -76,8 +76,7 @@ class TimeScale(object):
             non_work_time = sum_time - work_time
 
             non_slots = filter(lambda s: s not in src_slots, slots)
-            non_slots = map(lambda s: (s[1] - s[0], s), non_slots)
-            non_slots.sort()
+            non_slots = sorted(map(lambda s: (s[1] - s[0], s), non_slots))
 
             slots = []
             i = 0

@@ -2248,7 +2248,7 @@ class BaseModel(object):
                 if f._multi:
                     val = val[k]
                 # if val is a many2one, just write the ID
-                if type(val) == tuple:
+                if isinstance(val, tuple):
                     val = val[0]
                 if val is not False:
                     cr.execute(update_query, (ss[1](val), key))

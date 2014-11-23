@@ -636,7 +636,7 @@ class node_context(object):
         self.rootdir = False  # self._dirobj._get_root_directory(cr,uid,context)
 
     def __eq__(self, other):
-        if not type(other) == node_context:
+        if not isinstance(other, node_context):
             return False
         if self.dbname != other.dbname:
             return False
@@ -1046,7 +1046,7 @@ class node_dir(node_database):
                     pass
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1288,7 +1288,7 @@ class node_res_dir(node_class):
             self.dctx_dict[dfld.field] = dfld.expr
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1432,7 +1432,7 @@ class node_res_obj(node_class):
             self.res_id = res_id
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1692,7 +1692,7 @@ class node_file(node_class):
         self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False

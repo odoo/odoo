@@ -1059,7 +1059,7 @@ class Binary(http.Controller):
         hashed_session = hashlib.md5(request.session_id).hexdigest()
         retag = hashed_session
         id = None if not id else simplejson.loads(id)
-        if type(id) is list:
+        if isinstance(id, list):
             id = id[0]  # m2o
         try:
             if etag:

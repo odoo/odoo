@@ -516,7 +516,7 @@ class Resource(_ResourceBase):
     #@+node:__or__
 
     def __or__(self, other):
-        if type(other) is _MetaResource:
+        if isinstance(other, _MetaResource):
             other = other()
 
         result = Resource()
@@ -526,7 +526,7 @@ class Resource(_ResourceBase):
     #@+node:__and__
 
     def __and__(self, other):
-        if type(other) is _MetaResource:
+        if isinstance(other, _MetaResource):
             other = other()
 
         result = Resource()

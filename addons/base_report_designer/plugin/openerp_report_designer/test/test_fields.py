@@ -19,8 +19,7 @@ def get(object, level=3, ending=None, ending_excl=None, recur=None, root=''):
     if recur is None:
         recur = []
     res = sock.execute('terp', 3, 'admin', 'account.invoice', 'fields_get')
-    key = res.keys()
-    key.sort()
+    key = sorted(res.keys())
     for k in key:
         if (not ending or res[k]['type'] in ending) and ((not ending_excl) or not (res[k]['type'] in ending_excl)):
             print root + '/' + k

@@ -118,7 +118,7 @@ class DomApiGeneral:
             return v
 
     def openOfficeStringUtf8(self, string):
-        if type(string) == unicode:
+        if isinstance(string, unicode):
             return string.encode("utf-8")
         tempstring = unicode(string, "cp1252").encode("utf-8")
         return tempstring

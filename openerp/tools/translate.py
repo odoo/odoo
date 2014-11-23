@@ -659,8 +659,7 @@ def trans_generate(lang, modules, cr):
     trans_obj = registry.get('ir.translation')
     model_data_obj = registry.get('ir.model.data')
     uid = 1
-    l = registry.models.items()
-    l.sort()
+    l = sorted(registry.models.items())
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'

@@ -571,7 +571,7 @@ class _Minutes(_CalendarItem):
         """
         converts a timedelta in working minutes.
         """
-        if isinstance(src, cls) or type(src) is int:
+        if isinstance(src, cls) or isinstance(src, int):
             return _CalendarItem.__new__(cls, src)
 
         cal = cls.calendar

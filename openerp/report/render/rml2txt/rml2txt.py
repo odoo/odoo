@@ -399,13 +399,12 @@ class _rml_template(object):
                             frames[(t.posy, t.posx, n.localName)] = t
                         else:
                             self.style.update(n)
-            keys = frames.keys()
-            keys.sort()
+            keys = sorted(frames.keys())
             keys.reverse()
             self.page_template[id] = []
             for key in range(len(keys)):
                 if key > 0 and keys[key - 1][0] == keys[key][0]:
-                    if type(self.page_template[id][-1]) == type(frames[keys[key]]):
+                    if isinstance(self.page_template[id][-1], type(frames[keys[key]])):
                         if self.page_template[id][-1].tag_mergeable():
                             self.page_template[id][-1].merge(frames[keys[key]])
                         continue

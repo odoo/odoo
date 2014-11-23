@@ -261,8 +261,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     # by taking a copy.
     if not nocopy:
         # isinstance() does not work below, we want *exactly* the dict class
-        if (globals_dict is not None and type(globals_dict) is not dict) \
-            or (locals_dict is not None and type(locals_dict) is not dict):
+        if (globals_dict is not None and not isinstance(globals_dict, dict)) \
+            or (locals_dict is not None and not isinstance(locals_dict, dict)):
             _logger.warning(
                 "Looks like you are trying to pass a dynamic environment, "
                 "you should probably pass nocopy=True to safe_eval().")

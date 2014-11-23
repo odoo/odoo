@@ -2352,8 +2352,7 @@ class account_model(osv.osv):
                     if payment_term_id:
                         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_maturity)
                         if pterm_list:
-                            pterm_list = [l[0] for l in pterm_list]
-                            pterm_list.sort()
+                            pterm_list = sorted([l[0] for l in pterm_list])
                             date_maturity = pterm_list[-1]
 
                 val.update({

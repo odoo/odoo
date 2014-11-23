@@ -185,7 +185,7 @@ class AutoReload(object):
         # Check if some files have been touched in the addons path.
         # If true, check if the touched file belongs to an installed module
         # in any of the database used in the registry manager.
-        while 1:
+        while True:
             while self.notifier.check_events(1000):
                 self.notifier.read_events()
                 self.notifier.process_events()
@@ -534,7 +534,7 @@ class PreforkServer(CommonServer):
 
     def process_zombie(self):
         # reap dead workers
-        while 1:
+        while True:
             try:
                 wpid, status = os.waitpid(-1, os.WNOHANG)
                 if not wpid:
@@ -640,7 +640,7 @@ class PreforkServer(CommonServer):
         openerp.sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
-        while 1:
+        while True:
             try:
                 #_logger.debug("Multiprocess beat (%s)",time.time())
                 self.process_signals()

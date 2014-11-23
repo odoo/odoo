@@ -185,8 +185,7 @@ class account_analytic_line(osv.osv):
                             partner.property_payment_term.id, value=1,
                             date_ref=time.strftime('%Y-%m-%d'))
                     if pterm_list:
-                        pterm_list = [line[0] for line in pterm_list]
-                        pterm_list.sort()
+                        pterm_list = sorted([line[0] for line in pterm_list])
                         date_due = pterm_list[-1]
 
                 curr_invoice = {

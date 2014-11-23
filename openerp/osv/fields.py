@@ -668,7 +668,7 @@ class many2one(_column):
             context = {}
         obj = obj_src.pool[self._obj]
         self._table = obj._table
-        if type(values) == type([]):
+        if isinstance(values, type([])):
             for act in values:
                 if act[0] == 0:
                     id_new = obj.create(cr, act[2])
@@ -1517,7 +1517,7 @@ class sparse(function):
         return value
 
     def _fnct_write(self, obj, cr, uid, ids, field_name, value, args, context=None):
-        if not type(ids) == list:
+        if not isinstance(ids, list):
             ids = [ids]
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:

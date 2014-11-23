@@ -171,8 +171,7 @@ class document(object):
                     if value not in vals:
                         vals[value] = []
                     vals[value].append(b)
-                keys = vals.keys()
-                keys.sort()
+                keys = sorted(vals.keys())
 
                 if 'order' in attrs and attrs['order'] == 'desc':
                     keys.reverse()
