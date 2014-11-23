@@ -26,7 +26,8 @@ import string
 import unohelper
 import random
 import xmlrpclib
-import base64, tempfile
+import base64
+import tempfile
 from com.sun.star.task import XJobExecutor
 import os
 import sys
@@ -80,7 +81,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                 name = self.res_other[0]['name']
                 report_name = self.res_other[0]['report_name']
             except:
-                import traceback, sys
+                import traceback
+                import sys
                 info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 self.logob.log_write('ServerParameter', LOG_ERROR, info)
         elif docinfo.getUserFieldValue(3) <> "":
@@ -153,7 +155,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                         self.logobj.log_write('SendToServer', LOG_WARNING, ': report name already used DB %s' % (database))
                         self.win.endExecute()
                 except Exception, e:
-                    import traceback, sys
+                    import traceback
+                    import sys
                     info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                     self.logobj.log_write('ServerParameter', LOG_ERROR, info)
             else:

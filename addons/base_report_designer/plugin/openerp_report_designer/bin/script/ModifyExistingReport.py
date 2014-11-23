@@ -25,7 +25,8 @@ import uno
 import string
 import unohelper
 import xmlrpclib
-import base64, tempfile
+import base64
+import tempfile
 
 
 from com.sun.star.task import XJobExecutor
@@ -147,7 +148,8 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
             obj.log_write('Modify Existing Report', LOG_INFO, ':successful download report  %s  using database %s' % (self.report_with_id[selectedItemPos][2], database))
         except Exception, e:
             ErrorDialog("The report could not be downloaded.", "Report: %s\nDetails: %s" % (fp_name, str(e)), "Download Message !")
-            import traceback, sys
+            import traceback
+            import sys
             info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ModifyExistingReport', LOG_ERROR, info)
 

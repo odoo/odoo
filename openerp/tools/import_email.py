@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
-import os, sys
+import os
+import sys
 import re
 import smtplib
-import email, mimetypes
+import email
+import mimetypes
 from email.header import decode_header
 from email.mime.text import MIMEText
 import xmlrpclib

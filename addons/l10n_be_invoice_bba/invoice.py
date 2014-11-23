@@ -20,7 +20,9 @@
 #
 ##############################################################################
 
-import re, time, random
+import re
+import time
+import random
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _

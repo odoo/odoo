@@ -58,7 +58,8 @@ def genTree(object, aList, insField, host, level=3, ending=None, ending_excl=Non
                 genTree(res[k]['relation'], aList, insField, host, level - 1, ending, ending_excl, recur, root + '/' + res[k]["string"], actualroot + '/' + k)
     except:
         obj = Logger()
-        import traceback, sys
+        import traceback
+        import sys
         info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
         obj.log_write('Function', LOG_ERROR, info)
 
@@ -204,7 +205,8 @@ def getChildTable(oPar, aItemList, aComponentAdd, sTableName=""):
                                         aComponentAdd.append(sTableName + "." + oPar.Name)
             except:
                 obj = Logger()
-                import traceback, sys
+                import traceback
+                import sys
                 info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 obj.log_write('Function', LOG_ERROR, info)
     if bEmptyTableFlag == True:

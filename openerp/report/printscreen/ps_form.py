@@ -26,7 +26,8 @@ import openerp.tools as tools
 from openerp.report import render
 from lxml import etree
 
-import time, os
+import time
+import os
 
 
 class report_printscreen_list(report_int):

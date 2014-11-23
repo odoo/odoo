@@ -25,7 +25,8 @@ parser.add_option("--delay",
 
 (options, args) = parser.parse_args()
 
-import content_index, std_index
+import content_index
+import std_index
 
 from content_index import cntIndex
 

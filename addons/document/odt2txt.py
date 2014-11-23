@@ -20,7 +20,9 @@
 #
 ##############################################################################
 
-import sys, zipfile, xml.dom.minidom
+import sys
+import zipfile
+import xml.dom.minidom
 import StringIO
 
 

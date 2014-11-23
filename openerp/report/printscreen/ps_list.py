@@ -27,7 +27,8 @@ from lxml import etree
 from openerp.report import render, report_sxw
 import locale
 
-import time, os
+import time
+import os
 from operator import itemgetter
 from datetime import datetime
 

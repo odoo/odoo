@@ -100,7 +100,8 @@ class Change(unohelper.Base, XJobExecutor):
             self.win.endExecute()
             ServerParameter(aVal, url)
         except:
-            import traceback, sys
+            import traceback
+            import sys
             info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)
             ErrorDialog("Connection to server is fail. Please check your Server Parameter.", "", "Error!")

@@ -80,7 +80,8 @@ class ExportToRML(unohelper.Base, XJobExecutor):
             if res['report_rml_content']:
                 write_data_to_file(get_absolute_file_path(filename), res['report_rml_content'])
         except Exception, e:
-            import traceback, sys
+            import traceback
+            import sys
             info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ExportToRML', LOG_ERROR, info)
             ErrorDialog("Cannot save the file to the hard drive.", "Exception: %s." % e, "Error")

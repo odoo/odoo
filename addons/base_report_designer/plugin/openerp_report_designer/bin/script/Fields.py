@@ -116,7 +116,8 @@ class Fields(unohelper.Base, XJobExecutor):
                         if not component == "Document" and component[component.rfind(".") + 1:] == tcur.TextTable.Name:
                             VariableScope(tcur, self.aVariableList, self.aObjectList, self.aComponentAdd, self.aItemList, component)
                 except:
-                    import traceback, sys
+                    import traceback
+                    import sys
                     info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                     self.logobj.log_write('Fields', LOG_ERROR, info)
 
@@ -168,7 +169,8 @@ class Fields(unohelper.Base, XJobExecutor):
             res = self.sock.execute(database, uid, self.password, sObject, 'read', [ids[0]])
             self.win.setEditText("txtUName", res[0][sMain[sMain.rfind("/") + 1:]])
         except:
-            import traceback, sys
+            import traceback
+            import sys
             info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('Fields', LOG_ERROR, info)
             self.win.setEditText("txtUName", "TTT")
@@ -217,7 +219,8 @@ class Fields(unohelper.Base, XJobExecutor):
                     recur=['many2one']
                 )
             except:
-                import traceback, sys
+                import traceback
+                import sys
                 info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 self.logobj.log_write('Fields', LOG_ERROR, info)
 

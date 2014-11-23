@@ -10,7 +10,11 @@ __contributors__ = ["Martin 'Joey' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 
 if not hasattr(__builtins__, 'True'):
     True, False = 1, 0
-import re, sys, urllib, htmlentitydefs, codecs
+import re
+import sys
+import urllib
+import htmlentitydefs
+import codecs
 import sgmllib
 import urlparse
 sgmllib.charref = re.compile('&#([xX]?[0-9a-fA-F]+)[^0-9a-fA-F]')

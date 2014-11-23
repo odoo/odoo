@@ -23,7 +23,9 @@ from content_index import indexer, cntIndex
 from subprocess import Popen, PIPE
 import StringIO
 import odt2txt
-import sys, zipfile, xml.dom.minidom
+import sys
+import zipfile
+import xml.dom.minidom
 import logging
 _logger = logging.getLogger(__name__)
 

@@ -22,7 +22,9 @@
 
 """ Modules dependency graph. """
 
-import os, sys, imp
+import os
+import sys
+import imp
 from os.path import join as opj
 import itertools
 import zipimport
