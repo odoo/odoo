@@ -779,7 +779,7 @@ class resource_resource(osv.osv):
             wktime_list.append((day, res_str))
         # Convert into format like [('mon', '8:00-12:00', '13:00-18:00')]
         for item in wktime_list:
-            if wk_time.has_key(item[0]):
+            if item[0] in wk_time:
                 wk_time[item[0]].append(item[1])
             else:
                 wk_time[item[0]] = [item[0]]
@@ -788,7 +788,7 @@ class resource_resource(osv.osv):
             wktime_cal.append(tuple(v))
         # Add for the non-working days like: [('sat, sun', '8:00-8:00')]
         for k, v in wk_days.items():
-            if week_days.has_key(k):
+            if k in week_days:
                 week_days.pop(k)
         for v in week_days.itervalues():
             non_working += v + ','

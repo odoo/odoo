@@ -492,7 +492,7 @@ class res_users(osv.osv):
         cr = self.pool.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
-            if self._uid_cache.has_key(db):
+            if db in self._uid_cache:
                 self._uid_cache[db][uid] = passwd
             else:
                 self._uid_cache[db] = {uid: passwd}

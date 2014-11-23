@@ -198,9 +198,9 @@ class account_move_line(osv.osv):
 
     def _default_get_move_form_hook(self, cursor, user, data):
         '''Called in the end of default_get method for manual entry in account_move form'''
-        if data.has_key('analytic_account_id'):
+        if 'analytic_account_id' in data:
             del(data['analytic_account_id'])
-        if data.has_key('account_tax_id'):
+        if 'account_tax_id' in data:
             del(data['account_tax_id'])
         return data
 
@@ -954,7 +954,7 @@ class account_move_line(osv.osv):
         writeoff = debit - credit
 
         # Ifdate_p in context => take this date
-        if context.has_key('date_p') and context['date_p']:
+        if 'date_p' in context and context['date_p']:
             date = context['date_p']
         else:
             date = time.strftime('%Y-%m-%d')

@@ -134,7 +134,7 @@ class account_analytic_line(osv.osv):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        if (not vals.has_key('invoice_id')) or vals['invoice_id'] == False:
+        if ('invoice_id' not in vals) or vals['invoice_id'] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
                     raise osv.except_osv(_('Error!'),

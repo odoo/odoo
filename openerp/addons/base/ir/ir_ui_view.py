@@ -1054,7 +1054,7 @@ class view(osv.osv):
             else:
                 blank_nodes.append({'id': a['id'], 'name': a['name']})
 
-            if a.has_key('flow_start') and a['flow_start']:
+            if 'flow_start' in a and a['flow_start']:
                 start.append(a['id'])
             else:
                 if not a[_Source_Field]:
@@ -1065,7 +1065,7 @@ class view(osv.osv):
                 label_string = ""
                 if label:
                     for lbl in eval(label):
-                        if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl]) == 'False':
+                        if tools.ustr(lbl) in t and tools.ustr(t[lbl]) == 'False':
                             label_string += ' '
                         else:
                             label_string = label_string + " " + tools.ustr(t[lbl])

@@ -193,12 +193,12 @@ class account_invoice(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for inv in self.browse(cr, uid, ids, context):
-            if vals.has_key('reference_type'):
+            if 'reference_type' in vals:
                 reference_type = vals['reference_type']
             else:
                 reference_type = inv.reference_type or ''
             if reference_type == 'bba':
-                if vals.has_key('reference'):
+                if 'reference' in vals:
                     bbacomm = vals['reference']
                 else:
                     bbacomm = inv.reference or ''

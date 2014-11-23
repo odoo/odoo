@@ -191,7 +191,7 @@ class _MeProxyRecalc(_MeProxy):
     #@+node:__setattr__
 
     def __setattr__(self, name, value):
-        if self.task._properties.has_key(name):
+        if name in self.task._properties:
             self.task._set_attrib(name, value)
     #@-node:__setattr__
     #@-others
@@ -356,13 +356,13 @@ def _instrument(func):
     # all_name_map maps names to the all_names index
     # (same like all_names.index())
     all_name_map = list_to_dict(all_names)
-    if not all_name_map.has_key("me"):
+    if "me" not in all_name_map:
         all_name_map["me"] = len(all_names)
         all_names.append("me")
 
     #<python 2.5>
     for ln in local_names:
-        if not all_name_map.has_key(ln):
+        if ln not in all_name_map:
             all_name_map[ln] = len(all_names)
             all_names.append(ln)
     #</python 2.5>
@@ -1004,7 +1004,7 @@ def _build_balancing_list(tasks):
     while len(done_map) < count:
         for i in range(count):
             to_inspect = balancing_list[i]
-            if done_map.has_key(to_inspect):
+            if to_inspect in done_map:
                 continue
 
             done_map[to_inspect] = True
@@ -1041,7 +1041,7 @@ def _build_balancing_list(tasks):
         #@nl
         for j in range(i + 1, count):
             check_task = balancing_list[j]
-            if done_map.has_key(check_task):
+            if check_task in done_map:
                 continue
 
             if inspect_depends_on(check_task):
@@ -1442,7 +1442,7 @@ class SloppyAllocator(AllocationAlgorithm):
     #@	@+others
     #@+node:test_allocation
     def test_allocation(self, task, resource):
-        if task.__dict__.has_key("effort"):
+        if "effort" in task.__dict__:
             return self.test_allocation_effort(task, resource)
 
         return self.test_allocation_length(task, resource)
@@ -1577,7 +1577,7 @@ class SloppyAllocator(AllocationAlgorithm):
     #@+node:allocate
 
     def allocate(self, task, state):
-        if task.__dict__.has_key("effort"):
+        if "effort" in task.__dict__:
             self.allocate_effort(task, state)
         else:
             self.allocate_length(task, state)
@@ -2151,7 +2151,7 @@ class Task(object):
         self.depth = len(self.path.split(".")) - 1
         self.index = parent and ("%s.%i" % (parent.index, index)) \
             or str(index)
-        if self.formats.has_key(name):
+        if name in self.formats:
             raise AttributeError("Task name '%s' hides attribute of parent."
                                  % name)
 
@@ -2392,7 +2392,7 @@ class Task(object):
     #@+node:is_inherited
 
     def is_inherited(self, attrib_name):
-        return not self.__dict__.has_key(attrib_name)
+        return attrib_name not in self.__dict__
     #@-node:is_inherited
     #@+node:formatter
 
@@ -2678,7 +2678,7 @@ class Task(object):
         if self._is_compiled:
             self.__check_milestone()
             self.__check_task()
-            self.root.has_actual_data |= self.__dict__.has_key("performed")
+            self.root.has_actual_data |= "performed" in self.__dict__
 
     #@-node:_compile
     #@+node:__compile_function
@@ -2730,7 +2730,7 @@ class Task(object):
                 obj = globals_[name]
                 if isinstance(obj, types.FunctionType):
                     fg = obj.func_globals
-                    if not fg.has_key("me") and "me" in obj.func_code.co_names:
+                    if "me" not in fg and "me" in obj.func_code.co_names:
                         restore_globals.append(fg)
                         fg["me"] = me_instance
             except KeyError:
@@ -3187,7 +3187,7 @@ class Task(object):
     #@+node:_unfreeze
 
     def _unfreeze(self, attrib_name):
-        if self.__dict__.has_key(attrib_name):
+        if attrib_name in self.__dict__:
             del self.__dict__[attrib_name]
     #@-node:_unfreeze
     #@+node:_wrap_attrib
@@ -3793,9 +3793,9 @@ class _AllocationPoject(_ProjectBase):
     def unfreeze_parents(self):
         if self.has_actual_data:
             for t in filter(lambda t: t.children, self):
-                if not t._original_values.has_key("start"):
+                if "start" not in t._original_values:
                     t._unfreeze("start")
-                if not t._original_values.has_key("end"):
+                if "end" not in t._original_values:
                     t._unfreeze("end")
     #@-node:unfreeze_parents
     #@-others
@@ -4081,7 +4081,7 @@ class AdjustedProject(_AllocationPoject):
             else:
                 #@            << allocate tasks, that are allready at work >>
                 #@+node:<< allocate tasks, that are allready at work >>
-                if t.__dict__.has_key("effort"):
+                if "effort" in t.__dict__:
                     t.effort = t._to_delta(src.done + src.todo).round()
 
                 resource = src.booked_resource or src.performed_resource

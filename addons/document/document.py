@@ -815,7 +815,7 @@ class node_class(object):
         if not self.DAV_M_NS:
             return None
 
-        if self.DAV_M_NS.has_key(ns):
+        if ns in self.DAV_M_NS:
             prefix = self.DAV_M_NS[ns]
         else:
             _logger.debug('No namespace: %s ("%s").', ns, prop)

@@ -106,7 +106,7 @@ class hr_timesheet_sheet(osv.osv):
         for att_tuple in attendance_tuples:
             if att_tuple[0] in [0, 1, 4]:
                 if att_tuple[0] in [0, 1]:
-                    if att_tuple[2] and att_tuple[2].has_key('name'):
+                    if att_tuple[2] and 'name' in att_tuple[2]:
                         name = att_tuple[2]['name']
                     else:
                         name = self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name

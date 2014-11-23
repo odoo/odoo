@@ -107,11 +107,11 @@ class indexer(object):
 
 
 def mime_match(mime, mdict):
-    if mdict.has_key(mime):
+    if mime in mdict:
         return (mime, mdict[mime])
     if '/' in mime:
         mpat = mime.split('/')[0] + '/*'
-        if mdict.has_key(mpat):
+        if mpat in mdict:
             return (mime, mdict[mpat])
 
     return (None, None)
@@ -142,12 +142,12 @@ class contentIndex(object):
         fobj = None
         fname = None
         mime = None
-        if content_type and self.mimes.has_key(content_type):
+        if content_type and content_type in self.mimes:
             mime = content_type
             fobj = self.mimes[content_type]
         elif filename:
             bname, ext = os.path.splitext(filename)
-            if self.exts.has_key(ext):
+            if ext in self.exts:
                 fobj = self.exts[ext]
                 mime = fobj._getDefMime(ext)
 

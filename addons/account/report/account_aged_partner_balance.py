@@ -198,14 +198,14 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             if self.direction_selection == 'future':
                 # Query here is replaced by one query which gets the all the partners their 'before' value
                 before = False
-                if future_past.has_key(partner['id']):
+                if partner['id'] in future_past:
                     before = [future_past[partner['id']]]
                 self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
                 values['direction'] = before and before[0] or 0.0
             elif self.direction_selection == 'past':  # Changed this so people could in the future create new direction_selections
                 # Query here is replaced by one query which gets the all the partners their 'after' value
                 after = False
-                if future_past.has_key(partner['id']):  # Making sure this partner actually was found by the query
+                if partner['id'] in future_past:  # Making sure this partner actually was found by the query
                     after = [future_past[partner['id']]]
 
                 self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
@@ -213,13 +213,13 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
             for i in range(5):
                 during = False
-                if history[i].has_key(partner['id']):
+                if partner['id'] in history[i]:
                     during = [history[i][partner['id']]]
                 # Ajout du compteur
                 self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
                 values[str(i)] = during and during[0] or 0.0
             total = False
-            if totals.has_key(partner['id']):
+            if partner['id'] in totals:
                 total = [totals[partner['id']]]
             values['total'] = total and total[0] or 0.0
             # Add for total
@@ -329,26 +329,26 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
         values = {}
         if self.direction_selection == 'future':
             before = False
-            if future_past.has_key('Unknown Partner'):
+            if 'Unknown Partner' in future_past:
                 before = [future_past['Unknown Partner']]
             self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
             values['direction'] = before and before[0] or 0.0
         elif self.direction_selection == 'past':
             after = False
-            if future_past.has_key('Unknown Partner'):
+            if 'Unknown Partner' in future_past:
                 after = [future_past['Unknown Partner']]
             self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
             values['direction'] = after and after[0] or 0.0
 
         for i in range(5):
             during = False
-            if history[i].has_key('Unknown Partner'):
+            if 'Unknown Partner' in history[i]:
                 during = [history[i]['Unknown Partner']]
             self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
             values[str(i)] = during and during[0] or 0.0
 
         total = False
-        if totals.has_key('Unknown Partner'):
+        if 'Unknown Partner' in totals:
             total = [totals['Unknown Partner']]
         values['total'] = total and total[0] or 0.0
         # Add for total

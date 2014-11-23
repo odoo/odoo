@@ -395,7 +395,7 @@ class UpdateableDict(local):
         return self.dict.get(k, d)
 
     def has_key(self, k):
-        return self.dict.has_key(k)
+        return k in self.dict
 
     def items(self):
         return self.dict.items()

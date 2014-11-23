@@ -137,7 +137,7 @@ class account_analytic_plan_instance(osv.osv):
         if context is None:
             context = {}
         journal_obj = self.pool.get('account.journal')
-        if context.has_key('journal_id') and context['journal_id']:
+        if 'journal_id' in context and context['journal_id']:
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
             if journal.analytic_journal_id:
                 return journal.analytic_journal_id.id
@@ -226,7 +226,7 @@ class account_analytic_plan_instance(osv.osv):
                 item = acct_anal_plan_line_obj.browse(cr, uid, i, context=context)
                 temp_list = ['account1_ids', 'account2_ids', 'account3_ids', 'account4_ids', 'account5_ids', 'account6_ids']
                 for l in temp_list:
-                    if vals.has_key(l):
+                    if l in vals:
                         for tempo in vals[l]:
                             if acct_anal_acct.search(cr, uid, [('parent_id', 'child_of', [item.root_analytic_id.id]), ('id', '=', tempo[2]['analytic_account_id'])], context=context):
                                 total_per_plan += tempo[2]['rate']
@@ -240,7 +240,7 @@ class account_analytic_plan_instance(osv.osv):
             context = {}
         this = self.browse(cr, uid, ids[0], context=context)
         invoice_line_obj = self.pool.get('account.invoice.line')
-        if this.plan_id and not vals.has_key('plan_id'):
+        if this.plan_id and 'plan_id' not in vals:
             # this instance is a model, so we have to create a new plan instance instead of modifying it
             # copy the existing model
             temp_id = self.copy(cr, uid, this.id, None, context=context)
@@ -251,9 +251,9 @@ class account_analytic_plan_instance(osv.osv):
 
             # and finally modify the old model to be not a model anymore
             vals['plan_id'] = False
-            if not vals.has_key('name'):
+            if 'name' not in vals:
                 vals['name'] = this.name and (str(this.name) + '*') or "*"
-            if not vals.has_key('code'):
+            if 'code' not in vals:
                 vals['code'] = this.code and (str(this.code) + '*') or "*"
         return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context=context)
 
@@ -324,7 +324,7 @@ class account_move_line(osv.osv):
 
     def _default_get_move_form_hook(self, cursor, user, data):
         data = super(account_move_line, self)._default_get_move_form_hook(cursor, user, data)
-        if data.has_key('analytics_id'):
+        if 'analytics_id' in data:
             del(data['analytics_id'])
         return data
 

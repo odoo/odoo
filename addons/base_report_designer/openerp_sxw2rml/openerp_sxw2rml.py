@@ -159,7 +159,7 @@ class DomApi(DomApiGeneral):
         new_updatedict = copy.copy(updatedict)
         for u in new_updatedict.keys():
             try:
-                if new_updatedict[u].find("""%""") != -1 and dict.has_key(u):
+                if new_updatedict[u].find("""%""") != -1 and u in dict:
                     number = float(self.re_digits.search(dict[u]).group(1))
                     unit = self.re_digits.search(dict[u]).group(2)
                     new_number = self.stringPercentToFloat(new_updatedict[u]) * number

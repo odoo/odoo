@@ -671,7 +671,7 @@ class Resource(_ResourceBase):
         now = cal.now
         bookings = self.get_bookings(task)
 
-        if task.__dict__.has_key("effort"):
+        if "effort" in task.__dict__:
             efficiency = self.efficiency * task.efficiency
         else:
             efficiency = 1
@@ -698,7 +698,7 @@ class Resource(_ResourceBase):
         now = cal.now
 
         bookings = self.get_bookings(task)
-        if task.__dict__.has_key("effort"):
+        if "effort" in task.__dict__:
             efficiency = self.efficiency * task.efficiency
         else:
             efficiency = 1
@@ -913,7 +913,7 @@ class _AndResourceGroup(_ResourceGroup):
         result = ResourceList(*list(utils.flatten(result)))
         dupl_test = {}
         for r in result:
-            if dupl_test.has_key(r):
+            if r in dupl_test:
                 return None
             else:
                 dupl_test[r] = 1
@@ -926,7 +926,7 @@ class _AndResourceGroup(_ResourceGroup):
         resources = self._get_resources(state)
         tmp = {}
         for r in resources:
-            if tmp.has_key(r):
+            if r in tmp:
                 return True
 
             tmp[r] = 1
