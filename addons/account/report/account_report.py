@@ -169,7 +169,7 @@ class report_invoice_created(osv.osv):
             ('in_invoice', 'Supplier Invoice'),
             ('out_refund', 'Customer Refund'),
             ('in_refund', 'Supplier Refund'),
-            ], 'Type', readonly=True),
+        ], 'Type', readonly=True),
         'number': fields.char('Invoice Number', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'amount_untaxed': fields.float('Untaxed', readonly=True),

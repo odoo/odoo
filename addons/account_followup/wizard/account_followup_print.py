@@ -246,7 +246,7 @@ class account_followup_print(osv.osv_memory):
             'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            }
+        }
 
     def _get_msg(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg

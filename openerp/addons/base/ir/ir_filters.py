@@ -119,7 +119,7 @@ class ir_filters(osv.osv):
                         ('model_id', '=', vals['model_id']),
                         ('user_id', '=', vals['user_id']),
                         ('is_default', '=', True),
-                    ], context=context)
+                ], context=context)
                 if act_ids:
                     self.write(cr, uid, act_ids, {'is_default': False}, context=context)
             else:

@@ -134,7 +134,7 @@ class purchase_order(osv.osv, EDIMixin):
                 pricelist_id = product_pricelist.create(cr, uid, {'name': pricelist_name,
                                                                   'type': pricelist_type,
                                                                   'currency_id': currency.id,
-                                                                 })
+                                                                  })
                 self.pool.get('product.pricelist.version').create(cr, uid, {'name': pricelist_name,
                                                                             'pricelist_id': pricelist_id})
             pricelist = product_pricelist.browse(cr, uid, pricelist_id)

@@ -488,7 +488,7 @@ class JsonRequest(WebRequest):
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
-            }
+        }
         if error is not None:
             response['error'] = error
         if result is not None:

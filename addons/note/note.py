@@ -135,7 +135,7 @@ class note_note(osv.osv):
                         'stage_id': (stage.id, stage.name),
                         'stage_id_count': self.search(cr, uid, domain + [('stage_ids', '=', stage.id)], context=context, count=True),
                         '__fold': stage.fold,
-                    } for stage in stages]
+                } for stage in stages]
 
                 # note without user's stage
                 nb_notes_ws = self.search(cr, uid, domain + [('stage_ids', 'not in', current_stage_ids)], context=context, count=True)

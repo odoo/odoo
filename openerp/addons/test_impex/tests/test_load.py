@@ -178,7 +178,7 @@ class test_boolean_field(ImporterCase):
                   [u'нет'],  # no, ru
                   [u'vals'],  # false, nl
                   [u'klaidingas'],  # false, lt,
-        ]
+                  ]
 
         result = self.import_(['value'], falses)
         self.assertFalse(result['messages'])

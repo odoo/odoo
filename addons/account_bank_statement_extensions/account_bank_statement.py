@@ -77,7 +77,7 @@ class account_bank_statement_line_global(osv.osv):
             ('iso20022', 'ISO 20022'),
             ('coda', 'CODA'),
             ('manual', 'Manual'),
-            ], 'Type', required=True),
+        ], 'Type', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'bank_statement_line_ids': fields.one2many('account.bank.statement.line', 'globalisation_id', 'Bank Statement Lines'),
     }

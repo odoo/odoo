@@ -135,7 +135,7 @@ class account_analytic_line(osv.osv):
             'amount': result,
             'general_account_id': a,
             'product_uom_id': unit
-            }
+        }
         }
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):

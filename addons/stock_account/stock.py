@@ -51,7 +51,7 @@ class procurement_rule(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",),
-        }
+    }
     _defaults = {
         'invoice_state': '',
     }
@@ -68,7 +68,7 @@ class procurement_order(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
          ], "Invoice Control"),
-        }
+    }
 
     def _run_move_create(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
@@ -77,7 +77,7 @@ class procurement_order(osv.osv):
 
     _defaults = {
         'invoice_state': ''
-        }
+    }
 
 
 #----------------------------------------------------------
@@ -92,7 +92,7 @@ class stock_move(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, track_visibility='onchange',
             states={'draft': [('readonly', False)]}),
-        }
+    }
     _defaults = {
         'invoice_state': lambda *args, **argv: 'none'
     }
@@ -129,7 +129,7 @@ class stock_move(osv.osv):
                         move_line.product_id.id, move_line.product_uom_qty, move_line.partner_id.id, {
                             'uom': move_line.product_uom.id,
                             'date': move_line.date,
-                            })[pricelist]
+                        })[pricelist]
                 if price:
                     return price
         return move_line.product_id.list_price

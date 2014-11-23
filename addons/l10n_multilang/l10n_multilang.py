@@ -76,7 +76,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'value': value[in_id],
                     })
                 else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang,  src[in_id]))  # out_obj._name))
+                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, src[in_id]))  # out_obj._name))
         return True
 
     def execute(self, cr, uid, ids, context=None):

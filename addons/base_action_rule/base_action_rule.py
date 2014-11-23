@@ -55,7 +55,7 @@ class base_action_rule(osv.osv):
     _order = 'sequence'
 
     _columns = {
-        'name':  fields.char('Rule Name', required=True),
+        'name': fields.char('Rule Name', required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model',
             required=True, domain=[('osv_memory', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", string='Model'),

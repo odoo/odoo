@@ -56,7 +56,7 @@ class report_membership(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'quantity': fields.integer("Quantity", readonly=True),
-        }
+    }
 
     def init(self, cr):
         '''Create the view'''

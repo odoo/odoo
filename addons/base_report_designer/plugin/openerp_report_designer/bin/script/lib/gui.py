@@ -394,7 +394,7 @@ class DBModalDialog:
                     itemListenerProc=None,
                     nTabIndex=None):
         self.addControl("com.sun.star.awt.UnoControlCheckBoxModel",
-                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None,  bMultiSelection=None,
+                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None, bMultiSelection=None,
                         cLabel=cLabel,
                         nTabIndex=nTabIndex)
         if itemListenerProc != None:
@@ -454,7 +454,7 @@ class DBModalDialog:
                    cLabel=None,
                    nTabIndex=None,
                    sImagePath=None,
-                         ):
+                   ):
         oControlModel = self.oDialogModel.createInstance(cCtrlServiceName)
         self.oDialogModel.insertByName(cCtrlName, oControlModel)
         # if negative coordinates are given for X or Y position,

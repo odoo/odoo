@@ -110,7 +110,7 @@ class NumberedCanvas(canvas.Canvas):
             " %(this)i / %(total)i" % {
                'this': self._pageNumber,
                'total': page_count,
-            }
+        }
         )
 
 
@@ -986,7 +986,7 @@ class _rml_template(object):
 
         pagesize_map = {'a4': A4,
                     'us_letter': letter
-                    }
+                        }
         pageSize = A4
         if self.localcontext.get('company'):
             pageSize = pagesize_map.get(self.localcontext.get('company').rml_paper_format, A4)
@@ -1013,7 +1013,7 @@ class _rml_template(object):
             except Exception:  # FIXME: be even more specific, perhaps?
                 gr = ''
             if len(gr):
-#                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
+                #                self.image=[ n for n in utils._child_get(gr[0], self) if n.tag=='image' or not self.localcontext]
                 drw = _rml_draw(self.localcontext, gr[0], self.doc, images=images, path=self.path, title=self.title)
                 self.page_templates.append(platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id': 'str'})))
             else:

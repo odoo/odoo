@@ -75,7 +75,7 @@ class pos_config(osv.osv):
         'iface_big_scrollbars': fields.boolean('Large Scrollbars', help='For imprecise industrial touchscreens'),
         'receipt_header': fields.text('Receipt Header', help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt"),
-        'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
+        'proxy_ip': fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
 
         'state': fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
         'sequence_id': fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -85,12 +85,12 @@ class pos_config(osv.osv):
         'group_by': fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'barcode_product':  fields.char('Product Barcodes', size=64, help='The pattern that identifies product barcodes'),
-        'barcode_cashier':  fields.char('Cashier Barcodes', size=64, help='The pattern that identifies cashier login barcodes'),
+        'barcode_product': fields.char('Product Barcodes', size=64, help='The pattern that identifies product barcodes'),
+        'barcode_cashier': fields.char('Cashier Barcodes', size=64, help='The pattern that identifies cashier login barcodes'),
         'barcode_customer': fields.char('Customer Barcodes', size=64, help='The pattern that identifies customer\'s client card barcodes'),
-        'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
-        'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
-        'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
+        'barcode_price': fields.char('Price Barcodes', size=64, help='The pattern that identifies a product with a barcode encoded price'),
+        'barcode_weight': fields.char('Weight Barcodes', size=64, help='The pattern that identifies a product with a barcode encoded weight'),
+        'barcode_discount': fields.char('Discount Barcodes', size=64, help='The pattern that identifies a product with a barcode encoded discount'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -176,9 +176,9 @@ class pos_config(osv.osv):
         'barcode_product': '*',
         'barcode_cashier': '041*',
         'barcode_customer': '042*',
-        'barcode_weight':  '21xxxxxNNDDD',
+        'barcode_weight': '21xxxxxNNDDD',
         'barcode_discount': '22xxxxxxxxNN',
-        'barcode_price':   '23xxxxxNNNDD',
+        'barcode_price': '23xxxxxNNNDD',
     }
 
     def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
@@ -279,7 +279,7 @@ class pos_session(osv.osv):
                 select=1, copy=False),
 
         'sequence_number': fields.integer('Order Sequence Number', help='A sequence number that is incremented with each order'),
-        'login_number':  fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
+        'login_number': fields.integer('Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session'),
 
         'cash_control': fields.function(_compute_cash_all,
                                         multi='cash',
@@ -548,7 +548,7 @@ class pos_session(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url':   '/pos/web/',
+            'url': '/pos/web/',
         }
 
 
@@ -559,21 +559,21 @@ class pos_order(osv.osv):
 
     def _order_fields(self, cr, uid, ui_order, context=None):
         return {
-            'name':         ui_order['name'],
-            'user_id':      ui_order['user_id'] or False,
-            'session_id':   ui_order['pos_session_id'],
-            'lines':        ui_order['lines'],
+            'name': ui_order['name'],
+            'user_id': ui_order['user_id'] or False,
+            'session_id': ui_order['pos_session_id'],
+            'lines': ui_order['lines'],
             'pos_reference': ui_order['name'],
-            'partner_id':   ui_order['partner_id'] or False,
+            'partner_id': ui_order['partner_id'] or False,
         }
 
     def _payment_fields(self, cr, uid, ui_paymentline, context=None):
         return {
-            'amount':       ui_paymentline['amount'] or 0.0,
+            'amount': ui_paymentline['amount'] or 0.0,
             'payment_date': ui_paymentline['name'],
             'statement_id': ui_paymentline['statement_id'],
             'payment_name': ui_paymentline.get('note', False),
-            'journal':      ui_paymentline['journal_id'],
+            'journal': ui_paymentline['journal_id'],
         }
 
     def create_from_ui(self, cr, uid, orders, context=None):
@@ -684,7 +684,7 @@ class pos_order(osv.osv):
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_total': fields.function(_amount_all, string='Total', digits_compute=dp.get_precision('Account'),  multi='all'),
+        'amount_total': fields.function(_amount_all, string='Total', digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),

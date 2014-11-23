@@ -80,7 +80,7 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
 
         for report in self.reports:
             if report['name'] <> "":
-                model_ids = self.sock.execute(database, uid, self.password, 'ir.model',  'search', [('model', '=', report['model'])])
+                model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', report['model'])])
                 model_res_other = self.sock.execute(database, uid, self.password, 'ir.model', 'read', model_ids, ['name', 'model'])
                 if model_res_other <> []:
                     name = model_res_other[0]['name'] + " - " + report['name']
@@ -166,7 +166,7 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
         id = self.report_with_id[selectedItemPos][0]
         temp = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'unlink', id,)
         str_value = 'ir.actions.report.xml,' + str(id)
-        ids = self.sock.execute(database, uid, self.password, 'ir.values',  'search', [('value', '=', str_value)])
+        ids = self.sock.execute(database, uid, self.password, 'ir.values', 'search', [('value', '=', str_value)])
         if ids:
             rec = self.sock.execute(database, uid, self.password, 'ir.values', 'unlink', ids,)
         else:

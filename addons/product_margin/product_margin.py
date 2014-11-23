@@ -106,7 +106,7 @@ class product_product(osv.osv):
         'date_to': fields.function(_product_margin, type='date', string='Margin Date To', multi='product_margin'),
         'invoice_state': fields.function(_product_margin, type='selection', selection=[
                 ('paid', 'Paid'), ('open_paid', 'Open and Paid'), ('draft_open_paid', 'Draft, Open and Paid')
-            ], string='Invoice State', multi='product_margin', readonly=True),
+        ], string='Invoice State', multi='product_margin', readonly=True),
         'sale_avg_price': fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Customer Invoices."),
         'purchase_avg_price': fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
@@ -123,7 +123,7 @@ class product_product(osv.osv):
             help="Sum of Multiplication of Invoice price and quantity of Customer Invoices"),
         'total_cost': fields.function(_product_margin, type='float', string='Total Cost', multi='product_margin',
             help="Sum of Multiplication of Invoice price and quantity of Supplier Invoices "),
-        'sale_expected':  fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
+        'sale_expected': fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
             help="Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost': fields.function(_product_margin, type='float', string='Normal Cost', multi='product_margin',
             help="Sum of Multiplication of Cost price and quantity of Supplier Invoices"),

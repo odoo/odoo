@@ -89,7 +89,7 @@ TODO:
               'company_view.xml',
               'header_view.xml',
               'ir_report_view.xml',
-    ],
+             ],
     'demo': [
         "report/webkit_report_demo.xml",
     ],

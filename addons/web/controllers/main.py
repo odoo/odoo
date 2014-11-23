@@ -1210,7 +1210,7 @@ class Binary(http.Controller):
             }, request.context)
             args = {
                 'filename': ufile.filename,
-                'id':  attachment_id
+                'id': attachment_id
             }
         except Exception:
             args = {'error': "Something horrible happened"}

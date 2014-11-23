@@ -83,8 +83,8 @@ class account_invoice_line(osv.osv):
         company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
-        # debit account dacc will be the output account
-        # first check the product, if empty check the category
+            # debit account dacc will be the output account
+            # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
             if not dacc:
                 dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
@@ -184,7 +184,7 @@ class account_invoice_line(osv.osv):
                                 'uos_id': line['uos_id'],
                                 'account_analytic_id': line['account_analytic_id'],
                                 'taxes': line.get('taxes', []),
-                                })
+                            })
                 return diff_res
         return []
 

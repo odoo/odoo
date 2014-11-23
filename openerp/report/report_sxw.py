@@ -61,7 +61,7 @@ html_parents = {
     'tr': 1,
     'body': 0,
     'div': 0
-    }
+}
 sxw_tag = "p"
 
 rml2sxw = {
@@ -445,7 +445,7 @@ class report_sxw(report_rml, preprocess.report):
                             'datas_fname': name,
                             'res_model': self.table,
                             'res_id': obj.id,
-                            }, context=ctx
+                        }, context=ctx
                         )
                     except Exception:
                         # TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632

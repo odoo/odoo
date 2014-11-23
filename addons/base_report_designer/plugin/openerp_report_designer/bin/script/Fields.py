@@ -139,7 +139,7 @@ class Fields(unohelper.Base, XJobExecutor):
                 self.sValue = self.win.getListBoxItem("lstFields", self.aListFields.index(sFields))
             for var in self.aVariableList:
 
-                self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model',  'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
+                self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
                 fields = ['name', 'model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids, fields)
                 if self.model_res <> []:
@@ -164,7 +164,7 @@ class Fields(unohelper.Base, XJobExecutor):
                     sItem = var
             sMain = self.aListFields[self.win.getListBoxSelectedItemPos("lstFields")]
             sObject = self.getRes(self.sock, sItem[sItem.find("(") + 1:-1], sMain[1:])
-            ids = self.sock.execute(database, uid, self.password, sObject,  'search', [])
+            ids = self.sock.execute(database, uid, self.password, sObject, 'search', [])
             res = self.sock.execute(database, uid, self.password, sObject, 'read', [ids[0]])
             self.win.setEditText("txtUName", res[0][sMain[sMain.rfind("/") + 1:]])
         except:

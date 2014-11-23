@@ -158,7 +158,7 @@ class TestViewInheritance(ViewCase):
             element = E(view_type,
                 E.attribute(name, name='string'),
                 position='attributes'
-            )
+                        )
         return ET.tostring(element)
 
     def makeView(self, name, parent=None, arch=None):
@@ -344,7 +344,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                 Field(Field(name="inserted 1"), name="target"),
                 Field(Field(name="inserted 2"), name="target"),
                 Field(Field(name="inserted 3"), name="target"),
-            )
+        )
 
         self.View.apply_inheritance_specs(self.cr, self.uid,
                                           self.base_arch,

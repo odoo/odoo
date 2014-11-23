@@ -296,7 +296,7 @@ class ir_translation(osv.osv):
                 'res_id': id,
                 'value': value,
                 'src': src,
-                })
+            })
         return len(ids)
 
     def _get_source_query(self, cr, uid, name, types, lang, source, res_id):

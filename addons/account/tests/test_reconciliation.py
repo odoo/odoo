@@ -38,7 +38,7 @@ class TestReconciliation(TransactionCase):
             'name': 'invoice to client',
             'account_id': self.account_rcv_id,
             'type': 'out_invoice'
-            })
+                                                                 })
         self.account_invoice_line_model.create(cr, uid, {'product_id': self.product_id,
             'quantity': 1,
             'price_unit': 100,
@@ -103,7 +103,7 @@ class TestReconciliation(TransactionCase):
             'name': 'invoice to client',
             'account_id': self.account_rcv_id,
             'type': 'in_invoice'
-            })
+                                                                 })
         self.account_invoice_line_model.create(cr, uid, {'product_id': self.product_id,
             'quantity': 1,
             'price_unit': 100,

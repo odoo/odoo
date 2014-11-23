@@ -48,7 +48,7 @@ Italian accounting chart and localization.
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'l10n_chart_it_generic.xml',
-        ],
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,

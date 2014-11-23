@@ -121,7 +121,7 @@ class hr_contract(osv.osv):
             ('weekly', 'Weekly'),
             ('bi-weekly', 'Bi-weekly'),
             ('bi-monthly', 'Bi-monthly'),
-            ], 'Scheduled Pay', select=True),
+        ], 'Scheduled Pay', select=True),
     }
 
     _defaults = {
@@ -653,7 +653,7 @@ class hr_payslip(osv.osv):
                       'contract_id': False,
                       'struct_id': False,
                       }
-            }
+               }
         if (not employee_id) or (not date_from) or (not date_to):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
@@ -696,12 +696,12 @@ class hr_payslip(osv.osv):
         return res
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-# TODO it seems to be the mess in the onchanges, we should have onchange_employee => onchange_contract => doing all the things
+        # TODO it seems to be the mess in the onchanges, we should have onchange_employee => onchange_contract => doing all the things
         res = {'value': {
                  'line_ids': [],
                  'name': '',
                  }
-              }
+               }
         context = dict(context or {}, contract=True)
         if not contract_id:
             res['value'].update({'struct_id': False})

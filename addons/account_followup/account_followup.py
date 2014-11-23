@@ -482,7 +482,7 @@ class res_partner(osv.osv):
                                                     string = "Worst Due Date",
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
-        }
+    }
 
 
 class account_config_settings(osv.TransientModel):

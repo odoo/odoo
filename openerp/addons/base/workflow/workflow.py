@@ -61,7 +61,7 @@ class workflow(osv.osv):
 
             cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (inst_id,))
             workitems = dict(cr.fetchall())
-        return {'wkf': wkfinfo, 'workitems':  workitems}
+        return {'wkf': wkfinfo, 'workitems': workitems}
 
     def create(self, cr, user, vals, context=None):
         if not context:

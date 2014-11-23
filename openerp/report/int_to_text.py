@@ -64,7 +64,7 @@ def _10000_to_text(chiffre):
     if chiffre == 0:
         return 'zero'
     part1 = _1000_to_text(chiffre % 1000)
-    part2 = mille.get(chiffre / 1000,  _1000_to_text(chiffre / 1000) + ' mille')
+    part2 = mille.get(chiffre / 1000, _1000_to_text(chiffre / 1000) + ' mille')
     if part2 and part1:
         part1 = ' ' + part1
     return part2 + part1

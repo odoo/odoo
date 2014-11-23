@@ -736,7 +736,7 @@ if __name__ == '__main__':
     for name, node in node_res.items():
 
         draw.arc((int(node['y'] - radius), int(node['x'] - radius), int(node['y'] + radius), int(node['x'] + radius)), 0, 360, (128, 128, 128))
-        draw.text((int(node['y']),  int(node['x'])), str(name),  (128, 128, 128))
+        draw.text((int(node['y']), int(node['x'])), str(name), (128, 128, 128))
 
     for t in transitions:
         draw.line((int(node_res[t[0]]['y']), int(node_res[t[0]]['x']), int(node_res[t[1]]['y']), int(node_res[t[1]]['x'])), (128, 128, 128))

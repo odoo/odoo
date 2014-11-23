@@ -52,7 +52,7 @@ class sale_order(osv.Model):
             fiscal_position=so.fiscal_position.id,
             qty=qty,
             context=context
-        )['value']
+                                                                    )['value']
 
         if line_id:
             line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)

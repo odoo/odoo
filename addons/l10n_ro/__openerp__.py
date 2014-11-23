@@ -41,7 +41,7 @@ Romanian accounting chart and localization.
              'account_tax_template.xml',
              'fiscal_position_template.xml',
              'l10n_chart_ro_wizard.xml',
-              ],
+             ],
     "installable": True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

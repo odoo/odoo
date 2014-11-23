@@ -23,7 +23,7 @@ class TestAccountFollowup(TransactionCase):
         self.partner_id = self.partner.create(cr, uid, {'name': 'Test Company',
                                                     'email': 'test@localhost',
                                                     'is_company': True,
-                                                    },
+                                                        },
                                               context=None)
         self.followup_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account_followup", "demo_followup1")[1]
         self.account_id = self.registry("ir.model.data").get_object_reference(cr, uid, "account", "a_recv")[1]

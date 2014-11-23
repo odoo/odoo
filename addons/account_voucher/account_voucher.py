@@ -333,7 +333,7 @@ class account_voucher(osv.osv):
              ('cancel', 'Cancelled'),
              ('proforma', 'Pro-forma'),
              ('posted', 'Posted')
-            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
+             ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                         \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
@@ -1052,7 +1052,7 @@ class account_voucher(osv.osv):
                     if company_currency != current_currency else 0.0),
                 'date': voucher.date,
                 'date_maturity': voucher.date_due
-            }
+        }
         return move_line
 
     def account_move_get(self, cr, uid, voucher_id, context=None):
@@ -1493,7 +1493,7 @@ class account_voucher_line(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'reconcile': fields.boolean('Full Reconcile'),
         'type': fields.selection([('dr', 'Debit'), ('cr', 'Credit')], 'Dr/Cr'),
-        'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_line_id': fields.many2one('account.move.line', 'Journal Item', copy=False),
         'date_original': fields.related('move_line_id', 'date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id', 'date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),

@@ -40,7 +40,7 @@ and should not be installed on regular openerp servers.
     'depends': ['hw_proxy'],
     'test': [
     ],
-    'installable':  False,
+    'installable': False,
     'auto_install': False,
 }
 

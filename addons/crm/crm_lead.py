@@ -749,7 +749,7 @@ class crm_lead(format_address, osv.osv):
             'state_id': lead.state_id and lead.state_id.id or False,
             'is_company': is_company,
             'type': 'contact'
-        }
+                }
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
@@ -1011,7 +1011,7 @@ class crm_lead(format_address, osv.osv):
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
+            'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),

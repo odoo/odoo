@@ -289,7 +289,7 @@ class fleet_vehicle(osv.Model):
                     if overdue or due_soon:
                         ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
                         if len(ids) > 0:
-                        # we display only the name of the oldest overdue/due soon contract
+                            # we display only the name of the oldest overdue/due soon contract
                             name = (self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype_id.name)
 
             res[record.id] = {
@@ -365,7 +365,7 @@ class fleet_vehicle(osv.Model):
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
         'contract_renewal_total': fields.function(_get_contract_reminder_fnc, type="integer", string='Total of contracts due or overdue minus one', multi='contract_info'),
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
-        }
+    }
 
     _defaults = {
         'doors': 5,

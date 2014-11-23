@@ -150,7 +150,7 @@ class stock_quant(osv.osv):
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res

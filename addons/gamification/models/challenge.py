@@ -125,7 +125,7 @@ class gamification_challenge(osv.Model):
                 ('draft', 'Draft'),
                 ('inprogress', 'In Progress'),
                 ('done', 'Done'),
-            ], copy=False,
+        ], copy=False,
             string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
@@ -141,7 +141,7 @@ class gamification_challenge(osv.Model):
                 ('weekly', 'Weekly'),
                 ('monthly', 'Monthly'),
                 ('yearly', 'Yearly')
-            ],
+        ],
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
@@ -169,7 +169,7 @@ class gamification_challenge(osv.Model):
         'visibility_mode': fields.selection([
                 ('personal', 'Individual Goals'),
                 ('ranking', 'Leader Board (Group Ranking)'),
-            ],
+        ],
             string="Display Mode", required=True),
 
         'report_message_frequency': fields.selection([
@@ -179,7 +179,7 @@ class gamification_challenge(osv.Model):
                 ('weekly', 'Weekly'),
                 ('monthly', 'Monthly'),
                 ('yearly', 'Yearly')
-            ],
+        ],
             string="Report Frequency", required=True),
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
@@ -193,7 +193,7 @@ class gamification_challenge(osv.Model):
 
         'category': fields.selection(lambda s, *a, **k: s._get_categories(*a, **k),
             string="Appears in", help="Define the visibility of the challenge through menus", required=True),
-        }
+    }
 
     _defaults = {
         'period': 'once',
@@ -647,7 +647,7 @@ class gamification_challenge(osv.Model):
                     continue
 
                 ctx.update({'challenge_lines': goals})
-                body_html = temp_obj.render_template(cr, user.id,  challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
+                body_html = temp_obj.render_template(cr, user.id, challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
                 # send message only to users, not on the challenge
                 self.message_post(cr, uid, 0,

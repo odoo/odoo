@@ -17,7 +17,7 @@ class stock_picking_wave(osv.osv):
     _defaults = {
         'name': '/',
         'state': 'draft',
-        }
+    }
 
     def confirm_picking(self, cr, uid, ids, context=None):
         picking_todo = self.pool.get('stock.picking').search(cr, uid, [('wave_id', 'in', ids)], context=context)

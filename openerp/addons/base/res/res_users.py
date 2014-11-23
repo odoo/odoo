@@ -228,7 +228,7 @@ class res_users(osv.osv):
     ]
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
     ]
 
     def _get_company(self, cr, uid, context=None, uid2=False):

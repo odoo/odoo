@@ -370,6 +370,6 @@ class account_config_settings(osv.osv_memory):
         if analytic_accounting:
             return {'value': {
                 'module_account_accountant': True,
-                }}
+            }}
         return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

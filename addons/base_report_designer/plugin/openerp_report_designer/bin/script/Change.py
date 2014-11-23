@@ -53,7 +53,7 @@ class Change(unohelper.Base, XJobExecutor):
         }
         host = port = protocol = ''
         if docinfo.getUserFieldValue(0):
-            m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$',  docinfo.getUserFieldValue(0) or '')
+            m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$', docinfo.getUserFieldValue(0) or '')
             host = m.group(2)
             port = m.group(3)
             protocol = m.group(1)
@@ -83,7 +83,7 @@ class Change(unohelper.Base, XJobExecutor):
 
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i, self.lstProtocol.getItemCount())
-        self.win.doModalDialog("lstProtocol",  protocol)
+        self.win.doModalDialog("lstProtocol", protocol)
 
     def btnNext_clicked(self, oActionEvent):
         global url

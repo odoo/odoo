@@ -420,7 +420,7 @@ class Partner(osv.osv):
                 'partner_id': partner.id,
                 'account_id': account_id,
                 'fiscal_position': fpos_id or False
-                }, context=context)
+            }, context=context)
             line_value['invoice_id'] = invoice_id
             invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context=context)
             invoice_obj.write(cr, uid, invoice_id, {'invoice_line': [(6, 0, [invoice_line_id])]}, context=context)

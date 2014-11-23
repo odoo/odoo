@@ -243,7 +243,7 @@ class configmanager(object):
             "Use these options to translate Odoo to another language."
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
-            )
+                                     )
         group.add_option('--load-language', dest="load_language",
                          help="specifies the languages for the translations you want to be loaded")
         group.add_option('-l', "--language", dest="language",
@@ -403,7 +403,7 @@ class configmanager(object):
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
                 'geoip_database',
-        ]
+                ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to

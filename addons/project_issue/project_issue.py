@@ -438,7 +438,7 @@ class project_issue(osv.Model):
             custom_values = {}
         context = dict(context or {}, state_to='draft')
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
+            'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),

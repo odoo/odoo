@@ -89,7 +89,7 @@ class hr_employee(osv.osv):
                     '&',
                         ('employee_id', '=', False),
                         ('user_id', '=', employee.user_id.id)
-                ], context=context)
+            ], context=context)
         return res
 
     def _has_badges(self, cr, uid, ids, field_name, arg, context=None):
@@ -102,7 +102,7 @@ class hr_employee(osv.osv):
                     '&',
                         ('employee_id', '=', False),
                         ('user_id', '=', employee.user_id.id)
-                ], context=context)
+            ], context=context)
             res[employee.id] = len(employee_badge_ids) > 0
         return res
 

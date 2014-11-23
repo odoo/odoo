@@ -138,7 +138,7 @@ class website_sale(http.Controller):
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
+                 ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
 
@@ -330,7 +330,7 @@ class website_sale(http.Controller):
         value['cart_quantity'] = order.cart_quantity
         value['website_sale.total'] = request.website._render("website_sale.total", {
                 'website_sale_order': request.website.sale_get_order()
-            })
+        })
         return value
 
     #------------------------------------------------------

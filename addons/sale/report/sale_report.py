@@ -51,7 +51,7 @@ class sale_report(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order Status', readonly=True),
+        ], 'Order Status', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),

@@ -481,7 +481,7 @@ class product_pricelist_item(osv.osv):
             help="Sets the price so that it is a multiple of this value.\n" \
               "Rounding is applied after the discount and before the surcharge.\n" \
               "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
-            ),
+                                    ),
         'price_min_margin': fields.float('Min. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the minimum amount of margin over the base price.'),
         'price_max_margin': fields.float('Max. Price Margin',

@@ -695,7 +695,7 @@ class task(osv.osv):
             new_parent_ids = set(map(mapper, task.parent_ids))
             if new_child_ids or new_parent_ids:
                 task.write({'parent_ids': [(6, 0, list(new_parent_ids))],
-                            'child_ids':  [(6, 0, list(new_child_ids))]})
+                            'child_ids': [(6, 0, list(new_child_ids))]})
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:

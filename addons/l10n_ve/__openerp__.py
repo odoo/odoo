@@ -61,14 +61,14 @@ but you will need set manually account defaults for taxes.
     'depends': ['account',
                 'base_vat',
                 'account_chart'
-    ],
+                ],
     'demo': [],
     'data': ['data/account_tax_code.xml',
              'data/account_user_types.xml',
              'data/account_chart.xml',
              'data/account_tax.xml',
              'data/l10n_chart_ve_wizard.xml'
-    ],
+             ],
     'auto_install': False,
     'installable': True,
     'images': ['images/config_chart_l10n_ve.jpeg',

@@ -117,7 +117,7 @@ class mrp_routing(osv.osv):
             help="Keep empty if you produce at the location where the finished products are needed." \
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations."
-        ),
+                                       ),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
@@ -1167,7 +1167,7 @@ class mrp_production(osv.osv):
                 'product_uom': line.product_uom.id,
                 'product_uos_qty': line.product_uos_qty,
                 'product_uos': line.product_uos.id,
-                }
+            }
             proc_obj = self.pool.get("procurement.order")
             proc = proc_obj.create(cr, uid, vals, context=context)
             proc_obj.run(cr, uid, [proc], context=context)

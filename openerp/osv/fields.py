@@ -951,7 +951,7 @@ class many2many(_column):
                'limit': limit_str,
                'order_by': order_by,
                'offset': offset,
-                }, where_params)
+                                                                                }, where_params)
 
         cr.execute(query, [tuple(ids), ] + where_params)
         for r in cr.fetchall():

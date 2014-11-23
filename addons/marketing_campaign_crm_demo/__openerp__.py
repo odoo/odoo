@@ -25,7 +25,7 @@
     'version': '1.0',
     'depends': ['marketing_campaign',
                 'crm',
-    ],
+                ],
     'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """

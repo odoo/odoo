@@ -88,7 +88,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     flag = False
                     vals = {
                         'name': account.code + ' ' + account.name,
-                        'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
+                        'balance': account.balance != 0 and account.balance * report.sign or account.balance,
                         'type': 'account',
                         'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1, 6) or 6,  # account.level + 1
                         'account_type': account.type,

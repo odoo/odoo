@@ -39,7 +39,7 @@ class hr_timesheet_report(osv.osv):
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('done', 'Done')], 'Status', readonly=True),
-        }
+    }
 
     def _select(self):
         return super(hr_timesheet_report, self)._select() + """,

@@ -363,7 +363,7 @@ class mail_message(osv.Model):
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
                 'user_pid': pid
-                })
+            })
         return True
 
     def _message_read_dict(self, cr, uid, message, parent_id=False, context=None):
@@ -413,7 +413,7 @@ class mail_message(osv.Model):
                 'has_voted': has_voted,
                 'is_favorite': message.starred,
                 'attachment_ids': [],
-            }
+                }
 
     def _message_read_add_expandables(self, cr, uid, messages, message_tree, parent_tree,
             message_unload_ids=[], thread_level=0, domain=[], parent_id=False, context=None):
@@ -445,7 +445,7 @@ class mail_message(osv.Model):
                 'nb_messages': message_nb,
                 'type': 'expandable',
                 'parent_id': parent_id,
-                'max_limit':  max_limit,
+                'max_limit': max_limit,
             }
 
         if not messages:
@@ -895,4 +895,4 @@ class mail_message(osv.Model):
                         'message_id': message.parent_id.id,
                         'partner_id': partner.id,
                         'is_read': True,
-                    }, context=context)
+                }, context=context)

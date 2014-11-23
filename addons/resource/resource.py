@@ -728,11 +728,11 @@ class resource_resource(osv.osv):
             leave_ids = resource_calendar_leaves_pool.search(cr, uid, ['|', ('calendar_id', '=', calendar_id),
                                                                        ('calendar_id', '=', resource_calendar),
                                                                        ('resource_id', '=', resource_id)
-                                                                      ], context=context)
+                                                                       ], context=context)
         else:
             leave_ids = resource_calendar_leaves_pool.search(cr, uid, [('calendar_id', '=', calendar_id),
                                                                       ('resource_id', '=', False)
-                                                                      ], context=context)
+                                                                       ], context=context)
         leaves = resource_calendar_leaves_pool.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
         for i in range(len(leaves)):
             dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')

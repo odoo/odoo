@@ -155,7 +155,7 @@ class gamification_badge(osv.Model):
                 ('users', 'A selected list of users'),
                 ('having', 'People having some badges'),
                 ('nobody', 'No one, assigned through challenges'),
-            ],
+        ],
             string="Allowance to Grant",
             help="Who can grant this badge",
             required=True),

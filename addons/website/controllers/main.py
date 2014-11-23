@@ -169,7 +169,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': id,
-                }, context=request.context)
+            }, context=request.context)
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)
 
@@ -402,7 +402,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
-        ], auth="public", website=True)
+    ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.

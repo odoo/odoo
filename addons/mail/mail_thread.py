@@ -136,7 +136,7 @@ class mail_thread(osv.AbstractModel):
                             Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
                         </p>
                         %(static_help)s"""
-                    ) % {
+                     ) % {
                         'document': document_name,
                         'email': alias_email,
                         'static_help': help or ''
@@ -207,7 +207,7 @@ class mail_thread(osv.AbstractModel):
                 'followed': False,
                 'parent_model': subtype.parent_id and subtype.parent_id.res_model or self._name,
                 'id': subtype.id}
-            ) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
+             ) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
         for id in ids:
             res[id]['message_subtype_data'] = subtype_dict.copy()
 
@@ -1060,7 +1060,7 @@ class mail_thread(osv.AbstractModel):
                 'No possible route found for incoming message from %s to %s (Message-Id %s:). '
                 'Create an appropriate mail.alias or force the destination model.' %
                 (email_from, email_to, message_id)
-            )
+        )
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications

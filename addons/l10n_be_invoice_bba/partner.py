@@ -41,7 +41,7 @@ class res_partner(osv.osv):
             ('random', 'Random'),
             ('date', 'Date'),
             ('partner_ref', 'Customer Reference'),
-            ], 'Communication Algorithm',
+        ], 'Communication Algorithm',
             help='Select Algorithm to generate the Structured Communication on Outgoing Invoices.'),
     }
 

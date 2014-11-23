@@ -54,7 +54,7 @@ def exp_import_edi_url(db_name, uid, passwd, edi_url, context=None):
 
 
 def dispatch(method, params):
-    if method in ['import_edi_document',  'import_edi_url']:
+    if method in ['import_edi_document', 'import_edi_url']:
         (db, uid, passwd) = params[0:3]
         openerp.service.security.check(db, uid, passwd)
     else:

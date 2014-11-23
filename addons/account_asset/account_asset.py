@@ -407,7 +407,7 @@ class account_asset_depreciation_line(osv.osv):
                 'ref': reference,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
-                }
+            }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id

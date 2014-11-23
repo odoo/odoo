@@ -261,7 +261,7 @@ class mrp_production(osv.osv):
                 if context.get('__last_update'):
                     del context['__last_update']
                 if (wc.date_planned < dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
-                    self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
+                    self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id], {
                         'date_planned': dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)
                     i = self.pool.get('resource.calendar').interval_get(
@@ -543,7 +543,7 @@ class mrp_operations_operation(osv.osv):
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),
         'order_date': fields.function(_get_order_date, string='Order Date', type='date', store={'mrp.production': (_order_date_search_production, ['date_planned'], 10)}),
-        }
+    }
     _defaults = {
         'date_start': lambda *a: datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }

@@ -96,7 +96,7 @@ class purchase_order(osv.osv):
             warning = {
                 'title': title,
                 'message': message
-                }
+            }
             if partner.purchase_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
@@ -121,7 +121,7 @@ class account_invoice(osv.osv):
                 'account_id': False,
                 'payment_term': False,
             }
-                }
+            }
         warning = {}
         title = False
         message = False
@@ -132,7 +132,7 @@ class account_invoice(osv.osv):
             warning = {
                 'title': title,
                 'message': message
-                }
+            }
 
             if partner.invoice_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}

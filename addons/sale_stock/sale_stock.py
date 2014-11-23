@@ -90,11 +90,11 @@ class sale_order(osv.osv):
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),
                 ('prepaid', 'Before Delivery'),
-            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
-            }),
+        }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
@@ -399,7 +399,7 @@ class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
     _columns = {
         'sale_selectable': fields.boolean("Selectable on Sales Order Line")
-        }
+    }
 
 
 class stock_picking(osv.osv):

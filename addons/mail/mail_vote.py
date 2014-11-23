@@ -34,6 +34,6 @@ class mail_vote(osv.Model):
                 ondelete='cascade', required=True),
             'user_id': fields.many2one('res.users', 'User', select=1,
                 ondelete='cascade', required=True),
-        }
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

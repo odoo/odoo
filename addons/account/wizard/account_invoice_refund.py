@@ -179,7 +179,7 @@ class account_invoice_refund(osv.osv_memory):
                                         writeoff_period_id=period,
                                         writeoff_journal_id = inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
-                                        )
+                                                     )
                     if mode == 'modify':
                         invoice = inv_obj.read(cr, uid, [inv.id],
                                     ['name', 'type', 'number', 'reference',

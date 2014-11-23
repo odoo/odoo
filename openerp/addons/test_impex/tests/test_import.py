@@ -157,7 +157,7 @@ class test_boolean_field(ImporterCase):
                 False,
                 False,
                 False,
-            ],
+        ],
             values(self.read()))
 
     def test_trues(self):

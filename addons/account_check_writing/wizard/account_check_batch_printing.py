@@ -37,7 +37,7 @@ class account_check_write(osv.osv_memory):
 
     _defaults = {
         'check_number': _get_next_number,
-        }
+    }
 
     def print_check_write(self, cr, uid, ids, context=None):
         if context is None:

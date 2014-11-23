@@ -192,7 +192,7 @@ class sale_order(osv.osv):
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+        ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
@@ -205,7 +205,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order."),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
-            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""This field controls how invoice and delivery operations are synchronized."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
         'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True),
@@ -224,19 +224,19 @@ class sale_order(osv.osv):
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
+        },
             multi='sums', help="The amount without tax.", track_visibility='always'),
         'amount_tax': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
+        },
             multi='sums', help="The tax amount."),
         'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
+        },
             multi='sums', help="The total amount."),
 
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
@@ -326,7 +326,7 @@ class sale_order(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
@@ -339,7 +339,7 @@ class sale_order(osv.osv):
             'payment_term': payment_term,
             'user_id': dedicated_salesman,
         }
-        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False,  context=context)
+        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist
@@ -1133,7 +1133,7 @@ class sale_order_line(osv.osv):
                     product, qty or 1.0, partner_id, {
                         'uom': uom or result.get('product_uom'),
                         'date': date_order,
-                        })[pricelist]
+                    })[pricelist]
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")

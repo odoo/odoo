@@ -44,7 +44,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         self.total = 0.0
 
     def get_periods(self, form):
-#       Get start year-month-date and end year-month-date
+        #       Get start year-month-date and end year-month-date
         first_year = int(form['start_date'][0:4])
         last_year = int(form['end_date'][0:4])
 

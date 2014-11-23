@@ -199,7 +199,7 @@ class account_invoice(models.Model):
             ('in_invoice', 'Supplier Invoice'),
             ('out_refund', 'Customer Refund'),
             ('in_refund', 'Supplier Refund'),
-        ], string='Type', readonly=True, index=True, change_default=True,
+    ], string='Type', readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
 
@@ -221,7 +221,7 @@ class account_invoice(models.Model):
             ('open', 'Open'),
             ('paid', 'Paid'),
             ('cancel', 'Cancelled'),
-        ], string='Status', index=True, readonly=True, default='draft',
+    ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
              " * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
@@ -589,7 +589,7 @@ class account_invoice(models.Model):
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _('Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration') % type_label
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
-            domain = {'journal_id':  [('id', 'in', journals.ids)]}
+            domain = {'journal_id': [('id', 'in', journals.ids)]}
 
         return {'value': values, 'domain': domain}
 

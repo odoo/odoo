@@ -39,7 +39,7 @@ class crm_partner_binding(osv.osv_memory):
                 ('exist', 'Link to an existing customer'),
                 ('create', 'Create a new customer'),
                 ('nothing', 'Do not link to a customer')
-            ], 'Related Customer', required=True),
+        ], 'Related Customer', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer'),
     }
 

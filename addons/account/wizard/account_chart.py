@@ -36,7 +36,7 @@ class account_chart(osv.osv_memory):
         'period_to': fields.many2one('account.period', 'End period'),
         'target_move': fields.selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
-                                        ], 'Target Moves', required=True),
+                                         ], 'Target Moves', required=True),
     }
 
     def _get_fiscalyear(self, cr, uid, context=None):

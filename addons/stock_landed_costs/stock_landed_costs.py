@@ -85,7 +85,7 @@ class stock_landed_cost(osv.osv):
             store={
                 'stock.landed.cost': (lambda self, cr, uid, ids, c={}: ids, ['cost_lines'], 20),
                 'stock.landed.cost.lines': (_get_cost_line, ['price_unit', 'quantity', 'cost_id'], 20),
-            }, track_visibility='always'
+        }, track_visibility='always'
         ),
         'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange', copy=False),
         'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, copy=False),

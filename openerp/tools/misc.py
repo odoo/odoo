@@ -553,7 +553,7 @@ ALL_LANGUAGES = {
         'zh_TW': u'Chinese (TW) / 正體字',
         'th_TH': u'Thai / ภาษาไทย',
         'tlh_TLH': u'Klingon',
-    }
+}
 
 
 def scan_languages():
@@ -684,7 +684,7 @@ __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'terp-gdu-smart-failing', 'terp-go-week', 'terp-gtk-select-all', 'terp-locked', 'terp-mail-forward',
 'terp-mail-message-new', 'terp-mail-replied', 'terp-rating-rated', 'terp-stage', 'terp-stock_format-scientific',
 'terp-dolar_ok!', 'terp-idea', 'terp-stock_format-default', 'terp-mail-', 'terp-mail_delete'
-]
+                ]
 
 
 def icons(*a, **kw):

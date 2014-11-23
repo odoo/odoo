@@ -48,7 +48,7 @@ class account_analytic_profit(report_sxw.rml_parse):
             ('date', '<=', form['date_to']),
             ('journal_id', 'in', form['journal_ids'][0][2]),
             ('user_id', 'in', user_id),
-            ])
+        ])
         ids = list(set([b.journal_id.id for b in line_obj.browse(self.cr, self.uid, line_ids)]))
         return journal_obj.browse(self.cr, self.uid, ids)
 
@@ -118,7 +118,7 @@ class account_analytic_profit(report_sxw.rml_parse):
             ('date', '<=', form['date_to']),
             ('journal_id', 'in', form['journal_ids'][0][2]),
             ('user_id', 'in', form['employee_ids'][0][2]),
-            ])
+        ])
         return line_obj.browse(self.cr, self.uid, ids)
 
 

@@ -110,7 +110,7 @@ class crm_lead(osv.osv):
             return {'value':
                     {'date_assign': fields.date.context_today(self, cr, uid, context=context),
                      'user_id': user_id}
-                   }
+                    }
 
     def action_assign_partner(self, cr, uid, ids, context=None):
         return self.assign_partner(cr, uid, ids, partner_id=False, context=context)

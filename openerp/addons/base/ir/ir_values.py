@@ -254,7 +254,7 @@ class ir_values(osv.osv):
             ('name', '=', field_name),
             ('user_id', '=', False if for_all_users else uid),
             ('company_id', '=', company_id)
-            ]
+        ]
         self.unlink(cr, uid, self.search(cr, uid, search_criteria))
 
         return self.create(cr, uid, {
@@ -278,7 +278,7 @@ class ir_values(osv.osv):
             ('name', '=', field_name),
             ('user_id', '=', False if for_all_users else uid),
             ('company_id', '=', company_id)
-            ]
+        ]
         defaults = self.browse(cr, uid, self.search(cr, uid, search_criteria))
         return pickle.loads(defaults[0].value.encode('utf-8')) if defaults else None
 
@@ -375,7 +375,7 @@ class ir_values(osv.osv):
             ('model', '=', model),
             ('res_id', '=', res_id or 0),  # int field -> NULL == 0
             ('value', '=', action),
-            ]
+        ]
         self.unlink(cr, uid, self.search(cr, uid, search_criteria))
 
         return self.create(cr, uid, {

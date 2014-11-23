@@ -267,7 +267,7 @@ class account_fiscalyear_close(osv.osv_memory):
                    'name': (new_journal.name or '') + ':' + (period.code or ''),
                    'journal_id': new_journal.id,
                    'period_id': period.id
-               })]
+                   })]
         cr.execute('UPDATE account_fiscalyear ' \
                    'SET end_journal_period_id = %s ' \
                    'WHERE id = %s', (ids[0], old_fyear.id))

@@ -420,7 +420,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M') + "+0000",
-                            }
+                             }
                           )
 
     def write(self, modules, tnrs, source, trad, comments=None):
@@ -770,7 +770,7 @@ def trans_generate(lang, modules, cr):
                     model_data_ids = model_data_obj.search(cr, uid, [
                         ('model', '=', model),
                         ('res_id', '=', res_id),
-                        ])
+                    ])
                     if not model_data_ids:
                         push_translation(module, 'model', name, 0, encode(obj_value[field_name]))
 

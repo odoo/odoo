@@ -353,7 +353,7 @@ class share_wizard(osv.TransientModel):
                                             'view_id': x.view_id.id})
                                       for x in copied_action.view_ids
                                       if (wizard_data.access_mode != 'readonly' or x.view_mode == wizard_data.view_type)
-                                     ]
+                                      ]
         return action_def
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
@@ -534,7 +534,7 @@ class share_wizard(osv.TransientModel):
                             # otherwise we can simply link the rule to keep it dynamic
                             rule_obj.write(cr, SUPERUSER_ID, [rule.id], {
                                     'groups': [(4, group_id)]
-                                })
+                            })
                             _logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
 
     def _check_personal_rule_or_duplicate(self, cr, group_id, rule, context=None):
@@ -611,7 +611,7 @@ class share_wizard(osv.TransientModel):
                 'model_id': model_id,
                 'domain_force': domain,
                 'groups': [(4, group_id)]
-                })
+            })
             _logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):

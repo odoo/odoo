@@ -27,7 +27,7 @@
                 'document',
                 'email_template',
                 'decimal_precision'
-    ],
+                ],
     'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """

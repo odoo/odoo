@@ -67,4 +67,4 @@ class website_sale_options(website_sale):
                 'product': product,
                 'compute_currency': compute_currency,
                 'get_attribute_value_ids': self.get_attribute_value_ids,
-            })
+        })

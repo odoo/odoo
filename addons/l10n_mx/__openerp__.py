@@ -49,7 +49,7 @@ With this module you will have:
     "depends": ["account",
                 "base_vat",
                 "account_chart",
-                 ],
+                ],
     "demo_xml": [],
     "data": ["data/account_tax_code.xml",
              "data/account_chart.xml",

@@ -93,17 +93,17 @@ class document(object):
             return value
 
     def eval(self, record, expr):
-# TODO: support remote variables (eg address.title) in expr
-# how to do that: parse the string, find dots, replace those dotted variables by temporary
-# "simple ones", fetch the value of those variables and add them (temporarily) to the _data
-# dictionary passed to eval
+        # TODO: support remote variables (eg address.title) in expr
+        # how to do that: parse the string, find dots, replace those dotted variables by temporary
+        # "simple ones", fetch the value of those variables and add them (temporarily) to the _data
+        # dictionary passed to eval
 
-# FIXME: it wont work if the data hasn't been fetched yet... this could
-# happen if the eval node is the first one using this Record
-# the next line is a workaround for the problem: it causes the resource to be loaded
-# Pinky: Why not this ? eval(expr, browser) ?
-#       name = browser.name
-#       data_dict = browser._data[self.get_value(browser, 'id')]
+        # FIXME: it wont work if the data hasn't been fetched yet... this could
+        # happen if the eval node is the first one using this Record
+        # the next line is a workaround for the problem: it causes the resource to be loaded
+        # Pinky: Why not this ? eval(expr, browser) ?
+        #       name = browser.name
+        #       data_dict = browser._data[self.get_value(browser, 'id')]
         return safe_eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
@@ -145,7 +145,7 @@ class document(object):
                         el.text = i
 
             elif attrs['type'] == 'data':
-# TODO: test this
+                # TODO: test this
                 txt = self.datas.get('form', {}).get(attrs['name'], '')
                 el = etree.SubElement(parent, node.tag)
                 el.text = txt
@@ -185,7 +185,7 @@ class document(object):
 
             elif attrs['type'] == 'call':
                 if len(attrs['args']):
-# TODO: test this
+                    # TODO: test this
                     # fetches the values of the variables which names where passed in the args attribute
                     args = [self.eval(browser, arg) for arg in attrs['args'].split(',')]
                 else:

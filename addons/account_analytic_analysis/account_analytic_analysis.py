@@ -532,7 +532,7 @@ class account_analytic_account(osv.osv):
             ('weekly', 'Week(s)'),
             ('monthly', 'Month(s)'),
             ('yearly', 'Year(s)'),
-            ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
+        ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
         'recurring_interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'recurring_next_date': fields.date('Date of Next Invoice'),
     }
@@ -709,7 +709,7 @@ class account_analytic_account(osv.osv):
         fpos_obj = self.pool.get('account.fiscal.position')
         fiscal_position = None
         if fiscal_position_id:
-            fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+            fiscal_position = fpos_obj.browse(cr, uid, fiscal_position_id, context=context)
         invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
 

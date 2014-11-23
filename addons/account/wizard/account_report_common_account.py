@@ -29,7 +29,7 @@ class account_common_account_report(osv.osv_memory):
     _columns = {
         'display_account': fields.selection([('all', 'All'), ('movement', 'With movements'),
                                             ('not_zero', 'With balance is not equal to 0'),
-                                            ], 'Display Accounts', required=True),
+                                             ], 'Display Accounts', required=True),
 
     }
     _defaults = {

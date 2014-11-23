@@ -253,7 +253,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.message_unsubscribe_users(cr, self.user_projectuser_id, [pigs_id], [self.user_projectuser_id])
         self.assertRaises(except_orm,
             self.project_task.create, cr, self.user_projectuser_id, {'name': 'Pigs task', 'project_id': pigs_id}, {'mail_create_nolog': True}
-        )
+                          )
 
         # Do: project user can create a task without project
         self.project_task.create(cr, self.user_projectuser_id, {

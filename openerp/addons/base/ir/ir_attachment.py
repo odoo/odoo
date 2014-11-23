@@ -197,7 +197,7 @@ class ir_attachment(osv.osv):
         'res_model': fields.char('Resource Model', readonly=True, help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
+        'create_uid': fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
         'type': fields.selection([('url', 'URL'), ('binary', 'Binary'), ],
                 'Type', help="Binary File or URL", required=True, change_default=True),

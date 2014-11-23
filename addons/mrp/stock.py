@@ -109,7 +109,7 @@ class StockMove(osv.osv):
                             'group_id': move.group_id.id,
                             'priority': move.priority,
                             'partner_dest_id': move.partner_id.id,
-                            }
+                        }
                         if move.procurement_id:
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
                         else:

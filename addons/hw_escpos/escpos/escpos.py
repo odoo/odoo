@@ -57,35 +57,35 @@ class StyleStack:
     def __init__(self):
         self.stack = []
         self.defaults = {   # default style values
-            'align':     'left',
+            'align': 'left',
             'underline': 'off',
-            'bold':      'off',
-            'size':      'normal',
-            'font':    'a',
-            'width':     48,
-            'indent':    0,
-            'tabwidth':  2,
-            'bullet':    ' - ',
+            'bold': 'off',
+            'size': 'normal',
+            'font': 'a',
+            'width': 48,
+            'indent': 0,
+            'tabwidth': 2,
+            'bullet': ' - ',
             'line-ratio': 0.5,
-            'color':    'black',
+            'color': 'black',
 
-            'value-decimals':           2,
-            'value-symbol':             '',
-            'value-symbol-position':    'after',
-            'value-autoint':            'off',
-            'value-decimals-separator':  '.',
+            'value-decimals': 2,
+            'value-symbol': '',
+            'value-symbol-position': 'after',
+            'value-autoint': 'off',
+            'value-decimals-separator': '.',
             'value-thousands-separator': ',',
-            'value-width':               0,
+            'value-width': 0,
 
         }
 
         self.types = {  # attribute types, default is string and can be ommitted
-            'width':    'int',
-            'indent':   'int',
+            'width': 'int',
+            'indent': 'int',
             'tabwidth': 'int',
-            'line-ratio':       'float',
-            'value-decimals':   'int',
-            'value-width':      'int',
+            'line-ratio': 'float',
+            'value-decimals': 'int',
+            'value-width': 'int',
         }
 
         self.cmds = {
@@ -93,32 +93,32 @@ class StyleStack:
             # some style do not correspond to escpos command are used by
             # the serializer instead
             'align': {
-                'left':     TXT_ALIGN_LT,
-                'right':    TXT_ALIGN_RT,
-                'center':   TXT_ALIGN_CT,
+                'left': TXT_ALIGN_LT,
+                'right': TXT_ALIGN_RT,
+                'center': TXT_ALIGN_CT,
             },
             'underline': {
-                'off':      TXT_UNDERL_OFF,
-                'on':       TXT_UNDERL_ON,
-                'double':   TXT_UNDERL2_ON,
+                'off': TXT_UNDERL_OFF,
+                'on': TXT_UNDERL_ON,
+                'double': TXT_UNDERL2_ON,
             },
             'bold': {
-                'off':      TXT_BOLD_OFF,
-                'on':       TXT_BOLD_ON,
+                'off': TXT_BOLD_OFF,
+                'on': TXT_BOLD_ON,
             },
             'font': {
-                'a':        TXT_FONT_A,
-                'b':        TXT_FONT_B,
+                'a': TXT_FONT_A,
+                'b': TXT_FONT_B,
             },
             'size': {
-                'normal':           TXT_NORMAL,
-                'double-height':    TXT_2HEIGHT,
-                'double-width':     TXT_2WIDTH,
-                'double':           TXT_DOUBLE,
+                'normal': TXT_NORMAL,
+                'double-height': TXT_2HEIGHT,
+                'double-width': TXT_2WIDTH,
+                'double': TXT_DOUBLE,
             },
             'color': {
-                'black':    TXT_COLOR_BLACK,
-                'red':      TXT_COLOR_RED,
+                'black': TXT_COLOR_BLACK,
+                'red': TXT_COLOR_RED,
             },
         }
 
@@ -575,7 +575,7 @@ class Escpos:
                 'h4': {'size': 'double-height'},
                 'h5': {'bold': 'on'},
                 'em': {'font': 'b'},
-                'b':  {'bold': 'on'},
+                'b': {'bold': 'on'},
             }
 
             stylestack.push()

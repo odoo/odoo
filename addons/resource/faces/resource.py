@@ -463,7 +463,7 @@ class Resource(_ResourceBase):
     __metaclass__ = _MetaResource
     __attrib_completions__ = {\
         "max_load": 'max_load = ',
-        "title":  'title = "|"',
+        "title": 'title = "|"',
         "efficiency": 'efficiency = ',
         "vacation": 'vacation = [("|2002-02-01", "2002-02-05")]'}
 

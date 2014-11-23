@@ -146,7 +146,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                                 'key2': 'client_print_multi',
                                 'object': True,
                                 'user_id': uid
-                            }
+                        }
                         res = self.sock.execute(database, uid, self.password, 'ir.values', 'create', rec)
                     else:
                         ErrorDialog("This name is already used for another report.\nPlease try with another name.", "", "Error!")
@@ -159,7 +159,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
             else:
 
                 id = docinfo.getUserFieldValue(2)
-                vId = self.sock.execute(database, uid, self.password, 'ir.values',  'search', [('value', '=', 'ir.actions.report.xml,' + str(id))])
+                vId = self.sock.execute(database, uid, self.password, 'ir.values', 'search', [('value', '=', 'ir.actions.report.xml,' + str(id))])
                 rec = {'name': self.win.getEditText("txtReportName")}
                 res = self.sock.execute(database, uid, self.password, 'ir.values', 'write', vId, rec)
             oDoc2.store()

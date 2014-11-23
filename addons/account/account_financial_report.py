@@ -100,7 +100,7 @@ class account_financial_report(osv.osv):
     _columns = {
         'name': fields.char('Report Name', required=True, translate=True),
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
-        'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
+        'children_ids': fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
         'balance': fields.function(_get_balance, 'Balance', multi='balance'),
         'debit': fields.function(_get_balance, 'Debit', multi='balance'),
@@ -111,16 +111,16 @@ class account_financial_report(osv.osv):
             ('accounts', 'Accounts'),
             ('account_type', 'Account Type'),
             ('account_report', 'Report Value'),
-            ], 'Type'),
+        ], 'Type'),
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
-        'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
+        'account_report_id': fields.many2one('account.financial.report', 'Report Value'),
         'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
         'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'display_detail': fields.selection([
             ('no_detail', 'No detail'),
             ('detail_flat', 'Display children flat'),
             ('detail_with_hierarchy', 'Display children with hierarchy')
-            ], 'Display details'),
+        ], 'Display details'),
         'style_overwrite': fields.selection([
             (0, 'Automatic formatting'),
             (1, 'Main Title 1 (bold, underlined)'),
@@ -129,7 +129,7 @@ class account_financial_report(osv.osv):
             (4, 'Normal Text'),
             (5, 'Italic Text (smaller)'),
             (6, 'Smallest Text'),
-            ], 'Financial Report Style', help="You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level')."),
+        ], 'Financial Report Style', help="You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level')."),
     }
 
     _defaults = {

@@ -110,7 +110,7 @@ class website_event(http.Controller):
     @http.route([
         '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track''',
         '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
-        ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
         if tag:

@@ -44,12 +44,12 @@ class hr_holidays_summary_employee(osv.osv_memory):
              'ids': [],
              'model': 'hr.employee',
              'form': data
-            }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
             'datas': datas,
-            }
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

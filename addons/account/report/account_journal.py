@@ -55,7 +55,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'set_last_move_id': self.set_last_move_id,
             'tax_codes': self.tax_codes,
             'sum_vat': self._sum_vat,
-            })
+        })
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')

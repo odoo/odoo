@@ -306,7 +306,7 @@ class lunch_order(osv.Model):
                                           copy=True),
         'total': fields.function(_price_get, string="Total", store={
                  'lunch.order.line': (_fetch_orders_from_lines, ['product_id', 'order_id'], 20),
-            }),
+        }),
         'state': fields.selection([('new', 'New'), \
                                    ('confirmed', 'Confirmed'), \
                                    ('cancelled', 'Cancelled'), \
@@ -410,7 +410,7 @@ class lunch_order_line(osv.Model):
         'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store={
             'lunch.order': (_get_line_order_ids, ['date'], 10),
             'lunch.order.line': (lambda self, cr, uid, ids, ctx: ids, [], 10),
-            }),
+        }),
         'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
         'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note': fields.text('Note'),
@@ -494,7 +494,7 @@ class lunch_alert(osv.Model):
         'thursday': fields.boolean('Thursday'),
         'friday': fields.boolean('Friday'),
         'saturday': fields.boolean('Saturday'),
-        'sunday':  fields.boolean('Sunday'),
+        'sunday': fields.boolean('Sunday'),
         'active_from': fields.float('Between', required=True),
         'active_to': fields.float('And', required=True),
     }

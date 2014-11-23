@@ -51,7 +51,7 @@ class document_file(osv.osv):
     _columns = {
         # Columns from ir.attachment:
         'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'write_uid': fields.many2one('res.users', 'Last Modification User', readonly=True),
         # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, change_default=True),
@@ -137,7 +137,7 @@ class document_file(osv.osv):
         return super(document_file, self).write(cr, uid, ids, vals, context)
 
     def _index(self, cr, uid, data, datas_fname, file_type):
-        mime, icont = cntIndex.doIndex(data, datas_fname,  file_type or None, None)
+        mime, icont = cntIndex.doIndex(data, datas_fname, file_type or None, None)
         icont_u = ustr(icont)
         return mime, icont_u
 
@@ -162,9 +162,9 @@ class document_directory(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'write_uid': fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'create_uid': fields.many2one('res.users', 'Creator', readonly=True),
         'user_id': fields.many2one('res.users', 'Owner'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1, change_default=True),
@@ -367,7 +367,7 @@ class document_directory_dctx(osv.osv):
         'field': fields.char('Field', required=True, select=1, help="The name of the field."),
         'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" + \
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
-        }
+    }
 
 
 class document_directory_content_type(osv.osv):

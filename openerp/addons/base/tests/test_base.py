@@ -293,7 +293,7 @@ class test_base(common.TransactionCase):
         title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady', 'domain': 'contact'})
         test_users = [
             {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend', 'date': '2015-03-28', 'title': title_lady},
-            {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend',  'date': '2015-01-28', 'title': title_lady},
+            {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend', 'date': '2015-01-28', 'title': title_lady},
             {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend', 'date': '2015-03-02', 'title': title_sir},
             {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper', 'date': '2015-03-20', 'title': title_lady},
             {'name': 'Nab', 'login': 'nab', 'color': -3, 'function': '5$ Wrench', 'date': '2014-09-10', 'title': title_sir},

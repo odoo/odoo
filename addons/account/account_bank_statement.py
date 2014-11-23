@@ -679,7 +679,7 @@ class account_bank_statement_line(osv.osv):
             'amount_currency': 0.0,
             'date': st_line.date,
             'account_id': account_id
-            }
+        }
 
     def process_reconciliations(self, cr, uid, data, context=None):
         for datum in data:

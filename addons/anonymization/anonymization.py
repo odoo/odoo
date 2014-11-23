@@ -191,7 +191,7 @@ class ir_model_fields_anonymization(osv.osv):
     def onchange_field_name(self, cr, uid, ids, field_name, model_name):
         res = {'value': {
                 'field_id': False,
-            }}
+        }}
 
         if field_name and model_name:
             ir_model_fields_obj = self.pool.get('ir.model.fields')
@@ -472,7 +472,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
                "This file is also stored in the %s directory. The absolute file path is: %s.",
-              ]
+                ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
         fn = open(abs_filepath, 'r')
@@ -583,7 +583,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             # add a result message in the wizard:
             msg = '\n'.join(["Successfully reversed the anonymization.",
                              "",
-                            ])
+                             ])
 
             self.write(cr, uid, ids, {'msg': msg})
 

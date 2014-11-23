@@ -115,9 +115,9 @@ class Proxy(http.Controller):
         return request.make_response(resp, {
             'Cache-Control': 'no-cache',
             'Content-Type': 'text/html; charset=utf-8',
-            'Access-Control-Allow-Origin':  '*',
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET',
-            })
+        })
 
     @http.route('/hw_proxy/status_json', type='json', auth='none', cors='*')
     def status_json(self):

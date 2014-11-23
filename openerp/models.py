@@ -468,7 +468,7 @@ class BaseModel(object):
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'],
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
-                            ))
+                        ))
                         break
         self.invalidate_cache(cr, SUPERUSER_ID)
 
@@ -612,7 +612,7 @@ class BaseModel(object):
             columns = dict((key, val)
                 for key, val in parent_class._columns.iteritems()
                 if not val.manual
-            )
+                           )
             columns.update(cls._columns)
 
             inherits = dict(parent_class._inherits)
@@ -3152,7 +3152,7 @@ class BaseModel(object):
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
-            }
+                      }
         else:
             fnames = {field.name}
 
@@ -3525,7 +3525,7 @@ class BaseModel(object):
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
-                 ]
+                  ]
         if ir_property.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
 
@@ -5932,7 +5932,7 @@ PGERROR_TO_OE = defaultdict(
         '23502': convert_pgerror_23502,
         # unique constraint error
         '23505': convert_pgerror_23505,
-        })
+    })
 
 
 def _normalize_ids(arg, atoms={int, long, str, unicode, NewId}):

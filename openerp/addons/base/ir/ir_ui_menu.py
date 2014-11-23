@@ -200,7 +200,7 @@ class ir_ui_menu(osv.osv):
         ids = ir_values_obj.search(cr, uid, [
             ('model', '=', 'ir.ui.menu'),
             ('res_id', '=', id),
-            ])
+        ])
         for iv in ir_values_obj.browse(cr, uid, ids):
             ir_values_obj.copy(cr, uid, iv.id, default={'res_id': res},
                                context=context)
@@ -242,7 +242,7 @@ class ir_ui_menu(osv.osv):
                 'key': 'action',
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
-                }, context=ctx)
+            }, context=ctx)
         elif values_ids:
             # value is False, remove existing binding
             ir_values_obj.unlink(cursor, user, values_ids, context=ctx)

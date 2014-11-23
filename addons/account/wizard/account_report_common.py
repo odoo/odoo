@@ -53,9 +53,9 @@ class account_common_report(osv.osv_memory):
         'date_to': fields.date("End Date"),
         'target_move': fields.selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
-                                        ], 'Target Moves', required=True),
+                                         ], 'Target Moves', required=True),
 
-        }
+    }
 
     def _check_company_id(self, cr, uid, ids, context=None):
         for wiz in self.browse(cr, uid, ids, context=context):
@@ -176,7 +176,7 @@ class account_common_report(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'], context=context)[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from', 'date_to', 'fiscalyear_id', 'journal_ids', 'period_from', 'period_to', 'filter', 'chart_account_id', 'target_move'], context=context)[0]
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]

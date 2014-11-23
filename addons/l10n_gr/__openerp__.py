@@ -39,7 +39,7 @@ Greek accounting chart and localization.
              'account_tax.xml',
              'account_tax_vat.xml',
              'l10n_gr_wizard.xml'
-    ],
+             ],
     'installable': True,
     'images': ['images/config_chart_l10n_gr.jpeg', 'images/l10n_gr_chart.jpeg'],
 }

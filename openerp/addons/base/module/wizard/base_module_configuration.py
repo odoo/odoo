@@ -43,7 +43,7 @@ class base_module_configuration(osv.osv_memory):
                     'view_id': [view_id],
                     'type': 'ir.actions.act_window',
                     'target': 'new'
-                }
+            }
             return value
         # Run the config wizards
         config_pool = self.pool.get('res.config')

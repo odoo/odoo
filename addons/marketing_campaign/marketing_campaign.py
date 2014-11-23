@@ -536,7 +536,7 @@ class marketing_campaign_transition(osv.osv):
         'trigger': fields.selection([('auto', 'Automatic'),
                                      ('time', 'Time'),
                                      ('cosmetic', 'Cosmetic'),  # fake plastic transition
-                                    ],
+                                     ],
                                     'Trigger', required=True,
                                     help="How is the destination workitem triggered"),
     }
@@ -555,7 +555,7 @@ class marketing_campaign_transition(osv.osv):
 
     _constraints = [
             (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
-        ]
+    ]
 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')

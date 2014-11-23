@@ -77,7 +77,7 @@ class crm_phonecall(osv.osv):
     _defaults = {
         'date': fields.datetime.now,
         'priority': '1',
-        'state':  _get_default_state,
+        'state': _get_default_state,
         'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1
     }

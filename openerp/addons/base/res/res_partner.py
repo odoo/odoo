@@ -238,7 +238,7 @@ class res_partner(osv.Model, format_address):
         'ref': fields.char('Contact Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
-        'tz': fields.selection(_tz_get,  'Timezone', size=64,
+        'tz': fields.selection(_tz_get, 'Timezone', size=64,
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
@@ -296,7 +296,7 @@ class res_partner(osv.Model, format_address):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
-        'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
+        'contact_address': fields.function(_address_display, type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields
         'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers)

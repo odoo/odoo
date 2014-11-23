@@ -31,7 +31,7 @@ class wizard_price(osv.osv):
         'info_field': fields.text('Info', readonly=True),
         'real_time_accounting': fields.boolean("Generate accounting entries when real-time"),
         'recursive': fields.boolean("Change prices of child BoMs too"),
-        }
+    }
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(wizard_price, self).default_get(cr, uid, fields, context=context)

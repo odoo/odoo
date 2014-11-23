@@ -44,14 +44,14 @@ class Test_Lunch(common.TransactionCase):
         self.new_id_order = self.lunch_order.create(cr, uid, {
             'user_id': self.demo_id[0],
             'order_line_ids': '[]',
-            }, context=None)
+        }, context=None)
         self.new_id_order_line = self.lunch_order_line.create(cr, uid, {
             'order_id': self.new_id_order,
             'product_id': self.product_Bolognese_id,
             'note': '+Emmental',
             'cashmove': [],
             'price': self.lunch_product.browse(cr, uid, self.product_Bolognese_id, context=None).price,
-            })
+        })
 
     def test_00_lunch_order(self):
         """Change the state of an order line from 'new' to 'ordered'. Check that there are no cashmove linked to that order line"""

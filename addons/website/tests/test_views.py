@@ -198,7 +198,7 @@ class TestViewSaving(common.TransactionCase):
                         model='res.company', id=1, type='char',
                         field='phone', expression="edmund")),
                  "whop whop"
-        ), encoding="utf-8")
+                 ), encoding="utf-8")
         View.save(self.cr, self.uid, res_id = self.view_id, value=replacement,
                   xpath='/div/div[2]/ul/li[3]')
 

@@ -93,7 +93,7 @@ class payment_order_create(osv.osv_memory):
                     'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
                     'date': date_to_pay,
                     'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
-                }, context=context)
+            }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def search_entries(self, cr, uid, ids, context=None):
@@ -120,7 +120,7 @@ class payment_order_create(osv.osv_memory):
                 'views': [(resource_id, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-        }
+                }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

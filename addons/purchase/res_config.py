@@ -32,7 +32,7 @@ class purchase_config_settings(osv.osv_memory):
             [('manual', 'Based on purchase order lines'),
              ('picking', 'Based on incoming shipments'),
              ('order', 'Pre-generate draft invoices based on purchase orders'),
-            ], 'Default invoicing control method', required=True, default_model='purchase.order'),
+             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist': fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
             help='Allows to manage different prices based on rules per category of Supplier.\n'

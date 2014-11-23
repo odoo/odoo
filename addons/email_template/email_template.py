@@ -390,7 +390,7 @@ class email_template(osv.osv):
             'copyvalue': False,
             'sub_model_object_field': False,
             'null_value': False
-            }
+        }
         if model_object_field:
             fields_obj = self.pool.get('ir.model.fields')
             field_value = fields_obj.browse(cr, uid, model_object_field, context)
@@ -405,7 +405,7 @@ class email_template(osv.osv):
                         'copyvalue': self.build_expression(field_value.name, sub_field_value and sub_field_value.name or False, null_value or False),
                         'sub_model_object_field': sub_model_object_field or False,
                         'null_value': null_value or False
-                        })
+                    })
             else:
                 result.update({
                         'copyvalue': self.build_expression(field_value.name, False, null_value or False),

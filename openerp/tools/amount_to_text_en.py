@@ -28,14 +28,14 @@ _logger = logging.getLogger(__name__)
 # ENGLISH
 #-------------------------------------------------------------
 
-to_19 = ('Zero',  'One',   'Two',  'Three', 'Four',   'Five',   'Six',
-         'Seven', 'Eight', 'Nine', 'Ten',   'Eleven', 'Twelve', 'Thirteen',
+to_19 = ('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six',
+         'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen',
          'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
 tens  = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
 denom = ('',
-         'Thousand',     'Million',         'Billion',       'Trillion',       'Quadrillion',
-         'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
-         'Decillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
+         'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion',
+         'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion',
+         'Decillion', 'Undecillion', 'Duodecillion', 'Tredecillion', 'Quattuordecillion',
          'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Novemdecillion', 'Vigintillion')
 
 

@@ -64,7 +64,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
     'INPLACE_XOR', 'INPLACE_OR'
-    ] if x in opmap))
+] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
@@ -77,7 +77,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL',  # Only allows access to restricted globals
-    ] if x in opmap))
+] if x in opmap))
 
 _logger = logging.getLogger(__name__)
 

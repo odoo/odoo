@@ -163,7 +163,7 @@ class account_account_type(osv.osv):
                     ('liability', 'account_financial_report_liability0'),
                     ('income', 'account_financial_report_income0'),
                     ('expense', 'account_financial_report_expense0'),
-                ]:
+        ]:
             try:
                 financial_report_ref[key] = obj_financial_report.browse(cr, uid,
                     obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
@@ -907,13 +907,13 @@ class account_fiscalyear(osv.osv):
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             period_obj.create(cr, uid, {
-                    'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
+                    'name': "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
                     'date_start': ds,
                     'date_stop': ds,
                     'special': True,
                     'fiscalyear_id': fy.id,
-                })
+            })
             while ds.strftime('%Y-%m-%d') < fy.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
 
@@ -1274,7 +1274,7 @@ class account_move(osv.osv):
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
             _name: (lambda self, cr, uid, ids, c: ids, ['line_id'], 10),
             'account.move.line': (_get_move_from_lines, ['partner_id'], 10)
-            }),
+        }),
         'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted': [('readonly', True)]}, select=True),
         'narration': fields.text('Internal Note'),
@@ -1296,7 +1296,7 @@ class account_move(osv.osv):
                 move_ids = self.search(cursor, user, [
                     ('period_id', '=', move.period_id.id),
                     ('journal_id', '=', move.journal_id.id),
-                    ])
+                ])
                 if len(move_ids) > 1:
                     return False
         return True
@@ -2040,7 +2040,7 @@ class account_tax(osv.osv):
                     'price_unit': cur_price_unit,
                     'tax_code_id': tax.tax_code_id.id,
                     'ref_tax_code_id': tax.ref_tax_code_id.id,
-            }
+                    }
             res.append(data)
             if tax.type == 'percent':
                 amount = cur_price_unit * tax.amount
@@ -2148,7 +2148,7 @@ class account_tax(osv.osv):
             self._cr, self._uid, self, price_unit, quantity,
             product=product, partner=partner, force_excluded=force_excluded)
 
-    def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
+    def compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
@@ -2174,7 +2174,7 @@ class account_tax(osv.osv):
         return res
 
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
-        taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
+        taxes = self._applicable(cr, uid, taxes, price_unit, product, partner)
         res = []
         taxes.reverse()
         cur_price_unit = price_unit
@@ -2401,7 +2401,7 @@ class account_model_line(osv.osv):
     }
     _order = 'sequence'
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model, they must be positive!'),
+        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in model, they must be positive!'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model, they must be positive!'),
     ]
 
@@ -2532,7 +2532,7 @@ class account_account_template(osv.osv):
             ('liquidity', 'Liquidity'),
             ('other', 'Regular'),
             ('closed', 'Closed'),
-            ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
+        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
             "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
@@ -2687,7 +2687,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
             'note': account_template.note,
             'parent_id': data['cparent_id'][0],
             'company_id': company_id,
-            }
+        }
         acc_obj.create(cr, uid, vals)
         return {'type': 'state', 'state': 'end'}
 
@@ -2713,7 +2713,7 @@ class account_tax_code_template(osv.osv):
             'Sequence', help=(
                 "Determine the display order in the report 'Accounting "
                 "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
-            ),
+        ),
     }
 
     _defaults = {
@@ -3063,7 +3063,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             currency_id = data.currency_id and data.currency_id.id or self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
             res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
             if data.complete_tax_set:
-            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+                # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(cr, uid, data, context=context)
                 base_tax_domain = [("chart_template_id", "in", chart_ids), ('parent_id', '=', False)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale', 'all'))]

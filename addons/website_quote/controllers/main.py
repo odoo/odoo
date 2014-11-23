@@ -107,7 +107,7 @@ class sale_quote(http.Controller):
                     author_id=user.partner_id.id,
                     context=context,
                     attachments=attachments
-                )
+                                                            )
             request.session.body = False
         return True
 

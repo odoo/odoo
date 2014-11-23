@@ -24,14 +24,14 @@
 #-------------------------------------------------------------
 
 
-to_19_fr = (u'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
-          'sept', 'huit', 'neuf', 'dix',   'onze', 'douze', 'treize',
+to_19_fr = (u'zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six',
+          'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize',
           'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf')
 tens_fr  = ('vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
 denom_fr = ('',
-          'Mille',     'Millions',         'Milliards',       'Billions',       'Quadrillions',
-          'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
-          'Décillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
+          'Mille', 'Millions', 'Milliards', 'Billions', 'Quadrillions',
+          'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion',
+          'Décillion', 'Undecillion', 'Duodecillion', 'Tredecillion', 'Quattuordecillion',
           'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion')
 
 
@@ -96,8 +96,8 @@ def amount_to_text_fr(number, currency):
 # Dutch
 #-------------------------------------------------------------
 
-to_19_nl = ('Nul',  'Een',   'Twee',  'Drie', 'Vier',   'Vijf',   'Zes',
-          'Zeven', 'Acht', 'Negen', 'Tien',   'Elf', 'Twaalf', 'Dertien',
+to_19_nl = ('Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes',
+          'Zeven', 'Acht', 'Negen', 'Tien', 'Elf', 'Twaalf', 'Dertien',
           'Veertien', 'Vijftien', 'Zestien', 'Zeventien', 'Achttien', 'Negentien')
 tens_nl  = ('Twintig', 'Dertig', 'Veertig', 'Vijftig', 'Zestig', 'Zeventig', 'Tachtig', 'Negentig')
 denom_nl = ('',
@@ -191,7 +191,7 @@ def amount_to_text(nbr, lang='fr', currency='euro'):
 #        return str(nbr)
 
     if not _translate_funcs.has_key(lang):
-# TODO: use logger
+        # TODO: use logger
         print "WARNING: no translation function found for lang: '%s'" % (lang,)
 # TODO: (default should be en) same as above
         lang = 'fr'

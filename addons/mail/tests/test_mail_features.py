@@ -591,7 +591,7 @@ class test_mail(TestMail):
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
-            ]
+        ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
         # 6 - Subscribe Bert to Pigs
         group_pigs.message_subscribe([p_b_id])
@@ -614,8 +614,8 @@ class test_mail(TestMail):
         compose = mail_compose.browse(cr, uid, compose_id)
 
         # Test: mail.compose.message: composition_mode, model, res_id
-        self.assertEqual(compose.composition_mode,  'comment', 'compose wizard: mail.compose.message incorrect composition_mode')
-        self.assertEqual(compose.model,  'mail.group', 'compose wizard: mail.compose.message incorrect model')
+        self.assertEqual(compose.composition_mode, 'comment', 'compose wizard: mail.compose.message incorrect composition_mode')
+        self.assertEqual(compose.model, 'mail.group', 'compose wizard: mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'compose wizard: mail.compose.message incorrect res_id')
 
         # Do: Post the comment
@@ -772,7 +772,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
@@ -787,7 +787,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         self.assertEqual(len(notif_ids), na_admin_base + 3, 'Admin should have 3 new unread notifications')
         na_admin = self.mail_message._needaction_count(cr, uid, domain=[])
         na_admin_group = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
@@ -797,7 +797,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_raoul.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         self.assertEqual(len(notif_ids), na_demo_base + 0, 'Demo should have 0 new unread notifications')
         na_demo = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
         na_demo_group = self.mail_message._needaction_count(cr, user_raoul.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])

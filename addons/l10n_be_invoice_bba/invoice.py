@@ -232,7 +232,7 @@ class account_invoice(osv.osv):
     }
     _constraints = [
         (_check_communication, 'Invalid BBA Structured Communication !', ['Communication']),
-        ]
+    ]
 
 account_invoice()
 

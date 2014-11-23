@@ -368,7 +368,7 @@ class product_attribute_value(osv.osv):
                     'product_tmpl_id': context['active_id'],
                     'value_id': id,
                     'price_extra': value,
-                }, context=context)
+            }, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context and not context.get('show_attribute', True):

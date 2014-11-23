@@ -45,7 +45,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
              'fiscal_position.xml',
              'country_pl.xml',
              'l10n_chart_pl_wizard.xml'
-    ],
+             ],
     'auto_install': False,
     'installable': True,
 }

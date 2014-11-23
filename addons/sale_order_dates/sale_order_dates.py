@@ -78,7 +78,7 @@ class sale_order_dates(osv.osv):
                 'message': _("The date requested by the customer is "
                              "sooner than the commitment date. You may be "
                              "unable to honor the customer's request.")
-                }
+            }
             }
         return {}
 

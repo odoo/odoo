@@ -142,7 +142,7 @@ class TestCurrencyExport(TestExport):
                       ' {symbol}</span>'.format(
                           obj=obj,
                           symbol=currency.symbol.encode('utf-8')
-                          ),)
+                      ),)
 
     def test_currency_pre(self):
         currency = self.create(
@@ -161,7 +161,7 @@ class TestCurrencyExport(TestExport):
                       '</span>'.format(
                           obj=obj,
                           symbol=currency.symbol.encode('utf-8')
-                          ),)
+                      ),)
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
@@ -180,7 +180,7 @@ class TestCurrencyExport(TestExport):
                       ' {symbol}</span>'.format(
                           obj=obj,
                           symbol=currency.symbol.encode('utf-8')
-                          ),)
+                      ),)
 
 
 class TestTextExport(TestBasicExport):

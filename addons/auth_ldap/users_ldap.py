@@ -167,7 +167,7 @@ class CompanyLDAP(osv.osv):
         values = {'name': ldap_entry[1]['cn'][0],
                   'login': login,
                   'company_id': conf['company']
-                   }
+                  }
         return values
 
     def get_or_create_user(self, cr, uid, conf, login, ldap_entry,

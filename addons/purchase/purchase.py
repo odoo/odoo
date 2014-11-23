@@ -276,15 +276,15 @@ class purchase_order(osv.osv):
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums", help="The amount without tax", track_visibility='always'),
+        }, multi="sums", help="The amount without tax", track_visibility='always'),
         'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums", help="The tax amount"),
+        }, multi="sums", help="The tax amount"),
         'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums", help="The total amount"),
+        }, multi="sums", help="The total amount"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'payment_term_id': fields.many2one('account.payment.term', 'Payment Term'),
         'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
@@ -392,14 +392,14 @@ class purchase_order(osv.osv):
             return {'value': {
                 'fiscal_position': False,
                 'payment_term_id': False,
-                }}
+            }}
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'payment_term_id': supplier.property_supplier_payment_term.id or False,
-            }}
+        }}
 
     def invoice_open(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
@@ -434,7 +434,7 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
                 if not po.invoice_ids:
-                    context.update({'active_ids':  [line.id for line in po.order_line]})
+                    context.update({'active_ids': [line.id for line in po.order_line]})
                     wizard_obj.makeInvoices(cr, uid, [], context=context)
 
         for po in self.browse(cr, uid, ids, context=context):

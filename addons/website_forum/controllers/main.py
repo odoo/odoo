@@ -514,7 +514,7 @@ class WebsiteForum(http.Controller):
         user_question_ids = Post.search(cr, uid, [
                 ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
-            ], order='create_date desc', context=context)
+        ], order='create_date desc', context=context)
         count_user_questions = len(user_question_ids)
         # displaying only the 20 most recent questions
         user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
@@ -522,7 +522,7 @@ class WebsiteForum(http.Controller):
         user_answer_ids = Post.search(cr, uid, [
                 ('parent_id', '!=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
-            ], order='create_date desc', context=context)
+        ], order='create_date desc', context=context)
         count_user_answers = len(user_answer_ids)
         # displaying only the 20  most recent answers
         user_answers = Post.browse(cr, uid, user_answer_ids[:20], context=context)

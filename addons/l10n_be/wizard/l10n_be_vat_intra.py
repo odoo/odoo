@@ -55,7 +55,7 @@ class partner_vat_intra(osv.osv_memory):
       PP can stand for a complete fiscal year: '00'.
       YYYY stands for the year (4 positions).
     '''
-    ),
+                                   ),
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
         'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
@@ -65,7 +65,7 @@ class partner_vat_intra(osv.osv_memory):
         'file_save': fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         'comments': fields.text('Comments'),
-        }
+    }
 
     def _get_tax_code(self, cr, uid, context=None):
         obj_tax_code = self.pool.get('account.tax.code')
@@ -151,7 +151,7 @@ class partner_vat_intra(osv.osv_memory):
         xmldict.update({
                         'company_name': data_company.name,
                         'company_vat': company_vat,
-                        'vatnum':  company_vat[2:],
+                        'vatnum': company_vat[2:],
                         'mand_id': wiz_data.mand_id,
                         'sender_date': str(time.strftime('%Y-%m-%d')),
                         'street': street,

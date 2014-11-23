@@ -54,7 +54,7 @@ class google_map(http.Controller):
                 'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
                 'latitude': partner.partner_latitude,
                 'longitude': partner.partner_longitude,
-                })
+            })
 
         # generate the map
         values = {

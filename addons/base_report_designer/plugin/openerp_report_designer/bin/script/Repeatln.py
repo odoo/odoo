@@ -163,9 +163,9 @@ class RepeatIn(unohelper.Base, XJobExecutor):
             for var in self.aVariableList:
 
                 if var[:8] <> 'List of ':
-                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model',  'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
                 else:
-                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model',  'search', [('model', '=', var[8:])])
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[8:])])
                 fields = ['name', 'model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids, fields)
                 if self.model_res <> []:

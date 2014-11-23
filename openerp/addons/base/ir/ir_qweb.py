@@ -876,11 +876,11 @@ class MonetaryConverter(osv.AbstractModel):
             currency, options['_qweb_context'])
 
 TIMEDELTA_UNITS = (
-    ('year',   3600 * 24 * 365),
-    ('month',  3600 * 24 * 30),
-    ('week',   3600 * 24 * 7),
-    ('day',    3600 * 24),
-    ('hour',   3600),
+    ('year', 3600 * 24 * 365),
+    ('month', 3600 * 24 * 30),
+    ('week', 3600 * 24 * 7),
+    ('day', 3600 * 24),
+    ('hour', 3600),
     ('minute', 60),
     ('second', 1)
 )

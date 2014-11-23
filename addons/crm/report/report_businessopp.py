@@ -78,7 +78,7 @@ class report_custom(report_int):
             if benefit < minbenef:
                 minbenef = benefit
 
-            tuple_benefit = (proba * 100,  benefit)
+            tuple_benefit = (proba * 100, benefit)
             responsible_data.setdefault(userid, [])
             responsible_data[userid].append(tuple_benefit)
 

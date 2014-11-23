@@ -86,7 +86,7 @@ class hr_expense_expense(osv.osv):
         'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'),
             store={
                 'hr.expense.line': (_get_expense_from_line, ['unit_amount', 'unit_quantity'], 10)
-            }),
+        }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
         'department_id': fields.many2one('hr.department', 'Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -97,7 +97,7 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Approved'),
             ('done', 'Waiting Payment'),
             ('paid', 'Paid'),
-            ],
+        ],
             'Status', readonly=True, track_visibility='onchange', copy=False,
             help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the status is \'Accepted\'.\n If the accounting entries are made for the expense request, the status is \'Waiting Payment\'.'),
@@ -324,7 +324,7 @@ class hr_expense_expense(osv.osv):
                              'name': tax['name'],
                              'price_unit': tax['price_unit'],
                              'quantity': 1,
-                             'price':  tax['amount'] * tax['base_sign'] or 0.0,
+                             'price': tax['amount'] * tax['base_sign'] or 0.0,
                              'account_id': tax['account_collected_id'] or mres['account_id'],
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
@@ -420,7 +420,7 @@ class hr_expense_line(osv.osv):
         'analytic_account': fields.many2one('account.analytic.account', 'Analytic account'),
         'ref': fields.char('Reference'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
-        }
+    }
     _defaults = {
         'unit_quantity': 1,
         'date_value': lambda *a: time.strftime('%Y-%m-%d'),

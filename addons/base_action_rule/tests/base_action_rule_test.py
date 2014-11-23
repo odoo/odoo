@@ -30,7 +30,7 @@ class base_action_rule_test(common.TransactionCase):
             'is_default': False,
             'model_id': "base.action.rule.lead.test",
             'domain': "[('state','=','draft')]",
-            }, context=context)
+        }, context=context)
 
     def create_lead_test_1(self, cr, uid, context=None):
         """
@@ -39,7 +39,7 @@ class base_action_rule_test(common.TransactionCase):
         return self.model.create(cr, uid, {
             'name': "Lead Test 1",
             'user_id': self.admin,
-            }, context=context)
+        }, context=context)
 
     def create_rule(self, cr, uid, kind, filter_id=False, filter_pre_id=False, context=None):
         """
@@ -52,7 +52,7 @@ class base_action_rule_test(common.TransactionCase):
             'filter_pre_id': filter_pre_id,
             'filter_id': filter_id,
             'act_user_id': self.demo,
-            }, context=context)
+        }, context=context)
 
     def delete_rules(self, cr, uid, context=None):
         """ delete all the rules on model 'base.action.rule.lead.test' """

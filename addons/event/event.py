@@ -153,7 +153,7 @@ class event_event(models.Model):
             ('cancel', 'Cancelled'),
             ('confirm', 'Confirmed'),
             ('done', 'Done')
-        ], string='Status', default='draft', readonly=True, required=True, copy=False,
+    ], string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     email_registration_id = fields.Many2one(
         'email.template', string='Registration Confirmation Email',
@@ -325,7 +325,7 @@ class event_registration(models.Model):
             ('cancel', 'Cancelled'),
             ('open', 'Confirmed'),
             ('done', 'Attended'),
-        ], string='Status', default='draft', readonly=True, copy=False)
+    ], string='Status', default='draft', readonly=True, copy=False)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name', select=True)

@@ -163,7 +163,7 @@ class hr_timesheet_sheet(osv.osv):
             readonly=True, states={
                 'draft': [('readonly', False)],
                 'new': [('readonly', False)]}
-            ),
+        ),
         'attendances_ids': fields.one2many('hr.attendance', 'sheet_id', 'Attendances'),
         'state': fields.selection([
             ('new', 'New'),
@@ -324,7 +324,7 @@ class hr_timesheet_line(osv.osv):
                  ('employee_id.user_id', '=', ts_line.user_id.id)],
                 context=context)
             if sheet_ids:
-            # [0] because only one sheet possible for an employee between 2 dates
+                # [0] because only one sheet possible for an employee between 2 dates
                 res[ts_line.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
         return res
 
@@ -357,7 +357,7 @@ class hr_timesheet_line(osv.osv):
                     'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
                     'hr.analytic.timesheet': (lambda self, cr, uid, ids, context=None: ids, None, 10),
                   },
-            ),
+        ),
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
@@ -476,7 +476,7 @@ class hr_attendance(osv.osv):
                       'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
                       'hr.attendance': (lambda self, cr, uid, ids, context=None: ids, ['employee_id', 'name', 'day'], 10),
                   },
-            )
+        )
     }
     _defaults = {
         'name': _get_default_date,
@@ -609,7 +609,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True),
         'total': fields.float('Total Time', digits=(16, 2), readonly=True),
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
-        }
+    }
 
     _depends = {
         'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],

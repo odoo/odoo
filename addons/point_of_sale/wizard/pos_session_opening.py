@@ -29,7 +29,7 @@ class pos_session_opening(osv.osv_memory):
         context['active_id'] = data.pos_session_id.id
         return {
             'type': 'ir.actions.act_url',
-            'url':   '/pos/web/',
+            'url': '/pos/web/',
             'target': 'self',
         }
 

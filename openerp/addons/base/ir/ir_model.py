@@ -417,9 +417,9 @@ class ir_model_fields(osv.osv):
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise except_orm(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.') % field.name)
+                    raise except_orm(_('Error!'), _('Changing the storing system for field "%s" is not allowed.') % field.name)
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed') % field.name)
+                    raise except_orm(_('Error!'), _('Renaming sparse field "%s" is not allowed') % field.name)
 
         # if set, *one* column can be renamed here
         column_rename = None
@@ -513,7 +513,7 @@ class ir_model_fields(osv.osv):
             ctx = dict(context,
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True,
-            )
+                       )
 
             for obj, model_patches in patches.iteritems():
                 for field_name, field_patches in model_patches.iteritems():
@@ -698,7 +698,7 @@ class ir_model_access(osv.osv):
                    "  JOIN ir_model m ON (m.id = a.model_id) "
                    " WHERE m.model = %s AND a.active IS True "
                    " AND a.group_id = %s", (model_name, group_id)
-                   )
+                       )
             r = cr.fetchone()
             if r is None:
                 cr.execute("SELECT perm_" + mode + " "
@@ -706,7 +706,7 @@ class ir_model_access(osv.osv):
                        "  JOIN ir_model m ON (m.id = a.model_id) "
                        " WHERE m.model = %s AND a.active IS True "
                        " AND a.group_id IS NULL", (model_name, )
-                       )
+                           )
                 r = cr.fetchone()
 
             access = bool(r and r[0])
@@ -782,7 +782,7 @@ class ir_model_access(osv.osv):
             msg_heads = {
                 # Messages are declared in extenso so they are properly exported in translation terms
                 'read': _("Sorry, you are not allowed to access this document."),
-                'write':  _("Sorry, you are not allowed to modify this document."),
+                'write': _("Sorry, you are not allowed to modify this document."),
                 'create': _("Sorry, you are not allowed to create this kind of document."),
                 'unlink': _("Sorry, you are not allowed to delete this document."),
             }
@@ -1040,7 +1040,7 @@ class ir_model_data(osv.osv):
             model_obj.write(cr, uid, [res_id], values, context=context)
             self.write(cr, uid, [action_id], {
                 'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
-                }, context=context)
+            }, context=context)
         elif res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             if xml_id:
@@ -1054,14 +1054,14 @@ class ir_model_data(osv.osv):
                             'module': module,
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
-                            }, context=context)
+                        }, context=context)
                 self.create(cr, uid, {
                     'name': xml_id,
                     'model': model,
                     'module': module,
                     'res_id': res_id,
                     'noupdate': noupdate,
-                    }, context=context)
+                }, context=context)
         else:
             if mode == 'init' or (mode == 'update' and xml_id):
                 res_id = model_obj.create(cr, uid, values, context=context)
@@ -1076,14 +1076,14 @@ class ir_model_data(osv.osv):
                                 'module': module,
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
-                                }, context=context)
+                            }, context=context)
                     self.create(cr, uid, {
                         'name': xml_id,
                         'model': model,
                         'module': module,
                         'res_id': res_id,
                         'noupdate': noupdate
-                        }, context=context)
+                    }, context=context)
         if xml_id and res_id:
             self.loads[(module, xml_id)] = (model, res_id)
             for table, inherit_field in model_obj._inherits.iteritems():

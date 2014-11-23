@@ -90,7 +90,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
-            }
+                        }
 
             top_result.append(res_dict)
             res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
@@ -221,7 +221,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         'type': accounts[bcl_rup_ind]['type'],
                         'level': 0,
                         'pos': 0
-                    }
+                               }
 
                     if res_tot['type'] == 1:
                         # on change le type pour afficher le total

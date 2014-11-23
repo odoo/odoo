@@ -41,7 +41,7 @@ class account_partner_reconcile_process(osv.osv_memory):
                               WHERE debit > 0
                               AND credit > 0
                 """, (time.strftime('%Y-%m-%d'),)
-        )
+                   )
         return len(map(lambda x: x[0], cr.fetchall())) - 1
 
     def _get_today_reconciled(self, cr, uid, context=None):

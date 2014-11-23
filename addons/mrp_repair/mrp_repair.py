@@ -131,7 +131,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced', 'To be Invoiced'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Repaired')
-            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
+        ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -213,7 +213,7 @@ class mrp_repair(osv.osv):
                     'lot_id': False,
                     'product_uom': product and product.uom_id.id or False,
                 }
-        }
+                }
 
     def onchange_product_uom(self, cr, uid, ids, product_id, product_uom, context=None):
         res = {'value': {}}
@@ -249,7 +249,7 @@ class mrp_repair(osv.osv):
                         'partner_invoice_id': False,
                         'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
                     }
-            }
+                    }
         addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
@@ -258,7 +258,7 @@ class mrp_repair(osv.osv):
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }
-        }
+                }
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         """ Cancels repair order when it is in 'Draft' state.
@@ -609,7 +609,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
-                }}
+            }}
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
         location_id = location_obj.search(cr, uid, [('usage', '=', 'production')], context=context)
@@ -629,7 +629,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
                 'location_dest_id': location_id
-                }}
+            }}
         scrap_location_ids = location_obj.search(cr, uid, [('scrap_location', '=', True)], context=context)
 
         return {'value': {

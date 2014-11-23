@@ -339,7 +339,7 @@ class account_move_line(osv.osv):
                 analytic_line_obj.write(cr, uid, line.id, {
                     'invoice_id': invoice_id,
                     'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False
-                    }, context=context)
+                }, context=context)
         return res
 
 

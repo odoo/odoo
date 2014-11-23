@@ -148,7 +148,7 @@ class question(osv.osv):
     _columns = {
         'name': fields.char("Question", required=True),
         'answers_ids': fields.one2many("crm_profiling.answer", "question_id", "Available Answers", copy=True),
-        }
+    }
 
 
 class questionnaire(osv.osv):
@@ -171,7 +171,7 @@ class answer(osv.osv):
     _columns = {
         "name": fields.char("Answer", required=True),
         "question_id": fields.many2one('crm_profiling.question', "Question"),
-        }
+    }
 
 
 class partner(osv.osv):
@@ -179,7 +179,7 @@ class partner(osv.osv):
     _columns = {
         "answers_ids": fields.many2many("crm_profiling.answer", "partner_question_rel",\
                                 "partner", "answer", "Answers"),
-        }
+    }
 
     def _questionnaire_compute(self, cr, uid, answers, context=None):
         """
@@ -224,7 +224,7 @@ class crm_segmentation(osv.osv):
         'profiling_active': fields.boolean('Use The Profiling Rules', help='Check\
                              this box if you want to use this tab as part of the \
                              segmentation rule. If not checked, the criteria beneath will be ignored')
-        }
+    }
 
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You cannot create recursive profiles.', ['parent_id'])

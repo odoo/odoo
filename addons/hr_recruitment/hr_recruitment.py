@@ -124,7 +124,7 @@ class hr_applicant(osv.Model):
     def _get_default_company_id(self, cr, uid, department_id=None, context=None):
         company_id = False
         if department_id:
-            department = self.pool['hr.department'].browse(cr,  uid, department_id, context=context)
+            department = self.pool['hr.department'].browse(cr, uid, department_id, context=context)
             company_id = department.company_id.id if department and department.company_id else False
         if not company_id:
             company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
@@ -392,7 +392,7 @@ class hr_applicant(osv.Model):
             custom_values = {}
         val = msg.get('from').split('<')[0]
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
+            'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
@@ -501,7 +501,7 @@ class hr_applicant(osv.Model):
                                                      'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
-                                                     }, context=create_ctx)
+                                                      }, context=create_ctx)
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.pool['hr.job'].message_post(
                     cr, uid, [applicant.job_id.id],

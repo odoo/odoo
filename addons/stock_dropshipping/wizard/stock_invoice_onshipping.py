@@ -43,4 +43,4 @@ class stock_invoice_onshipping(osv.osv_memory):
 
     _defaults = {
         'journal_type': _get_journal_type,
-        }
+    }

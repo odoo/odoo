@@ -182,7 +182,7 @@ class account_move_line(osv.osv):
                 'ref': obj_line.ref,
                 'move_id': obj_line.id,
                 'user_id': uid,
-               }
+                }
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
         acc_ana_line_obj = self.pool.get('account.analytic.line')
@@ -294,7 +294,7 @@ class account_move_line(osv.osv):
                         # doesn't work with an outgoing currency rate method 'at date' but 'average'
                         'res.currency.compute.account': account,
                         'res.currency.compute.account_invert': True,
-                    })
+                })
                 if data.get('date'):
                     compute_ctx.update({'date': data['date']})
                 data['amount_currency'] = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], -total, context=compute_ctx)
@@ -569,7 +569,7 @@ class account_move_line(osv.osv):
     }
     _order = "date desc, id desc"
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
@@ -667,7 +667,7 @@ class account_move_line(osv.osv):
         context.update({
                 'date': date,
                 'res.currency.compute.account': acc,
-            })
+        })
         v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,

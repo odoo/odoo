@@ -169,7 +169,7 @@ class stock_move(osv.osv):
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
                  }),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly="1", help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
-        }
+    }
 
     def action_confirm(self, cr, uid, ids, context=None):
         """

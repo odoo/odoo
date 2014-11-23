@@ -62,7 +62,7 @@ class procurement_rule(osv.osv):
             store={
                 'stock.location.route': (_get_rules, ['sequence'], 10),
                 'procurement.rule': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 10),
-                }),
+            }),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type',
             help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
         'delay': fields.integer('Number of Days'),
