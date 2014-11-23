@@ -554,7 +554,7 @@ class test_mail(TestMail):
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id, p_d_id])
         self.assertEqual(test_pids, msg_pids, 'message_post: mail.message parent notification not created')
 
-         # Do: reply to last message
+        # Do: reply to last message
         msg3_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body='Test', parent_id=msg2_id)
         msg = self.mail_message.browse(cr, uid, msg3_id)
         # Test: check that its parent will be the first message

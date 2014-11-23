@@ -72,8 +72,8 @@ class report_transaction_pos(osv.osv):
                     to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text
                 )
         """)
-                    # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
-                    # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
+        # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
+        # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
 
 
 class report_sales_by_user_pos(osv.osv):

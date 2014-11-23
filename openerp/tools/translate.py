@@ -243,7 +243,7 @@ class GettextAlias(object):
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
             _logger.debug('translation went wrong for "%r", skipped', source)
-                # if so, double-check the root/base translations filenames
+            # if so, double-check the root/base translations filenames
         finally:
             if cr and is_new_cr:
                 cr.close()

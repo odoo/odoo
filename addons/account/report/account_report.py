@@ -68,7 +68,7 @@ class report_account_receivable(osv.osv):
                     to_char(date,'YYYY:IW'), a.type
             )""")
 
-                    #a.type in ('receivable','payable')
+        #a.type in ('receivable','payable')
 
 
 class temp_range(osv.osv):

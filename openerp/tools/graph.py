@@ -682,7 +682,7 @@ class graph(object):
         """Computes actual co-ordiantes of the nodes
         """
 
-            # for flat edges ie. source an destination nodes are on the same rank
+        # for flat edges ie. source an destination nodes are on the same rank
         for src in self.transitions:
             for des in self.transitions[src]:
                 if self.result[des]['x'] - self.result[src]['x'] == 0:

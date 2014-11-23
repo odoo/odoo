@@ -1016,7 +1016,7 @@ class node_dir(node_database):
         self.dir_id = dirr and dirr.id or False
         # todo: more info from dirr
         self.mimetype = 'application/x-directory'
-            # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = dirr and dirr.create_date or False
         self.domain = dirr and dirr.domain or []
         self.res_model = dirr and dirr.ressource_type_id and dirr.ressource_type_id.model or False
@@ -1258,7 +1258,7 @@ class node_res_dir(node_class):
         self.dir_id = dirr.id
         # todo: more info from dirr
         self.mimetype = 'application/x-directory'
-                        # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = dirr.create_date
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
@@ -1397,7 +1397,7 @@ class node_res_obj(node_class):
         # todo: more info from dirr
         self.dir_id = dir_id
         self.mimetype = 'application/x-directory'
-                        # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = parent.create_date
         # TODO: the write date should be MAX(file.write)..
         self.write_date = parent.write_date

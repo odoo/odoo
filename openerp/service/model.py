@@ -92,7 +92,7 @@ def check(f):
                         cr.close()
 
                 return False  # so that the original SQL error will
-                             # be returned, it is the best we have.
+                # be returned, it is the best we have.
 
             try:
                 cr = openerp.sql_db.db_connect(dbname).cursor()
