@@ -32,7 +32,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf8")
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from LoginTest import *
     from lib.error import *
@@ -108,7 +108,7 @@ class ExportToRML(unohelper.Base, XJobExecutor):
             sPath = sPath[9 + slash:]
         return sPath
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     ExportToRML(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(ExportToRML, "org.openoffice.openerp.report.exporttorml", ("com.sun.star.task.Job",),)

@@ -255,7 +255,7 @@ class hr_timesheet_sheet(osv.osv):
         for sheet in sheets:
             if sheet['state'] in ('confirm', 'done'):
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which is already confirmed.'))
-            elif sheet['total_attendance'] <> 0.00:
+            elif sheet['total_attendance'] != 0.00:
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a timesheet which have attendance entries.'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 

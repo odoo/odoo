@@ -27,7 +27,7 @@ import unohelper
 import xmlrpclib
 import base64
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.tools import *
@@ -60,7 +60,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
         self.password = passwd
         global url
         self.sock = RPCSession(url)
-        if docinfo.getUserFieldValue(2) <> "" and docinfo.getUserFieldValue(3) <> "":
+        if docinfo.getUserFieldValue(2) != "" and docinfo.getUserFieldValue(3) != "":
             self.win = DBModalDialog(60, 50, 180, 70, "Add Attachment to Server")
             self.win.addFixedText("lblResourceType", 2, 5, 100, 10, "Select Appropriate Resource Type:")
             self.win.addComboListBox("lstResourceType", -2, 25, 176, 15, True)
@@ -249,7 +249,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
         return oPropertyValue
 
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     AddAttachment(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(AddAttachment, "org.openoffice.openerp.report.addattachment", ("com.sun.star.task.Job",),)

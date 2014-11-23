@@ -28,7 +28,7 @@ import socket
 import cPickle
 import marshal
 import tempfile
-if __name__ <> "package":
+if __name__ != "package":
     from gui import *
     from logreport import *
     from rpc import *
@@ -142,7 +142,7 @@ def getPath(sPath, sMain):
                 break
             else:
                 res = re.findall('\\[\\[ *([a-zA-Z0-9_\.]+) *\\]\\]', sPath)
-                if len(res) <> 0:
+                if len(res) != 0:
                     if sItem[sItem.find(",'") + 2:sItem.find("')")] == sPath[:sPath.find(".")]:
                         sPath = sItem[sItem.find("(") + 1:sItem.find(",")] + sPath[sPath.find("."):]
                         getPath(sPath, sMain)

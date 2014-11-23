@@ -180,7 +180,7 @@ class crossovered_budget_lines(osv.osv):
     def _perc(self, cr, uid, ids, name, args, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.theoritical_amount <> 0.00:
+            if line.theoritical_amount != 0.00:
                 res[line.id] = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
             else:
                 res[line.id] = 0.00

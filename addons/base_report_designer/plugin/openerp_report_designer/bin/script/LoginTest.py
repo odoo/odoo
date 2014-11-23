@@ -21,7 +21,7 @@
 #
 #############################################################################
 
-if __name__ <> "package":
+if __name__ != "package":
     from ServerParameter import *
     from lib.gui import *
 

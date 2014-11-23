@@ -26,7 +26,7 @@ import string
 import unohelper
 import xmlrpclib
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.functions import *
@@ -111,7 +111,7 @@ class Change(unohelper.Base, XJobExecutor):
         self.win.endExecute()
 
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     Change(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(Change, "org.openoffice.openerp.report.change", ("com.sun.star.task.Job",),)

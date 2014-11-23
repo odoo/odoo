@@ -284,7 +284,7 @@ class res_partner(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get("payment_responsible_id", False):
             for part in self.browse(cr, uid, ids, context=context):
-                if part.payment_responsible_id <> vals["payment_responsible_id"]:
+                if part.payment_responsible_id != vals["payment_responsible_id"]:
                     # Find partner_id of user put as responsible
                     responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
                     self.pool.get("mail.thread").message_post(cr, uid, 0,

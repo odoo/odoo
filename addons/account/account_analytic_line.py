@@ -88,7 +88,7 @@ class account_analytic_line(osv.osv):
             if j_id.type == 'purchase':
                 if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
                     unit = prod.uom_po_id.id
-        if j_id.type <> 'sale':
+        if j_id.type != 'sale':
             a = prod.property_account_expense.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id

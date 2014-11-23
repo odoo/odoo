@@ -108,7 +108,7 @@ class website_event(http.Controller):
 
         # count by domains without self search
         for date in dates:
-            if date[0] <> 'old':
+            if date[0] != 'old':
                 date[3] = event_obj.search(
                     request.cr, request.uid, dom_without('date') + date[2],
                     count=True, context=request.context)

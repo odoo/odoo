@@ -233,7 +233,7 @@ class hr_expense_expense(osv.osv):
             if not exp.employee_id.address_home_id.property_account_payable.id:
                 raise osv.except_osv(_('Error!'), _('The employee must have a payable account set on his home address.'))
             company_currency = exp.company_id.currency_id.id
-            diff_currency_p = exp.currency_id.id <> company_currency
+            diff_currency_p = exp.currency_id.id != company_currency
 
             # create the move that will contain the accounting entries
             move_id = move_obj.create(cr, uid, self.account_move_get(cr, uid, exp.id, context=context), context=context)

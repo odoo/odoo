@@ -27,7 +27,7 @@ import unohelper
 import xmlrpclib
 
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.functions import *
     from lib.error import ErrorDialog
@@ -143,7 +143,7 @@ class Fields(unohelper.Base, XJobExecutor):
                 self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
                 fields = ['name', 'model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids, fields)
-                if self.model_res <> []:
+                if self.model_res != []:
                     self.insVariable.addItem(var[:var.find("(") + 1] + self.model_res[0]['name'] + ")", self.insVariable.getItemCount())
                 else:
                     self.insVariable.addItem(var, self.insVariable.getItemCount())
@@ -262,7 +262,7 @@ class Fields(unohelper.Base, XJobExecutor):
     def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     Fields()
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(Fields, "org.openoffice.openerp.report.fields", ("com.sun.star.task.Job",),)

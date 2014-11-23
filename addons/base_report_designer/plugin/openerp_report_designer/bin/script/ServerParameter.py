@@ -26,7 +26,7 @@ import string
 import unohelper
 import xmlrpclib
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.functions import *
@@ -64,7 +64,7 @@ class ServerParameter(unohelper.Base, XJobExecutor):
         self.win.addButton('btnCancel', -2 - 110 - 5, -5, 35, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
 
         sValue = ""
-        if docinfo.getUserFieldValue(0) <> "":
+        if docinfo.getUserFieldValue(0) != "":
             global url
             global result
             url = docinfo.getUserFieldValue(0)
@@ -141,7 +141,7 @@ class ServerParameter(unohelper.Base, XJobExecutor):
         self.win.endExecute()
 
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     ServerParameter(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(ServerParameter, "org.openoffice.openerp.report.serverparam", ("com.sun.star.task.Job",),)

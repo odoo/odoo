@@ -26,7 +26,7 @@ import string
 import unohelper
 import xmlrpclib
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.functions import *
@@ -163,14 +163,14 @@ class RepeatIn(unohelper.Base, XJobExecutor):
 
             for var in self.aVariableList:
 
-                if var[:8] <> 'List of ':
+                if var[:8] != 'List of ':
                     self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[var.find("(") + 1:var.find(")")])])
                 else:
                     self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model', 'search', [('model', '=', var[8:])])
                 fields = ['name', 'model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids, fields)
-                if self.model_res <> []:
-                    if var[:8] <> 'List of ':
+                if self.model_res != []:
+                    if var[:8] != 'List of ':
                         self.insVariable.addItem(var[:var.find("(") + 1] + self.model_res[0]['name'] + ")", self.insVariable.getItemCount())
                     else:
                         self.insVariable.addItem('List of ' + self.model_res[0]['name'], self.insVariable.getItemCount())
@@ -262,7 +262,7 @@ class RepeatIn(unohelper.Base, XJobExecutor):
                         doc.Text.insertTextContent(cursor, oInputList, False)
                     else:
                         oInputList.Items = (sKey, sValue)
-                        widget = (cursor.TextTable or selectedItem <> 'objects') and cursor.TextTable.getCellByName(cursor.Cell.CellName) or doc.Text
+                        widget = (cursor.TextTable or selectedItem != 'objects') and cursor.TextTable.getCellByName(cursor.Cell.CellName) or doc.Text
                         widget.insertTextContent(cursor, oInputList, False)
                 self.win.endExecute()
         else:
@@ -271,7 +271,7 @@ class RepeatIn(unohelper.Base, XJobExecutor):
     def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     RepeatIn()
 elif __name__ == "package":
     g_ImplementationHelper = unohelper.ImplementationHelper()

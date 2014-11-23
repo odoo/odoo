@@ -138,7 +138,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
             total = 0.0
             cat_salary.append(category_name)
             for mnth in self.mnths:
-                if mnth <> 'None':
+                if mnth != 'None':
                     if len(mnth) != 7:
                         mnth = '0' + str(mnth)
                     if mnth in amount and amount[mnth]:

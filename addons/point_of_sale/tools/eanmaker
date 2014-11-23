@@ -7,7 +7,7 @@ import math
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return -1
     oddsum = 0
     evensum = 0
@@ -31,7 +31,7 @@ def check_ean(eancode):
     """returns True if eancode is a valid ean13 string, or null"""
     if not eancode:
         return True
-    if len(eancode) <> 13:
+    if len(eancode) != 13:
         return False
     try:
         int(eancode)

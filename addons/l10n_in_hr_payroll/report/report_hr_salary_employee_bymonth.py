@@ -85,7 +85,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         cnt = 0
 
         for month in self.mnths:
-            if month <> '':
+            if month != '':
                 if len(month) != 7:
                     month = '0' + str(month)
                 if month in salary and salary[month]:

@@ -24,7 +24,7 @@
 import uno
 import unohelper
 import pythonloader
-if __name__ <> "package":
+if __name__ != "package":
     from actions import *
 
 
@@ -54,7 +54,7 @@ def getServiceManager(cHost="localhost", cPort="2002"):
         # Create the UnoUrlResolver on the Python side.
 
         # Connect to the running OpenOffice.org and get its context.
-        if __name__ <> "package":
+        if __name__ != "package":
             oLocalResolver = oLocalContext.ServiceManager.createInstanceWithContext(
                 "com.sun.star.bridge.UnoUrlResolver", oLocalContext)
             oContext = oLocalResolver.resolve("uno:socket,host=" + cHost + ",port=" + cPort + ";urp;StarOffice.ComponentContext")

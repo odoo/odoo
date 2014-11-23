@@ -144,7 +144,7 @@ class crossovered_analytic(report_sxw.rml_parse):
                 res = self.cr.dictfetchall()
                 if res:
                     for element in res:
-                        if self.base_amount <> 0.00:
+                        if self.base_amount != 0.00:
                             element['perc'] = (element['amt'] / self.base_amount) * 100.00
                         else:
                             element['perc'] = 0.00

@@ -835,7 +835,7 @@ class pos_order(osv.osv):
         stock_picking_obj = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.action_cancel(cr, uid, [order.picking_id.id])
-            if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
+            if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state != 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True

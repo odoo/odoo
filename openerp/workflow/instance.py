@@ -95,7 +95,7 @@ class WorkflowInstance(object):
         cr.execute('select state,flow_stop from wkf_workitem w left join wkf_activity a on (a.id=w.act_id) where w.inst_id=%s', (instance_id,))
         ok = True
         for r in cr.fetchall():
-            if (r[0] <> 'complete') or not r[1]:
+            if (r[0] != 'complete') or not r[1]:
                 ok = False
                 break
         if ok:

@@ -31,7 +31,7 @@ import os
 #  python procedure, passing it...
 #   1. the oActionEvent
 #   2. any other parameters you specified to this object's constructor (as a tuple).
-if __name__ <> "package":
+if __name__ != "package":
     os.system("ooffice '-accept=socket,host=localhost,port=2002;urp;'")
 passwd = ""
 database = ""

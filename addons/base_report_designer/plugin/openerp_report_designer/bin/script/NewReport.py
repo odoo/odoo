@@ -27,7 +27,7 @@ import unohelper
 import xmlrpclib
 
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.functions import *
@@ -89,7 +89,7 @@ class NewReport(unohelper.Base, XJobExecutor):
     def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-if __name__ <> "package" and __name__ == "__main__":
+if __name__ != "package" and __name__ == "__main__":
     NewReport(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(

@@ -302,7 +302,7 @@ class PageConverter(werkzeug.routing.PathConverter):
             if query and query.lower() not in xid.lower():
                 continue
             record = {'loc': xid}
-            if view['priority'] <> 16:
+            if view['priority'] != 16:
                 record['__priority'] = min(round(view['priority'] / 32.0, 1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]

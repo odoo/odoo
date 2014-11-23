@@ -102,7 +102,7 @@ class budget_report(report_sxw.rml_parse):
                                     record['theo'] += theo
                                     record['pln'] += line.planned_amount
                                     record['prac'] += pract
-                                    if record['theo'] <> 0.00:
+                                    if record['theo'] != 0.00:
                                         perc = (record['prac'] / record['theo']) * 100
                                     else:
                                         perc = 0.00
@@ -112,7 +112,7 @@ class budget_report(report_sxw.rml_parse):
                                     tot_prac += pract
                                     tot_perc += perc
                         else:
-                            if theo <> 0.00:
+                            if theo != 0.00:
                                 perc = (pract / theo) * 100
                             else:
                                 perc = 0.00

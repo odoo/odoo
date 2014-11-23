@@ -26,7 +26,7 @@ import unohelper
 import string
 import re
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from LoginTest import *
     database = "test"
@@ -55,7 +55,7 @@ class ConvertFieldsToBraces(unohelper.Base, XJobExecutor):
                 oPar.getAnchor().Text.insertString(oPar.getAnchor(), oPar.Items[1], False)
                 oPar.dispose()
 
-if __name__ <> "package":
+if __name__ != "package":
     ConvertFieldsToBraces(None)
 else:
     g_ImplementationHelper.addImplementation(ConvertFieldsToBraces, "org.openoffice.openerp.report.convertFB", ("com.sun.star.task.Job",),)

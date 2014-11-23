@@ -27,7 +27,7 @@ import string
 import unohelper
 import xmlrpclib
 from com.sun.star.task import XJobExecutor
-if __name__ <> "package":
+if __name__ != "package":
     from lib.gui import *
     from Expression import Expression
     from Fields import Fields
@@ -107,7 +107,7 @@ class modify(unohelper.Base, XJobExecutor):
             if res:
                 return method(res)
 
-if __name__ <> "package":
+if __name__ != "package":
     modify(None)
 else:
     g_ImplementationHelper.addImplementation(modify, "org.openoffice.openerp.report.modify", ("com.sun.star.task.Job",),)

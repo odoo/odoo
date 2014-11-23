@@ -169,7 +169,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 tot_enlitige = (r['enlitige'] or 0.0)
                 #
             else:
-                if cleanarray[i]['account_id'] <> cleanarray[i - 1]['account_id']:
+                if cleanarray[i]['account_id'] != cleanarray[i - 1]['account_id']:
 
                     new_header['debit'] = tot_debit
                     new_header['credit'] = tot_credit
