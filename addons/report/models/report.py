@@ -49,7 +49,10 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    return find_in_path('wkhtmltopdf')
+    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
+    if wkhtmltopdf_bin is None:
+        raise IOError
+    return wkhtmltopdf_bin
 
 
 #--------------------------------------------------------------------------
@@ -60,7 +63,7 @@ try:
     process = subprocess.Popen(
         [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-except (OSError, IOError, ValueError):
+except (OSError, IOError):
     _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
