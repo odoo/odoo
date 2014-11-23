@@ -487,7 +487,7 @@ def Project():
 
     # TODO: DO Resource allocation and compute availability
     def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
-        if context == None:
+        if context is None:
             context = {}
         allocation = {}
         return allocation
@@ -827,7 +827,7 @@ class task(osv.osv):
         return True
 
     def _check_dates(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         obj_task = self.browse(cr, uid, ids[0], context=context)
         start = obj_task.date_start or False
@@ -915,7 +915,7 @@ class task(osv.osv):
         return False
 
     def _check_child_task(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
@@ -1043,7 +1043,7 @@ class task(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         self._check_child_task(cr, uid, ids, context=context)
         res = super(task, self).unlink(cr, uid, ids, context)

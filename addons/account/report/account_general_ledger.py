@@ -210,9 +210,9 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             l['line_corresp'] = l['mmove_id'] == '' and ' ' or counterpart_accounts[l['mmove_id']].replace(', ', ',')
             # Modification of amount Currency
             if l['credit'] > 0:
-                if l['amount_currency'] != None:
+                if l['amount_currency'] is not None:
                     l['amount_currency'] = abs(l['amount_currency']) * -1
-            if l['amount_currency'] != None:
+            if l['amount_currency'] is not None:
                 self.tot_currency = self.tot_currency + l['amount_currency']
         return res
 

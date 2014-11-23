@@ -26,7 +26,7 @@ class Crawler(openerp.tests.HttpCase):
     post_install = True
 
     def crawl(self, url, seen=None, msg=''):
-        if seen == None:
+        if seen is None:
             seen = set()
         if url in seen:
             return seen

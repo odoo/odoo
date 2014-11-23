@@ -257,7 +257,7 @@ class RepeatIn(unohelper.Base, XJobExecutor):
                     doc.Text.insertTextContent(cursor, oInputList, False)
                 else:
                     sValue = u"[[ repeatIn(" + sObjName + self.aListRepeatIn[selectedItemPos].replace("/", ".") + ",'" + txtName + "') ]]"
-                    if cursor.TextTable == None:
+                    if cursor.TextTable is None:
                         oInputList.Items = (sKey, sValue)
                         doc.Text.insertTextContent(cursor, oInputList, False)
                     else:

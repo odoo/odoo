@@ -284,7 +284,7 @@ class fleet_vehicle(osv.Model):
                         overdue = True
                         total += 1
                     if diff_time < 15 and diff_time >= 0:
-                        due_soon = True;
+                        due_soon = True
                         total += 1
                     if overdue or due_soon:
                         ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')

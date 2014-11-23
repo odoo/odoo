@@ -60,7 +60,7 @@ class EscposDriver(Thread):
                 return supported_devices.device_list
 
     def add_supported_device(self, device_string):
-        r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}');
+        r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}')
         match = r.search(device_string)
         if match:
             match = match.group().split(':')
@@ -99,7 +99,7 @@ class EscposDriver(Thread):
         connected = []
 
         for device in self.supported_devices():
-            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) is not None:
                 connected.append(device)
         return connected
 
@@ -133,7 +133,7 @@ class EscposDriver(Thread):
     def set_status(self, status, message=None):
         _logger.info(status + ' : ' + (message or 'no message'))
         if status == self.status['status']:
-            if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
+            if message is not None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
                 self.status['messages'].append(message)
         else:
             self.status['status'] = status
@@ -157,7 +157,7 @@ class EscposDriver(Thread):
 
                 printer = self.get_escpos_printer()
 
-                if printer == None:
+                if printer is None:
                     if task != 'status':
                         self.queue.put((timestamp, task, data))
                     time.sleep(5)
@@ -180,7 +180,7 @@ class EscposDriver(Thread):
             except Exception as e:
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-' * 60 + '\n' + traceback.format_exc() + '-' * 60 + '\n'
-                _logger.error(errmsg);
+                _logger.error(errmsg)
 
     def push_task(self, task, data=None):
         self.lockedstart()
@@ -293,28 +293,28 @@ class EscposDriver(Thread):
         # Subtotal if the taxes are not included
         taxincluded = True
         if money(receipt['subtotal']) != money(receipt['total_with_tax']):
-            eprint.text(printline('', '-------'));
+            eprint.text(printline('', '-------'))
             eprint.text(printline(_('Subtotal'), money(receipt['subtotal']), width=40, ratio=0.6))
             print_taxes()
             #eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
             taxincluded = False
 
         # Total
-        eprint.text(printline('', '-------'));
+        eprint.text(printline('', '-------'))
         eprint.set(align='center', height=2)
         eprint.text(printline(_('         TOTAL'), money(receipt['total_with_tax']), width=40, ratio=0.6))
-        eprint.text('\n\n');
+        eprint.text('\n\n')
 
         # Paymentlines
         eprint.set(align='center')
         for line in receipt['paymentlines']:
             eprint.text(printline(line['journal'], money(line['amount']), ratio=0.6))
 
-        eprint.text('\n');
+        eprint.text('\n')
         eprint.set(align='center', height=2)
         eprint.text(printline(_('        CHANGE'), money(receipt['change']), width=40, ratio=0.6))
         eprint.set(align='center')
-        eprint.text('\n');
+        eprint.text('\n')
 
         # Extra Payment info
         if receipt['total_discount'] != 0:

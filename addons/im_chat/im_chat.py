@@ -237,7 +237,7 @@ class im_chat_message(osv.Model):
         if Session.is_in_session(cr, uid, uuid, uid, context=context):
             domain = [("to_id.uuid", "=", uuid)]
             if last_id:
-                domain.append(("id", "<", last_id));
+                domain.append(("id", "<", last_id))
             return self.search_read(cr, uid, domain, ['id', 'create_date', 'to_id', 'from_id', 'type', 'message'], limit=limit, context=context)
         return False
 
@@ -330,7 +330,7 @@ class res_users(osv.Model):
 
     def im_search(self, cr, uid, name, limit=20, context=None):
         """ search users with a name and return its id, name and im_status """
-        result = [];
+        result = []
         # find the employee group
         group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
 

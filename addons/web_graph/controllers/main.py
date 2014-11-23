@@ -48,7 +48,7 @@ class TableExporter(http.Controller):
                     worksheet.write(y, x + i, header['title'] if i == 0 else '', style)
                 if header['height'] > 1:
                     carry.append({'x': x, 'height': header['height'] - 1})
-                x = x + header['width'];
+                x = x + header['width']
             while (carry and carry[0]['x'] == x):
                 cell = carry.popleft()
                 for i in range(nbr_measures):
@@ -63,7 +63,7 @@ class TableExporter(http.Controller):
             worksheet.write(y, 0, '', header_plain)
             for measure in jdata['measure_row']:
                 style = header_bold if measure['is_bold'] else header_plain
-                worksheet.write(y, x, measure['text'], style);
+                worksheet.write(y, x, measure['text'], style)
                 x = x + 1
             y = y + 1
 

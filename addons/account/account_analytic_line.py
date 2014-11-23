@@ -65,7 +65,7 @@ class account_analytic_line(osv.osv):
     # property_valuation_price_type property
     def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
             unit=False, journal_id=False, context=None):
-        if context == None:
+        if context is None:
             context = {}
         if not journal_id:
             j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type', '=', 'purchase')])

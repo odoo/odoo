@@ -157,7 +157,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
         if self.Kind[self.win.getListBoxSelectedItem("lstResourceType")] == "pdf":
             url = self.doc2pdf(url[7:])
 
-        if url == None:
+        if url is None:
             ErrorDialog("Problem in creating PDF.", "", "PDF Error.")
             return None
 
@@ -192,7 +192,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
                 resourceid = s[0]
                 break
 
-        if resourceid == None:
+        if resourceid is None:
             ErrorDialog("No resource is selected.", "", "Resource Error.")
             return
 

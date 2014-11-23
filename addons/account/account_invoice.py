@@ -1372,7 +1372,7 @@ class account_invoice_line(models.Model):
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
             fposition_id=False, price_unit=False, currency_id=False, company_id=None):
         context = self._context
-        company_id = company_id if company_id != None else context.get('company_id', False)
+        company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(

@@ -195,7 +195,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 "AND " + self.init_query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids)))
             contemp = self.cr.fetchone()
-            if contemp != None:
+            if contemp is not None:
                 result_init = contemp[0] or 0.0
             else:
                 result_init = result_tmp + 0.0
@@ -213,7 +213,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
-        if contemp != None:
+        if contemp is not None:
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
@@ -244,7 +244,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 "AND " + self.init_query + " ",
                 (partner.id, tuple(move_state), tuple(self.account_ids)))
             contemp = self.cr.fetchone()
-            if contemp != None:
+            if contemp is not None:
                 result_init = contemp[0] or 0.0
             else:
                 result_init = result_tmp + 0.0
@@ -262,7 +262,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             (partner.id, tuple(move_state), tuple(self.account_ids),))
 
         contemp = self.cr.fetchone()
-        if contemp != None:
+        if contemp is not None:
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0

@@ -244,7 +244,7 @@ class account_coda_import(osv.osv_memory):
                 ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'].id, balance_start_check_date))
             res = cr.fetchone()
             balance_start_check = res and res[0]
-            if balance_start_check == None:
+            if balance_start_check is None:
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
                     balance_start_check = statement['journal_id'].default_debit_account_id.balance
                 else:

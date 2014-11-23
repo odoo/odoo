@@ -74,8 +74,8 @@ def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
     if not ean13:
         return "0000000000000"
-    ean13 = re.sub("[A-Za-z]", "0", ean13);
-    ean13 = re.sub("[^0-9]", "", ean13);
+    ean13 = re.sub("[A-Za-z]", "0", ean13)
+    ean13 = re.sub("[^0-9]", "", ean13)
     ean13 = ean13[:13]
     if len(ean13) < 13:
         ean13 = ean13 + '0' * (13 - len(ean13))

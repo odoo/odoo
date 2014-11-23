@@ -95,7 +95,7 @@ class Scanner(Thread):
 
     def set_status(self, status, message=None):
         if status == self.status['status']:
-            if message != None and message != self.status['messages'][-1]:
+            if message is not None and message != self.status['messages'][-1]:
                 self.status['messages'].append(message)
         else:
             self.status['status'] = status

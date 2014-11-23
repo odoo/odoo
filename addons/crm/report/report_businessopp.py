@@ -152,7 +152,7 @@ class report_custom(report_int):
                                     format=lambda x: ""),
                     y_axis = axis.Y(label="Planned amounts"))
 
-        bar_plot.fill_styles.reset();
+        bar_plot.fill_styles.reset()
         plot1 = bar_plot.T(label="Cost", data=data, fill_style=fill_style.red)
         plot2 = bar_plot.T(label="Revenue", data=data, hcol=2, stack_on=plot1, fill_style=fill_style.blue)
 

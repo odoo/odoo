@@ -57,7 +57,7 @@ class payroll_advice_report(report_sxw.rml_parse):
         return res
 
     def convert(self, amount, cur):
-        return amount_to_text_en.amount_to_text(amount, 'en', cur);
+        return amount_to_text_en.amount_to_text(amount, 'en', cur)
 
     def get_bysal_total(self):
         return self.total_bysal

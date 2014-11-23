@@ -92,7 +92,7 @@ def getDesktop():
     """An easy way to obtain the Desktop object from a running OOo.
     """
     global StarDesktop
-    if StarDesktop == None:
+    if StarDesktop is None:
         StarDesktop = createUnoService("com.sun.star.frame.Desktop")
     return StarDesktop
 # preload the StarDesktop variable.
@@ -165,13 +165,13 @@ def makePropertyValue(cName=None, uValue=None, nHandle=None, nState=None):
     """
     oPropertyValue = createUnoStruct("com.sun.star.beans.PropertyValue")
 
-    if cName != None:
+    if cName is not None:
         oPropertyValue.Name = cName
-    if uValue != None:
+    if uValue is not None:
         oPropertyValue.Value = uValue
-    if nHandle != None:
+    if nHandle is not None:
         oPropertyValue.Handle = nHandle
-    if nState != None:
+    if nState is not None:
         oPropertyValue.State = nState
 
     return oPropertyValue
@@ -246,7 +246,7 @@ def defineStyle(oDrawDoc, cStyleFamily, cStyleName, cParentStyleName=None):
         oStyle = oDrawDoc.createInstance("com.sun.star.style.Style")
 
         # Set its parent style
-        if cParentStyleName != None:
+        if cParentStyleName is not None:
             oStyle.setParentStyle(cParentStyleName)
 
         # Add the new style to the style family.
@@ -282,7 +282,7 @@ goAwtToolkit = None
 
 def getAwtToolkit():
     global goAwtToolkit
-    if goAwtToolkit == None:
+    if goAwtToolkit is None:
         goAwtToolkit = createUnoService("com.sun.star.awt.Toolkit")
     return goAwtToolkit
 
@@ -303,15 +303,15 @@ class DBModalDialog:
 
     def __init__(self, nPositionX=None, nPositionY=None, nWidth=None, nHeight=None, cTitle=None):
         self.oDialogModel = createUnoService("com.sun.star.awt.UnoControlDialogModel")
-        if nPositionX != None:
+        if nPositionX is not None:
             self.oDialogModel.PositionX = nPositionX
-        if nPositionY != None:
+        if nPositionY is not None:
             self.oDialogModel.PositionY = nPositionY
-        if nWidth != None:
+        if nWidth is not None:
             self.oDialogModel.Width = nWidth
-        if nHeight != None:
+        if nHeight is not None:
             self.oDialogModel.Height = nHeight
-        if cTitle != None:
+        if cTitle is not None:
             self.oDialogModel.Title = cTitle
         self.oDialogControl = createUnoService("com.sun.star.awt.UnoControlDialog")
         self.oDialogControl.setModel(self.oDialogModel)
@@ -357,7 +357,7 @@ class DBModalDialog:
                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None, bMultiSelection=None,
                         cLabel=cLabel,
                         nTabIndex=nTabIndex)
-        if actionListenerProc != None:
+        if actionListenerProc is not None:
             self.addActionListenerProc(cCtrlName, actionListenerProc)
 
     def setButtonLabel(self, cCtrlName, cLabel):
@@ -375,9 +375,9 @@ class DBModalDialog:
         self.addControl("com.sun.star.awt.UnoControlEditModel",
             cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None)
 
-        if cText != None:
+        if cText is not None:
             self.setEditText(cCtrlName, cText)
-        if textListenerProc != None:
+        if textListenerProc is not None:
             self.addTextListenerProc(cCtrlName, textListenerProc)
 
     #--------------------------------------------------
@@ -397,7 +397,7 @@ class DBModalDialog:
                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None, bMultiSelection=None,
                         cLabel=cLabel,
                         nTabIndex=nTabIndex)
-        if itemListenerProc != None:
+        if itemListenerProc is not None:
             self.addItemListenerProc(cCtrlName, itemListenerProc)
 
     def setEditText(self, cCtrlName, cText):
@@ -418,7 +418,7 @@ class DBModalDialog:
     def getCheckBoxState(self, cCtrlName):
         """Get the state of the control."""
         oControl = self.getControl(cCtrlName)
-        return oControl.getState();
+        return oControl.getState()
 
     def setCheckBoxState(self, cCtrlName, nState):
         """Set the state of the control."""
@@ -470,19 +470,19 @@ class DBModalDialog:
         oControlModel.Height = nHeight
         oControlModel.Name = cCtrlName
 
-        if bDropdown != None:
+        if bDropdown is not None:
             oControlModel.Dropdown = bDropdown
 
-        if bMultiSelection != None:
+        if bMultiSelection is not None:
             oControlModel.MultiSelection = bMultiSelection
 
-        if cLabel != None:
+        if cLabel is not None:
             oControlModel.Label = cLabel
 
-        if nTabIndex != None:
+        if nTabIndex is not None:
             oControlModel.TabIndex = nTabIndex
 
-        if sImagePath != None:
+        if sImagePath is not None:
             oControlModel.ImageURL = sImagePath
     #--------------------------------------------------
     #   Access controls and control models
@@ -502,7 +502,7 @@ class DBModalDialog:
         mod = self.addControl("com.sun.star.awt.UnoControlListBoxModel",
                          cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown, bMultiSelection)
 
-        if itemListenerProc != None:
+        if itemListenerProc is not None:
             self.addItemListenerProc(cCtrlName, itemListenerProc)
 
     def addListBoxItems(self, cCtrlName, tcItemTexts, nPosition=0):
@@ -564,9 +564,9 @@ class DBModalDialog:
 
         mod = self.addControl("com.sun.star.awt.UnoControlComboBoxModel",
                          cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown)
-        if itemListenerProc != None:
+        if itemListenerProc is not None:
             self.addItemListenerProc(cCtrlName, itemListenerProc)
-        if actionListenerProc != None:
+        if actionListenerProc is not None:
             self.addActionListenerProc(cCtrlName, actionListenerProc)
 
     def setComboBoxText(self, cCtrlName, cText):
@@ -582,7 +582,7 @@ class DBModalDialog:
     def getComboBoxSelectedText(self, cCtrlName):
         """Get the selected text of the ComboBox."""
         oControl = self.getControl(cCtrlName)
-        return oControl.getSelectedText();
+        return oControl.getSelectedText()
 
     def getControl(self, cCtrlName):
         """Get the control (not its model) for a particular control name.
@@ -612,9 +612,9 @@ class DBModalDialog:
         mod = self.addControl("com.sun.star.awt.UnoControlImageControlModel",
                          cCtrlName, nPositionX, nPositionY, nWidth, nHeight, sImagePath=sImagePath)
 
-        if itemListenerProc != None:
+        if itemListenerProc is not None:
             self.addItemListenerProc(cCtrlName, itemListenerProc)
-        if actionListenerProc != None:
+        if actionListenerProc is not None:
             self.addActionListenerProc(cCtrlName, actionListenerProc)
 
     #--------------------------------------------------
@@ -811,7 +811,7 @@ class DBModalDialog:
     def doModalDialog(self, sObjName, sValue):
         """Display the dialog as a modal dialog."""
         self.oDialogControl.setVisible(True)
-        if not sValue == None:
+        if not sValue is None:
             self.selectListBoxItem(sObjName, sValue, True)
         self.oDialogControl.execute()
 

@@ -63,7 +63,7 @@ class sale_order(osv.Model):
 
         values['product_id'] = product_id
         values['order_id'] = order_id
-        if values.get('tax_id') != None:
+        if values.get('tax_id') is not None:
             values['tax_id'] = [(6, 0, values['tax_id'])]
         return values
 
@@ -88,7 +88,7 @@ class sale_order(osv.Model):
             # compute new quantity
             if set_qty:
                 quantity = set_qty
-            elif add_qty != None:
+            elif add_qty is not None:
                 quantity = sol.browse(cr, SUPERUSER_ID, line_id, context=context).product_uom_qty + (add_qty or 0)
 
             # Remove zero of negative lines

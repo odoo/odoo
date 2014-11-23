@@ -422,7 +422,7 @@ class marketing_campaign_activity(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                context=None, count=False):
-        if context == None:
+        if context is None:
             context = {}
         if 'segment_id' in context and context['segment_id']:
             segment_obj = self.pool.get('marketing.campaign.segment').browse(cr,

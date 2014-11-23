@@ -139,7 +139,7 @@ def getPath(sPath, sMain):
         if oPar.supportsService("com.sun.star.text.TextField.DropDown"):
             sItem = oPar.Items[1]
             if sPath[:sPath.find(".")] == sMain:
-                break;
+                break
             else:
                 res = re.findall('\\[\\[ *([a-zA-Z0-9_\.]+) *\\]\\]', sPath)
                 if len(res) <> 0:

@@ -48,7 +48,7 @@ class indexer(object):
     def _getDefMime(self, ext):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
-        mts = self._getMimeTypes();
+        mts = self._getMimeTypes()
         if len(mts):
             return mts[0]
         return None
@@ -61,12 +61,12 @@ class indexer(object):
         """
         res = ''
         try:
-            if content != None:
+            if content is not None:
                 return self._doIndexContent(content)
         except NhException:
             pass
 
-        if realfile != None:
+        if realfile is not None:
             try:
                 return self._doIndexFile(realfile)
             except NhException:

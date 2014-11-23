@@ -973,7 +973,7 @@ class account_move_line(osv.osv):
         account = account_obj.browse(cr, uid, account_id, context=context)
         if not account.reconcile:
             raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
-        if r[0][1] != None:
+        if r[0][1] is not None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \

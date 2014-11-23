@@ -141,7 +141,7 @@ class report_custom(report_int):
                     y_axis=axis.Y(label=y_label),
                     y_range=(0, None),
                     size = (640, 480))
-        bar_plot.fill_styles.reset();
+        bar_plot.fill_styles.reset()
         # select workcenters
         cr.execute(
             "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs "

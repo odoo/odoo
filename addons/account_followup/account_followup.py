@@ -129,7 +129,7 @@ class res_partner(osv.osv):
 
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res = {}
-        if company_id == None:
+        if company_id is None:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         else:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)

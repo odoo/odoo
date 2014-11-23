@@ -42,7 +42,7 @@ class Scale(Thread):
 
     def set_status(self, status, message=None):
         if status == self.status['status']:
-            if message != None and message != self.status['messages'][-1]:
+            if message is not None and message != self.status['messages'][-1]:
                 self.status['messages'].append(message)
         else:
             self.status['status'] = status
@@ -131,7 +131,7 @@ class Scale(Thread):
                         try:
                             self.weight = float(''.join(answer))
                         except ValueError as v:
-                            self.set_status('error', 'No data Received, please power-cycle the scale');
+                            self.set_status('error', 'No data Received, please power-cycle the scale')
                             self.device = None
 
                 except Exception as e:
