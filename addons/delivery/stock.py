@@ -153,7 +153,7 @@ class stock_move(osv.osv):
                 if move.product_id.weight_net > 0.00:
                     weight_net = (converted_qty * move.product_id.weight_net)
 
-            res[move.id] =  {
+            res[move.id] = {
                 'weight': weight,
                 'weight_net': weight_net,
             }

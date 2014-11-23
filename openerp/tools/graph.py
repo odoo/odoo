@@ -485,7 +485,7 @@ class graph(object):
             index = self.start_nodes.index(self.start)
             same = False
 
-            roots  = []
+            roots = []
             if index > 0:
                 for start in self.start_nodes[:index]:
                     same = True

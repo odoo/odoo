@@ -104,7 +104,7 @@ class account_followup_sending_results(osv.osv_memory):
 
     _name = 'account_followup.sending.results'
     _description = 'Results from the sending of the different letters and emails'
-    _columns  = {
+    _columns = {
         'description': fields.text("Description", readonly=True),
         'needprinting': fields.boolean("Needs Printing")
     }
@@ -180,7 +180,7 @@ class account_followup_print(osv.osv_memory):
             needprinting = True
         resulttext += "<p align=\"center\">"
         for item in manuals:
-            resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) +  "\n </li>"
+            resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) + "\n </li>"
         resulttext += "</p>"
         result = {}
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context=context)
@@ -231,7 +231,7 @@ class account_followup_print(osv.osv_memory):
         # clear the manual actions if nothing is due anymore
         nbactionscleared = self.clear_manual_actions(cr, uid, partner_list, context=context)
         if nbactionscleared > 0:
-            restot['resulttext'] = restot['resulttext'] + "<li>" +  _("%s partners have no credits and as such the action is cleared") % (str(nbactionscleared)) + "</li>"
+            restot['resulttext'] = restot['resulttext'] + "<li>" + _("%s partners have no credits and as such the action is cleared") % (str(nbactionscleared)) + "</li>"
         # return the next action
         mod_obj = self.pool.get('ir.model.data')
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_account_followup_sending_results')], context=context)

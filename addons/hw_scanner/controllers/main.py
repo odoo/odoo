@@ -113,9 +113,9 @@ class Scanner(Thread):
         try:
             if not evdev:
                 return None
-            devices   = [device for device in listdir(self.input_dir)]
+            devices = [device for device in listdir(self.input_dir)]
             keyboards = [device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
-            scanners  = [device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
+            scanners = [device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
             if len(scanners) > 0:
                 self.set_status('connected', 'Connected to ' + scanners[0])
                 return evdev.InputDevice(join(self.input_dir, scanners[0]))
@@ -158,9 +158,9 @@ class Scanner(Thread):
 
         self.barcodes = Queue()
 
-        barcode  = []
-        shift    = False
-        device   = None
+        barcode = []
+        shift = False
+        device = None
 
         while True:  # barcodes loop
             if device:  # ungrab device between barcodes and timeouts for plug & play

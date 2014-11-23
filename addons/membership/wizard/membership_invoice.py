@@ -64,7 +64,7 @@ class membership_invoice(osv.osv_memory):
         except ValueError:
             form_view_id = False
 
-        return  {
+        return {
             'domain': [('id', 'in', invoice_list)],
             'name': 'Membership Invoices',
             'view_type': 'form',

@@ -124,7 +124,7 @@ class account_cash_statement(osv.osv):
         return result.keys()
 
     def _compute_difference(self, cr, uid, ids, fieldnames, args, context=None):
-        result =  dict.fromkeys(ids, 0.0)
+        result = dict.fromkeys(ids, 0.0)
 
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = obj.balance_end_real - obj.balance_end

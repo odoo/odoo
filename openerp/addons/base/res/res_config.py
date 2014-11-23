@@ -469,7 +469,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
 
         if module_ids and not field_value:
             dep_ids = module_pool.downstream_dependencies(cr, uid, module_ids, context=context)
-            dep_name = [x.shortdesc for x  in module_pool.browse(
+            dep_name = [x.shortdesc for x in module_pool.browse(
                 cr, uid, dep_ids + module_ids, context=context)]
             message = '\n'.join(dep_name)
             return {'warning': {'title': _('Warning!'),

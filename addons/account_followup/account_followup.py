@@ -148,7 +148,7 @@ class res_partner(osv.osv):
                     latest_date = aml.followup_date
                 if (aml.company_id == company) and (aml.blocked == False) and (aml.followup_line_id != False and
                             (not latest_days_without_lit or latest_days_without_lit < aml.followup_line_id.delay)):
-                    latest_days_without_lit =  aml.followup_line_id.delay
+                    latest_days_without_lit = aml.followup_line_id.delay
                     latest_level_without_lit = aml.followup_line_id.id
             res[partner.id] = {'latest_followup_date': latest_date,
                                'latest_followup_level_id': latest_level,

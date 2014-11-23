@@ -96,7 +96,7 @@ class sale_quote(http.Controller):
         return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
 
     def __message_post(self, message, order_id, type='comment', subtype=False, attachments=[]):
-        request.session.body =  message
+        request.session.body = message
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if 'body' in request.session and request.session.body:

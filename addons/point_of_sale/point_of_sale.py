@@ -203,7 +203,7 @@ class pos_config(osv.osv):
         values['sequence_id'] = ir_sequence.create(cr, uid, {
             'name': 'POS Order %s' % values['name'],
             'padding': 4,
-            'prefix': "%s/"  % values['name'],
+            'prefix': "%s/" % values['name'],
             'code': "pos.order",
             'company_id': values.get('company_id', False),
         }, context=context)
@@ -213,7 +213,7 @@ class pos_config(osv.osv):
         ir_sequence.create(cr, uid, {
             'name': 'POS order line %s' % values['name'],
             'padding': 4,
-            'prefix': "%s/"  % values['name'],
+            'prefix': "%s/" % values['name'],
             'code': "pos.order.line",
             'company_id': values.get('company_id', False),
         }, context=context)
@@ -669,7 +669,7 @@ class pos_order(osv.osv):
             val1 = val2 = 0.0
             cur = order.pricelist_id.currency_id
             for payment in order.statement_ids:
-                res[order.id]['amount_paid'] +=  payment.amount
+                res[order.id]['amount_paid'] += payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
                 val1 += line.price_subtotal_incl
@@ -1102,7 +1102,7 @@ class pos_order(osv.osv):
                         grouped_data[key].append(values)
                     else:
                         current_value = grouped_data[key][0]
-                        current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
+                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                         current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
@@ -1135,7 +1135,7 @@ class pos_order(osv.osv):
                 amount = line.price_subtotal
 
                 # Search for the income account
-                if  line.product_id.property_account_income.id:
+                if line.product_id.property_account_income.id:
                     income_account = line.product_id.property_account_income.id
                 elif line.product_id.categ_id.property_account_income_categ.id:
                     income_account = line.product_id.categ_id.property_account_income_categ.id
@@ -1341,7 +1341,7 @@ class ean_wizard(osv.osv_memory):
         for r in self.browse(cr, uid, ids):
             ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
             m = context.get('active_model')
-            m_id =  context.get('active_id')
+            m_id = context.get('active_id')
             self.pool[m].write(cr, uid, [m_id], {'ean13': ean13})
         return {'type': 'ir.actions.act_window_close'}
 
@@ -1438,7 +1438,7 @@ class res_partner(osv.osv):
 
         # image is a dataurl, get the data after the comma
         if partner.get('image', False):
-            img =  partner['image'].split(',')[1]
+            img = partner['image'].split(',')[1]
             partner['image'] = img
 
         if partner.get('id', False):  # Modifying existing partner

@@ -61,11 +61,11 @@ class website_event(http.Controller):
                 0],
             ['week', _('This Week'), [
                 ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sdn(today  + relativedelta(days=6 - today.weekday())))],
+                ("date_begin", "<", sdn(today + relativedelta(days=6 - today.weekday())))],
                 0],
             ['nextweek', _('Next Week'), [
                 ("date_end", ">=", sd(today + relativedelta(days=7 - today.weekday()))),
-                ("date_begin", "<", sdn(today  + relativedelta(days=13 - today.weekday())))],
+                ("date_begin", "<", sdn(today + relativedelta(days=13 - today.weekday())))],
                 0],
             ['month', _('This month'), [
                 ("date_end", ">=", sd(today.replace(day=1))),
@@ -73,7 +73,7 @@ class website_event(http.Controller):
                 0],
             ['nextmonth', _('Next month'), [
                 ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1)  + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
+                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
                 0],
             ['old', _('Old Events'), [
                 ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],

@@ -40,7 +40,7 @@ class report_xml(osv.osv):
             fp = open(get_module_resource('base_report_designer', 'openerp_sxw2rml', 'normalized_oo2rml.xsl'), 'rb')
         if file_type == 'odt':
             fp = open(get_module_resource('base_report_designer', 'openerp_sxw2rml', 'normalized_odt2rml.xsl'), 'rb')
-        return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
+        return {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
     def upload_report(self, cr, uid, report_id, file_sxw, file_type, context=None):
         '''

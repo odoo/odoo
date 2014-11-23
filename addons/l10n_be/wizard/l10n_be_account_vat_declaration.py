@@ -91,7 +91,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
         tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id', 'child_of', data_tax.tax_code_id.id), ('company_id', '=', obj_company.id)], context=context)
         ctx = context.copy()
-        data  = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids)[0]
         ctx['period_id'] = data['period_id'][0]
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code', 'sum_period'], context=ctx)
 

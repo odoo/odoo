@@ -227,7 +227,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         # on change le type pour afficher le total
                         res_tot['type'] = 2
                         result_accounts.append(res_tot)
-                    bcl_current_level =  accounts[bcl_rup_ind]['level']
+                    bcl_current_level = accounts[bcl_rup_ind]['level']
                     bcl_rup_ind -= 1
 
             old_level = account_elem['level']

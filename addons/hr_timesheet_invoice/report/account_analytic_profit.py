@@ -99,7 +99,7 @@ class account_analytic_profit(report_sxw.rml_parse):
                     tot += price * lid2.unit_amount * (1 - (discount or 0.0))
                 if tot:
                     procent = line.invoice_id.amount_untaxed / tot
-                    res[id]['amount'] +=  xxx * procent
+                    res[id]['amount'] += xxx * procent
                 else:
                     res[id]['amount'] += xxx
             else:

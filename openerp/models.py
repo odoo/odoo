@@ -182,7 +182,7 @@ def get_pg_type(f, type_override=None):
     field_type = type_override or type(f)
 
     if field_type in FIELDS_TO_PGTYPES:
-        pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
+        pg_type = (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
         # Explicit support for "falsy" digits (0, False) to indicate a
         # NUMERIC field with no fixed precision. The values will be saved
@@ -2010,7 +2010,7 @@ class BaseModel(object):
                 dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 value = datetime.datetime.strptime(value, dt_format)
             if gb['tz_convert']:
-                value =  pytz.timezone(context['tz']).localize(value)
+                value = pytz.timezone(context['tz']).localize(value)
         return value
 
     def _read_group_get_domain(self, groupby, value):

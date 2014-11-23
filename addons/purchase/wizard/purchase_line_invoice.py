@@ -43,7 +43,7 @@ class purchase_line_invoice(osv.osv_memory):
         if context is None:
             context = {}
 
-        record_ids =  context.get('active_ids', [])
+        record_ids = context.get('active_ids', [])
         if record_ids:
             res = False
             invoices = {}

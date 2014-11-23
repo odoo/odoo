@@ -845,7 +845,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  res[product.id] + product.price_extra
+            res[product.id] = res[product.id] + product.price_extra
 
         return res
 
@@ -857,7 +857,7 @@ class product_product(osv.osv):
             uom = product.uos_id or product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
                     context['uom'], value, uom.id)
-        value =  value - product.price_extra
+        value = value - product.price_extra
 
         return product.write({'list_price': value})
 

@@ -171,7 +171,7 @@ class account_invoice_refund(osv.osv_memory):
                             line.reconcile_id.unlink()
                     refund.signal_workflow('invoice_open')
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
-                    for tmpline in  refund.move_id.line_id:
+                    for tmpline in refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
                     for account in to_reconcile_ids:

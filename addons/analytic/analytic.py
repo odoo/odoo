@@ -65,7 +65,7 @@ class account_analytic_account(osv.osv):
             context = {}
         child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in child_ids:
-            res[i] =  {}
+            res[i] = {}
             for n in fields:
                 res[i][n] = 0.0
 
@@ -76,7 +76,7 @@ class account_analytic_account(osv.osv):
         where_clause_args = [tuple(child_ids)]
         if context.get('from_date', False):
             where_date += " AND l.date >= %s"
-            where_clause_args  += [context['from_date']]
+            where_clause_args += [context['from_date']]
         if context.get('to_date', False):
             where_date += " AND l.date <= %s"
             where_clause_args += [context['to_date']]

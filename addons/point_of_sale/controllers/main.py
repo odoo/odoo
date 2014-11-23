@@ -26,7 +26,7 @@ class PosController(http.Controller):
         pos_session_ids = PosSession.search(cr, uid, [('state', '=', 'opened'), ('user_id', '=', session.uid)], context=context)
         PosSession.login(cr, uid, pos_session_ids, context=context)
 
-        modules =  simplejson.dumps(module_boot(request.db))
+        modules = simplejson.dumps(module_boot(request.db))
         init =  """
                  var wc = new s.web.WebClient();
                  wc.show_application = function(){

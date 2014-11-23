@@ -51,7 +51,7 @@ class payroll_advice_report(report_sxw.rml_parse):
         if slip_ids:
             slip = payslip_pool.browse(self.cr, self.uid, slip_ids, context=self.context)[0]
             from_date = datetime.strptime(slip.date_from, '%Y-%m-%d')
-            to_date =  datetime.strptime(slip.date_to, '%Y-%m-%d')
+            to_date = datetime.strptime(slip.date_to, '%Y-%m-%d')
             res['from_name'] = from_date.strftime('%d') + '-' + from_date.strftime('%B') + '-' + from_date.strftime('%Y')
             res['to_name'] = to_date.strftime('%d') + '-' + to_date.strftime('%B') + '-' + to_date.strftime('%Y')
         return res

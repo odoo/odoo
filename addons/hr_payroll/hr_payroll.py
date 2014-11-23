@@ -352,7 +352,7 @@ class hr_payslip(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for payslip in self.browse(cr, uid, ids, context=context):
-            if payslip.state not in  ['draft', 'cancel']:
+            if payslip.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Warning!'), _('You cannot delete a payslip which is not draft or cancelled!'))
         return super(hr_payslip, self).unlink(cr, uid, ids, context)
 
@@ -372,7 +372,7 @@ class hr_payslip(osv.osv):
         clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
         # OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
-        clause_final =  [('employee_id', '=', employee.id), '|', '|'] + clause_1 + clause_2 + clause_3
+        clause_final = [('employee_id', '=', employee.id), '|', '|'] + clause_1 + clause_2 + clause_3
         contract_ids = contract_obj.search(cr, uid, clause_final, context=context)
         return contract_ids
 
@@ -879,7 +879,7 @@ result = rules.NET > categories.NET * 0.10''',
         elif rule.condition_select == 'range':
             try:
                 result = eval(rule.condition_range, localdict)
-                return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
+                return rule.condition_range_min <= result and result <= rule.condition_range_max or False
             except:
                 raise osv.except_osv(_('Error!'), _('Wrong range condition defined for salary rule %s (%s).') % (rule.name, rule.code))
         else:  # python code

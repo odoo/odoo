@@ -113,7 +113,7 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
         @param answers_ids: Answers's IDs
     """
 
-    ok =  []
+    ok = []
     cr.execute('''
         select r.category_id
         from res_partner_res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)

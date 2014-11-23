@@ -42,7 +42,7 @@ class sale_report(osv.osv):
     }
 
     def _select(self):
-        return  super(sale_report, self)._select() + ", s.warehouse_id as warehouse_id, s.shipped, s.shipped::integer as shipped_qty_1"
+        return super(sale_report, self)._select() + ", s.warehouse_id as warehouse_id, s.shipped, s.shipped::integer as shipped_qty_1"
 
     def _group_by(self):
         return super(sale_report, self)._group_by() + ", s.warehouse_id, s.shipped"

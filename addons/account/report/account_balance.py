@@ -113,7 +113,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             ctx['period_to'] = form['period_to']
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
+            ctx['date_to'] = form['date_to']
         ctx['state'] = form['target_move']
         parents = ids
         child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)

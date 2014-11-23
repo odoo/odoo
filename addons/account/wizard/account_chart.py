@@ -62,7 +62,7 @@ class account_chart(osv.osv_memory):
                                AND p.date_start < NOW()
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
-            periods =  [i[0] for i in cr.fetchall()]
+            periods = [i[0] for i in cr.fetchall()]
             if periods:
                 start_period = periods[0]
                 if len(periods) > 1:

@@ -80,7 +80,7 @@ class _flowable(object):
                         new_child.remove(n)
                     process(child, new_child)
                 else:
-                    new_child.text  = utils._process_text(self, child.text)
+                    new_child.text = utils._process_text(self, child.text)
                     new_child.tag = 'p'
                     try:
                         if new_child.get('style').find('terp_tblheader') != -1:
@@ -166,7 +166,7 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
     def __init__(self, node, style, localcontext={}):
         self.localcontext = localcontext
         self.posx = utils.unit_get(node.get('x'))
-        self.posy =  utils.unit_get(node.get('y'))
+        self.posy = utils.unit_get(node.get('y'))
 
         aligns = {
             'drawString': 'left',
@@ -265,7 +265,7 @@ class _rml_draw_style(object):
                     self.style[key] = result[key]
 
     def font_size_get(self, tag):
-        size  = utils.unit_get(self.style.get('td', {}).get('font-size', '16'))
+        size = utils.unit_get(self.style.get('td', {}).get('font-size', '16'))
         return size
 
     def get(self, tag):

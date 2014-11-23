@@ -590,7 +590,7 @@ class sale_order(osv.osv):
                         _('Cannot cancel this sales order!'),
                         _('First cancel all invoices attached to this sales order.'))
                 inv.signal_workflow('invoice_cancel')
-            sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
+            sale_order_line_obj.write(cr, uid, [l.id for l in sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
@@ -761,7 +761,7 @@ class sale_order(osv.osv):
                 if line[2].get('product_id'):
                     prod = product_obj.browse(cr, uid, line[2]['product_id'], context=context)
                 elif line[1]:
-                    prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
+                    prod = line_obj.browse(cr, uid, line[1], context=context).product_id
                 if prod and prod.taxes_id:
                     line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
                 order_line.append(line)
@@ -1018,7 +1018,7 @@ class sale_order_line(osv.osv):
         return {'value': value}
 
     def create(self, cr, uid, values, context=None):
-        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
+        if values.get('order_id') and values.get('product_id') and any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
             order = self.pool['sale.order'].read(cr, uid, values['order_id'], ['pricelist_id', 'partner_id', 'date_order', 'fiscal_position'], context=context)
             defaults = self.product_id_change(cr, uid, [], order['pricelist_id'][0], values['product_id'],
                 qty=float(values.get('product_uom_qty', False)),

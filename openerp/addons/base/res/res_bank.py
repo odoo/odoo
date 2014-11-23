@@ -227,8 +227,8 @@ class res_partner_bank(osv.osv):
             result['owner_name'] = part.name
             result['street'] = part.street or False
             result['city'] = part.city or False
-            result['zip'] =  part.zip or False
-            result['country_id'] =  part.country_id.id
+            result['zip'] = part.zip or False
+            result['country_id'] = part.country_id.id
             result['state_id'] = part.state_id.id
         return {'value': result}
 

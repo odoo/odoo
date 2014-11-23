@@ -202,7 +202,7 @@ class ir_model(osv.osv):
         return super(ir_model, self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
-        if  context is None:
+        if context is None:
             context = {}
         if context and context.get('manual'):
             vals['state'] = 'manual'
@@ -674,7 +674,7 @@ class ir_model_access(osv.osv):
     }
 
     def check_groups(self, cr, uid, group):
-        grouparr  = group.split('.')
+        grouparr = group.split('.')
         if not grouparr:
             return False
         cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN (select res_id from ir_model_data where module=%s and name=%s)", (uid, grouparr[0], grouparr[1],))

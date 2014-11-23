@@ -162,11 +162,11 @@ class res_company(osv.osv):
 
         # first line (notice that missing elements are filtered out before the join)
         res = ' | '.join(filter(bool, [
-            phone            and '%s: %s' % (_('Phone'), phone),
-            fax              and '%s: %s' % (_('Fax'), fax),
-            email            and '%s: %s' % (_('Email'), email),
-            website          and '%s: %s' % (_('Website'), website),
-            vat              and '%s: %s' % (_('TIN'), vat),
+            phone and '%s: %s' % (_('Phone'), phone),
+            fax and '%s: %s' % (_('Fax'), fax),
+            email and '%s: %s' % (_('Email'), email),
+            website and '%s: %s' % (_('Website'), website),
+            vat and '%s: %s' % (_('TIN'), vat),
             company_registry and '%s: %s' % (_('Reg'), company_registry),
         ]))
         # second line: bank accounts
@@ -247,7 +247,7 @@ class res_company(osv.osv):
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
-        ids =  self.search(cr, uid, [('parent_id', 'child_of', [company])])
+        ids = self.search(cr, uid, [('parent_id', 'child_of', [company])])
         return ids
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context=None):

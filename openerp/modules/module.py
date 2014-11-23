@@ -187,7 +187,7 @@ def get_module_icon(module):
     iconpath = ['static', 'description', 'icon.png']
     if get_module_resource(module, *iconpath):
         return ('/' + module + '/') + '/'.join(iconpath)
-    return '/base/'  + '/'.join(iconpath)
+    return '/base/' + '/'.join(iconpath)
 
 
 def get_module_root(path):

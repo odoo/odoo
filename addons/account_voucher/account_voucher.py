@@ -246,7 +246,7 @@ class account_voucher(osv.osv):
             for l in voucher.line_cr_ids:
                 credit += l.amount
             currency = voucher.currency_id or voucher.company_id.currency_id
-            res[voucher.id] =  currency_obj.round(cr, uid, currency, voucher.amount - sign * (credit - debit))
+            res[voucher.id] = currency_obj.round(cr, uid, currency, voucher.amount - sign * (credit - debit))
         return res
 
     def _paid_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
@@ -261,7 +261,7 @@ class account_voucher(osv.osv):
             ctx.update({
               'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False,
               'voucher_special_currency_rate': voucher.currency_id.rate * voucher.payment_rate, })
-            res[voucher.id] =  self.pool.get('res.currency').compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, voucher.amount, context=ctx)
+            res[voucher.id] = self.pool.get('res.currency').compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, voucher.amount, context=ctx)
         return res
 
     def _get_currency_help_label(self, cr, uid, currency_id, payment_rate, payment_rate_currency_id, context=None):
@@ -284,7 +284,7 @@ class account_voucher(osv.osv):
         if currency_id:
             currency_str = rml_parser.formatLang(1, currency_obj=currency_pool.browse(cr, uid, currency_id, context=context))
         if payment_rate_currency_id:
-            payment_rate_str  = rml_parser.formatLang(payment_rate, currency_obj=currency_pool.browse(cr, uid, payment_rate_currency_id, context=context))
+            payment_rate_str = rml_parser.formatLang(payment_rate, currency_obj=currency_pool.browse(cr, uid, payment_rate_currency_id, context=context))
         currency_help_label = _('At the operation date, the exchange rate was\n%s = %s') % (currency_str, payment_rate_str)
         return currency_help_label
 
@@ -541,7 +541,7 @@ class account_voucher(osv.osv):
         return default
 
     def onchange_rate(self, cr, uid, ids, rate, amount, currency_id, payment_rate_currency_id, company_id, context=None):
-        res =  {'value': {'paid_amount_in_company_currency': amount, 'currency_help_label': self._get_currency_help_label(cr, uid, currency_id, rate, payment_rate_currency_id, context=context)}}
+        res = {'value': {'paid_amount_in_company_currency': amount, 'currency_help_label': self._get_currency_help_label(cr, uid, currency_id, rate, payment_rate_currency_id, context=context)}}
         if rate and amount and currency_id:
             company_currency = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id
             # context should contain the date, the payment currency and the payment rate specified on the voucher
@@ -1047,7 +1047,7 @@ class account_voucher(osv.osv):
             'journal_id': voucher.journal_id.id,
             'period_id': voucher.period_id.id,
             'partner_id': voucher.partner_id.id,
-            'currency_id': company_currency <> current_currency and  current_currency or False,
+            'currency_id': company_currency <> current_currency and current_currency or False,
             'amount_currency': (sign * abs(voucher.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
             'date': voucher.date,

@@ -79,7 +79,7 @@ class report(object):
                     return '[[' + txt.group(1) + "''" + txt.group(4) + ']]'
                 t = _regex1.sub(_sub1, node.text or node.tail)
                 if t == " ":
-                    t = _regex11.sub(_sub1, node.text  or node.tail)
+                    t = _regex11.sub(_sub1, node.text or node.tail)
                 t = _regex3.sub(_sub3, t)
                 node.text = _regex2.sub(_sub2, t)
             self.preprocess_rml(node, type)

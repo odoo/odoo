@@ -259,7 +259,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     continue
                 if b['type'] == 'object':
                     # there we are! press the button!
-                    fn =  getattr(registry[datas['res_model']], b['name'])
+                    fn = getattr(registry[datas['res_model']], b['name'])
                     if not fn:
                         _logger.error("The %s model doesn't have a %s attribute!", datas['res_model'], b['name'])
                         continue

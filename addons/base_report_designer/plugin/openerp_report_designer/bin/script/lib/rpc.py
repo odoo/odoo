@@ -127,7 +127,7 @@ class XMLRPCGateway(RPCGateway):
 
         super(XMLRPCGateway, self).__init__(host, port, protocol)
         global rpc_url
-        rpc_url =  self.get_url() + 'xmlrpc/'
+        rpc_url = self.get_url() + 'xmlrpc/'
 
     def listdb(self):
         global rpc_url
@@ -177,7 +177,7 @@ class NETRPCGateway(RPCGateway):
             return -1
 
     def login(self, db, user, password):
-        sock =  mysocket()
+        sock = mysocket()
         try:
             sock.connect(self.host, self.port)
             sock.mysend(('common', 'login', db, user, password))

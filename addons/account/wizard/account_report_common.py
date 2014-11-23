@@ -111,7 +111,7 @@ class account_common_report(osv.osv_memory):
                                AND p.special = false
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
-            periods =  [i[0] for i in cr.fetchall()]
+            periods = [i[0] for i in cr.fetchall()]
             if periods and len(periods) > 1:
                 start_period = periods[0]
                 end_period = periods[1]

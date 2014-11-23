@@ -106,7 +106,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         total_mnths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
-        employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
+        employees = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
 
         for emp_id in employees:
             emp_salary.append(emp_id.name)

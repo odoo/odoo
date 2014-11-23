@@ -59,7 +59,7 @@ class Scale(Thread):
     def get_device(self):
         try:
             devices = [device for device in listdir(self.input_dir)]
-            scales  = [device for device in devices if ('mettler' in device.lower()) or ('toledo' in device.lower())]
+            scales = [device for device in devices if ('mettler' in device.lower()) or ('toledo' in device.lower())]
             if len(scales) > 0:
                 print join(self.input_dir, scales[0])
                 self.set_status('connected', 'Connected to ' + scales[0])
@@ -166,7 +166,7 @@ class Scale(Thread):
                     self.device = None
 
     def run(self):
-        self.device   = None
+        self.device = None
 
         while True:
             if self.device:

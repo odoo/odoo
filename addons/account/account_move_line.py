@@ -134,7 +134,7 @@ class account_move_line(osv.osv):
             else:
                 move_line_total = move_line.debit - move_line.credit
                 sign = (move_line.debit - move_line.credit) < 0 and -1 or 1
-            line_total_in_company_currency =  move_line.debit - move_line.credit
+            line_total_in_company_currency = move_line.debit - move_line.credit
             context_unreconciled = context.copy()
             if move_line.reconcile_partial_id:
                 for payment_line in move_line.reconcile_partial_id.line_partial_ids:
@@ -152,7 +152,7 @@ class account_move_line(osv.osv):
                     line_total_in_company_currency += (payment_line.debit - payment_line.credit)
 
             result = move_line_total
-            res[move_line.id]['amount_residual_currency'] =  sign * (move_line.currency_id and self.pool.get('res.currency').round(cr, uid, move_line.currency_id, result) or result)
+            res[move_line.id]['amount_residual_currency'] = sign * (move_line.currency_id and self.pool.get('res.currency').round(cr, uid, move_line.currency_id, result) or result)
             res[move_line.id]['amount_residual'] = sign * line_total_in_company_currency
         return res
 
@@ -176,7 +176,7 @@ class account_move_line(osv.osv):
                 'unit_amount': obj_line.quantity,
                 'product_id': obj_line.product_id and obj_line.product_id.id or False,
                 'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
-                'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
+                'amount': (obj_line.credit or 0.0) - (obj_line.debit or 0.0),
                 'general_account_id': obj_line.account_id.id,
                 'journal_id': obj_line.journal_id.analytic_journal_id.id,
                 'ref': obj_line.ref,
@@ -283,7 +283,7 @@ class account_move_line(osv.osv):
             if account and part:
                 account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
                 account = account_obj.browse(cr, uid, account, context=context)
-            data['account_id'] =  account and account.id or False
+            data['account_id'] = account and account.id or False
             # compute the amount in secondary currency of the account, if needed
             if account and account.currency_id:
                 data['currency_id'] = account.currency_id.id
@@ -703,7 +703,7 @@ class account_move_line(osv.osv):
                 val['date_maturity'] = res[0][0]
         if not account_id:
             id1 = part.property_account_payable.id
-            id2 =  part.property_account_receivable.id
+            id2 = part.property_account_receivable.id
             if jt:
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)

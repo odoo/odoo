@@ -424,7 +424,7 @@ class marketing_campaign_activity(osv.osv):
                context=None, count=False):
         if context == None:
             context = {}
-        if 'segment_id' in context  and context['segment_id']:
+        if 'segment_id' in context and context['segment_id']:
             segment_obj = self.pool.get('marketing.campaign.segment').browse(cr,
                                                     uid, context['segment_id'])
             act_ids = []

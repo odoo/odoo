@@ -47,7 +47,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         account_move_obj = self.pool.get('account.move')
 
-        for data in  self.read(cr, uid, ids, context=context):
+        for data in self.read(cr, uid, ids, context=context):
             fy_id = data['fy_id'][0]
 
             account_move_ids = account_move_obj.search(cr, uid, [('period_id.fiscalyear_id', '=', fy_id), ('state', '=', "draft")], context=context)

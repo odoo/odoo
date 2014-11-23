@@ -89,7 +89,7 @@ class bank(osv.osv):
                     'parent_id': ref_acc_bank.id,
                     'company_id': bank.company_id.id,
                 }
-                acc_bank_id  = obj_acc.create(cr, uid, acc, context=context)
+                acc_bank_id = obj_acc.create(cr, uid, acc, context=context)
 
                 jour_obj = self.pool.get('account.journal')
                 new_code = 1

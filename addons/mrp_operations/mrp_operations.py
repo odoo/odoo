@@ -255,7 +255,7 @@ class mrp_production(osv.osv):
                 }, context=context, update=False)
             old = None
             for wci in range(len(po.workcenter_lines)):
-                wc  = po.workcenter_lines[wci]
+                wc = po.workcenter_lines[wci]
                 if (old is None) or (wc.sequence > old):
                     dt = dt_end
                 if context.get('__last_update'):
@@ -444,7 +444,7 @@ class mrp_operations_operation(osv.osv):
                     raise osv.except_osv(_('Sorry!'), _('Operation has already started! You can either Pause/Finish/Cancel the operation.'))
                     return False
             if code.start_stop == 'pause':
-                if  code_lst[len(code_lst) - 1] != 'resume' and code_lst[len(code_lst) - 1] != 'start':
+                if code_lst[len(code_lst) - 1] != 'resume' and code_lst[len(code_lst) - 1] != 'start':
                     raise osv.except_osv(_('Error!'), _('In order to Pause the operation, it must be in the Start or Resume state!'))
                     return False
             if code.start_stop == 'resume':
@@ -460,7 +460,7 @@ class mrp_operations_operation(osv.osv):
                     raise osv.except_osv(_('Sorry!'), _('Operation is Already Cancelled!'))
                     return False
             if code.start_stop == 'cancel':
-                if  not 'start' in code_lst:
+                if not 'start' in code_lst:
                     raise osv.except_osv(_('Error!'), _('No operation to cancel.'))
                     return False
                 if 'done' in code_lst:

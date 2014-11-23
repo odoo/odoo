@@ -276,14 +276,14 @@ class WebKitParser(report_sxw):
         objs = self.getObjects(cursor, uid, ids, context)
         parser_instance.set_context(objs, data, ids, report_xml.report_type)
 
-        template =  False
+        template = False
 
         if report_xml.report_file:
             path = get_module_resource(*report_xml.report_file.split('/'))
             if path and os.path.exists(path):
                 template = file(path).read()
         if not template and report_xml.report_webkit_data:
-            template =  report_xml.report_webkit_data
+            template = report_xml.report_webkit_data
         if not template:
             raise except_osv(_('Error!'), _('Webkit report template not found!'))
         header = report_xml.webkit_header.html

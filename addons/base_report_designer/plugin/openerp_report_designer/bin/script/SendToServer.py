@@ -50,8 +50,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
     }
 
     def __init__(self, ctx):
-        self.ctx     = ctx
-        self.module  = "openerp_report"
+        self.ctx = ctx
+        self.module = "openerp_report"
         self.version = "0.1"
         LoginTest()
         self.logobj = Logger()
@@ -85,7 +85,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                 self.logob.log_write('ServerParameter', LOG_ERROR, info)
         elif docinfo.getUserFieldValue(3) <> "":
             name = ""
-            result =  "rnd"
+            result = "rnd"
             for i in range(5):
                 result = result + random.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
 

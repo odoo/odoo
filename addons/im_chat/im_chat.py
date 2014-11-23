@@ -319,7 +319,7 @@ class res_users(osv.Model):
         """ function computing the im_status field of the users """
         r = dict((i, 'offline') for i in ids)
         status_ids = self.pool['im_chat.presence'].search(cr, uid, [('user_id', 'in', ids)], context=context)
-        status =  self.pool['im_chat.presence'].browse(cr, uid, status_ids, context=context)
+        status = self.pool['im_chat.presence'].browse(cr, uid, status_ids, context=context)
         for s in status:
             r[s.user_id.id] = s.status
         return r

@@ -548,7 +548,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])
-                custom_updates =  fixes.get(key)
+                custom_updates = fixes.get(key)
                 if custom_updates:
                     custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]

@@ -673,7 +673,7 @@ form: module.record_id""" % (xml_id,)
             'You must give either an id or a search criteria'
         ref = _ref(self, cr)
         for id in ids:
-            brrec =  model.browse(cr, uid, id, context)
+            brrec = model.browse(cr, uid, id, context)
 
             class d(dict):
                 def __getitem__(self2, key):

@@ -163,9 +163,9 @@ class report_custom(report_int):
                     )
                     if f['fc' + str(i) + '_operande']:
                         fct_name = 'id'
-                        cond_op =  f['fc' + str(i) + '_op']
+                        cond_op = f['fc' + str(i) + '_op']
                         if len(f['fc' + str(i) + '_op'].split(',')) == 2:
-                            cond_op =  f['fc' + str(i) + '_op'].split(',')[1]
+                            cond_op = f['fc' + str(i) + '_op'].split(',')[1]
                             fct_name = f['fc' + str(i) + '_op'].split(',')[0]
                         cond.append((fct[fct_name], f['fc' + str(i) + '_operande'][1], cond_op, f['fc' + str(i) + '_condition']))
                     else:
@@ -304,7 +304,7 @@ class report_custom(report_int):
             if not f['width']:
                 f['width'] = round((float(length) / count) - 0.5)
 
-        _append_node('tableSize', '%s' %  ','.join(map(lambda x: '%.2fmm' % (x['width'],), fields)))
+        _append_node('tableSize', '%s' % ','.join(map(lambda x: '%.2fmm' % (x['width'],), fields)))
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 
@@ -410,7 +410,7 @@ class report_custom(report_int):
                         fields_bar[idx][d[0]] += d[idx + 1]
                     else:
                         fields_bar[idx][d[0]] = d[idx + 1]
-            for idx  in range(len(fields) - 1):
+            for idx in range(len(fields) - 1):
                 data = {}
                 for k in fields_bar[idx].keys():
                     if k in data:
@@ -509,7 +509,7 @@ class report_custom(report_int):
                         fields_bar[idx][d[0]] += d[idx + 1]
                     else:
                         fields_bar[idx][d[0]] = d[idx + 1]
-            for idx  in range(len(fields) - 1):
+            for idx in range(len(fields) - 1):
                 data = {}
                 for k in fields_bar[idx].keys():
                     if k in data:
@@ -592,7 +592,7 @@ class report_custom(report_int):
             if not f['width']:
                 f['width'] = round((float(length) / count) - 0.5)
 
-        _append_node('tableSize', '%s' %  ','.join(map(lambda x: '%.2fmm' % (x['width'],), fields)))
+        _append_node('tableSize', '%s' % ','.join(map(lambda x: '%.2fmm' % (x['width'],), fields)))
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 

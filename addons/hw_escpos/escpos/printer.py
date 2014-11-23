@@ -27,11 +27,11 @@ class Usb(Escpos):
         @param in_ep     : Input end point
         @param out_ep    : Output end point
         """
-        self.idVendor  = idVendor
+        self.idVendor = idVendor
         self.idProduct = idProduct
         self.interface = interface
-        self.in_ep     = in_ep
-        self.out_ep    = out_ep
+        self.in_ep = in_ep
+        self.out_ep = out_ep
         self.open()
 
     def open(self):
@@ -73,10 +73,10 @@ class Serial(Escpos):
         @param bytesize : Serial buffer size
         @param timeout  : Read/Write timeout
         """
-        self.devfile  = devfile
+        self.devfile = devfile
         self.baudrate = baudrate
         self.bytesize = bytesize
-        self.timeout  = timeout
+        self.timeout = timeout
         self.open()
 
     def open(self):

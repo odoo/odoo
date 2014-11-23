@@ -59,7 +59,7 @@ class report_custom(report_rml):
 
             if prod.seller_id:
                 main_sp_name = '- <b>' + to_xml(prod.seller_id.name) + '</b>\r\n'
-                pricelist =  prod.seller_id.property_product_pricelist_purchase
+                pricelist = prod.seller_id.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr, uid, [pricelist.id],
                      prod.id, number * prod_qtty or 1.0, prod.seller_id.id, {
                     'uom': prod.uom_po_id.id,
@@ -73,7 +73,7 @@ class report_custom(report_rml):
             for seller_id in prod.seller_ids:
                 if seller_id.name.id == prod.seller_id.id:
                     continue
-                sellers +=  '- <i>' + to_xml(seller_id.name.name) + '</i>\r\n'
+                sellers += '- <i>' + to_xml(seller_id.name.name) + '</i>\r\n'
                 pricelist = seller_id.name.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr, uid, [pricelist.id],
                      prod.id, number * prod_qtty or 1.0, seller_id.name.id, {
@@ -181,7 +181,7 @@ class report_custom(report_rml):
                 xml_tmp = ''
                 for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:
                     txt, sum, sum_strd = process_bom(sub_bom, company_currency.id)
-                    xml_tmp +=  txt
+                    xml_tmp += txt
                     total += sum
                     total_strd += sum_strd
 

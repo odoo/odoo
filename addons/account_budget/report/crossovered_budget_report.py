@@ -98,7 +98,7 @@ class budget_report(report_sxw.rml_parse):
                         pract = c_b_lines_obj._prac_amt(self.cr, self.uid, [line.id], context)[line.id]
                         if line.general_budget_id.id in done_budget:
                             for record in result:
-                                if record['b_id'] == line.general_budget_id.id  and record['a_id'] == line.analytic_account_id.id:
+                                if record['b_id'] == line.general_budget_id.id and record['a_id'] == line.analytic_account_id.id:
                                     record['theo'] += theo
                                     record['pln'] += line.planned_amount
                                     record['prac'] += pract

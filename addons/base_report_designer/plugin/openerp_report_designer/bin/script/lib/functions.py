@@ -143,7 +143,7 @@ def getPath(sPath, sMain):
                 res = re.findall('\\[\\[ *([a-zA-Z0-9_\.]+) *\\]\\]', sPath)
                 if len(res) <> 0:
                     if sItem[sItem.find(",'") + 2:sItem.find("')")] == sPath[:sPath.find(".")]:
-                        sPath =  sItem[sItem.find("(") + 1:sItem.find(",")] + sPath[sPath.find("."):]
+                        sPath = sItem[sItem.find("(") + 1:sItem.find(",")] + sPath[sPath.find("."):]
                         getPath(sPath, sMain)
     return sPath
 
@@ -197,7 +197,7 @@ def getChildTable(oPar, aItemList, aComponentAdd, sTableName=""):
                                 if aItemList.__contains__(oSubSection.TextField.Items) == False:
                                     aItemList.append(oSubSection.TextField.Items)
                                 if sTableName == "":
-                                    if  aComponentAdd.__contains__(oPar.Name) == False:
+                                    if aComponentAdd.__contains__(oPar.Name) == False:
                                         aComponentAdd.append(oPar.Name)
                                 else:
                                     if aComponentAdd.__contains__(sTableName + "." + oPar.Name) == False:
@@ -210,7 +210,7 @@ def getChildTable(oPar, aItemList, aComponentAdd, sTableName=""):
     if bEmptyTableFlag == True:
         aItemList.append((u'', u''))
         if sTableName == "":
-            if  aComponentAdd.__contains__(oPar.Name) == False:
+            if aComponentAdd.__contains__(oPar.Name) == False:
                 aComponentAdd.append(oPar.Name)
         else:
             if aComponentAdd.__contains__(sTableName + "." + oPar.Name) == False:

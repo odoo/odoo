@@ -182,7 +182,7 @@ class payment_line(osv.osv):
         st = partner_record.street or ''
         st1 = partner_record.street2 or ''
         zip = partner_record.zip or ''
-        city = partner_record.city or  ''
+        city = partner_record.city or ''
         zip_city = zip + ' ' + city
         cntry = partner_record.country_id and partner_record.country_id.name or ''
         return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" + cntry

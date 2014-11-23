@@ -41,8 +41,8 @@ class ConvertBracesToField(unohelper.Base, XJobExecutor):
 
     def __init__(self, ctx):
 
-        self.ctx     = ctx
-        self.module  = "openerp_report"
+        self.ctx = ctx
+        self.module = "openerp_report"
         self.version = "0.1"
         LoginTest()
         self.logobj = Logger()
@@ -62,7 +62,7 @@ class ConvertBracesToField(unohelper.Base, XJobExecutor):
 
         desktop = getDesktop()
         doc = desktop.getCurrentComponent()
-        docinfo =  doc.getDocumentInfo()
+        docinfo = doc.getDocumentInfo()
         count = 0
         regexes = [
             ['[a-zA-Z0-9_]+\.[a-zA-Z0-9_.]+', "Field"],

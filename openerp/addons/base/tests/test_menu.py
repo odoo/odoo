@@ -29,5 +29,5 @@ class test_menu(common.TransactionCase):
         remaining_ids = Menus.search(cr, uid, [('id', 'in', all_ids)], order="id", context=ctx)
         self.assertEqual([child1_id, child2_id, child21_id], remaining_ids)
 
-        orphan_ids =  Menus.search(cr, uid, [('id', 'in', all_ids), ('parent_id', '=', False)], order="id", context=ctx)
+        orphan_ids = Menus.search(cr, uid, [('id', 'in', all_ids), ('parent_id', '=', False)], order="id", context=ctx)
         self.assertEqual([child1_id, child2_id], orphan_ids)

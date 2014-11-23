@@ -94,7 +94,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         params = [tuple(move_state), tuple(self.account_ids)]
         # if we print from the partners, add a clause on active_ids
         if (data['model'] == 'res.partner') and ids:
-            PARTNER_REQUEST =  "AND l.partner_id IN %s"
+            PARTNER_REQUEST = "AND l.partner_id IN %s"
             params += [tuple(ids)]
         self.cr.execute(
             "SELECT DISTINCT l.partner_id "
@@ -218,7 +218,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         else:
             result_tmp = result_tmp + 0.0
 
-        return result_tmp  + result_init
+        return result_tmp + result_init
 
     def _sum_credit_partner(self, partner):
         move_state = ['draft', 'posted']
@@ -266,7 +266,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-        return result_tmp  + result_init
+        return result_tmp + result_init
 
     def _get_partners(self):
         # TODO: deprecated, to remove in trunk

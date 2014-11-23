@@ -71,7 +71,7 @@ class attendance_print(report_sxw.rml_parse):
 
         result_dict = {
             'total': total and str(total).split('.')[0],
-            'total2': total2  and str(total2).split('.')[0]
+            'total2': total2 and str(total2).split('.')[0]
         }
         return [result_dict]
 

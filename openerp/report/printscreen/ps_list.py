@@ -23,7 +23,7 @@ import openerp
 from openerp.report.interface import report_int
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval as eval
-from lxml  import etree
+from lxml import etree
 from openerp.report import render, report_sxw
 import locale
 
@@ -75,12 +75,12 @@ class report_printscreen_list(report_int):
         self.title = model_desc
         datas['ids'] = ids
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
-        fields_order =  self.groupby + self._parse_string(result['arch'])
+        fields_order = self.groupby + self._parse_string(result['arch'])
         if self.groupby:
             rows = []
 
             def get_groupby_data(groupby=[], domain=[]):
-                records =  model.read_group(cr, uid, domain, fields_order, groupby, 0, None, context)
+                records = model.read_group(cr, uid, domain, fields_order, groupby, 0, None, context)
                 for rec in records:
                     rec['__group'] = True
                     rec['__no_leaf'] = self.groupby_no_leaf
@@ -236,7 +236,7 @@ class report_printscreen_list(report_int):
                     if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
                         tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
-                        tsum[count] = float(tsum[count])  + float(line[f])
+                        tsum[count] = float(tsum[count]) + float(line[f])
                 else:
                     col.text = '/'
 

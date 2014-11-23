@@ -33,7 +33,7 @@ class pos_details(report_sxw.rml_parse):
             res = self.cr.fetchone()
             return res[0] or 'Draft'
         else:
-            return  ''
+            return ''
 
     def _get_all_users(self):
         user_obj = self.pool.get('res.users')

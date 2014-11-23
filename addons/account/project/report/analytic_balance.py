@@ -46,7 +46,7 @@ class account_analytic_balance(report_sxw.rml_parse):
         read_data = self.pool.get('account.analytic.account').read(self.cr, self.uid, ids, ['child_ids', 'code', 'complete_name', 'balance'])
         for data in read_data:
             if (data['id'] not in self.acc_ids):
-                inculde_empty =  True
+                inculde_empty = True
                 if (not self.empty_acc) and data['balance'] == 0.00:
                     inculde_empty = False
                 if inculde_empty:

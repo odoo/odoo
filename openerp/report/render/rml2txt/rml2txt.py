@@ -282,7 +282,7 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
 class _rml_tmpl_draw_string(_rml_tmpl_tag):
     def __init__(self, node, style):
         self.posx = utils.unit_get(node.get('x'))
-        self.posy =  utils.unit_get(node.get('y'))
+        self.posy = utils.unit_get(node.get('y'))
         aligns = {
             'drawString': 'left',
             'drawRightString': 'right',
@@ -359,7 +359,7 @@ class _rml_draw_style(object):
                     self.style[key] = result[key]
 
     def font_size_get(self, tag):
-        size  = utils.unit_get(self.style.get('td', {}).get('font-size', '16'))
+        size = utils.unit_get(self.style.get('td', {}).get('font-size', '16'))
         return size
 
     def get(self, tag):

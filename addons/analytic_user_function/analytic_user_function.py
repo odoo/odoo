@@ -116,7 +116,7 @@ class hr_analytic_timesheet(osv.osv):
             if unit_amount:
                 amount_unit = self.on_change_unit_amount(cr, uid, ids,
                             r.product_id.id, unit_amount, False, r.product_id.uom_id.id)['value']['amount']
-                amount = unit_amount *  amount_unit
+                amount = unit_amount * amount_unit
                 res['value']['amount'] = - round(amount, 2)
             res['value']['general_account_id'] = a
         return res

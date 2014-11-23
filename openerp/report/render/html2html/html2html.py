@@ -45,14 +45,14 @@ class html2html(object):
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
-                        new_child.text  = utils._process_text(self, child.text)
-                        new_child.tail  = utils._process_text(self, child.tail)
+                        new_child.text = utils._process_text(self, child.text)
+                        new_child.tail = utils._process_text(self, child.tail)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
                     if new_child.tag == 'img' and new_child.get('name'):
                         if _regex.findall(new_child.get('name')):
-                            src =  utils._process_text(self, new_child.get('name'))
+                            src = utils._process_text(self, new_child.get('name'))
                             if src:
                                 new_child.set('src', 'data:image/gif;base64,%s' % src)
                                 output = cStringIO.StringIO(base64.decodestring(src))
@@ -64,8 +64,8 @@ class html2html(object):
                                     new_child.set('height', str(height))
                             else:
                                 new_child.getparent().remove(new_child)
-                    new_child.text  = utils._process_text(self, child.text)
-                    new_child.tail  = utils._process_text(self, child.tail)
+                    new_child.text = utils._process_text(self, child.text)
+                    new_child.tail = utils._process_text(self, child.tail)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
             self._node.remove(n)

@@ -176,7 +176,7 @@ class Partner(osv.osv):
 
     def _get_partner_id(self, cr, uid, ids, context=None):
         member_line_obj = self.pool.get('membership.membership_line')
-        res_obj =  self.pool.get('res.partner')
+        res_obj = self.pool.get('res.partner')
         data_inv = member_line_obj.browse(cr, uid, ids, context=context)
         list_partner = []
         for data in data_inv:
@@ -239,7 +239,7 @@ class Partner(osv.osv):
                                 s = 1
                             elif mstate == 'cancel' and s != 0 and s != 1:
                                 s = 2
-                            elif  (mstate == 'draft' or mstate == 'proforma') and s != 0 and s != 1:
+                            elif (mstate == 'draft' or mstate == 'proforma') and s != 0 and s != 1:
                                 s = 3
                 if s == 4:
                     for mline in partner_data.member_lines:
@@ -404,7 +404,7 @@ class Partner(osv.osv):
                 raise osv.except_osv(_('Error!'),
                         _("Partner doesn't have an address to make the invoice."))
             quantity = 1
-            line_value =  {
+            line_value = {
                 'product_id': product_id,
             }
 

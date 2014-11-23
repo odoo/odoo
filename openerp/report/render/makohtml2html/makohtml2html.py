@@ -49,7 +49,7 @@ class makohtml2html(object):
     def format_body(self, html):
         body = html.findall('body')
         body_list = []
-        footer =  self.format_footer(body[-1].getchildren())
+        footer = self.format_footer(body[-1].getchildren())
         for b in body[:-1]:
             body_list.append(etree.tostring(b).replace('\t', '').replace('\n', ''))
         html_body = '''

@@ -63,7 +63,7 @@ class ir_sequence(openerp.osv.osv.osv):
         and number from postgres sequence when standard implementation.'''
         res = dict.fromkeys(ids)
         for element in self.browse(cr, user, ids, context=context):
-            if  element.implementation != 'standard':
+            if element.implementation != 'standard':
                 res[element.id] = element.number_next
             else:
                 # get number from postgres sequence. Cannot use
@@ -218,7 +218,7 @@ class ir_sequence(openerp.osv.osv.osv):
     def _interpolate(self, s, d):
         if s:
             return s % d
-        return  ''
+        return ''
 
     def _interpolation_dict(self):
         t = time.localtime()  # Actually, the server is always in UTC.

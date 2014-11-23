@@ -68,7 +68,7 @@ class account_sequence_installer(osv.osv_memory):
 
         obj_sequence = self.pool.get('ir.sequence')
         ir_seq = obj_sequence.create(cr, uid, vals, context)
-        res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
+        res = super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
         jou_obj = self.pool.get('account.journal')
         journal_ids = jou_obj.search(cr, uid, search_criteria, context=context)
         for journal in jou_obj.browse(cr, uid, journal_ids, context=context):

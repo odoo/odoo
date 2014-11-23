@@ -51,7 +51,7 @@ class partner_vat(osv.osv_memory):
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
         obj_module = self.pool.get('ir.module.module')
-        data  = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids)[0]
         year = data['year']
         date_start = year + '-01-01'
         date_stop = year + '-12-31'

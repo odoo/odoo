@@ -697,7 +697,7 @@ class view(osv.osv):
                 term = node.tail.strip()
                 trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.tail =  node.tail.replace(term, trans)
+                    node.tail = node.tail.replace(term, trans)
 
             if node.get('string') and node.get('string').strip() and not result:
                 term = node.get('string').strip()
@@ -1070,7 +1070,7 @@ class view(osv.osv):
                         else:
                             label_string = label_string + " " + tools.ustr(t[lbl])
                 labels[str(t['id'])] = (a['id'], label_string)
-        g  = graph(nodes, transitions, no_ancester)
+        g = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
         result = g.result_get()

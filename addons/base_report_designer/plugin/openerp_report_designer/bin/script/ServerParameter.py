@@ -38,7 +38,7 @@ if __name__ <> "package":
 
 class ServerParameter(unohelper.Base, XJobExecutor):
     def __init__(self, aVal=None, sURL=""):
-        self.module  = "openerp_report"
+        self.module = "openerp_report"
         self.version = "0.1"
         desktop = getDesktop()
         log_detail(self)

@@ -90,7 +90,7 @@ class base_report_file_sxw(osv.osv_memory):
     }
 
     def upload_report(self, cr, uid, ids, context=None):
-        from base_report_designer import  openerp_sxw2rml
+        from base_report_designer import openerp_sxw2rml
         import StringIO
         data = self.read(cr, uid, ids)[0]
         sxwval = StringIO.StringIO(base64.decodestring(data['file_sxw_upload']))
@@ -142,7 +142,7 @@ class base_report_rml_save(osv.osv_memory):
         report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
 
         if 'file_rml' in fields:
-            res['file_rml'] =  base64.encodestring(report.report_rml_content)
+            res['file_rml'] = base64.encodestring(report.report_rml_content)
         return res
 
     _columns = {

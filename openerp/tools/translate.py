@@ -1041,7 +1041,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     tmodule = False
                     tname = res_id
                 dic['imd_model'] = tmodel
-                dic['imd_name'] =  tname
+                dic['imd_name'] = tname
                 dic['module'] = tmodule
                 dic['res_id'] = None
 

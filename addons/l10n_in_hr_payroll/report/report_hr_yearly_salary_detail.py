@@ -83,9 +83,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         payslip_lines = self.cal_monthly_amt(form, obj.id)
         for line in payslip_lines:
             for line[0] in line:
-                if line[0][0]  == "Gross":
+                if line[0][0] == "Gross":
                     gross = line[0]
-                elif line[0][0]  == "Net":
+                elif line[0][0] == "Net":
                     net = line[0]
                 elif line[0][13] > 0.0 and line[0][0] != "Net":
                     self.total += line[0][len(line[0]) - 1]

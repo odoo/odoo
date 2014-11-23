@@ -118,7 +118,7 @@ class report_rml(report_int):
         if not context:
             context = {}
         doc = print_xml.document(cr, uid, datas, {})
-        self.bin_datas.update(doc.bin_datas  or {})
+        self.bin_datas.update(doc.bin_datas or {})
         doc.parse(self.tmpl, ids, self.table, context)
         xml = doc.xml_get()
         doc.close()

@@ -347,7 +347,7 @@ class project(osv.osv):
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
                         'name': task.name}
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
+            map_task_id[task.id] = task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks': [(6, 0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
@@ -487,7 +487,7 @@ def Project():
 
     # TODO: DO Resource allocation and compute availability
     def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
-        if context ==  None:
+        if context == None:
             context = {}
         allocation = {}
         return allocation

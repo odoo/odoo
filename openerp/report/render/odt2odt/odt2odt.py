@@ -36,13 +36,13 @@ class odt2odt(object):
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
-                        new_child.text  = utils._process_text(self, child.text)
-                        new_child.tail  = utils._process_text(self, child.tail)
+                        new_child.text = utils._process_text(self, child.text)
+                        new_child.tail = utils._process_text(self, child.tail)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
-                    new_child.text  = utils._process_text(self, child.text)
-                    new_child.tail  = utils._process_text(self, child.tail)
+                    new_child.text = utils._process_text(self, child.text)
+                    new_child.tail = utils._process_text(self, child.tail)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
             self._node.remove(n)

@@ -479,7 +479,7 @@ def _instrument(func):
                       co.co_freevars,
                       co.co_cellvars)
 
-    func =  new.function(new_co,
+    func = new.function(new_co,
                          func.func_globals,
                          func.func_name,
                          func.func_defaults,
@@ -994,7 +994,7 @@ def _build_balancing_list(tasks):
     # for p, b, i, t  in balancing_list:
     #    print p, b, i, t.path
 
-    balancing_list = [t for p, b, i, t  in balancing_list]
+    balancing_list = [t for p, b, i, t in balancing_list]
 
     # now correct the presorted list:
     # if task a is dependent on task b, b will be moved before a
@@ -2514,7 +2514,7 @@ class Task(object):
             try:
                 if not isinstance(res, (resource.Resource,
                                         resource._MetaResource)):
-                    raise ValueError("the resource '%s' is unknown." %  res)
+                    raise ValueError("the resource '%s' is unknown." % res)
 
                 start = _to_datetime(start)
                 end = _to_datetime(end)

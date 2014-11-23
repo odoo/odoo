@@ -45,8 +45,8 @@ if __name__ <> "package":
 
 class ExportToRML(unohelper.Base, XJobExecutor):
     def __init__(self, ctx):
-        self.ctx     = ctx
-        self.module  = "openerp_report"
+        self.ctx = ctx
+        self.module = "openerp_report"
         self.version = "0.1"
         LoginTest()
         if not loginstatus and __name__ == "package":

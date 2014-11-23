@@ -720,7 +720,7 @@ class _rml_flowable(object):
                         continue
                     fl = self._flowable(n, extra_style=paraStyle)
                     if isinstance(fl, list):
-                        flow  += fl
+                        flow += fl
                     else:
                         flow.append(fl)
 
@@ -832,9 +832,9 @@ class _rml_flowable(object):
             style = self.styles.para_style_get(node)
             return platypus.Preformatted(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText': 'str', 'dedent': 'int'})))
         elif node.tag == 'illustration':
-            return  self._illustration(node)
+            return self._illustration(node)
         elif node.tag == 'blockTable':
-            return  self._table(node)
+            return self._table(node)
         elif node.tag == 'title':
             styles = reportlab.lib.styles.getSampleStyleSheet()
             style = styles['Title']
@@ -896,7 +896,7 @@ class _rml_flowable(object):
             return EndFrameFlowable()
         elif node.tag == 'hr':
             width_hr = node.get('width') or '100%'
-            color_hr = node.get('color')  or 'black'
+            color_hr = node.get('color') or 'black'
             thickness_hr = node.get('thickness') or 1
             lineCap_hr = node.get('lineCap') or 'round'
             return platypus.flowables.HRFlowable(width=width_hr, color=color.get(color_hr), thickness=float(thickness_hr), lineCap=str(lineCap_hr))

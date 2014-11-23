@@ -649,7 +649,7 @@ class FieldConverter(osv.AbstractModel):
         Lang = self.pool['res.lang']
 
         lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
-            or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
+            or Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
 
         return Lang.browse(cr, uid, lang_ids[0], context=context)
 

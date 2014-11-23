@@ -54,7 +54,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             ctx['periods'] = data['form']['periods']
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form']['date_from']
-            ctx['date_to'] =  data['form']['date_to']
+            ctx['date_to'] = data['form']['date_to']
         ctx['state'] = data['form']['target_move']
         self.context.update(ctx)
         if (data['model'] == 'ir.ui.menu'):

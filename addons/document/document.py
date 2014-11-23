@@ -658,7 +658,7 @@ class node_context(object):
         """ Although this fn passes back to doc.dir, it is needed since
             it is a potential caching point.
         """
-        (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
+        (ndir, duri) = self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
         while duri:
             ndir = ndir.child(cr, duri[0])
             if not ndir:
@@ -1624,7 +1624,7 @@ class node_res_obj(node_class):
             'resource_find_all': False,
         }
         if (obj and (obj.type in ('directory'))) or not object2:
-            val['parent_id'] =  obj and obj.id or False
+            val['parent_id'] = obj and obj.id or False
 
         return dirobj.create(cr, uid, val)
 

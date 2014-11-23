@@ -1365,7 +1365,7 @@ class mail_thread(osv.AbstractModel):
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            msg_list = mail_header_msgid_re.findall(decode(message['References']))
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]

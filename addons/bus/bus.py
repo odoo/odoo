@@ -44,7 +44,7 @@ class ImBus(osv.Model):
     def gc(self, cr, uid):
         timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT * 2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
-        ids  = self.search(cr, openerp.SUPERUSER_ID, domain)
+        ids = self.search(cr, openerp.SUPERUSER_ID, domain)
         self.unlink(cr, openerp.SUPERUSER_ID, ids)
 
     def sendmany(self, cr, uid, notifications):

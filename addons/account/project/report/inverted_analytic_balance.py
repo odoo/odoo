@@ -55,7 +55,7 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
                 r['debit'] = r['balance']
                 r['credit'] = 0.0
             elif r['balance'] < 0:
-                r['debit'] =  0.0
+                r['debit'] = 0.0
                 r['credit'] = -r['balance']
             else:
                 r['debit'] = 0.0

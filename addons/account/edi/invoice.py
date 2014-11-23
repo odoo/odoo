@@ -183,7 +183,7 @@ class account_invoice(osv.osv, EDIMixin):
         currency_info = edi_document.pop('currency')
         currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
         currency = res_currency.browse(cr, uid, currency_id)
-        edi_document['currency_id'] =  self.edi_m2o(cr, uid, currency, context=context)
+        edi_document['currency_id'] = self.edi_m2o(cr, uid, currency, context=context)
 
         # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
         invoice_type = edi_document['type']

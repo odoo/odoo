@@ -51,7 +51,7 @@ class account_use_model(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        data =  self.read(cr, uid, ids, context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         record_id = context and context.get('model_line', False) or False
         if record_id:
             model_ids = data['model']

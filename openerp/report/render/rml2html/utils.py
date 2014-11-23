@@ -59,7 +59,7 @@ def attr_get(node, attrs, dict=None):
     res = {}
     for name in attrs:
         if node.get(name):
-            res[name] =  unit_get(node.get(name))
+            res[name] = unit_get(node.get(name))
     for key in dict:
         if node.get(key):
             if dict[key] == 'str':

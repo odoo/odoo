@@ -173,7 +173,7 @@ class product_product(osv.osv):
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
+            res[product.id] = str(product.qty_available) + _(" On Hand")
         return res
 
     _columns = {
@@ -328,7 +328,7 @@ class product_template(osv.osv):
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
+            res[product.id] = str(product.qty_available) + _(" On Hand")
         return res
 
     _columns = {

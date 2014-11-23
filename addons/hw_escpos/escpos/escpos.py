@@ -254,14 +254,14 @@ class XmlLineSerializer:
     def __init__(self, indent=0, tabwidth=2, width=48, ratio=0.5):
         self.tabwidth = tabwidth
         self.indent = indent
-        self.width  = max(0, width - int(tabwidth * indent))
+        self.width = max(0, width - int(tabwidth * indent))
         self.lwidth = int(self.width * ratio)
         self.rwidth = max(0, self.width - self.lwidth)
         self.clwidth = 0
         self.crwidth = 0
-        self.lbuffer  = ''
-        self.rbuffer  = ''
-        self.left    = True
+        self.lbuffer = ''
+        self.rbuffer = ''
+        self.left = True
 
     def _txt(self, txt):
         if self.left:
@@ -273,7 +273,7 @@ class XmlLineSerializer:
             if self.crwidth < self.rwidth:
                 txt = txt[:max(0, self.rwidth - self.crwidth)]
                 self.rbuffer += txt
-                self.crwidth  += len(txt)
+                self.crwidth += len(txt)
 
     def start_inline(self, stylestack=None):
         if (self.left and self.clwidth) or (not self.left and self.crwidth):
@@ -315,8 +315,8 @@ class XmlLineSerializer:
 
 class Escpos:
     """ ESC/POS Printer object """
-    device    = None
-    encoding  = None
+    device = None
+    encoding = None
     img_cache = {}
 
     def _check_image_size(self, size):
@@ -383,15 +383,15 @@ class Escpos:
 
     def _convert_image(self, im):
         """ Parse image and prepare it to a printable format """
-        pixels   = []
+        pixels = []
         pix_line = ""
-        im_left  = ""
+        im_left = ""
         im_right = ""
-        switch   = 0
+        switch = 0
         img_size = [0, 0]
 
         if im.size[0] > 512:
-            print  "WARNING: Image is wider than 512 and could be truncated at print time "
+            print "WARNING: Image is wider than 512 and could be truncated at print time "
         if im.size[1] > 255:
             raise ImageSizeError()
 
@@ -540,8 +540,8 @@ class Escpos:
 
         def format_value(value, decimals=3, width=0, decimals_separator='.', thousands_separator=',', autoint=False, symbol='', position='after'):
             decimals = max(0, int(decimals))
-            width    = max(0, int(width))
-            value    = float(value)
+            width = max(0, int(width))
+            value = float(value)
 
             if autoint and math.floor(value) == value:
                 decimals = 0
@@ -691,9 +691,9 @@ class Escpos:
             stylestack.pop()
 
         try:
-            stylestack      = StyleStack()
-            serializer      = XmlSerializer(self)
-            root            = ET.fromstring(xml.encode('utf-8'))
+            stylestack = StyleStack()
+            serializer = XmlSerializer(self)
+            root = ET.fromstring(xml.encode('utf-8'))
 
             self._raw(stylestack.to_escpos())
 
@@ -732,7 +732,7 @@ class Escpos:
             esc-pos code page change instructions and character declarations
             """
             char_utf8 = char.encode('utf-8')
-            encoded  = ''
+            encoded = ''
             encoding = self.encoding  # we reuse the last encoding to prevent code page switches at every character
             encodings = {
                 # TODO use ordering to prevent useless switches
@@ -792,7 +792,7 @@ class Escpos:
                         encoding = remaining.items()[0][0]
                     else:
                         encoding = 'cp437'
-                        encoded  = '\xb1'    # could not encode, output error character
+                        encoded = '\xb1'    # could not encode, output error character
                         break;
 
             if encoding != self.encoding:

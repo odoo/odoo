@@ -279,11 +279,11 @@ class rml_parse(object):
 
     def _add_header(self, rml_dom, header='external'):
         if header == 'internal':
-            rml_head =  self.rml_header2
+            rml_head = self.rml_header2
         elif header == 'internal landscape':
-            rml_head =  self.rml_header3
+            rml_head = self.rml_header3
         else:
-            rml_head =  self.rml_header
+            rml_head = self.rml_header
 
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
@@ -527,7 +527,7 @@ class report_sxw(report_rml, preprocess.report):
         meta = etree.tostring(rml_dom_meta, encoding='utf-8',
                               xml_declaration=True)
 
-        rml_dom =  etree.XML(rml)
+        rml_dom = etree.XML(rml)
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"] + "p"
         key2 = rml_parser.localcontext['name_space']["text"] + "drop-down"
@@ -544,9 +544,9 @@ class report_sxw(report_rml, preprocess.report):
                     for cnd in de:
                         if cnd.text or cnd.tail:
                             if pe.text:
-                                pe.text +=  cnd.text or cnd.tail
+                                pe.text += cnd.text or cnd.tail
                             else:
-                                pe.text =  cnd.text or cnd.tail
+                                pe.text = cnd.text or cnd.tail
                             pp.remove(de)
         else:
             for pe in elements:
@@ -559,9 +559,9 @@ class report_sxw(report_rml, preprocess.report):
                         text = cnd.get("{http://openoffice.org/2000/text}value", False)
                         if text:
                             if pe.text and text.startswith('[['):
-                                pe.text +=  text
+                                pe.text += text
                             elif text.startswith('[['):
-                                pe.text =  text
+                                pe.text = text
                             if de.getparent():
                                 pp.remove(de)
 
@@ -621,7 +621,7 @@ class report_sxw(report_rml, preprocess.report):
         objs = self.getObjects(cr, uid, ids, context)
         html_parser.set_context(objs, data, ids, report_type)
 
-        html_dom =  etree.HTML(html)
+        html_dom = etree.HTML(html)
         html_dom = self.preprocess_rml(html_dom, 'html2html')
 
         create_doc = self.generators['html2html']

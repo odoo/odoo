@@ -307,12 +307,12 @@ class DBModalDialog:
             self.oDialogModel.PositionX = nPositionX
         if nPositionY != None:
             self.oDialogModel.PositionY = nPositionY
-        if nWidth     != None:
-            self.oDialogModel.Width     = nWidth
-        if nHeight    != None:
-            self.oDialogModel.Height    = nHeight
-        if cTitle     != None:
-            self.oDialogModel.Title     = cTitle
+        if nWidth != None:
+            self.oDialogModel.Width = nWidth
+        if nHeight != None:
+            self.oDialogModel.Height = nHeight
+        if cTitle != None:
+            self.oDialogModel.Title = cTitle
         self.oDialogControl = createUnoService("com.sun.star.awt.UnoControlDialog")
         self.oDialogControl.setModel(self.oDialogModel)
 
@@ -461,7 +461,7 @@ class DBModalDialog:
         #  then make that coordinate be relative to the right/bottom
         #  edge of the dialog box instead of to the left/top.
         if nPositionX < 0:
-            nPositionX = self.oDialogModel.Width  + nPositionX - nWidth
+            nPositionX = self.oDialogModel.Width + nPositionX - nWidth
         if nPositionY < 0:
             nPositionY = self.oDialogModel.Height + nPositionY - nHeight
         oControlModel.PositionX = nPositionX

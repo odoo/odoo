@@ -89,7 +89,7 @@ class account_invoice(osv.osv):
         return result
 
     def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
-        partner_obj =  self.pool.get('res.partner')
+        partner_obj = self.pool.get('res.partner')
         reference = reference or ''
         algorithm = False
         if partner_id:

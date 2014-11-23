@@ -260,7 +260,7 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        department_id =  False
+        department_id = False
         user_id = False
         if employee_id:
             empl_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)

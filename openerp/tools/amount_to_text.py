@@ -27,7 +27,7 @@
 to_19_fr = (u'zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six',
           'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize',
           'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf')
-tens_fr  = ('vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
+tens_fr = ('vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
 denom_fr = ('',
           'Mille', 'Millions', 'Milliards', 'Billions', 'Quadrillions',
           'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion',
@@ -99,7 +99,7 @@ def amount_to_text_fr(number, currency):
 to_19_nl = ('Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes',
           'Zeven', 'Acht', 'Negen', 'Tien', 'Elf', 'Twaalf', 'Dertien',
           'Veertien', 'Vijftien', 'Zestien', 'Zeventien', 'Achttien', 'Negentien')
-tens_nl  = ('Twintig', 'Dertig', 'Veertig', 'Vijftig', 'Zestig', 'Zeventig', 'Tachtig', 'Negentig')
+tens_nl = ('Twintig', 'Dertig', 'Veertig', 'Vijftig', 'Zestig', 'Zeventig', 'Tachtig', 'Negentig')
 denom_nl = ('',
           'Duizend', 'Miljoen', 'Miljard', 'Triljoen', 'Quadriljoen',
            'Quintillion', 'Sextiljoen', 'Septillion', 'Octillion', 'Nonillion',

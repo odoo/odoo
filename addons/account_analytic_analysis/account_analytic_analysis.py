@@ -221,7 +221,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_line.account_id IN %s \
                                 AND account_analytic_journal.type='general' \
                             GROUP BY account_analytic_line.account_id", (parent_ids,))
-                    ff =  cr.fetchall()
+                    ff = cr.fetchall()
                     for account_id, hq in ff:
                         if account_id not in res:
                             res[account_id] = {}
@@ -264,7 +264,7 @@ class account_analytic_account(osv.osv):
         res_final = {}
         child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  0.0
+            res[i] = 0.0
         if not child_ids:
             return res
 
@@ -289,7 +289,7 @@ class account_analytic_account(osv.osv):
         res_final = {}
         child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  0.0
+            res[i] = 0.0
         if not child_ids:
             return res
         if child_ids:
@@ -458,9 +458,9 @@ class account_analytic_account(osv.osv):
         res = dict([(i, {}) for i in ids])
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id]['est_total'] = self._get_total_estimation(account)
-            res[account.id]['invoiced_total'] =  self._get_total_invoiced(account)
+            res[account.id]['invoiced_total'] = self._get_total_invoiced(account)
             res[account.id]['remaining_total'] = self._get_total_remaining(account)
-            res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
+            res[account.id]['toinvoice_total'] = self._get_total_toinvoice(account)
         return res
 
     _columns = {
@@ -748,7 +748,7 @@ class account_analytic_account(osv.osv):
     def _recurring_create_invoice(self, cr, uid, ids, automatic=False, context=None):
         context = context or {}
         invoice_ids = []
-        current_date =  time.strftime('%Y-%m-%d')
+        current_date = time.strftime('%Y-%m-%d')
         if ids:
             contract_ids = ids
         else:

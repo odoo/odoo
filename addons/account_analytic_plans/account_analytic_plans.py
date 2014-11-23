@@ -342,7 +342,7 @@ class account_move_line(osv.osv):
                 if toremove:
                     analytic_line_obj.unlink(cr, uid, toremove, context=context)
                 for line2 in line.analytics_id.account_ids:
-                    val = (line.credit or  0.0) - (line.debit or 0.0)
+                    val = (line.credit or 0.0) - (line.debit or 0.0)
                     amt = val * (line2.rate / 100)
                     al_vals = {
                         'name': line.name,

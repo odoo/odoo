@@ -31,7 +31,7 @@ _logger = logging.getLogger(__name__)
 to_19 = ('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six',
          'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen',
          'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
-tens  = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
+tens = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
 denom = ('',
          'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion',
          'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion',

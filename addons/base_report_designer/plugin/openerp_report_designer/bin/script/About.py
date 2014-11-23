@@ -30,8 +30,8 @@ if __name__ <> 'package':
 
 class About(unohelper.Base, XJobExecutor):
     def __init__(self, ctx):
-        self.ctx     = ctx
-        self.module  = "openerp_report"
+        self.ctx = ctx
+        self.module = "openerp_report"
         self.version = "0.1"
         self.win = DBModalDialog(60, 50, 175, 115, "About Odoo Report Designer")
 
