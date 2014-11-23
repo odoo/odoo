@@ -33,15 +33,15 @@ class crm_segmentation(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, help='The name of the segmentation.'),
         'description': fields.text('Description'),
-        'categ_id': fields.many2one('res.partner.category', 'Partner Category',\
+        'categ_id': fields.many2one('res.partner.category', 'Partner Category',
                          required=True, help='The partner category that will be \
 added to partners that match the segmentation criterions after computation.'),
         'exclusif': fields.boolean('Exclusive', help='Check if the category is limited to partners that match the segmentation criterions.\
                         \nIf checked, remove the category from partners that doesn\'t match segmentation criterions'),
-        'state': fields.selection([('not running', 'Not Running'),\
+        'state': fields.selection([('not running', 'Not Running'),
                     ('running', 'Running')], 'Execution Status', readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
-        'segmentation_line': fields.one2many('crm.segmentation.line', \
+        'segmentation_line': fields.one2many('crm.segmentation.line',
                             'segmentation_id', 'Criteria', required=True, copy=True),
         'sales_purchase_active': fields.boolean('Use The Sales Purchase Rules', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
     }
@@ -121,7 +121,7 @@ class crm_segmentation_line(osv.osv):
                         ('purchase', 'Purchase Amount')], 'Control Variable', required=True),
         'expr_operator': fields.selection([('<', '<'), ('=', '='), ('>', '>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
-        'operator': fields.selection([('and', 'Mandatory Expression'),\
+        'operator': fields.selection([('and', 'Mandatory Expression'),
                         ('or', 'Optional Expression')], 'Mandatory / Optional', required=True),
     }
     _defaults = {
@@ -143,32 +143,32 @@ class crm_segmentation_line(osv.osv):
             cr.execute('select * from ir_module_module where name=%s and state=%s', ('account', 'installed'))
             if cr.fetchone():
                 if l['expr_name'] == 'sale':
-                    cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-                            'FROM account_invoice_line l, account_invoice i ' \
-                            'WHERE (l.invoice_id = i.id) ' \
-                               'AND i.partner_id = %s '\
+                    cr.execute('SELECT SUM(l.price_unit * l.quantity) '
+                            'FROM account_invoice_line l, account_invoice i '
+                            'WHERE (l.invoice_id = i.id) '
+                               'AND i.partner_id = %s '
                                'AND i.type = \'out_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
-                    cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-                            'FROM account_invoice_line l, account_invoice i ' \
-                            'WHERE (l.invoice_id = i.id) ' \
-                               'AND i.partner_id = %s '\
+                    cr.execute('SELECT SUM(l.price_unit * l.quantity) '
+                            'FROM account_invoice_line l, account_invoice i '
+                            'WHERE (l.invoice_id = i.id) '
+                               'AND i.partner_id = %s '
                                'AND i.type = \'out_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0
                 elif l['expr_name'] == 'purchase':
-                    cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-                            'FROM account_invoice_line l, account_invoice i ' \
-                            'WHERE (l.invoice_id = i.id) ' \
-                               'AND i.partner_id = %s '\
+                    cr.execute('SELECT SUM(l.price_unit * l.quantity) '
+                            'FROM account_invoice_line l, account_invoice i '
+                            'WHERE (l.invoice_id = i.id) '
+                               'AND i.partner_id = %s '
                                'AND i.type = \'in_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
-                    cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-                            'FROM account_invoice_line l, account_invoice i ' \
-                            'WHERE (l.invoice_id = i.id) ' \
-                               'AND i.partner_id = %s '\
+                    cr.execute('SELECT SUM(l.price_unit * l.quantity) '
+                            'FROM account_invoice_line l, account_invoice i '
+                            'WHERE (l.invoice_id = i.id) '
+                               'AND i.partner_id = %s '
                                'AND i.type = \'in_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0

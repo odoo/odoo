@@ -46,9 +46,9 @@ def check_cycle(self, cr, uid, ids, context=None):
     """
     level = 100
     while len(ids):
-        cr.execute('SELECT DISTINCT parent_id '\
-                   'FROM ' + self._table + ' '\
-                   'WHERE id IN %s '\
+        cr.execute('SELECT DISTINCT parent_id '
+                   'FROM ' + self._table + ' '
+                   'WHERE id IN %s '
                    'AND parent_id IS NOT NULL', (tuple(ids),))
         ids = map(itemgetter(0), cr.fetchall())
         if not level:
@@ -127,7 +127,7 @@ class account_payment_term_line(osv.osv):
                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
         'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
-        'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
+        'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month."
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
         'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
@@ -326,10 +326,10 @@ class account_account(osv.osv):
             # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
-            request = ("SELECT l.account_id as id, " +\
+            request = ("SELECT l.account_id as id, " +
                        ', '.join(mapping.values()) +
-                       " FROM account_move_line l" \
-                       " WHERE l.account_id IN %s " \
+                       " FROM account_move_line l"
+                       " WHERE l.account_id IN %s "
                        + filters +
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
@@ -470,9 +470,9 @@ class account_account(osv.osv):
             ('liquidity', 'Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
-            "different types of accounts: view can not have journal items, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "
+            "different types of accounts: view can not have journal items, consolidation are accounts that "
+            "can have children accounts for multi-company consolidations, payable/receivable are for "
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="Account Type is used for information purpose, to generate "
@@ -505,10 +505,10 @@ class account_account(osv.osv):
         'parent_right': fields.integer('Parent Right', select=1),
         'currency_mode': fields.selection([('current', 'At Date'), ('average', 'Average Rate')], 'Outgoing Currencies Rate',
             help=
-            'This will select how the current currency rate for outgoing transactions is computed. '\
-            'In most countries the legal method is "average" but only a few software systems are able to '\
-            'manage this. So if you import from another software system you may have to use the rate at date. ' \
-            'Incoming transactions always use the rate at date.', \
+            'This will select how the current currency rate for outgoing transactions is computed. '
+            'In most countries the legal method is "average" but only a few software systems are able to '
+            'manage this. So if you import from another software system you may have to use the rate at date. '
+            'Incoming transactions always use the rate at date.',
             required=True),
         'level': fields.function(_get_level, string='Level', method=True, type='integer',
              store={
@@ -530,8 +530,8 @@ class account_account(osv.osv):
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
         while(ids):
-            cr.execute('SELECT DISTINCT child_id '\
-                       'FROM account_account_consol_rel '\
+            cr.execute('SELECT DISTINCT child_id '
+                       'FROM account_account_consol_rel '
                        'WHERE parent_id IN %s', (tuple(ids),))
             child_ids = map(itemgetter(0), cr.fetchall())
             c_ids = child_ids
@@ -734,10 +734,10 @@ class account_journal(osv.osv):
         'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'), ('sale_refund', 'Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund', 'Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
-                                 help="Select 'Sale' for customer invoices journals."\
-                                 " Select 'Purchase' for supplier invoices journals."\
-                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
-                                 " Select 'General' for miscellaneous operations journals."\
+                                 help="Select 'Sale' for customer invoices journals."
+                                 " Select 'Purchase' for supplier invoices journals."
+                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."
+                                 " Select 'General' for miscellaneous operations journals."
                                  " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', 'Type Controls', domain=[('code', '<>', 'view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
@@ -1221,9 +1221,9 @@ class account_move(osv.osv):
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids:
             return {}
-        cr.execute( 'SELECT move_id, SUM(debit) '\
-                    'FROM account_move_line '\
-                    'WHERE move_id IN %s '\
+        cr.execute( 'SELECT move_id, SUM(debit) '
+                    'FROM account_move_line '
+                    'WHERE move_id IN %s '
                     'GROUP BY move_id', (tuple(ids),))
         result = dict(cr.fetchall())
         for id in ids:
@@ -1333,8 +1333,8 @@ class account_move(osv.osv):
                 if new_name:
                     self.write(cr, uid, [move.id], {'name': new_name})
 
-        cr.execute('UPDATE account_move '\
-                   'SET state=%s '\
+        cr.execute('UPDATE account_move '
+                   'SET state=%s '
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
         self.invalidate_cache(cr, uid, context=context)
@@ -1361,8 +1361,8 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if ids:
-            cr.execute('UPDATE account_move '\
-                       'SET state=%s '\
+            cr.execute('UPDATE account_move '
+                       'SET state=%s '
                        'WHERE id IN %s', ('draft', tuple(ids),))
             self.invalidate_cache(cr, uid, context=context)
         return True
@@ -1423,12 +1423,12 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('User Error!'),
-                        _('You cannot delete a posted journal entry "%s".') % \
+                        _('You cannot delete a posted journal entry "%s".') %
                                 move['name'])
             for line in move.line_id:
                 if line.invoice:
                     raise osv.except_osv(_('User Error!'),
-                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
+                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") %
                                     (line.invoice.number, move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
@@ -1457,14 +1457,14 @@ class account_move(osv.osv):
             mode2 = 'debit'
             if not account_id:
                 raise osv.except_osv(_('User Error!'),
-                        _('There is no default debit account defined \n' \
+                        _('There is no default debit account defined \n'
                           'on journal "%s".') % move.journal_id.name)
         else:
             account_id = move.journal_id.default_credit_account_id.id
             mode2 = 'credit'
             if not account_id:
                 raise osv.except_osv(_('User Error!'),
-                        _('There is no default credit account defined \n' \
+                        _('There is no default credit account defined \n'
                           'on journal "%s".') % move.journal_id.name)
 
         # find the first line of this move with the current mode
@@ -1828,7 +1828,7 @@ class account_tax_code(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context, load='_classic_write')
-        return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
+        return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name'])
                 for x in reads]
 
     def _default_company(self, cr, uid, context=None):
@@ -2341,7 +2341,7 @@ class account_model(osv.osv):
                 date_maturity = context.get('date', time.strftime('%Y-%m-%d'))
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
-                        raise osv.except_osv(_('Error!'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
+                        raise osv.except_osv(_('Error!'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!"
                                                             "\nPlease define partner on it!") % (line.name, model.name))
 
                     payment_term_id = False
@@ -2532,12 +2532,12 @@ class account_account_template(osv.osv):
             ('liquidity', 'Liquidity'),
             ('other', 'Regular'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
-            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+        ], 'Internal Type', required=True, help="This type is used to differentiate types with "
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "
+            "can have children accounts for multi-company consolidations, payable/receivable are for "
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            help="These types are defined according to your country. The type contains more information "\
+            help="These types are defined according to your country. The type contains more information "
             "about the account and its specificities."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id', 'Financial Reports'),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
@@ -2763,7 +2763,7 @@ class account_tax_code_template(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context, load='_classic_write')
-        return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
+        return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name'])
                 for x in reads]
 
     _check_recursion = check_cycle

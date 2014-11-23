@@ -220,8 +220,8 @@ class mail_alias(osv.Model):
         try:
             cr.execute('ALTER TABLE %s ALTER COLUMN alias_id SET NOT NULL' % (child_table_name))
         except Exception:
-            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
-                            "If you want to have it, you should update the records and execute manually:\n"\
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"
+                            "If you want to have it, you should update the records and execute manually:\n"
                             "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
                             child_table_name, 'alias_id', child_table_name, 'alias_id')
 

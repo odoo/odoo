@@ -35,7 +35,7 @@ class Twitter(http.Controller):
         if len(tweets) < 12:
             if debug:
                 return {"error": _("Twitter user @%(username)s has less than 12 favorite tweets. "
-                                   "Please add more or choose a different screen name.") % \
+                                   "Please add more or choose a different screen name.") %
                         {'username': screen_name}}
             else:
                 return []

@@ -220,7 +220,7 @@ class crm_lead(format_address, osv.osv):
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags',
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64, help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
@@ -274,7 +274,7 @@ class crm_lead(format_address, osv.osv):
         'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
+        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode',
                             domain="[('section_id','=',section_id)]"),
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),

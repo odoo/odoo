@@ -27,7 +27,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
     _name = "account.open.closed.fiscalyear"
     _description = "Choose Fiscal Year"
     _columns = {
-       'fyear_id': fields.many2one('account.fiscalyear', \
+       'fyear_id': fields.many2one('account.fiscalyear',
                                  'Fiscal Year', required=True, help='Select Fiscal Year which you want to remove entries for its End of year entries journal'),
     }
 

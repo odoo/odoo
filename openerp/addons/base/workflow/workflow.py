@@ -117,7 +117,7 @@ class wkf_transition(osv.osv):
         'trigger_expr_id': fields.char('Trigger Expression'),
         'sequence': fields.integer('Sequence'),
         'signal': fields.char('Signal (Button Name)',
-                              help="When the operation of transition comes from a button pressed in the client form, "\
+                              help="When the operation of transition comes from a button pressed in the client form, "
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
         'group_id': fields.many2one('res.groups', 'Group Required',
                                    help="The group that a user must have to be authorized to validate this transition."),

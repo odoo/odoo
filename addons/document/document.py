@@ -179,11 +179,11 @@ class document_directory(osv.osv):
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'resource_find_all': fields.boolean('Find all resources',
-                help="If true, all attachments that match this resource will " \
+                help="If true, all attachments that match this resource will "
                     " be located. If false, only ones that have this as parent."),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model', change_default=True,
-            help="If you put an object here, this directory template will appear bellow all of these objects. " \
-                 "Such directories are \"attached\" to the specific model or record, just like attachments. " \
+            help="If you put an object here, this directory template will appear bellow all of these objects. "
+                 "Such directories are \"attached\" to the specific model or record, just like attachments. "
                  "Don't put a parent directory if you select a parent model."),
         'ressource_id': fields.integer('Resource ID',
             help="Along with Parent Model, this ID attaches this folder to a specific record of Parent Model."),
@@ -365,7 +365,7 @@ class document_directory_dctx(osv.osv):
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
         'field': fields.char('Field', required=True, select=1, help="The name of the field."),
-        'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" + \
+        'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" +
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
     }
 
@@ -402,7 +402,7 @@ class document_directory_content(osv.osv):
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
         'include_name': fields.boolean('Include Record Name',
-                help="Check this field if you want that the name of the file to contain the record name." \
+                help="Check this field if you want that the name of the file to contain the record name."
                     "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
@@ -1807,7 +1807,7 @@ class node_file(node_class):
                 raise NotImplementedError('Cannot move files between dynamic folders.')
 
             if not ndir_obj:
-                ndir_obj = self.context._dirobj.browse(cr, self.context.uid, \
+                ndir_obj = self.context._dirobj.browse(cr, self.context.uid,
                         ndir_node.dir_id, context=self.context.context)
 
             assert ndir_obj.id == ndir_node.dir_id

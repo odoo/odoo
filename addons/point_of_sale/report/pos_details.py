@@ -118,8 +118,8 @@ class pos_details(report_sxw.rml_parse):
                 a_l = []
                 for r in st_id:
                     a_l.append(r['id'])
-                self.cr.execute("select aj.name,sum(amount) from account_bank_statement_line as absl,account_bank_statement as abs,account_journal as aj " \
-                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id IN %s " \
+                self.cr.execute("select aj.name,sum(amount) from account_bank_statement_line as absl,account_bank_statement as abs,account_journal as aj "
+                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id IN %s "
                                 "group by aj.name ", (tuple(a_l),))
 
                 data = self.cr.dictfetchall()

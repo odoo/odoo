@@ -44,10 +44,10 @@ def _get_fields_type(self, cr, uid, context=None):
     # Avoid too many nested `if`s below, as RedHat's Python 2.6
     # break on it. See bug 939653.
     return sorted([(k, k) for k, v in fields.__dict__.iteritems()
-                   if type(v) == types.TypeType and \
-                   issubclass(v, fields._column) and \
-                   v != fields._column and \
-                   not v._deprecated and \
+                   if type(v) == types.TypeType and
+                   issubclass(v, fields._column) and
+                   v != fields._column and
+                   not v._deprecated and
                    not issubclass(v, fields.function)])
 
 

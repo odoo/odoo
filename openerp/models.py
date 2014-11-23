@@ -390,7 +390,7 @@ class BaseModel(object):
             name_id = 'model_' + self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)",
                     (name_id, context['module'], 'ir.model', model_id)
                 )
 
@@ -453,7 +453,7 @@ class BaseModel(object):
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
-                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
+                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)",
                         (name1, context['module'], 'ir.model.fields', id)
                     )
             else:
@@ -1242,7 +1242,7 @@ class BaseModel(object):
                         message=_(u"Unknown database identifier '%s'") % dbid))
                     dbid = False
 
-            converted = convert(record, lambda field, err:\
+            converted = convert(record, lambda field, err:
                 _log(dict(extras, record=stream.index, field=field_names[field]), field, err))
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
@@ -1811,11 +1811,11 @@ class BaseModel(object):
             # override defaults with the provided values, never allow the other way around
             defaults = self.default_get(cr, uid, list(missing_defaults), context)
             for dv in defaults:
-                if ((dv in self._columns and self._columns[dv]._type == 'many2many') \
+                if ((dv in self._columns and self._columns[dv]._type == 'many2many')
                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'many2many')) \
                         and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
                     defaults[dv] = [(6, 0, defaults[dv])]
-                if (dv in self._columns and self._columns[dv]._type == 'one2many' \
+                if (dv in self._columns and self._columns[dv]._type == 'one2many'
                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many')) \
                         and isinstance(defaults[dv], (list, tuple)) and defaults[dv] and isinstance(defaults[dv][0], dict):
                     defaults[dv] = [(0, 0, x) for x in defaults[dv]]
@@ -2556,9 +2556,9 @@ class BaseModel(object):
                                     i = 0
                                     while True:
                                         newname = k + '_moved' + str(i)
-                                        cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
-                                            "WHERE c.relname=%s " \
-                                            "AND a.attname=%s " \
+                                        cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a "
+                                            "WHERE c.relname=%s "
+                                            "AND a.attname=%s "
                                             "AND c.oid=a.attrelid ", (self._table, newname))
                                         if not cr.fetchone()[0]:
                                             break
@@ -2750,10 +2750,10 @@ class BaseModel(object):
         # attlen is the number of bytes necessary to represent the type when
         # the type has a fixed size. If the type has a varying size attlen is
         # -1 and atttypmod is the size limit + 4, or -1 if there is no limit.
-        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size " \
-           "FROM pg_class c,pg_attribute a,pg_type t " \
-           "WHERE c.relname=%s " \
-           "AND c.oid=a.attrelid " \
+        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size "
+           "FROM pg_class c,pg_attribute a,pg_type t "
+           "WHERE c.relname=%s "
+           "AND c.oid=a.attrelid "
            "AND a.atttypid=t.oid", (self._table,))
         return dict(map(lambda x: (x['attname'], x), cr.dictfetchall()))
 
@@ -3073,7 +3073,7 @@ class BaseModel(object):
                     operation, user, self._name, ', '.join(invalid_fields))
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. '
-                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                     (self._description, operation))
 
         return fields
@@ -3309,7 +3309,7 @@ class BaseModel(object):
                     ))
             # store an access error exception in existing records
             exc = AccessError(
-                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                 (self._name, 'read')
             )
             forbidden = missing.exists()
@@ -3399,7 +3399,7 @@ class BaseModel(object):
                     return
                 _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
-                                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                                  (self._description, operation))
             else:
                 # If we get here, the missing_ids are not in the database
@@ -3540,7 +3540,7 @@ class BaseModel(object):
         ir_values_obj = self.pool.get('ir.values')
         ir_attachment_obj = self.pool.get('ir.attachment')
         for sub_ids in cr.split_for_in_conditions(ids):
-            cr.execute('delete from ' + self._table + ' ' \
+            cr.execute('delete from ' + self._table + ' '
                        'where id IN %s', (sub_ids,))
 
             # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
@@ -3707,7 +3707,7 @@ class BaseModel(object):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3822,7 +3822,7 @@ class BaseModel(object):
             col = self._inherits[table]
             nids = []
             for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('select distinct "' + col + '" from "' + self._table + '" ' \
+                cr.execute('select distinct "' + col + '" from "' + self._table + '" '
                            'where id IN %s', (sub_ids,))
                 nids.extend([x[0] for x in cr.fetchall()])
 
@@ -4051,7 +4051,7 @@ class BaseModel(object):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" %
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -4436,7 +4436,7 @@ class BaseModel(object):
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
         if not order_field_column._classic_write and not getattr(order_field_column, 'store', False):
-            _logger.debug("Many2one function/related fields must be stored " \
+            _logger.debug("Many2one function/related fields must be stored "
                 "to be used as ordering fields! Ignoring sorting for %s.%s",
                 self._name, order_field)
             return
@@ -4761,7 +4761,7 @@ class BaseModel(object):
         return existing
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
-        _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
+        _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" %
                         self._name)
         assert parent is None or parent in self._columns or parent in self._inherit_fields,\
             "The 'parent' parameter passed to check_recursion() must be None or a valid field name"

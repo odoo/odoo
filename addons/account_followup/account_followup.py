@@ -400,14 +400,14 @@ class res_partner(osv.osv):
         having_where_clause = ' AND '.join(map(lambda x: '(MIN(l.date_maturity) %s %%s)' % (x[1]), args))
         having_values = [x[2] for x in args]
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute('SELECT partner_id FROM account_move_line l '\
-                   'WHERE account_id IN '\
-                   '(SELECT id FROM account_account '\
-                   'WHERE type=\'receivable\' AND active) '\
+        cr.execute('SELECT partner_id FROM account_move_line l '
+                   'WHERE account_id IN '
+                   '(SELECT id FROM account_account '
+                   'WHERE type=\'receivable\' AND active) '
                    'AND l.company_id = %s '
-                   'AND reconcile_id IS NULL '\
-                   'AND ' + query + ' '\
-                   'AND partner_id IS NOT NULL '\
+                   'AND reconcile_id IS NULL '
+                   'AND ' + query + ' '
+                   'AND partner_id IS NOT NULL '
                    'GROUP BY partner_id HAVING ' + having_where_clause,
                    [company_id] + having_values)
         res = cr.fetchall()

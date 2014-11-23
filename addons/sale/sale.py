@@ -128,15 +128,15 @@ class sale_order(osv.osv):
                 sale_clause = ',  sale_order AS sale '
                 no_invoiced = True
 
-        cursor.execute('SELECT rel.order_id ' \
-                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' + sale_clause + \
+        cursor.execute('SELECT rel.order_id '
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' + sale_clause +
                 'WHERE rel.invoice_id = inv.id ' + clause)
         res = cursor.fetchall()
         if no_invoiced:
-            cursor.execute('SELECT sale.id ' \
-                    'FROM sale_order AS sale ' \
-                    'WHERE sale.id NOT IN ' \
-                        '(SELECT rel.order_id ' \
+            cursor.execute('SELECT sale.id '
+                    'FROM sale_order AS sale '
+                    'WHERE sale.id NOT IN '
+                        '(SELECT rel.order_id '
                         'FROM sale_order_invoice_rel AS rel) and sale.state != \'cancel\'')
             res.extend(cursor.fetchall())
         if not res:
@@ -930,7 +930,7 @@ class sale_order_line(osv.osv):
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
                         raise osv.except_osv(_('Error!'),
-                                _('Please define income account for this product: "%s" (id:%d).') % \
+                                _('Please define income account for this product: "%s" (id:%d).') %
                                     (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,

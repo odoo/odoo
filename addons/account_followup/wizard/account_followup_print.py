@@ -265,18 +265,18 @@ class account_followup_print(osv.osv_memory):
         company_id = data.company_id.id
 
         cr.execute(
-            "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
-            "FROM account_move_line AS l "\
-                "LEFT JOIN account_account AS a "\
-                "ON (l.account_id=a.id) "\
-            "WHERE (l.reconcile_id IS NULL) "\
-                "AND (a.type='receivable') "\
-                "AND (l.state<>'draft') "\
-                "AND (l.partner_id is NOT NULL) "\
-                "AND (a.active) "\
-                "AND (l.debit > 0) "\
-                "AND (l.company_id = %s) " \
-                "AND (l.blocked = False)" \
+            "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "
+            "FROM account_move_line AS l "
+                "LEFT JOIN account_account AS a "
+                "ON (l.account_id=a.id) "
+            "WHERE (l.reconcile_id IS NULL) "
+                "AND (a.type='receivable') "
+                "AND (l.state<>'draft') "
+                "AND (l.partner_id is NOT NULL) "
+                "AND (a.active) "
+                "AND (l.debit > 0) "
+                "AND (l.company_id = %s) "
+                "AND (l.blocked = False)"
             "ORDER BY l.date", (company_id,))  #l.blocked added to take litigation into account and it is not necessary to change follow-up level of account move lines without debit
         move_lines = cr.fetchall()
         old = None
@@ -287,9 +287,9 @@ class account_followup_print(osv.osv_memory):
         current_date = datetime.date(*time.strptime(date,
             '%Y-%m-%d')[:3])
         cr.execute(
-            "SELECT * "\
-            "FROM account_followup_followup_line "\
-            "WHERE followup_id=%s "\
+            "SELECT * "
+            "FROM account_followup_followup_line "
+            "WHERE followup_id=%s "
             "ORDER BY delay", (fup_id,))
 
         # Create dictionary of tuples where first element is the date to compare with the due date and second element is the id of the next level

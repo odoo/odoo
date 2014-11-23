@@ -175,8 +175,8 @@ class res_users(osv.osv):
             help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, type='char', size=64,
             fnct_inv=_set_new_password, string='Set Password',
-            help="Specify a value only when creating a user or if you're "\
-                 "changing the user's password, otherwise leave empty. After "\
+            help="Specify a value only when creating a user or if you're "
+                 "changing the user's password, otherwise leave empty. After "
                  "a change of password, the user has to login again."),
         'signature': fields.html('Signature'),
         'active': fields.boolean('Active'),

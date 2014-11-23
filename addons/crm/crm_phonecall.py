@@ -37,7 +37,7 @@ class crm_phonecall(osv.osv):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+        'section_id': fields.many2one('crm.case.section', 'Sales Team',
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'partner_id': fields.many2one('res.partner', 'Contact'),
@@ -58,7 +58,7 @@ class crm_phonecall(osv.osv):
         'name': fields.char('Call Summary', required=True),
         'active': fields.boolean('Active', required=False),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',
                         domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone'),
@@ -111,7 +111,7 @@ class crm_phonecall(osv.osv):
                 self.write(cr, uid, [phonecall.id], values, context=context)
         return True
 
-    def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
+    def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary,
                     user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
         """
         action :('schedule','Schedule a call'), ('log','Log a call')

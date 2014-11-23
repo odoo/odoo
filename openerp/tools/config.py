@@ -368,7 +368,7 @@ class configmanager(object):
 
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
-            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
+            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "
             "use -s/--save if you want to generate it" % opt.config)
 
         # place/search the config file on Win32 near the server installation
@@ -382,7 +382,7 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config \
+            self.config_file or opt.config
                 or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 

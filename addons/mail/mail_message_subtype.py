@@ -33,20 +33,20 @@ class mail_message_subtype(osv.osv):
 
     _columns = {
         'name': fields.char('Message Type', required=True, translate=True,
-            help='Message subtype gives a more precise type on the message, '\
-                    'especially for system notifications. For example, it can be '\
-                    'a notification related to a new record (New), or to a stage '\
-                    'change in a process (Stage change). Message subtypes allow to '\
+            help='Message subtype gives a more precise type on the message, '
+                    'especially for system notifications. For example, it can be '
+                    'a notification related to a new record (New), or to a stage '
+                    'change in a process (Stage change). Message subtypes allow to '
                     'precisely tune the notifications the user want to receive on its wall.'),
         'description': fields.text('Description', translate=True,
-            help='Description that will be added in the message posted for this '\
+            help='Description that will be added in the message posted for this '
                     'subtype. If void, the name will be added instead.'),
         'parent_id': fields.many2one('mail.message.subtype', string='Parent',
             ondelete='set null',
             help='Parent subtype, used for automatic subscription.'),
         'relation_field': fields.char('Relation field',
-            help='Field used to link the related model to the subtype model when '\
-                    'using automatic subscription on a related document. The field '\
+            help='Field used to link the related model to the subtype model when '
+                    'using automatic subscription on a related document. The field '
                     'is used to compute getattr(related_document.relation_field).'),
         'res_model': fields.char('Model',
             help="Model the subtype applies to. If False, this subtype applies to all models."),

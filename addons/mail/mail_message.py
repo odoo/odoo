@@ -127,7 +127,7 @@ class mail_message(osv.Model):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', size=12,
-            help="Message type: email for email message, notification for system "\
+            help="Message type: email for email message, notification for system "
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
             help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),

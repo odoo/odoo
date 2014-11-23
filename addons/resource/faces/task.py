@@ -96,7 +96,7 @@ class _IncompleteError(Exception):
             Exception.__init__(self, *args)
         else:
             Exception.__init__(self,
-                               "Not enough data for calculating task, "\
+                               "Not enough data for calculating task, "
                                "maybe you have a recursive reference.",
                                *args)
     #@-node:__init__
@@ -1346,7 +1346,7 @@ class StrictAllocator(AllocationAlgorithm):
             factor = sum(map(lambda a: a[1], loads))
             length = end - start
 
-            effort = to_delta(length * factor\
+            effort = to_delta(length * factor
                               + task.performed_effort).round()
 
         return (end, book_load), resource, calc_load, start, effort
@@ -1672,8 +1672,8 @@ def YearlyMax(value):
     #@-node:<< calculate calendar and time_diff >>
     #@nl
     return float(time_diff) / \
-        (cal.working_days_per_year \
-     * cal.working_hours_per_day \
+        (cal.working_days_per_year
+     * cal.working_hours_per_day
          * 60)
 #@nonl
 #@-node:YearlyMax
@@ -1696,8 +1696,8 @@ def WeeklyMax(value):
     #@-node:<< calculate calendar and time_diff >>
     #@nl
     return float(time_diff) / \
-        (cal.working_days_per_week \
-     * cal.working_hours_per_day \
+        (cal.working_days_per_week
+     * cal.working_hours_per_day
          * 60)
 
 #@-node:WeeklyMax
@@ -1720,8 +1720,8 @@ def MonthlyMax(value):
     #@-node:<< calculate calendar and time_diff >>
     #@nl
     return float(time_diff) / \
-        (cal.working_days_per_month \
-     * cal.working_hours_per_day \
+        (cal.working_days_per_month
+     * cal.working_hours_per_day
          * 60)
 
 #@-node:MonthlyMax
@@ -2019,7 +2019,7 @@ class Task(object):
     _delta_completion = {"Delta": 'Delta("|")',
                          "Multi": "Multi(|)"}
 
-    __attrib_completions__ = { \
+    __attrib_completions__ = {
         "def NewTask():": "def |NewTask():\n",
         "milestone": 'milestone = True',
         "start": 'start = ',
@@ -2152,7 +2152,7 @@ class Task(object):
         self.index = parent and ("%s.%i" % (parent.index, index)) \
             or str(index)
         if self.formats.has_key(name):
-            raise AttributeError("Task name '%s' hides attribute of parent." \
+            raise AttributeError("Task name '%s' hides attribute of parent."
                                  % name)
 
         cal = self.calendar
@@ -2482,7 +2482,7 @@ class Task(object):
         for r in self.performed_resource:
             r.correct_bookings(self)
 
-        self._resource_length = map(lambda r: (weakref.proxy(r), \
+        self._resource_length = map(lambda r: (weakref.proxy(r),
                                                r.length_of(self)),
                                     self._iter_booked_resources())
     #@-node:_allocate
@@ -2526,7 +2526,7 @@ class Task(object):
 
                 return ((res, start, end, working_time), index)
             except Exception, exc:
-                self._raise(exc.__class__("Item %i: %s" \
+                self._raise(exc.__class__("Item %i: %s"
                                           % (index + 1, str(exc))),
                             "performed")
 
@@ -2539,7 +2539,7 @@ class Task(object):
         for item, index in converted:
             res, start, end, work_time = item
             if last_res == res and start < last_end:
-                self._warn("Items %i, %i:  %s and %s are overlapping." \
+                self._warn("Items %i, %i:  %s and %s are overlapping."
                            % (last_index + 1, index + 1,
                               str(performed[last_index]),
                               str(performed[index])),
@@ -2659,7 +2659,7 @@ class Task(object):
             self.__at_compile
             #@        << raise child recursion error >>
             #@+node:<< raise child recursion error >>
-            self._raise(RecursionError("A child defines a "\
+            self._raise(RecursionError("A child defines a "
                                        "recursive definition at %s" % self.path))
             #@-node:<< raise child recursion error >>
             #@nl
@@ -3198,7 +3198,7 @@ class Task(object):
 
         try:
             dest, dattr = self.__at_compile
-            raise RecursionError("Recursive definition of %s(%s) and %s(%s)." \
+            raise RecursionError("Recursive definition of %s(%s) and %s(%s)."
                                  % (self.path, attrib_name, dest.path, dattr))
         except AttributeError:
             pass
@@ -3268,7 +3268,7 @@ class Task(object):
             except ValueError:
                 #@            << raise child recursion error >>
                 #@+node:<< raise child recursion error >>
-                self._raise(RecursionError("A child defines a "\
+                self._raise(RecursionError("A child defines a "
                                            "recursive definition at %s" % self.path))
                 #@-node:<< raise child recursion error >>
                 #@nl
@@ -3289,7 +3289,7 @@ class Task(object):
                 return to_start(start)
             #@        << raise recursion error >>
             #@+node:<< raise recursion error >>
-            raise RecursionError("you have to specify a "\
+            raise RecursionError("you have to specify a "
                                  "start or an end at %s" % self.path)
             #@nonl
             #@-node:<< raise recursion error >>
@@ -3309,7 +3309,7 @@ class Task(object):
             except ValueError:
                 #@            << raise child recursion error >>
                 #@+node:<< raise child recursion error >>
-                self._raise(RecursionError("A child defines a "\
+                self._raise(RecursionError("A child defines a "
                                            "recursive definition at %s" % self.path))
                 #@-node:<< raise child recursion error >>
                 #@nl
@@ -3330,7 +3330,7 @@ class Task(object):
                 return to_end(end)
             #@        << raise recursion error >>
             #@+node:<< raise recursion error >>
-            raise RecursionError("you have to specify a "\
+            raise RecursionError("you have to specify a "
                                  "start or an end at %s" % self.path)
             #@nonl
             #@-node:<< raise recursion error >>
@@ -3368,7 +3368,7 @@ class Task(object):
     #@+node:__calc_duration
 
     def __calc_duration(self):
-        return self._to_delta(self.end.to_datetime()\
+        return self._to_delta(self.end.to_datetime()
                               - self.start.to_datetime(), True)
 
     duration = _TaskProperty(__calc_duration)
@@ -3543,7 +3543,7 @@ class Task(object):
         end = self._find_frozen("end")
 
         if not (start or end):
-            self._raise(ValueError("You must specify either a"\
+            self._raise(ValueError("You must specify either a"
                                    " start or an end attribute"))
 
         if start and end:

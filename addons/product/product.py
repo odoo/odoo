@@ -140,15 +140,15 @@ class product_uom(osv.osv):
         'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True, digits=0,  # force NUMERIC with unlimited precision
-            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
+            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=0,  # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Bigger Ratio',
-            help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
+            help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'
                     '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
-            help="The computed quantity will be a multiple of this value. "\
+            help="The computed quantity will be a multiple of this value. "
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger', 'Bigger than the reference Unit of Measure'),
@@ -549,16 +549,16 @@ class product_template(osv.osv):
             store={
                 'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the product. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved, "\
+            help="Medium-sized image of the product. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved, "
                  "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
             store={
                 'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the product. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized image of the product. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
         'packaging_ids': fields.one2many(
             'product.packaging', 'product_tmpl_id', 'Logistical Units',
@@ -948,7 +948,7 @@ class product_product(osv.osv):
 
         'image': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
             string="Big-sized image", type="binary",
-            help="Image of the product variant (Big-sized image of product template if false). It is automatically "\
+            help="Image of the product variant (Big-sized image of product template if false). It is automatically "
                  "resized as a 1024x1024px image, with aspect ratio preserved."),
         'image_small': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
             string="Small-sized image", type="binary",

@@ -348,7 +348,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                 hooks_results.update(hook(cr, uid, ids, context=None) or set())
 
         additionals = set(
-            module for requirements, consequences \
+            module for requirements, consequences
                        in self._install_if.iteritems()
                    if base.issuperset(requirements)
                    for module in consequences)

@@ -148,10 +148,10 @@ class WebKitParser(report_sxw):
 
         raise except_osv(
                          _('Wkhtmltopdf library path is not set'),
-                         _('Please install executable on your system' \
-                         ' (sudo apt-get install wkhtmltopdf) or download it from here:' \
-                         ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the' \
-                         ' path in the ir.config_parameter with the webkit_path key.' \
+                         _('Please install executable on your system'
+                         ' (sudo apt-get install wkhtmltopdf) or download it from here:'
+                         ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'
+                         ' path in the ir.config_parameter with the webkit_path key.'
                          'Minimal version is 0.9.9')
                         )
 
@@ -254,7 +254,7 @@ class WebKitParser(report_sxw):
         # just try to find an xml id for the report
         cr = cursor
         pool = openerp.registry(cr.dbname)
-        found_xml_ids = pool["ir.model.data"].search(cr, uid, [["model", "=", "ir.actions.report.xml"], \
+        found_xml_ids = pool["ir.model.data"].search(cr, uid, [["model", "=", "ir.actions.report.xml"],
             ["res_id", "=", report_xml.id]], context=context)
         xml_id = None
         if found_xml_ids:

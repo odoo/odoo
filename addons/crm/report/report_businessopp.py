@@ -147,7 +147,7 @@ class report_custom(report_int):
                     x_grid_interval = lambda min, max: [40, 60, 80, 100],
                     x_grid_style = line_style.gray70_dash1,
                     x_range = (33, 100),
-                    x_axis = axis.X(label=None, minor_tic_interval = lambda min, max: [50, 70, 90],\
+                    x_axis = axis.X(label=None, minor_tic_interval = lambda min, max: [50, 70, 90],
                                     format=lambda x: ""),
                     y_axis = axis.Y(label="Planned amounts"))
 

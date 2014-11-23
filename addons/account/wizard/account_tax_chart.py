@@ -29,8 +29,8 @@ class account_tax_chart(osv.osv_memory):
     _name = "account.tax.chart"
     _description = "Account tax chart"
     _columns = {
-       'period_id': fields.many2one('account.period', \
-                                    'Period',  \
+       'period_id': fields.many2one('account.period',
+                                    'Period',
                                     ),
        'target_move': fields.selection([('posted', 'All Posted Entries'),
                                         ('all', 'All Entries'),
@@ -59,8 +59,8 @@ class account_tax_chart(osv.osv_memory):
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         if data.period_id:
-            result['context'] = str({'period_id': data.period_id.id, \
-                                     'fiscalyear_id': data.period_id.fiscalyear_id.id, \
+            result['context'] = str({'period_id': data.period_id.id,
+                                     'fiscalyear_id': data.period_id.fiscalyear_id.id,
                                      'state': data.target_move})
             period_code = data.period_id.code
             result['name'] += period_code and (':' + period_code) or ''

@@ -324,7 +324,7 @@ class mail_mail(osv.Model):
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
-                _logger.exception('MemoryError while processing mail with ID %r and Msg-Id %r. '\
+                _logger.exception('MemoryError while processing mail with ID %r and Msg-Id %r. '
                                   'Consider raising the --limit-memory-hard startup option',
                                   mail.id, mail.message_id)
                 raise

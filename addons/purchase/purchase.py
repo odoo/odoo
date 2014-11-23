@@ -230,7 +230,7 @@ class purchase_order(osv.osv):
             change_default=True, track_visibility='always'),
         'dest_address_id': fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
             states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]},
-            help="Put an address if you want to deliver directly from the supplier to the customer. " \
+            help="Put an address if you want to deliver directly from the supplier to the customer. "
                 "Otherwise, keep empty to deliver to your own company."
         ),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage', '<>', 'view')], states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
@@ -264,8 +264,8 @@ class purchase_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual', 'Based on Purchase Order lines'), ('order', 'Based on generated draft invoice'), ('picking', 'Based on incoming shipments')], 'Invoicing Control', required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
-                "Based on generated invoice: create a draft invoice you can validate later.\n" \
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
+                "Based on generated invoice: create a draft invoice you can validate later.\n"
                 "Based on incoming shipments: let you create an invoice when receipts are validated."
         ),
         'minimum_planned_date': fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
@@ -598,7 +598,7 @@ class purchase_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(
                 _('Error!'),
-                _('Define purchase journal for this company: "%s" (id:%d).') % \
+                _('Define purchase journal for this company: "%s" (id:%d).') %
                     (order.company_id.name, order.company_id.id))
         return {
             'name': order.partner_ref or order.name,

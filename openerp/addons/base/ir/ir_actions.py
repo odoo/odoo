@@ -291,8 +291,8 @@ class ir_actions_act_window(osv.osv):
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, type='binary', string='Views',
-               help="This function field computes the ordered list of views that should be enabled " \
-                    "when displaying the result of an action, federating view mode, views and " \
+               help="This function field computes the ordered list of views that should be enabled "
+                    "when displaying the result of an action, federating view mode, views and "
                     "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."),
         'limit': fields.integer('Limit', help='Default limit for the list view'),
         'auto_refresh': fields.integer('Auto-Refresh',

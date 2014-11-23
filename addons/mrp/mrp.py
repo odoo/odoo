@@ -114,8 +114,8 @@ class mrp_routing(osv.osv):
         'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Work Centers', copy=True),
 
         'location_id': fields.many2one('stock.location', 'Production Location',
-            help="Keep empty if you produce at the location where the finished products are needed." \
-                "Set a location if you produce at a fixed location. This can be a partner location " \
+            help="Keep empty if you produce at the location where the finished products are needed."
+                "Set a location if you produce at a fixed location. This can be a partner location "
                 "if you subcontract the manufacturing operations."
                                        ),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -141,7 +141,7 @@ class mrp_routing_workcenter(osv.osv):
             help="Number of iterations this work center has to do in the specified operation of the routing."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this Work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
-             help="Routing indicates all the Work Centers used, for how long and/or cycles." \
+             help="Routing indicates all the Work Centers used, for how long and/or cycles."
                 "If Routing is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
         'note': fields.text('Description'),
         'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
@@ -177,7 +177,7 @@ class mrp_bom(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. "\
+        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. "
                 "The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% during the production process."),
@@ -412,7 +412,7 @@ class mrp_bom_line(osv.osv):
         'product_uom': _get_uom_id,
     }
     _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n' \
+        ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 

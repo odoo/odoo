@@ -79,7 +79,7 @@ class pos_config(osv.osv):
 
         'state': fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
         'sequence_id': fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
-            help="This sequence is automatically created by Odoo but you can change it "\
+            help="This sequence is automatically created by Odoo but you can change it "
                 "to customize the reference numbers of your orders.", copy=False),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by': fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
@@ -853,7 +853,7 @@ class pos_order(osv.osv):
             'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
         }
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
+        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable
                              and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
 
         if not args['account_id']:
@@ -1140,8 +1140,8 @@ class pos_order(osv.osv):
                 elif line.product_id.categ_id.property_account_income_categ.id:
                     income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
-                    raise osv.except_osv(_('Error!'), _('Please define income '\
-                        'account for this product: "%s" (id:%d).') \
+                    raise osv.except_osv(_('Error!'), _('Please define income '
+                        'account for this product: "%s" (id:%d).')
                         % (line.product_id.name, line.product_id.id, ))
 
                 # Empty the tax list as long as there is no tax code:
@@ -1283,7 +1283,7 @@ class pos_order_line(osv.osv):
             return {}
         if not pricelist:
             raise osv.except_osv(_('No Pricelist!'),
-                _('You have to select a pricelist in the sale form !\n' \
+                _('You have to select a pricelist in the sale form !\n'
                 'Please set one before choosing a product.'))
 
         price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
@@ -1398,16 +1398,16 @@ class pos_category(osv.osv):
             store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
+            help="Medium-sized image of the category. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved. "
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized image", type="binary", multi="_get_image",
             store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized image of the category. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
     }
 

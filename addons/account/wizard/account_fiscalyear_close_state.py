@@ -30,7 +30,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _name = "account.fiscalyear.close.state"
     _description = "Fiscalyear Close state"
     _columns = {
-       'fy_id': fields.many2one('account.fiscalyear', \
+       'fy_id': fields.many2one('account.fiscalyear',
                                 'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
     }
 
@@ -54,14 +54,14 @@ class account_fiscalyear_close_state(osv.osv_memory):
             if account_move_ids:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to close a fiscalyear, you must first post related journal entries.'))
 
-            cr.execute('UPDATE account_journal_period ' \
-                       'SET state = %s ' \
+            cr.execute('UPDATE account_journal_period '
+                       'SET state = %s '
                        'WHERE period_id IN (SELECT id FROM account_period \
                         WHERE fiscalyear_id = %s)',
                     ('done', fy_id))
-            cr.execute('UPDATE account_period SET state = %s ' \
+            cr.execute('UPDATE account_period SET state = %s '
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
-            cr.execute('UPDATE account_fiscalyear ' \
+            cr.execute('UPDATE account_fiscalyear '
                     'SET state = %s WHERE id = %s', ('done', fy_id))
             self.invalidate_cache(cr, uid, context=context)
 

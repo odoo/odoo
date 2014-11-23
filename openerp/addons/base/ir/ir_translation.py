@@ -113,14 +113,14 @@ class ir_translation_import_cursor(object):
                 AND ti.imd_model = imd.model; """ % self._table_name)
 
         if self._debug:
-            cr.execute("SELECT module, imd_name, imd_model FROM %s " \
+            cr.execute("SELECT module, imd_name, imd_model FROM %s "
                 "WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
             for row in cr.fetchall():
                 _logger.info("ir.translation.cursor: missing res_id for %s.%s <%s> ", *row)
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
         # referencing non-existent data.
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" %
             self._table_name)
 
         find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
@@ -146,7 +146,7 @@ class ir_translation_import_cursor(object):
         if self._debug:
             cr.execute('SELECT COUNT(*) FROM ONLY %s' % self._parent_table)
             c1 = cr.fetchone()[0]
-            cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
+            cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' %
                 (self._parent_table, self._table_name, find_expr))
             c = cr.fetchone()[0]
             _logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)

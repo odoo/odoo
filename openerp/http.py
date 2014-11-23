@@ -112,8 +112,8 @@ def dispatch_rpc(service_name, method, params):
                 openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
-            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
+    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError,
+            openerp.exceptions.AccessDenied, openerp.exceptions.Warning,
             openerp.exceptions.RedirectWarning):
         raise
     except openerp.exceptions.DeferredException, e:

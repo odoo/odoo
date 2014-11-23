@@ -103,16 +103,16 @@ class im_livechat_channel(osv.Model):
             store={
                 'im_livechat.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized photo of the group. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
+            help="Medium-sized photo of the group. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved. "
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
             store={
                 'im_livechat.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized photo of the group. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized photo of the group. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
     }
 

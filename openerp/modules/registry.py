@@ -211,7 +211,7 @@ class Registry(Mapping):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
         r, c = cr.fetchone()
-        _logger.debug("Multiprocess load registry signaling: [Registry: # %s] "\
+        _logger.debug("Multiprocess load registry signaling: [Registry: # %s] "
                     "[Cache: # %s]",
                     r, c)
         return r, c
@@ -417,7 +417,7 @@ class RegistryManager(object):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
                 r, c = cr.fetchone()
-                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "\
+                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "
                     "[Cache - old# %s new# %s]",
                     registry.base_registry_signaling_sequence, r,
                     registry.base_cache_signaling_sequence, c)

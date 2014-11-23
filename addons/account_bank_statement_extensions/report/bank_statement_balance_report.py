@@ -30,13 +30,13 @@ class bank_statement_balance_report(report_sxw.rml_parse):
     def set_context(self, objects, data, ids, report_type=None):
         cr = self.cr
 
-        cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance ' \
-                   'FROM account_bank_statement s ' \
-                   'INNER JOIN account_journal j on s.journal_id = j.id ' \
-                   'INNER JOIN ' \
-                   '(SELECT journal_id, max(date) as max_date FROM account_bank_statement ' \
-                   'GROUP BY journal_id) d ' \
-                   'ON (s.journal_id = d.journal_id AND s.date = d.max_date) ' \
+        cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance '
+                   'FROM account_bank_statement s '
+                   'INNER JOIN account_journal j on s.journal_id = j.id '
+                   'INNER JOIN '
+                   '(SELECT journal_id, max(date) as max_date FROM account_bank_statement '
+                   'GROUP BY journal_id) d '
+                   'ON (s.journal_id = d.journal_id AND s.date = d.max_date) '
                    'ORDER BY j.code')
         lines = cr.dictfetchall()
 

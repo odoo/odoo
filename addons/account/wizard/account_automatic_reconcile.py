@@ -169,11 +169,11 @@ class account_automatic_reconcile(osv.osv_memory):
             partner_ids = [id for (id,) in cr.fetchall()]
             for partner_id in partner_ids:
                 cr.execute(
-                    "SELECT id " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND state <> 'draft' " \
+                    "SELECT id "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND state <> 'draft' "
                     "AND reconcile_id IS NULL",
                     (account_id.id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
@@ -186,13 +186,13 @@ class account_automatic_reconcile(osv.osv_memory):
 
             # get the list of partners who have more than one unreconciled transaction
             cr.execute(
-                "SELECT partner_id " \
-                "FROM account_move_line " \
-                "WHERE account_id=%s " \
-                "AND reconcile_id IS NULL " \
-                "AND state <> 'draft' " \
-                "AND partner_id IS NOT NULL " \
-                "GROUP BY partner_id " \
+                "SELECT partner_id "
+                "FROM account_move_line "
+                "WHERE account_id=%s "
+                "AND reconcile_id IS NULL "
+                "AND state <> 'draft' "
+                "AND partner_id IS NOT NULL "
+                "GROUP BY partner_id "
                 "HAVING count(*)>1",
                 (account_id.id,))
             partner_ids = [id for (id,) in cr.fetchall()]
@@ -200,26 +200,26 @@ class account_automatic_reconcile(osv.osv_memory):
             for partner_id in partner_ids:
                 # get the list of unreconciled 'debit transactions' for this partner
                 cr.execute(
-                    "SELECT id, debit " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND reconcile_id IS NULL " \
-                    "AND state <> 'draft' " \
-                    "AND debit > 0 " \
+                    "SELECT id, debit "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND reconcile_id IS NULL "
+                    "AND state <> 'draft' "
+                    "AND debit > 0 "
                     "ORDER BY date_maturity",
                     (account_id.id, partner_id))
                 debits = cr.fetchall()
 
                 # get the list of unreconciled 'credit transactions' for this partner
                 cr.execute(
-                    "SELECT id, credit " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND reconcile_id IS NULL " \
-                    "AND state <> 'draft' " \
-                    "AND credit > 0 " \
+                    "SELECT id, credit "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND reconcile_id IS NULL "
+                    "AND state <> 'draft' "
+                    "AND credit > 0 "
                     "ORDER BY date_maturity",
                     (account_id.id, partner_id))
                 credits = cr.fetchall()
@@ -232,10 +232,10 @@ class account_automatic_reconcile(osv.osv_memory):
             # unreconciled transactions to the unreconciled count
             partner_filter = partner_ids and 'AND partner_id not in (%s)' % ','.join(map(str, filter(None, partner_ids))) or ''
             cr.execute(
-                "SELECT count(*) " \
-                "FROM account_move_line " \
-                "WHERE account_id=%s " \
-                "AND reconcile_id IS NULL " \
+                "SELECT count(*) "
+                "FROM account_move_line "
+                "WHERE account_id=%s "
+                "AND reconcile_id IS NULL "
                 "AND state <> 'draft' " + partner_filter,
                 (account_id.id,))
             additional_unrec = cr.fetchone()[0]

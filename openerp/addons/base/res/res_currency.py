@@ -228,8 +228,8 @@ class res_currency(osv.osv):
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
-            raise osv.except_osv(_('Error'), _('No rate found \n' \
-                    'for the currency: %s \n' \
+            raise osv.except_osv(_('Error'), _('No rate found \n'
+                    'for the currency: %s \n'
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate / from_currency.rate
 

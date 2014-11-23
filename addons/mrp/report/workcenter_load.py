@@ -105,11 +105,11 @@ class report_custom(report_int):
         assert len(ids), 'You should provide some ids!'
         colors = choice_colors(len(ids))
         cr.execute(
-            "SELECT MAX(mrp_production.date_planned) AS stop,MIN(mrp_production.date_planned) AS start "\
-            "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "\
-            "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
-            "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
-            "AND mrp_production.state NOT IN ('cancel','done') "\
+            "SELECT MAX(mrp_production.date_planned) AS stop,MIN(mrp_production.date_planned) AS start "
+            "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "
+            "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "
+            "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "
+            "AND mrp_production.state NOT IN ('cancel','done') "
             "AND mrp_workcenter.id IN %s", (tuple(ids),))
         res = cr.dictfetchone()
         if not res['stop']:
@@ -144,8 +144,8 @@ class report_custom(report_int):
         bar_plot.fill_styles.reset();
         # select workcenters
         cr.execute(
-            "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \
-            "WHERE mw.id IN %s and mw.resource_id=rs.id " \
+            "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs "
+            "WHERE mw.id IN %s and mw.resource_id=rs.id "
             "ORDER BY mw.id", (tuple(ids),))
         workcenters = cr.dictfetchall()
 

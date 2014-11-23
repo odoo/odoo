@@ -101,8 +101,8 @@ class WorkflowService(object):
         for old_inst_id, workflow_id in self.cr.fetchall():
             # first active instance for new resource (new_rid), using same wkf
             self.cr.execute(
-                'SELECT id '\
-                'FROM wkf_instance '\
+                'SELECT id '
+                'FROM wkf_instance '
                 'WHERE res_id=%s AND res_type=%s AND wkf_id=%s AND state=%s',
                 (new_rid, self.record.model, workflow_id, 'active'))
             new_id = self.cr.fetchone()

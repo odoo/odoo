@@ -88,7 +88,7 @@ class stock_picking(osv.osv):
                 picking.partner_id.id, context=context)
         if not grid_id:
             raise osv.except_osv(_('Warning!'),
-                    _('The carrier %s (id: %d) has no delivery grid!') \
+                    _('The carrier %s (id: %d) has no delivery grid!')
                             % (picking.carrier_id.name,
                                 picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])

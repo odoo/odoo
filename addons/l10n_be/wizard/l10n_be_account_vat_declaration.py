@@ -48,7 +48,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution', help='It indicates whether a restitution is to make or not?'),
         'ask_payment': fields.boolean('Ask Payment', help='It indicates whether a payment is to make or not?'),
-        'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
+        'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: '
             'no clients to be included in the client listing.'),
         'comments': fields.text('Comments'),
     }

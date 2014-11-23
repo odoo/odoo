@@ -92,5 +92,5 @@ class monkey(object):
     def __call__(self, fn):
         name = fn.__name__
         old = getattr(self.obj, name)
-        setattr(self.obj, name, lambda self_, *args, **kwargs: \
+        setattr(self.obj, name, lambda self_, *args, **kwargs:
                 fn(old, self_, *args, **kwargs))

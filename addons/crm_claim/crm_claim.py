@@ -83,16 +83,16 @@ class crm_claim(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Claim Date', select=True),
         'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
         'type_action': fields.selection([('correction', 'Corrective Action'), ('prevention', 'Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
         'user_fault': fields.char('Trouble Responsible'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help="Responsible sales team."\
-                                " Define Responsible user and Email account for"\
+        'section_id': fields.many2one('crm.case.section', 'Sales Team',
+                        select=True, help="Responsible sales team."
+                                " Define Responsible user and Email account for"
                                 " mail gateway."),
         'company_id': fields.many2one('res.company', 'Company'),
         'partner_id': fields.many2one('res.partner', 'Partner'),

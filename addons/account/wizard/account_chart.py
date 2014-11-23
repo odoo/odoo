@@ -29,8 +29,8 @@ class account_chart(osv.osv_memory):
     _name = "account.chart"
     _description = "Account chart"
     _columns = {
-        'fiscalyear': fields.many2one('account.fiscalyear', \
-                                    'Fiscal year',  \
+        'fiscalyear': fields.many2one('account.fiscalyear',
+                                    'Fiscal year',
                                     help='Keep empty for all open fiscal years'),
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
@@ -96,7 +96,7 @@ class account_chart(osv.osv_memory):
             period_from = data.get('period_from', False) and data['period_from'][0] or False
             period_to = data.get('period_to', False) and data['period_to'][0] or False
             result['periods'] = period_obj.build_ctx_periods(cr, uid, period_from, period_to)
-        result['context'] = str({'fiscalyear': fiscalyear_id, 'periods': result['periods'], \
+        result['context'] = str({'fiscalyear': fiscalyear_id, 'periods': result['periods'],
                                  'state': data['target_move']})
         if fiscalyear_id:
             result['name'] += ':' + fy_obj.read(cr, uid, [fiscalyear_id], context=context)[0]['code']

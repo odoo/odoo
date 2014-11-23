@@ -328,9 +328,9 @@ class account_move_line(osv.osv):
         res = {}
         for line_id in ids:
             res[line_id] = False
-        cursor.execute('SELECT l.id, i.id ' \
-                       'FROM account_move_line l, account_invoice i ' \
-                       'WHERE l.move_id = i.move_id ' \
+        cursor.execute('SELECT l.id, i.id '
+                       'FROM account_move_line l, account_invoice i '
+                       'WHERE l.move_id = i.move_id '
                        'AND l.id IN %s',
                        (tuple(ids),))
         invoice_ids = []
@@ -406,8 +406,8 @@ class account_move_line(osv.osv):
             qu1 = ' AND' + ' AND'.join(qu1)
         else:
             qu1 = ''
-        cursor.execute('SELECT l.id ' \
-                'FROM account_move_line l, account_invoice i ' \
+        cursor.execute('SELECT l.id '
+                'FROM account_move_line l, account_invoice i '
                 'WHERE l.move_id = i.move_id ' + qu1, qu2)
         res = cursor.fetchall()
         if not res:
@@ -483,7 +483,7 @@ class account_move_line(osv.osv):
         'balance': fields.function(_balance, fnct_search=_balance_search, string='Balance'),
         'state': fields.selection([('draft', 'Unbalanced'), ('valid', 'Balanced')], 'Status', readonly=True, copy=False),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
-        'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
+        'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "
                     "this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
@@ -499,8 +499,8 @@ class account_move_line(osv.osv):
         period_obj = self.pool.get('account.period')
         dt = time.strftime('%Y-%m-%d')
         if context.get('journal_id') and context.get('period_id'):
-            cr.execute('SELECT date FROM account_move_line ' \
-                    'WHERE journal_id = %s AND period_id = %s ' \
+            cr.execute('SELECT date FROM account_move_line '
+                    'WHERE journal_id = %s AND period_id = %s '
                     'ORDER BY id DESC limit 1',
                     (context['journal_id'], context['period_id']))
             res = cr.fetchone()
@@ -959,9 +959,9 @@ class account_move_line(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
 
-        cr.execute('SELECT account_id, reconcile_id '\
-                   'FROM account_move_line '\
-                   'WHERE id IN %s '\
+        cr.execute('SELECT account_id, reconcile_id '
+                   'FROM account_move_line '
+                   'WHERE id IN %s '
                    'GROUP BY account_id,reconcile_id',
                    (tuple(ids), ))
         r = cr.fetchall()
@@ -1118,7 +1118,7 @@ class account_move_line(osv.osv):
         if res:
             if res[1] != 'draft':
                 raise osv.except_osv(_('User Error!'),
-                       _('The account move (%s) for centralisation ' \
+                       _('The account move (%s) for centralisation '
                          'has been confirmed.') % res[2])
         return res
 

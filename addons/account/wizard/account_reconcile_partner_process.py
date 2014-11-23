@@ -46,11 +46,11 @@ class account_partner_reconcile_process(osv.osv_memory):
 
     def _get_today_reconciled(self, cr, uid, context=None):
         cr.execute(
-                "SELECT l.partner_id " \
-                "FROM account_move_line AS l LEFT JOIN res_partner p ON (p.id = l.partner_id) " \
-                "WHERE l.reconcile_id IS NULL " \
-                "AND %s =  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') " \
-                "AND l.state <> 'draft' " \
+                "SELECT l.partner_id "
+                "FROM account_move_line AS l LEFT JOIN res_partner p ON (p.id = l.partner_id) "
+                "WHERE l.reconcile_id IS NULL "
+                "AND %s =  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') "
+                "AND l.state <> 'draft' "
                 "GROUP BY l.partner_id ", (time.strftime('%Y-%m-%d'),)
         )
         return len(map(lambda x: x[0], cr.fetchall())) + 1

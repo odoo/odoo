@@ -92,7 +92,7 @@ class NewReport(unohelper.Base, XJobExecutor):
 if __name__ <> "package" and __name__ == "__main__":
     NewReport(None)
 elif __name__ == "package":
-    g_ImplementationHelper.addImplementation( \
+    g_ImplementationHelper.addImplementation(
             NewReport,
             "org.openoffice.openerp.report.opennewreport",
             ("com.sun.star.task.Job",),)

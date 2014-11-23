@@ -855,7 +855,7 @@ class many2many(_column):
         _column.__init__(self, string=string, **args)
         self._obj = obj
         if rel and '.' in rel:
-            raise Exception(_('The second argument of the many2many field %s must be a SQL table !'\
+            raise Exception(_('The second argument of the many2many field %s must be a SQL table !'
                 'You used %s, which is not a valid SQL table name.') % (string, rel))
         self._rel = rel
         self._id1 = id1

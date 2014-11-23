@@ -49,10 +49,10 @@ class crm_helpdesk_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_deadline': fields.date('Deadline', select=True),
-        'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
+        'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'),
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
         'channel_id': fields.many2one('crm.tracking.medium', 'Channel'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
         'planned_cost': fields.float('Planned Costs'),

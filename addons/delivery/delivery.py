@@ -247,8 +247,8 @@ class delivery_grid_line(osv.osv):
         'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when calculating delivery grid."),
         'grid_id': fields.many2one('delivery.grid', 'Grid', required=True, ondelete='cascade'),
-        'type': fields.selection([('weight', 'Weight'), ('volume', 'Volume'),\
-                                  ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')],\
+        'type': fields.selection([('weight', 'Weight'), ('volume', 'Volume'),
+                                  ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')],
                                  'Variable', required=True),
         'operator': fields.selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),

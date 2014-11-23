@@ -643,7 +643,7 @@ class WebClient(http.Controller):
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({'id': m['src'],
-                                                             'string': m['value']} \
+                                                             'string': m['value']}
                                                             for m in msg_group)
         return {"modules": translations_per_module,
                 "lang_parameters": lang_params}

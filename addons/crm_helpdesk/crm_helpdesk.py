@@ -46,7 +46,7 @@ class crm_helpdesk(osv.osv):
             'write_date': fields.datetime('Update Date', readonly=True),
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
-            'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+            'section_id': fields.many2one('crm.case.section', 'Sales Team',
                             select=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
@@ -61,7 +61,7 @@ class crm_helpdesk(osv.osv):
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
             'probability': fields.float('Probability (%)'),
-            'categ_id': fields.many2one('crm.case.categ', 'Category', \
+            'categ_id': fields.many2one('crm.case.categ', 'Category',
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),

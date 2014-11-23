@@ -59,11 +59,11 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         else:
             self.ACCOUNT_TYPE = ('payable', 'receivable')
 
-        self.cr.execute("SELECT a.id " \
-                "FROM account_account a " \
-                "LEFT JOIN account_account_type t " \
-                    "ON (a.type = t.code) " \
-                    "WHERE a.type IN %s " \
+        self.cr.execute("SELECT a.id "
+                "FROM account_account a "
+                "LEFT JOIN account_account_type t "
+                    "ON (a.type = t.code) "
+                    "WHERE a.type IN %s "
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         res = super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
@@ -88,28 +88,28 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         full_account = []
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
-                    "CASE WHEN sum(debit) > sum(credit) " \
-                        "THEN sum(debit) - sum(credit) " \
-                        "ELSE 0 " \
-                    "END AS sdebit, " \
-                    "CASE WHEN sum(debit) < sum(credit) " \
-                        "THEN sum(credit) - sum(debit) " \
-                        "ELSE 0 " \
-                    "END AS scredit, " \
-                    "(SELECT sum(debit-credit) " \
-                        "FROM account_move_line l " \
-                        "WHERE partner_id = p.id " \
-                            "AND " + self.query + " " \
-                            "AND blocked = TRUE " \
-                    ") AS enlitige " \
-            "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
-            "JOIN account_account ac ON (l.account_id = ac.id)" \
-            "JOIN account_move am ON (am.id = l.move_id)" \
-            "WHERE ac.type IN %s " \
-            "AND am.state IN %s " \
-            "AND " + self.query + "" \
-            "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, "
+                    "CASE WHEN sum(debit) > sum(credit) "
+                        "THEN sum(debit) - sum(credit) "
+                        "ELSE 0 "
+                    "END AS sdebit, "
+                    "CASE WHEN sum(debit) < sum(credit) "
+                        "THEN sum(credit) - sum(debit) "
+                        "ELSE 0 "
+                    "END AS scredit, "
+                    "(SELECT sum(debit-credit) "
+                        "FROM account_move_line l "
+                        "WHERE partner_id = p.id "
+                            "AND " + self.query + " "
+                            "AND blocked = TRUE "
+                    ") AS enlitige "
+            "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) "
+            "JOIN account_account ac ON (l.account_id = ac.id)"
+            "JOIN account_move am ON (am.id = l.move_id)"
+            "WHERE ac.type IN %s "
+            "AND am.state IN %s "
+            "AND " + self.query + ""
+            "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code "
             "ORDER BY l.account_id,p.name",
             (self.ACCOUNT_TYPE, tuple(move_state)))
         res = self.cr.dictfetchall()

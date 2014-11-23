@@ -426,7 +426,7 @@ class ir_ui_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
+            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name,
             string='Full Path', type='char', size=128),

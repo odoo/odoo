@@ -160,7 +160,7 @@ class questionnaire(osv.osv):
     _columns = {
         'name': fields.char("Questionnaire", required=True),
         'description': fields.text("Description", required=True),
-        'questions_ids': fields.many2many('crm_profiling.question', 'profile_questionnaire_quest_rel',\
+        'questions_ids': fields.many2many('crm_profiling.question', 'profile_questionnaire_quest_rel',
                                 'questionnaire', 'question', "Questions"),
     }
 
@@ -177,7 +177,7 @@ class answer(osv.osv):
 class partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        "answers_ids": fields.many2many("crm_profiling.answer", "partner_question_rel",\
+        "answers_ids": fields.many2many("crm_profiling.answer", "partner_question_rel",
                                 "partner", "answer", "Answers"),
     }
 
@@ -215,9 +215,9 @@ class crm_segmentation(osv.osv):
 
     _inherit = "crm.segmentation"
     _columns = {
-        "answer_yes": fields.many2many("crm_profiling.answer", "profile_question_yes_rel",\
+        "answer_yes": fields.many2many("crm_profiling.answer", "profile_question_yes_rel",
                             "profile", "answer", "Included Answers"),
-        "answer_no": fields.many2many("crm_profiling.answer", "profile_question_no_rel",\
+        "answer_no": fields.many2many("crm_profiling.answer", "profile_question_no_rel",
                             "profile", "answer", "Excluded Answers"),
         'parent_id': fields.many2one('crm.segmentation', 'Parent Profile'),
         'child_ids': fields.one2many('crm.segmentation', 'parent_id', 'Child Profiles'),
@@ -238,7 +238,7 @@ class crm_segmentation(osv.osv):
             @param ids: List of crm segmentation’s IDs """
 
         partner_obj = self.pool.get('res.partner')
-        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id', \
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id',
                             'sales_purchase_active', 'profiling_active'])
         for categ in categs:
             if start:

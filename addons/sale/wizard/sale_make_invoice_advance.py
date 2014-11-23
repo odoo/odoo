@@ -98,7 +98,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 res['account_id'] = account_id
             if not res.get('account_id'):
                 raise osv.except_osv(_('Configuration Error!'),
-                        _('There is no income account defined for this product: "%s" (id:%d).') % \
+                        _('There is no income account defined for this product: "%s" (id:%d).') %
                             (wizard.product_id.name, wizard.product_id.id,))
 
             # determine invoice amount

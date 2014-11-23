@@ -30,9 +30,9 @@ class account_fiscalyear_close(osv.osv_memory):
     _name = "account.fiscalyear.close"
     _description = "Fiscalyear Close"
     _columns = {
-       'fy_id': fields.many2one('account.fiscalyear', \
+       'fy_id': fields.many2one('account.fiscalyear',
                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
-       'fy2_id': fields.many2one('account.fiscalyear', \
+       'fy2_id': fields.many2one('account.fiscalyear',
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', 'Opening Entries Journal', domain="[('type','=','situation')]", required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.'),
        'period_id': fields.many2one('account.period', 'Opening Entries Period', required=True),
@@ -268,8 +268,8 @@ class account_fiscalyear_close(osv.osv_memory):
                    'journal_id': new_journal.id,
                    'period_id': period.id
                    })]
-        cr.execute('UPDATE account_fiscalyear ' \
-                   'SET end_journal_period_id = %s ' \
+        cr.execute('UPDATE account_fiscalyear '
+                   'SET end_journal_period_id = %s '
                    'WHERE id = %s', (ids[0], old_fyear.id))
         obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
 

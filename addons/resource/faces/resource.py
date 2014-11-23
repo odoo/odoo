@@ -461,7 +461,7 @@ class Resource(_ResourceBase):
     #@	<< declarations >>
     #@+node:<< declarations >>
     __metaclass__ = _MetaResource
-    __attrib_completions__ = {\
+    __attrib_completions__ = {
         "max_load": 'max_load = ',
         "title": 'title = "|"',
         "efficiency": 'efficiency = ',

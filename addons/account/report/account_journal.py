@@ -92,7 +92,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid,
             [('journal_id', '=', journal_id), ('period_id', '=', period_id)])
         self.cr.execute(
-            'select distinct tax_code_id from account_move_line ' \
+            'select distinct tax_code_id from account_move_line '
             'where period_id=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
             (period_id, journal_id)
         )
@@ -105,7 +105,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return tax_codes
 
     def _sum_vat(self, period_id, journal_id, tax_code_id):
-        self.cr.execute('select sum(tax_amount) from account_move_line where ' \
+        self.cr.execute('select sum(tax_amount) from account_move_line where '
                         'period_id=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
                         (period_id, journal_id, tax_code_id))
         return self.cr.fetchone()[0] or 0.0
@@ -168,8 +168,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.symbol AS code "\
-                "FROM res_currency c,account_account AS ac "\
+        self.cr.execute("SELECT c.symbol AS code "
+                "FROM res_currency c,account_account AS ac "
                 "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:

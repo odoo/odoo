@@ -30,7 +30,7 @@ class TestModulesLoading(unittest2.TestCase):
             deps = ms[module]
             self.assertGreaterEqual(
                 seen, set(deps),
-                        'Module %s (index %d), ' \
+                        'Module %s (index %d), '
                         'missing dependencies %s from loaded modules %s' % (
                     module, sorted_modules.index(module), deps, seen
                 ))

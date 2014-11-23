@@ -325,8 +325,8 @@ class mail_thread(osv.AbstractModel):
             help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
             type='text', string='Summary', multi="_get_message_data",
-            help="Holds the Chatter summary (number of messages, ...). "\
-                 "This summary is directly in html format in order to "\
+            help="Holds the Chatter summary (number of messages, ...). "
+                 "This summary is directly in html format in order to "
                  "be inserted in kanban views."),
     }
 

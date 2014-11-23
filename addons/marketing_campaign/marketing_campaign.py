@@ -66,22 +66,22 @@ class marketing_campaign(osv.osv):
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record. "\
-                                            "If the record is the partner itself leave this field empty. "\
+                                            help="The generated workitems will be linked to the partner related to the record. "
+                                            "If the record is the partner itself leave this field empty. "
                                             "This is useful for reporting purposes, via the Campaign Analysis or Campaign Follow-up views."),
         'unique_field_id': fields.many2one('ir.model.fields', 'Unique Field',
                                            domain="[('model_id', '=', object_id), ('ttype', 'in', ['char','int','many2one','text','selection'])]",
-                                           help='If set, this field will help segments that work in "no duplicates" mode to avoid '\
-                                           'selecting similar records twice. Similar records are records that have the same value for '\
-                                           'this unique field. For example by choosing the "email_from" field for CRM Leads you would prevent '\
-                                           'sending the same campaign to the same email address again. If not set, the "no duplicates" segments '\
-                                           "will only avoid selecting the same record again if it entered the campaign previously. "\
+                                           help='If set, this field will help segments that work in "no duplicates" mode to avoid '
+                                           'selecting similar records twice. Similar records are records that have the same value for '
+                                           'this unique field. For example by choosing the "email_from" field for CRM Leads you would prevent '
+                                           'sending the same campaign to the same email address again. If not set, the "no duplicates" segments '
+                                           "will only avoid selecting the same record again if it entered the campaign previously. "
                                            "Only easily comparable fields like textfields, integers, selections or single relationships may be used."),
         'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
                                 ('active', 'Normal')],
-                                 'Mode', required=True, help= \
+                                 'Mode', required=True, help=
             """Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
@@ -228,18 +228,18 @@ class marketing_campaign_segment(osv.osv):
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
         'object_id': fields.related('campaign_id', 'object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
-                            help="Filter to select the matching resource records that belong to this segment. "\
-                                 "New filters can be created and saved using the advanced search on the list view of the Resource. "\
-                                 "If no filter is set, all records are selected without filtering. "\
+                            help="Filter to select the matching resource records that belong to this segment. "
+                                 "New filters can be created and saved using the advanced search on the list view of the Resource. "
+                                 "If no filter is set, all records are selected without filtering. "
                                  "The synchronization mode may also add a criterion to the filter."),
         'sync_last_date': fields.datetime('Last Synchronization', help="Date on which this segment was synchronized last time (automatically or manually)"),
         'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
                                       ('write_date', 'Only records modified after last sync (no duplicates)'),
                                       ('all', 'All records (no duplicates)')],
                                       'Synchronization mode',
-                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "\
-                                           '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
-                                           'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
+                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "
+                                           '"No duplicates" prevents selecting records which have already entered the campaign previously.'
+                                           'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '
                                            'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancelled', 'Cancelled'),
@@ -725,9 +725,9 @@ class marketing_campaign_workitem(osv.osv):
                     # auto       Y            Y             N           Y
                     #
 
-                    run = (transition.trigger == 'auto' \
+                    run = (transition.trigger == 'auto'
                            and campaign_mode != 'manual') \
-                        or (transition.trigger == 'time' \
+                        or (transition.trigger == 'time'
                         and campaign_mode == 'test')
                     if run:
                         new_wi = self.browse(cr, uid, wi_id, context)

@@ -367,8 +367,8 @@ class product_pricelist_version(osv.osv):
             required=True, select=True, ondelete='cascade'),
         'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active',
-            help="When a version is duplicated it is set to non active, so that the " \
-            "dates do not overlaps with original version. You should change the dates " \
+            help="When a version is duplicated it is set to non active, so that the "
+            "dates do not overlaps with original version. You should change the dates "
             "and reactivate the pricelist", copy=False),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True, copy=True),
@@ -391,11 +391,11 @@ class product_pricelist_version(osv.osv):
             if pricelist_version.date_end:
                 where.append("((date_start<='%s') or (date_start is null))" % (pricelist_version.date_end,))
 
-            cursor.execute('SELECT id ' \
-                    'FROM product_pricelist_version ' \
+            cursor.execute('SELECT id '
+                    'FROM product_pricelist_version '
                     'WHERE ' + ' and '.join(where) + (where and ' and ' or '') +
-                        'pricelist_id = %s ' \
-                        'AND active ' \
+                        'pricelist_id = %s '
+                        'AND active '
                         'AND id <> %s', (
                             pricelist_version.pricelist_id.id,
                             pricelist_version.id))
@@ -478,9 +478,9 @@ class product_pricelist_item(osv.osv):
         'price_discount': fields.float('Price Discount', digits=(16, 4)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
-            help="Sets the price so that it is a multiple of this value.\n" \
-              "Rounding is applied after the discount and before the surcharge.\n" \
-              "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
+            help="Sets the price so that it is a multiple of this value.\n"
+              "Rounding is applied after the discount and before the surcharge.\n"
+              "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
                                     ),
         'price_min_margin': fields.float('Min. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the minimum amount of margin over the base price.'),

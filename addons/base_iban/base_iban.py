@@ -139,7 +139,7 @@ class res_partner_bank(osv.osv):
         if default_iban_check(iban_country):
             if iban_country in _ref_iban:
                 return _('The IBAN does not seem to be correct. You should have entered something like this %s'), \
-                        ('%s \nWhere B = National bank code, S = Branch code,'\
+                        ('%s \nWhere B = National bank code, S = Branch code,'
                          ' C = Account No, K = Check digit' % _ref_iban[iban_country])
             return _('This IBAN does not pass the validation check, please verify it'), ()
         return _('The IBAN is invalid, it should begin with the country code'), ()

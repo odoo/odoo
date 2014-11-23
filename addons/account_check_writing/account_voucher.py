@@ -88,15 +88,15 @@ class account_voucher(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
-            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
-                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
+            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or
+                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or
                 self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
         return super(account_voucher, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('amount') and vals.get('journal_id') and 'amount_in_word' not in vals:
-            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or \
-                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or \
+            vals['amount_in_word'] = self._amount_to_text(cr, uid, vals['amount'], vals.get('currency_id') or
+                self.pool['account.journal'].browse(cr, uid, vals['journal_id'], context=context).currency.id or
                 self.pool['res.company'].browse(cr, uid, vals['company_id']).currency_id.id, context=context)
         return super(account_voucher, self).write(cr, uid, ids, vals, context=context)
 

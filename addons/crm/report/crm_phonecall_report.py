@@ -49,7 +49,7 @@ class crm_phonecall_report(osv.osv):
         'delay_close': fields.float('Delay to close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16, 2), readonly=True, group_operator="avg"),
         'delay_open': fields.float('Delay to open', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),

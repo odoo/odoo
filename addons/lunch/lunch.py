@@ -307,10 +307,10 @@ class lunch_order(osv.Model):
         'total': fields.function(_price_get, string="Total", store={
                  'lunch.order.line': (_fetch_orders_from_lines, ['product_id', 'order_id'], 20),
         }),
-        'state': fields.selection([('new', 'New'), \
-                                   ('confirmed', 'Confirmed'), \
-                                   ('cancelled', 'Cancelled'), \
-                                   ('partially', 'Partially Confirmed')] \
+        'state': fields.selection([('new', 'New'),
+                                   ('confirmed', 'Confirmed'),
+                                   ('cancelled', 'Cancelled'),
+                                   ('partially', 'Partially Confirmed')]
                                 , 'Status', readonly=True, select=True, copy=False),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
     }
@@ -415,10 +415,10 @@ class lunch_order_line(osv.Model):
         'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note': fields.text('Note'),
         'price': fields.float("Price"),
-        'state': fields.selection([('new', 'New'), \
-                                   ('confirmed', 'Received'), \
-                                   ('ordered', 'Ordered'),  \
-                                   ('cancelled', 'Cancelled')], \
+        'state': fields.selection([('new', 'New'),
+                                   ('confirmed', 'Received'),
+                                   ('ordered', 'Ordered'),
+                                   ('cancelled', 'Cancelled')],
                                 'Status', readonly=True, select=True),
         'cashmove': fields.one2many('lunch.cashmove', 'order_id', 'Cash Move', ondelete='cascade'),
 
@@ -483,9 +483,9 @@ class lunch_alert(osv.Model):
     _description = 'Lunch Alert'
     _columns = {
         'message': fields.text('Message', size=256, required=True),
-        'alter_type': fields.selection([('specific', 'Specific Day'), \
-                                    ('week', 'Every Week'), \
-                                    ('days', 'Every Day')], \
+        'alter_type': fields.selection([('specific', 'Specific Day'),
+                                    ('week', 'Every Week'),
+                                    ('days', 'Every Day')],
                                 string='Recurrency', required=True, select=True),
         'specific_day': fields.date('Day'),
         'monday': fields.boolean('Monday'),

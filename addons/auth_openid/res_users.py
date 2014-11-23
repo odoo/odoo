@@ -39,7 +39,7 @@ class res_users(osv.osv):
     }
 
     def _check_openid_url_email(self, cr, uid, ids, context=None):
-        return all(self.search_count(cr, uid, [('active', '=', True), ('openid_url', '=', u.openid_url), ('openid_email', '=', u.openid_email)]) == 1 \
+        return all(self.search_count(cr, uid, [('active', '=', True), ('openid_url', '=', u.openid_url), ('openid_email', '=', u.openid_email)]) == 1
                    for u in self.browse(cr, uid, ids, context) if u.active and u.openid_url)
 
     def _check_openid_url_email_msg(self, cr, uid, ids, context):

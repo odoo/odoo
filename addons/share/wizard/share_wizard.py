@@ -181,7 +181,7 @@ class share_wizard(osv.TransientModel):
         'record_name': fields.char('Record name', help="Name of the shared record, if sharing a precise record"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
         'embed_code': fields.function(_embed_code, type='text', string='Code',
-            help="Embed this code in your documents to provide a link to the "\
+            help="Embed this code in your documents to provide a link to the "
                   "shared document."),
         'embed_option_title': fields.boolean('Display title'),
         'embed_option_search': fields.boolean('Display search view'),

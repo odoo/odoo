@@ -74,8 +74,8 @@ class base_action_rule(osv.osv):
             help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
-            help="Delay after the trigger date." \
-            "You can put a negative number if you need a delay before the" \
+            help="Delay after the trigger date."
+            "You can put a negative number if you need a delay before the"
             "trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),

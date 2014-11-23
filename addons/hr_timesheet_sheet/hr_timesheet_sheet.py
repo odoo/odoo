@@ -246,7 +246,7 @@ class hr_timesheet_sheet(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        return [(r['id'], _('Week ') + datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U')) \
+        return [(r['id'], _('Week ') + datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U'))
                 for r in self.read(cr, uid, ids, ['date_from'],
                     context=context, load='_classic_write')]
 
@@ -514,7 +514,7 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             for attendance in self.browse(cr, uid, ids, context=context):
                 if context['sheet_id'] != attendance.sheet_id.id:
-                    raise osv.except_osv(_('User Error!'), _('You cannot enter an attendance ' \
+                    raise osv.except_osv(_('User Error!'), _('You cannot enter an attendance '
                             'date outside the current timesheet dates.'))
         return res
 
@@ -644,7 +644,7 @@ class res_company(osv.osv):
             [('day', 'Day'), ('week', 'Week'), ('month', 'Month')], 'Timesheet range',
             help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
-            help="Allowed difference in hours between the sign in/out and the timesheet " \
+            help="Allowed difference in hours between the sign in/out and the timesheet "
                  "computation for one sheet. Set this to 0 if you do not want any control."),
     }
     _defaults = {

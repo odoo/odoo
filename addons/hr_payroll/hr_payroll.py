@@ -63,7 +63,7 @@ class hr_payroll_structure(osv.osv):
         return res
 
     _defaults = {
-        'company_id': lambda self, cr, uid, context: \
+        'company_id': lambda self, cr, uid, context:
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'parent_id': _get_parent,
@@ -156,7 +156,7 @@ class contrib_register(osv.osv):
         'note': fields.text('Description'),
     }
     _defaults = {
-        'company_id': lambda self, cr, uid, context: \
+        'company_id': lambda self, cr, uid, context:
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
@@ -179,7 +179,7 @@ class hr_salary_rule_category(osv.osv):
     }
 
     _defaults = {
-        'company_id': lambda self, cr, uid, context: \
+        'company_id': lambda self, cr, uid, context:
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
@@ -298,7 +298,7 @@ class hr_payslip(osv.osv):
         'date_to': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         'state': 'draft',
         'credit_note': False,
-        'company_id': lambda self, cr, uid, context: \
+        'company_id': lambda self, cr, uid, context:
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
@@ -818,7 +818,7 @@ result = rules.NET > categories.NET * 0.10''',
         'sequence': 5,
         'appears_on_payslip': True,
         'active': True,
-        'company_id': lambda self, cr, uid, context: \
+        'company_id': lambda self, cr, uid, context:
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'condition_select': 'none',
@@ -956,10 +956,10 @@ class hr_employee(osv.osv):
             if not employee.contract_ids:
                 res[employee.id] = {'basic': 0.0}
                 continue
-            cr.execute( 'SELECT SUM(wage) '\
-                        'FROM hr_contract '\
-                        'WHERE employee_id = %s '\
-                        'AND date_start <= %s '\
+            cr.execute( 'SELECT SUM(wage) '
+                        'FROM hr_contract '
+                        'WHERE employee_id = %s '
+                        'AND date_start <= %s '
                         'AND (date_end > %s OR date_end is NULL)',
                         (employee.id, current_date, current_date))
             result = dict(cr.dictfetchone())

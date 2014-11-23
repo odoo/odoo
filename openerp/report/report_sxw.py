@@ -190,8 +190,8 @@ class rml_parse(object):
                 d = res_digits[1]
             else:
                 d = res_digits(self.cr)[1]
-        elif (hasattr(obj, '_field') and\
-                isinstance(obj._field, (float_field, function_field)) and\
+        elif (hasattr(obj, '_field') and
+                isinstance(obj._field, (float_field, function_field)) and
                 obj._field.digits):
             d = obj._field.digits[1]
             if not d and d is not 0:

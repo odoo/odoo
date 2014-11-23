@@ -398,22 +398,22 @@ class TinyPoFile(object):
 
     def write_infos(self, modules):
         import openerp.release as release
-        self.buffer.write("# Translation of %(project)s.\n" \
-                          "# This file contains the translation of the following modules:\n" \
-                          "%(modules)s" \
-                          "#\n" \
-                          "msgid \"\"\n" \
-                          "msgstr \"\"\n" \
-                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' \
-                          '''"Report-Msgid-Bugs-To: \\n"\n''' \
-                          '''"POT-Creation-Date: %(now)s\\n"\n'''        \
-                          '''"PO-Revision-Date: %(now)s\\n"\n'''         \
-                          '''"Last-Translator: <>\\n"\n''' \
-                          '''"Language-Team: \\n"\n'''   \
-                          '''"MIME-Version: 1.0\\n"\n''' \
-                          '''"Content-Type: text/plain; charset=UTF-8\\n"\n'''   \
-                          '''"Content-Transfer-Encoding: \\n"\n'''       \
-                          '''"Plural-Forms: \\n"\n'''    \
+        self.buffer.write("# Translation of %(project)s.\n"
+                          "# This file contains the translation of the following modules:\n"
+                          "%(modules)s"
+                          "#\n"
+                          "msgid \"\"\n"
+                          "msgstr \"\"\n"
+                          '''"Project-Id-Version: %(project)s %(version)s\\n"\n'''
+                          '''"Report-Msgid-Bugs-To: \\n"\n'''
+                          '''"POT-Creation-Date: %(now)s\\n"\n'''
+                          '''"PO-Revision-Date: %(now)s\\n"\n'''
+                          '''"Last-Translator: <>\\n"\n'''
+                          '''"Language-Team: \\n"\n'''
+                          '''"MIME-Version: 1.0\\n"\n'''
+                          '''"Content-Type: text/plain; charset=UTF-8\\n"\n'''
+                          '''"Content-Transfer-Encoding: \\n"\n'''
+                          '''"Plural-Forms: \\n"\n'''
                           "\n"
 
                           % {'project': release.description,
