@@ -25,7 +25,7 @@
     'category' : 'Accounting & Finance',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
+    'depends' : ['base_setup', 'product', 'analytic', 'board', 'report'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -70,7 +70,6 @@
         'views/account_analytic_view.xml',
         'views/ir_sequence_view.xml',
         'views/company_view.xml',
-        'edi/invoice_action_data.xml',
         'views/account_bank_view.xml',
         'views/res_config_view.xml',
         'views/account_tip_data.xml',
@@ -103,7 +102,6 @@
         'views/account_unit_test.xml',
     ],
     'test': [
-#         'test/test_edi_invoice.yml',
 #         'test/account_report.yml',
     ],
     'installable': True,
