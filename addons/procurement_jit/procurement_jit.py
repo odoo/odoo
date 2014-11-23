@@ -22,6 +22,7 @@
 
 from openerp.osv import osv
 
+
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
 

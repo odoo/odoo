@@ -23,6 +23,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class stock_return_picking_line(osv.osv_memory):
     _name = "stock.return.picking.line"
     _rec_name = 'product_id'
@@ -71,7 +72,7 @@ class stock_return_picking(osv.osv_memory):
             for move in pick.move_lines:
                 if move.move_dest_id:
                     chained_move_exist = True
-                #Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)
+                # Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)
                 qty = 0
                 quant_search = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('qty', '>', 0.0), ('location_id', 'child_of', move.location_dest_id.id)], context=context)
                 for quant in quant_obj.browse(cr, uid, quant_search, context=context):
@@ -114,10 +115,10 @@ class stock_return_picking(osv.osv_memory):
 
         if moves_to_unreserve:
             move_obj.do_unreserve(cr, uid, moves_to_unreserve, context=context)
-            #break the link between moves in order to be able to fix them later if needed
+            # break the link between moves in order to be able to fix them later if needed
             move_obj.write(cr, uid, moves_to_unreserve, {'move_orig_ids': False}, context=context)
 
-        #Create new picking for returned products
+        # Create new picking for returned products
         pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
         new_picking = pick_obj.copy(cr, uid, pick.id, {
             'move_lines': [],

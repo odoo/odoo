@@ -47,6 +47,8 @@ SLEEP_INTERVAL = 60     # 1 min
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
 #----------------------------------------------------------
+
+
 class LoggingBaseWSGIServerMixIn(object):
     def handle_error(self, request, client_address):
         t, e, _ = sys.exc_info()
@@ -55,17 +57,21 @@ class LoggingBaseWSGIServerMixIn(object):
             return
         _logger.exception('Exception happened during processing of request from %s', client_address)
 
+
 class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
     """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
     use this class, sets the socket and calls the process_request() manually
     """
+
     def __init__(self, app):
         werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
+
     def server_bind(self):
         # we dont bind beause we use the listen socket of PreforkServer#socket
         # instead we close the socket
         if self.socket:
             self.socket.close()
+
     def server_activate(self):
         # dont listen as we use PreforkServer#socket
         pass
@@ -82,11 +88,13 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 # should also work with systemd socket activation. This is currently untested
 # and not yet used.
 
+
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environement, this is used by autoreload to keep the listen
     socket open when a reload happens.
     """
+
     def __init__(self, host, port, app):
         super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
                                                            handler=RequestHandler)
@@ -109,12 +117,14 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 # AutoReload watcher
 #----------------------------------------------------------
 
+
 class AutoReload(object):
     def __init__(self, server):
         self.server = server
         self.files = {}
         self.modules = {}
         import pyinotify
+
         class EventHandler(pyinotify.ProcessEvent):
             def __init__(self, autoreload):
                 self.autoreload = autoreload
@@ -194,6 +204,7 @@ class AutoReload(object):
 # Servers: Threaded, Gevented and Prefork
 #----------------------------------------------------------
 
+
 class CommonServer(object):
     def __init__(self, app):
         # TODO Change the xmlrpc_* options to http_*
@@ -220,6 +231,7 @@ class CommonServer(object):
             if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
                 raise
         sock.close()
+
 
 class ThreadedServer(CommonServer):
     def __init__(self, app):
@@ -365,6 +377,7 @@ class ThreadedServer(CommonServer):
     def reload(self):
         os.kill(self.pid, signal.SIGHUP)
 
+
 class GeventServer(CommonServer):
     def __init__(self, app):
         super(GeventServer, self).__init__(app)
@@ -408,12 +421,14 @@ class GeventServer(CommonServer):
         self.start()
         self.stop()
 
+
 class PreforkServer(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
     PreforkServer (aka Multicorn) currently uses accept(2) as dispatching
     method between workers but we plan to replace it by a more intelligent
     dispatcher to will parse the first HTTP request line.
     """
+
     def __init__(self, app):
         # config
         self.address = (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
@@ -642,8 +657,10 @@ class PreforkServer(CommonServer):
                 self.stop(False)
                 return -1
 
+
 class Worker(object):
     """ Workers """
+
     def __init__(self, multi):
         self.multi = multi
         self.watchdog_time = time.time()
@@ -696,6 +713,7 @@ class Worker(object):
         # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
+
         def time_expired(n, stack):
             _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
             # We dont suicide in such case
@@ -740,8 +758,10 @@ class Worker(object):
             # should we use 3 to abort everything ?
             sys.exit(1)
 
+
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
+
     def process_request(self, client, addr):
         client.setblocking(1)
         client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -770,6 +790,7 @@ class WorkerHTTP(Worker):
     def start(self):
         Worker.start(self)
         self.server = BaseWSGIServerNoBind(self.multi.app)
+
 
 class WorkerCron(Worker):
     """ Cron workers """
@@ -841,6 +862,7 @@ class WorkerCron(Worker):
 
 server = None
 
+
 def load_server_wide_modules():
     for m in openerp.conf.server_wide_modules:
         try:
@@ -853,6 +875,7 @@ The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
+
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
     if openerp.tools.osutil.is_running_as_nt_service():
@@ -864,6 +887,7 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
+
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
@@ -873,6 +897,7 @@ def load_test_file_yml(registry, test_file):
         else:
             _logger.info('test %s has been rollbacked', test_file)
             cr.rollback()
+
 
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
@@ -888,10 +913,11 @@ def load_test_file_py(registry, test_file):
                 stream = openerp.modules.module.TestStream()
                 result = unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
-                if hasattr(registry._assertion_report,'report_result'):
+                if hasattr(registry._assertion_report, 'report_result'):
                     registry._assertion_report.report_result(success)
                 if not success:
                     _logger.error('%s: at least one error occurred in a test', test_file)
+
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
@@ -919,6 +945,7 @@ def preload_registries(dbnames):
             return -1
     return rc
 
+
 def start(preload=None, stop=False):
     """ Start the openerp http server and cron processor.
     """
@@ -945,6 +972,7 @@ def start(preload=None, stop=False):
         _reexec(modules)
 
     return rc if rc else 0
+
 
 def restart():
     """ Restart the server

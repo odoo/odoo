@@ -24,11 +24,12 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
 
+
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
     _columns = {
-        'product_id' : fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product'),
         'new_quantity': fields.float('New Quantity on Hand', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
         'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
@@ -68,7 +69,7 @@ class stock_change_product_qty(osv.osv_memory):
                 try:
                     self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
-                   pass
+                    pass
             res['location_id'] = location_id
         return res
 
@@ -109,7 +110,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'theoretical_qty': th_qty,
                 'prod_lot_id': data.lot_id.id
             }
-            inventory_line_obj.create(cr , uid, line_data, context=context)
+            inventory_line_obj.create(cr, uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 

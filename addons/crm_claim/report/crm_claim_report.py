@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 
 AVAILABLE_PRIORITIES = [
@@ -37,30 +37,29 @@ class crm_claim_report(osv.osv):
     _description = "CRM Claim Report"
 
     _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Claims', readonly=True),  # TDE FIXME master: rename into nbr_claims
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'claim_date': fields.datetime('Claim Date', readonly=True),
-        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True,domain="[('section_ids','=',section_id)]"),
+        'delay_close': fields.float('Delay to close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids','=',section_id)]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
+        'type_action': fields.selection([('correction', 'Corrective Action'), ('prevention', 'Preventive Action')], 'Action Type'),
         'date_closed': fields.datetime('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+        'delay_expected': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg"),
         'email': fields.integer('# Emails', size=128, readonly=True),
         'subject': fields.char('Claim Subject', readonly=True)
     }
 
     def init(self, cr):
-
         """ Display Number of cases And Section Name
         @param cr: the current row, from the database cursor,
          """

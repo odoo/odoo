@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class mrp_config_settings(osv.osv_memory):
     _name = 'mrp.config.settings'
     _inherit = 'res.config.settings'
@@ -52,7 +53,7 @@ class mrp_config_settings(osv.osv_memory):
         'group_mrp_properties': fields.boolean("Allow several bill of materials per products using properties",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the properties specified on the sales order and the Bill of Material."""),
-        #FIXME: Should be removed as module product_manufacturer has been removed
+        # FIXME: Should be removed as module product_manufacturer has been removed
         'module_product_manufacturer': fields.boolean("Define manufacturers on products ",
             help='This allows you to define the following for a product:\n'
                  '* Manufacturer\n'

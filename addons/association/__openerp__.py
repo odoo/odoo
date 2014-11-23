@@ -28,7 +28,7 @@
 This module is to configure modules related to an association.
 ==============================================================
 
-It installs the profile for associations to manage events, registrations, memberships, 
+It installs the profile for associations to manage events, registrations, memberships,
 membership products (schemes).
     """,
     'author': 'OpenERP SA',

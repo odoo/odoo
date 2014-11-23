@@ -34,12 +34,15 @@ import openerp.addons.decimal_precision as dp
 def strToDate(dt):
     return date(int(dt[0:4]), int(dt[5:7]), int(dt[8:10]))
 
+
 def strToDatetime(strdate):
     return datetime.strptime(strdate, DEFAULT_SERVER_DATE_FORMAT)
 
 # ---------------------------------------------------------
 # Budgets
 # ---------------------------------------------------------
+
+
 class account_budget_post(osv.osv):
     _name = "account.budget.post"
     _description = "Budgetary Position"
@@ -56,20 +59,19 @@ class account_budget_post(osv.osv):
     _order = "name"
 
 
-
 class crossovered_budget(osv.osv):
     _name = "crossovered.budget"
     _description = "Budget"
 
     _columns = {
-        'name': fields.char('Name', required=True, states={'done':[('readonly',True)]}),
-        'code': fields.char('Code', size=16, required=True, states={'done':[('readonly',True)]}),
+        'name': fields.char('Name', required=True, states={'done': [('readonly', True)]}),
+        'code': fields.char('Code', size=16, required=True, states={'done': [('readonly', True)]}),
         'creating_user_id': fields.many2one('res.users', 'Responsible User'),
         'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),
-        'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
-        'date_to': fields.date('End Date', required=True, states={'done':[('readonly',True)]}),
-        'state' : fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('confirm','Confirmed'),('validate','Validated'),('done','Done')], 'Status', select=True, required=True, readonly=True, copy=False),
-        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]}, copy=True),
+        'date_from': fields.date('Start Date', required=True, states={'done': [('readonly', True)]}),
+        'date_to': fields.date('End Date', required=True, states={'done': [('readonly', True)]}),
+        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed'), ('validate', 'Validated'), ('done', 'Done')], 'Status', select=True, required=True, readonly=True, copy=False),
+        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done': [('readonly', True)]}, copy=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
@@ -116,18 +118,18 @@ class crossovered_budget_lines(osv.osv):
     def _prac_amt(self, cr, uid, ids, context=None):
         res = {}
         result = 0.0
-        if context is None: 
+        if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
-                raise osv.except_osv(_('Error!'),_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
+                raise osv.except_osv(_('Error!'), _("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
             date_to = line.date_to
             date_from = line.date_from
             if line.analytic_account_id.id:
                 cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
-                       "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
+                       "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to, acc_ids,))
                 result = cr.fetchone()[0]
             if result is None:
                 result = 0.00
@@ -135,7 +137,7 @@ class crossovered_budget_lines(osv.osv):
         return res
 
     def _prac(self, cr, uid, ids, name, args, context=None):
-        res={}
+        res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = self._prac_amt(cr, uid, [line.id], context=context)[line.id]
         return res
@@ -189,14 +191,14 @@ class crossovered_budget_lines(osv.osv):
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
+        'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position', required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount', required=True, digits_compute=dp.get_precision('Account')),
-        'practical_amount':fields.function(_prac, string='Practical Amount', type='float', digits_compute=dp.get_precision('Account')),
-        'theoritical_amount':fields.function(_theo, string='Theoretical Amount', type='float', digits_compute=dp.get_precision('Account')),
-        'percentage':fields.function(_perc, string='Percentage', type='float'),
+        'planned_amount': fields.float('Planned Amount', required=True, digits_compute=dp.get_precision('Account')),
+        'practical_amount': fields.function(_prac, string='Practical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'theoritical_amount': fields.function(_theo, string='Theoretical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'percentage': fields.function(_perc, string='Percentage', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 

@@ -21,8 +21,9 @@
 
 from openerp.osv import fields, osv
 
+
 class document_configuration(osv.osv_memory):
-    _name='document.configuration'
+    _name = 'document.configuration'
     _description = 'Directory Configuration'
     _inherit = 'res.config'
 
@@ -38,9 +39,9 @@ class document_configuration(osv.osv_memory):
                 sale_dir_id = data_pool.browse(cr, uid, dir_data_id, context=context).res_id
             else:
                 sale_dir_id = data_pool.create(cr, uid, {'name': 'Sale Orders'})
-            mid = model_pool.search(cr, uid, [('model','=','sale.order')])
+            mid = model_pool.search(cr, uid, [('model', '=', 'sale.order')])
             dir_pool.write(cr, uid, [sale_dir_id], {
-                'type':'ressource',
+                'type': 'ressource',
                 'ressource_type_id': mid[0],
                 'domain': '[]',
             })
@@ -52,7 +53,7 @@ class document_configuration(osv.osv_memory):
                 quta_dir_id = data_pool.create(cr, uid, {'name': 'Sale Quotations'})
 
             dir_pool.write(cr, uid, [quta_dir_id], {
-                'type':'ressource',
+                'type': 'ressource',
                 'ressource_type_id': mid[0],
                 'domain': "[('state','=','draft')]",
             })
@@ -79,7 +80,6 @@ class document_configuration(osv.osv_memory):
                     'directory_id': quta_dir_id,
                 })
 
-
         if self.pool.get('product.product'):
             # Product
             dir_data_id = data_pool._get_id(cr, uid, 'document', 'dir_product')
@@ -88,9 +88,9 @@ class document_configuration(osv.osv_memory):
             else:
                 product_dir_id = data_pool.create(cr, uid, {'name': 'Products'})
 
-            mid = model_pool.search(cr, uid, [('model','=','product.product')])
+            mid = model_pool.search(cr, uid, [('model', '=', 'product.product')])
             dir_pool.write(cr, uid, [product_dir_id], {
-                'type':'ressource',
+                'type': 'ressource',
                 'ressource_type_id': mid[0],
             })
 
@@ -102,12 +102,12 @@ class document_configuration(osv.osv_memory):
             else:
                 project_dir_id = data_pool.create(cr, uid, {'name': 'Projects'})
 
-            mid = model_pool.search(cr, uid, [('model','=','account.analytic.account')])
+            mid = model_pool.search(cr, uid, [('model', '=', 'account.analytic.account')])
             dir_pool.write(cr, uid, [project_dir_id], {
-                'type':'ressource',
+                'type': 'ressource',
                 'ressource_type_id': mid[0],
                 'domain': '[]',
                 'ressource_tree': 1
-        })
+                })
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

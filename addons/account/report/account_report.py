@@ -24,7 +24,8 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
@@ -40,9 +41,9 @@ class report_account_receivable(osv.osv):
     _columns = {
         'name': fields.char('Week of Year', size=7, readonly=True),
         'type': fields.selection(_code_get, 'Account Type', required=True),
-        'balance':fields.float('Balance', readonly=True),
-        'debit':fields.float('Debit', readonly=True),
-        'credit':fields.float('Credit', readonly=True),
+        'balance': fields.float('Balance', readonly=True),
+        'debit': fields.float('Debit', readonly=True),
+        'credit': fields.float('Credit', readonly=True),
     }
     _order = 'name desc'
 
@@ -68,6 +69,8 @@ class report_account_receivable(osv.osv):
             )""")
 
                     #a.type in ('receivable','payable')
+
+
 class temp_range(osv.osv):
     _name = 'temp.range'
     _description = 'A Temporary table used for Dashboard view'
@@ -89,10 +92,11 @@ class report_aged_receivable(osv.osv):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
-        if context is None:context = {}
+        if context is None:
+            context = {}
         if not self.called:
             self._init(cr, user)
-        self.called = True # To make sure that init doesn't get called multiple times
+        self.called = True  # To make sure that init doesn't get called multiple times
 
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
@@ -100,11 +104,11 @@ class report_aged_receivable(osv.osv):
     def _calc_bal(self, cr, uid, ids, name, args, context=None):
         res = {}
         for period in self.read(cr, uid, ids, ['name'], context=context):
-            date1,date2 = period['name'].split(' to ')
+            date1, date2 = period['name'].split(' to ')
             cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
                             AND (COALESCE(line.date,date) BETWEEN %s AND  %s) \
-                            AND (reconcile_id IS NULL) AND ac.active",(str(date2),str(date1),))
+                            AND (reconcile_id IS NULL) AND ac.active", (str(date2), str(date1),))
             amount = cr.fetchone()
             amount = amount[0] or 0.00
             res[period['id']] = amount
@@ -146,7 +150,7 @@ class report_aged_receivable(osv.osv):
             cr.execute('delete from temp_range')
 
             for name in names:
-                self.pool['temp.range'].create(cr, uid, {'name':name})
+                self.pool['temp.range'].create(cr, uid, {'name': name})
 
         cr.execute("""
             create or replace view report_aged_receivable as (
@@ -161,11 +165,11 @@ class report_invoice_created(osv.osv):
     _columns = {
         'name': fields.char('Description', readonly=True),
         'type': fields.selection([
-            ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Invoice'),
-            ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True),
+            ('out_invoice', 'Customer Invoice'),
+            ('in_invoice', 'Supplier Invoice'),
+            ('out_refund', 'Customer Refund'),
+            ('in_refund', 'Supplier Refund'),
+            ], 'Type', readonly=True),
         'number': fields.char('Invoice Number', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'amount_untaxed': fields.float('Untaxed', readonly=True),
@@ -175,13 +179,13 @@ class report_invoice_created(osv.osv):
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([
-            ('draft','Draft'),
-            ('proforma','Pro-forma'),
-            ('proforma2','Pro-forma'),
-            ('open','Open'),
-            ('paid','Done'),
-            ('cancel','Cancelled')
-        ],'Status', readonly=True),
+            ('draft', 'Draft'),
+            ('proforma', 'Pro-forma'),
+            ('proforma2', 'Pro-forma'),
+            ('open', 'Open'),
+            ('paid', 'Done'),
+            ('cancel', 'Cancelled')
+        ], 'Status', readonly=True),
         'origin': fields.char('Source Document', readonly=True, help="Reference of the document that generated this invoice report."),
         'create_date': fields.datetime('Create Date', readonly=True)
     }
@@ -206,6 +210,7 @@ class report_invoice_created(osv.osv):
                 (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
 
+
 class report_account_type_sales(osv.osv):
     _name = "report.account_type.sales"
     _description = "Report of the Sales by Account Type"
@@ -218,8 +223,8 @@ class report_account_type_sales(osv.osv):
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
@@ -259,8 +264,8 @@ class report_account_sales(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc'
 

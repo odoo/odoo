@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class change_production_qty(osv.osv_memory):
     _name = 'change.production.qty'
     _description = 'Change Quantity of Products'
@@ -64,7 +65,7 @@ class change_production_qty(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        record_id = context and context.get('active_id',False)
+        record_id = context and context.get('active_id', False)
         assert record_id, _('Active Id not found')
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
@@ -94,7 +95,7 @@ class change_production_qty(osv.osv_memory):
                     if r['product_id'] == move.product_id.id:
                         move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
             if prod.move_prod_id:
-                move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
+                move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty':  wiz_qty.product_qty})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
         return {}
 

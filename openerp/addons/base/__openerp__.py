@@ -93,7 +93,7 @@ The kernel of OpenERP, needed for all installation.
     'test': [
         'tests/base_test.yml',
         'tests/test_osv_expression.yml',
-        'tests/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
+        'tests/test_ir_rule.yml',  # <-- These tests modify/add/delete ir_rules.
     ],
     'installable': True,
     'auto_install': True,

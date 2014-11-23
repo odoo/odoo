@@ -34,7 +34,7 @@ Hardware Poxy
 This module allows you to remotely use peripherals connected to this server.
 
 This modules only contains the enabling framework. The actual devices drivers
-are found in other modules that must be installed separately. 
+are found in other modules that must be installed separately.
 
 """,
     'author': 'OpenERP SA',

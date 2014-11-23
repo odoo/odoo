@@ -22,13 +22,14 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sales Advance Payment Invoice"
 
     _columns = {
-        'advance_payment_method':fields.selection(
-            [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
+        'advance_payment_method': fields.selection(
+            [('all', 'Invoice the whole sales order'), ('percentage', 'Percentage'), ('fixed', 'Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
             'What do you want to invoice?', required=True,
             help="""Use Invoice the whole sale order to create the final invoice.
@@ -63,7 +64,7 @@ class sale_advance_payment_inv(osv.osv_memory):
 
     def onchange_method(self, cr, uid, ids, advance_payment_method, product_id, context=None):
         if advance_payment_method == 'percentage':
-            return {'value': {'amount':0, 'product_id':False }}
+            return {'value': {'amount': 0, 'product_id': False}}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             return {'value': {'amount': product.list_price}}
@@ -86,7 +87,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             res = val['value']
 
             # determine and check income account
-            if not wizard.product_id.id :
+            if not wizard.product_id.id:
                 prop = ir_property_obj.get(cr, uid,
                             'property_account_income_categ', 'product.category', context=context)
                 prop_id = prop and prop.id or False
@@ -111,7 +112,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             else:
                 inv_amount = wizard.amount
                 if not res.get('name'):
-                    #TODO: should find a way to call formatLang() from rml_parse
+                    # TODO: should find a way to call formatLang() from rml_parse
                     symbol = sale.pricelist_id.currency_id.symbol
                     if sale.pricelist_id.currency_id.position == 'after':
                         symbol_order = (inv_amount, symbol)
@@ -191,7 +192,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             inv_ids.append(self._create_invoices(cr, uid, inv_values, sale_id, context=context))
 
         if context.get('open_invoices', False):
-            return self.open_invoices( cr, uid, ids, inv_ids, context=context)
+            return self.open_invoices(cr, uid, ids, inv_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def open_invoices(self, cr, uid, ids, invoice_ids, context=None):

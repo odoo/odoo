@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 
+
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description = "Purchase Requisition"
@@ -240,7 +241,7 @@ class purchase_requisition(osv.osv):
                 raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
 
             confirm = False
-            #check that we have at least confirm one line
+            # check that we have at least confirm one line
             for po_line in tender.po_line_ids:
                 if po_line.state == 'confirmed':
                     confirm = True
@@ -248,44 +249,44 @@ class purchase_requisition(osv.osv):
             if not confirm:
                 raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
 
-            #check for complete RFQ
+            # check for complete RFQ
             for quotation in tender.purchase_ids:
                 if (self.check_valid_quotation(cr, uid, quotation, context=context)):
-                    #use workflow to set PO state to confirm
+                    # use workflow to set PO state to confirm
                     po.signal_workflow(cr, uid, [quotation.id], 'purchase_confirm')
 
-            #get other confirmed lines per supplier
+            # get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
-                #only take into account confirmed line that does not belong to already confirmed purchase order
+                # only take into account confirmed line that does not belong to already confirmed purchase order
                 if po_line.state == 'confirmed' and po_line.order_id.state in ['draft', 'sent', 'bid']:
                     if id_per_supplier.get(po_line.partner_id.id):
                         id_per_supplier[po_line.partner_id.id].append(po_line)
                     else:
                         id_per_supplier[po_line.partner_id.id] = [po_line]
 
-            #generate po based on supplier and cancel all previous RFQ
+            # generate po based on supplier and cancel all previous RFQ
             ctx = dict(context or {}, force_requisition_id=True)
             for supplier, product_line in id_per_supplier.items():
-                #copy a quotation for this supplier and change order_line then validate it
+                # copy a quotation for this supplier and change order_line then validate it
                 quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
                 vals = self._prepare_po_from_tender(cr, uid, tender, context=context)
                 new_po = po.copy(cr, uid, quotation_id, default=vals, context=context)
-                #duplicate po_line and change product_qty if needed and associate them to newly created PO
+                # duplicate po_line and change product_qty if needed and associate them to newly created PO
                 for line in product_line:
                     vals = self._prepare_po_line_from_tender(cr, uid, tender, line, new_po, context=context)
                     poline.copy(cr, uid, line.id, default=vals, context=context)
-                #use workflow to set new PO state to confirm
+                # use workflow to set new PO state to confirm
                 po.signal_workflow(cr, uid, [new_po], 'purchase_confirm')
 
-            #cancel other orders
+            # cancel other orders
             self.cancel_unconfirmed_quotations(cr, uid, tender, context=context)
 
-            #set tender to state done
+            # set tender to state done
             self.signal_workflow(cr, uid, [tender.id], 'done')
         return True
 
     def cancel_unconfirmed_quotations(self, cr, uid, tender, context=None):
-        #cancel other orders
+        # cancel other orders
         po = self.pool.get('purchase.order')
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
@@ -328,6 +329,7 @@ class purchase_requisition_line(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
     }
+
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
@@ -376,7 +378,7 @@ class purchase_order_line(osv.osv):
         return True
 
     def generate_po(self, cr, uid, tender_id, context=None):
-        #call generate_po from tender with active_id. Called from js widget
+        # call generate_po from tender with active_id. Called from js widget
         return self.pool.get('purchase.requisition').generate_po(cr, uid, [tender_id], context=context)
 
 

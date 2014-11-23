@@ -34,6 +34,7 @@ REMOTE_CONNECTION_TIMEOUT = 2.5
 
 logger = logging.getLogger(__name__)
 
+
 class QWeb(orm.AbstractModel):
     """ QWeb object for rendering stuff in the website context
     """
@@ -63,11 +64,11 @@ class QWeb(orm.AbstractModel):
                 val = qwebcontext.get('url_for')(val)
             yield (att, val)
 
-
     def get_converter_for(self, field_type):
         return self.pool.get(
             'website.qweb.field.' + field_type,
             self.pool['website.qweb.field'])
+
 
 class Field(orm.AbstractModel):
     _name = 'website.qweb.field'
@@ -75,13 +76,14 @@ class Field(orm.AbstractModel):
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context, context=None):
-        if options is None: options = {}
+        if options is None:
+            options = {}
         field = record._model._fields[field_name]
         attrs = [('data-oe-translate', 1 if getattr(field, 'translate', False) else 0)]
 
         placeholder = options.get('placeholder') \
-                   or source_element.get('placeholder') \
-                   or getattr(field, 'placeholder', None)
+            or source_element.get('placeholder') \
+            or getattr(field, 'placeholder', None)
         if placeholder:
             attrs.append(('placeholder', placeholder))
 
@@ -101,11 +103,13 @@ class Field(orm.AbstractModel):
     def qweb_object(self):
         return self.pool['website.qweb']
 
+
 class Integer(orm.AbstractModel):
     _name = 'website.qweb.field.integer'
     _inherit = ['website.qweb.field']
 
     value_from_string = int
+
 
 class Float(orm.AbstractModel):
     _name = 'website.qweb.field.float'
@@ -130,6 +134,7 @@ def parse_fuzzy(in_format, value):
 
     return parser.parse(value, dayfirst=day_first, yearfirst=year_first)
 
+
 class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
     _inherit = ['website.qweb.field', 'ir.qweb.field.date']
@@ -144,10 +149,12 @@ class Date(orm.AbstractModel):
 
     def from_html(self, cr, uid, model, field, element, context=None):
         value = element.text_content().strip()
-        if not value: return False
+        if not value:
+            return False
 
         datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
         return value
+
 
 class DateTime(orm.AbstractModel):
     _name = 'website.qweb.field.datetime'
@@ -174,9 +181,11 @@ class DateTime(orm.AbstractModel):
         ])
 
     def from_html(self, cr, uid, model, field, element, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         value = element.text_content().strip()
-        if not value: return False
+        if not value:
+            return False
 
         # parse from string to datetime
         dt = datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -200,12 +209,14 @@ class DateTime(orm.AbstractModel):
         # format back to string
         return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
+
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
     _inherit = ['website.qweb.field', 'ir.qweb.field.text']
 
     def from_html(self, cr, uid, model, field, element, context=None):
         return html_to_text(element)
+
 
 class Selection(orm.AbstractModel):
     _name = 'website.qweb.field.selection'
@@ -223,6 +234,7 @@ class Selection(orm.AbstractModel):
 
         raise ValueError(u"No value found for label %s in selection %s" % (
                          value, selection))
+
 
 class ManyToOne(orm.AbstractModel):
     _name = 'website.qweb.field.many2one'
@@ -254,13 +266,15 @@ class ManyToOne(orm.AbstractModel):
         # not necessary, but might as well be explicit about it
         return None
 
+
 class HTML(orm.AbstractModel):
     _name = 'website.qweb.field.html'
     _inherit = ['website.qweb.field', 'ir.qweb.field.html']
 
     def from_html(self, cr, uid, model, field, element, context=None):
         content = []
-        if element.text: content.append(element.text)
+        if element.text:
+            content.append(element.text)
         content.extend(html.tostring(child)
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
@@ -288,7 +302,8 @@ class Image(orm.AbstractModel):
             source_element, t_att, g_att, qweb_context, context=context)
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
-        if options is None: options = {}
+        if options is None:
+            options = {}
         aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
         classes = ' '.join(itertools.imap(escape, aclasses))
 
@@ -371,6 +386,7 @@ class Image(orm.AbstractModel):
         image.save(out, image.format)
         return out.getvalue().encode('base64')
 
+
 class Monetary(orm.AbstractModel):
     _name = 'website.qweb.field.monetary'
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
@@ -382,6 +398,7 @@ class Monetary(orm.AbstractModel):
 
         return float(value.replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
+
 
 class Duration(orm.AbstractModel):
     _name = 'website.qweb.field.duration'
@@ -421,6 +438,7 @@ class Contact(orm.AbstractModel):
 
     def from_html(self, cr, uid, model, field, element, context=None):
         return None
+
 
 class QwebView(orm.AbstractModel):
     _name = 'website.qweb.field.qweb'
@@ -476,11 +494,14 @@ _MISC_BLOCK = set((
     ' footer form header hgroup hr ol output pre section tfoot ul video'
 ).split())
 
+
 def _collapse_whitespace(text):
     """ Collapses sequences of whitespace characters in ``text`` to a single
     space
     """
     return re.sub('\s+', ' ', text)
+
+
 def _realize_padding(it):
     """ Fold and convert padding requests: integers in the output sequence are
     requests for at least n newlines of padding. Runs thereof can be collapsed
@@ -499,6 +520,7 @@ def _realize_padding(it):
         yield item
     # leftover padding irrelevant as the output will be stripped
 
+
 def _wrap(element, output, wrapper=u''):
     """ Recursively extracts text from ``element`` (via _element_to_text), and
     wraps it all in ``wrapper``. Extracted text is added to ``output``
@@ -511,6 +533,7 @@ def _wrap(element, output, wrapper=u''):
     for child in element:
         _element_to_text(child, output)
     output.append(wrapper)
+
 
 def _element_to_text(e, output):
     if e.tag == 'br':

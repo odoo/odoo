@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_fiscalyear_close_state(osv.osv_memory):
     """
     Closes  Account Fiscalyear
@@ -30,7 +31,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _description = "Fiscalyear Close state"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
+                                'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -54,8 +55,8 @@ class account_fiscalyear_close_state(osv.osv_memory):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to close a fiscalyear, you must first post related journal entries.'))
 
             cr.execute('UPDATE account_journal_period ' \
-                        'SET state = %s ' \
-                        'WHERE period_id IN (SELECT id FROM account_period \
+                       'SET state = %s ' \
+                       'WHERE period_id IN (SELECT id FROM account_period \
                         WHERE fiscalyear_id = %s)',
                     ('done', fy_id))
             cr.execute('UPDATE account_period SET state = %s ' \

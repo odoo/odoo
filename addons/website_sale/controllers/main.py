@@ -7,8 +7,9 @@ from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 
-PPG = 20 # Products Per Page
+PPG = 20  # Products Per Page
 PPR = 4  # Products Per Row
+
 
 class table_compute(object):
     def __init__(self):
@@ -18,15 +19,15 @@ class table_compute(object):
         res = True
         for y in range(sizey):
             for x in range(sizex):
-                if posx+x>=PPR:
+                if posx + x >= PPR:
                     res = False
                     break
-                row = self.table.setdefault(posy+y, {})
-                if row.setdefault(posx+x) is not None:
+                row = self.table.setdefault(posy + y, {})
+                if row.setdefault(posx + x) is not None:
                     res = False
                     break
             for x in range(PPR):
-                self.table[posy+y].setdefault(x, None)
+                self.table[posy + y].setdefault(x, None)
         return res
 
     def process(self, products):
@@ -37,11 +38,11 @@ class table_compute(object):
         for p in products:
             x = min(max(p.website_size_x, 1), PPR)
             y = min(max(p.website_size_y, 1), PPR)
-            if index>=PPG:
+            if index >= PPG:
                 x = y = 1
 
             pos = minpos
-            while not self._check_place(pos%PPR, pos/PPR, x, y):
+            while not self._check_place(pos % PPR, pos / PPR, x, y):
                 pos += 1
             # if 21st products (index 20) and the last line is full (PPR products in it), break
             # (pos + 1.0) / PPR is the line where the product would be inserted
@@ -51,18 +52,18 @@ class table_compute(object):
             if index >= PPG and ((pos + 1.0) / PPR) > maxy:
                 break
 
-            if x==1 and y==1:   # simple heuristic for CPU optimization
-                minpos = pos/PPR
+            if x == 1 and y == 1:   # simple heuristic for CPU optimization
+                minpos = pos / PPR
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
-            self.table[pos/PPR][pos%PPR] = {
-                'product': p, 'x':x, 'y': y,
+                    self.table[(pos / PPR) + y2][(pos % PPR) + x2] = False
+            self.table[pos / PPR][pos % PPR] = {
+                'product': p, 'x': x, 'y': y,
                 'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
             }
-            if index<=PPG:
-                maxy=max(maxy,y+(pos/PPR))
+            if index <= PPG:
+                maxy = max(maxy, y + (pos / PPR))
             index += 1
 
         # Format table according to HTML needs
@@ -88,15 +89,15 @@ class QueryURL(object):
     def __call__(self, path=None, **kw):
         if not path:
             path = self.path
-        for k,v in self.args.items():
-            kw.setdefault(k,v)
+        for k, v in self.args.items():
+            kw.setdefault(k, v)
         l = []
-        for k,v in kw.items():
+        for k, v in kw.items():
             if v:
                 if isinstance(v, list) or isinstance(v, set):
-                    l.append(werkzeug.url_encode([(k,i) for i in v]))
+                    l.append(werkzeug.url_encode([(k, i) for i in v]))
                 else:
-                    l.append(werkzeug.url_encode([(k,v)]))
+                    l.append(werkzeug.url_encode([(k, v)]))
         if l:
             path += '?' + '&'.join(l)
         return path
@@ -111,6 +112,7 @@ def get_pricelist():
         partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
         pricelist = partner.property_product_pricelist
     return pricelist
+
 
 class website_sale(http.Controller):
 
@@ -148,7 +150,7 @@ class website_sale(http.Controller):
             domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
         attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
+        attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
         if attrib_values:
@@ -221,7 +223,7 @@ class website_sale(http.Controller):
             'compute_currency': compute_currency,
             'keep': keep,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
-            'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
+            'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib', i) for i in attribs]),
         }
         return request.website.render("website_sale.products", values)
 
@@ -237,7 +239,7 @@ class website_sale(http.Controller):
             category = category_obj.browse(cr, uid, int(category), context=context)
 
         attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
+        attrib_values = [map(int, v.split("-")) for v in attrib_list if v]
         attrib_set = set([v[1] for v in attrib_values])
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
@@ -369,7 +371,7 @@ class website_sale(http.Controller):
         checkout = {}
         if not data:
             if request.uid != request.website.user_id.id:
-                checkout.update( self.checkout_parse("billing", partner) )
+                checkout.update(self.checkout_parse("billing", partner))
                 shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             else:
                 order = request.website.sale_get_order(force_create=1, context=context)
@@ -377,10 +379,10 @@ class website_sale(http.Controller):
                     domain = [("partner_id", "=", order.partner_id.id)]
                     user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=dict(context or {}, active_test=False))
                     if not user_ids or request.website.user_id.id not in user_ids:
-                        checkout.update( self.checkout_parse("billing", order.partner_id) )
+                        checkout.update(self.checkout_parse("billing", order.partner_id))
         else:
             checkout = self.checkout_parse('billing', data)
-            try: 
+            try:
                 shipping_id = int(data["shipping_id"])
             except ValueError:
                 pass
@@ -408,7 +410,7 @@ class website_sale(http.Controller):
             shippings = shipping_ids and orm_partner.browse(cr, SUPERUSER_ID, list(shipping_ids), ctx) or []
         if shipping_id > 0:
             shipping = orm_partner.browse(cr, SUPERUSER_ID, shipping_id, ctx)
-            checkout.update( self.checkout_parse("shipping", shipping) )
+            checkout.update(self.checkout_parse("shipping", shipping))
 
         checkout['shipping_id'] = shipping_id
 
@@ -489,7 +491,7 @@ class website_sale(http.Controller):
                 # quick and partial off-line checksum validation
                 check_func = registry["res.partner"].simple_vat_check
             vat_country, vat_number = registry["res.partner"]._split_vat(data.get("vat"))
-            if not check_func(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
+            if not check_func(cr, uid, vat_country, vat_number, context=None):  # simple_vat_check
                 error["vat"] = 'error'
 
         if data.get("shipping_id") == -1:
@@ -832,7 +834,7 @@ class website_sale(http.Controller):
         if not name:
             name = _("New Product")
         product_obj = request.registry.get('product.product')
-        product_id = product_obj.create(cr, uid, { 'name': name, 'public_categ_ids': category }, context=context)
+        product_id = product_obj.create(cr, uid, {'name': name, 'public_categ_ids': category}, context=context)
         product = product_obj.browse(cr, uid, product_id, context=context)
 
         return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))

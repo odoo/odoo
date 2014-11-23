@@ -30,7 +30,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         super(report_account_common, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'get_lines': self.get_lines,
             'time': time,
             'get_fiscalyear': self._get_fiscalyear,
@@ -38,8 +38,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_filter': self._get_filter,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
             'get_target_move': self._get_target_move,
         })
         self.context = context
@@ -62,7 +62,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'balance': report.balance * report.sign or 0.0,
                 'type': 'report',
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
-                'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
+                'account_type': report.type == 'sum' and 'view' or False,  # used to underline the financial report balances
             }
             if data['form']['debit_credit']:
                 vals['debit'] = report.debit
@@ -72,17 +72,17 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             lines.append(vals)
             account_ids = []
             if report.display_detail == 'no_detail':
-                #the rest of the loop is used to display the details of the financial report, so it's not needed here.
+                # the rest of the loop is used to display the details of the financial report, so it's not needed here.
                 continue
             if report.type == 'accounts' and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
             elif report.type == 'account_type' and report.account_type_ids:
-                account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
+                account_ids = account_obj.search(self.cr, self.uid, [('user_type', 'in', [x.id for x in report.account_type_ids])])
             if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
-                    #if there are accounts to display, we add them to the lines with a level equals to their level in
-                    #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
-                    #financial reports for Assets, liabilities...)
+                    # if there are accounts to display, we add them to the lines with a level equals to their level in
+                    # the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
+                    # financial reports for Assets, liabilities...)
                     if report.display_detail == 'detail_flat' and account.type == 'view':
                         continue
                     flag = False
@@ -90,7 +90,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'name': account.code + ' ' + account.name,
                         'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
                         'type': 'account',
-                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
+                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1, 6) or 6,  # account.level + 1
                         'account_type': account.type,
                     }
 

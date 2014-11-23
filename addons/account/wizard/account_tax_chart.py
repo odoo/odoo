@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_tax_chart(osv.osv_memory):
     """
     For Chart of taxes
@@ -60,7 +61,7 @@ class account_tax_chart(osv.osv_memory):
         if data.period_id:
             result['context'] = str({'period_id': data.period_id.id, \
                                      'fiscalyear_id': data.period_id.fiscalyear_id.id, \
-                                        'state': data.target_move})
+                                     'state': data.target_move})
             period_code = data.period_id.code
             result['name'] += period_code and (':' + period_code) or ''
         else:

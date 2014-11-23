@@ -9,6 +9,7 @@ from openerp.tests import common
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
+
 def registry():
     return openerp.modules.registry.RegistryManager.get(DB)
 

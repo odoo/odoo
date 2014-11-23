@@ -34,21 +34,22 @@ class rml(render.render):
         self.localcontext = localcontext
         self.rml = rml
         self.output_type = 'pdf'
-        self.title=title
-
+        self.title = title
 
     def _render(self):
-        return rml2pdf.parseNode(self.rml, self.localcontext, images=self.bin_datas, path=self.path,title=self.title)
+        return rml2pdf.parseNode(self.rml, self.localcontext, images=self.bin_datas, path=self.path, title=self.title)
+
 
 class rml2html(render.render):
-    def __init__(self, rml,localcontext = None, datas=None):
+    def __init__(self, rml, localcontext = None, datas=None):
         super(rml2html, self).__init__(datas)
         self.rml = rml
         self.localcontext = localcontext
         self.output_type = 'html'
 
     def _render(self):
-        return htmlizer.parseString(self.rml,self.localcontext)
+        return htmlizer.parseString(self.rml, self.localcontext)
+
 
 class rml2txt(render.render):
     def __init__(self, rml, localcontext= None, datas=None):
@@ -60,6 +61,7 @@ class rml2txt(render.render):
     def _render(self):
         return txtizer.parseString(self.rml, self.localcontext)
 
+
 class odt2odt(render.render):
     def __init__(self, rml, localcontext=None, datas=None):
         render.render.__init__(self, datas)
@@ -68,7 +70,8 @@ class odt2odt(render.render):
         self.output_type = 'odt'
 
     def _render(self):
-        return odt.parseNode(self.rml_dom,self.localcontext)
+        return odt.parseNode(self.rml_dom, self.localcontext)
+
 
 class html2html(render.render):
     def __init__(self, rml, localcontext=None, datas=None):
@@ -78,7 +81,8 @@ class html2html(render.render):
         self.output_type = 'html'
 
     def _render(self):
-        return html.parseString(self.rml_dom,self.localcontext)
+        return html.parseString(self.rml_dom, self.localcontext)
+
 
 class makohtml2html(render.render):
     def __init__(self, html, localcontext = None):
@@ -88,7 +92,6 @@ class makohtml2html(render.render):
         self.output_type = 'html'
 
     def _render(self):
-        return makohtml.parseNode(self.html,self.localcontext)
+        return makohtml.parseNode(self.html, self.localcontext)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

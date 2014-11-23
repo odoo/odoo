@@ -1,5 +1,6 @@
 from openerp.tests.common import TransactionCase
 
+
 class TestTax(TransactionCase):
     """Tests for taxes (account.tax)
 

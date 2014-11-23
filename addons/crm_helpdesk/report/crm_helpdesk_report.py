@@ -19,17 +19,18 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
+    ('draft', 'Draft'),
+    ('open', 'Open'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
+
 
 class crm_helpdesk_report(osv.osv):
     """ Helpdesk report after Sales Services """
@@ -40,12 +41,12 @@ class crm_helpdesk_report(osv.osv):
 
     _columns = {
         'date': fields.datetime('Date', readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Requests', readonly=True),  # TDE FIXME master: rename into nbr_requests
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
-        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
-        'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
+        'delay_close': fields.float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg"),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_deadline': fields.date('Deadline', select=True),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
@@ -55,14 +56,13 @@ class crm_helpdesk_report(osv.osv):
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
         'planned_cost': fields.float('Planned Costs'),
-        'create_date': fields.datetime('Creation Date' , readonly=True, select=True),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date_closed': fields.datetime('Close Date', readonly=True, select=True),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+        'delay_expected': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg"),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
     def init(self, cr):
-
         """
             Display Deadline ,Responsible user, partner ,Department
             @param cr: the current row, from the database cursor

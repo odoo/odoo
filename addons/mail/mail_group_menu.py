@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.osv import fields
 
+
 class ir_ui_menu(osv.osv):
     """ Override of ir.ui.menu class. When adding mail_thread module, each
         new mail.group will create a menu entry. This overrides checks that

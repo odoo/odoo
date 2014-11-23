@@ -30,7 +30,7 @@
 {
     'name': 'Italy - Accounting',
     'version': '0.2',
-    'depends': ['base_vat','account_chart','base_iban'],
+    'depends': ['base_vat', 'account_chart', 'base_iban'],
     'author': 'OpenERP Italian Community',
     'description': """
 Piano dei conti italiano di un'impresa generica.
@@ -52,5 +52,5 @@ Italian accounting chart and localization.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
+    'images': ['images/config_chart_l10n_it.jpeg', 'images/l10n_it_chart.jpeg'],
 }

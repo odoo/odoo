@@ -23,6 +23,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_timesheet_current_open(osv.osv_memory):
     _name = 'hr.timesheet.current.open'
     _description = 'hr.timesheet.current.open'
@@ -33,15 +34,15 @@ class hr_timesheet_current_open(osv.osv_memory):
             context = {}
         view_type = 'form,tree'
 
-        user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
+        user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if not len(user_ids):
             raise osv.except_osv(_('Error!'), _('Please create an employee and associate it with this user.'))
-        ids = ts.search(cr, uid, [('user_id','=',uid),('state','in',('draft','new')),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))], context=context)
+        ids = ts.search(cr, uid, [('user_id', '=', uid), ('state', 'in', ('draft', 'new')), ('date_from', '<=', time.strftime('%Y-%m-%d')), ('date_to', '>=', time.strftime('%Y-%m-%d'))], context=context)
 
         if len(ids) > 1:
             view_type = 'tree,form'
-            domain = "[('id','in',["+','.join(map(str, ids))+"]),('user_id', '=', uid)]"
-        elif len(ids)==1:
+            domain = "[('id','in',[" + ','.join(map(str, ids)) + "]),('user_id', '=', uid)]"
+        elif len(ids) == 1:
             domain = "[('user_id', '=', uid)]"
         else:
             domain = "[('user_id', '=', uid)]"

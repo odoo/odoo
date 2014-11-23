@@ -32,11 +32,12 @@ import stock_graph
 import StringIO
 import unicodedata
 
+
 class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
 
     def _render(self):
         return self.pdf
@@ -54,7 +55,7 @@ class report_stock(report_int):
             warehouse_id = registry['stock.warehouse'].search(cr, uid, [])[0]
             location_id = registry['stock.warehouse'].browse(cr, uid, warehouse_id).lot_stock_id.id
 
-        loc_ids = registry['stock.location'].search(cr, uid, [('location_id','child_of',[location_id])])
+        loc_ids = registry['stock.location'].search(cr, uid, [('location_id', 'child_of', [location_id])])
 
         now = time.strftime('%Y-%m-%d')
         dt_from = now
@@ -71,7 +72,6 @@ class report_stock(report_int):
             products[prod] = [(now, prods[prod]['qty_available'])]
             prods[prod] = 0
 
-
         if not loc_ids or not product_ids:
             return (False, 'pdf')
 
@@ -80,29 +80,29 @@ class report_stock(report_int):
                    "where state IN %s"
                    "and location_id IN %s"
                    "and product_id IN %s"
-                   "group by date,product_id",(('confirmed','assigned','waiting'),tuple(loc_ids) ,tuple(product_ids),))
+                   "group by date,product_id", (('confirmed', 'assigned', 'waiting'), tuple(loc_ids), tuple(product_ids),))
         for (qty, dt, prod_id) in cr.fetchall():
-            if dt<=dt_from:
-                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
+            if dt <= dt_from:
+                dt = (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
-            products[prod_id].append((dt,-qty))
+            products[prod_id].append((dt, -qty))
 
         cr.execute("select sum(r.product_qty * u.factor), r.date, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
                    "where state IN %s"
                    "and location_dest_id IN %s"
                    "and product_id IN %s"
-                   "group by date,product_id",(('confirmed','assigned','waiting'),tuple(loc_ids) ,tuple(product_ids),))
+                   "group by date,product_id", (('confirmed', 'assigned', 'waiting'), tuple(loc_ids), tuple(product_ids),))
 
         for (qty, dt, prod_id) in cr.fetchall():
-            if dt<=dt_from:
-                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
+            if dt <= dt_from:
+                dt = (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
-            products[prod_id].append((dt,qty))
+            products[prod_id].append((dt, qty))
 
         dt = dt_from
         qty = 0
@@ -110,12 +110,12 @@ class report_stock(report_int):
         io = StringIO.StringIO()
         gt = stock_graph.stock_graph(io)
         for prod_id in products:
-            prod_name = names.get(prod_id,'Unknown')
+            prod_name = names.get(prod_id, 'Unknown')
             if isinstance(prod_name, str):
-                 prod_name = prod_name.decode('utf-8')
-                 prod_name = unicodedata.normalize('NFKD',prod_name)
-                 prod_name = prod_name.encode('ascii','replace')
-            gt.add(prod_id, prod_name, products[prod_id])   
+                prod_name = prod_name.decode('utf-8')
+                prod_name = unicodedata.normalize('NFKD', prod_name)
+                prod_name = prod_name.encode('ascii', 'replace')
+            gt.add(prod_id, prod_name, products[prod_id])
         gt.draw()
         gt.close()
         self.obj = external_pdf(io.getvalue())
@@ -125,4 +125,3 @@ report_stock('report.stock.product.history')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

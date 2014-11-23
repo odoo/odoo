@@ -24,31 +24,31 @@ from openerp.tools.translate import _
 
 import time
 
+
 class crm_phonecall2phonecall(osv.osv_memory):
     _name = 'crm.phonecall2phonecall'
     _description = 'Phonecall To Phonecall'
 
     _columns = {
-        'name' : fields.char('Call summary', required=True, select=1),
-        'user_id' : fields.many2one('res.users',"Assign To"),
-        'contact_name':fields.char('Contact'),
-        'phone':fields.char('Phone'),
+        'name': fields.char('Call summary', required=True, select=1),
+        'user_id': fields.many2one('res.users', "Assign To"),
+        'contact_name': fields.char('Contact'),
+        'phone': fields.char('Phone'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                 domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                ('object_id.model', '=', 'crm.phonecall')]"), 
+                ('object_id.model', '=', 'crm.phonecall')]"),
         'date': fields.datetime('Date'),
-        'section_id':fields.many2one('crm.case.section','Sales Team'),
-        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
-        'partner_id' : fields.many2one('res.partner', "Partner"),
-        'note':fields.text('Note')
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'action': fields.selection([('schedule', 'Schedule a call'), ('log', 'Log a call')], 'Action', required=True),
+        'partner_id': fields.many2one('res.partner', "Partner"),
+        'note': fields.text('Note')
     }
-
 
     def action_cancel(self, cr, uid, ids, context=None):
         """
         Closes Phonecall to Phonecall form
         """
-        return {'type':'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_schedule(self, cr, uid, ids, context=None):
         value = {}
@@ -64,11 +64,11 @@ class crm_phonecall2phonecall(osv.osv_memory):
                     action=this.action, context=context)
 
         return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
-    
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        
+
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False

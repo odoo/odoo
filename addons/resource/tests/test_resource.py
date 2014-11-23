@@ -444,7 +444,8 @@ class TestResource(TestResourceCommon):
         res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16))
         self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')
 
+
 def seconds(td):
     assert isinstance(td, timedelta)
 
-    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10 ** 6) / 10. ** 6

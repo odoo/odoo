@@ -2,15 +2,16 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
+
 class CashBox(osv.osv_memory):
     _register = False
     _columns = {
-        'name' : fields.char('Reason', required=True),
-        # Attention, we don't set a domain, because there is a journal_type key 
+        'name': fields.char('Reason', required=True),
+        # Attention, we don't set a domain, because there is a journal_type key
         # in the context of the action
-        'amount' : fields.float('Amount',
-                                digits_compute = dp.get_precision('Account'),
-                                required=True),
+        'amount': fields.float('Amount',
+                               digits_compute = dp.get_precision('Account'),
+                               required=True),
     }
 
     def run(self, cr, uid, ids, context=None):
@@ -30,7 +31,7 @@ class CashBox(osv.osv_memory):
                 if not record.journal_id:
                     raise osv.except_osv(_('Error!'),
                                          _("Please check that the field 'Journal' is set on the Bank Statement"))
-                    
+
                 if not record.journal_id.internal_account_id:
                     raise osv.except_osv(_('Error!'),
                                          _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))

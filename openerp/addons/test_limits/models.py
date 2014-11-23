@@ -3,6 +3,7 @@ import time
 
 import openerp
 
+
 class m(openerp.osv.osv.Model):
     """ This model exposes a few methods that will consume between 'almost no
         resource' and 'a lot of resource'.

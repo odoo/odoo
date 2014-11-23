@@ -49,6 +49,8 @@ _ = plocale.get_gettext()
 # is used to find snapshot attributes
 #@-doc
 #@@code
+
+
 def _isattrib(obj, a):
     return a[0] != "_" \
            and not callable(getattr(obj, a)) \
@@ -56,6 +58,8 @@ def _isattrib(obj, a):
            and a not in ("name")
 #@-node:_isattrib
 #@+node:class ResourceCalendar
+
+
 class ResourceCalendar(object):
     """
     The resource calendar saves the load time of a resource.
@@ -79,17 +83,20 @@ class ResourceCalendar(object):
         if src:
             self.bookings = list(src.bookings)
         else:
-            self.bookings = [ (datetime.datetime.min, 0) ]
+            self.bookings = [(datetime.datetime.min, 0)]
     #@-node:__init__
     #@+node:__str__
+
     def __str__(self):
         return str(self.bookings)
     #@-node:__str__
     #@+node:__repr__
+
     def __repr__(self):
         return "<ResourceCalendar %s>" % (str(self))
     #@-node:__repr__
     #@+node:add_load
+
     def add_load(self, start, end, load):
         start = _to_datetime(start)
         end = _to_datetime(end)
@@ -121,7 +128,8 @@ class ResourceCalendar(object):
         for i in range(start_pos, len(bookings)):
             end_pos = i
             item = bookings[i]
-            if item[0] >= end: break
+            if item[0] >= end:
+                break
             bookings[i] = (item[0], item[1] + load)
         else:
             end_pos = len(bookings)
@@ -134,6 +142,7 @@ class ResourceCalendar(object):
             bookings.insert(end_pos, (end, left_load - load))
     #@-node:add_load
     #@+node:end_of_booking_interval
+
     def end_of_booking_interval(self, date):
         date = _to_datetime(date)
         bookings = self.bookings
@@ -152,6 +161,7 @@ class ResourceCalendar(object):
         return next_date, load
     #@-node:end_of_booking_interval
     #@+node:find_free_time
+
     def find_free_time(self, start, length, load, max_load):
         bookings = self.bookings
 
@@ -182,7 +192,7 @@ class ResourceCalendar(object):
                 date, lo = bookings[index]
 
                 if date >= end:
-                    #I found a good start date
+                    # I found a good start date
                     return None, sd
 
                 if lo + load > max_load:
@@ -203,6 +213,7 @@ class ResourceCalendar(object):
         return next_start
     #@-node:find_free_time
     #@+node:get_bookings
+
     def get_bookings(self, start, end):
         start = _to_datetime(start)
         end = _to_datetime(end)
@@ -217,6 +228,7 @@ class ResourceCalendar(object):
         return start_pos, end_pos, bookings
     #@-node:get_bookings
     #@+node:get_load
+
     def get_load(self, date):
         date = _to_datetime(date)
         bookings = self.bookings
@@ -227,11 +239,15 @@ class ResourceCalendar(object):
     #@-others
 #@-node:class ResourceCalendar
 #@+node:class _ResourceBase
+
+
 class _ResourceBase(object):
     pass
 
 #@-node:class _ResourceBase
 #@+node:class _MetaResource
+
+
 class _MetaResource(type):
     doc_template = """
     A resource class. The resources default attributes can
@@ -268,33 +284,39 @@ class _MetaResource(type):
         super(_MetaResource, self).__init__(name, bases, dict_)
         self.name = name
         self.title = dict_.get("title", name)
-        self._calendar = { None: ResourceCalendar() }
-        self._tasks = { }
+        self._calendar = {None: ResourceCalendar()}
+        self._tasks = {}
         self.__set_vacation()
         self.__add_resource(bases[0])
         self.__doc__ = dict_.get("__doc__", self.doc_template) % locals()
     #@-node:__init__
     #@+node:__or__
+
     def __or__(self, other):
         return self().__or__(other)
     #@-node:__or__
     #@+node:__and__
+
     def __and__(self, other):
         return self().__and__(other)
     #@-node:__and__
     #@+node:__cmp__
+
     def __cmp__(self, other):
         return cmp(self.name, getattr(other, "name", None))
     #@-node:__cmp__
     #@+node:__repr__
+
     def __repr__(self):
         return "<Resource %s>" % self.name
     #@-node:__repr__
     #@+node:__str__
+
     def __str__(self):
         return repr(self)
     #@-node:__str__
     #@+node:__set_vacation
+
     def __set_vacation(self):
         vacation = self.vacation
 
@@ -308,6 +330,7 @@ class _MetaResource(type):
             self.add_vacation(vacation)
     #@-node:__set_vacation
     #@+node:__add_resource
+
     def __add_resource(self, base):
         if issubclass(base, _ResourceBase):
             members = getattr(base, base.__name__ + "_members", [])
@@ -315,10 +338,12 @@ class _MetaResource(type):
             setattr(base, base.__name__ + "_members", members)
     #@-node:__add_resource
     #@+node:get_members
+
     def get_members(self):
         return getattr(self, self.__name__ + "_members", [])
     #@-node:get_members
     #@+node:add_vacation
+
     def add_vacation(self, start, end=None):
         start_date = _to_datetime(start)
 
@@ -342,6 +367,7 @@ class _MetaResource(type):
         self._tasks.setdefault("", []).append(tp)
     #@-node:add_vacation
     #@+node:calendar
+
     def calendar(self, scenario):
         try:
             return self._calendar[scenario]
@@ -353,6 +379,8 @@ class _MetaResource(type):
     #@-others
 #@-node:class _MetaResource
 #@+node:make_team
+
+
 def make_team(resource):
     members = resource.get_members()
     if not members:
@@ -365,6 +393,8 @@ def make_team(resource):
     return result
 #@-node:make_team
 #@+node:class Booking
+
+
 class Booking(object):
     """
     A booking unit for a task.
@@ -384,10 +414,12 @@ class Booking(object):
         self.__task = task
     #@-node:__init__
     #@+node:__cmp__
+
     def __cmp__(self, other):
         return cmp(self._id, other._id)
     #@-node:__cmp__
     #@+node:path
+
     def path(self):
         first_dot = self._id.find(".")
         return "root" + self._id[first_dot:]
@@ -396,10 +428,12 @@ class Booking(object):
     #@nonl
     #@-node:path
     #@+node:_idendity_
+
     def _idendity_(self):
         return self._id
     #@-node:_idendity_
     #@+node:__getattr__
+
     def __getattr__(self, name):
         if self.__task:
             return getattr(self.__task, name)
@@ -409,15 +443,20 @@ class Booking(object):
     #@-others
 #@-node:class Booking
 #@+node:class ResourceList
+
+
 class ResourceList(list):
     #@	@+others
     #@+node:__init__
     def __init__(self, *args):
-        if args: self.extend(args)
+        if args:
+            self.extend(args)
     #@-node:__init__
     #@-others
 #@-node:class ResourceList
 #@+node:class Resource
+
+
 class Resource(_ResourceBase):
     #@	<< declarations >>
     #@+node:<< declarations >>
@@ -426,14 +465,13 @@ class Resource(_ResourceBase):
         "max_load": 'max_load = ',
         "title":  'title = "|"',
         "efficiency": 'efficiency = ',
-        "vacation": 'vacation = [("|2002-02-01", "2002-02-05")]' }
+        "vacation": 'vacation = [("|2002-02-01", "2002-02-05")]'}
 
     __type_image__ = "resource16"
 
-    max_load = None # the maximum sum load for all task
+    max_load = None  # the maximum sum load for all task
     vacation = ()
     efficiency = 1.0
-
 
     #@-node:<< declarations >>
     #@nl
@@ -444,32 +482,39 @@ class Resource(_ResourceBase):
             setattr(self, k, v)
     #@-node:__init__
     #@+node:_idendity_
+
     def _idendity_(cls):
         return "resource:" + cls.__name__
 
     _idendity_ = classmethod(_idendity_)
     #@-node:_idendity_
     #@+node:__repr__
+
     def __repr__(self):
         return "<Resource %s>" % self.__class__.__name__
     #@-node:__repr__
     #@+node:__str__
+
     def __str__(self):
         return repr(self)
     #@-node:__str__
     #@+node:__call__
+
     def __call__(self):
         return self
     #@-node:__call__
     #@+node:__hash__
+
     def __hash__(self):
         return hash(self.__class__)
     #@-node:__hash__
     #@+node:__cmp__
+
     def __cmp__(self, other):
         return cmp(self.name, other.name)
     #@-node:__cmp__
     #@+node:__or__
+
     def __or__(self, other):
         if type(other) is _MetaResource:
             other = other()
@@ -479,6 +524,7 @@ class Resource(_ResourceBase):
         return result
     #@-node:__or__
     #@+node:__and__
+
     def __and__(self, other):
         if type(other) is _MetaResource:
             other = other()
@@ -488,6 +534,7 @@ class Resource(_ResourceBase):
         return result
     #@-node:__and__
     #@+node:_permutation_count
+
     def _permutation_count(self):
         if hasattr(self, "_subresource"):
             return self._subresource._permutation_count()
@@ -495,6 +542,7 @@ class Resource(_ResourceBase):
         return 1
     #@-node:_permutation_count
     #@+node:_get_resources
+
     def _get_resources(self, state):
         if hasattr(self, "_subresource"):
             result = self._subresource._get_resources(state)
@@ -511,13 +559,15 @@ class Resource(_ResourceBase):
         return result
     #@-node:_get_resources
     #@+node:all_members
+
     def all_members(self):
         if hasattr(self, "_subresource"):
             return self._subresource.all_members()
 
-        return [ self.__class__ ]
+        return [self.__class__]
     #@-node:all_members
     #@+node:unbook_tasks_of_project
+
     def unbook_tasks_of_project(cls, project_id, scenario):
         try:
             task_list = cls._tasks[scenario]
@@ -538,6 +588,7 @@ class Resource(_ResourceBase):
     unbook_tasks_of_project = classmethod(unbook_tasks_of_project)
     #@-node:unbook_tasks_of_project
     #@+node:unbook_task
+
     def unbook_task(cls, task):
         identdity = task._idendity_()
         scenario = task.scenario
@@ -559,8 +610,9 @@ class Resource(_ResourceBase):
     unbook_task = classmethod(unbook_task)
     #@-node:unbook_task
     #@+node:correct_bookings
+
     def correct_bookings(cls, task):
-        #correct the booking data with the actual task data
+        # correct the booking data with the actual task data
         try:
             tasks = cls._tasks[task.scenario][task._idendity_()]
         except KeyError:
@@ -573,8 +625,10 @@ class Resource(_ResourceBase):
     correct_bookings = classmethod(correct_bookings)
     #@-node:correct_bookings
     #@+node:book_task
+
     def book_task(cls, task, start, end, load, work_time, actual):
-        if not work_time: return
+        if not work_time:
+            return
 
         start = _to_datetime(start)
         end = _to_datetime(end)
@@ -602,6 +656,7 @@ class Resource(_ResourceBase):
     book_task = classmethod(book_task)
     #@-node:book_task
     #@+node:length_of
+
     def length_of(cls, task):
         cal = task.root.calendar
         bookings = cls.get_bookings(task)
@@ -610,6 +665,7 @@ class Resource(_ResourceBase):
     length_of = classmethod(length_of)
     #@-node:length_of
     #@+node:done_of
+
     def done_of(self, task):
         cal = task.root.calendar
         now = cal.now
@@ -636,6 +692,7 @@ class Resource(_ResourceBase):
         return task._to_delta(sum(map(book_done, bookings)))
     #@-node:done_of
     #@+node:todo_of
+
     def todo_of(self, task):
         cal = task.root.calendar
         now = cal.now
@@ -662,12 +719,14 @@ class Resource(_ResourceBase):
         return task._to_delta(sum(map(book_todo, bookings)))
     #@-node:todo_of
     #@+node:get_bookings
+
     def get_bookings(cls, task):
         return cls._tasks.get(task.scenario, {}).get(task._idendity_(), ())
 
     get_bookings = classmethod(get_bookings)
     #@-node:get_bookings
     #@+node:get_bookings_at
+
     def get_bookings_at(cls, start, end, scenario):
         result = []
 
@@ -677,43 +736,50 @@ class Resource(_ResourceBase):
             return ()
 
         for task_id, bookings in items:
-            result += [ booking for booking in bookings
-                        if booking.book_start < end
-                        and booking.book_end > start ]
+            result += [booking for booking in bookings
+                       if booking.book_start < end
+                       and booking.book_end > start]
 
         vacations = cls._tasks.get("", ())
-        result += [ booking for booking in vacations
-                    if booking.book_start < end
-                    and booking.book_end > start ]
+        result += [booking for booking in vacations
+                   if booking.book_start < end
+                   and booking.book_end > start]
 
         return result
 
     get_bookings_at = classmethod(get_bookings_at)
     #@-node:get_bookings_at
     #@+node:find_free_time
+
     def find_free_time(cls, start, length, load, max_load, scenario):
         return cls.calendar(scenario).find_free_time(start, length, load, max_load)
 
     find_free_time = classmethod(find_free_time)
     #@-node:find_free_time
     #@+node:get_load
+
     def get_load(cls, date, scenario):
         return cls.calendar(scenario).get_load(date)
 
     get_load = classmethod(get_load)
     #@-node:get_load
     #@+node:end_of_booking_interval
+
     def end_of_booking_interval(cls, date, task):
         return cls.calendar(task.scenario).end_of_booking_interval(date)
 
     end_of_booking_interval = classmethod(end_of_booking_interval)
     #@-node:end_of_booking_interval
     #@+node:snapshot
+
     def snapshot(self):
         from task import _as_string
+
         def isattrib(a):
-            if a == "max_load" and self.max_load is None: return False
-            if a in ("name", "title", "vacation"): return False
+            if a == "max_load" and self.max_load is None:
+                return False
+            if a in ("name", "title", "vacation"):
+                return False
             return _isattrib(self, a)
 
         attribs = filter(isattrib, dir(self))
@@ -736,6 +802,7 @@ class _ResourceGroup(object):
             self.__append(a)
     #@-node:__init__
     #@+node:all_members
+
     def all_members(self):
         group = reduce(lambda a, b: a + b.all_members(),
                        self.resources, [])
@@ -745,14 +812,17 @@ class _ResourceGroup(object):
         return group
     #@-node:all_members
     #@+node:_permutation_count
+
     def _permutation_count(self):
         abstract
     #@-node:_permutation_count
     #@+node:_refactor
+
     def _refactor(self, arg):
         pass
     #@-node:_refactor
     #@+node:__append
+
     def __append(self, arg):
         if isinstance(arg, self.__class__):
             self.resources += arg.resources
@@ -773,6 +843,7 @@ class _ResourceGroup(object):
         self._refactor(arg)
     #@-node:__append
     #@+node:__str__
+
     def __str__(self):
         op = lower(self.__class__.__name__[0:-13])
         return "(" + \
@@ -799,8 +870,9 @@ class _OrResourceGroup(_ResourceGroup):
         assert(0)
     #@-node:_get_resources
     #@+node:_permutation_count
+
     def _permutation_count(self):
-        return sum([ r._permutation_count() for r in self.resources])
+        return sum([r._permutation_count() for r in self.resources])
     #@-node:_permutation_count
     #@-others
 #@-node:class _OrResourceGroup
@@ -811,23 +883,24 @@ class _AndResourceGroup(_ResourceGroup):
     #@	@+others
     #@+node:__init__
     def __init__(self, *args):
-        self.factors = [ 1 ]
+        self.factors = [1]
         _ResourceGroup.__init__(self, *args)
     #@-node:__init__
     #@+node:_refactor
+
     def _refactor(self, arg):
         count = arg._permutation_count()
-        self.factors = [ count * f for f in self.factors ]
+        self.factors = [count * f for f in self.factors]
         self.factors.append(1)
     #@-node:_refactor
     #@+node:_permutation_count
-        #print "AndResourceGroup", count, arg, self.factors
-
+        # print "AndResourceGroup", count, arg, self.factors
 
     def _permutation_count(self):
         return self.factors[0]
     #@-node:_permutation_count
     #@+node:_get_resources
+
     def _get_resources(self, state):
         """delivers None when there are duplicate resources"""
         result = []
@@ -838,7 +911,7 @@ class _AndResourceGroup(_ResourceGroup):
             result.append(self.resources[i - 1]._get_resources(substate))
 
         result = ResourceList(*list(utils.flatten(result)))
-        dupl_test = { }
+        dupl_test = {}
         for r in result:
             if dupl_test.has_key(r):
                 return None
@@ -848,9 +921,10 @@ class _AndResourceGroup(_ResourceGroup):
         return result
     #@-node:_get_resources
     #@+node:_has_duplicates
+
     def _has_duplicates(self, state):
         resources = self._get_resources(state)
-        tmp = { }
+        tmp = {}
         for r in resources:
             if tmp.has_key(r):
                 return True

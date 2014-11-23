@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_chart(osv.osv_memory):
     """
     For Chart of Accounts
@@ -96,7 +97,7 @@ class account_chart(osv.osv_memory):
             period_to = data.get('period_to', False) and data['period_to'][0] or False
             result['periods'] = period_obj.build_ctx_periods(cr, uid, period_from, period_to)
         result['context'] = str({'fiscalyear': fiscalyear_id, 'periods': result['periods'], \
-                                    'state': data['target_move']})
+                                 'state': data['target_move']})
         if fiscalyear_id:
             result['name'] += ':' + fy_obj.read(cr, uid, [fiscalyear_id], context=context)[0]['code']
         return result

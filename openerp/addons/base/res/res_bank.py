@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class Bank(osv.osv):
-    _description='Bank'
+    _description = 'Bank'
     _name = 'res.bank'
     _order = 'name'
     _columns = {
@@ -45,14 +46,16 @@ class Bank(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
     }
+
     def name_get(self, cr, uid, ids, context=None):
         result = []
         for bank in self.browse(cr, uid, ids, context):
             result.append((bank.id, (bank.bic and (bank.bic + ' - ') or '') + bank.name))
         return result
 
+
 class res_partner_bank_type(osv.osv):
-    _description='Bank Account Type'
+    _description = 'Bank Account Type'
     _name = 'res.partner.bank.type'
     _order = 'name'
     _columns = {
@@ -65,8 +68,9 @@ class res_partner_bank_type(osv.osv):
         'format_layout': lambda *args: "%(bank_name)s: %(acc_number)s"
     }
 
+
 class res_partner_bank_type_fields(osv.osv):
-    _description='Bank type fields'
+    _description = 'Bank type fields'
     _name = 'res.partner.bank.type.field'
     _order = 'name'
     _columns = {
@@ -76,6 +80,7 @@ class res_partner_bank_type_fields(osv.osv):
         'readonly': fields.boolean('Readonly'),
         'size': fields.integer('Max. Size'),
     }
+
 
 class res_partner_bank(osv.osv):
     '''Bank Accounts'''
@@ -95,7 +100,8 @@ class res_partner_bank(osv.osv):
         return result
 
     def _default_value(self, cursor, user, field, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         if field in ('country_id', 'state_id'):
             value = False
         else:
@@ -113,7 +119,7 @@ class res_partner_bank(osv.osv):
         return value
 
     _columns = {
-        'name': fields.char('Bank Account'), # to be removed in v6.2 ?
+        'name': fields.char('Bank Account'),  # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
@@ -128,7 +134,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
+        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)]),
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
@@ -213,7 +219,6 @@ class res_partner_bank(osv.osv):
             result['bank_name'] = bank.name
             result['bank_bic'] = bank.bic
         return {'value': result}
-
 
     def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
         result = {}

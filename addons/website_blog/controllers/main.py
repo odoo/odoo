@@ -73,7 +73,7 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=self._blog_post_per_page,
         )
-        post_ids = blog_obj.search(cr, uid, [], offset=(page-1)*self._blog_post_per_page, limit=self._blog_post_per_page, context=context)
+        post_ids = blog_obj.search(cr, uid, [], offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page, context=context)
         posts = blog_obj.browse(cr, uid, post_ids, context=context)
         blog_url = QueryURL('', ['blog', 'tag'])
         return request.website.render("website_blog.latest_blogs", {
@@ -236,8 +236,8 @@ class WebsiteBlog(http.Controller):
             request.session[request.session_id].append(blog_post.id)
             # Increase counter
             blog_post_obj.write(cr, SUPERUSER_ID, [blog_post.id], {
-                'visits': blog_post.visits+1,
-            },context=context)
+                'visits': blog_post.visits + 1,
+            }, context=context)
         return response
 
     def _blog_post_message(self, user, blog_post_id=0, **post):
@@ -286,8 +286,8 @@ class WebsiteBlog(http.Controller):
                     '/website_blog/static/src/img/anonymous.png',
                 "date": message.date,
                 'body': html2plaintext(message.body),
-                'website_published' : message.website_published,
-                'publish' : publish,
+                'website_published': message.website_published,
+                'publish': publish,
             })
         return values
 
@@ -333,7 +333,7 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         mail_obj = request.registry.get('mail.message')
         domain = [('res_id', '=', int(post_id)), ('model', '=', 'blog.post'), ('path', '=', path)]
-        #check current user belongs to website publisher group
+        # check current user belongs to website publisher group
         publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
         if not publish:
             domain.append(('website_published', '=', True))

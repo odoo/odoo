@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import osv,fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
 
 class repair_cancel(osv.osv_memory):
     _name = 'mrp.repair.cancel'
@@ -46,7 +47,7 @@ class repair_cancel(osv.osv_memory):
         if repair_order.invoiced or repair_order.invoice_method == 'none':
             repair_order_obj.action_cancel(cr, uid, [record_id], context=context)
         else:
-            raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
+            raise osv.except_osv(_('Warning!'), _('Repair order is not invoiced.'))
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -60,7 +61,7 @@ class repair_cancel(osv.osv_memory):
         """
         if context is None:
             context = {}
-        res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
 
@@ -83,4 +84,3 @@ class repair_cancel(osv.osv_memory):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

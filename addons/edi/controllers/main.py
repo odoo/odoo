@@ -3,6 +3,7 @@ import werkzeug.urls
 import openerp
 import openerp.addons.web.controllers.main as webmain
 
+
 class EDI(openerp.http.Controller):
 
     @openerp.http.route('/edi/import_url', type='http', auth='none')
@@ -10,8 +11,8 @@ class EDI(openerp.http.Controller):
         # http://hostname:8069/edi/import_url?url=URIEncodedURL
         req = openerp.http.request
 
-        # `url` may contain a full URL with a valid query string, we basically want to watch out for XML brackets and double-quotes 
-        safe_url = werkzeug.url_quote_plus(url,':/?&;=')
+        # `url` may contain a full URL with a valid query string, we basically want to watch out for XML brackets and double-quotes
+        safe_url = werkzeug.url_quote_plus(url, ':/?&;=')
 
         values = dict(init='s.edi.edi_import("%s");' % safe_url)
         return req.render('web.webclient_bootstrap', values)

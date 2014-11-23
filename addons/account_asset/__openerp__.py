@@ -28,15 +28,15 @@
 Financial and accounting asset management.
 ==========================================
 
-This Module manages the assets owned by a company or an individual. It will keep 
-track of depreciation's occurred on those assets. And it allows to create Move's 
+This Module manages the assets owned by a company or an individual. It will keep
+track of depreciation's occurred on those assets. And it allows to create Move's
 of the depreciation lines.
 
     """,
     'website': 'https://www.odoo.com/page/accounting',
     'category': 'Accounting & Finance',
     'sequence': 32,
-    'demo': [ 'account_asset_demo.xml'],
+    'demo': ['account_asset_demo.xml'],
     'test': [
         'test/account_asset_demo.yml',
         'test/account_asset.yml',
@@ -56,4 +56,3 @@ of the depreciation lines.
     'application': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

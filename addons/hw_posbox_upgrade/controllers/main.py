@@ -64,7 +64,7 @@ upgrade_template = """
             color: white;
             border-radius: 3px;
             text-align: center;
-            margin: 30px; 
+            margin: 30px;
             text-decoration: none;
             display: inline-block;
         }
@@ -89,16 +89,17 @@ upgrade_template = """
 
 """
 
+
 class PosboxUpgrader(hw_proxy.Proxy):
     def __init__(self):
-        super(PosboxUpgrader,self).__init__()
+        super(PosboxUpgrader, self).__init__()
         self.upgrading = threading.Lock()
         self.last_upgrade = 0
 
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):
-        return upgrade_template 
-    
+        return upgrade_template
+
     @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
     def perform_upgrade(self):
         self.upgrading.acquire()
@@ -122,5 +123,3 @@ class PosboxUpgrader(hw_proxy.Proxy):
             self.last_upgrade = time.time()
             self.upgrading.release()
             return 'SUCCESS'
-
-        

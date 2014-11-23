@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #    Copyright (C) 2010-2011 OpenERP S.A. (<http://www.openerp.com>).
 #    $Id$
@@ -28,7 +28,7 @@ class wizard_price(osv.osv):
     _name = "wizard.price"
     _description = "Compute price wizard"
     _columns = {
-        'info_field': fields.text('Info', readonly=True), 
+        'info_field': fields.text('Info', readonly=True),
         'real_time_accounting': fields.boolean("Generate accounting entries when real-time"),
         'recursive': fields.boolean("Change prices of child BoMs too"),
         }

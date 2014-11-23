@@ -35,10 +35,10 @@ will be validated using the Belgian rules.
 There are two different levels of VAT number validation:
 --------------------------------------------------------
     * By default, a simple off-line check is performed using the known validation
-      rules for the country, usually a simple check digit. This is quick and 
+      rules for the country, usually a simple check digit. This is quick and
       always available, but allows numbers that are perhaps not truly allocated,
       or not valid anymore.
-      
+
     * When the "VAT VIES Check" option is enabled (in the configuration of the user's
       Company), VAT numbers will be instead submitted to the online EU VIES
       database, which will truly verify that the number is valid and currently

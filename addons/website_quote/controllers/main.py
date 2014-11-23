@@ -28,6 +28,7 @@ import time
 
 from openerp.tools.translate import _
 
+
 class sale_quote(http.Controller):
     @http.route([
         "/quote/<int:order_id>",
@@ -42,9 +43,9 @@ class sale_quote(http.Controller):
             if token != order.access_token:
                 return request.website.render('website.404')
             # Log only once a day
-            if request.session.get('view_quote',False)!=now:
+            if request.session.get('view_quote', False) != now:
                 request.session['view_quote'] = now
-                body=_('Quotation viewed by customer')
+                body = _('Quotation viewed by customer')
                 self.__message_post(body, order_id, type='comment')
         days = 0
         if order.validity_date:
@@ -64,7 +65,7 @@ class sale_quote(http.Controller):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
-        attachments=sign and [('signature.png', sign.decode('base64'))] or []
+        attachments = sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
         self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
@@ -115,13 +116,13 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
         if token != order.access_token:
             return request.website.render('website.404')
-        if order.state not in ('draft','sent'):
+        if order.state not in ('draft', 'sent'):
             return False
-        line_id=int(line_id)
+        line_id = int(line_id)
         if unlink:
             request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [line_id], context=request.context)
             return False
-        number=(remove and -1 or 1)
+        number = (remove and -1 or 1)
 
         order_line_obj = request.registry.get('sale.order.line')
         order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [line_id], [], context=request.context)[0]
@@ -131,7 +132,7 @@ class sale_quote(http.Controller):
 
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
-        values = { 'template': quote }
+        values = {'template': quote}
         return request.website.render('website_quote.so_template', values)
 
     @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
@@ -156,7 +157,7 @@ class sale_quote(http.Controller):
             'website_description': option.website_description,
             'name': option.name,
             'order_id': order.id,
-            'product_id' : option.product_id.id,
+            'product_id': option.product_id.id,
             'product_uos_qty': option.quantity,
             'product_uos': option.uom_id.id,
             'product_uom_qty': option.quantity,
@@ -166,5 +167,3 @@ class sale_quote(http.Controller):
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
-
-

@@ -22,12 +22,13 @@
 
 import logging
 import tempfile
-LOG_DEBUG='debug'
-LOG_INFO='info'
-LOG_WARNING='warn'
-LOG_ERROR='error'
-LOG_CRITICAL='critical'
+LOG_DEBUG = 'debug'
+LOG_INFO = 'info'
+LOG_WARNING = 'warn'
+LOG_ERROR = 'error'
+LOG_CRITICAL = 'critical'
 _logger = logging.getLogger(__name__)
+
 
 def log_detail(self):
     import os
@@ -38,9 +39,10 @@ def log_detail(self):
     _logger.addHandler(hdlr)
     _logger.setLevel(logging.INFO)
 
+
 class Logger(object):
     def log_write(self, name, level, msg):
-        getattr(_logger,level)(msg)
+        getattr(_logger, level)(msg)
 
     def shutdown(self):
         logging.shutdown()

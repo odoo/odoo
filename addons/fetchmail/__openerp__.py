@@ -21,10 +21,10 @@
 ##############################################################################
 
 {
-    'name' : 'Email Gateway',
-    'version' : '1.0',
-    'depends' : ['mail'],
-    'author' : 'OpenERP SA',
+    'name': 'Email Gateway',
+    'version': '1.0',
+    'depends': ['mail'],
+    'author': 'OpenERP SA',
     'category': 'Tools',
     'description': """
 Retrieve incoming email on POP/IMAP servers.

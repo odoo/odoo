@@ -12,20 +12,24 @@ ID_FIELD = {
     'fields': [],
 }
 
+
 def make_field(name='value', string='unknown', required=False, fields=[]):
     return [
         ID_FIELD,
         {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields},
     ]
 
+
 def sorted_fields(fields):
     """ recursively sort field lists to ease comparison """
     recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
     return sorted(recursed, key=lambda field: field['id'])
 
+
 class BaseImportCase(TransactionCase):
     def assertEqualFields(self, fields1, fields2):
         self.assertEqual(sorted_fields(fields1), sorted_fields(fields2))
+
 
 class test_basic_fields(BaseImportCase):
     def get_fields(self, field):
@@ -65,7 +69,7 @@ class test_basic_fields(BaseImportCase):
             {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': []},
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': []},
         ]))
-    
+
     def test_m2o_required(self):
         """ If an m2o field is required, its three sub-fields are
         required as well (the client has to handle that: requiredness
@@ -75,6 +79,7 @@ class test_basic_fields(BaseImportCase):
             {'id': 'value', 'name': 'id', 'string': 'External ID', 'required': True, 'fields': []},
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': []},
         ]))
+
 
 class test_o2m(BaseImportCase):
     def get_fields(self, field):
@@ -91,6 +96,7 @@ class test_o2m(BaseImportCase):
             ]},
             {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': []},
         ]))
+
 
 class test_match_headers_single(TransactionCase):
     def test_match_by_name(self):
@@ -141,6 +147,7 @@ class test_match_headers_single(TransactionCase):
 
         self.assertEqual(match, [])
 
+
 class test_match_headers_multiple(TransactionCase):
     def test_noheaders(self):
         self.assertEqual(
@@ -148,6 +155,7 @@ class test_match_headers_multiple(TransactionCase):
                 [], [], {}),
             (None, None)
         )
+
     def test_nomatch(self):
         self.assertEqual(
             self.registry('base_import.import')._match_headers(
@@ -182,6 +190,7 @@ class test_match_headers_multiple(TransactionCase):
                 3: ['qux', 'corge'],
             })
         )
+
 
 class test_preview(TransactionCase):
     def make_import(self):
@@ -241,9 +250,9 @@ class test_preview(TransactionCase):
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': []},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': []},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': []},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -253,10 +262,12 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
+
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
     can be fed to Model.import_data
     """
+
     def test_all(self):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
@@ -269,7 +280,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', 'somevalue', 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True, })
 
         self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -293,7 +304,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True, })
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -317,7 +328,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True, })
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -339,7 +350,7 @@ class test_convert_import_data(TransactionCase):
             ValueError,
             Import._convert_import_data,
             record, [],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True, })
 
     def test_falsefields(self):
         Import = self.registry('base_import.import')
@@ -355,4 +366,4 @@ class test_convert_import_data(TransactionCase):
             ValueError,
             Import._convert_import_data,
             record, [False, False, False],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True, })

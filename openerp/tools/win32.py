@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,14 +35,14 @@ if not hasattr(locale, 'nl_langinfo'):
             val = time.strptime('30/12/2004', '%d/%m/%Y')
             dt = datetime.datetime(*val[:-2])
             format_date = dt.strftime('%x')
-            for x, y in [('30', '%d'),('12', '%m'),('2004','%Y'),('04', '%Y')]:
+            for x, y in [('30', '%d'), ('12', '%m'), ('2004', '%Y'), ('04', '%Y')]:
                 format_date = format_date.replace(x, y)
             return format_date
         if param == locale.T_FMT:
             val = time.strptime('13:24:56', '%H:%M:%S')
             dt = datetime.datetime(*val[:-2])
             format_time = dt.strftime('%X')
-            for x, y in [('13', '%H'),('24', '%M'),('56','%S')]:
+            for x, y in [('13', '%H'), ('24', '%M'), ('56', '%S')]:
                 format_time = format_time.replace(x, y)
             return format_time
     locale.nl_langinfo = nl_langinfo

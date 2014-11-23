@@ -23,6 +23,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_timesheet_invoice_create(osv.osv_memory):
 
     _name = 'hr.timesheet.invoice.create'
@@ -64,11 +65,9 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)
         res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)[0]['res_id']
         act_win = act_obj.read(cr, uid, [res_id], context=context)[0]
-        act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
+        act_win['domain'] = [('id', 'in', invs), ('type', '=', 'out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
 
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

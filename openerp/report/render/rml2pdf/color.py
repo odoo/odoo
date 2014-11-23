@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,6 +26,7 @@ allcols = colors.getAllNamedColors()
 
 regex_t = re.compile('\(([0-9\.]*),([0-9\.]*),([0-9\.]*)\)')
 regex_h = re.compile('#([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])([0-9a-zA-Z][0-9a-zA-Z])')
+
 
 def get(col_str):
     if col_str is None:
@@ -38,8 +39,7 @@ def get(col_str):
         return float(res.group(1)), float(res.group(2)), float(res.group(3))
     res = regex_h.search(col_str, 0)
     if res:
-        return tuple([ float(int(res.group(i),16))/255 for i in range(1,4)])
+        return tuple([float(int(res.group(i), 16)) / 255 for i in range(1, 4)])
     return colors.red
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

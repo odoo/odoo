@@ -47,10 +47,12 @@ types_mapping = {
     'datetime': (1114,),
 }
 
+
 def unbuffer(symb, cr):
     if symb is None:
         return None
     return str(symb)
+
 
 def undecimalize(symb, cr):
     if symb is None:
@@ -74,6 +76,7 @@ re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
 
 sql_counter = 0
+
 
 class Cursor(object):
     """Represents an open transaction to the PostgreSQL DB backend,
@@ -194,11 +197,14 @@ class Cursor(object):
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
+
     def dictfetchone(self):
         row = self._obj.fetchone()
         return row and self.__build_dict(row)
+
     def dictfetchmany(self, size):
         return map(self.__build_dict, self._obj.fetchmany(size))
+
     def dictfetchall(self):
         return map(self.__build_dict, self._obj.fetchall())
 
@@ -272,6 +278,7 @@ class Cursor(object):
 
         if not self.sql_log:
             return
+
         def process(type):
             sqllogs = {'from': self.sql_from_log, 'into': self.sql_into_log}
             sum = 0
@@ -402,10 +409,12 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across
         several requests, and simulates committing, rolling back, and closing.
     """
+
     def __init__(self, *args, **kwargs):
         super(TestCursor, self).__init__(*args, **kwargs)
         # in order to simulate commit and rollback, the cursor maintains a
@@ -439,8 +448,10 @@ class TestCursor(Cursor):
         self.execute("ROLLBACK TO SAVEPOINT test_cursor")
         self.execute("SAVEPOINT test_cursor")
 
+
 class PsycoConnection(psycopg2.extensions.connection):
     pass
+
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
@@ -558,6 +569,7 @@ class ConnectionPool(object):
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
+
     def __init__(self, pool, dbname, dsn):
         self.dbname = dbname
         self.dsn = dsn
@@ -586,6 +598,7 @@ class Connection(object):
         except Exception:
             return False
 
+
 def dsn(db_or_uri):
     """parse the given `db_or_uri` and return a 2-tuple (dbname, uri)"""
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
@@ -609,6 +622,7 @@ def dsn(db_or_uri):
 
 _Pool = None
 
+
 def db_connect(to, allow_uri=False):
     global _Pool
     if _Pool is None:
@@ -619,11 +633,13 @@ def db_connect(to, allow_uri=False):
         raise ValueError('URI connections not allowed')
     return Connection(_Pool, db, uri)
 
+
 def close_db(db_name):
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
     global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name)[1])
+
 
 def close_all():
     global _Pool

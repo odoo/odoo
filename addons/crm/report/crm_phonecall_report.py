@@ -40,26 +40,25 @@ class crm_phonecall_report(osv.osv):
     _auto = False
 
     _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Section', readonly=True),
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
-        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case"),
+        'duration': fields.float('Duration', digits=(16, 2), readonly=True, group_operator="avg"),
+        'delay_open': fields.float('Delay to open', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
-        'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.datetime('Opening Date', readonly=True, select=True),
         'date_closed': fields.datetime('Close Date', readonly=True, select=True),
     }
 
     def init(self, cr):
-
         """ Phone Calls By User And Section
             @param cr: the current row, from the database cursor,
         """

@@ -41,6 +41,7 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
 
+
 def at_install(flag):
     """ Sets the at-install state of a test, the flag is a boolean specifying
     whether the test should (``True``) or should not (``False``) run during
@@ -53,6 +54,7 @@ def at_install(flag):
         obj.at_install = flag
         return obj
     return decorator
+
 
 def post_install(flag):
     """ Sets the post-install state of a test. The flag is a boolean
@@ -67,10 +69,11 @@ def post_install(flag):
         return obj
     return decorator
 
+
 class BaseCase(unittest2.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
-    
+
     This class is abstract and expects self.registry, self.cr and self.uid to be
     initialized by subclasses.
     """
@@ -182,6 +185,7 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
 
     https_response = http_response
 
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
@@ -222,7 +226,7 @@ class HttpCase(TransactionCase):
 
     def authenticate(self, user, password):
         if user is not None:
-            url = '/login?%s' % werkzeug.urls.url_encode({'db': DB,'login': user, 'key': password})
+            url = '/login?%s' % werkzeug.urls.url_encode({'db': DB, 'login': user, 'key': password})
             auth = self.url_open(url)
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
@@ -278,14 +282,14 @@ class HttpCase(TransactionCase):
                     # when error occurs the execution stack may be sent as as JSON
                     try:
                         line_ = json.loads(line_)
-                    except ValueError: 
+                    except ValueError:
                         pass
                     self.fail(line_ or "phantomjs test failed")
 
     def phantom_run(self, cmd, timeout):
         _logger.info('phantom_run executing %s', ' '.join(cmd))
 
-        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_localhost_%s.*'%PORT)
+        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_localhost_%s.*' % PORT)
         for i in glob.glob(ls_glob):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
@@ -320,7 +324,7 @@ class HttpCase(TransactionCase):
 
     def phantom_jsfile(self, jsfile, timeout=60, **kw):
         options = {
-            'timeout' : timeout,
+            'timeout': timeout,
             'port': PORT,
             'db': DB,
             'session_id': self.session_id,
@@ -356,8 +360,8 @@ class HttpCase(TransactionCase):
             'url_path': url_path,
             'code': code,
             'ready': ready,
-            'timeout' : timeout,
-            'login' : login,
+            'timeout': timeout,
+            'login': login,
             'session_id': self.session_id,
         }
         options.update(kw)

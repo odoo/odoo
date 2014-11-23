@@ -29,17 +29,20 @@ from openerp import tools
 from openerp import http
 from openerp.http import request
 
+
 class im_livechat_channel(osv.Model):
     _name = 'im_livechat.channel'
 
     def _get_default_image(self, cr, uid, context=None):
         image_path = openerp.modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -56,7 +59,7 @@ class im_livechat_channel(osv.Model):
     def _script_external(self, cr, uid, ids, name, arg, context=None):
         values = {
             "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
-            "dbname":cr.dbname
+            "dbname": cr.dbname
         }
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
@@ -67,7 +70,7 @@ class im_livechat_channel(osv.Model):
     def _script_internal(self, cr, uid, ids, name, arg, context=None):
         values = {
             "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
-            "dbname":cr.dbname
+            "dbname": cr.dbname
         }
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
@@ -142,7 +145,7 @@ class im_livechat_channel(osv.Model):
         user_id = random.choice(users).id
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
-        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)
+        newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'anonymous_name': anonymous_name}, context=context)
         return Session.session_info(cr, uid, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
@@ -172,6 +175,7 @@ class im_livechat_channel(osv.Model):
         self.write(cr, uid, ids, {'user_ids': [(3, uid)]})
         return True
 
+
 class im_chat_session(osv.Model):
     _inherit = 'im_chat.session'
 
@@ -189,9 +193,9 @@ class im_chat_session(osv.Model):
         return result
 
     _columns = {
-        'anonymous_name' : fields.char('Anonymous Name'),
+        'anonymous_name': fields.char('Anonymous Name'),
         'channel_id': fields.many2one("im_livechat.channel", "Channel"),
-        'fullname' : fields.function(_get_fullname, type="char", string="Complete name"),
+        'fullname': fields.function(_get_fullname, type="char", string="Complete name"),
     }
 
     def is_in_session(self, cr, uid, uuid, user_id, context=None):
@@ -209,7 +213,7 @@ class im_chat_session(osv.Model):
         for session in self.browse(cr, uid, ids, context=context):
             users_infos = super(im_chat_session, self).users_infos(cr, uid, ids, context=context)
             if session.anonymous_name:
-                users_infos.append({'id' : False, 'name' : session.anonymous_name, 'im_status' : 'online'})
+                users_infos.append({'id': False, 'name': session.anonymous_name, 'im_status': 'online'})
             return users_infos
 
 
@@ -239,7 +243,7 @@ class LiveChatController(http.Controller):
         reg = openerp.modules.registry.RegistryManager.get(db)
         # if geoip, add the country name to the anonymous name
         if hasattr(request, 'geoip'):
-            anonymous_name = anonymous_name + " ("+request.geoip.get('country_name', "")+")"
+            anonymous_name = anonymous_name + " (" + request.geoip.get('country_name', "") + ")"
         return reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
 
     @http.route('/im_livechat/available', type='json', auth="none")
@@ -248,4 +252,3 @@ class LiveChatController(http.Controller):
         reg = openerp.modules.registry.RegistryManager.get(db)
         with reg.cursor() as cr:
             return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
-

@@ -30,7 +30,7 @@ This module adds issue menu and features to your portal if project_issue and por
 ==================================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['project_issue','portal'],
+    'depends': ['project_issue', 'portal'],
     'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',

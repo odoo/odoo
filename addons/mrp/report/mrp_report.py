@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 
 
 class report_workcenter_load(osv.osv):
-    _name="report.workcenter.load"
-    _description="Work Center Load"
+    _name = "report.workcenter.load"
+    _description = "Work Center Load"
     _auto = False
     _log_access = False
     _columns = {
@@ -53,16 +53,15 @@ class report_workcenter_load(osv.osv):
             )""")
 
 
-
 class report_mrp_inout(osv.osv):
-    _name="report.mrp.inout"
-    _description="Stock value variation"
+    _name = "report.mrp.inout"
+    _description = "Stock value variation"
     _auto = False
     _log_access = False
     _rec_name = 'date'
     _columns = {
         'date': fields.char('Week', required=True),
-        'value': fields.float('Stock value', required=True, digits=(16,2)),
+        'value': fields.float('Stock value', required=True, digits=(16, 2)),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
@@ -80,7 +79,7 @@ class report_mrp_inout(osv.osv):
                         sm.price_unit * sm.product_qty
                     else
                         0.0
-                    end) as value, 
+                    end) as value,
                     sm.company_id
                 from
                     stock_move sm
@@ -99,6 +98,4 @@ class report_mrp_inout(osv.osv):
             )""")
 
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -22,16 +22,18 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+
 class invoice(osv.osv):
     _inherit = 'account.invoice'
 
     def invoice_pay_customer(self, cr, uid, ids, context=None):
-        if not ids: return []
+        if not ids:
+            return []
         dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_dialog_form')
 
         inv = self.browse(cr, uid, ids[0], context=context)
         return {
-            'name':_("Pay Invoice"),
+            'name': _("Pay Invoice"),
             'view_mode': 'form',
             'view_id': view_id,
             'view_type': 'form',
@@ -48,8 +50,8 @@ class invoice(osv.osv):
                 'close_after_process': True,
                 'invoice_type': inv.type,
                 'invoice_id': inv.id,
-                'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
-                'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+                'default_type': inv.type in ('out_invoice', 'out_refund') and 'receipt' or 'payment',
+                'type': inv.type in ('out_invoice', 'out_refund') and 'receipt' or 'payment'
             }
         }
 

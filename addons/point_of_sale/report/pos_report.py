@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp import tools
 
+
 class report_transaction_pos(osv.osv):
     _name = "report.transaction.pos"
     _description = "transaction for the pos"
@@ -71,15 +72,16 @@ class report_transaction_pos(osv.osv):
                     to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text
                 )
         """)
-                    #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
-                    #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
+                    # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
+                    # to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
+
 
 class report_sales_by_user_pos(osv.osv):
     _name = "report.sales.by.user.pos"
     _description = "Sales by user"
     _auto = False
     _columns = {
-        'date_order': fields.date('Order Date',required=True, select=True),
+        'date_order': fields.date('Order Date', required=True, select=True),
         'amount': fields.float('Total', readonly=True, select=True),
         'qty': fields.float('Quantity', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
@@ -106,12 +108,13 @@ class report_sales_by_user_pos(osv.osv):
                 )
         """)
 
+
 class report_sales_by_user_pos_month(osv.osv):
     _name = "report.sales.by.user.pos.month"
     _description = "Sales by user monthly"
     _auto = False
     _columns = {
-        'date_order': fields.date('Order Date',required=True, select=True),
+        'date_order': fields.date('Order Date', required=True, select=True),
         'amount': fields.float('Total', readonly=True, select=True),
         'qty': fields.float('Quantity', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),

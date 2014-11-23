@@ -25,10 +25,11 @@ from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
         lang_obj = self.pool.get('res.lang')
-        ids = lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True),])
+        ids = lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True), ])
         langs = lang_obj.browse(cr, uid, ids)
         return [(lang.code, lang.name) for lang in langs]
 
@@ -53,10 +54,10 @@ class base_update_translations(osv.osv_memory):
         if context is None:
             context = {}
         res = super(base_update_translations, self).default_get(cr, uid, fields, context=context)
-        
+
         if context.get('active_model') != "res.lang":
             return res
-        
+
         record_id = context.get('active_id', False) or False
         if record_id:
             lang = self.pool.get('res.lang').browse(cr, uid, record_id).code

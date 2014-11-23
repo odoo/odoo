@@ -23,20 +23,22 @@ from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class base_language_install(osv.osv_memory):
     """ Install Language"""
 
     _name = "base.language.install"
     _description = "Install Language"
     _columns = {
-        'lang': fields.selection(tools.scan_languages(),'Language', required=True),
+        'lang': fields.selection(tools.scan_languages(), 'Language', required=True),
         'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwritten and replaced by the official ones."),
-        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
+        'state': fields.selection([('init', 'init'), ('done', 'done')], 'Status', readonly=True),
     }
     _defaults = {
         'state': 'init',
         'overwrite': False
     }
+
     def lang_install(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

@@ -17,7 +17,7 @@ import openerp
 #----------------------------------------------------------
 # Common
 #----------------------------------------------------------
-openerp.multi_process = True # Nah!
+openerp.multi_process = True  # Nah!
 
 # Equivalent of --load command-line option
 openerp.conf.server_wide_modules = ['web']

@@ -2,6 +2,7 @@
 import unittest2
 from openerp import models, fields
 
+
 class TestFieldToColumn(unittest2.TestCase):
     def test_char(self):
         # create a field, initialize its attributes, and convert it to a column

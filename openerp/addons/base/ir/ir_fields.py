@@ -12,9 +12,13 @@ from openerp import models, api, _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, ustr
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
+
+
 def only_ref_fields(record):
     return dict((k, v) for k, v in record.iteritems()
                 if k in REFERENCING_FIELDS)
+
+
 def exclude_ref_fields(record):
     return dict((k, v) for k, v in record.iteritems()
                 if k not in REFERENCING_FIELDS)
@@ -27,11 +31,14 @@ LINK_TO = lambda id: (4, id, False)
 DELETE_ALL = lambda: (5, False, False)
 REPLACE_WITH = lambda ids: (6, False, ids)
 
+
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
     pass
 
-class ConversionNotFound(ValueError): pass
+
+class ConversionNotFound(ValueError):
+    pass
 
 
 class ir_fields_converter(models.Model):
@@ -132,7 +139,7 @@ class ir_fields_converter(models.Model):
         true, yes, false, no = _(u"true"), _(u"yes"), _(u"false"), _(u"no")
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
-            [u'1', u"true", u"yes"], # don't use potentially translated values
+            [u'1', u"true", u"yes"],  # don't use potentially translated values
             self._get_translations(['code'], u"true"),
             self._get_translations(['code'], u"yes"),
         ))
@@ -220,7 +227,7 @@ class ir_fields_converter(models.Model):
                     'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"
                 })
 
-        input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
+        input_tz = self._input_tz()  # Apply input tz to the parsed naive datetime
         dt = input_tz.localize(parsed_value, is_dst=False)
         # And convert to UTC before reformatting for writing
         return dt.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), []
@@ -291,8 +298,10 @@ class ir_fields_converter(models.Model):
         RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
             field_type = _(u"database id")
-            try: tentative_id = int(value)
-            except ValueError: tentative_id = value
+            try:
+                tentative_id = int(value)
+            except ValueError:
+                tentative_id = value
             try:
                 if RelatedModel.search([('id', '=', tentative_id)]):
                     id = tentative_id
@@ -310,7 +319,7 @@ class ir_fields_converter(models.Model):
             try:
                 id = self.env.ref(xmlid).id
             except ValueError:
-                pass # leave id is None
+                pass  # leave id is None
         elif subfield is None:
             field_type = _(u"name")
             ids = RelatedModel.name_search(name=value, operator='=')
@@ -390,7 +399,7 @@ class ir_fields_converter(models.Model):
             warnings.extend(ws)
             # transform [{subfield:ref1,ref2,ref3}] into
             # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
-            records = ({subfield:item} for item in record[subfield].split(','))
+            records = ({subfield: item} for item in record[subfield].split(','))
 
         def log(_, e):
             if not isinstance(e, Warning):

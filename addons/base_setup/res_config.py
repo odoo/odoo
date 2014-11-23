@@ -23,10 +23,11 @@ from openerp.osv import fields, osv
 import re
 from openerp.report.render.rml2pdf import customfonts
 
+
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-        
+
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
             help='Work in multi-company environments, with appropriate security access between companies.\n'
@@ -45,11 +46,11 @@ class base_config_settings(osv.osv_memory):
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
 
     }
-    
-    _defaults= {
-        'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
+
+    _defaults = {
+        'font': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
     }
-    
+
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
@@ -62,19 +63,19 @@ class base_config_settings(osv.osv_memory):
             'target': 'current',
         }
 
-    def _change_header(self, header,font):
+    def _change_header(self, header, font):
         """ Replace default fontname use in header and setfont tag """
-        
-        default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
-        return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
-    
+
+        default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"' % font, header)
+        return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>' % font, default_para)
+
     def set_base_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids, context)[0]
         if wizard.font:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             font_name = wizard.font.name
-            user.company_id.write({'font': wizard.font.id,'rml_header': self._change_header(user.company_id.rml_header,font_name), 'rml_header2': self._change_header(user.company_id.rml_header2, font_name), 'rml_header3': self._change_header(user.company_id.rml_header3, font_name)})
+            user.company_id.write({'font': wizard.font.id, 'rml_header': self._change_header(user.company_id.rml_header, font_name), 'rml_header2': self._change_header(user.company_id.rml_header2, font_name), 'rml_header3': self._change_header(user.company_id.rml_header3, font_name)})
         return {}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
@@ -82,6 +83,8 @@ class base_config_settings(osv.osv_memory):
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm.
+
+
 class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
@@ -89,7 +92,7 @@ class sale_config_settings(osv.osv_memory):
         'module_web_linkedin': fields.boolean('Get contacts automatically from linkedIn',
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
-        'module_sale' : fields.boolean('SALE'),
+        'module_sale': fields.boolean('SALE'),
         'module_mass_mailing': fields.boolean(
             'Manage mass mailing campaigns',
             help='Get access to statistics with your mass mailing, manage campaigns.'),

@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 
+
 class account_unreconcile(osv.osv_memory):
     _name = "account.unreconcile"
     _description = "Account Unreconcile"

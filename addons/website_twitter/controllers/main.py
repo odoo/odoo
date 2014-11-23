@@ -4,6 +4,7 @@ from openerp.tools.translate import _
 
 import json
 
+
 class Twitter(http.Controller):
     @http.route(['/twitter_reload'], type='json', auth="user", website=True)
     def twitter_reload(self):
@@ -28,14 +29,14 @@ class Twitter(http.Controller):
         twitter_tweets = request.registry['website.twitter.tweet']
         tweets = twitter_tweets.search_read(
                 cr, uid,
-                [('website_id','=', request.website.id),
-                 ('screen_name','=', screen_name)],
+                [('website_id', '=', request.website.id),
+                 ('screen_name', '=', screen_name)],
                 ['tweet'], limit=int(limit), order="tweet_id desc", context=request.context)
         if len(tweets) < 12:
             if debug:
                 return {"error": _("Twitter user @%(username)s has less than 12 favorite tweets. "
                                    "Please add more or choose a different screen name.") % \
-                                      {'username': screen_name}}
+                        {'username': screen_name}}
             else:
                 return []
         return [json.loads(tweet['tweet']) for tweet in tweets]

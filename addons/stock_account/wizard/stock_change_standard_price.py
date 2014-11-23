@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class change_standard_price(osv.osv_memory):
     _name = "stock.change.standard.price"
     _description = "Change Standard Price"
@@ -32,8 +33,6 @@ class change_standard_price(osv.osv_memory):
             "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
             "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
     }
-
-
 
     def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
@@ -78,9 +77,9 @@ class change_standard_price(osv.osv_memory):
             prod_obj = self.pool.get('product.product')
             rec_id = prod_obj.browse(cr, uid, rec_id, context=context).product_tmpl_id.id
         prod_obj = self.pool.get('product.template')
-        
+
         res = self.browse(cr, uid, ids, context=context)
-        
+
         prod_obj.do_change_standard_price(cr, uid, [rec_id], res[0].new_price, context)
         return {'type': 'ir.actions.act_window_close'}
 

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -49,7 +50,7 @@ class stock_move(osv.osv):
         default = default or {}
         context = context or {}
         if not default.get('split_from'):
-            #we don't want to propagate the link to the purchase order line except in case of move split
+            # we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
@@ -79,7 +80,6 @@ class stock_move(osv.osv):
                 return partner, uid, currency
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
 
-
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
         if move.purchase_line_id:
@@ -87,7 +87,6 @@ class stock_move(osv.osv):
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
         return res
-
 
     def attribute_price(self, cr, uid, move, context=None):
         """
@@ -113,7 +112,7 @@ class stock_move(osv.osv):
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-    
+
     def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
         res = {}
         for picking in self.browse(cr, uid, ids, context=context):
@@ -162,7 +161,7 @@ class stock_picking(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse', 
+        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse',
                                           help="When products are bought, they can be delivered to this warehouse"),
         'buy_pull_id': fields.many2one('procurement.rule', 'BUY rule'),
     }
@@ -236,7 +235,7 @@ class stock_warehouse(osv.osv):
     def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
         pull_obj = self.pool.get('procurement.rule')
-        #change the buy pull rule name
+        # change the buy pull rule name
         if warehouse.buy_pull_id:
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res

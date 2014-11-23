@@ -28,4 +28,3 @@ import wizard
 import res_config
 
 import controllers
-

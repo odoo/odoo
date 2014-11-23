@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class TestBasicInheritance(common.TransactionCase):
     def test_inherit_method(self):
         env = self.env
@@ -9,16 +10,14 @@ class TestBasicInheritance(common.TransactionCase):
         b = env['inheritance.1'].create({'name': 'B'})
 
         self.assertEqual(
-        a.call()
-            ,
-        """
+            a.call(),
+            """
         This is model 0 record A
         """.strip()
         )
         self.assertEqual(
-        b.call()
-            ,
-        """
+            b.call(),
+            """
         This is model 1 record B
         """.strip()
         )

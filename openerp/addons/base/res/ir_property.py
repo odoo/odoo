@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -43,6 +43,7 @@ TYPE2FIELD = {
     'selection': 'value_text',
 }
 
+
 class ir_property(osv.osv):
     _name = 'ir.property'
 
@@ -53,27 +54,27 @@ class ir_property(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
-        'value_float' : fields.float('Value'),
-        'value_integer' : fields.integer('Value'),
-        'value_text' : fields.text('Value'), # will contain (char, text)
-        'value_binary' : fields.binary('Value'),
+        'value_float': fields.float('Value'),
+        'value_integer': fields.integer('Value'),
+        'value_text': fields.text('Value'),  # will contain (char, text)
+        'value_binary': fields.binary('Value'),
         'value_reference': fields.char('Value'),
-        'value_datetime' : fields.datetime('Value'),
+        'value_datetime': fields.datetime('Value'),
 
-        'type' : fields.selection([('char', 'Char'),
-                                   ('float', 'Float'),
-                                   ('boolean', 'Boolean'),
-                                   ('integer', 'Integer'),
-                                   ('text', 'Text'),
-                                   ('binary', 'Binary'),
-                                   ('many2one', 'Many2One'),
-                                   ('date', 'Date'),
-                                   ('datetime', 'DateTime'),
-                                   ('selection', 'Selection'),
+        'type': fields.selection([('char', 'Char'),
+                                  ('float', 'Float'),
+                                  ('boolean', 'Boolean'),
+                                  ('integer', 'Integer'),
+                                  ('text', 'Text'),
+                                  ('binary', 'Binary'),
+                                  ('many2one', 'Many2One'),
+                                  ('date', 'Date'),
+                                  ('datetime', 'DateTime'),
+                                  ('selection', 'Selection'),
                                   ],
-                                  'Type',
-                                  required=True,
-                                  select=1),
+                                 'Type',
+                                 required=True,
+                                 select=1),
     }
 
     _defaults = {
@@ -150,9 +151,10 @@ class ir_property(osv.osv):
         domain = self._get_domain(cr, uid, name, model, context=context)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
-            #make the search with company_id asc to make sure that properties specific to a company are given first
+            # make the search with company_id asc to make sure that properties specific to a company are given first
             nid = self.search(cr, uid, domain, limit=1, order='company_id asc', context=context)
-            if not nid: return False
+            if not nid:
+                return False
             record = self.browse(cr, uid, nid[0], context=context)
             return self.get_by_record(cr, uid, record, context=context)
         return False
@@ -262,6 +264,7 @@ class ir_property(osv.osv):
         field = self.env[model]._fields[name]
         if field.type == 'many2one':
             comodel = field.comodel_name
+
             def makeref(value):
                 return value and '%s,%s' % (comodel, value)
             if operator in ('=', '!=', '<=', '<', '>', '>='):

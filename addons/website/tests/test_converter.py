@@ -10,6 +10,7 @@ from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.ir_qweb import html_to_text
 from openerp.addons.website.models.website import slugify, unslug
 
+
 class TestUnslug(unittest2.TestCase):
     def test_unslug(self):
         tests = {
@@ -133,6 +134,7 @@ class TestHTMLToText(unittest2.TestCase):
                 E.div(E.span("foo"), " bar"),
                 "baz")))
 
+
 class TestConvertBack(common.TransactionCase):
     def setUp(self):
         super(TestConvertBack, self).setUp()
@@ -255,11 +257,13 @@ class TestConvertBack(common.TransactionCase):
             "element edition should have been written directly to the m2o record"
         )
 
+
 class TestTitleToSlug(unittest2.TestCase):
     """
     Those tests should pass with or without python-slugify
     See website/models/website.py slugify method
     """
+
     def test_spaces(self):
         self.assertEqual(
             "spaces",

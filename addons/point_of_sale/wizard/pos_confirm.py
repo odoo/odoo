@@ -28,7 +28,7 @@ class pos_confirm(osv.osv_memory):
 
     def action_confirm(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('pos.order')
-        ids = order_obj.search(cr, uid, [('state','=','paid')], context=context)
+        ids = order_obj.search(cr, uid, [('state', '=', 'paid')], context=context)
         for order in order_obj.browse(cr, uid, ids, context=context):
             todo = True
             for line in order.statement_ids:
@@ -39,7 +39,7 @@ class pos_confirm(osv.osv_memory):
                 order.signal_workflow('done')
 
         # Check if there is orders to reconcile their invoices
-        ids = order_obj.search(cr, uid, [('state','=','invoiced'),('invoice_id.state','=','open')], context=context)
+        ids = order_obj.search(cr, uid, [('state', '=', 'invoiced'), ('invoice_id.state', '=', 'open')], context=context)
         for order in order_obj.browse(cr, uid, ids, context=context):
             invoice = order.invoice_id
             data_lines = [x.id for x in invoice.move_id.line_id if x.account_id.id == invoice.account_id.id]

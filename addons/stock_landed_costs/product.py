@@ -29,6 +29,7 @@ SPLIT_METHOD = [
     ('by_volume', 'By Volume'),
 ]
 
+
 class product_template(osv.osv):
     _inherit = "product.template"
 

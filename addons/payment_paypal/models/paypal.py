@@ -102,7 +102,7 @@ class AcquirerPaypal(osv.Model):
         else:
             percentage = acquirer.fees_int_var
             fixed = acquirer.fees_int_fixed
-        fees = (percentage / 100.0 * amount + fixed ) / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
     def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):

@@ -21,6 +21,7 @@
 from openerp import api
 from openerp.osv import fields, osv
 
+
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'
     _rec_name = "sequence_main_id"

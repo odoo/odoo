@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 
+
 class account_statement_from_invoice_lines(osv.osv_memory):
     """
     Generate Entries by Statement from Invoices

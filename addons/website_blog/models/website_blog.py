@@ -46,7 +46,7 @@ class BlogPost(osv.Model):
         res = {}
         for blog_post in self.browse(cr, uid, ids, context=context):
             age = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, age.days)
+            res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
     _columns = {
@@ -189,6 +189,7 @@ class BlogPost(osv.Model):
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
+
 
 class BlogPostHistory(osv.Model):
     _name = "blog.post.history"

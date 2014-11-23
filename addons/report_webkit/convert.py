@@ -33,6 +33,7 @@ from openerp.tools import convert
 
 original_xml_import = convert.xml_import
 
+
 class WebkitXMLImport(original_xml_import):
 
     # Override of xml import in order to add webkit_header tag in report tag.

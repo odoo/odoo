@@ -55,6 +55,7 @@ BUILTIN_ALTERNATIVES = [
     ('Courier', 'bolditalic', ["FreeMonoBoldOblique", "DejaVuSansMono-BoldOblique"]),
 ]
 
+
 class res_font(osv.Model):
     _name = "res.font"
     _description = 'Fonts available'
@@ -143,7 +144,7 @@ class res_font(osv.Model):
                         _logger.debug("Builtin remapping %r", altern_def)
                         break
                 else:
-                    _logger.warning("No local alternative found for builtin font `%s` (%s mode)." 
+                    _logger.warning("No local alternative found for builtin font `%s` (%s mode)."
                                     "Consider installing the DejaVu fonts if you have problems "
                                     "with unicode characters in RML reports",
                                     builtin_font_family, mode)

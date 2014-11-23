@@ -38,22 +38,22 @@ class hr_recruitment_report(osv.Model):
         'date_create': fields.datetime('Create Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
-        'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
+        'job_id': fields.many2one('hr.job', 'Applied Job', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
-        'department_id': fields.many2one('hr.department','Department',readonly=True),
+        'department_id': fields.many2one('hr.department', 'Department', readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
-        'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
-        'salary_prop_avg' : fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
-        'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
-        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
-        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
+        'salary_prop': fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
+        'salary_prop_avg': fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
+        'salary_exp': fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
+        'salary_exp_avg': fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'available': fields.float("Availability"),
-        'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
+        'delay_close': fields.float('Avg. Delay to Close', digits=(16, 2), readonly=True, group_operator="avg",
+                                    help="Number of Days to close the project issue"),
         'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
     }
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_recruitment_report')
         cr.execute("""
@@ -99,5 +99,3 @@ class hr_recruitment_report(osv.Model):
         """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-

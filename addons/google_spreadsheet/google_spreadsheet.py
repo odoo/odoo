@@ -31,6 +31,7 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
+
 class config(osv.osv):
     _inherit = 'google.drive.config'
 

@@ -26,6 +26,7 @@ from openerp.osv import osv
 from openerp.tools.translate import _
 import openerp
 
+
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit = "hr.employee"
@@ -39,7 +40,7 @@ class hr_employee(osv.osv):
         md = self.pool.get('ir.model.data')
         try:
             dummy, res_id = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
-            #search on id found in result to check if current user has read access right
+            # search on id found in result to check if current user has read access right
             check_right = self.pool.get('account.analytic.journal').search(cr, uid, [('id', '=', res_id)], context=context)
             if check_right:
                 return res_id
@@ -51,7 +52,7 @@ class hr_employee(osv.osv):
         md = self.pool.get('ir.model.data')
         try:
             dummy, res_id = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
-            #search on id found in result to check if current user has read access right
+            # search on id found in result to check if current user has read access right
             check_right = self.pool.get('product.template').search(cr, uid, [('id', '=', res_id)], context=context)
             if check_right:
                 return res_id
@@ -84,9 +85,8 @@ class hr_analytic_timesheet(osv.osv):
         self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context=context)
         return True
 
-
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
-        res = {'value':{}}
+        res = {'value': {}}
         if prod_id and unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
@@ -146,7 +146,7 @@ class hr_analytic_timesheet(osv.osv):
         if context.get('employee_id'):
             emp_id = [context.get('employee_id')]
         else:
-            emp_id = emp_obj.search(cr, uid, [('user_id','=',context.get('user_id') or uid)], limit=1, context=context)
+            emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id') or uid)], limit=1, context=context)
         if not emp_id:
             model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'hr', 'open_view_employee_list_my')
             msg = _("Employee is not created for this user. Please create one from configuration panel.")
@@ -154,28 +154,28 @@ class hr_analytic_timesheet(osv.osv):
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
         if emp.journal_id:
             return emp.journal_id.id
-        else :
-            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.')%(emp.name))
-
+        else:
+            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.') % (emp.name))
 
     _defaults = {
         'product_uom_id': _getEmployeeUnit,
         'product_id': _getEmployeeProduct,
         'general_account_id': _getGeneralAccount,
         'journal_id': _getAnalyticJournal,
-        'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self,cr,uid,context=ctx)),
+        'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self, cr, uid, context=ctx)),
         'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id') or uid,
     }
+
     def on_change_account_id(self, cr, uid, ids, account_id, context=None):
-        return {'value':{}}
+        return {'value': {}}
 
     def on_change_date(self, cr, uid, ids, date):
         if ids:
             new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
-                warning = {'title':_('User Alert!'),'message':_('Changing the date will let this entry appear in the timesheet of the new date.')}
-                return {'value':{},'warning':warning}
-        return {'value':{}}
+                warning = {'title': _('User Alert!'), 'message': _('Changing the date will let this entry appear in the timesheet of the new date.')}
+                return {'value': {}, 'warning': warning}
+        return {'value': {}}
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -185,10 +185,10 @@ class hr_analytic_timesheet(osv.osv):
         ename = ''
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
-        if not vals.get('journal_id',False):
-           raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
-        if not vals.get('account_id',False):
-           raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
+        if not vals.get('journal_id', False):
+            raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!') % (ename,))
+        if not vals.get('account_id', False):
+            raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):
@@ -201,6 +201,7 @@ class hr_analytic_timesheet(osv.osv):
             'general_account_id': self._getGeneralAccount(cr, uid, context),
             'journal_id': self._getAnalyticJournal(cr, uid, context),
         }}
+
 
 class account_analytic_account(osv.osv):
 

@@ -76,7 +76,7 @@ class format_address(object):
 @api.model
 def _tz_get(self):
     # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-    return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+    return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
 
 class res_partner_category(osv.Model):
@@ -200,7 +200,7 @@ class res_partner(osv.Model, format_address):
         for all commercial fields (see :py:meth:`~_commercial_fields`) """
         result = dict.fromkeys(ids, False)
         for partner in self.browse(cr, uid, ids, context=context):
-            current_partner = partner 
+            current_partner = partner
             while not current_partner.is_company and current_partner.parent_id:
                 current_partner = current_partner.parent_id
             result[partner.id] = current_partner.id
@@ -218,11 +218,11 @@ class res_partner(osv.Model, format_address):
     _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
 
     _commercial_partner_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+        'res.partner': (lambda self, cr, uid, ids, context=None: self.search(cr, uid, [('id', 'child_of', ids)], context=dict(active_test=False)),
                         ['parent_id', 'is_company'], 10)
     }
     _display_name_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
+        'res.partner': (lambda self, cr, uid, ids, context=None: self.search(cr, uid, [('id', 'child_of', ids)], context=dict(active_test=False)),
                         ['parent_id', 'is_company', 'name'], 10)
     }
 
@@ -234,7 +234,7 @@ class res_partner(osv.Model, format_address):
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
-        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
+        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active', '=', True)]),  # force "active_test" domain to bypass _search() override
         'ref': fields.char('Contact Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
@@ -257,8 +257,8 @@ class res_partner(osv.Model, format_address):
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
-                                   ('delivery', 'Shipping'), ('contact', 'Contact'),
-                                   ('other', 'Other')], 'Address Type',
+                                  ('delivery', 'Shipping'), ('contact', 'Contact'),
+                                  ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street'),
         'street2': fields.char('Street2'),
@@ -321,9 +321,9 @@ class res_partner(osv.Model, format_address):
         return tools.image_resize_image_big(image.encode('base64'))
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
+        if (not view_id) and (view_type == 'form') and context and context.get('force_email', False):
             view_id = self.pool['ir.model.data'].get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
-        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(res_partner, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
         return res
@@ -341,7 +341,7 @@ class res_partner(osv.Model, format_address):
         'company_id': _default_company,
         'color': 0,
         'is_company': False,
-        'type': 'contact', # type 'default' is wildcard and thus inappropriate
+        'type': 'contact',  # type 'default' is wildcard and thus inappropriate
         'use_parent_address': False,
         'image': False,
     }
@@ -396,18 +396,18 @@ class res_partner(osv.Model, format_address):
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
+        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13', ]):
+            thisean = partner_o['ean13']
+            if thisean and thisean != '':
+                if len(thisean) != 13:
                     return False
-                sum=0
+                sum = 0
                 for i in range(12):
                     if not (i % 2):
-                        sum+=int(thisean[i])
+                        sum += int(thisean[i])
                     else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
+                        sum += 3 * int(thisean[i])
+                if math.ceil(sum / 10.0) * 10 - sum != int(thisean[12]):
                     return False
         return True
 
@@ -423,7 +423,7 @@ class res_partner(osv.Model, format_address):
             if field.type == 'many2one':
                 values[fname] = partner[fname].id if partner[fname] else False
             elif field.type == 'many2many':
-                values[fname] = [(6,0,[r.id for r in partner[fname] or []])]
+                values[fname] = [(6, 0, [r.id for r in partner[fname] or []])]
             else:
                 values[fname] = partner[fname]
         return values
@@ -488,7 +488,7 @@ class res_partner(osv.Model, format_address):
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
-            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
+            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if partner.parent_id and partner.use_parent_address:
                 onchange_vals = self.onchange_address(cr, uid, [partner.id],
                                                       use_parent_address=partner.use_parent_address,
@@ -496,7 +496,7 @@ class res_partner(osv.Model, format_address):
                                                       context=context).get('value', {})
                 partner.update_address(onchange_vals)
 
-        # 2. To DOWNSTREAM: sync children 
+        # 2. To DOWNSTREAM: sync children
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
             if partner.commercial_partner_id == partner:
@@ -547,7 +547,7 @@ class res_partner(osv.Model, format_address):
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
-                        raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
+                        raise osv.except_osv(_("Warning"), _("You can not change the company as the partner/user has multiple user linked with different companies."))
 
         result = super(res_partner, self).write(vals)
         for partner in self:
@@ -597,8 +597,8 @@ class res_partner(osv.Model, format_address):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
-            name = name.replace('\n\n','\n')
-            name = name.replace('\n\n','\n')
+            name = name.replace('\n\n', '\n')
+            name = name.replace('\n\n', '\n')
             if context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
@@ -608,7 +608,7 @@ class res_partner(osv.Model, format_address):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        emails = tools.email_split(text.replace(' ',','))
+        emails = tools.email_split(text.replace(' ', ','))
         if emails:
             email = emails[0]
             name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
@@ -637,7 +637,7 @@ class res_partner(osv.Model, format_address):
         """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
         always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
         # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
+        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id', 'in') \
                 and args[0][2] != [False]:
             context = dict(context or {}, active_test=False)
         return super(res_partner, self)._search(cr, user, args, offset=offset, limit=limit, order=order, context=context,
@@ -684,7 +684,7 @@ class res_partner(osv.Model, format_address):
                 return self.name_get(cr, uid, ids, context)
             else:
                 return []
-        return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
+        return super(res_partner, self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def find_or_create(self, cr, uid, email, context=None):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
@@ -696,7 +696,7 @@ class res_partner(osv.Model, format_address):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        ids = self.search(cr, uid, [('email', 'ilike', email)], context=context)
         if not ids:
             return self.name_create(cr, uid, email, context=context)[0]
         return ids[0]
@@ -744,8 +744,8 @@ class res_partner(osv.Model, format_address):
                     if len(result) == len(adr_pref):
                         return result
                     to_scan = [c for c in record.child_ids
-                                 if c not in visited
-                                 if not c.is_company] + to_scan
+                               if c not in visited
+                               if not c.is_company] + to_scan
 
                 # Continue scanning at ancestor if current_partner is not a commercial entity
                 if current_partner.is_company or not current_partner.parent_id:
@@ -755,15 +755,16 @@ class res_partner(osv.Model, format_address):
         # default to type 'default' or the partner itself
         default = result.get('default', partner.id)
         for adr_type in adr_pref:
-            result[adr_type] = result.get(adr_type) or default 
+            result[adr_type] = result.get(adr_type) or default
         return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
-        if res: return res
+        if res:
+            return res
         if not context.get('category_id', False):
             return False
-        return _('Partners: ')+self.pool['res.partner.category'].browse(cr, uid, context['category_id'], context).name
+        return _('Partners: ') + self.pool['res.partner.category'].browse(cr, uid, context['category_id'], context).name
 
     @api.model
     @api.returns('self')
@@ -772,7 +773,6 @@ class res_partner(osv.Model, format_address):
         return self.env.ref('base.main_partner')
 
     def _display_address(self, cr, uid, address, without_company=False, context=None):
-
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
@@ -786,7 +786,7 @@ class res_partner(osv.Model, format_address):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id.address_format or \
-              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+            "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
             'state_code': address.state_id.code or '',
             'state_name': address.state_id.name or '',

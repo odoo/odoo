@@ -32,28 +32,28 @@ class pos_payment_report(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'pos_payment': self._pos_payment,
-            'pos_payment_total':self._pos_payment_total,
+            'pos_payment_total': self._pos_payment_total,
         })
 
     def _pos_payment(self, obj):
         self.total = 0
-        data={}
-        sql = """ select id from pos_order where id = %d"""%(obj.id)
+        data = {}
+        sql = """ select id from pos_order where id = %d""" % (obj.id)
         self.cr.execute(sql)
         if self.cr.fetchone():
             self.cr.execute ("select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
-                                 "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu " \
-                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  and pu.id=pt.uom_id " \
-                                 "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date and po.id=%d"%(obj.id))
-            data=self.cr.dictfetchall()
+                             "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  and pu.id=pt.uom_id " \
+                             "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date and po.id=%d" % (obj.id))
+            data = self.cr.dictfetchall()
         else:
             self.cr.execute ("select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
-                                 "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu  " \
-                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and pu.id=pt.uom_id  " \
-                                 "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date")
-            data=self.cr.dictfetchall()
+                             "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu  " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and pu.id=pt.uom_id  " \
+                             "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date")
+            data = self.cr.dictfetchall()
 
         for d in data:
             self.total += d['price_unit'] * d['qty']

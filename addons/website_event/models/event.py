@@ -30,7 +30,7 @@ from openerp.addons.website.models.website import slug
 
 class event(osv.osv):
     _name = 'event.event'
-    _inherit = ['event.event','website.seo.metadata']
+    _inherit = ['event.event', 'website.seo.metadata']
     _track = {
         'website_published': {
             'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
@@ -46,10 +46,10 @@ class event(osv.osv):
         ]
         web = self.pool.get('website')
         result = []
-        for name,path in todo:
-            name2 = name+' '+event.name
+        for name, path in todo:
+            name2 = name + ' ' + event.name
             newpath = web.new_page(cr, uid, name2, path, ispage=False, context=context)
-            url = "/event/"+slug(event)+"/page/" + newpath
+            url = "/event/" + slug(event) + "/page/" + newpath
             result.append((name, url))
         return result
 
@@ -66,7 +66,7 @@ class event(osv.osv):
                 tocreate = self._get_new_menu_pages(cr, uid, event, context)
                 tocreate.append((_('Register'), '/event/%s/register' % slug(event)))
                 sequence = 0
-                for name,url in tocreate:
+                for name, url in tocreate:
                     menuobj.create(cr, uid, {
                         'name': name,
                         'url': url,
@@ -125,4 +125,3 @@ class event(osv.osv):
         if event.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
         return None
-

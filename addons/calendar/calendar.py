@@ -357,7 +357,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                     AND part_rel.res_partner_id = %s
         """
 
-        #Add filter on type
+        # Add filter on type
         type_to_read = ()
         if notif:
             type_to_read += ('notification',)
@@ -371,7 +371,7 @@ class calendar_alarm_manager(osv.AbstractModel):
             base_request += filter_user
             tuple_params += (partner_id, )
 
-        #Add filter on hours
+        # Add filter on hours
         tuple_params += (seconds, seconds,)
 
         cr.execute("""SELECT *
@@ -408,12 +408,12 @@ class calendar_alarm_manager(osv.AbstractModel):
                 if alarm.type in alarm_type and \
                     one_date - timedelta(minutes=alarm.duration_minutes) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > datetime.strptime(after.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)):
-                        alert = {
-                            'alarm_id': alarm.id,
-                            'event_id': event.id,
-                            'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
-                        }
-                        res.append(alert)
+                    alert = {
+                        'alarm_id': alarm.id,
+                        'event_id': event.id,
+                        'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
+                    }
+                    res.append(alert)
         return res
 
     def get_next_mail(self, cr, uid, context=None):
@@ -678,7 +678,7 @@ class calendar_event(osv.Model):
         """
         def todate(date):
             val = parser.parse(''.join((re.compile('\d')).findall(date)))
-            ## Dates are localized to saved timezone if any, else current timezone.
+            # Dates are localized to saved timezone if any, else current timezone.
             if not val.tzinfo:
                 val = pytz.UTC.localize(val)
             return val.astimezone(timezone)
@@ -688,8 +688,8 @@ class calendar_event(osv.Model):
         if not startdate:
             startdate = datetime.now()
 
-        ## Convert the start date to saved timezone (or context tz) as it'll
-        ## define the correct hour/day asked by the user to repeat for recurrence.
+        # Convert the start date to saved timezone (or context tz) as it'll
+        # define the correct hour/day asked by the user to repeat for recurrence.
         startdate = startdate.astimezone(timezone)  # transform "+hh:mm" timezone
         rset1 = rrule.rrulestr(str(event.rrule), dtstart=startdate, forceset=True)
         ids_depending = self.search(cr, uid, [('recurrent_id', '=', event.id), '|', ('active', '=', False), ('active', '=', True)], context=context)
@@ -764,7 +764,7 @@ class calendar_event(osv.Model):
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
             context['tz'] = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
             tz = context['tz']
-        tz = tools.ustr(tz).encode('utf-8') # make safe for str{p,f}time()
+        tz = tools.ustr(tz).encode('utf-8')  # make safe for str{p,f}time()
 
         format_date, format_time = self.get_date_formats(cr, uid, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -813,7 +813,7 @@ class calendar_event(osv.Model):
         if not isinstance(ids, list):
             ids = [ids]
 
-        #read these fields as SUPERUSER because if the record is private a normal search could raise an error
+        # read these fields as SUPERUSER because if the record is private a normal search could raise an error
         events = self.read(cr, SUPERUSER_ID, ids,
                            ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by',
                             'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa',
@@ -1013,7 +1013,6 @@ class calendar_event(osv.Model):
         return {'value': value}
 
     def onchange_dates(self, cr, uid, ids, fromtype, start=False, end=False, checkallday=False, allday=False, context=None):
-
         """Returns duration and end date based on values passed
         @param ids: List of calendar event's IDs.
         """
@@ -1129,7 +1128,6 @@ class calendar_event(osv.Model):
         return sort_fields
 
     def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
-
         """Gives virtual event ids for recurring events
         This method gives ids of dates that comes between start date and end date of calendar views
 
@@ -1302,13 +1300,13 @@ class calendar_event(osv.Model):
         data['count'] = r._count
         data['interval'] = r._interval
         data['final_date'] = r._until and r._until.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        #repeat weekly
+        # repeat weekly
         if r._byweekday:
             for i in xrange(0, 7):
                 if i in r._byweekday:
                     data[day_list[i]] = True
             data['rrule_type'] = 'weekly'
-        #repeat monthly by nweekday ((weekday, weeknumber), )
+        # repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
             data['byday'] = str(r._bynweekday[0][1])
@@ -1320,13 +1318,13 @@ class calendar_event(osv.Model):
             data['month_by'] = 'date'
             data['rrule_type'] = 'monthly'
 
-        #repeat yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
+        # repeat yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
         if r._bymonth:
             data['interval'] = data['interval'] * 12
 
-        #FIXEME handle forever case
-        #end of recurrence
-        #in case of repeat for ever that we do not support right now
+        # FIXEME handle forever case
+        # end of recurrence
+        # in case of repeat for ever that we do not support right now
         if not (data.get('count') or data.get('final_date')):
             data['count'] = 100
         if data.get('count'):
@@ -1414,7 +1412,7 @@ class calendar_event(osv.Model):
         return invitation
 
     def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
-        #Function used only in calendar_event_data.xml for email template
+        # Function used only in calendar_event_data.xml for email template
         date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
 
         if tz:
@@ -1485,7 +1483,7 @@ class calendar_event(osv.Model):
                 final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
             )
 
-            #do not copy the id
+            # do not copy the id
             if data.get('id'):
                 del(data['id'])
             new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
@@ -1609,7 +1607,7 @@ class calendar_event(osv.Model):
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
         for result in res:
-            #remove the count, since the value is not consistent with the result of the search when expand the group
+            # remove the count, since the value is not consistent with the result of the search when expand the group
             for groupname in groupby:
                 if result.get(groupname + "_count"):
                     del result[groupname + "_count"]

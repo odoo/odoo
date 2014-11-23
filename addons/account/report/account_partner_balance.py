@@ -31,17 +31,17 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.account_ids = []
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_filter': self._get_filter,
             'get_account': self._get_account,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_partners':self._get_partners,
+            'get_partners': self._get_partners,
             'get_target_move': self._get_target_move,
         })
 
@@ -52,7 +52,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         self.result_selection = data['form'].get('result_selection')
         self.target_move = data['form'].get('target_move', 'all')
 
-        if (self.result_selection == 'customer' ):
+        if (self.result_selection == 'customer'):
             self.ACCOUNT_TYPE = ('receivable',)
         elif (self.result_selection == 'supplier'):
             self.ACCOUNT_TYPE = ('payable',)
@@ -82,7 +82,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return res
 
     def lines(self):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -114,7 +114,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             (self.ACCOUNT_TYPE, tuple(move_state)))
         res = self.cr.dictfetchall()
 
-
         if self.display_partner == 'non-zero_balance':
             full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
         else:
@@ -124,7 +123,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             if not rec.get('name', False):
                 rec.update({'name': _('Unknown Partner')})
 
-        ## We will now compute Total
+        # We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         return subtotal_row
 
@@ -140,7 +139,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             # For the first element we always add the line
             # type = 1 is the line is the first of the account
             # type = 2 is an other line of the account
-            if i==0:
+            if i == 0:
                 # We add the first as the header
                 #
                 ##
@@ -170,7 +169,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 tot_enlitige = (r['enlitige'] or 0.0)
                 #
             else:
-                if cleanarray[i]['account_id'] <> cleanarray[i-1]['account_id']:
+                if cleanarray[i]['account_id'] <> cleanarray[i - 1]['account_id']:
 
                     new_header['debit'] = tot_debit
                     new_header['credit'] = tot_credit
@@ -198,7 +197,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     new_header['enlitige'] = tot_enlitige
                     new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                     new_header['type'] = 3
-                    ##get_fiscalyear
+                    # get_fiscalyear
                     ##
 
                     completearray.append(new_header)
@@ -210,7 +209,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
                     completearray.append(r)
 
-                if cleanarray[i]['account_id'] == cleanarray[i-1]['account_id']:
+                if cleanarray[i]['account_id'] == cleanarray[i - 1]['account_id']:
                     # we reset the counter
 
                     new_header['debit'] = tot_debit

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
     _description = 'Invoice Types'
@@ -38,6 +39,7 @@ class sale_journal_invoice_type(osv.osv):
 #==============================================
 # sale journal inherit
 #==============================================
+
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'

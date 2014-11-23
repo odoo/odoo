@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class mrp_price(osv.osv_memory):
     _name = 'mrp.product_price'
     _description = 'Product Price'
@@ -41,16 +42,16 @@ class mrp_price(osv.osv_memory):
         """
         if context is None:
             context = {}
-        datas = {'ids' : context.get('active_ids',[])}
+        datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['number'])
         res = res and res[0] or {}
         datas['form'] = res
 
         return {
-            'type' : 'ir.actions.report.xml',
-            'report_name':'product.price',
-            'datas' : datas,
-       }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'product.price',
+            'datas': datas,
+            }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

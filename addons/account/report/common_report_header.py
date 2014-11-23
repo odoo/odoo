@@ -22,6 +22,8 @@
 from openerp.tools.translate import _
 
 # Mixin to use with rml_parse, so self.pool will be defined.
+
+
 class common_report_header(object):
 
     def _sum_debit(self, period_id=False, journal_id=False):
@@ -52,7 +54,7 @@ class common_report_header(object):
         if not (period_id and journal_id):
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE period_id IN %s AND journal_id IN %s '+ self.query_get_clause+'',
+                        'WHERE period_id IN %s AND journal_id IN %s ' + self.query_get_clause + '',
                         (tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -75,7 +77,7 @@ class common_report_header(object):
 
     def get_start_period(self, data):
         if data.get('form', False) and data['form'].get('period_from', False):
-            return self.pool.get('account.period').browse(self.cr,self.uid,data['form']['period_from']).name
+            return self.pool.get('account.period').browse(self.cr, self.uid, data['form']['period_from']).name
         return ''
 
     def get_end_period(self, data):
@@ -104,7 +106,7 @@ class common_report_header(object):
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'',
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + '',
                         (period_id, tuple(journals)))
 
         return self.cr.fetchone()[0] or 0.0
@@ -114,7 +116,7 @@ class common_report_header(object):
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause +' ',
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' ',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -131,7 +133,7 @@ class common_report_header(object):
     def _get_journal(self, data):
         codes = []
         if data.get('form', False) and data['form'].get('journal_ids', False):
-            self.cr.execute('select code from account_journal where id IN %s',(tuple(data['form']['journal_ids']),))
+            self.cr.execute('select code from account_journal where id IN %s', (tuple(data['form']['journal_ids']),))
             codes = [x for x, in self.cr.fetchall()]
         return codes
 
@@ -140,6 +142,6 @@ class common_report_header(object):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
         return ''
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

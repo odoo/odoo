@@ -23,10 +23,11 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp import workflow
 
+
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    
+
     def make_invoices(self, cr, uid, ids, context=None):
         """
              To make invoices.
@@ -40,11 +41,12 @@ class sale_order_line_make_invoice(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = False
         invoices = {}
 
-    #TODO: merge with sale.py/make_invoice
+    # TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
             """
                  To make invoices.
@@ -68,7 +70,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'account_id': a,
                 'partner_id': order.partner_invoice_id.id,
                 'invoice_line': [(6, 0, lines)],
-                'currency_id' : order.pricelist_id.currency_id.id,
+                'currency_id': order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,

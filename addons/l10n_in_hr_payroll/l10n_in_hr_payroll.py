@@ -30,6 +30,7 @@ import openerp.addons.decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
 
+
 class hr_contract(osv.osv):
     """
     Employee contract allows to add different values in fields.
@@ -56,10 +57,10 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
-        'name':fields.char('Name', readonly=True, required=True, states={'draft': [('readonly', False)]},),
+        'name': fields.char('Name', readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
         'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
-        'state':fields.selection([
+        'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
@@ -68,8 +69,8 @@ class payroll_advice(osv.osv):
         'line_ids': fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'chaque_nos': fields.char('Cheque Numbers'),
         'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
-        'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'bank_id': fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
         'batch_id': fields.many2one('hr.payslip.run', 'Batch', readonly=True)
     }
 
@@ -104,7 +105,7 @@ class payroll_advice(osv.osv):
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
                     raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
-                line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
+                line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
                     advice_line = {
@@ -140,12 +141,12 @@ class payroll_advice(osv.osv):
     def set_to_draft(self, cr, uid, ids, context=None):
         """Resets Advice as draft.
         """
-        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
         """Marks Advice as cancelled.
         """
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         res = {}
@@ -154,8 +155,9 @@ class payroll_advice(osv.osv):
             if company.partner_id.bank_ids:
                 res.update({'bank_id': company.partner_id.bank_ids[0].bank.id})
         return {
-            'value':res
+            'value': res
         }
+
 
 class hr_payslip_run(osv.osv):
 
@@ -171,7 +173,7 @@ class hr_payslip_run(osv.osv):
         res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'available_advice': False}, context=context)
         return res
-    
+
     def create_advice(self, cr, uid, ids, context=None):
         payslip_pool = self.pool.get('hr.payslip')
         payslip_line_pool = self.pool.get('hr.payslip.line')
@@ -180,7 +182,7 @@ class hr_payslip_run(osv.osv):
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
             if run.available_advice:
-                raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
+                raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name))
             advice_data = {
                         'batch_id': run.id,
                         'company_id': users[0].company_id.id,
@@ -209,20 +211,21 @@ class hr_payslip_run(osv.osv):
                             'bysal': line.total
                     }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
-        return self.write(cr, uid, ids, {'available_advice' : True})
+        return self.write(cr, uid, ids, {'available_advice': True})
 
 
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
     '''
+
     def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
         res = {}
         hr_obj = self.pool.get('hr.employee')
         if not employee_id:
             return {'value': res}
         employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
-        res.update({'name': employee.bank_account_id.acc_number , 'ifsc_code': employee.bank_account_id.bank_bic or ''})
+        res.update({'name': employee.bank_account_id.acc_number, 'ifsc_code': employee.bank_account_id.bank_bic or ''})
         return {'value': res}
 
     _name = 'hr.payroll.advice.line'
@@ -251,6 +254,7 @@ class hr_payslip(osv.osv):
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice', copy=False)
     }
+
 
 class res_company(osv.osv):
 

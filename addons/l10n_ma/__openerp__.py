@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name' : 'Maroc - Accounting',
-    'version' : '1.0',
-    'author' : 'kazacube',
-    'category' : 'Localization/Account Charts',
+    'name': 'Maroc - Accounting',
+    'version': '1.0',
+    'author': 'kazacube',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Maroc.
 =================================================================
@@ -34,8 +34,8 @@ produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...
 L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable
 Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
-    'depends' : ['base', 'account'],
-    'data' : [
+    'depends': ['base', 'account'],
+    'data': [
         'security/ir.model.access.csv',
         'account_type.xml',
         'account_pcg_morocco.xml',
@@ -43,10 +43,9 @@ Seddik au cours du troisième trimestre 2010.""",
         'l10n_ma_tax.xml',
         'l10n_ma_journal.xml',
     ],
-    'demo' : [],
+    'demo': [],
     'auto_install': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_ma.jpeg','images/l10n_ma_chart.jpeg'],
+    'images': ['images/config_chart_l10n_ma.jpeg', 'images/l10n_ma_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

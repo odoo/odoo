@@ -22,11 +22,12 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"
     _description = "Purchase Requisition Partner"
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Supplier', required=True,domain=[('supplier', '=', True)]),
+        'partner_id': fields.many2one('res.partner', 'Supplier', required=True, domain=[('supplier', '=', True)]),
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

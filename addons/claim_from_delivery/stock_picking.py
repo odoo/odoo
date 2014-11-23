@@ -7,11 +7,10 @@ class stock_picking(osv.osv):
     def _claim_count_out(self, cr, uid, ids, field_name, arg, context=None):
         Claim = self.pool['crm.claim']
         return {
-            id: Claim.search_count(cr, uid, [('ref', '=',('stock.picking,' + str(ids[0])))], context=context)
+            id: Claim.search_count(cr, uid, [('ref', '=', ('stock.picking,' + str(ids[0])))], context=context)
             for id in ids
         }
 
     _columns = {
-        'claim_count_out': fields.function(_claim_count_out, string='Claims', type='integer'),    
+        'claim_count_out': fields.function(_claim_count_out, string='Claims', type='integer'),
     }
-

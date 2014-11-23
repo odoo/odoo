@@ -36,20 +36,21 @@ class price_type(osv.osv):
         When a field is a price, you can use it in pricelists to base
         sale and purchase prices based on some fields of the product.
     """
+
     def _price_field_get(self, cr, uid, context=None):
         mf = self.pool.get('ir.model.fields')
-        ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
+        ids = mf.search(cr, uid, [('model', 'in', (('product.product'), ('product.template'))), ('ttype', '=', 'float')], context=context)
         res = []
         for field in mf.browse(cr, uid, ids, context=context):
             res.append((field.name, field.field_description))
         return res
 
     def _get_field_currency(self, cr, uid, fname, ctx):
-        ids = self.search(cr, uid, [('field','=',fname)], context=ctx)
+        ids = self.search(cr, uid, [('field', '=', fname)], context=ctx)
         return self.browse(cr, uid, ids, context=ctx)[0].currency_id
 
     def _get_currency(self, cr, uid, ctx):
-        comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+        comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
         if not comp:
             comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)
@@ -58,10 +59,10 @@ class price_type(osv.osv):
     _name = "product.price.type"
     _description = "Price Type"
     _columns = {
-        "name" : fields.char("Price Name", required=True, translate=True, help="Name of this kind of price."),
-        "active" : fields.boolean("Active"),
-        "field" : fields.selection(_price_field_get, "Product Field", size=32, required=True, help="Associated field in the product form."),
-        "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
+        "name": fields.char("Price Name", required=True, translate=True, help="Name of this kind of price."),
+        "active": fields.boolean("Active"),
+        "field": fields.selection(_price_field_get, "Product Field", size=32, required=True, help="Associated field in the product form."),
+        "currency_id": fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
     }
     _defaults = {
         "active": lambda *args: True,
@@ -86,12 +87,12 @@ class product_pricelist(osv.osv):
     def _pricelist_type_get(self, cr, uid, context=None):
         pricelist_type_obj = self.pool.get('product.pricelist.type')
         pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
-        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
+        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key', 'name'], context=context)
 
         res = []
 
         for type in pricelist_types:
-            res.append((type['key'],type['name']))
+            res.append((type['key'], type['name']))
 
         return res
 
@@ -108,12 +109,12 @@ class product_pricelist(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        result= []
+        result = []
         if not all(ids):
             return result
         for pl in self.browse(cr, uid, ids, context=context):
-            name = pl.name + ' ('+ pl.currency_id.name + ')'
-            result.append((pl.id,name))
+            name = pl.name + ' (' + pl.currency_id.name + ')'
+            result.append((pl.id, name))
         return result
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -125,7 +126,7 @@ class product_pricelist(osv.osv):
                        FROM ((
                                 SELECT pr.id, pr.name
                                 FROM product_pricelist pr JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE pr.name || ' (' || cur.name || ')' = %(name)s
                             )
@@ -138,7 +139,7 @@ class product_pricelist(osv.osv):
                                         tr.name = 'product.pricelist,name' AND
                                         tr.lang = %(lang)s
                                      ) JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE tr.value || ' (' || cur.name || ')' = %(name)s
                             )
@@ -154,7 +155,6 @@ class product_pricelist(osv.osv):
                 return self.name_get(cr, uid, ids, context)
         return super(product_pricelist, self).name_search(
             cr, uid, name, args, operator=operator, context=context, limit=limit)
-
 
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
@@ -185,7 +185,7 @@ class product_pricelist(osv.osv):
         results = {}
         for pricelist in self.browse(cr, uid, ids, context=context):
             subres = self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
-            for product_id,price in subres.items():
+            for product_id, price in subres.items():
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
@@ -239,7 +239,7 @@ class product_pricelist(osv.osv):
                 'AND (price_version_id = %s) '
             'ORDER BY sequence, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, version.id))
-        
+
         item_ids = [x[0] for x in cr.fetchall()]
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
 
@@ -259,7 +259,7 @@ class product_pricelist(osv.osv):
                         qty_in_product_uom = qty
                 else:
                     qty_in_product_uom = qty
-                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
+                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
@@ -325,7 +325,7 @@ class product_pricelist(osv.osv):
 
                 if price is not False:
                     price_limit = price
-                    price = price * (1.0+(rule.price_discount or 0.0))
+                    price = price * (1.0 + (rule.price_discount or 0.0))
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)
                     if context.get('uom'):
@@ -335,9 +335,9 @@ class product_pricelist(osv.osv):
                         factor = 1.0
                     price += (rule.price_surcharge or 0.0) / factor
                     if rule.price_min_margin:
-                        price = max(price, price_limit+rule.price_min_margin)
+                        price = max(price, price_limit + rule.price_min_margin)
                     if rule.price_max_margin:
-                        price = min(price, price_limit+rule.price_max_margin)
+                        price = min(price, price_limit + rule.price_max_margin)
                     rule_id = rule.id
                 break
 
@@ -374,7 +374,7 @@ class product_pricelist_version(osv.osv):
             'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
         'date_end': fields.date('End Date', help="Last valid date for the version."),
-        'company_id': fields.related('pricelist_id','company_id',type='many2one',
+        'company_id': fields.related('pricelist_id', 'company_id', type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
     _defaults = {
@@ -393,7 +393,7 @@ class product_pricelist_version(osv.osv):
 
             cursor.execute('SELECT id ' \
                     'FROM product_pricelist_version ' \
-                    'WHERE '+' and '.join(where) + (where and ' and ' or '')+
+                    'WHERE ' + ' and '.join(where) + (where and ' and ' or '') +
                         'pricelist_id = %s ' \
                         'AND active ' \
                         'AND id <> %s', (
@@ -427,7 +427,7 @@ class product_pricelist_item(osv.osv):
         if fields.get('type') == 'purchase':
             product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'standard_price')], context=context)
         elif fields.get('type') == 'sale':
-            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field', '=', 'list_price')], context=context)
         else:
             return -1
         if not product_price_type_ids:
@@ -475,7 +475,7 @@ class product_pricelist_item(osv.osv):
 
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
-        'price_discount': fields.float('Price Discount', digits=(16,4)),
+        'price_discount': fields.float('Price Discount', digits=(16, 4)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
             help="Sets the price so that it is a multiple of this value.\n" \
@@ -486,7 +486,7 @@ class product_pricelist_item(osv.osv):
             digits_compute= dp.get_precision('Product Price'), help='Specify the minimum amount of margin over the base price.'),
         'price_max_margin': fields.float('Max. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the maximum amount of margin over the base price.'),
-        'company_id': fields.related('price_version_id','company_id',type='many2one',
+        'company_id': fields.related('price_version_id', 'company_id', type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
 
@@ -498,12 +498,10 @@ class product_pricelist_item(osv.osv):
     def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:
             return {}
-        prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code','name'])
+        prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code', 'name'])
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}
 
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

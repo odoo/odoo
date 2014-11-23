@@ -3,7 +3,7 @@ from openerp.addons.web.http import request
 
 
 class picking_wave_report(http.Controller):
-    @http.route('/report/stock_picking_wave.report_pickingwave/<ids>', type='http', auth='user', 
+    @http.route('/report/stock_picking_wave.report_pickingwave/<ids>', type='http', auth='user',
                 website=True)
     def report_picking_wave(self, ids):
         self.cr, self.uid, self.pool = request.cr, request.uid, request.registry

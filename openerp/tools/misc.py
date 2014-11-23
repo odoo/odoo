@@ -52,7 +52,7 @@ except ImportError:
 
 from config import config
 from cache import *
-from .parse_version import parse_version 
+from .parse_version import parse_version
 
 import openerp
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
@@ -65,6 +65,7 @@ _logger = logging.getLogger(__name__)
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
+
 def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
     if config.get('bin_path') and config['bin_path'] != 'None':
@@ -73,6 +74,7 @@ def find_in_path(name):
         return which(name, path=os.pathsep.join(path))
     except IOError:
         return None
+
 
 def find_pg_tool(name):
     path = None
@@ -83,6 +85,7 @@ def find_pg_tool(name):
     except IOError:
         return None
 
+
 def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     if not prog:
@@ -92,6 +95,7 @@ def exec_pg_command(name, *args):
     with open(os.devnull) as dn:
         return subprocess.call(args2, stdout=dn, stderr=subprocess.STDOUT)
 
+
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
@@ -100,8 +104,9 @@ def exec_pg_command_pipe(name, *args):
     # with redirecting std[in/err/out]
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-          close_fds=(os.name=="posix"))
+          close_fds=(os.name == "posix"))
     return pop.stdin, pop.stdout
+
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
@@ -111,7 +116,7 @@ def exec_command_pipe(name, *args):
     # with redirecting std[in/err/out]
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-          close_fds=(os.name=="posix"))
+          close_fds=(os.name == "posix"))
     return pop.stdin, pop.stdout
 
 #----------------------------------------------------------
@@ -120,11 +125,12 @@ def exec_command_pipe(name, *args):
 #file_path_root = os.getcwd()
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
+
 def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
     >>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
@@ -262,9 +268,10 @@ def flatten(list):
             r.append(e)
     return r
 
+
 def reverse_enumerate(l):
     """Like enumerate but in the other sens
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -279,7 +286,8 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return izip(xrange(len(l)-1, -1, -1), reversed(l))
+    return izip(xrange(len(l) - 1, -1, -1), reversed(l))
+
 
 def topological_sort(elems):
     """ Return a list of elements sorted so that their dependencies are listed
@@ -428,29 +436,32 @@ class UpdateableDict(local):
     def __ne__(self, y):
         return self.dict.__ne__(y)
 
+
 class currency(float):
     """ Deprecate
-    
+
     .. warning::
-    
+
     Don't use ! Use res.currency.round()
     """
 
     def __init__(self, value, accuracy=2, rounding=None):
         if rounding is None:
-            rounding=10**-accuracy
-        self.rounding=rounding
-        self.accuracy=accuracy
+            rounding = 10 ** -accuracy
+        self.rounding = rounding
+        self.accuracy = accuracy
 
     def __new__(cls, value, accuracy=2, rounding=None):
         return float.__new__(cls, round(value, accuracy))
 
-    #def __str__(self):
+    # def __str__(self):
     #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
     #   return str(display_value)
 
+
 def to_xml(s):
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
 
 def get_iso_codes(lang):
     if lang.find('_') != -1:
@@ -544,6 +555,7 @@ ALL_LANGUAGES = {
         'tlh_TLH': u'Klingon',
     }
 
+
 def scan_languages():
     """ Returns all languages supported by OpenERP for translation
 
@@ -551,6 +563,7 @@ def scan_languages():
     :rtype: [(str, unicode)]
     """
     return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
+
 
 def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
@@ -566,19 +579,20 @@ def get_user_companies(cr, user):
         return []
     return [user_comp] + _get_company_children(cr, [user_comp])
 
+
 def mod10r(number):
     """
     Input number : account or invoice number
     Output return: the same number completed with the recursive mod10
     key
     """
-    codec=[0,9,4,6,8,2,7,1,3,5]
+    codec = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5]
     report = 0
-    result=""
+    result = ""
     for digit in number:
         result += digit
         if digit.isdigit():
-            report = codec[ (int(digit) + report) % 10 ]
+            report = codec[(int(digit) + report) % 10]
     return result + str((10 - report) % 10)
 
 
@@ -589,13 +603,14 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,basestring):
-        sz=len(sz)
+    if isinstance(sz, basestring):
+        sz = len(sz)
     s, i = float(sz), 0
-    while s >= 1024 and i < len(units)-1:
+    while s >= 1024 and i < len(units) - 1:
         s /= 1024
         i += 1
     return "%0.2f %s" % (s, units[i])
+
 
 def logged(f):
     @wraps(f)
@@ -617,6 +632,7 @@ def logged(f):
         return res
 
     return wrapper
+
 
 class profile(object):
     def __init__(self, fname=None):
@@ -658,21 +674,23 @@ __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
 'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
-'terp-check','terp-go-month','terp-go-year','terp-go-today','terp-document-new','terp-camera_test',
-'terp-emblem-important','terp-gtk-media-pause','terp-gtk-stop','terp-gnome-cpu-frequency-applet+',
-'terp-dialog-close','terp-gtk-jump-to-rtl','terp-gtk-jump-to-ltr','terp-accessories-archiver',
-'terp-stock_align_left_24','terp-stock_effects-object-colorize','terp-go-home','terp-gtk-go-back-rtl',
-'terp-gtk-go-back-ltr','terp-personal','terp-personal-','terp-personal+','terp-accessories-archiver-minus',
-'terp-accessories-archiver+','terp-stock_symbol-selection','terp-call-start','terp-dolar',
-'terp-face-plain','terp-folder-blue','terp-folder-green','terp-folder-orange','terp-folder-yellow',
-'terp-gdu-smart-failing','terp-go-week','terp-gtk-select-all','terp-locked','terp-mail-forward',
-'terp-mail-message-new','terp-mail-replied','terp-rating-rated','terp-stage','terp-stock_format-scientific',
-'terp-dolar_ok!','terp-idea','terp-stock_format-default','terp-mail-','terp-mail_delete'
+'terp-check', 'terp-go-month', 'terp-go-year', 'terp-go-today', 'terp-document-new', 'terp-camera_test',
+'terp-emblem-important', 'terp-gtk-media-pause', 'terp-gtk-stop', 'terp-gnome-cpu-frequency-applet+',
+'terp-dialog-close', 'terp-gtk-jump-to-rtl', 'terp-gtk-jump-to-ltr', 'terp-accessories-archiver',
+'terp-stock_align_left_24', 'terp-stock_effects-object-colorize', 'terp-go-home', 'terp-gtk-go-back-rtl',
+'terp-gtk-go-back-ltr', 'terp-personal', 'terp-personal-', 'terp-personal+', 'terp-accessories-archiver-minus',
+'terp-accessories-archiver+', 'terp-stock_symbol-selection', 'terp-call-start', 'terp-dolar',
+'terp-face-plain', 'terp-folder-blue', 'terp-folder-green', 'terp-folder-orange', 'terp-folder-yellow',
+'terp-gdu-smart-failing', 'terp-go-week', 'terp-gtk-select-all', 'terp-locked', 'terp-mail-forward',
+'terp-mail-message-new', 'terp-mail-replied', 'terp-rating-rated', 'terp-stage', 'terp-stock_format-scientific',
+'terp-dolar_ok!', 'terp-idea', 'terp-stock_format-default', 'terp-mail-', 'terp-mail_delete'
 ]
+
 
 def icons(*a, **kw):
     global __icons_list
-    return [(x, x) for x in __icons_list ]
+    return [(x, x) for x in __icons_list]
+
 
 def detect_ip_addr():
     """Try a very crude method to figure out a valid external
@@ -691,28 +709,28 @@ def detect_ip_addr():
 
         ip_addr = None
 
-        if not fcntl: # not UNIX:
+        if not fcntl:  # not UNIX:
             host = socket.gethostname()
             ip_addr = socket.gethostbyname(host)
-        else: # UNIX:
+        else:  # UNIX:
             # get all interfaces:
             nbytes = 128 * 32
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             names = array('B', '\0' * nbytes)
-            #print 'names: ', names
-            outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
+            # print 'names: ', names
+            outbytes = unpack('iL', fcntl.ioctl(s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
             namestr = names.tostring()
 
             # try 64 bit kernel:
             for i in range(0, outbytes, 40):
-                name = namestr[i:i+16].split('\0', 1)[0]
+                name = namestr[i:i + 16].split('\0', 1)[0]
                 if name != 'lo':
-                    ip_addr = socket.inet_ntoa(namestr[i+20:i+24])
+                    ip_addr = socket.inet_ntoa(namestr[i + 20:i + 24])
                     break
 
             # try 32 bit kernel:
             if ip_addr is None:
-                ifaces = filter(None, [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
+                ifaces = filter(None, [namestr[i:i + 32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
 
                 for ifname in [iface for iface in ifaces if iface != 'lo']:
                     ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
@@ -737,6 +755,8 @@ def detect_ip_addr():
 #  common/timezone_get() rpc method, which clients need to read
 #  to know the appropriate time offset to use when reading/writing
 #  times.
+
+
 def get_win32_timezone():
     """Attempt to return the "standard name" of the current timezone on a win32 system.
        @return the standard name of the current win32 timezone, or False if it cannot be found.
@@ -745,14 +765,15 @@ def get_win32_timezone():
     if sys.platform == "win32":
         try:
             import _winreg
-            hklm = _winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
-            current_tz_key = _winreg.OpenKey(hklm, r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation", 0,_winreg.KEY_ALL_ACCESS)
-            res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
+            hklm = _winreg.ConnectRegistry(None, _winreg.HKEY_LOCAL_MACHINE)
+            current_tz_key = _winreg.OpenKey(hklm, r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation", 0, _winreg.KEY_ALL_ACCESS)
+            res = str(_winreg.QueryValueEx(current_tz_key, "StandardName")[0])  # [0] is value, [1] is type code
             _winreg.CloseKey(current_tz_key)
             _winreg.CloseKey(hklm)
         except Exception:
             pass
     return res
+
 
 def detect_server_timezone():
     """Attempt to detect the timezone to use on the server side.
@@ -769,9 +790,9 @@ def detect_server_timezone():
     # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
     # Option 2: to be backwards compatible with 5.0 or earlier, the value from time.tzname[0], but only if it is known to pytz
     # Option 3: the environment variable TZ
-    sources = [ (config['timezone'], 'OpenERP configuration'),
-                (time.tzname[0], 'time.tzname'),
-                (os.environ.get('TZ',False),'TZ environment variable'), ]
+    sources = [(config['timezone'], 'OpenERP configuration'),
+               (time.tzname[0], 'time.tzname'),
+               (os.environ.get('TZ', False), 'TZ environment variable'), ]
     # Option 4: OS-specific: /etc/timezone on Unix
     if os.path.exists("/etc/timezone"):
         tz_value = False
@@ -782,7 +803,7 @@ def detect_server_timezone():
             pass
         finally:
             f.close()
-        sources.append((tz_value,"/etc/timezone file"))
+        sources.append((tz_value, "/etc/timezone file"))
     # Option 5: timezone info from registry on Win32
     if sys.platform == "win32":
         # Timezone info is stored in windows registry.
@@ -790,9 +811,9 @@ def detect_server_timezone():
         # of timezones in windows is rarely something that is known to pytz.
         # But that's ok, it is always possible to use a config option to set
         # it explicitly.
-        sources.append((get_win32_timezone(),"Windows Registry"))
+        sources.append((get_win32_timezone(), "Windows Registry"))
 
-    for (value,source) in sources:
+    for (value, source) in sources:
         if value:
             try:
                 tz = pytz.timezone(value)
@@ -805,6 +826,7 @@ def detect_server_timezone():
         "timezone. You can specify it explicitly with option 'timezone' in "
         "the server configuration.")
     return 'UTC'
+
 
 def get_server_timezone():
     return "UTC"
@@ -822,27 +844,27 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
 # the C standard (1989 version), always available on platforms
 # with a C standard implementation.
 DATETIME_FORMATS_MAP = {
-        '%C': '', # century
-        '%D': '%m/%d/%Y', # modified %y->%Y
+        '%C': '',  # century
+        '%D': '%m/%d/%Y',  # modified %y->%Y
         '%e': '%d',
-        '%E': '', # special modifier
+        '%E': '',  # special modifier
         '%F': '%Y-%m-%d',
-        '%g': '%Y', # modified %y->%Y
+        '%g': '%Y',  # modified %y->%Y
         '%G': '%Y',
         '%h': '%b',
         '%k': '%H',
         '%l': '%I',
         '%n': '\n',
-        '%O': '', # special modifier
+        '%O': '',  # special modifier
         '%P': '%p',
         '%R': '%H:%M',
         '%r': '%I:%M:%S %p',
-        '%s': '', #num of seconds since epoch
+        '%s': '',  # num of seconds since epoch
         '%T': '%H:%M:%S',
-        '%t': ' ', # tab
+        '%t': ' ',  # tab
         '%u': ' %w',
         '%V': '%W',
-        '%y': '%Y', # Even if %y works, it's ambiguous, so we should use %Y
+        '%y': '%Y',  # Even if %y works, it's ambiguous, so we should use %Y
         '%+': '%Y-%m-%d %H:%M:%S',
 
         # %Z is a special case that causes 2 problems at least:
@@ -886,6 +908,7 @@ POSIX_TO_LDML = {
     #'Z': 'z',
 }
 
+
 def posix_to_ldml(fmt, locale):
     """ Converts a posix/strftime pattern into an LDML date format pattern.
 
@@ -909,13 +932,13 @@ def posix_to_ldml(fmt, locale):
             quoted = []
 
         if pc:
-            if c == '%': # escaped percent
+            if c == '%':  # escaped percent
                 buf.append('%')
-            elif c == 'x': # date format, short seems to match
+            elif c == 'x':  # date format, short seems to match
                 buf.append(locale.date_formats['short'].pattern)
-            elif c == 'X': # time format, seems to include seconds. short does not
+            elif c == 'X':  # time format, seems to include seconds. short does not
                 buf.append(locale.time_formats['medium'].pattern)
-            else: # look up format char in static mapping
+            else:  # look up format char in static mapping
                 buf.append(POSIX_TO_LDML[c])
             pc = False
         elif c == '%':
@@ -930,6 +953,7 @@ def posix_to_ldml(fmt, locale):
         buf.append("'")
 
     return ''.join(buf)
+
 
 def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
         tz_offset=True, ignore_unparsable_time=True):
@@ -995,10 +1019,12 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
+
 class upload_data_thread(threading.Thread):
     def __init__(self, email, data, type):
-        self.args = [('email',email),('type',type),('data',data)]
-        super(upload_data_thread,self).__init__()
+        self.args = [('email', email), ('type', type), ('data', data)]
+        super(upload_data_thread, self).__init__()
+
     def run(self):
         try:
             import urllib
@@ -1009,10 +1035,12 @@ class upload_data_thread(threading.Thread):
         except Exception:
             pass
 
+
 def upload_data(email, data, type='SURVEY'):
     a = upload_data_thread(email, data, type)
     a.start()
     return True
+
 
 def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
     """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
@@ -1027,24 +1055,30 @@ def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
         res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
     return res
 
+
 def get_and_group_by_company(cr, uid, obj, ids, context=None):
     return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
 
 # port of python 2.6's attrgetter with support for dotted notation
+
+
 def resolve_attr(obj, attr):
     for name in attr.split("."):
         obj = getattr(obj, name)
     return obj
 
+
 def attrgetter(*items):
     if len(items) == 1:
         attr = items[0]
+
         def g(obj):
             return resolve_attr(obj, attr)
     else:
         def g(obj):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
+
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
@@ -1063,11 +1097,13 @@ class unquote(str):
        >>> print d
        {'test': active_id}
     """
+
     def __repr__(self):
         return self
 
+
 class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns 
+    """Defaultdict-based evaluation context that returns
        an ``unquote`` string for any missing name used during
        the evaluation.
        Mostly useful for evaluating OpenERP domains/contexts that
@@ -1087,6 +1123,7 @@ class UnquoteEvalContext(defaultdict):
        {'default_user_id': 1, 'default_section_id': section_id}
 
        """
+
     def __init__(self, *args, **kwargs):
         super(UnquoteEvalContext, self).__init__(None, *args, **kwargs)
 
@@ -1106,6 +1143,7 @@ class mute_logger(object):
             do_suff()
 
     """
+
     def __init__(self, *loggers):
         self.loggers = loggers
 
@@ -1130,6 +1168,8 @@ class mute_logger(object):
         return deco
 
 _ph = object()
+
+
 class CountingStream(object):
     """ Stream wrapper counting the number of element it has yielded. Similar
     role to ``enumerate``, but for use when the iteration process of the stream
@@ -1147,20 +1187,25 @@ class CountingStream(object):
         ``int``, index of the last yielded element in the stream. If the stream
         has ended, will give an index 1-past the stream
     """
+
     def __init__(self, stream, start=-1):
         self.stream = iter(stream)
         self.index = start
         self.stopped = False
+
     def __iter__(self):
         return self
+
     def next(self):
-        if self.stopped: raise StopIteration()
+        if self.stopped:
+            raise StopIteration()
         self.index += 1
         val = next(self.stream, _ph)
         if val is _ph:
             self.stopped = True
             raise StopIteration()
         return val
+
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
@@ -1188,6 +1233,7 @@ class ConstantMapping(Mapping):
     Useful for default value to methods
     """
     __slots__ = ['_value']
+
     def __init__(self, val):
         self._value = val
 
@@ -1245,22 +1291,31 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
+
     def __delitem__(self, key):
         raise NotImplementedError("'__delitem__' not supported on frozendict")
+
     def __setitem__(self, key, val):
         raise NotImplementedError("'__setitem__' not supported on frozendict")
+
     def clear(self):
         raise NotImplementedError("'clear' not supported on frozendict")
+
     def pop(self, key, default=None):
         raise NotImplementedError("'pop' not supported on frozendict")
+
     def popitem(self):
         raise NotImplementedError("'popitem' not supported on frozendict")
+
     def setdefault(self, key, default=None):
         raise NotImplementedError("'setdefault' not supported on frozendict")
+
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
+
 
 @contextmanager
 def ignore(*exc):

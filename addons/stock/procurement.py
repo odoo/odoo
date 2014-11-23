@@ -29,11 +29,13 @@ from datetime import datetime
 from psycopg2 import OperationalError
 import openerp
 
+
 class procurement_group(osv.osv):
     _inherit = 'procurement.group'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner')
     }
+
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
@@ -54,13 +56,13 @@ class procurement_rule(osv.osv):
             help="Source location is action=move"),
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the rule is global"),
-        'procure_method': fields.selection([('make_to_stock', 'Take From Stock'), ('make_to_order', 'Create Procurement')], 'Move Supply Method', required=True, 
+        'procure_method': fields.selection([('make_to_stock', 'Take From Stock'), ('make_to_order', 'Create Procurement')], 'Move Supply Method', required=True,
                                            help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there."""),
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
             store={
                 'stock.location.route': (_get_rules, ['sequence'], 10),
                 'procurement.rule': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 10),
-        }),
+                }),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type',
             help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
         'delay': fields.integer('Number of Days'),
@@ -75,6 +77,7 @@ class procurement_rule(osv.osv):
         'propagate': True,
         'delay': 0,
     }
+
 
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
@@ -97,7 +100,7 @@ class procurement_order(osv.osv):
             context = {}
         to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
         ctx = context.copy()
-        #set the context for the propagation of the procurement cancelation
+        # set the context for the propagation of the procurement cancelation
         ctx['cancel_procurement'] = True
         for procurement in self.browse(cr, uid, to_cancel_ids, context=ctx):
             self.propagate_cancel(cr, uid, procurement, context=ctx)
@@ -138,7 +141,7 @@ class procurement_order(osv.osv):
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
-            #a rule defined on 'Stock' is suitable for a procurement in 'Stock\Bin A'
+            # a rule defined on 'Stock' is suitable for a procurement in 'Stock\Bin A'
             all_parent_location_ids = self._find_parent_locations(cr, uid, procurement, context=context)
             rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', 'in', all_parent_location_ids)], context=context)
             rule_id = rule_id and rule_id[0] or False
@@ -157,8 +160,8 @@ class procurement_order(osv.osv):
             group_id = procurement.group_id and procurement.group_id.id or False
         elif procurement.rule_id.group_propagation_option == 'fixed':
             group_id = procurement.rule_id.group_id and procurement.rule_id.group_id.id or False
-        #it is possible that we've already got some move done, so check for the done qty and create
-        #a new move with the correct qty
+        # it is possible that we've already got some move done, so check for the done qty and create
+        # a new move with the correct qty
         already_done_qty = 0
         already_done_qty_uos = 0
         for move in procurement.move_ids:
@@ -200,7 +203,7 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-            #create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+            # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             move_obj.create(cr, SUPERUSER_ID, move_dict, context=context)
             return True
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
@@ -209,7 +212,7 @@ class procurement_order(osv.osv):
         new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
         res = super(procurement_order, self).run(cr, uid, new_ids, autocommit=autocommit, context=context)
 
-        #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
+        # after all the procurements are run, check if some created a draft stock move that needs to be confirmed
         #(we do that in batch because it fasts the picking assignation and the picking state computation)
         move_to_confirm_ids = []
         for procurement in self.browse(cr, uid, new_ids, context=context):
@@ -282,10 +285,10 @@ class procurement_order(osv.osv):
 
             move_obj = self.pool.get('stock.move')
 
-            #Minimum stock rules
+            # Minimum stock rules
             self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=use_new_cursor, company_id=company_id, context=context)
 
-            #Search all confirmed stock_moves and try to assign them
+            # Search all confirmed stock_moves and try to assign them
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc', context=context)
             for x in xrange(0, len(confirmed_ids), 100):
                 move_obj.action_assign(cr, uid, confirmed_ids[x:x + 100], context=context)

@@ -24,7 +24,7 @@
 import uno
 import unohelper
 import pythonloader
-if __name__<>"package":
+if __name__ <> "package":
     from actions import *
 
 
@@ -39,7 +39,9 @@ if __name__<>"package":
 # It is cached in a global variable.
 goServiceManager = False
 pythonloader.DEBUG = 0
-def getServiceManager( cHost="localhost", cPort="2002" ):
+
+
+def getServiceManager(cHost="localhost", cPort="2002"):
     """Get the ServiceManager from the running OpenOffice.org.
         Then retain it in the global variable goServiceManager for future use.
         This is similar to the GetProcessServiceManager() in OOo Basic.
@@ -52,14 +54,14 @@ def getServiceManager( cHost="localhost", cPort="2002" ):
         # Create the UnoUrlResolver on the Python side.
 
         # Connect to the running OpenOffice.org and get its context.
-        if __name__<>"package":
+        if __name__ <> "package":
             oLocalResolver = oLocalContext.ServiceManager.createInstanceWithContext(
-                                    "com.sun.star.bridge.UnoUrlResolver", oLocalContext )
-            oContext = oLocalResolver.resolve( "uno:socket,host=" + cHost + ",port=" + cPort + ";urp;StarOffice.ComponentContext" )
+                                    "com.sun.star.bridge.UnoUrlResolver", oLocalContext)
+            oContext = oLocalResolver.resolve("uno:socket,host=" + cHost + ",port=" + cPort + ";urp;StarOffice.ComponentContext")
         # Get the ServiceManager object
             goServiceManager = oContext.ServiceManager
         else:
-            goServiceManager=oLocalContext.ServiceManager
+            goServiceManager = oLocalContext.ServiceManager
 
     return goServiceManager
 
@@ -72,65 +74,70 @@ def getServiceManager( cHost="localhost", cPort="2002" ):
 
 
 # This is the same as ServiceManager.createInstance( ... )
-def createUnoService( cClass ):
+def createUnoService(cClass):
     """A handy way to create a global objects within the running OOo.
     Similar to the function of the same name in OOo Basic.
     """
     oServiceManager = getServiceManager()
-    oObj = oServiceManager.createInstance( cClass )
+    oObj = oServiceManager.createInstance(cClass)
     return oObj
 
 
 # The StarDesktop object.  (global like in OOo Basic)
 # It is cached in a global variable.
 StarDesktop = None
+
+
 def getDesktop():
     """An easy way to obtain the Desktop object from a running OOo.
     """
     global StarDesktop
     if StarDesktop == None:
-        StarDesktop = createUnoService( "com.sun.star.frame.Desktop" )
+        StarDesktop = createUnoService("com.sun.star.frame.Desktop")
     return StarDesktop
 # preload the StarDesktop variable.
-#getDesktop()
+# getDesktop()
 
 
 # The CoreReflection object.
 # It is cached in a global variable.
 goCoreReflection = False
+
+
 def getCoreReflection():
     global goCoreReflection
     if not goCoreReflection:
-        goCoreReflection = createUnoService( "com.sun.star.reflection.CoreReflection" )
+        goCoreReflection = createUnoService("com.sun.star.reflection.CoreReflection")
     return goCoreReflection
 
 
-def createUnoStruct( cTypeName ):
+def createUnoStruct(cTypeName):
     """Create a UNO struct and return it.
     Similar to the function of the same name in OOo Basic.
     """
     oCoreReflection = getCoreReflection()
     # Get the IDL class for the type name
-    oXIdlClass = oCoreReflection.forName( cTypeName )
+    oXIdlClass = oCoreReflection.forName(cTypeName)
     # Create the struct.
-    oReturnValue, oStruct = oXIdlClass.createObject( None )
+    oReturnValue, oStruct = oXIdlClass.createObject(None)
     return oStruct
 
 #------------------------------------------------------------
 #   API helpers
 #------------------------------------------------------------
 
-def hasUnoInterface( oObject, cInterfaceName ):
+
+def hasUnoInterface(oObject, cInterfaceName):
     """Similar to Basic's HasUnoInterfaces() function, but singular not plural."""
 
     # Get the Introspection service.
-    oIntrospection = createUnoService( "com.sun.star.beans.Introspection" )
+    oIntrospection = createUnoService("com.sun.star.beans.Introspection")
 
     # Now inspect the object to learn about it.
-    oObjInfo = oIntrospection.inspect( oObject )
+    oObjInfo = oIntrospection.inspect(oObject)
 
     # Obtain an array describing all methods of the object.
-    oMethods = oObjInfo.getMethods( uno.getConstantByName( "com.sun.star.beans.MethodConcept.ALL" ) )
+    oMethods = oObjInfo.getMethods(uno.getConstantByName("com.sun.star.beans.MethodConcept.ALL"))
     # Now look at every method.
     for oMethod in oMethods:
         # Check the method's interface to see if
@@ -140,10 +147,11 @@ def hasUnoInterface( oObject, cInterfaceName ):
             return True
     return False
 
-def hasUnoInterfaces( oObject, *cInterfaces ):
+
+def hasUnoInterfaces(oObject, *cInterfaces):
     """Similar to the function of the same name in OOo Basic."""
     for cInterface in cInterfaces:
-        if not hasUnoInterface( oObject, cInterface ):
+        if not hasUnoInterface(oObject, cInterface):
             return False
     return True
 
@@ -152,10 +160,10 @@ def hasUnoInterfaces( oObject, *cInterfaces ):
 #------------------------------------------------------------
 
 
-def makePropertyValue( cName=None, uValue=None, nHandle=None, nState=None ):
+def makePropertyValue(cName=None, uValue=None, nHandle=None, nState=None):
     """Create a com.sun.star.beans.PropertyValue struct and return it.
     """
-    oPropertyValue = createUnoStruct( "com.sun.star.beans.PropertyValue" )
+    oPropertyValue = createUnoStruct("com.sun.star.beans.PropertyValue")
 
     if cName != None:
         oPropertyValue.Name = cName
@@ -169,25 +177,25 @@ def makePropertyValue( cName=None, uValue=None, nHandle=None, nState=None ):
     return oPropertyValue
 
 
-def makePoint( nX, nY ):
+def makePoint(nX, nY):
     """Create a com.sun.star.awt.Point struct."""
-    oPoint = createUnoStruct( "com.sun.star.awt.Point" )
+    oPoint = createUnoStruct("com.sun.star.awt.Point")
     oPoint.X = nX
     oPoint.Y = nY
     return oPoint
 
 
-def makeSize( nWidth, nHeight ):
+def makeSize(nWidth, nHeight):
     """Create a com.sun.star.awt.Size struct."""
-    oSize = createUnoStruct( "com.sun.star.awt.Size" )
+    oSize = createUnoStruct("com.sun.star.awt.Size")
     oSize.Width = nWidth
     oSize.Height = nHeight
     return oSize
 
 
-def makeRectangle( nX, nY, nWidth, nHeight ):
+def makeRectangle(nX, nY, nWidth, nHeight):
     """Create a com.sun.star.awt.Rectangle struct."""
-    oRect = createUnoStruct( "com.sun.star.awt.Rectangle" )
+    oRect = createUnoStruct("com.sun.star.awt.Rectangle")
     oRect.X = nX
     oRect.Y = nY
     oRect.Width = nWidth
@@ -195,7 +203,7 @@ def makeRectangle( nX, nY, nWidth, nHeight ):
     return oRect
 
 
-def Array( *args ):
+def Array(*args):
     """This is just sugar coating so that code from OOoBasic which
     contains the Array() function can work perfectly in python."""
     tArray = ()
@@ -204,7 +212,7 @@ def Array( *args ):
     return tArray
 
 
-def loadComponentFromURL( cUrl, tProperties=() ):
+def loadComponentFromURL(cUrl, tProperties=()):
     """Open or Create a document from it's URL.
     New documents are created from URL's such as:
         private:factory/sdraw
@@ -213,7 +221,7 @@ def loadComponentFromURL( cUrl, tProperties=() ):
         private:factory/simpress
     """
     StarDesktop = getDesktop()
-    oDocument = StarDesktop.loadComponentFromURL( cUrl, "_blank", 0, tProperties )
+    oDocument = StarDesktop.loadComponentFromURL(cUrl, "_blank", 0, tProperties)
     return oDocument
 
 
@@ -222,47 +230,47 @@ def loadComponentFromURL( cUrl, tProperties=() ):
 #------------------------------------------------------------
 
 
-def defineStyle( oDrawDoc, cStyleFamily, cStyleName, cParentStyleName=None ):
+def defineStyle(oDrawDoc, cStyleFamily, cStyleName, cParentStyleName=None):
     """Add a new style to the style catalog if it is not already present.
     This returns the style object so that you can alter its properties.
     """
 
-    oStyleFamily = oDrawDoc.getStyleFamilies().getByName( cStyleFamily )
+    oStyleFamily = oDrawDoc.getStyleFamilies().getByName(cStyleFamily)
 
     # Does the style already exist?
-    if oStyleFamily.hasByName( cStyleName ):
+    if oStyleFamily.hasByName(cStyleName):
         # then get it so we can return it.
-        oStyle = oStyleFamily.getByName( cStyleName )
+        oStyle = oStyleFamily.getByName(cStyleName)
     else:
         # Create new style object.
-        oStyle = oDrawDoc.createInstance( "com.sun.star.style.Style" )
+        oStyle = oDrawDoc.createInstance("com.sun.star.style.Style")
 
         # Set its parent style
         if cParentStyleName != None:
-            oStyle.setParentStyle( cParentStyleName )
+            oStyle.setParentStyle(cParentStyleName)
 
         # Add the new style to the style family.
-        oStyleFamily.insertByName( cStyleName, oStyle )
+        oStyleFamily.insertByName(cStyleName, oStyle)
 
     return oStyle
 
 
-def getStyle( oDrawDoc, cStyleFamily, cStyleName ):
+def getStyle(oDrawDoc, cStyleFamily, cStyleName):
     """Lookup and return a style from the document.
     """
-    return oDrawDoc.getStyleFamilies().getByName( cStyleFamily ).getByName( cStyleName )
+    return oDrawDoc.getStyleFamilies().getByName(cStyleFamily).getByName(cStyleName)
 
 #------------------------------------------------------------
 #   General Utility functions
 #------------------------------------------------------------
 
 
-def convertToURL( cPathname ):
+def convertToURL(cPathname):
     """Convert a Windows or Linux pathname into an OOo URL."""
-    if len( cPathname ) > 1:
+    if len(cPathname) > 1:
         if cPathname[1:2] == ":":
             cPathname = "/" + cPathname[0] + "|" + cPathname[2:]
-    cPathname = cPathname.replace( "\\", "/" )
+    cPathname = cPathname.replace("\\", "/")
     cPathname = "file://" + cPathname
     return cPathname
 
@@ -271,16 +279,19 @@ def convertToURL( cPathname ):
 #goAwtToolkit = createUnoService( "com.sun.star.awt.Toolkit" )
 goAwtToolkit = None
 
+
 def getAwtToolkit():
     global goAwtToolkit
     if goAwtToolkit == None:
-        goAwtToolkit = createUnoService( "com.sun.star.awt.Toolkit" )
+        goAwtToolkit = createUnoService("com.sun.star.awt.Toolkit")
     return goAwtToolkit
 
 # This class builds dialog boxes.
 # This can be used in two different ways...
 # 1. by subclassing it (elegant)
 # 2. without subclassing it (less elegant)
+
+
 class DBModalDialog:
     """Class to build a dialog box from the com.sun.star.awt.* services.
     This doesn't do anything you couldn't already do using OOo's UNO API,
@@ -289,17 +300,23 @@ class DBModalDialog:
     You can add controls, and listeners for those controls to the dialog box.
     This class can be used by subclassing it, or without subclassing it.
     """
-    def __init__( self, nPositionX=None, nPositionY=None, nWidth=None, nHeight=None, cTitle=None ):
-        self.oDialogModel = createUnoService( "com.sun.star.awt.UnoControlDialogModel" )
-        if nPositionX != None:  self.oDialogModel.PositionX = nPositionX
-        if nPositionY != None:  self.oDialogModel.PositionY = nPositionY
-        if nWidth     != None:  self.oDialogModel.Width     = nWidth
-        if nHeight    != None:  self.oDialogModel.Height    = nHeight
-        if cTitle     != None:  self.oDialogModel.Title     = cTitle
-        self.oDialogControl = createUnoService( "com.sun.star.awt.UnoControlDialog" )
-        self.oDialogControl.setModel( self.oDialogModel )
 
-    def release( self ):
+    def __init__(self, nPositionX=None, nPositionY=None, nWidth=None, nHeight=None, cTitle=None):
+        self.oDialogModel = createUnoService("com.sun.star.awt.UnoControlDialogModel")
+        if nPositionX != None:
+            self.oDialogModel.PositionX = nPositionX
+        if nPositionY != None:
+            self.oDialogModel.PositionY = nPositionY
+        if nWidth     != None:
+            self.oDialogModel.Width     = nWidth
+        if nHeight    != None:
+            self.oDialogModel.Height    = nHeight
+        if cTitle     != None:
+            self.oDialogModel.Title     = cTitle
+        self.oDialogControl = createUnoService("com.sun.star.awt.UnoControlDialog")
+        self.oDialogControl.setModel(self.oDialogModel)
+
+    def release(self):
         """Release resources.
         After calling this, you can no longer use this object.
         """
@@ -309,20 +326,19 @@ class DBModalDialog:
     #   Dialog box adjustments
     #--------------------------------------------------
 
-    def setDialogPosition( self, nX, nY ):
+    def setDialogPosition(self, nX, nY):
         self.oDialogModel.PositionX = nX
         self.oDialogModel.PositionY = nY
 
-    def setDialogSize( self, nWidth, nHeight ):
+    def setDialogSize(self, nWidth, nHeight):
         self.oDialogModel.Width = nWidth
         self.oDialogModel.Height = nHeight
 
-    def setDialogTitle( self, cCaption ):
+    def setDialogTitle(self, cCaption):
         self.oDialogModel.Title = cCaption
 
-    def setVisible( self, bVisible ):
-        self.oDialogControl.setVisible( bVisible )
-
+    def setVisible(self, bVisible):
+        self.oDialogControl.setVisible(bVisible)
 
     #--------------------------------------------------
     #   com.sun.star.awt.UnoControlButton
@@ -333,36 +349,36 @@ class DBModalDialog:
     #       com.sun.star.awt.UnoControlButtonModel
     #       com.sun.star.awt.UnoControlDialogElement
     #       com.sun.star.awt.UnoControlModel
-    def addButton( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                       cLabel=None,
-                       actionListenerProc=None,
-                       nTabIndex=None ):
-        self.addControl( "com.sun.star.awt.UnoControlButtonModel",
-                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None, bMultiSelection=None,
-                         cLabel=cLabel,
-                         nTabIndex=nTabIndex )
+    def addButton(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                  cLabel=None,
+                  actionListenerProc=None,
+                  nTabIndex=None):
+        self.addControl("com.sun.star.awt.UnoControlButtonModel",
+                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None, bMultiSelection=None,
+                        cLabel=cLabel,
+                        nTabIndex=nTabIndex)
         if actionListenerProc != None:
-            self.addActionListenerProc( cCtrlName, actionListenerProc )
+            self.addActionListenerProc(cCtrlName, actionListenerProc)
 
-    def setButtonLabel( self, cCtrlName, cLabel ):
+    def setButtonLabel(self, cCtrlName, cLabel):
         """Set the label of the control."""
-        oControl = self.getControl( cCtrlName )
-        oControl.setLabel( cLabel )
+        oControl = self.getControl(cCtrlName)
+        oControl.setLabel(cLabel)
 
     #--------------------------------------------------
     #   com.sun.star.awt.UnoControlEditModel
     #--------------------------------------------------
-    def addEdit( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                        cText=None,
-                        textListenerProc=None ):
+    def addEdit(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                cText=None,
+                textListenerProc=None):
         """Add a Edit control to the window."""
-        self.addControl( "com.sun.star.awt.UnoControlEditModel",
+        self.addControl("com.sun.star.awt.UnoControlEditModel",
             cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None)
 
         if cText != None:
-            self.setEditText( cCtrlName, cText )
+            self.setEditText(cCtrlName, cText)
         if textListenerProc != None:
-            self.addTextListenerProc( cCtrlName, textListenerProc )
+            self.addTextListenerProc(cCtrlName, textListenerProc)
 
     #--------------------------------------------------
     #   com.sun.star.awt.UnoControlCheckBox
@@ -373,80 +389,81 @@ class DBModalDialog:
     #       com.sun.star.awt.UnoControlCheckBoxModel
     #       com.sun.star.awt.UnoControlDialogElement
     #       com.sun.star.awt.UnoControlModel
-    def addCheckBox( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                       cLabel=None,
-                       itemListenerProc=None,
-                       nTabIndex=None ):
-        self.addControl( "com.sun.star.awt.UnoControlCheckBoxModel",
-                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None,  bMultiSelection=None,
-                         cLabel=cLabel,
-                         nTabIndex=nTabIndex )
+    def addCheckBox(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                    cLabel=None,
+                    itemListenerProc=None,
+                    nTabIndex=None):
+        self.addControl("com.sun.star.awt.UnoControlCheckBoxModel",
+                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown=None,  bMultiSelection=None,
+                        cLabel=cLabel,
+                        nTabIndex=nTabIndex)
         if itemListenerProc != None:
-            self.addItemListenerProc( cCtrlName, itemListenerProc )
+            self.addItemListenerProc(cCtrlName, itemListenerProc)
 
-    def setEditText( self, cCtrlName, cText ):
+    def setEditText(self, cCtrlName, cText):
         """Set the text of the edit box."""
-        oControl = self.getControl( cCtrlName )
-        oControl.setText( cText )
+        oControl = self.getControl(cCtrlName)
+        oControl.setText(cText)
 
-    def getEditText( self, cCtrlName):
+    def getEditText(self, cCtrlName):
         """Set the text of the edit box."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getText()
 
-    def setCheckBoxLabel( self, cCtrlName, cLabel ):
+    def setCheckBoxLabel(self, cCtrlName, cLabel):
         """Set the label of the control."""
-        oControl = self.getControl( cCtrlName )
-        oControl.setLabel( cLabel )
+        oControl = self.getControl(cCtrlName)
+        oControl.setLabel(cLabel)
 
-    def getCheckBoxState( self, cCtrlName ):
+    def getCheckBoxState(self, cCtrlName):
         """Get the state of the control."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getState();
 
-    def setCheckBoxState( self, cCtrlName, nState ):
+    def setCheckBoxState(self, cCtrlName, nState):
         """Set the state of the control."""
-        oControl = self.getControl( cCtrlName )
-        oControl.setState( nState )
+        oControl = self.getControl(cCtrlName)
+        oControl.setState(nState)
 
-    def enableCheckBoxTriState( self, cCtrlName, bTriStateEnable ):
+    def enableCheckBoxTriState(self, cCtrlName, bTriStateEnable):
         """Enable or disable the tri state mode of the control."""
-        oControl = self.getControl( cCtrlName )
-        oControl.enableTriState( bTriStateEnable )
-
+        oControl = self.getControl(cCtrlName)
+        oControl.enableTriState(bTriStateEnable)
 
     #--------------------------------------------------
     #   com.sun.star.awt.UnoControlFixedText
     #--------------------------------------------------
 
-    def addFixedText( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                        cLabel=None ):
-        self.addControl( "com.sun.star.awt.UnoControlFixedTextModel",
-                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                         bDropdown=None, bMultiSelection=None,
-                         cLabel=cLabel )
+    def addFixedText(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                     cLabel=None):
+        self.addControl("com.sun.star.awt.UnoControlFixedTextModel",
+                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                        bDropdown=None, bMultiSelection=None,
+                        cLabel=cLabel)
 
-        return self.getControl( cCtrlName )
+        return self.getControl(cCtrlName)
 
     #--------------------------------------------------
     #   Add Controls to dialog
     #--------------------------------------------------
 
-    def addControl( self, cCtrlServiceName,
-                        cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                        bDropdown=None,
-                        bMultiSelection=None,
-                        cLabel=None,
-                        nTabIndex=None,
-                        sImagePath=None,
+    def addControl(self, cCtrlServiceName,
+                   cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                   bDropdown=None,
+                   bMultiSelection=None,
+                   cLabel=None,
+                   nTabIndex=None,
+                   sImagePath=None,
                          ):
-        oControlModel = self.oDialogModel.createInstance( cCtrlServiceName )
-        self.oDialogModel.insertByName( cCtrlName, oControlModel )
+        oControlModel = self.oDialogModel.createInstance(cCtrlServiceName)
+        self.oDialogModel.insertByName(cCtrlName, oControlModel)
         # if negative coordinates are given for X or Y position,
         #  then make that coordinate be relative to the right/bottom
         #  edge of the dialog box instead of to the left/top.
-        if nPositionX < 0: nPositionX = self.oDialogModel.Width  + nPositionX - nWidth
-        if nPositionY < 0: nPositionY = self.oDialogModel.Height + nPositionY - nHeight
+        if nPositionX < 0:
+            nPositionX = self.oDialogModel.Width  + nPositionX - nWidth
+        if nPositionY < 0:
+            nPositionY = self.oDialogModel.Height + nPositionY - nHeight
         oControlModel.PositionX = nPositionX
         oControlModel.PositionY = nPositionY
         oControlModel.Width = nWidth
@@ -456,8 +473,8 @@ class DBModalDialog:
         if bDropdown != None:
             oControlModel.Dropdown = bDropdown
 
-        if bMultiSelection!=None:
-            oControlModel.MultiSelection=bMultiSelection
+        if bMultiSelection != None:
+            oControlModel.MultiSelection = bMultiSelection
 
         if cLabel != None:
             oControlModel.Label = cLabel
@@ -475,212 +492,209 @@ class DBModalDialog:
     #   com.sun.star.awt.UnoContorlListBoxModel
     #--------------------------------------------------
 
-
-    def addComboListBox( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+    def addComboListBox(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
                         bDropdown=True,
                         bMultiSelection=False,
                         itemListenerProc=None,
                         actionListenerProc=None,
                         ):
 
-        mod = self.addControl( "com.sun.star.awt.UnoControlListBoxModel",
-                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight,bDropdown,bMultiSelection )
+        mod = self.addControl("com.sun.star.awt.UnoControlListBoxModel",
+                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown, bMultiSelection)
 
         if itemListenerProc != None:
-            self.addItemListenerProc( cCtrlName, itemListenerProc )
+            self.addItemListenerProc(cCtrlName, itemListenerProc)
 
-    def addListBoxItems( self, cCtrlName, tcItemTexts, nPosition=0 ):
+    def addListBoxItems(self, cCtrlName, tcItemTexts, nPosition=0):
         """Add a tupple of items to the ListBox at specified position."""
-        oControl = self.getControl( cCtrlName )
-        oControl.addItems( tcItemTexts, nPosition )
+        oControl = self.getControl(cCtrlName)
+        oControl.addItems(tcItemTexts, nPosition)
 
-    def selectListBoxItem( self, cCtrlName, cItemText, bSelect=True ):
+    def selectListBoxItem(self, cCtrlName, cItemText, bSelect=True):
         """Selects/Deselects the ispecified item."""
-        oControl = self.getControl( cCtrlName )
-        return oControl.selectItem( cItemText, bSelect )
+        oControl = self.getControl(cCtrlName)
+        return oControl.selectItem(cItemText, bSelect)
 
-    def selectListBoxItemPos( self, cCtrlName, nItemPos, bSelect=True ):
+    def selectListBoxItemPos(self, cCtrlName, nItemPos, bSelect=True):
         """Select/Deselect the item at the specified position."""
-        oControl = self.getControl( cCtrlName )
-        return oControl.selectItemPos( nItemPos, bSelect )
+        oControl = self.getControl(cCtrlName)
+        return oControl.selectItemPos(nItemPos, bSelect)
 
-    def removeListBoxItems( self, cCtrlName, nPosition, nCount=1 ):
+    def removeListBoxItems(self, cCtrlName, nPosition, nCount=1):
         """Remove items from a ListBox."""
-        oControl = self.getControl( cCtrlName )
-        oControl.removeItems( nPosition, nCount )
+        oControl = self.getControl(cCtrlName)
+        oControl.removeItems(nPosition, nCount)
 
-    def getListBoxItemCount( self, cCtrlName ):
+    def getListBoxItemCount(self, cCtrlName):
         """Get the number of items in a ListBox."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getItemCount()
 
-    def getListBoxSelectedItem( self, cCtrlName ):
+    def getListBoxSelectedItem(self, cCtrlName):
         """Returns the currently selected item."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getSelectedItem()
 
-    def getListBoxItem( self, cCtrlName, nPosition ):
+    def getListBoxItem(self, cCtrlName, nPosition):
         """Return the item at specified position within the ListBox."""
-        oControl = self.getControl( cCtrlName )
-        return oControl.getItem( nPosition )
+        oControl = self.getControl(cCtrlName)
+        return oControl.getItem(nPosition)
 
-    def getListBoxSelectedItemPos(self,cCtrlName):
+    def getListBoxSelectedItemPos(self, cCtrlName):
 
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getSelectedItemPos()
 
-    def getListBoxSelectedItems(self,cCtrlName):
-        oControl = self.getControl( cCtrlName )
+    def getListBoxSelectedItems(self, cCtrlName):
+        oControl = self.getControl(cCtrlName)
         return oControl.getSelectedItems()
 
-    def getListBoxSelectedItemsPos(self,cCtrlName):
+    def getListBoxSelectedItemsPos(self, cCtrlName):
 
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getSelectedItemsPos()
 
     #--------------------------------------------------
     #   com.sun.star.awt.UnoControlComboBoxModel
     #--------------------------------------------------
-    def addComboBox( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
-                        bDropdown=True,
-                        itemListenerProc=None,
-                        actionListenerProc=None ):
+    def addComboBox(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+                    bDropdown=True,
+                    itemListenerProc=None,
+                    actionListenerProc=None):
 
-        mod = self.addControl( "com.sun.star.awt.UnoControlComboBoxModel",
-                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight,bDropdown)
+        mod = self.addControl("com.sun.star.awt.UnoControlComboBoxModel",
+                         cCtrlName, nPositionX, nPositionY, nWidth, nHeight, bDropdown)
         if itemListenerProc != None:
-            self.addItemListenerProc( cCtrlName, itemListenerProc )
+            self.addItemListenerProc(cCtrlName, itemListenerProc)
         if actionListenerProc != None:
-            self.addActionListenerProc( cCtrlName, actionListenerProc )
+            self.addActionListenerProc(cCtrlName, actionListenerProc)
 
-
-    def setComboBoxText( self, cCtrlName, cText ):
+    def setComboBoxText(self, cCtrlName, cText):
         """Set the text of the ComboBox."""
-        oControl = self.getControl( cCtrlName )
-        oControl.setText( cText )
+        oControl = self.getControl(cCtrlName)
+        oControl.setText(cText)
 
-    def getComboBoxText( self, cCtrlName):
+    def getComboBoxText(self, cCtrlName):
         """Set the text of the ComboBox."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getText()
 
-    def getComboBoxSelectedText( self, cCtrlName ):
+    def getComboBoxSelectedText(self, cCtrlName):
         """Get the selected text of the ComboBox."""
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         return oControl.getSelectedText();
 
-    def getControl( self, cCtrlName ):
+    def getControl(self, cCtrlName):
         """Get the control (not its model) for a particular control name.
         The control returned includes the service com.sun.star.awt.UnoControl,
          and another control-specific service which inherits from it.
         """
-        oControl = self.oDialogControl.getControl( cCtrlName )
+        oControl = self.oDialogControl.getControl(cCtrlName)
         return oControl
 
-    def getControlModel( self, cCtrlName ):
+    def getControlModel(self, cCtrlName):
         """Get the control model (not the control) for a particular control name.
         The model returned includes the service UnoControlModel,
          and another control-specific service which inherits from it.
         """
-        oControl = self.getControl( cCtrlName )
+        oControl = self.getControl(cCtrlName)
         oControlModel = oControl.getModel()
         return oControlModel
     #---------------------------------------------------
     #    com.sun.star.awt.UnoControlImageControlModel
     #---------------------------------------------------
-    def addImageControl( self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
+
+    def addImageControl(self, cCtrlName, nPositionX, nPositionY, nWidth, nHeight,
                         sImagePath="",
                         itemListenerProc=None,
-                        actionListenerProc=None ):
+                        actionListenerProc=None):
 
-        mod = self.addControl( "com.sun.star.awt.UnoControlImageControlModel",
+        mod = self.addControl("com.sun.star.awt.UnoControlImageControlModel",
                          cCtrlName, nPositionX, nPositionY, nWidth, nHeight, sImagePath=sImagePath)
 
         if itemListenerProc != None:
-            self.addItemListenerProc( cCtrlName, itemListenerProc )
+            self.addItemListenerProc(cCtrlName, itemListenerProc)
         if actionListenerProc != None:
-            self.addActionListenerProc( cCtrlName, actionListenerProc )
-
+            self.addActionListenerProc(cCtrlName, actionListenerProc)
 
     #--------------------------------------------------
     #   Adjust properties of control models
     #--------------------------------------------------
 
-    def setControlModelProperty( self, cCtrlName, cPropertyName, uValue ):
+    def setControlModelProperty(self, cCtrlName, cPropertyName, uValue):
         """Set the value of a property of a control's model.
         This affects the control model, not the control.
         """
-        oControlModel = self.getControlModel( cCtrlName )
-        oControlModel.setPropertyValue( cPropertyName, uValue )
+        oControlModel = self.getControlModel(cCtrlName)
+        oControlModel.setPropertyValue(cPropertyName, uValue)
 
-    def getControlModelProperty( self, cCtrlName, cPropertyName ):
+    def getControlModelProperty(self, cCtrlName, cPropertyName):
         """Get the value of a property of a control's model.
         This affects the control model, not the control.
         """
-        oControlModel = self.getControlModel( cCtrlName )
-        return oControlModel.getPropertyValue( cPropertyName )
+        oControlModel = self.getControlModel(cCtrlName)
+        return oControlModel.getPropertyValue(cPropertyName)
 
     #--------------------------------------------------
     #   Sugar coated property adjustments to control models.
     #--------------------------------------------------
 
-    def setEnabled( self, cCtrlName, bEnabled=True ):
+    def setEnabled(self, cCtrlName, bEnabled=True):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        self.setControlModelProperty( cCtrlName, "Enabled", bEnabled )
+        self.setControlModelProperty(cCtrlName, "Enabled", bEnabled)
 
-    def getEnabled( self, cCtrlName ):
+    def getEnabled(self, cCtrlName):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
 
-        return self.getControlModelProperty( cCtrlName, "Enabled" )
+        return self.getControlModelProperty(cCtrlName, "Enabled")
 
-    def setState( self, cCtrlName, nState ):
+    def setState(self, cCtrlName, nState):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        self.setControlModelProperty( cCtrlName, "Status", nState )
+        self.setControlModelProperty(cCtrlName, "Status", nState)
 
-    def getState( self, cCtrlName ):
+    def getState(self, cCtrlName):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        return self.getControlModelProperty( cCtrlName, "Status" )
+        return self.getControlModelProperty(cCtrlName, "Status")
 
-    def setLabel( self, cCtrlName, cLabel ):
+    def setLabel(self, cCtrlName, cLabel):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        self.setControlModelProperty( cCtrlName, "Label", cLabel )
+        self.setControlModelProperty(cCtrlName, "Label", cLabel)
 
-    def getLabel( self, cCtrlName ):
+    def getLabel(self, cCtrlName):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        return self.getControlModelProperty( cCtrlName, "Label" )
+        return self.getControlModelProperty(cCtrlName, "Label")
 
-    def setHelpText( self, cCtrlName, cHelpText ):
+    def setHelpText(self, cCtrlName, cHelpText):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        self.setControlModelProperty( cCtrlName, "HelpText", cHelpText )
+        self.setControlModelProperty(cCtrlName, "HelpText", cHelpText)
 
-    def getHelpText( self, cCtrlName ):
+    def getHelpText(self, cCtrlName):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        return self.getControlModelProperty( cCtrlName, "HelpText" )
-
+        return self.getControlModelProperty(cCtrlName, "HelpText")
 
     #--------------------------------------------------
     #   Adjust controls (not models)
@@ -689,63 +703,74 @@ class DBModalDialog:
     # The following apply to all controls which are a
     #   com.sun.star.awt.UnoControl
 
-    def setDesignMode( self, cCtrlName, bDesignMode=True ):
-        oControl = self.getControl( cCtrlName )
-        oControl.setDesignMode( bDesignMode )
+    def setDesignMode(self, cCtrlName, bDesignMode=True):
+        oControl = self.getControl(cCtrlName)
+        oControl.setDesignMode(bDesignMode)
 
-    def isDesignMode( self, cCtrlName, bDesignMode=True ):
-        oControl = self.getControl( cCtrlName )
+    def isDesignMode(self, cCtrlName, bDesignMode=True):
+        oControl = self.getControl(cCtrlName)
         return oControl.isDesignMode()
 
-    def isTransparent( self, cCtrlName, bDesignMode=True ):
-        oControl = self.getControl( cCtrlName )
+    def isTransparent(self, cCtrlName, bDesignMode=True):
+        oControl = self.getControl(cCtrlName)
         return oControl.isTransparent()
-
 
     # The following apply to all controls which are a
     #   com.sun.star.awt.UnoControlDialogElement
 
-    def setPosition( self, cCtrlName, nPositionX, nPositionY ):
-        self.setControlModelProperty( cCtrlName, "PositionX", nPositionX )
-        self.setControlModelProperty( cCtrlName, "PositionY", nPositionY )
-    def setPositionX( self, cCtrlName, nPositionX ):
-        self.setControlModelProperty( cCtrlName, "PositionX", nPositionX )
-    def setPositionY( self, cCtrlName, nPositionY ):
-        self.setControlModelProperty( cCtrlName, "PositionY", nPositionY )
-    def getPositionX( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "PositionX" )
-    def getPositionY( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "PositionY" )
+    def setPosition(self, cCtrlName, nPositionX, nPositionY):
+        self.setControlModelProperty(cCtrlName, "PositionX", nPositionX)
+        self.setControlModelProperty(cCtrlName, "PositionY", nPositionY)
 
-    def setSize( self, cCtrlName, nWidth, nHeight ):
-        self.setControlModelProperty( cCtrlName, "Width", nWidth )
-        self.setControlModelProperty( cCtrlName, "Height", nHeight )
-    def setWidth( self, cCtrlName, nWidth ):
-        self.setControlModelProperty( cCtrlName, "Width", nWidth )
-    def setHeight( self, cCtrlName, nHeight ):
-        self.setControlModelProperty( cCtrlName, "Height", nHeight )
-    def getWidth( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "Width" )
-    def getHeight( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "Height" )
+    def setPositionX(self, cCtrlName, nPositionX):
+        self.setControlModelProperty(cCtrlName, "PositionX", nPositionX)
 
-    def setTabIndex( self, cCtrlName, nWidth, nTabIndex ):
-        self.setControlModelProperty( cCtrlName, "TabIndex", nTabIndex )
-    def getTabIndex( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "TabIndex" )
+    def setPositionY(self, cCtrlName, nPositionY):
+        self.setControlModelProperty(cCtrlName, "PositionY", nPositionY)
 
-    def setStep( self, cCtrlName, nWidth, nStep ):
-        self.setControlModelProperty( cCtrlName, "Step", nStep )
-    def getStep( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "Step" )
+    def getPositionX(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "PositionX")
 
-    def setTag( self, cCtrlName, nWidth, cTag ):
-        self.setControlModelProperty( cCtrlName, "Tag", cTag )
-    def getTag( self, cCtrlName ):
-        return self.getControlModelProperty( cCtrlName, "Tag" )
+    def getPositionY(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "PositionY")
 
-    def setEchoChar(self, cCtrlName , cVal):
+    def setSize(self, cCtrlName, nWidth, nHeight):
+        self.setControlModelProperty(cCtrlName, "Width", nWidth)
+        self.setControlModelProperty(cCtrlName, "Height", nHeight)
+
+    def setWidth(self, cCtrlName, nWidth):
+        self.setControlModelProperty(cCtrlName, "Width", nWidth)
+
+    def setHeight(self, cCtrlName, nHeight):
+        self.setControlModelProperty(cCtrlName, "Height", nHeight)
+
+    def getWidth(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "Width")
+
+    def getHeight(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "Height")
+
+    def setTabIndex(self, cCtrlName, nWidth, nTabIndex):
+        self.setControlModelProperty(cCtrlName, "TabIndex", nTabIndex)
+
+    def getTabIndex(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "TabIndex")
+
+    def setStep(self, cCtrlName, nWidth, nStep):
+        self.setControlModelProperty(cCtrlName, "Step", nStep)
+
+    def getStep(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "Step")
+
+    def setTag(self, cCtrlName, nWidth, cTag):
+        self.setControlModelProperty(cCtrlName, "Tag", cTag)
+
+    def getTag(self, cCtrlName):
+        return self.getControlModelProperty(cCtrlName, "Tag")
+
+    def setEchoChar(self, cCtrlName, cVal):
         self.setControlModelProperty(cCtrlName, "EchoChar", cVal)
+
     def getEchoChar(self, cCtrlName):
         return self.setControlModelProperty(cCtrlName, "EchoChar")
 
@@ -755,42 +780,42 @@ class DBModalDialog:
 
     # This applies to...
     #   UnoControlButton
-    def addActionListenerProc( self, cCtrlName, actionListenerProc ):
+    def addActionListenerProc(self, cCtrlName, actionListenerProc):
         """Create an com.sun.star.awt.XActionListener object and add it to a control.
         A listener object is created which will call the python procedure actionListenerProc.
         The actionListenerProc can be either a method or a global procedure.
         The following controls support XActionListener:
             UnoControlButton
         """
-        oControl = self.getControl( cCtrlName )
-        oActionListener = ActionListenerProcAdapter( actionListenerProc )
-        oControl.addActionListener( oActionListener )
+        oControl = self.getControl(cCtrlName)
+        oActionListener = ActionListenerProcAdapter(actionListenerProc)
+        oControl.addActionListener(oActionListener)
 
     # This applies to...
     #   UnoControlCheckBox
-    def addItemListenerProc( self, cCtrlName, itemListenerProc ):
+    def addItemListenerProc(self, cCtrlName, itemListenerProc):
         """Create an com.sun.star.awt.XItemListener object and add it to a control.
         A listener object is created which will call the python procedure itemListenerProc.
         The itemListenerProc can be either a method or a global procedure.
         The following controls support XActionListener:
             UnoControlCheckBox
         """
-        oControl = self.getControl( cCtrlName )
-        oActionListener = ItemListenerProcAdapter( itemListenerProc )
-        oControl.addItemListener( oActionListener )
+        oControl = self.getControl(cCtrlName)
+        oActionListener = ItemListenerProcAdapter(itemListenerProc)
+        oControl.addItemListener(oActionListener)
 
     #--------------------------------------------------
     #   Display the modal dialog.
     #--------------------------------------------------
 
-    def doModalDialog( self, sObjName,sValue):
+    def doModalDialog(self, sObjName, sValue):
         """Display the dialog as a modal dialog."""
-        self.oDialogControl.setVisible( True )
-        if not sValue==None:
-            self.selectListBoxItem( sObjName, sValue, True )
+        self.oDialogControl.setVisible(True)
+        if not sValue == None:
+            self.selectListBoxItem(sObjName, sValue, True)
         self.oDialogControl.execute()
 
-    def endExecute( self ):
+    def endExecute(self):
         """Call this from within one of the listeners to end the modal dialog.
         For instance, the listener on your OK or Cancel button would call this to end the dialog.
         """

@@ -4,6 +4,7 @@ import sphinx.environment
 from sphinx.writers.html import HTMLTranslator
 from docutils.writers.html4css1 import HTMLTranslator as DocutilsTranslator
 
+
 def patch():
     # navify toctree (oh god)
     @monkey(sphinx.environment.BuildEnvironment)
@@ -25,6 +26,7 @@ def patch():
     HTMLTranslator.write_colspecs = lambda self: None
     # copy data- attributes straight from source to dest
     HTMLTranslator.starttag = starttag_data
+
 
 def navbarify(node, navbar=None):
     """
@@ -60,6 +62,7 @@ def navbarify(node, navbar=None):
             # list_item.bullet_list
             list_item.children[1]['classes'].append('dropdown-menu')
 
+
 def visit_table(self, node):
     """
     * remove border
@@ -71,6 +74,7 @@ def visit_table(self, node):
     classes = ' '.join({'table', self.settings.table_style}).strip()
     self.body.append(self.starttag(node, 'table', CLASS=classes))
 
+
 def starttag_data(self, node, tagname, suffix='\n', empty=False, **attributes):
     attributes.update(
         (k, v) for k, v in node.attributes.iteritems()
@@ -80,9 +84,11 @@ def starttag_data(self, node, tagname, suffix='\n', empty=False, **attributes):
     return DocutilsTranslator.starttag(
         self, node, tagname, suffix=suffix, empty=empty, **attributes)
 
+
 class monkey(object):
     def __init__(self, obj):
         self.obj = obj
+
     def __call__(self, fn):
         name = fn.__name__
         old = getattr(self.obj, name)

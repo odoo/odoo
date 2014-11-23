@@ -21,9 +21,11 @@
 
 from openerp.osv import fields, osv
 
+
 class account_invoice(osv.osv):
 
     _inherit = 'account.invoice'
+
     def action_number(self, cr, uid, ids, *args):
         result = super(account_invoice, self).action_number(cr, uid, ids, *args)
         for inv in self.browse(cr, uid, ids):
@@ -42,6 +44,7 @@ class account_invoice_line(osv.osv):
     _columns = {
         'asset_category_id': fields.many2one('account.asset.category', 'Asset Category'),
     }
+
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -56,7 +59,7 @@ class account_invoice_line(osv.osv):
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
-                    'purchase_date' : line.invoice_id.date_invoice,
+                    'purchase_date': line.invoice_id.date_invoice,
                 }
                 changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
                 vals.update(changed_vals['value'])

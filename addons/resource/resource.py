@@ -29,6 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
 
+
 class resource_calendar(osv.osv):
     """ Calendar model for a resource. It has
 
@@ -157,9 +158,9 @@ class resource_calendar(osv.osv):
         for interval in intervals:
             res += interval[1] - interval[0]
             if res > limit and remove_at_end:
-                interval = (interval[0], interval[1] + relativedelta(seconds=seconds(limit-res)))
+                interval = (interval[0], interval[1] + relativedelta(seconds=seconds(limit - res)))
             elif res > limit:
-                interval = (interval[0] + relativedelta(seconds=seconds(res-limit)), interval[1])
+                interval = (interval[0] + relativedelta(seconds=seconds(res - limit)), interval[1])
             results.append(interval)
             if res > limit:
                 break
@@ -638,24 +639,26 @@ class resource_calendar_attendance(osv.osv):
     _description = "Work Detail"
 
     _columns = {
-        'name' : fields.char("Name", required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
-        'date_from' : fields.date('Starting Date'),
-        'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
-        'hour_to' : fields.float("Work to", required=True),
-        'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
+        'name': fields.char("Name", required=True),
+        'dayofweek': fields.selection([('0', 'Monday'), ('1', 'Tuesday'), ('2', 'Wednesday'), ('3', 'Thursday'), ('4', 'Friday'), ('5', 'Saturday'), ('6', 'Sunday')], 'Day of Week', required=True, select=True),
+        'date_from': fields.date('Starting Date'),
+        'hour_from': fields.float('Work from', required=True, help="Start and End time of working.", select=True),
+        'hour_to': fields.float("Work to", required=True),
+        'calendar_id': fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
 
     _order = 'dayofweek, hour_from'
 
     _defaults = {
-        'dayofweek' : '0'
+        'dayofweek': '0'
     }
+
 
 def hours_time_string(hours):
     """ convert a number of hours (float) into a string with format '%H:%M' """
     minutes = int(round(hours * 60))
     return "%02d:%02d" % divmod(minutes, 60)
+
 
 class resource_resource(osv.osv):
     _name = "resource.resource"
@@ -663,20 +666,19 @@ class resource_resource(osv.osv):
     _columns = {
         'name': fields.char("Name", required=True),
         'code': fields.char('Code', size=16, copy=False),
-        'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
-        'company_id' : fields.many2one('res.company', 'Company'),
-        'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
-        'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
-        'time_efficiency' : fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'resource_type': fields.selection([('user', 'Human'), ('material', 'Material')], 'Resource Type', required=True),
+        'user_id': fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
+        'time_efficiency': fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."),
+        'calendar_id': fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
     _defaults = {
-        'resource_type' : 'user',
-        'time_efficiency' : 1,
-        'active' : True,
+        'resource_type': 'user',
+        'time_efficiency': 1,
+        'active': True,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
-
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -695,7 +697,7 @@ class resource_resource(osv.osv):
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
             resource_objs[user.id] = {
-                 'name' : user.name,
+                 'name': user.name,
                  'vacation': [],
                  'efficiency': 1.0,
             }
@@ -749,12 +751,12 @@ class resource_resource(osv.osv):
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
-            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'),
-                   ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
+            return [('fri', '8:0-12:0', '13:0-17:0'), ('thu', '8:0-12:0', '13:0-17:0'), ('wed', '8:0-12:0', '13:0-17:0'),
+                   ('mon', '8:0-12:0', '13:0-17:0'), ('tue', '8:0-12:0', '13:0-17:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""
-        week_days = {"0": "mon", "1": "tue", "2": "wed","3": "thu", "4": "fri", "5": "sat", "6": "sun"}
+        week_days = {"0": "mon", "1": "tue", "2": "wed", "3": "thu", "4": "fri", "5": "sat", "6": "sun"}
         wk_days = {}
         wk_time = {}
         wktime_list = []
@@ -766,11 +768,11 @@ class resource_resource(osv.osv):
         for week in weeks:
             res_str = ""
             day = None
-            if week_days.get(week['dayofweek'],False):
+            if week_days.get(week['dayofweek'], False):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
             else:
-                raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
+                raise osv.except_osv(_('Configuration Error!'), _('Make sure the Working time has been configured with proper week days!'))
             hour_from_str = hours_time_string(week['hour_from'])
             hour_to_str = hours_time_string(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
@@ -782,7 +784,7 @@ class resource_resource(osv.osv):
             else:
                 wk_time[item[0]] = [item[0]]
                 wk_time[item[0]].append(item[1])
-        for k,v in wk_time.items():
+        for k, v in wk_time.items():
             wktime_cal.append(tuple(v))
         # Add for the non-working days like: [('sat, sun', '8:00-8:00')]
         for k, v in wk_days.items():
@@ -799,12 +801,12 @@ class resource_calendar_leaves(osv.osv):
     _name = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'name' : fields.char("Name"),
-        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
-        'calendar_id' : fields.many2one("resource.calendar", "Working Time"),
-        'date_from' : fields.datetime('Start Date', required=True),
-        'date_to' : fields.datetime('End Date', required=True),
-        'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
+        'name': fields.char("Name"),
+        'company_id': fields.related('calendar_id', 'company_id', type='many2one', relation='res.company', string="Company", store=True, readonly=True),
+        'calendar_id': fields.many2one("resource.calendar", "Working Time"),
+        'date_from': fields.datetime('Start Date', required=True),
+        'date_to': fields.datetime('End Date', required=True),
+        'resource_id': fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
     }
 
     def check_dates(self, cr, uid, ids, context=None):
@@ -825,9 +827,10 @@ class resource_calendar_leaves(osv.osv):
             return {'value': result}
         return {'value': {'calendar_id': []}}
 
+
 def seconds(td):
     assert isinstance(td, datetime.timedelta)
 
-    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10 ** 6) / 10. ** 6
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

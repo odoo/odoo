@@ -22,12 +22,13 @@
 from openerp import tools
 from openerp.osv import fields, osv
 
+
 class payslip_report(osv.osv):
     _name = "payslip.report"
     _description = "Payslip Analysis"
     _auto = False
     _columns = {
-        'name':fields.char('Name', readonly=True),
+        'name': fields.char('Name', readonly=True),
         'date_from': fields.date('Date From', readonly=True,),
         'date_to': fields.date('Date To', readonly=True,),
         'year': fields.char('Year', size=4, readonly=True),
@@ -44,11 +45,12 @@ class payslip_report(osv.osv):
         'nbr': fields.integer('# Payslip lines', readonly=True),
         'number': fields.char('Number', readonly=True),
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'paid': fields.boolean('Made Payment Order ? ', readonly=True),
         'total': fields.float('Total', readonly=True),
-        'category_id':fields.many2one('hr.salary.rule.category', 'Category', readonly=True),
+        'category_id': fields.many2one('hr.salary.rule.category', 'Category', readonly=True),
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'payslip_report')
         cr.execute("""
@@ -76,7 +78,7 @@ class payslip_report(osv.osv):
                 from
                     hr_payslip as p
                     left join hr_payslip_line as l on (p.id=l.slip_id)
-                where 
+                where
                     l.employee_id IS NOT NULL
                 group by
                     p.number,l.name,p.date_from,p.date_to,p.state,p.company_id,p.paid,

@@ -15,6 +15,7 @@ from openerp.tools import misc
 
 _logger = logging.getLogger(__name__)
 
+
 class publisher_warranty_contract(AbstractModel):
     _name = "publisher_warranty.contract"
 

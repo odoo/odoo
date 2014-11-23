@@ -173,8 +173,8 @@ class TestCleaner(unittest2.TestCase):
         test_str = '''<div>
         <span>
         </span>
-        <p>Hello, <span>Raoul</span> 
-    <bold>You</bold> are 
+        <p>Hello, <span>Raoul</span>
+    <bold>You</bold> are
     pretty</p>
 <span>Really</span>
 </div>
@@ -194,8 +194,8 @@ class TestCleaner(unittest2.TestCase):
         self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
 
         # TEST: shorten in quote
-        test_str = '''<div> Blahble         
-            bluih      blouh   
+        test_str = '''<div> Blahble
+            bluih      blouh
         <blockquote>This is a quote
         <span>And this is quite a long quote, after all.</span>
         </blockquote>

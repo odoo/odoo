@@ -2,6 +2,7 @@ import unittest2
 
 import openerp.tests.common as common
 
+
 class test_ir_values(common.TransactionCase):
 
     def test_00(self):
@@ -15,7 +16,6 @@ class test_ir_values(common.TransactionCase):
         ir_values.set_default(self.cr, self.uid, 'other_unexisting_model',
             'my_other_test_field', 'conditional value', condition='foo=bar')
 
-        
         # Retrieve them.
 
         ir_values = self.registry('ir.values')
@@ -39,7 +39,7 @@ class test_ir_values(common.TransactionCase):
         # Do it again but for a specific user.
 
         ir_values = self.registry('ir.values')
-        ir_values.set(self.cr, self.uid, 'default', False, 'my_test_field',['unexisting_model'], 'specific value', preserve_user=True)
+        ir_values.set(self.cr, self.uid, 'default', False, 'my_test_field', ['unexisting_model'], 'specific value', preserve_user=True)
 
         # Retrieve it and check it is the one for the current user.
         ir_values = self.registry('ir.values')
@@ -75,11 +75,11 @@ class test_ir_values(common.TransactionCase):
         ir_values = self.registry('ir.values')
         actions = ir_values.get(self.cr, self.uid, 'action', 'tree_but_open', ['unexisting_model'])
         assert len(actions) == 2, "Mismatching number of bound actions"
-        #first action
+        # first action
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'OnDblClick Action 2', 'Bound action does not match definition'
         assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == act_id_2, 'Bound action does not match definition'
-        #second action - this ones comes last because it was re-created with a different name
+        # second action - this ones comes last because it was re-created with a different name
         assert len(actions[1]) == 3, "Malformed action definition"
         assert actions[1][1] == 'OnDblClick Action New', 'Re-Registering an action should replace it'
         assert isinstance(actions[1][2], dict) and actions[1][2]['id'] == act_id_1, 'Bound action does not match definition'

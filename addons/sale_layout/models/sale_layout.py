@@ -77,6 +77,7 @@ class AccountInvoice(osv.Model):
 
 import openerp
 
+
 class AccountInvoiceLine(osv.Model):
     _inherit = 'account.invoice.line'
     _order = 'invoice_id, categ_sequence, sequence, id'

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (c) 2011 CCI Connect asbl (http://www.cciconnect.be) All Rights Reserved.
 #                       Philmer <philmer@cciconnect.be>
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,8 +31,8 @@ Asserts on accounting.
 ======================
 With this module you can manually check consistencies and inconsistencies of accounting module from menu Reporting/Accounting/Accounting Tests.
 
-You can write a query in order to create Consistency Test and you will get the result of the test 
-in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test 
+You can write a query in order to create Consistency Test and you will get the result of the test
+in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test
 and print the report from Print button in header area.
 """,
     'depends': ['account'],

@@ -6,6 +6,7 @@ import openerp.tests.common
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
+
 class test_ir_attachment(openerp.tests.common.TransactionCase):
     def setUp(self):
         super(test_ir_attachment, self).setUp()

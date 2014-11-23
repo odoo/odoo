@@ -133,7 +133,7 @@ Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 German accounting chart and localization.
     """,
     'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
-    'demo': [ ],
+    'demo': [],
     'data': [
         'account_tax_skr03.xml',
         'account_types_skr03.xml',
@@ -148,7 +148,7 @@ German accounting chart and localization.
         'l10n_de_wizard.xml',
     ],
     'installable': True,
-    'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
+    'images': ['images/config_chart_l10n_de.jpeg', 'images/l10n_de_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

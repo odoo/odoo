@@ -8,7 +8,7 @@ OpenERP Web Gantt chart view.
 """,
     'version': '2.0',
     'depends': ['web'],
-    'data' : [
+    'data': [
         'views/web_gantt.xml',
     ],
     'qweb': [

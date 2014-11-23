@@ -45,7 +45,7 @@ The validation can be configured in the company:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': ['images/hr_my_current_timesheet.jpeg','images/hr_timesheet_analysis.jpeg','images/hr_timesheet_sheet_analysis.jpeg','images/hr_timesheet_activity.jpeg'],
+    'images': ['images/hr_my_current_timesheet.jpeg', 'images/hr_timesheet_analysis.jpeg', 'images/hr_timesheet_sheet_analysis.jpeg', 'images/hr_timesheet_activity.jpeg'],
     'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
     'data': [
         'security/ir.model.access.csv',
@@ -59,10 +59,10 @@ The validation can be configured in the company:
         'views/hr_timesheet_sheet.xml',
     ],
     'demo': ['hr_timesheet_sheet_demo.xml'],
-    'test':['test/test_hr_timesheet_sheet.yml'],
+    'test': ['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,
-    'qweb': ['static/src/xml/timesheet.xml',],
+    'qweb': ['static/src/xml/timesheet.xml', ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

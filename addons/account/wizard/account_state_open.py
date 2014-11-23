@@ -22,6 +22,7 @@ from openerp.osv import osv
 
 from openerp.tools.translate import _
 
+
 class account_state_open(osv.osv_memory):
     _name = 'account.state.open'
     _description = 'Account State Open'

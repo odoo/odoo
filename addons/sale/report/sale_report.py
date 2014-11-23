@@ -22,6 +22,7 @@
 from openerp import tools
 from openerp.osv import fields, osv
 
+
 class sale_report(osv.osv):
     _name = "sale.report"
     _description = "Sales Orders Statistics"
@@ -39,8 +40,8 @@ class sale_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
-        'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
-        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
+        'delay': fields.float('Commitment Delay', digits=(16, 2), readonly=True),
+        'categ_id': fields.many2one('product.category', 'Category of Product', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'state': fields.selection([
             ('draft', 'Quotation'),

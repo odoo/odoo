@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv import osv,fields
+from openerp.osv import osv, fields
+
 
 class account_journal(osv.osv):
     _inherit = "account.journal"
@@ -37,12 +38,12 @@ class res_company(osv.osv):
             ('top', 'Check on Top'),
             ('middle', 'Check in middle'),
             ('bottom', 'Check on bottom'),
-            ],"Check Layout",
-            help="Check on top is compatible with Quicken, QuickBooks and Microsoft Money. Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on bottom is compatible with Peachtree, ACCPAC and DacEasy only"  ),
+            ], "Check Layout",
+            help="Check on top is compatible with Quicken, QuickBooks and Microsoft Money. Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on bottom is compatible with Peachtree, ACCPAC and DacEasy only"),
         }
-        
+
     _defaults = {
-        'check_layout' : lambda *a: 'top',
+        'check_layout': lambda *a: 'top',
     }
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

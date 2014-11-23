@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    'name' : 'eInvoicing',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
-    'category' : 'Accounting & Finance',
-    'description' : """
+    'name': 'eInvoicing',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Accounting & Finance',
+    'description': """
 Accounting and Financial Management.
 ====================================
 
@@ -44,12 +44,12 @@ Creates a dashboard for accountants that includes:
     * Company Analysis
     * Graph of Treasury
 
-Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) 
+Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal)
 for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'https://www.odoo.com/page/billing',
-    'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
+    'images': ['images/accounts.jpeg', 'images/bank_statement.jpeg', 'images/cash_register.jpeg', 'images/chart_of_accounts.jpeg', 'images/customer_invoice.jpeg', 'images/journal_entries.jpeg'],
+    'depends': ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -142,7 +142,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/views/report_invertedanalyticbalance.xml',
         'views/account.xml',
     ],
-    'qweb' : [
+    'qweb': [
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
         "static/src/xml/account_bank_statement_reconciliation.xml",
@@ -167,7 +167,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_validate_account_move.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
-        'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
+        'test/account_fiscalyear_close.yml',  # last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,
     'auto_install': False,

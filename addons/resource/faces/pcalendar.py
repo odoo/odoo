@@ -49,20 +49,22 @@ DEFAULT_WORKING_DAYS_PER_MONTH = 20
 DEFAULT_WORKING_DAYS_PER_YEAR = 200
 DEFAULT_WORKING_HOURS_PER_DAY = 8
 
-DEFAULT_WORKING_TIMES = ( (8 * 60, 12 * 60 ),
-                          (13 * 60, 17 * 60 ) )
-DEFAULT_WORKING_DAYS = { 0 : DEFAULT_WORKING_TIMES,
-                         1 : DEFAULT_WORKING_TIMES,
-                         2 : DEFAULT_WORKING_TIMES,
-                         3 : DEFAULT_WORKING_TIMES,
-                         4 : DEFAULT_WORKING_TIMES,
-                         5 : (),
-                         6 : () }
+DEFAULT_WORKING_TIMES = ((8 * 60, 12 * 60),
+                         (13 * 60, 17 * 60))
+DEFAULT_WORKING_DAYS = {0: DEFAULT_WORKING_TIMES,
+                        1: DEFAULT_WORKING_TIMES,
+                        2: DEFAULT_WORKING_TIMES,
+                        3: DEFAULT_WORKING_TIMES,
+                        4: DEFAULT_WORKING_TIMES,
+                        5: (),
+                        6: ()}
 
 #@-node:<< Imports >>
 #@nl
 #@+others
 #@+node:to_time_range
+
+
 def to_time_range(src):
     """
     converts a string to a timerange, i.e
@@ -70,7 +72,8 @@ def to_time_range(src):
     from, to are ints, specifing the minutes since midnight
     """
 
-    if not src: return ()
+    if not src:
+        return ()
 
     mo = TIME_RANGE_PATTERN.match(src)
     if not mo:
@@ -81,13 +84,15 @@ def to_time_range(src):
     return from_time, to_time
 #@-node:to_time_range
 #@+node:to_datetime
+
+
 def to_datetime(src):
     """
     a tolerant conversion function to convert different strings
     to a datetime.dateime
     """
 
-    #to get the original value for wrappers
+    # to get the original value for wrappers
     new = getattr(src, "_value", src)
     while new is not src:
         src = new
@@ -101,22 +106,22 @@ def to_datetime(src):
 
     src = str(src)
 
-    formats = [ "%x %H:%M",
-                "%x",
-                "%Y-%m-%d %H:%M",
-                "%y-%m-%d %H:%M",
-                "%d.%m.%Y %H:%M",
-                "%d.%m.%y %H:%M",
-                "%Y%m%d %H:%M",
-                "%d/%m/%y %H:%M",
-                "%d/%m/%Y %H:%M",
-                "%d/%m/%Y",
-                "%d/%m/%y",
-                "%Y-%m-%d",
-                "%y-%m-%d",
-                "%d.%m.%Y",
-                "%d.%m.%y",
-                "%Y%m%d" ]
+    formats = ["%x %H:%M",
+               "%x",
+               "%Y-%m-%d %H:%M",
+               "%y-%m-%d %H:%M",
+               "%d.%m.%Y %H:%M",
+               "%d.%m.%y %H:%M",
+               "%Y%m%d %H:%M",
+               "%d/%m/%y %H:%M",
+               "%d/%m/%Y %H:%M",
+               "%d/%m/%Y",
+               "%d/%m/%y",
+               "%Y-%m-%d",
+               "%y-%m-%d",
+               "%d.%m.%Y",
+               "%d.%m.%y",
+               "%Y%m%d"]
     for f in formats:
         try:
             conv = time.strptime(src, f)
@@ -128,6 +133,8 @@ def to_datetime(src):
     raise TypeError("'%s' (%s) is not a datetime" % (src, str(type(src))))
 #@-node:
 #@+node:_to_days
+
+
 def _to_days(src):
     """
     converts a string of the day abreviations mon, tue, wed,
@@ -138,16 +145,16 @@ def _to_days(src):
     """
 
     tokens = src.split(",")
-    result = { }
+    result = {}
     for t in tokens:
         try:
-            index =  { "mon" : 0,
-                       "tue" : 1,
-                       "wed" : 2,
-                       "thu" : 3,
-                       "fri" : 4,
-                       "sat" : 5,
-                       "sun" : 6 } [ lower(t.strip()) ]
+            index =  {"mon": 0,
+                      "tue": 1,
+                      "wed": 2,
+                      "thu": 3,
+                      "fri": 4,
+                      "sat": 5,
+                      "sun": 6} [lower(t.strip())]
             result[index] = 1
         except:
             raise ValueError("%s is not a day" % (t))
@@ -155,6 +162,8 @@ def _to_days(src):
     return result
 #@-node:_to_days
 #@+node:_add_to_time_spans
+
+
 def _add_to_time_spans(src, to_add, is_free):
     if not isinstance(to_add, (tuple, list)):
         to_add = (to_add,)
@@ -193,7 +202,8 @@ def _add_to_time_spans(src, to_add, is_free):
                 free_count += 1
             else:
                 if not work_count:
-                    if free_count: sequence.append((last, date, True))
+                    if free_count:
+                        sequence.append((last, date, True))
                     last = date
                 work_count += 1
         else:
@@ -205,12 +215,16 @@ def _add_to_time_spans(src, to_add, is_free):
             else:
                 assert(work_count > 0)
                 work_count -= 1
-                if not work_count: sequence.append((last, date, False))
-                if free_count: last = date
+                if not work_count:
+                    sequence.append((last, date, False))
+                if free_count:
+                    last = date
 
     return tuple(sequence)
 #@-node:_add_to_time_spans
 #@+node:to_timedelta
+
+
 def to_timedelta(src, cal=None, is_duration=False):
     """
     converts a string to a datetime.timedelta. If cal is specified
@@ -253,7 +267,7 @@ def to_timedelta(src, cal=None, is_duration=False):
         minutes = minutes % 60
         days    = hours / d_w_h
         hours   = hours % d_w_h
-        return [ days, 0, 0, 0, minutes, hours ]
+        return [days, 0, 0, 0, minutes, hours]
 
     def convert_days(value):
         days = int(value)
@@ -263,9 +277,9 @@ def to_timedelta(src, cal=None, is_duration=False):
         value -= hours
         value *= 60
         minutes = round(value)
-        return [ days, 0, 0, 0, minutes, hours ]
+        return [days, 0, 0, 0, minutes, hours]
 
-    sum_args = [ 0, 0, 0, 0, 0, 0 ]
+    sum_args = [0, 0, 0, 0, 0, 0]
 
     split = src.split(" ")
     for s in split:
@@ -291,12 +305,14 @@ def to_timedelta(src, cal=None, is_duration=False):
         elif unit == 'H':
             args = convert_minutes(val * 60)
 
-        sum_args = [ a + b for a, b in zip(sum_args, args) ]
+        sum_args = [a + b for a, b in zip(sum_args, args)]
 
     sum_args = tuple(sum_args)
     return datetime.timedelta(*sum_args)
 #@-node:to_timedelta
 #@+node:timedelta_to_str
+
+
 def timedelta_to_str(delta, format, cal=None, is_duration=False):
     cal = cal or _default_calendar
     if is_duration:
@@ -324,8 +340,9 @@ def timedelta_to_str(delta, format, cal=None, is_duration=False):
     minutes = delta.seconds / 60
 
     def rebase(d_r, cond1, cond2, letter, divisor):
-        #rebase the days
-        if not cond1: return d_r
+        # rebase the days
+        if not cond1:
+            return d_r
 
         days, result = d_r
 
@@ -383,6 +400,8 @@ def timedelta_to_str(delta, format, cal=None, is_duration=False):
     return result.strip()
 #@-node:timedelta_to_str
 #@+node:strftime
+
+
 def strftime(dt, format):
     """
     an extended version of strftime, that introduces some new
@@ -397,9 +416,9 @@ def strftime(dt, format):
     if iso[0] != dt.year:
         iso_date = dt.replace(day=1, month=1)
         format = format \
-                 .replace("%IB", iso_date.strftime("%B"))\
-                 .replace("%ib", iso_date.strftime("%b"))\
-                 .replace("%im", iso_date.strftime("%m"))
+            .replace("%IB", iso_date.strftime("%B"))\
+            .replace("%ib", iso_date.strftime("%b"))\
+            .replace("%im", iso_date.strftime("%m"))
     else:
         format = format \
                  .replace("%IB", "%B")\
@@ -407,12 +426,14 @@ def strftime(dt, format):
                  .replace("%im", "%m")
 
     format = format \
-             .replace("%IW", str(iso[1]))\
-             .replace("%IY", str(iso[0]))\
+        .replace("%IW", str(iso[1]))\
+        .replace("%IY", str(iso[0]))\
 
     return dt.strftime(format)
 #@-node:strftime
 #@+node:union
+
+
 def union(*calendars):
     """
     returns a calendar that unifies all working times
@@ -472,7 +493,8 @@ def union(*calendars):
         start = None
         for time, is_end in times:
             if not is_end:
-                if not start: start = time
+                if not start:
+                    start = time
                 open += 1
             else:
                 open -= 1
@@ -498,12 +520,13 @@ def union(*calendars):
 #@nonl
 #@-node:union
 #@+node:class _CalendarItem
+
+
 class _CalendarItem(int):
     #@	<< class _CalendarItem declarations >>
     #@+node:<< class _CalendarItem declarations >>
     __slots__ = ()
     calender = None
-
 
     #@-node:<< class _CalendarItem declarations >>
     #@nl
@@ -516,6 +539,7 @@ class _CalendarItem(int):
             return int.__new__(cls, sys.maxint)
     #@-node:__new__
     #@+node:round
+
     def round(self, round_up=True):
         m_t_u = self.calendar.minimum_time_unit
 
@@ -524,18 +548,20 @@ class _CalendarItem(int):
         minutes %= m_t_u
 
         round_up = round_up and minutes > 0 or minutes > m_t_u / 2
-        if round_up: base += m_t_u
+        if round_up:
+            base += m_t_u
         return self.__class__(base)
     #@-node:round
     #@-others
 #@-node:class _CalendarItem
 #@+node:class _Minutes
+
+
 class _Minutes(_CalendarItem):
     #@	<< class _Minutes declarations >>
     #@+node:<< class _Minutes declarations >>
     __slots__ = ()
     STR_FORMAT = "{%dd}{ %HH}{ %MM}"
-
 
     #@-node:<< class _Minutes declarations >>
     #@nl
@@ -557,10 +583,12 @@ class _Minutes(_CalendarItem):
         return _CalendarItem.__new__(cls, src)
     #@-node:__new__
     #@+node:__cmp__
+
     def __cmp__(self, other):
         return cmp(int(self), int(self.__class__(other)))
     #@-node:__cmp__
     #@+node:__add__
+
     def __add__(self, other):
         try:
             return self.__class__(int(self) + int(self.__class__(other)))
@@ -568,6 +596,7 @@ class _Minutes(_CalendarItem):
             return NotImplemented
     #@-node:__add__
     #@+node:__sub__
+
     def __sub__(self, other):
         try:
             return self.__class__(int(self) - int(self.__class__(other)))
@@ -575,6 +604,7 @@ class _Minutes(_CalendarItem):
             return NotImplemented
     #@-node:__sub__
     #@+node:to_timedelta
+
     def to_timedelta(self, is_duration=False):
         d_w_h = is_duration and 24 or self.calendar.working_hours_per_day
         minutes = int(self)
@@ -586,6 +616,7 @@ class _Minutes(_CalendarItem):
     #@nonl
     #@-node:to_timedelta
     #@+node:strftime
+
     def strftime(self, format=None, is_duration=False):
         td = self.to_timedelta(is_duration)
         return timedelta_to_str(td, format or self.STR_FORMAT,
@@ -595,6 +626,8 @@ class _Minutes(_CalendarItem):
     #@-others
 #@-node:class _Minutes
 #@+node:class _WorkingDateBase
+
+
 class _WorkingDateBase(_CalendarItem):
     """
     A daytetime which has only valid values within the
@@ -607,43 +640,47 @@ class _WorkingDateBase(_CalendarItem):
     _minutes = _Minutes
     __slots__ = ()
 
-
     #@-node:<< class _WorkingDateBase declarations >>
     #@nl
     #@	@+others
     #@+node:__new__
     def __new__(cls, src):
-        #cls.__bases__[0] is the base of
-        #the calendar specific StartDate and EndDate
+        # cls.__bases__[0] is the base of
+        # the calendar specific StartDate and EndDate
 
         if isinstance(src, cls.__bases__[0]) or type(src) in (int, float):
             return _CalendarItem.__new__(cls, src)
-
 
         src = cls.calendar.from_datetime(to_datetime(src))
         return _CalendarItem.__new__(cls, src)
     #@-node:__new__
     #@+node:__repr__
+
     def __repr__(self):
         return self.strftime()
     #@-node:__repr__
     #@+node:to_datetime
+
     def to_datetime(self):
         return self.to_starttime()
     #@-node:to_datetime
     #@+node:to_starttime
+
     def to_starttime(self):
         return self.calendar.to_starttime(self)
     #@-node:to_starttime
     #@+node:to_endtime
+
     def to_endtime(self):
         return self.calendar.to_endtime(self)
     #@-node:to_endtime
     #@+node:__cmp__
+
     def __cmp__(self, other):
         return cmp(int(self), int(self.__class__(other)))
     #@-node:__cmp__
     #@+node:__add__
+
     def __add__(self, other):
         try:
             return self.__class__(int(self) + int(self._minutes(other)))
@@ -653,6 +690,7 @@ class _WorkingDateBase(_CalendarItem):
             return NotImplemented
     #@-node:__add__
     #@+node:__sub__
+
     def __sub__(self, other):
         if isinstance(other, (datetime.timedelta, str, _Minutes)):
             try:
@@ -669,12 +707,15 @@ class _WorkingDateBase(_CalendarItem):
             return NotImplemented
     #@-node:__sub__
     #@+node:strftime
+
     def strftime(self, format=None):
         return strftime(self.to_datetime(), format or self.STR_FORMAT)
     #@-node:strftime
     #@-others
 #@-node:class _WorkingDateBase
 #@+node:class Calendar
+
+
 class Calendar(object):
     """
     A calendar to specify working times and vacations.
@@ -691,7 +732,6 @@ class Calendar(object):
     working_hours_per_day = DEFAULT_WORKING_HOURS_PER_DAY
     now = EPOCH
 
-
     #@-node:<< declarations >>
     #@nl
     #@	@+others
@@ -701,11 +741,12 @@ class Calendar(object):
         self.time_spans = ()
         self._dt_num_can = ()
         self._num_dt_can = ()
-        self.working_times = { }
+        self.working_times = {}
         self._recalc_working_time()
         self._make_classes()
     #@-node:__init__
     #@+node:__or__
+
     def __or__(self, other):
         if isinstance(other, Calendar):
             return union(self, other)
@@ -714,6 +755,7 @@ class Calendar(object):
     #@nonl
     #@-node:__or__
     #@+node:clone
+
     def clone(self):
         result = Calendar()
         result.working_times = self.working_times.copy()
@@ -724,6 +766,7 @@ class Calendar(object):
     #@nonl
     #@-node:clone
     #@+node:set_working_days
+
     def set_working_days(self, day_range, trange, *further_tranges):
         """
         Sets the working days of an calendar
@@ -731,7 +774,7 @@ class Calendar(object):
         trange and further_tranges is a time range string like
         '8:00-10:00'
         """
-        time_ranges = [ trange ] + list(further_tranges)
+        time_ranges = [trange] + list(further_tranges)
         time_ranges = filter(bool, map(to_time_range, time_ranges))
         days = _to_days(day_range)
 
@@ -742,6 +785,7 @@ class Calendar(object):
         self._build_mapping()
     #@-node:set_working_days
     #@+node:set_vacation
+
     def set_vacation(self, value):
         """
         Sets vacation time.
@@ -753,6 +797,7 @@ class Calendar(object):
         self._build_mapping()
     #@-node:set_vacation
     #@+node:set_extra_work
+
     def set_extra_work(self, value):
         """
         Sets extra working time
@@ -764,6 +809,7 @@ class Calendar(object):
         self._build_mapping()
     #@-node:set_extra_work
     #@+node:from_datetime
+
     def from_datetime(self, value):
         assert(isinstance(value, datetime.datetime))
         delta = value - self.EPOCH
@@ -804,13 +850,14 @@ class Calendar(object):
                 else:
                     result = nstart
             else:
-                result += (nend - cend) # == (result - cend) + nend
+                result += (nend - cend)  # == (result - cend) + nend
 
         return result
     #@-node:from_datetime
     #@+node:split_time
+
     def split_time(self, value):
-        #map exceptional timespans
+        # map exceptional timespans
         num_dt_can = self._num_dt_can
         pos = bisect.bisect(num_dt_can, (value, sys.maxint)) - 1
         if pos >= 0:
@@ -820,20 +867,21 @@ class Calendar(object):
                 delta = value - self.EPOCH
                 return delta.days / 7, delta.days % 7, delta.seconds / 60, -1
             else:
-                value += (cend - nend) # (value - nend + cend)
-                #calculate the weeks since the epoch
+                value += (cend - nend)  # (value - nend + cend)
+                # calculate the weeks since the epoch
 
         weeks = value / self.week_time
         value %= self.week_time
 
-        #calculate the remaining days
+        # calculate the remaining days
         days = 0
         for day_time in self.day_times:
-            if value < day_time: break
+            if value < day_time:
+                break
             value -= day_time
             days += 1
 
-        #calculate the remaining minutes
+        # calculate the remaining minutes
         minutes = 0
         slots = self.working_times.get(days, DEFAULT_WORKING_DAYS[days])
         index = 0
@@ -850,6 +898,7 @@ class Calendar(object):
         return weeks, days, minutes, index
     #@-node:split_time
     #@+node:to_starttime
+
     def to_starttime(self, value):
         weeks, days, minutes, index = self.split_time(value)
         return self.EPOCH + datetime.timedelta(weeks=weeks,
@@ -857,14 +906,17 @@ class Calendar(object):
                                                minutes=minutes)
     #@-node:to_starttime
     #@+node:to_endtime
+
     def to_endtime(self, value):
         return self.to_starttime(value - 1) + datetime.timedelta(minutes=1)
     #@-node:to_endtime
     #@+node:get_working_times
+
     def get_working_times(self, day):
         return self.working_times.get(day, DEFAULT_WORKING_DAYS[day])
     #@-node:get_working_times
     #@+node:_build_mapping
+
     def _build_mapping(self):
         self._dt_num_can = self._num_dt_can = ()
         dt_num_can = []
@@ -903,7 +955,7 @@ class Calendar(object):
     #@-node:_recalc_working_time
     #@+node:_make_classes
     def _make_classes(self):
-        #ensure that the clases are instance specific
+        # ensure that the clases are instance specific
         class minutes(_Minutes):
             calendar = self
             __slots__ = ()
@@ -913,7 +965,9 @@ class Calendar(object):
             _minutes = minutes
             __slots__ = ()
 
-        class wdt(db): __slots__ = ()
+        class wdt(db):
+            __slots__ = ()
+
         class edt(db):
             __slots__ = ()
 

@@ -10,12 +10,12 @@ class FlaskyStyle(Style):
 
     styles = {
         # No corresponding class for the following:
-        #Text:                     "", # class:  ''
+        # Text:                     "", # class:  ''
         Whitespace:                "underline #f8f8f8",      # class: 'w'
-        Error:                     "#a40000 border:#ef2929", # class: 'err'
+        Error:                     "#a40000 border:#ef2929",  # class: 'err'
         Other:                     "#000000",                # class 'x'
 
-        Comment:                   "italic #8f5902", # class: 'c'
+        Comment:                   "italic #8f5902",  # class: 'c'
         Comment.Preproc:           "noitalic",       # class: 'cp'
 
         Keyword:                   "bold #004461",   # class: 'k'
@@ -62,7 +62,7 @@ class FlaskyStyle(Style):
         String:                    "#4e9a06",        # class: 's'
         String.Backtick:           "#4e9a06",        # class: 'sb'
         String.Char:               "#4e9a06",        # class: 'sc'
-        String.Doc:                "italic #8f5902", # class: 'sd' - like a comment
+        String.Doc:                "italic #8f5902",  # class: 'sd' - like a comment
         String.Double:             "#4e9a06",        # class: 's2'
         String.Escape:             "#4e9a06",        # class: 'se'
         String.Heredoc:            "#4e9a06",        # class: 'sh'
@@ -74,7 +74,7 @@ class FlaskyStyle(Style):
 
         Generic:                   "#000000",        # class: 'g'
         Generic.Deleted:           "#a40000",        # class: 'gd'
-        Generic.Emph:              "italic #000000", # class: 'ge'
+        Generic.Emph:              "italic #000000",  # class: 'ge'
         Generic.Error:             "#ef2929",        # class: 'gr'
         Generic.Heading:           "bold #000080",   # class: 'gh'
         Generic.Inserted:          "#00A000",        # class: 'gi'

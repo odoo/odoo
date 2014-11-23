@@ -69,11 +69,11 @@ class ir_model_fields_anonymization(osv.osv):
         ids = self.search(cr, uid, [('state', '<>', 'not_existing')], context=context)
         fields = self.browse(cr, uid, ids, context=context)
         if not len(fields) or len(fields) == len([f for f in fields if f.state == 'clear']):
-            state = 'clear' # all fields are clear
+            state = 'clear'  # all fields are clear
         elif len(fields) == len([f for f in fields if f.state == 'anonymized']):
-            state = 'anonymized' # all fields are anonymized
+            state = 'anonymized'  # all fields are anonymized
         else:
-            state = 'unstable' # fields are mixed: this should be fixed
+            state = 'unstable'  # fields are mixed: this should be fixed
 
         return state
 
@@ -425,11 +425,11 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
                 sid = str(record['id'])
                 if field_type == 'char':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'selection':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'text':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'boolean':
                     anonymized_value = random.choice([True, False])
                 elif field_type == 'date':
@@ -440,7 +440,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     anonymized_value = 0.0
                 elif field_type == 'integer':
                     anonymized_value = 0
-                elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
+                elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']:  # cannot anonymize these kind of fields
                     msg = _("Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference.")
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
@@ -502,7 +502,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 'res_model': 'ir.model.fields.anonymize.wizard',
                 'type': 'ir.actions.act_window',
                 'context': {'step': 'just_anonymized'},
-                'target':'new',
+                'target': 'new',
         }
 
     def reverse_anonymize_database(self, cr, uid, ids, context=None):
@@ -606,7 +606,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     'res_model': 'ir.model.fields.anonymize.wizard',
                     'type': 'ir.actions.act_window',
                     'context': {'step': 'just_desanonymized'},
-                    'target':'new',
+                    'target': 'new',
             }
 
     def _id_get(self, cr, uid, model, id_str, mod):
@@ -634,4 +634,3 @@ class ir_model_fields_anonymization_migration_fix(osv.osv):
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

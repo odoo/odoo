@@ -22,34 +22,36 @@
 from openerp import tools
 from openerp.osv import fields, osv
 
+
 class payment_advice_report(osv.osv):
     _name = "payment.advice.report"
     _description = "Payment Advice Analysis"
     _auto = False
     _columns = {
-        'name':fields.char('Name', readonly=True),
+        'name': fields.char('Name', readonly=True),
         'date': fields.date('Date', readonly=True,),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
             ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
             ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'state':fields.selection([
+        'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
         ], 'Status', select=True, readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payment Lines', readonly=True),
-        'number':fields.char('Number', readonly=True),
+        'number': fields.char('Number', readonly=True),
         'bysal': fields.float('By Salary', readonly=True),
-        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'cheque_nos':fields.char('Cheque Numbers', readonly=True),
+        'bank_id': fields.many2one('res.bank', 'Bank', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'cheque_nos': fields.char('Cheque Numbers', readonly=True),
         'neft': fields.boolean('NEFT Transaction', readonly=True),
         'ifsc_code': fields.char('IFSC Code', size=32, readonly=True),
         'employee_bank_no': fields.char('Employee Bank Account', required=True),
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'payment_advice_report')
         cr.execute("""
@@ -75,7 +77,7 @@ class payment_advice_report(osv.osv):
                 from
                     hr_payroll_advice as p
                     left join hr_payroll_advice_line as l on (p.id=l.advice_id)
-                where 
+                where
                     l.employee_id IS NOT NULL
                 group by
                     p.number,p.name,p.date,p.state,p.company_id,p.bank_id,p.chaque_nos,p.neft,

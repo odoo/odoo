@@ -38,6 +38,7 @@ for record in cr.dictfetchall():
 result = res
 '''
 
+
 class accounting_assert_test(osv.osv):
     _name = "accounting.assert.test"
     _order = "sequence"
@@ -55,5 +56,3 @@ class accounting_assert_test(osv.osv):
         'active': True,
         'sequence': 10,
     }
-
-

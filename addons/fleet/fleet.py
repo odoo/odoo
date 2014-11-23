@@ -27,8 +27,10 @@ from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
+
 def str_to_datetime(strdate):
     return datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
+
 
 class fleet_vehicle_cost(osv.Model):
     _name = 'fleet.vehicle.cost'
@@ -37,7 +39,7 @@ class fleet_vehicle_cost(osv.Model):
 
     def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
         res = dict.fromkeys(ids, False)
-        for record in self.browse(cr,uid,ids,context=context):
+        for record in self.browse(cr, uid, ids, context=context):
             if record.odometer_id:
                 res[record.id] = record.odometer_id.value
         return res
@@ -58,23 +60,23 @@ class fleet_vehicle_cost(osv.Model):
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
         'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
-        'cost_type': fields.selection([('contract', 'Contract'), ('services','Services'), ('fuel','Fuel'), ('other','Other')], 'Category of the cost', help='For internal purpose only', required=True),
+        'cost_type': fields.selection([('contract', 'Contract'), ('services', 'Services'), ('fuel', 'Fuel'), ('other', 'Other')], 'Category of the cost', help='For internal purpose only', required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', help='Parent cost to this current cost'),
         'cost_ids': fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
         'odometer_id': fields.many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log'),
         'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Odometer Value', help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
-        'date' :fields.date('Date',help='Date when the cost has been executed'),
+        'date': fields.date('Date', help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
         'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
     }
 
-    _defaults ={
+    _defaults = {
         'cost_type': 'other',
     }
 
     def create(self, cr, uid, data, context=None):
-        #make sure that the data are consistent with values of parent and contract records given
+        # make sure that the data are consistent with values of parent and contract records given
         if 'parent_id' in data and data['parent_id']:
             parent = self.browse(cr, uid, data['parent_id'], context=context)
             data['vehicle_id'] = parent.vehicle_id.id
@@ -86,8 +88,8 @@ class fleet_vehicle_cost(osv.Model):
             data['cost_subtype_id'] = contract.cost_subtype_id.id
             data['cost_type'] = contract.cost_type
         if 'odometer' in data and not data['odometer']:
-            #if received value for odometer is 0, then remove it from the data as it would result to the creation of a
-            #odometer log with 0, which is to be avoided
+            # if received value for odometer is 0, then remove it from the data as it would result to the creation of a
+            # odometer log with 0, which is to be avoided
             del(data['odometer'])
         return super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
 
@@ -98,6 +100,7 @@ class fleet_vehicle_tag(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
     }
 
+
 class fleet_vehicle_state(osv.Model):
     _name = 'fleet.vehicle.state'
     _order = 'sequence asc'
@@ -105,7 +108,7 @@ class fleet_vehicle_state(osv.Model):
         'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', help="Used to order the note stages")
     }
-    _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
+    _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]
 
 
 class fleet_vehicle_model(osv.Model):
@@ -135,7 +138,7 @@ class fleet_vehicle_model(osv.Model):
 
     _columns = {
         'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
-        'modelname': fields.char('Model name', required=True), 
+        'modelname': fields.char('Model name', required=True),
         'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
@@ -197,10 +200,10 @@ class fleet_vehicle(osv.Model):
         if context is None:
             context = {}
         if context.get('xml_id'):
-            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet', context['xml_id'], context=context)
+            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'fleet', context['xml_id'], context=context)
             res['context'] = context
             res['context'].update({'default_vehicle_id': ids[0]})
-            res['domain'] = [('vehicle_id','=', ids[0])]
+            res['domain'] = [('vehicle_id', '=', ids[0])]
             return res
         return False
 
@@ -210,18 +213,18 @@ class fleet_vehicle(osv.Model):
         """
         if context is None:
             context = {}
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_costs_act', context=context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'fleet', 'fleet_vehicle_costs_act', context=context)
         res['context'] = context
         res['context'].update({
             'default_vehicle_id': ids[0],
             'search_default_parent_false': True
         })
-        res['domain'] = [('vehicle_id','=', ids[0])]
+        res['domain'] = [('vehicle_id', '=', ids[0])]
         return res
 
     def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
         res = dict.fromkeys(ids, 0)
-        for record in self.browse(cr,uid,ids,context=context):
+        for record in self.browse(cr, uid, ids, context=context):
             ids = self.pool.get('fleet.vehicle.odometer').search(cr, uid, [('vehicle_id', '=', record.id)], limit=1, order='value desc')
             if len(ids) > 0:
                 res[record.id] = self.pool.get('fleet.vehicle.odometer').browse(cr, uid, ids[0], context=context).value
@@ -264,7 +267,7 @@ class fleet_vehicle(osv.Model):
         return res
 
     def _get_contract_reminder_fnc(self, cr, uid, ids, field_names, unknow_none, context=None):
-        res= {}
+        res = {}
         for record in self.browse(cr, uid, ids, context=context):
             overdue = False
             due_soon = False
@@ -276,23 +279,23 @@ class fleet_vehicle(osv.Model):
                     due_time_str = element.expiration_date
                     current_date = str_to_datetime(current_date_str)
                     due_time = str_to_datetime(due_time_str)
-                    diff_time = (due_time-current_date).days
+                    diff_time = (due_time - current_date).days
                     if diff_time < 0:
                         overdue = True
                         total += 1
                     if diff_time < 15 and diff_time >= 0:
-                            due_soon = True;
-                            total += 1
+                        due_soon = True;
+                        total += 1
                     if overdue or due_soon:
-                        ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
+                        ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
                         if len(ids) > 0:
-                            #we display only the name of the oldest overdue/due soon contract
-                            name=(self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype_id.name)
+                        # we display only the name of the oldest overdue/due soon contract
+                            name = (self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype_id.name)
 
             res[record.id] = {
                 'contract_renewal_overdue': overdue,
                 'contract_renewal_due_soon': due_soon,
-                'contract_renewal_total': (total - 1), #we remove 1 from the real total for display purposes
+                'contract_renewal_total': (total - 1),  # we remove 1 from the real total for display purposes
                 'contract_renewal_name': name,
             }
         return res
@@ -303,7 +306,7 @@ class fleet_vehicle(osv.Model):
         except ValueError:
             model_id = False
         return model_id
-    
+
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
         Odometer = self.pool['fleet.vehicle.odometer']
         LogFuel = self.pool['fleet.vehicle.log.fuel']
@@ -323,7 +326,7 @@ class fleet_vehicle(osv.Model):
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
-    _order= 'license_plate asc'
+    _order = 'license_plate asc'
     _columns = {
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -334,7 +337,7 @@ class fleet_vehicle(osv.Model):
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
-        'cost_count': fields.function(_count_all, type='integer', string="Costs" , multi=True),
+        'cost_count': fields.function(_count_all, type='integer', string="Costs", multi=True),
         'contract_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
         'service_count': fields.function(_count_all, type='integer', string='Services', multi=True),
         'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
@@ -345,9 +348,9 @@ class fleet_vehicle(osv.Model):
         'location': fields.char('Location', help='Location of the vehicle (garage, ...)'),
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
-        'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags', copy=False),
+        'tag_ids': fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False),
         'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Last Odometer', help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=True),
+        'odometer_unit': fields.selection([('kilometers', 'Kilometers'), ('miles', 'Miles')], 'Odometer Unit', help='Unit of the odometer ', required=True),
         'transmission': fields.selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle'),
         'fuel_type': fields.selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle'),
         'horsepower': fields.integer('Horsepower'),
@@ -384,7 +387,7 @@ class fleet_vehicle(osv.Model):
         context = dict(context or {}, mail_create_nolog=True)
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
-        self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)
+        self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name, vehicle.license_plate), context=context)
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -395,32 +398,32 @@ class fleet_vehicle(osv.Model):
         for vehicle in self.browse(cr, uid, ids, context):
             changes = []
             if 'model_id' in vals and vehicle.model_id.id != vals['model_id']:
-                value = self.pool.get('fleet.vehicle.model').browse(cr,uid,vals['model_id'],context=context).name
+                value = self.pool.get('fleet.vehicle.model').browse(cr, uid, vals['model_id'], context=context).name
                 oldmodel = vehicle.model_id.name or _('None')
-                changes.append(_("Model: from '%s' to '%s'") %(oldmodel, value))
+                changes.append(_("Model: from '%s' to '%s'") % (oldmodel, value))
             if 'driver_id' in vals and vehicle.driver_id.id != vals['driver_id']:
-                value = self.pool.get('res.partner').browse(cr,uid,vals['driver_id'],context=context).name
+                value = self.pool.get('res.partner').browse(cr, uid, vals['driver_id'], context=context).name
                 olddriver = (vehicle.driver_id.name) or _('None')
-                changes.append(_("Driver: from '%s' to '%s'") %(olddriver, value))
+                changes.append(_("Driver: from '%s' to '%s'") % (olddriver, value))
             if 'state_id' in vals and vehicle.state_id.id != vals['state_id']:
-                value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state_id'],context=context).name
+                value = self.pool.get('fleet.vehicle.state').browse(cr, uid, vals['state_id'], context=context).name
                 oldstate = vehicle.state_id.name or _('None')
-                changes.append(_("State: from '%s' to '%s'") %(oldstate, value))
+                changes.append(_("State: from '%s' to '%s'") % (oldstate, value))
             if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
                 old_license_plate = vehicle.license_plate or _('None')
-                changes.append(_("License Plate: from '%s' to '%s'") %(old_license_plate, vals['license_plate']))
+                changes.append(_("License Plate: from '%s' to '%s'") % (old_license_plate, vals['license_plate']))
 
             if len(changes) > 0:
                 self.message_post(cr, uid, [vehicle.id], body=", ".join(changes), context=context)
 
-        vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
+        vehicle_id = super(fleet_vehicle, self).write(cr, uid, ids, vals, context)
         return True
 
 
 class fleet_vehicle_odometer(osv.Model):
-    _name='fleet.vehicle.odometer'
-    _description='Odometer log for a vehicle'
-    _order='date desc'
+    _name = 'fleet.vehicle.odometer'
+    _description = 'Odometer log for a vehicle'
+    _order = 'date desc'
 
     def _vehicle_log_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
@@ -429,7 +432,7 @@ class fleet_vehicle_odometer(osv.Model):
             if not name:
                 name = record.date
             elif record.date:
-                name += ' / '+ record.date
+                name += ' / ' + record.date
             res[record.id] = name
         return res
 
@@ -471,63 +474,63 @@ class fleet_vehicle_log_fuel(osv.Model):
         }
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
-        #need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
-        #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
-        #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
-        #of 3.0/2=1.5)
-        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
-        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
-        #computation to 2 decimal
+        # need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
+        # make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
+        # liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
+        # of 3.0/2=1.5)
+        # If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        # onchange. And in order to verify that there is no change in the result, we have to limit the precision of the
+        # computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
-            return {'value' : {'amount' : round(liter * price_per_liter,2),}}
-        elif amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
-            return {'value' : {'price_per_liter' : round(amount / liter,2),}}
-        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
-            return {'value' : {'liter' : round(amount / price_per_liter,2),}}
-        else :
+        if liter > 0 and price_per_liter > 0 and round(liter * price_per_liter, 2) != amount:
+            return {'value': {'amount': round(liter * price_per_liter, 2), }}
+        elif amount > 0 and liter > 0 and round(amount / liter, 2) != price_per_liter:
+            return {'value': {'price_per_liter': round(amount / liter, 2), }}
+        elif amount > 0 and price_per_liter > 0 and round(amount / price_per_liter, 2) != liter:
+            return {'value': {'liter': round(amount / price_per_liter, 2), }}
+        else:
             return {}
 
     def on_change_price_per_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
-        #need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
-        #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
-        #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
-        #of 3.0/2=1.5)
-        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
-        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
-        #computation to 2 decimal
+        # need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
+        # make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
+        # liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
+        # of 3.0/2=1.5)
+        # If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        # onchange. And in order to verify that there is no change in the result, we have to limit the precision of the
+        # computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
-            return {'value' : {'amount' : round(liter * price_per_liter,2),}}
-        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
-            return {'value' : {'liter' : round(amount / price_per_liter,2),}}
-        elif amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
-            return {'value' : {'price_per_liter' : round(amount / liter,2),}}
-        else :
+        if liter > 0 and price_per_liter > 0 and round(liter * price_per_liter, 2) != amount:
+            return {'value': {'amount': round(liter * price_per_liter, 2), }}
+        elif amount > 0 and price_per_liter > 0 and round(amount / price_per_liter, 2) != liter:
+            return {'value': {'liter': round(amount / price_per_liter, 2), }}
+        elif amount > 0 and liter > 0 and round(amount / liter, 2) != price_per_liter:
+            return {'value': {'price_per_liter': round(amount / liter, 2), }}
+        else:
             return {}
 
     def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
-        #need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
-        #make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
-        #liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
-        #of 3.0/2=1.5)
-        #If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
-        #onchange. And in order to verify that there is no change in the result, we have to limit the precision of the 
-        #computation to 2 decimal
+        # need to cast in float because the value receveid from web client maybe an integer (Javascript and JSON do not
+        # make any difference between 3.0 and 3). This cause a problem if you encode, for example, 2 liters at 1.5 per
+        # liter => total is computed as 3.0, then trigger an onchange that recomputes price_per_liter as 3/2=1 (instead
+        # of 3.0/2=1.5)
+        # If there is no change in the result, we return an empty dict to prevent an infinite loop due to the 3 intertwine
+        # onchange. And in order to verify that there is no change in the result, we have to limit the precision of the
+        # computation to 2 decimal
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
-        if amount > 0 and liter > 0 and round(amount/liter,2) != price_per_liter:
-            return {'value': {'price_per_liter': round(amount / liter,2),}}
-        elif amount > 0 and price_per_liter > 0 and round(amount/price_per_liter,2) != liter:
-            return {'value': {'liter': round(amount / price_per_liter,2),}}
-        elif liter > 0 and price_per_liter > 0 and round(liter*price_per_liter,2) != amount:
-            return {'value': {'amount': round(liter * price_per_liter,2),}}
-        else :
+        if amount > 0 and liter > 0 and round(amount / liter, 2) != price_per_liter:
+            return {'value': {'price_per_liter': round(amount / liter, 2), }}
+        elif amount > 0 and price_per_liter > 0 and round(amount / price_per_liter, 2) != liter:
+            return {'value': {'liter': round(amount / price_per_liter, 2), }}
+        elif liter > 0 and price_per_liter > 0 and round(liter * price_per_liter, 2) != amount:
+            return {'value': {'amount': round(liter * price_per_liter, 2), }}
+        else:
             return {}
 
     def _get_default_service_type(self, cr, uid, context):
@@ -549,7 +552,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
-        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
+        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True),  # we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
         'date': fields.date.context_today,
@@ -587,7 +590,7 @@ class fleet_vehicle_log_services(osv.Model):
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference'),
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
-        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
+        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True),  # we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
     }
@@ -610,15 +613,15 @@ class fleet_service_type(osv.Model):
 class fleet_vehicle_log_contract(osv.Model):
 
     def scheduler_manage_auto_costs(self, cr, uid, context=None):
-        #This method is called by a cron task
-        #It creates costs for contracts having the "recurring cost" field setted, depending on their frequency
-        #For example, if a contract has a reccuring cost of 200 with a weekly frequency, this method creates a cost of 200 on the first day of each week, from the date of the last recurring costs in the database to today
-        #If the contract has not yet any recurring costs in the database, the method generates the recurring costs from the start_date to today
-        #The created costs are associated to a contract thanks to the many2one field contract_id
-        #If the contract has no start_date, no cost will be created, even if the contract has recurring costs
+        # This method is called by a cron task
+        # It creates costs for contracts having the "recurring cost" field setted, depending on their frequency
+        # For example, if a contract has a reccuring cost of 200 with a weekly frequency, this method creates a cost of 200 on the first day of each week, from the date of the last recurring costs in the database to today
+        # If the contract has not yet any recurring costs in the database, the method generates the recurring costs from the start_date to today
+        # The created costs are associated to a contract thanks to the many2one field contract_id
+        # If the contract has no start_date, no cost will be created, even if the contract has recurring costs
         vehicle_cost_obj = self.pool.get('fleet.vehicle.cost')
         d = datetime.datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT).date()
-        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','!=','closed')], offset=0, limit=None, order=None,context=None, count=False)
+        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state', '!=', 'closed')], offset=0, limit=None, order=None, context=None, count=False)
         deltas = {'yearly': relativedelta(years=+1), 'monthly': relativedelta(months=+1), 'weekly': relativedelta(weeks=+1), 'daily': relativedelta(days=+1)}
         for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, contract_ids, context=context):
             if not contract.start_date or contract.cost_frequency == 'no':
@@ -626,7 +629,7 @@ class fleet_vehicle_log_contract(osv.Model):
             found = False
             last_cost_date = contract.start_date
             if contract.generated_cost_ids:
-                last_autogenerated_cost_id = vehicle_cost_obj.search(cr, uid, ['&', ('contract_id','=',contract.id), ('auto_generated','=',True)], offset=0, limit=1, order='date desc',context=context, count=False)
+                last_autogenerated_cost_id = vehicle_cost_obj.search(cr, uid, ['&', ('contract_id', '=', contract.id), ('auto_generated', '=', True)], offset=0, limit=1, order='date desc', context=context, count=False)
                 if last_autogenerated_cost_id:
                     found = True
                     last_cost_date = vehicle_cost_obj.browse(cr, uid, last_autogenerated_cost_id[0], context=context).date
@@ -647,8 +650,8 @@ class fleet_vehicle_log_contract(osv.Model):
         return True
 
     def scheduler_manage_contract_expiration(self, cr, uid, context=None):
-        #This method is called by a cron task
-        #It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
+        # This method is called by a cron task
+        # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
         datetime_today = datetime.datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT)
         limit_date = (datetime_today + relativedelta(days=+15)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         ids = self.search(cr, uid, ['&', ('state', '=', 'open'), ('expiration_date', '<', limit_date)], offset=0, limit=None, order=None, context=context, count=False)
@@ -673,9 +676,9 @@ class fleet_vehicle_log_contract(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
             if record.cost_subtype_id.name:
-                name += ' / '+ record.cost_subtype_id.name
+                name += ' / ' + record.cost_subtype_id.name
             if record.date:
-                name += ' / '+ record.date
+                name += ' / ' + record.date
             res[record.id] = name
         return res
 
@@ -696,7 +699,7 @@ class fleet_vehicle_log_contract(osv.Model):
 
     def on_change_start_date(self, cr, uid, ids, strdate, enddate, context=None):
         if (strdate):
-            return {'value': {'expiration_date': self.compute_next_year_date(strdate),}}
+            return {'value': {'expiration_date': self.compute_next_year_date(strdate), }}
         return {}
 
     def get_days_left(self, cr, uid, ids, prop, unknow_none, context=None):
@@ -710,7 +713,7 @@ class fleet_vehicle_log_contract(osv.Model):
             if (record.expiration_date and (record.state == 'open' or record.state == 'toclose')):
                 today = str_to_datetime(time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
                 renew_date = str_to_datetime(record.expiration_date)
-                diff_time = (renew_date-today).days
+                diff_time = (renew_date - today).days
                 res[record.id] = diff_time > 0 and diff_time or 0
             else:
                 res[record.id] = -1
@@ -719,7 +722,7 @@ class fleet_vehicle_log_contract(osv.Model):
     def act_renew_contract(self, cr, uid, ids, context=None):
         assert len(ids) == 1, "This operation should only be done for 1 single contract at a time, as it it suppose to open a window as result"
         for element in self.browse(cr, uid, ids, context=context):
-            #compute end date
+            # compute end date
             startdate = str_to_datetime(element.start_date)
             enddate = str_to_datetime(element.expiration_date)
             diffdate = (enddate - startdate)
@@ -731,7 +734,7 @@ class fleet_vehicle_log_contract(osv.Model):
             newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, element.id, default, context=context)
         mod, modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
         return {
-            'name':_("Renew Contract"),
+            'name': _("Renew Contract"),
             'view_mode': 'form',
             'view_id': modid,
             'view_type': 'tree,form',
@@ -740,7 +743,7 @@ class fleet_vehicle_log_contract(osv.Model):
             'nodestroy': True,
             'domain': '[]',
             'res_id': newid,
-            'context': {'active_id':newid}, 
+            'context': {'active_id': newid},
         }
 
     def _get_default_contract_type(self, cr, uid, context=None):
@@ -773,31 +776,31 @@ class fleet_vehicle_log_contract(osv.Model):
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
     _name = 'fleet.vehicle.log.contract'
     _description = 'Contract information on a vehicle'
-    _order='state desc,expiration_date'
+    _order = 'state desc,expiration_date'
     _columns = {
         'name': fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
         'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
         'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
-        'insurer_id' :fields.many2one('res.partner', 'Supplier'),
+        'insurer_id': fields.many2one('res.partner', 'Supplier'),
         'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
         'ins_ref': fields.char('Contract Reference', size=64, copy=False),
-        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],
+        'state': fields.selection([('open', 'In Progress'), ('toclose', 'To Close'), ('closed', 'Terminated')],
                                   'Status', readonly=True, help='Choose wheter the contract is still valid or not',
                                   copy=False),
         'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract', copy=False),
         'cost_generated': fields.float('Recurring Cost Amount', help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
-        'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
+        'cost_frequency': fields.selection([('no', 'No'), ('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
         'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs'),
         'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
-        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
+        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True),  # we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,
-        'state':'open',
+        'state': 'open',
         'expiration_date': lambda self, cr, uid, ctx: self.compute_next_year_date(fields.date.context_today(self, cr, uid, context=ctx)),
         'cost_frequency': 'no',
         'cost_subtype_id': _get_default_contract_type,
@@ -810,10 +813,11 @@ class fleet_vehicle_log_contract(osv.Model):
     def contract_open(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
+
 class fleet_contract_state(osv.Model):
     _name = 'fleet.contract.state'
     _description = 'Contains the different possible status of a leasing contract'
 
     _columns = {
-        'name':fields.char('Contract Status', required=True),
+        'name': fields.char('Contract Status', required=True),
     }

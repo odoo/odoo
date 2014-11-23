@@ -53,7 +53,7 @@ class account_report_general_ledger(osv.osv_memory):
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
-        if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
+        if not data['form']['fiscalyear_id']:  # GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
 
         if data['form']['landscape'] is False:

@@ -26,31 +26,32 @@ import string
 import unohelper
 import xmlrpclib
 from com.sun.star.task import XJobExecutor
-if __name__<>"package":
+if __name__ <> "package":
     from lib.gui import *
     from lib.error import ErrorDialog
     from lib.functions import *
     from lib.logreport import *
     from lib.rpc import *
     from ServerParameter import *
-    database="test"
+    database = "test"
 
-class Change( unohelper.Base, XJobExecutor ):
+
+class Change(unohelper.Base, XJobExecutor):
     def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
-        desktop=getDesktop()
+        desktop = getDesktop()
         log_detail(self)
-        self.logobj=Logger()
+        self.logobj = Logger()
         doc = desktop.getCurrentComponent()
-        docinfo=doc.getDocumentInfo()
+        docinfo = doc.getDocumentInfo()
         self.protocol = {
             'XML-RPC': 'http://',
             'XML-RPC secure': 'https://',
             'NET-RPC': 'socket://',
         }
-        host=port=protocol=''
+        host = port = protocol = ''
         if docinfo.getUserFieldValue(0):
             m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$',  docinfo.getUserFieldValue(0) or '')
             host = m.group(2)
@@ -58,61 +59,61 @@ class Change( unohelper.Base, XJobExecutor ):
             protocol = m.group(1)
         if  protocol:
             for (key, value) in self.protocol.iteritems():
-                if value==protocol:
-                    protocol=key
+                if value == protocol:
+                    protocol = key
                     break
         else:
-            protocol='XML-RPC'
-        self.win=DBModalDialog(60, 50, 120, 90, "Connect to Odoo Server")
+            protocol = 'XML-RPC'
+        self.win = DBModalDialog(60, 50, 120, 90, "Connect to Odoo Server")
 
         self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
-        self.win.addEdit("txtHost",-2,9,60,15, host or 'localhost')
+        self.win.addEdit("txtHost", -2, 9, 60, 15, host or 'localhost')
 
-        self.win.addFixedText("lblReportName",45 , 31, 15, 15, "Port  ")
-        self.win.addEdit("txtPort",-2,28,60,15, port or "8069")
+        self.win.addFixedText("lblReportName", 45, 31, 15, 15, "Port  ")
+        self.win.addEdit("txtPort", -2, 28, 60, 15, port or "8069")
 
         self.win.addFixedText("lblLoginName", 2, 51, 60, 15, "Protocol Connection")
 
         self.win.addComboListBox("lstProtocol", -2, 48, 60, 15, True)
-        self.lstProtocol = self.win.getControl( "lstProtocol" )
+        self.lstProtocol = self.win.getControl("lstProtocol")
 
-        self.win.addButton( 'btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked )
+        self.win.addButton('btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked)
 
-        self.win.addButton( 'btnCancel', -2 - 30 - 5 ,-5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked )
+        self.win.addButton('btnCancel', -2 - 30 - 5, -5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
 
         for i in self.protocol.keys():
-            self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
-        self.win.doModalDialog( "lstProtocol",  protocol)
+            self.lstProtocol.addItem(i, self.lstProtocol.getItemCount())
+        self.win.doModalDialog("lstProtocol",  protocol)
 
     def btnNext_clicked(self, oActionEvent):
         global url
-        aVal=''
-        #aVal= Fetature used
+        aVal = ''
+        # aVal= Fetature used
         try:
-            url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")]+self.win.getEditText("txtHost")+":"+self.win.getEditText("txtPort")
-            self.sock=RPCSession(url)
-            desktop=getDesktop()
+            url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")] + self.win.getEditText("txtHost") + ":" + self.win.getEditText("txtPort")
+            self.sock = RPCSession(url)
+            desktop = getDesktop()
             doc = desktop.getCurrentComponent()
-            docinfo=doc.getDocumentInfo()
-            docinfo.setUserFieldValue(0,url)
-            res=self.sock.listdb()
+            docinfo = doc.getDocumentInfo()
+            docinfo.setUserFieldValue(0, url)
+            res = self.sock.listdb()
             self.win.endExecute()
-            ServerParameter(aVal,url)
-        except :
-            import traceback,sys
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+            ServerParameter(aVal, url)
+        except:
+            import traceback, sys
+            info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)
             ErrorDialog("Connection to server is fail. Please check your Server Parameter.", "", "Error!")
             self.win.endExecute()
 
-    def btnCancel_clicked(self,oActionEvent):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 
-if __name__<>"package" and __name__=="__main__":
+if __name__ <> "package" and __name__ == "__main__":
     Change(None)
-elif __name__=="package":
-    g_ImplementationHelper.addImplementation( Change, "org.openoffice.openerp.report.change", ("com.sun.star.task.Job",),)
+elif __name__ == "package":
+    g_ImplementationHelper.addImplementation(Change, "org.openoffice.openerp.report.change", ("com.sun.star.task.Job",),)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

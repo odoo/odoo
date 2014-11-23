@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 
+
 class project_project(osv.osv):
     _inherit = 'project.project'
 
@@ -56,7 +57,7 @@ class project_project(osv.osv):
         help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
         try:
             if project.to_invoice and project.partner_id:
-                help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
+                help += _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
         except:
             # if the user do not have access rights on the partner
             pass
@@ -80,7 +81,7 @@ class project_work(osv.osv):
         if not emp_id:
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration!'),
-                 _('Please define employee for user "%s". You must create one.')% (user_name,))
+                 _('Please define employee for user "%s". You must create one.') % (user_name,))
         emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration!'),
@@ -118,7 +119,7 @@ class project_work(osv.osv):
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
         if vals.get('date'):
-            vals_line['date' ] = vals['date'][:10]
+            vals_line['date'] = vals['date'][:10]
 
         # Calculate quantity based on employee's product's uom
         vals_line['unit_amount'] = vals['hours']
@@ -144,17 +145,17 @@ class project_work(osv.osv):
             # Compute based on pricetype
             amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
                 prod_id, amount, False, unit, vals_line['journal_id'], context=context)
-            if amount_unit and 'amount' in amount_unit.get('value',{}):
-                updv = { 'amount': amount_unit['value']['amount'] }
+            if amount_unit and 'amount' in amount_unit.get('value', {}):
+                updv = {'amount': amount_unit['value']['amount']}
                 timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
 
         return timeline_id
 
     def create(self, cr, uid, vals, *args, **kwargs):
         context = kwargs.get('context', {})
-        if not context.get('no_analytic_entry',False):
+        if not context.get('no_analytic_entry', False):
             vals['hr_analytic_timesheet_id'] = self._create_analytic_entries(cr, uid, vals, context=context)
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+        return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         """
@@ -185,7 +186,7 @@ class project_work(osv.osv):
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 vals_line['unit_amount'] = vals['hours']
-                prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
+                prod_id = vals_line.get('product_id', line_id.product_id.id)  # False may be set
 
                 # Put user related details in analytic timesheet values
                 details = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
@@ -203,13 +204,13 @@ class project_work(osv.osv):
                     prod_id=prod_id, company_id=False,
                     unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
 
-                if amount_unit and 'amount' in amount_unit.get('value',{}):
+                if amount_unit and 'amount' in amount_unit.get('value', {}):
                     vals_line['amount'] = amount_unit['value']['amount']
 
             if vals_line:
                 self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
 
-        return super(project_work,self).write(cr, uid, ids, vals, context)
+        return super(project_work, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         hat_obj = self.pool.get('hr.analytic.timesheet')
@@ -220,10 +221,10 @@ class project_work(osv.osv):
         # Delete entry from timesheet too while deleting entry to task.
         if hat_ids:
             hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
-    _columns={
-        'hr_analytic_timesheet_id':fields.many2one('hr.analytic.timesheet','Related Timeline Id', ondelete='set null'),
+    _columns = {
+        'hr_analytic_timesheet_id': fields.many2one('hr.analytic.timesheet', 'Related Timeline Id', ondelete='set null'),
     }
 
 
@@ -236,7 +237,7 @@ class task(osv.osv):
                 work_ids = [x.id for x in task_obj.work_ids]
                 self.pool.get('project.task.work').unlink(cr, uid, work_ids, *args, **kwargs)
 
-        return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(task, self).unlink(cr, uid, ids, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -245,10 +246,10 @@ class task(osv.osv):
         acc_id = False
         missing_analytic_entries = {}
 
-        if vals.get('project_id',False) or vals.get('name',False):
+        if vals.get('project_id', False) or vals.get('name', False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
-            if vals.get('project_id',False):
+            if vals.get('project_id', False):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
                 acc_id = project_obj.analytic_account_id.id
 
@@ -256,29 +257,29 @@ class task(osv.osv):
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
                         if not task_work.hr_analytic_timesheet_id:
-                            if acc_id :
+                            if acc_id:
                                 # missing timesheet activities to generate
                                 missing_analytic_entries[task_work.id] = {
-                                    'name' : task_work.name,
-                                    'user_id' : task_work.user_id.id,
-                                    'date' : task_work.date and task_work.date[:10] or False,
+                                    'name': task_work.name,
+                                    'user_id': task_work.user_id.id,
+                                    'date': task_work.date and task_work.date[:10] or False,
                                     'account_id': acc_id,
-                                    'hours' : task_work.hours,
-                                    'task_id' : task_obj.id
+                                    'hours': task_work.hours,
+                                    'task_id': task_obj.id
                                 }
                             continue
                         line_id = task_work.hr_analytic_timesheet_id.id
-                        if vals.get('project_id',False):
+                        if vals.get('project_id', False):
                             vals_line['account_id'] = acc_id
-                        if vals.get('name',False):
+                        if vals.get('name', False):
                             vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
 
-        res = super(task,self).write(cr, uid, ids, vals, context)
+        res = super(task, self).write(cr, uid, ids, vals, context)
 
         for task_work_id, analytic_entry in missing_analytic_entries.items():
             timeline_id = task_work_obj._create_analytic_entries(cr, uid, analytic_entry, context=context)
-            task_work_obj.write(cr, uid, task_work_id, {'hr_analytic_timesheet_id' : timeline_id}, context=context)
+            task_work_obj.write(cr, uid, task_work_id, {'hr_analytic_timesheet_id': timeline_id}, context=context)
 
         return res
 
@@ -287,37 +288,38 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def unlink(self, cursor, user, ids, context=None):
-        parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
+        parnter_id = self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
             raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
-        return super(res_partner,self).unlink(cursor, user, ids,
+        return super(res_partner, self).unlink(cursor, user, ids,
                 context=context)
 
 
 class account_analytic_line(osv.osv):
-   _inherit = "account.analytic.line"
+    _inherit = "account.analytic.line"
 
-   def get_product(self, cr, uid, context=None):
+    def get_product(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
         emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_ids:
             employee = emp_obj.browse(cr, uid, emp_ids, context=context)[0]
-            if employee.product_id:return employee.product_id.id
+            if employee.product_id:
+                return employee.product_id.id
         return False
-   
-   _defaults = {'product_id': get_product,}
-   
-   def on_change_account_id(self, cr, uid, ids, account_id):
-       res = {}
-       if not account_id:
-           return res
-       res.setdefault('value',{})
-       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
-       st = acc.to_invoice.id
-       res['value']['to_invoice'] = st or False
-       if acc.state == 'close' or acc.state == 'cancelled':
-           raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
-       return res
+
+    _defaults = {'product_id': get_product, }
+
+    def on_change_account_id(self, cr, uid, ids, account_id):
+        res = {}
+        if not account_id:
+            return res
+        res.setdefault('value', {})
+        acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+        st = acc.to_invoice.id
+        res['value']['to_invoice'] = st or False
+        if acc.state == 'close' or acc.state == 'cancelled':
+            raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+        return res
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

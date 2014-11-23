@@ -3,6 +3,7 @@ import functools
 import openerp
 from openerp.http import Controller, route, request, Response
 
+
 def webservice(f):
     @functools.wraps(f)
     def wrap(*args, **kw):
@@ -11,6 +12,7 @@ def webservice(f):
         except Exception, e:
             return Response(response=str(e), status=500)
     return wrap
+
 
 class ImportModule(Controller):
 

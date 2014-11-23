@@ -42,7 +42,7 @@ class account_analytic_cost_ledger(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids)[0]
         datas = {
-            'ids': context.get('active_ids',[]),
+            'ids': context.get('active_ids', []),
             'model': 'account.analytic.account',
             'form': data
         }

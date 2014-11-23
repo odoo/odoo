@@ -20,25 +20,29 @@ TIMEOUT = 50
 #----------------------------------------------------------
 # Bus
 #----------------------------------------------------------
+
+
 def json_dump(v):
     return simplejson.dumps(v, separators=(',', ':'))
+
 
 def hashable(key):
     if isinstance(key, list):
         key = tuple(key)
     return key
 
+
 class ImBus(osv.Model):
     _name = 'bus.bus'
     _columns = {
-        'id' : fields.integer('Id'),
-        'create_date' : fields.datetime('Create date'),
-        'channel' : fields.char('Channel'),
-        'message' : fields.char('Message'),
+        'id': fields.integer('Id'),
+        'create_date': fields.datetime('Create date'),
+        'channel': fields.char('Channel'),
+        'message': fields.char('Message'),
     }
 
     def gc(self, cr, uid):
-        timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
+        timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT * 2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         ids  = self.search(cr, openerp.SUPERUSER_ID, domain)
         self.unlink(cr, openerp.SUPERUSER_ID, ids)
@@ -48,8 +52,8 @@ class ImBus(osv.Model):
         for channel, message in notifications:
             channels.add(channel)
             values = {
-                "channel" : json_dump(channel),
-                "message" : json_dump(message)
+                "channel": json_dump(channel),
+                "message": json_dump(message)
             }
             self.pool['bus.bus'].create(cr, openerp.SUPERUSER_ID, values)
             cr.commit()
@@ -65,15 +69,16 @@ class ImBus(osv.Model):
     def poll(self, cr, uid, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
-            timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
+            timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:
             # else returns the unread notifications
-            domain = [('id','>',last)]
+            domain = [('id', '>', last)]
         channels = [json_dump(c) for c in channels]
-        domain.append(('channel','in',channels))
+        domain.append(('channel', 'in', channels))
         notifications = self.search_read(cr, openerp.SUPERUSER_ID, domain)
-        return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
+        return [{"id": notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
+
 
 class ImDispatch(object):
     def __init__(self):
@@ -116,7 +121,7 @@ class ImDispatch(object):
             cr.execute("listen imbus")
             cr.commit();
             while True:
-                if select.select([conn], [], [], TIMEOUT) == ([],[],[]):
+                if select.select([conn], [], [], TIMEOUT) == ([], [], []):
                     pass
                 else:
                     conn.poll()
@@ -126,7 +131,7 @@ class ImDispatch(object):
                     # dispatch to local threads/greenlets
                     events = set()
                     for c in channels:
-                        events.update(self.channels.pop(hashable(c),[]))
+                        events.update(self.channels.pop(hashable(c), []))
                     for e in events:
                         e.set()
 
@@ -160,6 +165,8 @@ dispatch = ImDispatch().start()
 #----------------------------------------------------------
 # Controller
 #----------------------------------------------------------
+
+
 class Controller(openerp.http.Controller):
     """ Examples:
     openerp.jsonRpc('/longpolling/poll','call',{"channels":["c1"],last:0}).then(function(r){console.log(r)});

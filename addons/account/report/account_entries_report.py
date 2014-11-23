@@ -20,8 +20,9 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+
 
 class account_entries_report(osv.osv):
     _name = "account.entries.report"
@@ -45,12 +46,12 @@ class account_entries_report(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=True),
-        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True),
-        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
+        'move_state': fields.selection([('draft', 'Unposted'), ('posted', 'Posted')], 'Status', readonly=True),
+        'move_line_state': fields.selection([('draft', 'Unbalanced'), ('valid', 'Valid')], 'State of Move Line', readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
-        'partner_id': fields.many2one('res.partner','Partner', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),  # TDE FIXME master: rename into product_quantity
+        'quantity': fields.float('Products Quantity', digits=(16, 2), readonly=True),  # TDE FIXME master: rename into product_quantity
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),
@@ -76,33 +77,33 @@ class account_entries_report(osv.osv):
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
                 current_period = period_obj.find(cr, uid, context=context)[0]
-                args.append(['period_id','in',[current_period]])
+                args.append(['period_id', 'in', [current_period]])
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
                 current_year = fiscalyear_obj.find(cr, uid)
                 ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                args.append(['period_id','in',ids])
-        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+                args.append(['period_id', 'in', ids])
+        for a in [['period_id', 'in', 'current_year'], ['period_id', 'in', 'current_period']]:
             if a in args:
                 args.remove(a)
         return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False,lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if context is None:
             context = {}
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         period_obj = self.pool.get('account.period')
         if context.get('period', False) == 'current_period':
             current_period = period_obj.find(cr, uid, context=context)[0]
-            domain.append(['period_id','in',[current_period]])
+            domain.append(['period_id', 'in', [current_period]])
         elif context.get('year', False) == 'current_year':
             current_year = fiscalyear_obj.find(cr, uid)
             ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-            domain.append(['period_id','in',ids])
+            domain.append(['period_id', 'in', ids])
         else:
             domain = domain
-        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby,lazy)
+        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby, lazy)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

@@ -45,10 +45,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
-            'get_partners':self._get_partners,
-            'get_intial_balance':self._get_intial_balance,
-            'display_initial_balance':self._display_initial_balance,
-            'display_currency':self._display_currency,
+            'get_partners': self._get_partners,
+            'get_intial_balance': self._get_intial_balance,
+            'display_initial_balance': self._display_initial_balance,
+            'display_currency': self._display_currency,
             'get_target_move': self._get_target_move,
         })
 
@@ -61,7 +61,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         obj_move = self.pool.get('account.move.line')
         obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
-        ctx2 = data['form'].get('used_context',{}).copy()
+        ctx2 = data['form'].get('used_context', {}).copy()
         self.initial_balance = data['form'].get('initial_balance', True)
         if self.initial_balance:
             ctx2.update({'initial_bal': True})
@@ -73,7 +73,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         self.amount_currency = data['form'].get('amount_currency', False)
         self.target_move = data['form'].get('target_move', 'all')
         PARTNER_REQUEST = ''
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         if self.result_selection == 'supplier':
@@ -81,7 +81,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         elif self.result_selection == 'customer':
             self.ACCOUNT_TYPE = ['receivable']
         else:
-            self.ACCOUNT_TYPE = ['payable','receivable']
+            self.ACCOUNT_TYPE = ['payable', 'receivable']
 
         self.cr.execute(
             "SELECT a.id " \
@@ -92,7 +92,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 "AND a.active", (tuple(self.ACCOUNT_TYPE), ))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         params = [tuple(move_state), tuple(self.account_ids)]
-        #if we print from the partners, add a clause on active_ids
+        # if we print from the partners, add a clause on active_ids
         if (data['model'] == 'res.partner') and ids:
             PARTNER_REQUEST =  "AND l.partner_id IN %s"
             params += [tuple(ids)]
@@ -104,7 +104,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                     "AND l.account_id = account.id " \
                     "AND am.id = l.move_id " \
                     "AND am.state IN %s"
-#                    "AND " + self.query +" " \
+            #                    "AND " + self.query +" " \
                     "AND l.account_id IN %s " \
                     " " + PARTNER_REQUEST + " " \
                     "AND account.active ", params)
@@ -114,7 +114,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return super(third_party_ledger, self).set_context(objects, data, self.partner_ids, report_type)
 
     def lines(self, partner):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -133,7 +133,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             "LEFT JOIN res_currency c ON (l.currency_id=c.id)" \
             "LEFT JOIN account_move m ON (m.id=l.move_id)" \
             "WHERE l.partner_id = %s " \
-                "AND l.account_id IN %s AND " + self.query +" " \
+                "AND l.account_id IN %s AND " + self.query + " " \
                 "AND m.state IN %s " \
                 " " + RECONCILE_TAG + " "\
                 "ORDER BY l.date",
@@ -149,7 +149,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return full_account
 
     def _get_intial_balance(self, partner):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         if self.reconcil:
@@ -172,7 +172,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return res
 
     def _sum_debit_partner(self, partner):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -221,7 +221,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return result_tmp  + result_init
 
     def _sum_credit_partner(self, partner):
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 

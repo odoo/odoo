@@ -25,6 +25,7 @@ import time
 from openerp.osv import fields, osv
 from openerp import api
 
+
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
@@ -70,7 +71,7 @@ class account_fiscal_position(osv.osv):
                 if tax.tax_src_id.id == t.id:
                     if tax.tax_dest_id:
                         result.add(tax.tax_dest_id.id)
-                    ok=True
+                    ok = True
             if not ok:
                 result.add(t.id)
         return list(result)
@@ -141,6 +142,7 @@ class account_fiscal_position(osv.osv):
             return fiscal_position_ids[0]
         return False
 
+
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
     _description = 'Taxes Fiscal Position'
@@ -164,8 +166,8 @@ class account_fiscal_position_account(osv.osv):
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
-        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
+        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type', '<>', 'view')], required=True),
+        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type', '<>', 'view')], required=True)
     }
 
     _sql_constraints = [
@@ -194,13 +196,14 @@ class res_partner(osv.osv):
                       GROUP BY l.partner_id, a.type
                       """,
                    (tuple(ids),))
-        maps = {'receivable':'credit', 'payable':'debit' }
+        maps = {'receivable': 'credit', 'payable': 'debit'}
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0)
-        for pid,type,val in cr.fetchall():
-            if val is None: val=0
-            res[pid][maps[type]] = (type=='receivable') and val or -val
+        for pid, type, val in cr.fetchall():
+            if val is None:
+                val = 0
+            res[pid][maps[type]] = (type == 'receivable') and val or -val
         return res
 
     def _asset_difference_search(self, cr, uid, obj, name, type, args, context=None):
@@ -209,7 +212,7 @@ class res_partner(osv.osv):
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
             map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
+                                'operator': x[1]}, args))
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
                     '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
@@ -217,18 +220,18 @@ class res_partner(osv.osv):
                     '(SELECT (debit-credit) AS bal, partner_id ' \
                     'FROM account_move_line l ' \
                     'WHERE account_id IN ' \
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=%s AND active) ' \
+                    '(SELECT id FROM account_account '\
+                    'WHERE type=%s AND active) ' \
                     'AND reconcile_id IS NULL ' \
-                    'AND '+query+') AS l ' \
+                    'AND ' + query + ') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where), 
-                    (type,) + having_values)
+                    'GROUP BY pid HAVING ' + where),
+                   (type,) + having_values)
         res = cr.fetchall()
         if not res:
-            return [('id','=','0')]
-        return [('id','in',map(itemgetter(0), res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(itemgetter(0), res))]
 
     def _credit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'receivable', args, context=context)
@@ -252,7 +255,7 @@ class res_partner(osv.osv):
         return {
             partner_id: {
                 'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+                'contracts_count': AnalyticAccount.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
             }
             for partner_id in ids
         }

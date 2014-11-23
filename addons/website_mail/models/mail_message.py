@@ -24,6 +24,7 @@ from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 from openerp.osv import osv, fields, expression
 
+
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
 

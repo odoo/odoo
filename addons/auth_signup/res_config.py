@@ -22,6 +22,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.safe_eval import safe_eval
 
+
 class base_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
 

@@ -62,6 +62,7 @@ ACTION_DICT = {
     'nodestroy': True,
 }
 
+
 def backup(path, raise_exception=True):
     path = os.path.normpath(path)
     if not os.path.exists(path):
@@ -114,6 +115,7 @@ class module_category(osv.osv):
         'visible': 1,
     }
 
+
 class MyFilterMessages(Transform):
     """
     Custom docutils transform to remove `system message` for a document and
@@ -131,6 +133,7 @@ class MyFilterMessages(Transform):
             _logger.warning("docutils' system message present: %s", str(node))
             node.parent.remove(node)
 
+
 class MyWriter(Writer):
     """
     Custom docutils html4ccs1 writer that doesn't add the warnings to the
@@ -140,19 +143,20 @@ class MyWriter(Writer):
     def get_transforms(self):
         return [MyFilterMessages, writer_aux.Admonitions]
 
+
 class module(osv.osv):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
     _description = "Module"
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-         res = super(module, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-         result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_server_module_immediate_install')[1]
-         if view_type == 'form':
-             if res.get('toolbar',False):
-                 list = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != result]
-                 res['toolbar'] = {'action': list}
-         return res
+        res = super(module, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_server_module_immediate_install')[1]
+        if view_type == 'form':
+            if res.get('toolbar', False):
+                list = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != result]
+                res['toolbar'] = {'action': list}
+        return res
 
     @classmethod
     def get_module_info(cls, name):
@@ -338,10 +342,10 @@ class module(osv.osv):
             if mod['state'] in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise orm.except_orm(_('Error'), _('You try to remove a module that is installed or will be installed'))
             mod_names.append(mod['name'])
-        #Removing the entry from ir_model_data
+        # Removing the entry from ir_model_data
         #ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
 
-        #if ids_meta:
+        # if ids_meta:
         #    self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
         return super(module, self).unlink(cr, uid, ids, context=context)
@@ -400,7 +404,7 @@ class module(osv.osv):
                     update_mods += dep.depend_id
 
             # update dependency modules that require it, and determine demo for module
-            update_demo = update_mods.state_update(newstate, states_to_update, level=level-1)
+            update_demo = update_mods.state_update(newstate, states_to_update, level=level - 1)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
@@ -427,6 +431,7 @@ class module(osv.osv):
         #  - all dependencies satisfied (installed or to be installed),
         #  - at least one dependency being 'to install'
         satisfied_states = frozenset(('installed', 'to install', 'to upgrade'))
+
         def all_depencies_satisfied(m):
             states = set(d.state for d in m.dependencies_id)
             return states.issubset(satisfied_states) and ('to install' in states)
@@ -510,7 +515,7 @@ class module(osv.osv):
             'params': {'menu_id': menu_ids and menu_ids[0] or False}
         }
 
-    #TODO remove me in master, not called anymore
+    # TODO remove me in master, not called anymore
     def button_immediate_uninstall(self, cr, uid, ids, context=None):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -592,7 +597,6 @@ class module(osv.osv):
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
         }
-
 
     def create(self, cr, uid, vals, context=None):
         new_id = super(module, self).create(cr, uid, vals, context=context)
@@ -716,7 +720,7 @@ class module(osv.osv):
                 bck = backup(server_dir)
                 _logger.info('Copy downloaded module `openerp` to `%s`', server_dir)
                 shutil.move(os.path.join(tmp, OPENERP), server_dir)
-                #if bck:
+                # if bck:
                 #    shutil.rmtree(bck)
 
             self.update_list(cr, uid, context=context)
@@ -792,6 +796,7 @@ DEP_STATES = [
     ('to install', 'To be installed'),
     ('unknown', 'Unknown'),
 ]
+
 
 class module_dependency(osv.Model):
     _name = "ir.module.module.dependency"

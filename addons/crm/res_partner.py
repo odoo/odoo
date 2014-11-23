@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
     def _opportunity_meeting_phonecall_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
+        res = dict(map(lambda x: (x, {'opportunity_count': 0, 'meeting_count': 0}), ids))
         # the user may not have access rights for opportunities or meetings
         try:
             for partner in self.browse(cr, uid, ids, context):
@@ -44,7 +45,7 @@ class res_partner(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('probability', 'not in', ['0', '100'])]),
-        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
+        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id',
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
@@ -70,18 +71,18 @@ class res_partner(osv.osv):
 
     def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
         categ_obj = self.pool.get('crm.case.categ')
-        categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
+        categ_ids = categ_obj.search(cr, uid, [('object_id.model', '=', 'crm.lead')])
         lead_obj = self.pool.get('crm.lead')
         opportunity_ids = {}
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner_id:
                 partner_id = partner.id
             opportunity_id = lead_obj.create(cr, uid, {
-                'name' : opportunity_summary,
-                'planned_revenue' : planned_revenue,
-                'probability' : probability,
-                'partner_id' : partner_id,
-                'categ_ids' : categ_ids and categ_ids[0:1] or [],
+                'name': opportunity_summary,
+                'planned_revenue': planned_revenue,
+                'probability': probability,
+                'partner_id': partner_id,
+                'categ_ids': categ_ids and categ_ids[0:1] or [],
                 'type': 'opportunity'
             }, context=context)
             opportunity_ids[partner_id] = opportunity_id

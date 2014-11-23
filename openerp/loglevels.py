@@ -31,6 +31,7 @@ LOG_CRITICAL = 'critical'
 # TODO get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are here until we refactor tools so that this module doesn't depends on tools.
 
+
 def get_encodings(hint_encoding='utf-8'):
     fallbacks = {
         'latin1': 'latin9',
@@ -43,7 +44,7 @@ def get_encodings(hint_encoding='utf-8'):
             yield fallbacks[hint_encoding.lower()]
 
     # some defaults (also taking care of pure ASCII)
-    for charset in ['utf8','latin1']:
+    for charset in ['utf8', 'latin1']:
         if not hint_encoding or (charset.lower() != hint_encoding.lower()):
             yield charset
 
@@ -54,6 +55,7 @@ def get_encodings(hint_encoding='utf-8'):
         prefenc = fallbacks.get(prefenc.lower())
         if prefenc:
             yield prefenc
+
 
 def ustr(value, hint_encoding='utf-8', errors='strict'):
     """This method is similar to the builtin `unicode`, except
@@ -94,7 +96,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
 
 def exception_to_unicode(e):
-    if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
+    if (sys.version_info[:2] < (2, 6)) and hasattr(e, 'message'):
         return ustr(e.message)
     if hasattr(e, 'args'):
         return "\n".join((ustr(a) for a in e.args))

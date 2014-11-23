@@ -30,9 +30,9 @@ Quick and Easy sale process
 ===========================
 
 This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
-It is compatible with all PC tablets and the iPad, offering multiple payment methods. 
+It is compatible with all PC tablets and the iPad, offering multiple payment methods.
 
-Product selection can be done in several ways: 
+Product selection can be done in several ways:
 
 * Using a barcode reader
 * Browsing through categories of products or via a text search.
@@ -47,7 +47,7 @@ Main Features
 * Refund previous sales
     """,
     'author': 'OpenERP SA',
-    'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
+    'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg', 'images/sale_order_pos.jpeg', 'images/product_pos.jpeg'],
     'depends': ['sale_stock'],
     'data': [
         'data/report_paperformat.xml',

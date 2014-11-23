@@ -195,10 +195,10 @@ class account_invoice(models.Model):
         help="The reference of this invoice as provided by the supplier.",
         readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([
-            ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Invoice'),
-            ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
+            ('out_invoice', 'Customer Invoice'),
+            ('in_invoice', 'Supplier Invoice'),
+            ('out_refund', 'Customer Refund'),
+            ('in_refund', 'Supplier Refund'),
         ], string='Type', readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
@@ -215,12 +215,12 @@ class account_invoice(models.Model):
     comment = fields.Text('Additional Information')
 
     state = fields.Selection([
-            ('draft','Draft'),
-            ('proforma','Pro-forma'),
-            ('proforma2','Pro-forma'),
-            ('open','Open'),
-            ('paid','Paid'),
-            ('cancel','Cancelled'),
+            ('draft', 'Draft'),
+            ('proforma', 'Pro-forma'),
+            ('proforma2', 'Pro-forma'),
+            ('open', 'Open'),
+            ('paid', 'Paid'),
+            ('cancel', 'Cancelled'),
         ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
@@ -550,7 +550,7 @@ class account_invoice(models.Model):
                     acc_id = rec_account.id
                 else:
                     acc_id = pay_account.id
-                values= {'account_id': acc_id}
+                values = {'account_id': acc_id}
 
             if self:
                 if company_id:
@@ -672,7 +672,7 @@ class account_invoice(models.Model):
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
                 currency = self.currency_id.with_context(date=self.date_invoice)
-                il['analytic_lines'] = [(0,0, {
+                il['analytic_lines'] = [(0, 0, {
                     'name': il['name'],
                     'date': self.date_invoice,
                     'account_id': il['account_analytic_id'],
@@ -744,7 +744,7 @@ class account_invoice(models.Model):
                 line['currency_id'] = False
                 line['amount_currency'] = False
             line['ref'] = ref
-            if self.type in ('out_invoice','in_refund'):
+            if self.type in ('out_invoice', 'in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
                 line['price'] = - line['price']
@@ -782,7 +782,7 @@ class account_invoice(models.Model):
                     line2[tmp] = l
             line = []
             for key, val in line2.items():
-                line.append((0,0,val))
+                line.append((0, 0, val))
         return line
 
     @api.multi
@@ -937,16 +937,16 @@ class account_invoice(models.Model):
             'partner_id': part,
             'name': line['name'][:64],
             'date': date,
-            'debit': line['price']>0 and line['price'],
-            'credit': line['price']<0 and -line['price'],
+            'debit': line['price'] > 0 and line['price'],
+            'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
             'analytic_lines': line.get('analytic_lines', []),
-            'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
             'tax_code_id': line.get('tax_code_id', False),
             'tax_amount': line.get('tax_amount', False),
             'ref': line.get('ref', False),
-            'quantity': line.get('quantity',1.00),
+            'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
@@ -954,7 +954,7 @@ class account_invoice(models.Model):
 
     @api.multi
     def action_number(self):
-        #TODO: not correct fix but required a fresh values before reading it.
+        # TODO: not correct fix but required a fresh values before reading it.
         self.write({})
 
         for inv in self:
@@ -1010,7 +1010,7 @@ class account_invoice(models.Model):
 
     @api.multi
     def _log_event(self, factor=1.0, name='Open Invoice'):
-        #TODO: implement messages system
+        # TODO: implement messages system
         return True
 
     @api.multi
@@ -1119,7 +1119,7 @@ class account_invoice(models.Model):
     def pay_and_reconcile(self, pay_amount, pay_account_id, period_id, pay_journal_id,
                           writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=''):
         # TODO check if we can use different period for payment and the writeoff line
-        assert len(self)==1, "Can only pay one invoice at a time."
+        assert len(self) == 1, "Can only pay one invoice at a time."
         # Take the seq as name for move
         SIGN = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = SIGN[self.type]
@@ -1192,7 +1192,7 @@ class account_invoice(models.Model):
             code = self.currency_id.symbol
             # TODO: use currency's formatting function
             msg = _("Invoice partially paid: %s%s of %s%s (%s%s remaining).") % \
-                    (pay_amount, code, self.amount_total, code, total, code)
+                (pay_amount, code, self.amount_total, code, total, code)
             self.message_post(body=msg)
             lines2rec.reconcile_partial('manual')
 
@@ -1205,6 +1205,7 @@ class account_invoice(models.Model):
         recs = self.browse(cr, uid, ids, context)
         return recs.pay_and_reconcile(pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
+
 
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
@@ -1544,7 +1545,7 @@ class account_invoice_tax(models.Model):
                     'sequence': tax['sequence'],
                     'base': currency.round(tax['price_unit'] * line['quantity']),
                 }
-                if invoice.type in ('out_invoice','in_invoice'):
+                if invoice.type in ('out_invoice', 'in_invoice'):
                     val['base_code_id'] = tax['base_code_id']
                     val['tax_code_id'] = tax['tax_code_id']
                     val['base_amount'] = currency.compute(val['base'] * tax['base_sign'], company_currency, round=False)
@@ -1568,7 +1569,7 @@ class account_invoice_tax(models.Model):
                     val['account_analytic_id'] = line.account_analytic_id.id
 
                 key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
-                if not key in tax_grouped:
+                if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['base'] += val['base']
@@ -1626,6 +1627,7 @@ class res_partner(models.Model):
         Find the partner for which the accounting entries will be created
         '''
         return partner.commercial_partner_id
+
 
 class mail_compose_message(models.Model):
     _inherit = 'mail.compose.message'

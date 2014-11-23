@@ -8,6 +8,7 @@ from openerp.http import request
 
 from openerp.addons.website.models.website import slug
 
+
 class website_hr_recruitment(http.Controller):
     @http.route([
         '/jobs',
@@ -107,8 +108,8 @@ class website_hr_recruitment(http.Controller):
         # public user can't create applicants (duh)
         env = request.env(user=SUPERUSER_ID)
         value = {
-            'source_id' : env.ref('hr_recruitment.source_website_company').id,
-            'name': '%s\'s Application' % post.get('partner_name'), 
+            'source_id': env.ref('hr_recruitment.source_website_company').id,
+            'name': '%s\'s Application' % post.get('partner_name'),
         }
         for f in ['email_from', 'partner_name', 'description']:
             value[f] = post.get(f)

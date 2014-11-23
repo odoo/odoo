@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
     _description = "Invoice Rate"
@@ -38,7 +39,6 @@ class hr_timesheet_invoice_factor(osv.osv):
     }
 
 
-
 class account_analytic_account(osv.osv):
     def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         obj_invoice = self.pool.get('account.invoice')
@@ -46,8 +46,8 @@ class account_analytic_account(osv.osv):
 
         cr.execute('SELECT account_id as account_id, l.invoice_id '
                 'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
-                    'ON (h.line_id=l.id) '
-                    'WHERE l.account_id = ANY(%s)', (ids,))
+                   'ON (h.line_id=l.id) '
+                   'WHERE l.account_id = ANY(%s)', (ids,))
         account_to_invoice_map = {}
         for rec in cr.dictfetchall():
             account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
@@ -58,7 +58,7 @@ class account_analytic_account(osv.osv):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
 
         return res
 
@@ -121,20 +121,20 @@ class account_analytic_line(osv.osv):
         return False
 
     _defaults = {
-        'journal_id' : _default_journal,
-        'general_account_id' : _default_general_account,
+        'journal_id': _default_journal,
+        'general_account_id': _default_general_account,
     }
 
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
-        return super(account_analytic_line,self).write(cr, uid, ids, vals,
+        return super(account_analytic_line, self).write(cr, uid, ids, vals,
                 context=context)
 
     def _check_inv(self, cr, uid, ids, vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+        if (not vals.has_key('invoice_id')) or vals['invoice_id'] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
                     raise osv.except_osv(_('Error!'),
@@ -145,7 +145,7 @@ class account_analytic_line(osv.osv):
         pro_price_obj = self.pool.get('product.pricelist')
         if account.pricelist_id:
             pl = account.pricelist_id.id
-            price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
+            price = pro_price_obj.price_get(cr, uid, [pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
         else:
             price = 0.0
         return price
@@ -181,7 +181,7 @@ class account_analytic_line(osv.osv):
 
                 date_due = False
                 if partner.property_payment_term:
-                    pterm_list= account_payment_term_obj.compute(cr, uid,
+                    pterm_list = account_payment_term_obj.compute(cr, uid,
                             partner.property_payment_term.id, value=1,
                             date_ref=time.strftime('%Y-%m-%d'))
                     if pterm_list:
@@ -190,7 +190,7 @@ class account_analytic_line(osv.osv):
                         date_due = pterm_list[-1]
 
                 curr_invoice = {
-                    'name': time.strftime('%d/%m/%Y') + ' - '+account.name,
+                    'name': time.strftime('%d/%m/%Y') + ' - ' + account.name,
                     'partner_id': account.partner_id.id,
                     'company_id': account.company_id.id,
                     'payment_term': partner.property_payment_term.id or False,
@@ -227,7 +227,7 @@ class account_analytic_line(osv.osv):
                         unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
                     else:
                         # expenses, using price from amount field
-                        unit_price = total_price*-1.0 / qty
+                        unit_price = total_price * -1.0 / qty
 
                     factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
                     # factor_name = factor.customer_name and line_name + ' - ' + factor.customer_name or line_name
@@ -254,9 +254,9 @@ class account_analytic_line(osv.osv):
                         taxes = product.taxes_id or general_account.tax_ids
                         tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                         curr_line.update({
-                            'invoice_line_tax_id': [(6,0,tax )],
+                            'invoice_line_tax_id': [(6, 0, tax)],
                             'name': factor_name,
-                            'invoice_line_tax_id': [(6,0,tax)],
+                            'invoice_line_tax_id': [(6, 0, tax)],
                             'account_id': general_account.id,
                         })
                     #
@@ -273,14 +273,14 @@ class account_analytic_line(osv.osv):
                             details.append(line['date'])
                         if data.get('time', False):
                             if line['product_uom_id']:
-                                details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
+                                details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']], context2)[0].name))
                             else:
                                 details.append("%s" % (line['unit_amount'], ))
                         if data.get('name', False):
                             details.append(line['name'])
-                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                        note.append(u' - '.join(map(lambda x: unicode(x) or '', details)))
                     if note:
-                        curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
+                        curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '', note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
                     cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
                     self.invalidate_cache(cr, uid, ['invoice_id'], ids, context=context)
@@ -289,23 +289,24 @@ class account_analytic_line(osv.osv):
         return invoices
 
 
-
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
+
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
         res = {}
         if not account_id:
             return res
-        res.setdefault('value',{})
+        res.setdefault('value', {})
         acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
         st = acc.to_invoice.id
         res['value']['to_invoice'] = st or False
-        if acc.state=='pending':
+        if acc.state == 'pending':
             res['warning'] = {
                 'title': 'Warning',
                 'message': 'The analytic account is in pending state.\nYou should not work on this account !'
             }
         return res
+
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -318,23 +319,22 @@ class account_invoice(osv.osv):
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
-		    # *-* browse (or refactor to avoid read inside the loop)
+                    # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'], context=context)[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml
 
 
-
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
-        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
+        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids, context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for move_line in self.browse(cr, uid, ids, context=context):
-            #For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
-            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice','out_refund') and move_line.invoice.id or False
+            # For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
+            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice', 'out_refund') and move_line.invoice.id or False
             for line in move_line.analytic_lines:
                 analytic_line_obj.write(cr, uid, line.id, {
                     'invoice_id': invoice_id,

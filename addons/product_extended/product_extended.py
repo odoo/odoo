@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2014 OpenERP S.A. (<http://www.openerp.com>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,6 @@ from openerp.osv import osv
 class product_product(osv.osv):
     _name = 'product.product'
     _inherit = 'product.product'
-
 
     def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting = False, context=None):
         '''
@@ -40,27 +39,26 @@ class product_product(osv.osv):
             if bom_id:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:
-                    #Search the products that are components of this bom of prod_id
+                    # Search the products that are components of this bom of prod_id
                     bom = bom_obj.browse(cr, uid, bom_id, context=context)
 
-                    #Call compute_price on these subproducts
+                    # Call compute_price on these subproducts
                     prod_set = set([x.product_id.id for x in bom.bom_line_ids])
                     res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
-                    if test: 
+                    if test:
                         testdict.update(res)
-                #Use calc price to calculate and put the price on the product of the BoM if necessary
+                # Use calc price to calculate and put the price on the product of the BoM if necessary
                 price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
                 if test:
-                    testdict.update({prod_id : price})
+                    testdict.update({prod_id: price})
         if test:
             return testdict
         else:
             return True
 
-
     def _calc_price(self, cr, uid, bom, test = False, real_time_accounting=False, context=None):
         if context is None:
-            context={}
+            context = {}
         price = 0
         uom_obj = self.pool.get("product.uom")
         tmpl_obj = self.pool.get('product.template')
@@ -74,18 +72,18 @@ class product_product(osv.osv):
                 cycle = wline.cycle_nbr
                 hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
                 price += wc.costs_cycle * cycle + wc.costs_hour * hour
-                price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, price, bom.product_id.uom_id.id)
-        
-        #Convert on product UoM quantities
+                price = self.pool.get('product.uom')._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
+
+        # Convert on product UoM quantities
         if price > 0:
             price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price / bom.product_qty, bom.product_id.uom_id.id)
 
         product = tmpl_obj.browse(cr, uid, bom.product_tmpl_id.id, context=context)
         if not test:
             if (product.valuation != "real_time" or not real_time_accounting):
-                tmpl_obj.write(cr, uid, [product.id], {'standard_price' : price}, context=context)
+                tmpl_obj.write(cr, uid, [product.id], {'standard_price': price}, context=context)
             else:
-                #Call wizard function here
+                # Call wizard function here
                 wizard_obj = self.pool.get("stock.change.standard.price")
                 ctx = context.copy()
                 ctx.update({'active_id': product.id, 'active_model': 'product.template'})
@@ -95,13 +93,13 @@ class product_product(osv.osv):
 
 product_product()
 
+
 class product_bom(osv.osv):
     _inherit = 'mrp.bom'
-            
+
     _columns = {
-        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
+        'standard_price': fields.related('product_tmpl_id', 'standard_price', type="float", relation="product.product", string="Standard Price", store=False)
     }
 
 product_bom()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

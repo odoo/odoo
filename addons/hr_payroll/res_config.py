@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class human_resources_configuration(osv.osv_memory):
     _inherit = 'hr.config.settings'
     _columns = {

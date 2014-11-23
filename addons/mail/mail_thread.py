@@ -52,6 +52,7 @@ _logger = logging.getLogger(__name__)
 
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
+
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
@@ -161,7 +162,7 @@ class mail_thread(osv.AbstractModel):
                         RIGHT JOIN mail_notification n
                         ON (n.message_id = m.id AND n.partner_id = %s AND (n.is_read = False or n.is_read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
-                    (user_pid, self._name, tuple(ids),))
+                   (user_pid, self._name, tuple(ids),))
         for result in cr.fetchall():
             res[result[0]]['message_unread'] = True
             res[result[0]]['message_unread_count'] += 1
@@ -271,9 +272,9 @@ class mail_thread(osv.AbstractModel):
                 new = set(command[2])
 
         # remove partners that are no longer followers
-        self.message_unsubscribe(cr, uid, [id], list(old-new), context=context)
+        self.message_unsubscribe(cr, uid, [id], list(old - new), context=context)
         # add new followers
-        self.message_subscribe(cr, uid, [id], list(new-old), context=context)
+        self.message_subscribe(cr, uid, [id], list(new - old), context=context)
 
     def _search_followers(self, cr, uid, obj, name, args, context):
         """Search function for message_follower_ids
@@ -804,7 +805,7 @@ class mail_thread(osv.AbstractModel):
 
         def _warn(message):
             _logger.warning('Routing mail with Message-Id %s: route %s: %s',
-                                message_id, route, message)
+                            message_id, route, message)
 
         # Wrong model
         if model and not model in self.pool:
@@ -818,7 +819,7 @@ class mail_thread(osv.AbstractModel):
         # Private message: should not contain any thread_id
         if not model and thread_id:
             if assert_model:
-                if thread_id: 
+                if thread_id:
                     raise ValueError('Routing: posting a message without model should be with a null res_id (private message), received %s.' % thread_id)
             _warn('posting a message without model should be with a null res_id (private message), received %s resetting thread_id' % thread_id)
             thread_id = 0
@@ -1004,11 +1005,11 @@ class mail_thread(osv.AbstractModel):
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos = \
-             ','.join([decode_header(message, 'Delivered-To'),
-                       decode_header(message, 'To'),
-                       decode_header(message, 'Cc'),
-                       decode_header(message, 'Resent-To'),
-                       decode_header(message, 'Resent-Cc')])
+            ','.join([decode_header(message, 'Delivered-To'),
+                  decode_header(message, 'To'),
+                  decode_header(message, 'Cc'),
+                  decode_header(message, 'Resent-To'),
+                  decode_header(message, 'Resent-Cc')])
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
@@ -1158,7 +1159,7 @@ class mail_thread(osv.AbstractModel):
                                                                 ], context=context)
             if existing_msg_ids:
                 _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                                msg.get('from'), msg.get('to'), msg.get('message_id'))
+                             msg.get('from'), msg.get('to'), msg.get('message_id'))
                 return False
 
         # find possible routes for the message
@@ -1254,15 +1255,15 @@ class mail_thread(osv.AbstractModel):
                 # original get_filename is not able to decode iso-8859-1 (for instance).
                 # therefore, iso encoded attachements are not able to be decoded properly with get_filename
                 # code here partially copy the original get_filename method, but handle more encoding
-                filename=part.get_param('filename', None, 'content-disposition')
+                filename = part.get_param('filename', None, 'content-disposition')
                 if not filename:
-                    filename=part.get_param('name', None)
+                    filename = part.get_param('name', None)
                 if filename:
                     if isinstance(filename, tuple):
                         # RFC2231
-                        filename=email.utils.collapse_rfc2231_value(filename).strip()
+                        filename = email.utils.collapse_rfc2231_value(filename).strip()
                     else:
-                        filename=decode(filename)
+                        filename = decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
@@ -1552,9 +1553,9 @@ class mail_thread(osv.AbstractModel):
         ir_attachment = self.pool.get('ir.attachment')
 
         assert (not thread_id) or \
-                isinstance(thread_id, (int, long)) or \
-                (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
-                "Invalid thread_id; should be 0, False, an ID or a list with one ID"
+            isinstance(thread_id, (int, long)) or \
+            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
+            "Invalid thread_id; should be 0, False, an ID or a list with one ID"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
 
@@ -1567,7 +1568,7 @@ class mail_thread(osv.AbstractModel):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
-        #0: Find the message's author, because we need it for private discussion
+        # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
         if author_id is None:  # keep False values
             author_id = self.pool.get('mail.message')._get_default_author(cr, uid, context=context)
@@ -1949,13 +1950,13 @@ class mail_thread(osv.AbstractModel):
         :param new_res_id : the new res_id of the mail.message
         :param new_model : the name of the new model of the mail.message
 
-        Example :   self.pool.get("crm.lead").message_change_thread(self, cr, uid, 2, 4, "project.issue", context) 
+        Example :   self.pool.get("crm.lead").message_change_thread(self, cr, uid, 2, 4, "project.issue", context)
                     will transfert thread of the lead (id=2) to the issue (id=4)
         """
 
         # get the sbtype id of the comment Message
         subtype_res_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'mail.mt_comment', raise_if_not_found=True)
-        
+
         # get the ids of the comment and none-comment of the thread
         message_obj = self.pool.get('mail.message')
         msg_ids_comment = message_obj.search(cr, uid, [
@@ -1966,9 +1967,9 @@ class mail_thread(osv.AbstractModel):
                     ('model', '=', self._name),
                     ('res_id', '=', id),
                     ('subtype_id', '!=', subtype_res_id)], context=context)
-        
+
         # update the messages
-        message_obj.write(cr, uid, msg_ids_comment, {"res_id" : new_res_id, "model" : new_model}, context=context)
-        message_obj.write(cr, uid, msg_ids_not_comment, {"res_id" : new_res_id, "model" : new_model, "subtype_id" : None}, context=context)
-        
+        message_obj.write(cr, uid, msg_ids_comment, {"res_id": new_res_id, "model": new_model}, context=context)
+        message_obj.write(cr, uid, msg_ids_not_comment, {"res_id": new_res_id, "model": new_model, "subtype_id": None}, context=context)
+
         return True

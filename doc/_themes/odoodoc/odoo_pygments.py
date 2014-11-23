@@ -7,6 +7,8 @@ from pygments.style import Style
 from pygments.token import *
 
 # extracted from getbootstrap.com
+
+
 class OdooStyle(Style):
     background_color = '#ffffcc'
     highlight_color = '#fcf8e3'

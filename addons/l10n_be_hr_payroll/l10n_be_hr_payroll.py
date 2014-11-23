@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 
 import openerp.addons.decimal_precision as dp
 
+
 class hr_contract_be(osv.osv):
     _inherit = 'hr.contract'
 
@@ -44,7 +45,7 @@ class hr_employee_be(osv.osv):
     _inherit = 'hr.employee'
 
     _columns = {
-        'spouse_fiscal_status': fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
+        'spouse_fiscal_status': fields.selection([('without income', 'Without Income'), ('with income', 'With Income')], 'Tax status for spouse'),
         'disabled_spouse_bool': fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
         'disabled_children_bool': fields.boolean('Disabled Children', help="if recipient children is/are declared disabled by law"),
         'resident_bool': fields.boolean('Nonresident', help="if recipient lives in a foreign country"),

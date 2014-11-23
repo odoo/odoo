@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 

@@ -53,10 +53,9 @@ class sale_order(osv.Model):
                 result['value']['carrier_id'] = dtype
         return result
 
-
     def _delivery_unset(self, cr, uid, ids, context=None):
         sale_obj = self.pool['sale.order.line']
-        line_ids = sale_obj.search(cr, uid, [('order_id', 'in', ids), ('is_delivery', '=', True)],context=context)
+        line_ids = sale_obj.search(cr, uid, [('order_id', 'in', ids), ('is_delivery', '=', True)], context=context)
         sale_obj.unlink(cr, uid, line_ids, context=context)
 
     def delivery_set(self, cr, uid, ids, context=None):
@@ -78,7 +77,7 @@ class sale_order(osv.Model):
             taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
-            #create the sale order line
+            # create the sale order line
             line_obj.create(cr, uid, {
                 'order_id': order.id,
                 'name': grid.carrier_id.name,

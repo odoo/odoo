@@ -20,9 +20,11 @@ from openerp.osv import orm
 
 logger = logging.getLogger(__name__)
 
+
 class RequestUID(object):
     def __init__(self, **kw):
         self.__dict__.update(kw)
+
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -76,7 +78,7 @@ class ir_http(orm.AbstractModel):
             if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
-            
+
         if request.website_enabled:
             try:
                 if func:
@@ -253,6 +255,7 @@ class ir_http(orm.AbstractModel):
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
+
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
@@ -275,29 +278,32 @@ class ModelConverter(ir.ir_http.ModelConverter):
 
     def generate(self, cr, uid, query=None, args=None, context=None):
         obj = request.registry[self.model]
-        domain = eval( self.domain, (args or {}).copy())
+        domain = eval(self.domain, (args or {}).copy())
         if query:
-            domain.append((obj._rec_name, 'ilike', '%'+query+'%'))
-        for record in obj.search_read(cr, uid, domain=domain, fields=['write_date',obj._rec_name], context=context):
+            domain.append((obj._rec_name, 'ilike', '%' + query + '%'))
+        for record in obj.search_read(cr, uid, domain=domain, fields=['write_date', obj._rec_name], context=context):
             if record.get(obj._rec_name, False):
                 yield {'loc': (record['id'], record[obj._rec_name])}
 
+
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
+
     def generate(self, cr, uid, query=None, args={}, context=None):
         View = request.registry['ir.ui.view']
         views = View.search_read(cr, uid, [['page', '=', True]],
-            fields=['xml_id','priority','write_date'], order='name', context=context)
+            fields=['xml_id', 'priority', 'write_date'], order='name', context=context)
         for view in views:
             xid = view['xml_id'].startswith('website.') and view['xml_id'][8:] or view['xml_id']
             # the 'page/homepage' url is indexed as '/', avoid aving the same page referenced twice
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
-            if xid=='homepage': continue
+            if xid == 'homepage':
+                continue
             if query and query.lower() not in xid.lower():
                 continue
             record = {'loc': xid}
             if view['priority'] <> 16:
-                record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
+                record['__priority'] = min(round(view['priority'] / 32.0, 1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]
             yield record

@@ -62,6 +62,7 @@ db_list = http.db_list
 
 db_monodb = http.db_monodb
 
+
 def serialize_exception(f):
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -78,6 +79,7 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
 
+
 def redirect_with_hash(*args, **kw):
     """
         .. deprecated:: 8.0
@@ -86,11 +88,13 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
+
 def abort_and_redirect(url):
     r = request.httprequest
     response = werkzeug.utils.redirect(url, 302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
+
 
 def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
@@ -143,6 +147,7 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
+
 def module_installed():
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
@@ -151,7 +156,7 @@ def module_installed():
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
     Modules = request.session.model('ir.module.module')
-    domain = [('state','=','installed'), ('name','in', loadable)]
+    domain = [('state', '=', 'installed'), ('name', 'in', loadable)]
     for module in Modules.search_read(domain, ['name', 'dependencies_id']):
         modules[module['name']] = []
         deps = module.get('dependencies_id')
@@ -163,6 +168,7 @@ def module_installed():
     sorted_modules = topological_sort(modules)
     return sorted_modules
 
+
 def module_installed_bypass_session(dbname):
     loadable = http.addons_manifest.keys()
     modules = {}
@@ -171,8 +177,8 @@ def module_installed_bypass_session(dbname):
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             # TODO The following code should move to ir.module.module.list_installed_modules()
-            domain = [('state','=','installed'), ('name','in', loadable)]
-            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
+            domain = [('state', '=', 'installed'), ('name', 'in', loadable)]
+            ids = m.search(cr, 1, [('state', '=', 'installed'), ('name', 'in', loadable)])
             for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
                 modules[module['name']] = []
                 deps = module.get('dependencies_id')
@@ -180,10 +186,11 @@ def module_installed_bypass_session(dbname):
                     deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
                     dependencies = [i['name'] for i in deps_read]
                     modules[module['name']] = dependencies
-    except Exception,e:
+    except Exception, e:
         pass
     sorted_modules = topological_sort(modules)
     return sorted_modules
+
 
 def module_boot(db=None):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
@@ -198,6 +205,7 @@ def module_boot(db=None):
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
     return addons
+
 
 def concat_xml(file_list):
     """Concatenate xml files
@@ -220,16 +228,18 @@ def concat_xml(file_list):
 
         if root is None:
             root = ElementTree.Element(xml.tag)
-        #elif root.tag != xml.tag:
+        # elif root.tag != xml.tag:
         #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
 
         for child in xml.getchildren():
             root.append(child)
     return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
+
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
+
 
 def manifest_glob(extension, addons=None, db=None, include_remotes=False):
     if addons is None:
@@ -253,6 +263,7 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((path, fs2web(path[len(addons_path):])))
     return r
 
+
 def manifest_list(extension, mods=None, db=None, debug=None):
     """ list ressources to load specifying either:
     mods: a comma separated string listing modules
@@ -262,6 +273,7 @@ def manifest_list(extension, mods=None, db=None, debug=None):
         _logger.warning("openerp.addons.web.main.manifest_list(): debug parameter is deprecated")
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
     return [wp for _fp, wp in files]
+
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
@@ -276,6 +288,7 @@ def get_last_modified(files):
         return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
                    for f in files)
     return datetime.datetime(1970, 1, 1)
+
 
 def make_conditional(response, last_modified=None, etag=None, max_age=0):
     """ Makes the provided response conditional based upon the request,
@@ -299,14 +312,17 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
+
 def login_and_redirect(db, login, key, redirect_url='/web'):
     request.session.authenticate(db, login, key)
     return set_cookie_and_redirect(redirect_url)
+
 
 def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
+
 
 def login_redirect():
     url = '/web/login?'
@@ -317,12 +333,14 @@ def login_redirect():
     </script></head></html>
     """ % (url,)
 
+
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, request.context)
 
     return [(id, name, clean_action(action))
             for id, name, action in actions]
+
 
 def clean_action(action):
     action.setdefault('flags', {})
@@ -332,6 +350,8 @@ def clean_action(action):
     return action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
+
+
 def generate_views(action):
     """
     While the server generates a sequence called "views" computing dependencies
@@ -364,10 +384,11 @@ def generate_views(action):
                              'either multiple view modes or a single view '
                              'mode and an optional view id.\n\n Got view '
                              'modes %r and view id %r for action %r' % (
-                view_modes, view_id, action))
+                                 view_modes, view_id, action))
         action['views'] = [(False, mode) for mode in view_modes]
         return
     action['views'] = [(view_id, view_modes[0])]
+
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -404,6 +425,7 @@ def fix_view_modes(action):
 
     return action
 
+
 def _local_web_translations(trans_file):
     messages = []
     try:
@@ -415,6 +437,7 @@ def _local_web_translations(trans_file):
         if x.id and x.string and "openerp-web" in x.auto_comments:
             messages.append({'id': x.id, 'string': x.string})
     return messages
+
 
 def xml2json_from_elementtree(el, preserve_whitespaces=False):
     """ xml2json-direct
@@ -441,6 +464,7 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
             kids.append(kid.tail)
     res["children"] = kids
     return res
+
 
 def content_disposition(filename):
     filename = filename.encode('utf8')
@@ -544,6 +568,7 @@ class Home(http.Controller):
         response = request.make_response(bundle.css(), [('Content-Type', 'text/css')])
         return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
+
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")
@@ -597,7 +622,7 @@ class WebClient(http.Controller):
         if mods is None:
             m = request.registry.get('ir.module.module')
             mods = [x['name'] for x in m.search_read(request.cr, uid,
-                [('state','=','installed')], ['name'])]
+                [('state', '=', 'installed')], ['name'])]
         if lang is None:
             lang = request.context["lang"]
         res_lang = request.registry.get('res.lang')
@@ -611,15 +636,15 @@ class WebClient(http.Controller):
         # done server-side when the language is loaded, so we only need to load the user's lang.
         ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read(request.cr, uid, [('module','in',mods),('lang','=',lang),
-                                               ('comments','like','openerp-web'),('value','!=',False),
-                                               ('value','!=','')],
-                                              ['module','src','value','lang'], order='module')
+        messages = ir_translation.search_read(request.cr, uid, [('module', 'in', mods), ('lang', '=', lang),
+                                               ('comments', 'like', 'openerp-web'), ('value', '!=', False),
+                                               ('value', '!=', '')],
+                                              ['module', 'src', 'value', 'lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod,{'messages':[]})
+            translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({'id': m['src'],
                                                              'string': m['value']} \
-                                                                for m in msg_group)
+                                                            for m in msg_group)
         return {"modules": translations_per_module,
                 "lang_parameters": lang_params}
 
@@ -630,6 +655,7 @@ class WebClient(http.Controller):
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
+
 
 class Proxy(http.Controller):
 
@@ -648,6 +674,7 @@ class Proxy(http.Controller):
 
         base_url = request.httprequest.base_url
         return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
+
 
 class Database(http.Controller):
 
@@ -739,7 +766,7 @@ class Database(http.Controller):
                {'fileToken': token}
             )
         except Exception, e:
-            return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
+            return simplejson.dumps([[], [{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
     def restore(self, db_file, restore_pwd, new_db, mode):
@@ -762,6 +789,7 @@ class Database(http.Controller):
             return {'error': 'AccessDenied', 'title': _('Change Password')}
         except Exception:
             return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
+
 
 class Session(http.Controller):
 
@@ -789,16 +817,16 @@ class Session(http.Controller):
 
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
-        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
+        old_password, new_password, confirm_password = operator.itemgetter('old_pwd', 'new_password', 'confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':_('You cannot leave any password empty.'),'title': _('Change Password')}
+            return {'error': _('You cannot leave any password empty.'), 'title': _('Change Password')}
         if new_password != confirm_password:
-            return {'error': _('The new password and its confirmation must be identical.'),'title': _('Change Password')}
+            return {'error': _('The new password and its confirmation must be identical.'), 'title': _('Change Password')}
         try:
             if request.session.model('res.users').change_password(
                 old_password, new_password):
-                return {'new_password':new_password}
+                return {'new_password': new_password}
         except Exception:
             return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
         return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
@@ -856,6 +884,7 @@ class Session(http.Controller):
         request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
+
 class Menu(http.Controller):
 
     @http.route('/web/menu/load_needaction', type='json', auth="user")
@@ -867,13 +896,14 @@ class Menu(http.Controller):
         """
         return request.session.model('ir.ui.menu').get_needaction_data(menu_ids, request.context)
 
+
 class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         return self.do_search_read(model, fields, offset, limit, domain, sort)
-    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None
-                       , sort=None):
+
+    def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -978,8 +1008,9 @@ class DataSet(http.Controller):
             return False
         # python 2.6 has no start parameter
         for i, id in enumerate(ids):
-            m.write(id, { field: i + offset })
+            m.write(id, {field: i + offset})
         return True
+
 
 class View(http.Controller):
 
@@ -996,7 +1027,7 @@ class View(http.Controller):
     @http.route('/web/view/undo_custom', type='json', auth="user")
     def undo_custom(self, view_id, reset=False):
         CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id' ,'=', view_id)],
+        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id', '=', view_id)],
                                     0, False, False, request.context)
         if vcustom:
             if reset:
@@ -1006,13 +1037,15 @@ class View(http.Controller):
             return {'result': True}
         return {'result': False}
 
+
 class TreeView(View):
 
     @http.route('/web/treeview/action', type='json', auth="user")
     def action(self, model, id):
         return load_actions_from_ir_values(
-            'action', 'tree_but_open',[(model, id)],
+            'action', 'tree_but_open', [(model, id)],
             False)
+
 
 class Binary(http.Controller):
 
@@ -1027,7 +1060,7 @@ class Binary(http.Controller):
         retag = hashed_session
         id = None if not id else simplejson.loads(id)
         if type(id) is list:
-            id = id[0] # m2o
+            id = id[0]  # m2o
         try:
             if etag:
                 if not id and hashed_session == etag:
@@ -1051,8 +1084,10 @@ class Binary(http.Controller):
                     width = int(resize[0])
                     height = int(resize[1])
                     # resize maximum 500*500
-                    if width > 500: width = 500
-                    if height > 500: height = 500
+                    if width > 500:
+                        width = 500
+                    if height > 500:
+                        height = 500
                     image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
 
             image_data = base64.b64decode(image_base64)
@@ -1123,7 +1158,7 @@ class Binary(http.Controller):
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
+            res = {field: data}
         elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
@@ -1223,6 +1258,7 @@ class Binary(http.Controller):
 
         return response
 
+
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
@@ -1260,6 +1296,7 @@ class Action(http.Controller):
             return clean_action(return_action)
         else:
             return False
+
 
 class Export(http.Controller):
 
@@ -1401,6 +1438,7 @@ class Export(http.Controller):
             (prefix + '/' + k, prefix_string + '/' + v)
             for k, v in self.fields_info(model, export_fields).iteritems())
 
+
 class ExportFormat(object):
     raw_data = False
 
@@ -1438,19 +1476,19 @@ class ExportFormat(object):
         ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas', [])
 
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-
         return request.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
-                            content_disposition(self.filename(model))),
+                      content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': token})
+
 
 class CSVExport(ExportFormat, http.Controller):
 
@@ -1476,12 +1514,13 @@ class CSVExport(ExportFormat, http.Controller):
             row = []
             for d in data:
                 if isinstance(d, basestring):
-                    d = d.replace('\n',' ').replace('\t',' ')
+                    d = d.replace('\n', ' ').replace('\t', ' ')
                     try:
                         d = d.encode('utf-8')
                     except UnicodeError:
                         pass
-                if d is False: d = None
+                if d is False:
+                    d = None
                 row.append(d)
             writer.writerow(row)
 
@@ -1489,6 +1528,7 @@ class CSVExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
+
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values
@@ -1512,7 +1552,7 @@ class ExcelExport(ExportFormat, http.Controller):
 
         for i, fieldname in enumerate(fields):
             worksheet.write(0, i, fieldname)
-            worksheet.col(i).width = 8000 # around 220 pixels
+            worksheet.col(i).width = 8000  # around 220 pixels
 
         base_style = xlwt.easyxf('align: wrap yes')
         date_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD')
@@ -1535,6 +1575,7 @@ class ExcelExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
+
 
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
@@ -1587,7 +1628,7 @@ class Reports(http.Controller):
         file_name = action.get('name', 'report')
         if 'name' not in action:
             reports = request.session.model('ir.actions.report.xml')
-            res_id = reports.search([('report_name', '=', action['report_name']),],
+            res_id = reports.search([('report_name', '=', action['report_name']), ],
                                     0, False, False, context)
             if len(res_id) > 0:
                 file_name = reports.read(res_id[0], ['name'], context)['name']
@@ -1601,6 +1642,7 @@ class Reports(http.Controller):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': token})
+
 
 class Apps(http.Controller):
     @http.route('/apps/<app>', auth='user')
@@ -1626,7 +1668,6 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -64,8 +64,8 @@ class crm_make_sale(osv.osv_memory):
         """
         # update context: if come from phonecall, default state values can make the quote crash lp:1017353
         context = dict(context or {})
-        context.pop('default_state', False)        
-        
+        context.pop('default_state', False)
+
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
@@ -98,9 +98,9 @@ class crm_make_sale(osv.osv_memory):
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_shipping_id': partner_addr['delivery'],
-                    'date_order': fields.date.context_today(self,cr,uid,context=context),
+                    'date_order': fields.date.context_today(self, cr, uid, context=context),
                     'fiscal_position': fpos,
-                    'payment_term':payment_term,
+                    'payment_term': payment_term,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
@@ -114,7 +114,7 @@ class crm_make_sale(osv.osv_memory):
                 case_obj.case_mark_won(cr, uid, data, context=context)
             if not new_ids:
                 return {'type': 'ir.actions.act_window_close'}
-            if len(new_ids)<=1:
+            if len(new_ids) <= 1:
                 value = {
                     'domain': str([('id', 'in', new_ids)]),
                     'view_type': 'form',
@@ -122,7 +122,7 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
-                    'name' : _('Quotation'),
+                    'name': _('Quotation'),
                     'res_id': new_ids and new_ids[0]
                 }
             else:
@@ -133,14 +133,13 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
-                    'name' : _('Quotation'),
+                    'name': _('Quotation'),
                     'res_id': new_ids
                 }
             return value
 
-
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer','=',True)]),
+        'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer', '=', True)]),
         'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sales order.'),
     }
     _defaults = {

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_recruitment_partner_create(osv.osv_memory):
     _name = 'hr.recruitment.partner.create'
     _description = 'Create Partner from job application'
@@ -53,7 +54,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)], context=context)
             if partner_id:
-                raise osv.except_osv(_('Error!'),_('A contact is already existing with the same name.'))
+                raise osv.except_osv(_('Error!'), _('A contact is already existing with the same name.'))
             partner_id = partner_obj.create(cr, uid, {
                 'name': case.partner_name or case.name,
                 'user_id': case.user_id.id,

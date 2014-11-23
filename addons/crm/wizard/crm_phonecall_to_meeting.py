@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+
 class crm_phonecall2meeting(osv.osv_memory):
     """ Phonecall to Meeting """
 
@@ -38,7 +39,7 @@ class crm_phonecall2meeting(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        return {'type':'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """ This opens Meeting's calendar view to schedule meeting on current Phonecall

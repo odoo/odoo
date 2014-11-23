@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
 
 # Overloaded stock_picking to manage carriers :
+
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
@@ -43,30 +45,28 @@ class stock_picking(osv.osv):
                               }
         return res
 
-
     def _get_picking_line(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
 
-
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
+        'carrier_id': fields.many2one("delivery.carrier", "Carrier"),
         'volume': fields.float('Volume'),
         'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id','product_uom_qty','product_uom'], 40),
+                 'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
                  }),
         'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id','product_uom_qty','product_uom'], 40),
+                 'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
         'number_of_packages': fields.integer('Number of Packages'),
-        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
+        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight",),
     }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
@@ -168,7 +168,7 @@ class stock_move(osv.osv):
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
                  }),
-        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
+        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly="1", help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -188,10 +188,9 @@ class stock_move(osv.osv):
                 pick_obj.write(cr, uid, pickings, {'carrier_id': proc.sale_line_id.order_id.carrier_id.id}, context=context)
         return res
 
-
     def _get_default_uom(self, cr, uid, context=None):
         uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
-        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
+        return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id), ('factor', '=', 1)])[0]
 
     _defaults = {
         'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),

@@ -28,14 +28,14 @@ from openerp import osv, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class base_report_sxw(osv.osv_memory):
     """Base Report sxw """
     _name = 'base.report.sxw'
 
     _columns = {
-        'report_id': fields.many2one('ir.actions.report.xml', "Report", required=True,domain=[('report_sxw_content','<>',False)],),
+        'report_id': fields.many2one('ir.actions.report.xml', "Report", required=True, domain=[('report_sxw_content', '<>', False)],),
     }
-
 
     def get_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
@@ -73,11 +73,11 @@ class base_report_file_sxw(osv.osv_memory):
 
         """
         res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
-        report_id1 = self.pool['base.report.sxw'].search(cr,uid,[])
+        report_id1 = self.pool['base.report.sxw'].search(cr, uid, [])
         data = self.pool['base.report.sxw'].read(cr, uid, report_id1, context=context)[0]
         report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         if context is None:
-            context={}
+            context = {}
         if 'report_id' in fields:
             res['report_id'] = data['report_id']
             res['file_sxw'] = base64.encodestring(report.report_sxw_content)
@@ -85,16 +85,16 @@ class base_report_file_sxw(osv.osv_memory):
 
     _columns = {
         'report_id': fields.many2one('ir.actions.report.xml', "Report", readonly=True),
-        'file_sxw':fields.binary('Your .SXW file',readonly=True),
-        'file_sxw_upload':fields.binary('Your .SXW file',required=True)
+        'file_sxw': fields.binary('Your .SXW file', readonly=True),
+        'file_sxw_upload': fields.binary('Your .SXW file', required=True)
     }
 
     def upload_report(self, cr, uid, ids, context=None):
         from base_report_designer import  openerp_sxw2rml
         import StringIO
-        data=self.read(cr,uid,ids)[0]
+        data = self.read(cr, uid, ids)[0]
         sxwval = StringIO.StringIO(base64.decodestring(data['file_sxw_upload']))
-        fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/openerp_sxw2rml')
+        fp = tools.file_open('normalized_oo2rml.xsl', subdir='addons/base_report_designer/openerp_sxw2rml')
         newrmlcontent = str(openerp_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
         report = self.pool['ir.actions.report.xml'].write(cr, uid, [data['report_id']], {
             'report_sxw_content': base64.decodestring(data['file_sxw_upload']),
@@ -116,9 +116,11 @@ class base_report_file_sxw(osv.osv_memory):
             'target': 'new',
         }
 
+
 class base_report_rml_save(osv.osv_memory):
     """Base Report file Save"""
     _name = 'base.report.rml.save'
+
     def default_get(self, cr, uid, fields, context=None):
         """
              To get default values for the object.
@@ -131,20 +133,20 @@ class base_report_rml_save(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-        
+
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
-        report_ids = self.pool['base.report.sxw'].search(cr,uid,[], context=context)
+        report_ids = self.pool['base.report.sxw'].search(cr, uid, [], context=context)
 
         data = self.pool['base.report.file.sxw'].read(cr, uid, report_ids, context=context)[0]
-        
+
         report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
-        
+
         if 'file_rml' in fields:
             res['file_rml'] =  base64.encodestring(report.report_rml_content)
         return res
 
     _columns = {
-        'file_rml':fields.binary('Save As'),
+        'file_rml': fields.binary('Save As'),
     }
 
 

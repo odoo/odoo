@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 
+
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['sale.order', 'crm.tracking.mixin']

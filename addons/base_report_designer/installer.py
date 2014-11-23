@@ -24,6 +24,7 @@ from openerp.osv import osv
 import base64
 from openerp.tools.translate import _
 
+
 class base_report_designer_installer(osv.osv_memory):
     _name = 'base_report_designer.installer'
     _inherit = 'res.config.installer'
@@ -35,13 +36,13 @@ class base_report_designer_installer(osv.osv_memory):
         return data
 
     _columns = {
-        'name':fields.char('File name'),
-        'plugin_file':fields.char('OpenObject Report Designer Plug-in', readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
-        'description':fields.text('Description', readonly=True)
+        'name': fields.char('File name'),
+        'plugin_file': fields.char('OpenObject Report Designer Plug-in', readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
+        'description': fields.text('Description', readonly=True)
     }
 
     _defaults = {
-        'name' : 'openerp_report_designer.zip',
+        'name': 'openerp_report_designer.zip',
         'description' : """
         * Save the OpenERP Report Designer plug-­in.
         * Follow these steps to install plug-­in.
@@ -58,4 +59,3 @@ class base_report_designer_installer(osv.osv_memory):
         """
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

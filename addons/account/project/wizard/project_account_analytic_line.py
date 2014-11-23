@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class project_account_analytic_line(osv.osv_memory):
     _name = "project.account.analytic.line"
     _description = "Analytic Entries by line"
@@ -30,17 +31,17 @@ class project_account_analytic_line(osv.osv_memory):
     }
 
     def action_open_window(self, cr, uid, ids, context=None):
-        mod_obj =self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
         domain = []
         data = self.read(cr, uid, ids, [])[0]
         from_date = data['from_date']
         to_date = data['to_date']
         if from_date and to_date:
-            domain = [('date','>=',from_date), ('date','<=',to_date)]
+            domain = [('date', '>=', from_date), ('date', '<=', to_date)]
         elif from_date:
-            domain = [('date','>=',from_date)]
+            domain = [('date', '>=', from_date)]
         elif to_date:
-            domain = [('date','<=',to_date)]
+            domain = [('date', '<=', to_date)]
         result = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_analytic_line_filter')
         id = result and result[1] or False
         return {

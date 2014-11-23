@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 commands = {}
 
+
 class CommandType(type):
     def __init__(cls, name, bases, attrs):
         super(CommandType, cls).__init__(name, bases, attrs)
@@ -18,6 +19,7 @@ class CommandType(type):
         if name != 'command':
             commands[name] = cls
 
+
 class Command(object):
     """Subclass this class to define new openerp subcommands """
     __metaclass__ = CommandType
@@ -25,8 +27,10 @@ class Command(object):
     def run(self, args):
         pass
 
+
 class Help(Command):
     """Display the list of available commands"""
+
     def run(self, args):
         print "Available commands:\n"
         padding = max([len(k) for k in commands.keys()]) + 2
@@ -38,6 +42,7 @@ import server
 import deploy
 import scaffold
 import start
+
 
 def main():
     args = sys.argv[1:]
@@ -58,8 +63,8 @@ def main():
         for m in module.get_modules():
             m = 'openerp.addons.' + m
             __import__(m)
-            #try:
-            #except Exception, e:
+            # try:
+            # except Exception, e:
             #    raise
             #    print e
         logging.disable(logging.NOTSET)

@@ -24,6 +24,7 @@ from datetime import datetime
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
     _inherit = 'mail.thread'
@@ -60,14 +61,14 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        #return {}.fromkeys(ids, 0)
+        # return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for repair in self.browse(cr, uid, ids, context=context):
             val = 0.0
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
-                #manage prices with tax included use compute_all instead of compute
+                # manage prices with tax included use compute_all instead of compute
                 if line.to_invoice:
                     tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:

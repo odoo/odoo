@@ -36,17 +36,22 @@ _logger = logging.getLogger(__name__)
 #--------------------------------------------------------------------
 # QWeb template engine
 #--------------------------------------------------------------------
+
+
 class QWebException(Exception):
     def __init__(self, message, **kw):
         Exception.__init__(self, message)
         self.qweb = dict(kw)
+
     def pretty_xml(self):
         if 'node' not in self.qweb:
             return ''
         return etree.tostring(self.qweb['node'], pretty_print=True)
 
+
 class QWebTemplateNotFound(QWebException):
     pass
+
 
 def raise_qweb_exception(etype=None, **kw):
     if etype is None:
@@ -60,6 +65,7 @@ def raise_qweb_exception(etype=None, **kw):
         # Will use `raise foo from bar` in python 3 and rename cause to __cause__
         e.qweb['cause'] = original
         raise
+
 
 class QWebContext(dict):
     def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
@@ -90,6 +96,7 @@ class QWebContext(dict):
 
     def __copy__(self):
         return self.copy()
+
 
 class QWeb(orm.AbstractModel):
     """ Base QWeb rendering engine
@@ -249,7 +256,7 @@ class QWeb(orm.AbstractModel):
             qwebcontext['__caller__'] = stack[-1]
         stack.append(id_or_xml_id)
         qwebcontext['__stack__'] = stack
-        qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
+        qwebcontext['xmlid'] = str(stack[0])  # Temporary fix
         return self.render_node(self.get_template(id_or_xml_id, qwebcontext), qwebcontext)
 
     def render_node(self, element, qwebcontext):
@@ -273,7 +280,8 @@ class QWeb(orm.AbstractModel):
                         attrs = self._render_att[attribute](
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
-                            if not val: continue
+                            if not val:
+                                continue
                             if not isinstance(val, str):
                                 val = unicode(val).encode('utf-8')
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
@@ -512,6 +520,7 @@ class QWeb(orm.AbstractModel):
 # QWeb Fields converters
 #--------------------------------------------------------------------
 
+
 class FieldConverter(osv.AbstractModel):
     """ Used to convert a t-field specification into an output HTML field.
 
@@ -561,7 +570,8 @@ class FieldConverter(osv.AbstractModel):
 
         Converts a single value to its HTML version/output
         """
-        if not value: return ''
+        if not value:
+            return ''
         return value
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
@@ -632,15 +642,17 @@ class FieldConverter(osv.AbstractModel):
 
         :returns: res.lang browse_record
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
 
         lang_code = context.get('lang') or 'en_US'
         Lang = self.pool['res.lang']
 
         lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
-               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
+            or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
 
         return Lang.browse(cr, uid, lang_ids[0], context=context)
+
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -668,12 +680,14 @@ class FloatConverter(osv.AbstractModel):
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
         return formatted
 
+
 class DateConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.date'
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
-        if not value or len(value)<10: return ''
+        if not value or len(value) < 10:
+            return ''
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
@@ -691,12 +705,14 @@ class DateConverter(osv.AbstractModel):
             value, format=pattern,
             locale=locale)
 
+
 class DateTimeConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.datetime'
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
-        if not value: return ''
+        if not value:
+            return ''
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
@@ -717,6 +733,7 @@ class DateTimeConverter(osv.AbstractModel):
 
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
+
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field'
@@ -725,9 +742,11 @@ class TextConverter(osv.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
-        if not value: return ''
+        if not value:
+            return ''
 
         return nl2br(value, options=options)
+
 
 class SelectionConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.selection'
@@ -735,11 +754,13 @@ class SelectionConverter(osv.AbstractModel):
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
         value = record[field_name]
-        if not value: return ''
+        if not value:
+            return ''
         field = record._fields[field_name]
         selection = dict(field.get_description(record.env)['selection'])
         return self.value_to_html(
             cr, uid, selection[value], field, options=options)
+
 
 class ManyToOneConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.many2one'
@@ -747,9 +768,11 @@ class ManyToOneConverter(osv.AbstractModel):
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
         [read] = record.read([field_name])
-        if not read[field_name]: return ''
+        if not read[field_name]:
+            return ''
         _, value = read[field_name]
         return nl2br(value, options=options)
+
 
 class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'
@@ -757,6 +780,7 @@ class HTMLConverter(osv.AbstractModel):
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         return HTMLSafe(value or '')
+
 
 class ImageConverter(osv.AbstractModel):
     """ ``image`` widget rendering, inserts a data:uri-using image tag in the
@@ -776,10 +800,11 @@ class ImageConverter(osv.AbstractModel):
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
-        except: # image.verify() throws "suitable exceptions", I have no idea what they are
+        except:  # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
         return HTMLSafe('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+
 
 class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
@@ -859,6 +884,8 @@ TIMEDELTA_UNITS = (
     ('minute', 60),
     ('second', 1)
 )
+
+
 class DurationConverter(osv.AbstractModel):
     """ ``duration`` converter, to display integral or fractional values as
     human-readable time spans (e.g. 1.5 as "1 hour 30 minutes").
@@ -889,9 +916,10 @@ class DurationConverter(osv.AbstractModel):
         r = value * factor
         for unit, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
-            if not v: continue
+            if not v:
+                continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, threshold=1, locale=locale)
+                v * secs_per_unit, threshold=1, locale=locale)
             if section:
                 sections.append(section)
         return ' '.join(sections)
@@ -914,6 +942,7 @@ class RelativeDatetimeConverter(osv.AbstractModel):
 
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
+
 
 class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
@@ -952,6 +981,7 @@ class Contact(orm.AbstractModel):
 
         return HTMLSafe(html)
 
+
 class QwebView(orm.AbstractModel):
     _name = 'ir.qweb.field.qweb'
     _inherit = 'ir.qweb.field.many2one'
@@ -972,6 +1002,7 @@ class QwebView(orm.AbstractModel):
 
         return HTMLSafe(html)
 
+
 class QwebWidget(osv.AbstractModel):
     _name = 'ir.qweb.widget'
 
@@ -980,6 +1011,7 @@ class QwebWidget(osv.AbstractModel):
 
     def format(self, inner, options, qwebcontext):
         return escape(self._format(inner, options, qwebcontext))
+
 
 class QwebWidgetMonetary(osv.AbstractModel):
     _name = 'ir.qweb.widget.monetary'
@@ -1004,6 +1036,7 @@ class QwebWidgetMonetary(osv.AbstractModel):
             formatted_amount, pre=pre, post=post
         ).format(symbol=display.symbol,)
 
+
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
     objects with a ``__html__`` methods but AFAIK does not provide any such
@@ -1012,20 +1045,25 @@ class HTMLSafe(object):
     Wrapping a string in HTML will prevent its escaping
     """
     __slots__ = ['string']
+
     def __init__(self, string):
         self.string = string
+
     def __html__(self):
         return self.string
+
     def __str__(self):
         s = self.string
         if isinstance(s, unicode):
             return s.encode('utf-8')
         return s
+
     def __unicode__(self):
         s = self.string
         if isinstance(s, str):
             return s.decode('utf-8')
         return s
+
 
 def nl2br(string, options=None):
     """ Converts newlines to HTML linebreaks in ``string``. Automatically
@@ -1036,20 +1074,26 @@ def nl2br(string, options=None):
     :param dict options:
     :rtype: HTMLSafe
     """
-    if options is None: options = {}
+    if options is None:
+        options = {}
 
     if options.get('html-escape', True):
         string = escape(string)
     return HTMLSafe(string.replace('\n', '<br>\n'))
 
+
 def get_field_type(field, options):
     """ Gets a t-field's effective type from the field definition and its options """
     return options.get('widget', field.type)
 
+
 class AssetError(Exception):
     pass
+
+
 class AssetNotFound(AssetError):
     pass
+
 
 class AssetsBundle(object):
     # Sass installation:
@@ -1182,6 +1226,7 @@ class AssetsBundle(object):
 
             # move up all @import rules to the top
             matches = []
+
             def push(matchobj):
                 matches.append(matchobj.group(0))
                 return ''
@@ -1244,6 +1289,7 @@ class AssetsBundle(object):
 
         # move up all @import rules to the top and exclude file imports
         imports = []
+
         def push(matchobj):
             ref = matchobj.group(2)
             line = '@import "%s"' % ref
@@ -1282,6 +1328,7 @@ class AssetsBundle(object):
             if isinstance(asset, SassAsset):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
         return error
+
 
 class WebAsset(object):
     html_url = '%s'
@@ -1371,6 +1418,7 @@ class WebAsset(object):
             content = self.content
         return '\n/* %s */\n%s' % (self.name, content)
 
+
 class JavascriptAsset(WebAsset):
     def minify(self):
         return self.with_header(rjsmin(self.content))
@@ -1386,6 +1434,7 @@ class JavascriptAsset(WebAsset):
             return '<script type="text/javascript" src="%s"></script>' % (self.html_url % self.url)
         else:
             return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
+
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1444,6 +1493,7 @@ class StylesheetAsset(WebAsset):
         else:
             return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
 
+
 class SassAsset(StylesheetAsset):
     html_url = '%s.css'
     rx_indent = re.compile(r'^( +|\t+)', re.M)
@@ -1489,6 +1539,7 @@ class SassAsset(StylesheetAsset):
         except StopIteration:
             pass
         return "/*! %s */\n%s" % (self.id, content)
+
 
 def rjsmin(script):
     """ Minify js with a clever regex.

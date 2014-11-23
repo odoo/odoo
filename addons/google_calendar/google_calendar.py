@@ -53,15 +53,15 @@ class Struct(object):
 
 
 class OpenerpEvent(Struct):
-        event = False
-        found = False
-        event_id = False
-        isRecurrence = False
-        isInstance = False
-        update = False
-        status = False
-        attendee_id = False
-        synchro = False
+    event = False
+    found = False
+    event_id = False
+    isRecurrence = False
+    isInstance = False
+    update = False
+    status = False
+    attendee_id = False
+    synchro = False
 
 
 class GmailEvent(Struct):
@@ -83,13 +83,13 @@ class SyncEvent(object):
         return getattr(self, key)
 
     def compute_OP(self, modeFull=True):
-        #If event are already in Gmail and in OpenERP
+        # If event are already in Gmail and in OpenERP
         if self.OE.found and self.GG.found:
-            #If the event has been deleted from one side, we delete on other side !
+            # If the event has been deleted from one side, we delete on other side !
             if self.OE.status != self.GG.status:
                 self.OP = Delete((self.OE.status and "OE") or (self.GG.status and "GG"),
                                  'The event has been deleted from one side, we delete on other side !')
-            #If event is not deleted !
+            # If event is not deleted !
             elif self.OE.status and self.GG.status:
                 if self.OE.update.split('.')[0] != self.GG.update.split('.')[0]:
                     if self.OE.update < self.GG.update:
@@ -98,7 +98,7 @@ class SyncEvent(object):
                         tmpSrc = 'OE'
                     assert tmpSrc in ['GG', 'OE']
 
-                    #if self.OP.action == None:
+                    # if self.OP.action == None:
                     if self[tmpSrc].isRecurrence:
                         if self[tmpSrc].status:
                             self.OP = Update(tmpSrc, 'Only need to update, because i\'m active')
@@ -374,7 +374,7 @@ class google_calendar(osv.AbstractModel):
         data['access_token'] = self.get_token(cr, uid, context)
 
         status, response, ask_time = self.pool['google.service']._do_request(cr, uid, url, data, headers, type='GET', context=context)
-        #TO_CHECK : , if http fail, no event, do DELETE ?
+        # TO_CHECK : , if http fail, no event, do DELETE ?
         return response
 
     def update_recurrent_event_exclu(self, cr, uid, instance_id, event_ori_google_id, event_new, context=None):
@@ -632,7 +632,7 @@ class google_calendar(osv.AbstractModel):
                     new_google_internal_event_id = source_attendee_record.google_internal_event_id + '_' + att.event_id.recurrent_id_date.replace('-', '').replace(' ', 'T').replace(':', '') + 'Z'
 
                 if new_google_internal_event_id:
-                    #TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
+                    # TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
                     try:
                         st, response, ask_time = self.update_recurrent_event_exclu(cr, uid, new_google_internal_event_id, source_attendee_record.google_internal_event_id, att.event_id, context=context)
                         if status_response(st):
@@ -792,7 +792,7 @@ class google_calendar(osv.AbstractModel):
                         self.pool['calendar.attendee'].write(cr, uid, attendee_record_id, {'oe_synchro_date': meeting.oe_update_date, 'google_internal_event_id': event.GG.event['id']}, context=context_tmp)
                     elif actSrc == 'OE':
                         raise "Should be never here, creation for OE is done before update !"
-                    #TODO Add to batch
+                    # TODO Add to batch
                 elif isinstance(actToDo, Update):
                     if actSrc == 'GG':
                         self.update_from_google(cr, uid, event.OE.event, event.GG.event, 'write', context)

@@ -3,6 +3,7 @@ from openerp.tests import common
 
 ANSWER_TO_ULTIMATE_QUESTION = 42
 
+
 class TestAttributes(common.TransactionCase):
 
     def test_we_can_add_attributes(self):

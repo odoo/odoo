@@ -6,6 +6,7 @@ from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
+
 class BarcodeController(http.Controller):
 
     @http.route(['/barcode/web/'], type='http', auth='user')

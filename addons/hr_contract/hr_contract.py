@@ -23,6 +23,7 @@ import time
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
+
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
@@ -32,7 +33,7 @@ class hr_employee(osv.osv):
         res = {}
         obj_contract = self.pool.get('hr.contract')
         for emp in self.browse(cr, uid, ids, context=context):
-            contract_ids = obj_contract.search(cr, uid, [('employee_id','=',emp.id),], order='date_start', context=context)
+            contract_ids = obj_contract.search(cr, uid, [('employee_id', '=', emp.id), ], order='date_start', context=context)
             if contract_ids:
                 res[emp.id] = contract_ids[-1:][0]
             else:
@@ -66,21 +67,22 @@ class hr_contract_type(osv.osv):
         'name': fields.char('Contract Type', required=True),
     }
 
+
 class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _columns = {
         'name': fields.char('Contract Reference', required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
-        'department_id': fields.related('employee_id','department_id', type='many2one', relation='hr.department', string="Department", readonly=True),
+        'department_id': fields.related('employee_id', 'department_id', type='many2one', relation='hr.department', string="Department", readonly=True),
         'type_id': fields.many2one('hr.contract.type', "Contract Type", required=True),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date'),
         'trial_date_start': fields.date('Trial Start Date'),
         'trial_date_end': fields.date('Trial End Date'),
-        'working_hours': fields.many2one('resource.calendar','Working Schedule'),
-        'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
+        'working_hours': fields.many2one('resource.calendar', 'Working Schedule'),
+        'wage': fields.float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', required=False, readonly=False),
@@ -108,8 +110,8 @@ class hr_contract(osv.osv):
 
     def _check_dates(self, cr, uid, ids, context=None):
         for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
-             if contract['date_start'] and contract['date_end'] and contract['date_start'] > contract['date_end']:
-                 return False
+            if contract['date_start'] and contract['date_end'] and contract['date_start'] > contract['date_end']:
+                return False
         return True
 
     _constraints = [

@@ -40,8 +40,10 @@ from reportlab.lib.units import toLength
 import base64
 import copy
 
+
 class DomApiGeneral:
     """General DOM API utilities."""
+
     def __init__(self, content_string="", file=""):
         self.content_string = content_string
         self.re_digits = re.compile(r"(.*?\d)(pt|cm|mm|inch|in)")
@@ -50,13 +52,13 @@ class DomApiGeneral:
         """Split values and units to a tuple."""
         temp = self.re_digits.findall(string)
         if not temp:
-            return (string,"")
+            return (string, "")
         else:
             return (temp[0])
 
     def stringPercentToFloat(self, string):
-        temp = string.replace("""%""","")
-        return float(temp)/100
+        temp = string.replace("""%""", "")
+        return float(temp) / 100
 
     def findChildrenByName(self, parent, name, attr_dict=None):
         """Helper functions. Does not work recursively.
@@ -70,7 +72,7 @@ class DomApiGeneral:
         if attr_dict == {}:
             return children
         else:
-            return self._selectForAttributes(nodelist=children,attr_dict=attr_dict)
+            return self._selectForAttributes(nodelist=children, attr_dict=attr_dict)
 
     def _selectForAttributes(self, nodelist, attr_dict):
         "Helper function."""
@@ -88,14 +90,14 @@ class DomApiGeneral:
     def _stringToTuple(self, s):
         """Helper function."""
         try:
-            temp = string.split(s,",")
-            return int(temp[0]),int(temp[1])
+            temp = string.split(s, ",")
+            return int(temp[0]), int(temp[1])
         except:
             return None
 
     def _tupleToString(self, t):
         try:
-            return self.openOfficeStringUtf8("%s,%s" % (t[0],t[1]))
+            return self.openOfficeStringUtf8("%s,%s" % (t[0], t[1]))
         except:
             return None
 
@@ -118,11 +120,13 @@ class DomApiGeneral:
     def openOfficeStringUtf8(self, string):
         if type(string) == unicode:
             return string.encode("utf-8")
-        tempstring = unicode(string,"cp1252").encode("utf-8")
+        tempstring = unicode(string, "cp1252").encode("utf-8")
         return tempstring
+
 
 class DomApi(DomApiGeneral):
     """This class provides a DOM-API for XML-Files from an SXW-Archive."""
+
     def __init__(self, xml_content, xml_styles):
         DomApiGeneral.__init__(self)
         self.content_dom = xml.dom.minidom.parseString(xml_content)
@@ -137,10 +141,10 @@ class DomApi(DomApiGeneral):
         # ******** always use the following order:
         self.buildStyleDict()
         self.buildStylePropertiesDict()
-        if self.styles_dom.getElementsByTagName("style:page-master").__len__()<>0:
+        if self.styles_dom.getElementsByTagName("style:page-master").__len__() <> 0:
             self.page_master = self.styles_dom.getElementsByTagName("style:page-master")[0]
-        if  self.styles_dom.getElementsByTagName("style:page-layout").__len__()<>0 :
-			self.page_master = self.styles_dom.getElementsByTagName("style:page-layout")[0]
+        if  self.styles_dom.getElementsByTagName("style:page-layout").__len__() <> 0:
+            self.page_master = self.styles_dom.getElementsByTagName("style:page-layout")[0]
         self.document = self.content_dom.getElementsByTagName("office:document-content")[0]
 
     def buildStylePropertiesDict(self):
@@ -163,7 +167,7 @@ class DomApi(DomApiGeneral):
                         new_number = int(new_number)
                         # no floats allowed for "pt"
                         # OOo just takes the int, does not round (try it out!)
-                    new_updatedict[u] = "%s%s" % (new_number,unit)
+                    new_updatedict[u] = "%s%s" % (new_number, unit)
                 else:
                     dict[u] = new_updatedict[u]
             except:
@@ -183,16 +187,16 @@ class DomApi(DomApiGeneral):
         content_styles = self.content_dom.getElementsByTagName("style:style")
         # these are the content_styles with styles_styles added!!!
         for s in content_styles:
-            c = self.findChildrenByName(s,"style:properties")
+            c = self.findChildrenByName(s, "style:properties")
             if c == []:
                 # some derived automatic styles do not have "style:properties":
                 temp = self.content_dom.createElement("style:properties")
                 s.appendChild(temp)
-                c = self.findChildrenByName(s,"style:properties")
+                c = self.findChildrenByName(s, "style:properties")
             c = c[0]
             dict = self.style_properties_dict[(s.getAttribute("style:name")).encode("utf-8")] or {}
             for attribute in dict.keys():
-                c.setAttribute(self.openOfficeStringUtf8(attribute),self.openOfficeStringUtf8(dict[attribute]))
+                c.setAttribute(self.openOfficeStringUtf8(attribute), self.openOfficeStringUtf8(dict[attribute]))
 
     def transferStylesXml(self):
         """Transfer certain sub-trees from styles.xml to the normalized content.xml
@@ -202,7 +206,7 @@ class DomApi(DomApiGeneral):
         # TODO: What about table styles etc.?
         outline_styles = self.styles_dom.getElementsByTagName("text:outline-style")
         t = self.content_dom.createElement("transferredfromstylesxml")
-        self.document.insertBefore(t,self.body)
+        self.document.insertBefore(t, self.body)
         t_new = self.body.previousSibling
         try:
             page_master = self.page_master
@@ -221,7 +225,7 @@ class DomApi(DomApiGeneral):
         for s in all_styles:
             for x in s._attrs.keys():
                 v = s.getAttribute(x)
-                s.setAttribute(x,"%s" % self._lengthToFloat(v))
+                s.setAttribute(x, "%s" % self._lengthToFloat(v))
                 # convert float to string first!
 
     def normalizeTableColumns(self):
@@ -231,13 +235,13 @@ class DomApi(DomApiGeneral):
             if c.hasAttribute("table:number-columns-repeated"):
                 number = int(c.getAttribute("table:number-columns-repeated"))
                 c.removeAttribute("table:number-columns-repeated")
-                for i in range(number-1):
-                    (c.parentNode).insertBefore(c.cloneNode(deep=1),c)
+                for i in range(number - 1):
+                    (c.parentNode).insertBefore(c.cloneNode(deep=1), c)
 
     def buildStyleDict(self):
         """Store all style:style-nodes from content.xml and styles.xml in self.style_dict.
         Caution: in this dict the nodes from two dom apis are merged!"""
-        for st in (self.styles_dom,self.content_dom):
+        for st in (self.styles_dom, self.content_dom):
             for s in st.getElementsByTagName("style:style"):
                 name = s.getAttribute("style:name").encode("utf-8")
                 self.style_dict[name] = s
@@ -255,53 +259,56 @@ class DomApi(DomApiGeneral):
 
         children = self.style_dict[style_name].childNodes
         for c in children:
-            if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties")>0 :
+            if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties") > 0:
                 for attr in c._attrs.keys():
                     res[attr] = c.getAttribute(attr).encode("utf-8")
         return res
 
+
 class PyOpenOffice(object):
     """This is the main class which provides all functionality."""
+
     def __init__(self, path='.', save_pict=False):
         self.path = path
         self.save_pict = save_pict
         self.images = {}
 
     def oo_read(self, fname):
-        z = zipfile.ZipFile(fname,"r")
+        z = zipfile.ZipFile(fname, "r")
         content = z.read('content.xml')
         style = z.read('styles.xml')
         all = z.namelist()
         for a in all:
-            if a[:9]=='Pictures/' and len(a)>10:
+            if a[:9] == 'Pictures/' and len(a) > 10:
                 pic_content = z.read(a)
                 self.images[a[9:]] = pic_content
                 if self.save_pict:
-                    f=open(os.path.join(self.path, os.path.basename(a)),"wb")
+                    f = open(os.path.join(self.path, os.path.basename(a)), "wb")
                     f.write(pic_content)
                     f.close()
         z.close()
-        return content,style
+        return content, style
 
     def oo_replace(self, content):
         regex = [
             (r"<para[^>]*/>", ""),
             (r"<para(.*)>(.*?)<text:line-break[^>]*/>", "<para$1>$2</para><para$1>"),
         ]
-        for key,val in regex:
+        for key, val in regex:
             content = re.sub(key, val, content)
         return content
 
     def unpackNormalize(self, sourcefile):
-        c,s = self.oo_read(sourcefile)
+        c, s = self.oo_read(sourcefile)
         c = self.oo_replace(c)
-        dom = DomApi(c,s)
+        dom = DomApi(c, s)
         dom.normalizeStyleProperties()
         dom.transferStylesXml()
         dom.normalizeLength()
         dom.normalizeTableColumns()
         new_c = dom.toxml()
         return new_c
+
 
 def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
     from lxml import etree
@@ -320,7 +327,7 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
     root = etree.XPathEvaluator(result)("/document/stylesheet")
 
     if root:
-        root=root[0]
+        root = root[0]
         images = etree.Element("images")
         for img in tool.images:
             node = etree.Element('image', name=img)
@@ -350,13 +357,12 @@ if __name__ == "__main__":
     fname = sys.argv[1]
     f = fname
     xsl_file = 'normalized_oo2rml.xsl'
-    z = zipfile.ZipFile(fname,"r")
+    z = zipfile.ZipFile(fname, "r")
     mimetype = z.read('mimetype')
-    if mimetype.split('/')[-1] == 'vnd.oasis.opendocument.text' :
-		xsl_file = 'normalized_odt2rml.xsl'
+    if mimetype.split('/')[-1] == 'vnd.oasis.opendocument.text':
+        xsl_file = 'normalized_odt2rml.xsl'
     xsl = file(os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]), xsl_file)).read()
     result = sxw2rml(f, xsl, output=opt.output, save_pict=False)
 
     print result
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

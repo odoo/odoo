@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 TRANSLATION_TYPE = [
     ('field', 'Field'),
     ('model', 'Object'),
-    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
+    ('rml', 'RML  (deprecated - use Report)'),  # Pending deprecation - to be replaced by report!
     ('report', 'Report/Template'),
     ('selection', 'Selection'),
     ('view', 'View'),
@@ -45,6 +45,7 @@ TRANSLATION_TYPE = [
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
 ]
+
 
 class ir_translation_import_cursor(object):
     """Temporary cursor for optimizing mass insert into ir.translation
@@ -154,6 +155,7 @@ class ir_translation_import_cursor(object):
         cr.execute("DROP TABLE %s" % self._table_name)
         return True
 
+
 class ir_translation(osv.osv):
     _name = "ir.translation"
     _log_access = False
@@ -194,9 +196,9 @@ class ir_translation(osv.osv):
         if  record.type == 'model':
             model_name, field = record.name.split(',')
             model = self.pool.get(model_name)
-            #We need to take the context without the language information, because we want to write on the
-            #value store in db and not on the one associate with current language.
-            #Also not removing lang from context trigger an error when lang is different
+            # We need to take the context without the language information, because we want to write on the
+            # value store in db and not on the one associate with current language.
+            # Also not removing lang from context trigger an error when lang is different
             context_wo_lang = context.copy()
             context_wo_lang.pop('lang', None)
             model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
@@ -213,9 +215,9 @@ class ir_translation(osv.osv):
         'module': fields.char('Module', help="Module this term belongs to", select=True),
 
         'state': fields.selection(
-            [('to_translate','To Translate'),
-             ('inprogress','Translation in Progress'),
-             ('translated','Translated')],
+            [('to_translate', 'To Translate'),
+             ('inprogress', 'Translation in Progress'),
+             ('translated', 'Translated')],
             string="Status",
             help="Automatically set to let administators find new terms that might need to be translated"),
 
@@ -228,8 +230,8 @@ class ir_translation(osv.osv):
         'state': 'to_translate',
     }
 
-    _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
-        'Language code of translation item must be among known languages' ), ]
+    _sql_constraints = [('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
+        'Language code of translation item must be among known languages'), ]
 
     def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
@@ -237,12 +239,12 @@ class ir_translation(osv.osv):
         # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
         if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
+            # temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
             cr.execute('DROP INDEX ir_translation_ltns')
             cr.commit()
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
         if cr.fetchone():
-            #temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+            # temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
             cr.execute('DROP INDEX ir_translation_lts')
             cr.commit()
 
@@ -268,10 +270,10 @@ class ir_translation(osv.osv):
             cr.execute('select res_id,value '
                     'from ir_translation '
                     'where lang=%s '
-                        'and type=%s '
-                        'and name=%s '
-                        'and res_id IN %s',
-                    (lang,tt,name,tuple(ids)))
+                       'and type=%s '
+                       'and name=%s '
+                       'and res_id IN %s',
+                    (lang, tt, name, tuple(ids)))
             for res_id, value in cr.fetchall():
                 translations[res_id] = value
         return translations
@@ -282,18 +284,18 @@ class ir_translation(osv.osv):
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
-                    'and type=%s '
-                    'and name=%s '
-                    'and res_id IN %s',
-                (lang,tt,name,tuple(ids),))
+                   'and type=%s '
+                   'and name=%s '
+                   'and res_id IN %s',
+                (lang, tt, name, tuple(ids),))
         for id in ids:
             self.create(cr, uid, {
-                'lang':lang,
-                'type':tt,
-                'name':name,
-                'res_id':id,
-                'value':value,
-                'src':src,
+                'lang': lang,
+                'type': tt,
+                'name': name,
+                'res_id': id,
+                'value': value,
+                'src': src,
                 })
         return len(ids)
 
@@ -319,7 +321,7 @@ class ir_translation(osv.osv):
                         AND name=%s"""
 
             params = (lang or '', types, tools.ustr(name))
-        
+
         return (query, params)
 
     @tools.ormcache(skiparg=3)
@@ -344,9 +346,9 @@ class ir_translation(osv.osv):
             return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
-        
+
         query, params = self._get_source_query(cr, uid, name, types, lang, source, res_id)
-        
+
         cr.execute(query, params)
         res = cr.fetchone()
         trad = res and res[0] or u''
@@ -370,9 +372,9 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('src') or ('value' in vals and not(vals.get('value'))):
-            vals.update({'state':'to_translate'})
+            vals.update({'state': 'to_translate'})
         if vals.get('value'):
-            vals.update({'state':'translated'})
+            vals.update({'state': 'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         self._get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
@@ -407,10 +409,10 @@ class ir_translation(osv.osv):
                     domain.insert(0, '|')
                     domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model, k))])
                 else:
-                    translatable_fields.append({'name': k, 'id': id, 'model': model })
+                    translatable_fields.append({'name': k, 'id': id, 'model': model})
         if len(langs):
             fields = [f.get('name') for f in translatable_fields]
-            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
+            record = trans_model.read(cr, uid, [id], fields, context={'lang': main_lang})[0]
             for lg in langs:
                 for f in translatable_fields:
                     # Check if record exists, else create it (at once)
@@ -421,7 +423,7 @@ class ir_translation(osv.osv):
                         """
                     src = record[f['name']] or None
                     name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+                    cr.execute(sql, (lg, src, name, f['id'], src, lg, name, f['id'], src, lg, name, id))
 
         action = {
             'name': 'Translate',
@@ -444,7 +446,7 @@ class ir_translation(osv.osv):
         return ir_translation_import_cursor(cr, uid, self, context=context)
 
     def load_module_terms(self, cr, modules, langs, context=None):
-        context = dict(context or {}) # local copy
+        context = dict(context or {})  # local copy
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
@@ -461,14 +463,14 @@ class ir_translation(osv.osv):
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
                         tools.trans_load(cr, base_trans_file, lang, verbose=False, module_name=module_name, context=context)
-                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+                        context['overwrite'] = True  # make sure the requested translation will override the base terms later
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
                         tools.trans_load(cr, base_trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
-                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+                        context['overwrite'] = True  # make sure the requested translation will override the base terms later
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = openerp.modules.get_module_resource(module_name, 'i18n', lang_code + '.po')

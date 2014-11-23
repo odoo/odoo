@@ -207,4 +207,4 @@ class crm_lead_assignation (osv.TransientModel):
             partner_location.append(partner.city)
         return {'value': {'partner_location': ", ".join(partner_location)}}
 
-# # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

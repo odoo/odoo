@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -26,9 +26,9 @@
     'license': 'AGPL-3',
     'author': 'Noviat',
     'website': 'https://www.odoo.com/page/accounting',
-    'category' : 'Localization',
+    'category': 'Localization',
     'description': """
-    
+
 Belgian localization for in- and outgoing invoices (prereq to account_coda):
 ============================================================================
     - Rename 'reference' field labels to 'Communication'
@@ -41,20 +41,20 @@ A Structured Communication can be generated automatically on outgoing invoices a
     2) Date : +++DOY/YEAR/SSSDD+++
         **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits
     3) Customer Reference +++RRR/RRRR/SSSDDD+++
-        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  
-        
+        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits
+
 The preferred type of Structured Communication and associated Algorithm can be
 specified on the Partner records. A 'random' Structured Communication will
-generated if no algorithm is specified on the Partner record. 
+generated if no algorithm is specified on the Partner record.
 
     """,
     'depends': ['account'],
     'demo': [],
-    'data' : [
+    'data': [
         'partner_view.xml',
-        'account_invoice_view.xml',        
+        'account_invoice_view.xml',
     ],
     'auto_install': False,
-    'installable': True,}
+    'installable': True, }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

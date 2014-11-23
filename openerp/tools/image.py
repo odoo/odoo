@@ -32,6 +32,7 @@ from random import randint
 # Image resizing
 # ----------------------------------------
 
+
 def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False):
     """ Function to resize an image. The image will be resized to the given
         size, while keeping the aspect ratios, and holes in the image will be
@@ -96,6 +97,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
+
 def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0):
     """
         Create a thumbnail by resizing while keeping ratio.
@@ -117,6 +119,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     image = Image.new('RGBA', size, (255, 255, 255, 0))
     image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
     return image
+
 
 def image_save_for_web(image, fp=None, format=None):
     """
@@ -141,6 +144,7 @@ def image_save_for_web(image, fp=None, format=None):
         image.save(img, **opt)
         return img.getvalue()
 
+
 def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', filetype=None, avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
@@ -148,12 +152,14 @@ def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', 
     """
     return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
+
 def image_resize_image_medium(base64_source, size=(128, 128), encoding='base64', filetype=None, avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'medium'
         image size: 180x180.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
     return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+
 
 def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', filetype=None, avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'small' image
@@ -165,6 +171,7 @@ def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', fi
 # ----------------------------------------
 # Colors
 # ---------------------------------------
+
 
 def image_colorize(original, randomize=True, color=(255, 255, 255)):
     """ Add a color to the transparent background of an image.
@@ -188,6 +195,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
 # ----------------------------------------
 # Misc image tools
 # ---------------------------------------
+
 
 def image_get_resized_images(base64_source, return_big=False, return_medium=True, return_small=True,
     big_name='image', medium_name='image_medium', small_name='image_small',
@@ -221,12 +229,11 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     return return_dict
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import sys
 
-    assert len(sys.argv)==3, 'Usage to Test: image.py SRC.png DEST.png'
+    assert len(sys.argv) == 3, 'Usage to Test: image.py SRC.png DEST.png'
 
-    img = file(sys.argv[1],'rb').read().encode('base64')
-    new = image_resize_image(img, (128,100))
+    img = file(sys.argv[1], 'rb').read().encode('base64')
+    new = image_resize_image(img, (128, 100))
     file(sys.argv[2], 'wb').write(new.decode('base64'))
-

@@ -27,6 +27,7 @@ import os
 
 _logger = logging.getLogger(__name__)
 
+
 class makohtml2html(object):
     def __init__(self, html, localcontext):
         self.localcontext = localcontext
@@ -50,8 +51,8 @@ class makohtml2html(object):
         body_list = []
         footer =  self.format_footer(body[-1].getchildren())
         for b in body[:-1]:
-            body_list.append(etree.tostring(b).replace('\t', '').replace('\n',''))
-        html_body ='''
+            body_list.append(etree.tostring(b).replace('\t', '').replace('\n', ''))
+        html_body = '''
         <script type="text/javascript">
 
         var indexer = 0;
@@ -109,15 +110,15 @@ class makohtml2html(object):
                 </tr>
             </table>
         </form>
-    </body></html>'''%(body_list,body_list[0],footer,'1',len(body_list))
+    </body></html>''' % (body_list, body_list[0], footer, '1', len(body_list))
         return html_body
 
     def render(self):
         path = os.path.realpath('addons/base/report')
-        temp_lookup = TemplateLookup(directories=[path],output_encoding='utf-8', encoding_errors='replace')
+        temp_lookup = TemplateLookup(directories=[path], output_encoding='utf-8', encoding_errors='replace')
         template = Template(self.html, lookup=temp_lookup)
-        self.localcontext.update({'css_path':path})
-        final_html ='''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+        self.localcontext.update({'css_path': path})
+        final_html = '''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
                     <html>'''
         try:
             html = template.render_unicode(**self.localcontext)
@@ -127,6 +128,7 @@ class makohtml2html(object):
             return final_html
         except Exception:
             _logger.exception('report :')
+
 
 def parseNode(html, localcontext = {}):
     r = makohtml2html(html, localcontext)

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import orm, fields
 
+
 def selection_fn(obj, cr, uid, context=None):
     return list(enumerate(["Corge", "Grault", "Wheee", "Moog"]))
 
+
 def function_fn(model, cr, uid, ids, field_name, arg, context):
     return dict((id, 3) for id in ids)
+
 
 def function_fn_write(model, cr, uid, id, field_name, field_value, fnct_inv_arg, context):
     """ just so CreatorCase.export can be used
@@ -160,6 +163,7 @@ class RecO2M(orm.Model):
         'value': fields.integer(),
         'child': fields.one2many('export.one2many.multiple', 'parent_id'),
     }
+
 
 class OnlyOne(orm.Model):
     _name = 'export.unique'

@@ -1,5 +1,6 @@
 from openerp.osv import orm, fields
 
+
 class TestObject(orm.TransientModel):
     _name = 'web_tests_demo.model'
 
@@ -11,4 +12,3 @@ class TestObject(orm.TransientModel):
     _defaults = {
         'other': "bob"
     }
-

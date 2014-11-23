@@ -45,7 +45,7 @@ multi_process = False
 # sufficiently deferred so that setting the TZ environment variable
 # in openerp.cli.server was working.
 import os
-os.environ['TZ'] = 'UTC' # Set the timezone...
+os.environ['TZ'] = 'UTC'  # Set the timezone...
 import time              # ... *then* import time.
 del os
 del time
@@ -55,6 +55,7 @@ del time
 #----------------------------------------------------------
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
+
 
 def registry(database_name):
     """

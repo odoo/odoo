@@ -43,10 +43,10 @@ class account_analytic_journal_report(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids)[0]
         ids_list = []
-        if context.get('active_id',False):
-            ids_list.append(context.get('active_id',False))
+        if context.get('active_id', False):
+            ids_list.append(context.get('active_id', False))
         else:
-            record = self.browse(cr,uid,ids[0],context=context)
+            record = self.browse(cr, uid, ids[0], context=context)
             for analytic_record in record.analytic_account_journal_id:
                 ids_list.append(analytic_record.id)
         datas = {

@@ -33,16 +33,15 @@ Greek accounting chart and localization.
     """,
     'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     'demo': [],
-    'data': [ 'account_types.xml',
-               'account_chart.xml',
-               'account_full_chart.xml',
-               'account_tax.xml',
-               'account_tax_vat.xml',
-               'l10n_gr_wizard.xml'
+    'data': ['account_types.xml',
+             'account_chart.xml',
+             'account_full_chart.xml',
+             'account_tax.xml',
+             'account_tax_vat.xml',
+             'l10n_gr_wizard.xml'
     ],
     'installable': True,
-    'images': ['images/config_chart_l10n_gr.jpeg','images/l10n_gr_chart.jpeg'],
+    'images': ['images/config_chart_l10n_gr.jpeg', 'images/l10n_gr_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

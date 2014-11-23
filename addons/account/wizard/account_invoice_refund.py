@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_invoice_refund(osv.osv_memory):
 
     """Refunds invoice"""
@@ -35,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Reason', required=True),
-       'filter_refund': fields.selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'),('modify', 'Modify: create refund, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
+       'filter_refund': fields.selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'), ('modify', 'Modify: create refund, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -49,7 +50,7 @@ class account_invoice_refund(osv.osv_memory):
                (inv_type == 'out_refund') and 'sale' or \
                (inv_type == 'in_invoice') and 'purchase_refund' or \
                (inv_type == 'in_refund') and 'purchase'
-        journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
+        journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id', '=', company_id)], limit=1, context=context)
         return journal and journal[0] or False
 
     def _get_reason(self, cr, uid, context=None):
@@ -73,7 +74,7 @@ class account_invoice_refund(osv.osv_memory):
         # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
         context = dict(context or {})
         context.pop('form_view_ref', None)
-        res = super(account_invoice_refund,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        res = super(account_invoice_refund, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         type = context.get('type', 'out_invoice')
         company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
         journal_type = (type == 'out_invoice') and 'sale_refund' or \
@@ -82,7 +83,7 @@ class account_invoice_refund(osv.osv_memory):
                        (type == 'in_refund') and 'purchase'
         for field in res['fields']:
             if field == 'journal_id':
-                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', journal_type), ('company_id','child_of',[company_id])], context=context)
+                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', journal_type), ('company_id', 'child_of', [company_id])], context=context)
                 res['fields'][field]['selection'] = journal_select
         return res
 
@@ -127,21 +128,21 @@ class account_invoice_refund(osv.osv_memory):
                 if form.date:
                     date = form.date
                     if not form.period.id:
-                            cr.execute("select name from ir_model_fields \
+                        cr.execute("select name from ir_model_fields \
                                             where model = 'account.period' \
                                             and name = 'company_id'")
-                            result_query = cr.fetchone()
-                            if result_query:
-                                cr.execute("""select p.id from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
+                        result_query = cr.fetchone()
+                        if result_query:
+                            cr.execute("""select p.id from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
                                     and date(%s) between p.date_start AND p.date_stop and y.company_id = %s limit 1""", (date, company.id,))
-                            else:
-                                cr.execute("""SELECT id
+                        else:
+                            cr.execute("""SELECT id
                                         from account_period where date(%s)
                                         between date_start AND  date_stop  \
                                         limit 1 """, (date,))
-                            res = cr.fetchone()
-                            if res:
-                                period = res[0]
+                        res = cr.fetchone()
+                        if res:
+                            period = res[0]
                 else:
                     date = inv.date_invoice
                 if form.description:
@@ -151,7 +152,7 @@ class account_invoice_refund(osv.osv_memory):
 
                 if not period:
                     raise osv.except_osv(_('Insufficient Data!'), \
-                                            _('No period found on the invoice.'))
+                                         _('No period found on the invoice.'))
 
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id, context=context)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
@@ -204,8 +205,8 @@ class account_invoice_refund(osv.osv_memory):
                             'name': description
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',
-                                         'payment_term', 'journal_id'):
-                                invoice[field] = invoice[field] and invoice[field][0]
+                                      'payment_term', 'journal_id'):
+                            invoice[field] = invoice[field] and invoice[field][0]
                         inv_id = inv_obj.create(cr, uid, invoice, {})
                         if inv.payment_term.id:
                             data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], inv.payment_term.id, date)
@@ -227,9 +228,8 @@ class account_invoice_refund(osv.osv_memory):
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
-        data_refund = self.read(cr, uid, ids, ['filter_refund'],context=context)[0]['filter_refund']
+        data_refund = self.read(cr, uid, ids, ['filter_refund'], context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

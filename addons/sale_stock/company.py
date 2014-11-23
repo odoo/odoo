@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {

@@ -38,19 +38,26 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 _logger = logging.getLogger(__name__)
 
+
 class SpecialValue(object):
     """ Encapsulates a value in the cache in place of a normal value. """
+
     def __init__(self, value):
         self.value = value
+
     def get(self):
         return self.value
 
+
 class FailedValue(SpecialValue):
     """ Special value that encapsulates an exception instead of a value. """
+
     def __init__(self, exception):
         self.exception = exception
+
     def get(self):
         raise self.exception
+
 
 def _check_value(value):
     """ Return `value`, or call its getter if `value` is a :class:`SpecialValue`. """
@@ -1056,6 +1063,7 @@ class Char(_String):
             return False
         return ustr(value)[:self.size]
 
+
 class Text(_String):
     """ Text field. Very similar to :class:`~.Char` but used for longer
      contents and displayed as a multiline text box
@@ -1068,6 +1076,7 @@ class Text(_String):
         if value is None or value is False:
             return False
         return ustr(value)
+
 
 class Html(_String):
     type = 'html'
@@ -1494,6 +1503,7 @@ class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
         it returns ``record[field.name] | value`` and stores it in the cache.
     """
+
     def __init__(self, field, record, value):
         self.args = (field, record, value)
 

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class stock_location_path(osv.osv):
     _inherit = "stock.location.path"
     _columns = {
@@ -41,6 +42,8 @@ class stock_location_path(osv.osv):
 #----------------------------------------------------------
 # Procurement Rule
 #----------------------------------------------------------
+
+
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
     _columns = {
@@ -166,8 +169,10 @@ class stock_move(osv.osv):
 # Picking
 #----------------------------------------------------------
 
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
+
     def __get_invoice_state(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for pick in self.browse(cr, uid, ids, context=context):
@@ -190,7 +195,7 @@ class stock_picking(osv.osv):
     def _set_inv_state(self, cr, uid, picking_id, name, value, arg, context=None):
         pick = self.browse(cr, uid, picking_id, context=context)
         moves = [x.id for x in pick.move_lines]
-        move_obj= self.pool.get("stock.move")
+        move_obj = self.pool.get("stock.move")
         move_obj.write(cr, uid, moves, {'invoice_state': value}, context=context)
 
     _columns = {
@@ -199,8 +204,8 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-        fnct_inv = _set_inv_state,
-        store={
+            fnct_inv = _set_inv_state,
+            store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),
         },
@@ -223,7 +228,7 @@ class stock_picking(osv.osv):
             @return: object of the partner to invoice
         """
         return picking.partner_id and picking.partner_id.id
-        
+
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
@@ -235,7 +240,7 @@ class stock_picking(osv.osv):
         todo = {}
         for picking in self.browse(cr, uid, ids, context=context):
             partner = self._get_partner_to_invoice(cr, uid, picking, context)
-            #grouping is based on the invoiced partner
+            # grouping is based on the invoiced partner
             if group:
                 key = partner
             else:

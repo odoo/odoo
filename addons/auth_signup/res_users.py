@@ -29,13 +29,16 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
 
+
 class SignupError(Exception):
     pass
+
 
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     return ''.join(random.choice(chars) for i in xrange(20))
+
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -57,7 +60,7 @@ class res_partner(osv.Model):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
         if context is None:
-            context= {}
+            context = {}
         res = dict.fromkeys(ids, False)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for partner in self.browse(cr, uid, ids, context):
@@ -167,6 +170,7 @@ class res_partner(osv.Model):
         else:
             res['email'] = partner.email or ''
         return res
+
 
 class res_users(osv.Model):
     _inherit = 'res.users'

@@ -27,6 +27,7 @@ from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 
+
 class StockMove(osv.osv):
     _inherit = 'stock.move'
 
@@ -47,8 +48,8 @@ class StockMove(osv.osv):
         """check if product associated to move has a phantom bom
             return list of ids of mrp.bom for that product """
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
-        #without giving him the right to read the boms.
+        # doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
+        # without giving him the right to read the boms.
         domain = [
             '|', ('product_id', '=', move.product_id.id),
             '&', ('product_id', '=', False), ('product_tmpl_id.product_variant_ids', '=', move.product_id.id),
@@ -75,7 +76,7 @@ class StockMove(osv.osv):
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
-            
+
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
@@ -89,7 +90,7 @@ class StockMove(osv.osv):
                         'state': 'draft',  #will be confirmed below
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
-                        'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
+                        'split_from': move.id,  # Needed in order to keep sale connection, but will be removed by unlink
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
@@ -113,14 +114,13 @@ class StockMove(osv.osv):
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
                         else:
                             proc = proc_obj.create(cr, uid, valdef, context=context)
-                        proc_obj.run(cr, uid, [proc], context=context) #could be omitted
+                        proc_obj.run(cr, uid, [proc], context=context)  # could be omitted
 
-            
-            #check if new moves needs to be exploded
+            # check if new moves needs to be exploded
             if to_explode_again_ids:
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
                     processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
-            
+
             if not move.split_from and move.procurement_id:
                 # Check if procurements have been made to wait for
                 moves = move.procurement_id.move_ids
@@ -130,24 +130,24 @@ class StockMove(osv.osv):
             if processed_ids and move.state == 'assigned':
                 # Set the state of resulting moves according to 'assigned' as the original move is assigned
                 move_obj.write(cr, uid, list(set(processed_ids) - set([move.id])), {'state': 'assigned'}, context=context)
-                
-            #delete the move with original product which is not relevant anymore
+
+            # delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
-        #return list of newly created move or the move id otherwise, unless there is no move anymore
+        # return list of newly created move or the move id otherwise, unless there is no move anymore
         return processed_ids or (not bis and [move.id]) or []
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []
         for move in self.browse(cr, uid, ids, context=context):
-            #in order to explode a move, we must have a picking_type_id on that move because otherwise the move
-            #won't be assigned to a picking and it would be weird to explode a move into several if they aren't
-            #all grouped in the same picking.
+            # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
+            # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
+            # all grouped in the same picking.
             if move.picking_type_id:
                 move_ids.extend(self._action_explode(cr, uid, move, context=context))
             else:
                 move_ids.append(move.id)
 
-        #we go further with the list of ids potentially changed by action_explode
+        # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
@@ -167,7 +167,7 @@ class StockMove(osv.osv):
 
         if product_qty <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
-        #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
+        # because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
         ids2 = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'draft':
@@ -213,7 +213,7 @@ class StockMove(osv.osv):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id,
                                                             restrict_lot_id=restrict_lot_id,
                                                             restrict_partner_id=restrict_partner_id, context=context)
-            #If we are not scrapping our whole move, tracking and lot references must not be removed
+            # If we are not scrapping our whole move, tracking and lot references must not be removed
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
@@ -235,10 +235,11 @@ class StockMove(osv.osv):
                     workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
         return res
 
+
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse', 
+        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse',
                                                   help="When products are manufactured, they can be manufactured in this warehouse."),
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
     }
@@ -260,7 +261,7 @@ class stock_warehouse(osv.osv):
             'route_id': manufacture_route_id,
             'action': 'manufacture',
             'picking_type_id': warehouse.int_type_id.id,
-            'propagate': False, 
+            'propagate': False,
             'warehouse_id': warehouse.id,
         }
 
@@ -300,7 +301,7 @@ class stock_warehouse(osv.osv):
     def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
         pull_obj = self.pool.get('procurement.rule')
-        #change the manufacture pull rule name
+        # change the manufacture pull rule name
         if warehouse.manufacture_pull_id:
             pull_obj.write(cr, uid, warehouse.manufacture_pull_id.id, {'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res

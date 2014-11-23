@@ -11,6 +11,7 @@ from openerp.addons.base.ir import ir_qweb
 
 directory = os.path.dirname(__file__)
 
+
 class TestExport(common.TransactionCase):
     _model = None
 
@@ -26,19 +27,24 @@ class TestExport(common.TransactionCase):
 
         for postfix in type, field.type, '':
             fs = ['ir', 'qweb', 'field']
-            if postfix is None: continue
-            if postfix: fs.append(postfix)
+            if postfix is None:
+                continue
+            if postfix:
+                fs.append(postfix)
 
             try:
                 model = self.registry('.'.join(fs))
                 break
-            except KeyError: pass
+            except KeyError:
+                pass
 
         return lambda value, options=None, context=None: e(model.value_to_html(
             self.cr, self.uid, value, field, options=options, context=context))
 
+
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
+
 
 class TestCharExport(TestBasicExport):
     def test_char(self):
@@ -50,12 +56,14 @@ class TestCharExport(TestBasicExport):
         value = converter("foo<bar>")
         self.assertEqual(value, "foo&lt;bar&gt;")
 
+
 class TestIntegerExport(TestBasicExport):
     def test_integer(self):
         converter = self.get_converter('integer')
 
         value = converter(42)
         self.assertEqual(value, "42")
+
 
 class TestFloatExport(TestBasicExport):
     def setUp(self):
@@ -87,6 +95,7 @@ class TestFloatExport(TestBasicExport):
 
         value = converter(42.01234)
         self.assertEqual(value, '42.01')
+
 
 class TestCurrencyExport(TestExport):
     _model = 'test_converter.monetary'
@@ -131,9 +140,9 @@ class TestCurrencyExport(TestExport):
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ),)
+                          obj=obj,
+                          symbol=currency.symbol.encode('utf-8')
+                          ),)
 
     def test_currency_pre(self):
         currency = self.create(
@@ -150,9 +159,9 @@ class TestCurrencyExport(TestExport):
                       '{symbol} '
                       '<span class="oe_currency_value">0.12</span>'
                       '</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ),)
+                          obj=obj,
+                          symbol=currency.symbol.encode('utf-8')
+                          ),)
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
@@ -169,9 +178,10 @@ class TestCurrencyExport(TestExport):
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       ' {symbol}</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ),)
+                          obj=obj,
+                          symbol=currency.symbol.encode('utf-8')
+                          ),)
+
 
 class TestTextExport(TestBasicExport):
     def test_text(self):
@@ -208,10 +218,10 @@ class TestTextExport(TestBasicExport):
         fldkjsfhs &lt;i style=&quot;color: red&quot;&gt;&lt;a href=&quot;http://spamspam.com&quot;&gt;fldskjh&lt;/a&gt;&lt;/i&gt;<br>
         """)
 
+
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
         Sub = self.registry('test_converter.test_model.sub')
-
 
         id0 = self.Model.create(self.cr, self.uid, {
             'many2one': Sub.create(self.cr, self.uid, {'name': "Foo"})
@@ -229,6 +239,7 @@ class TestMany2OneExport(TestBasicExport):
 
         value = converter(self.Model.browse(self.cr, self.uid, id1))
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
+
 
 class TestBinaryExport(TestBasicExport):
     def test_image(self):
@@ -260,6 +271,7 @@ class TestBinaryExport(TestBasicExport):
             e(converter.value_to_html(
                 self.cr, self.uid, 'binary', content.encode('base64'), field))
 
+
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
         [record] = self.Model.browse(self.cr, self.uid, [self.Model.create(self.cr, self.uid, {
@@ -277,6 +289,7 @@ class TestSelectionExport(TestBasicExport):
         value = converter.record_to_html(self.cr, self.uid, field_name, record)
         self.assertEqual(value, "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
+
 class TestHTMLExport(TestBasicExport):
     def test_html(self):
         converter = self.get_converter('html')
@@ -284,6 +297,7 @@ class TestHTMLExport(TestBasicExport):
         input = '<span>span</span>'
         value = converter(input)
         self.assertEqual(value, input)
+
 
 class TestDatetimeExport(TestBasicExport):
     def setUp(self):
@@ -326,6 +340,7 @@ class TestDatetimeExport(TestBasicExport):
             'March 2'
         )
 
+
 class TestDurationExport(TestBasicExport):
     def setUp(self):
         super(TestDurationExport, self).setUp()
@@ -361,6 +376,7 @@ class TestDurationExport(TestBasicExport):
 
         result = converter(72, {'unit': 'second'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u"1 minute 12 secondes")
+
 
 class TestRelativeDatetime(TestBasicExport):
     # not sure how a test based on "current time" should be tested. Even less

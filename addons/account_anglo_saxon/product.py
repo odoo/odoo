@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,11 +14,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
+
 
 class product_category(osv.osv):
     _inherit = "product.category"
@@ -29,7 +30,7 @@ class product_category(osv.osv):
             string="Price Difference Account",
             help="This account will be used to value price difference between purchase price and cost price."),
 
-        #Redefine fields to change help text for anglo saxon methodology.            
+        # Redefine fields to change help text for anglo saxon methodology.
         'property_account_income_categ': fields.property(
             type='many2one',
             relation='account.account',
@@ -43,6 +44,7 @@ class product_category(osv.osv):
 
     }
 
+
 class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
@@ -51,8 +53,8 @@ class product_template(osv.osv):
             relation='account.account',
             string="Price Difference Account",
             help="This account will be used to value price difference between purchase price and cost price."),
-            
-        #Redefine fields to change help text for anglo saxon methodology.
+
+        # Redefine fields to change help text for anglo saxon methodology.
         'property_account_income': fields.property(
             type='many2one',
             relation='account.account',
@@ -68,4 +70,3 @@ class product_template(osv.osv):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

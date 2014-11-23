@@ -21,6 +21,7 @@
 
 import math
 
+
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
         not (precision_digits and precision_rounding),\
@@ -28,6 +29,7 @@ def _float_check_precision(precision_digits=None, precision_rounding=None):
     if precision_digits is not None:
         return 10 ** -precision_digits
     return precision_rounding
+
 
 def float_round(value, precision_digits=None, precision_rounding=None, rounding_method='HALF-UP'):
     """Return ``value`` rounded to ``precision_digits`` decimal digits,
@@ -40,16 +42,17 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float value: the value to round
        :param int precision_digits: number of fractional digits to round to.
        :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
+           non-zero value at the desired precision (for example, 0.01 for a
            2-digit precision).
        :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
-           one rounding up to the closest number with the rule that number>=0.5 is 
+           one rounding up to the closest number with the rule that number>=0.5 is
            rounded up to 1, and the latest one always rounding up.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    if rounding_factor == 0 or value == 0: return 0.0
+    if rounding_factor == 0 or value == 0:
+        return 0.0
 
     # NORMALIZE - ROUND - DENORMALIZE
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),
@@ -67,12 +70,12 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # direction.
     # Credit: discussion with OpenERP community members on bug 882036
 
-    normalized_value = value / rounding_factor # normalize
+    normalized_value = value / rounding_factor  # normalize
     epsilon_magnitude = math.log(abs(normalized_value), 2)
-    epsilon = 2**(epsilon_magnitude-53)
+    epsilon = 2 ** (epsilon_magnitude - 53)
     if rounding_method == 'HALF-UP':
-        normalized_value += cmp(normalized_value,0) * epsilon
-        rounded_value = round(normalized_value) # round to integer
+        normalized_value += cmp(normalized_value, 0) * epsilon
+        rounded_value = round(normalized_value)  # round to integer
 
     # TIE-BREAKING: UP (for ceiling operations)
     # When rounding the value up, we instead subtract the epsilon value
@@ -84,11 +87,12 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
 
     elif rounding_method == 'UP':
         sign = cmp(normalized_value, 0)
-        normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+        normalized_value -= sign * epsilon
+        rounded_value = math.ceil(abs(normalized_value)) * sign  # ceil to integer
 
-    result = rounded_value * rounding_factor # de-normalize
+    result = rounded_value * rounding_factor  # de-normalize
     return result
+
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
     """Returns true if ``value`` is small enough to be treated as
@@ -97,23 +101,24 @@ def float_is_zero(value, precision_digits=None, precision_rounding=None):
        is used as the zero *epsilon*: values less than that are considered
        to be zero.
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
-       not both! 
+       not both!
 
        Warning: ``float_is_zero(value1-value2)`` is not equivalent to
        ``float_compare(value1,value2) == 0``, as the former will round after
        computing the difference, while the latter will round before, giving
-       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
+       different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
        :param int precision_digits: number of fractional digits to round to.
        :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
+           non-zero value at the desired precision (for example, 0.01 for a
            2-digit precision).
        :param float value: value to compare with the precision's zero
        :return: True if ``value`` is considered zero
     """
     epsilon = _float_check_precision(precision_digits=precision_digits,
-                                             precision_rounding=precision_rounding)
+                                     precision_rounding=precision_rounding)
     return abs(float_round(value, precision_rounding=epsilon)) < epsilon
+
 
 def float_compare(value1, value2, precision_digits=None, precision_rounding=None):
     """Compare ``value1`` and ``value2`` after rounding them according to the
@@ -129,14 +134,14 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
        because they respectively round to 0.01 and 0.0, even though
        0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
 
-       Warning: ``float_is_zero(value1-value2)`` is not equivalent to 
+       Warning: ``float_is_zero(value1-value2)`` is not equivalent to
        ``float_compare(value1,value2) == 0``, as the former will round after
        computing the difference, while the latter will round before, giving
-       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
+       different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
        :param int precision_digits: number of fractional digits to round to.
        :param float precision_rounding: decimal number representing the minimum
-           non-zero value at the desired precision (for example, 0.01 for a 
+           non-zero value at the desired precision (for example, 0.01 for a
            2-digit precision).
        :param float value1: first value to compare
        :param float value2: second value to compare
@@ -148,8 +153,10 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
     value1 = float_round(value1, precision_rounding=rounding_factor)
     value2 = float_round(value2, precision_rounding=rounding_factor)
     delta = value1 - value2
-    if float_is_zero(delta, precision_rounding=rounding_factor): return 0
+    if float_is_zero(delta, precision_rounding=rounding_factor):
+        return 0
     return -1 if delta < 0.0 else 1
+
 
 def float_repr(value, precision_digits):
     """Returns a string representation of a float with the
@@ -189,11 +196,11 @@ if __name__ == "__main__":
     for magnitude in range(7):
         for i in xrange(len(fractions)):
             frac, exp, prec = fractions[i], expecteds[i], precisions[i]
-            for sign in [-1,1]:
-                for x in xrange(0,10000,97):
-                    n = x * 10**magnitude
+            for sign in [-1, 1]:
+                for x in xrange(0, 10000, 97):
+                    n = x * 10 ** magnitude
                     f = sign * (n + frac)
-                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
+                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
                     try_round(f, f_exp, precision_digits=prec)
 
     stop = time.time()
@@ -202,4 +209,4 @@ if __name__ == "__main__":
     # 47130 round calls in 0.422306060791 secs, with Python 2.6.7 on Core i3 x64
     # with decimal:
     # 47130 round calls in 6.612248100021 secs, with Python 2.6.7 on Core i3 x64
-    print count, " round calls, ", errors, "errors, done in ", (stop-start), 'secs'
+    print count, " round calls, ", errors, "errors, done in ", (stop - start), 'secs'

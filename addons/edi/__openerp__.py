@@ -26,16 +26,16 @@
 Provides a common EDI platform that other Applications can use.
 ===============================================================
 
-OpenERP specifies a generic EDI format for exchanging business documents between 
+OpenERP specifies a generic EDI format for exchanging business documents between
 different systems, and provides generic mechanisms to import and export them.
 
-More details about OpenERP's EDI format may be found in the technical OpenERP 
+More details about OpenERP's EDI format may be found in the technical OpenERP
 documentation at http://doc.openerp.com.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/api',
     'depends': ['base', 'email_template'],
-    'data' : [
+    'data': [
         'views/edi.xml',
     ],
     'icon': '/edi/static/src/img/knowledge.png',

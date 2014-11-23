@@ -22,6 +22,7 @@
 
 from openerp.osv import osv
 
+
 class confirm_statement_line(osv.osv_memory):
     _name = 'confirm.statement.line'
     _description = 'Confirm selected statement lines'

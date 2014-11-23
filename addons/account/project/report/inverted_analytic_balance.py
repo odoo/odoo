@@ -23,10 +23,11 @@ import time
 from openerp.osv import osv
 from openerp.report import report_sxw
 
+
 class account_inverted_analytic_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_inverted_analytic_balance, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines_g': self._lines_g,
             'lines_a': self._lines_a,
@@ -98,26 +99,26 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT sum(amount) \
                 FROM account_analytic_line \
-                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT -sum(amount) \
                 FROM account_analytic_line \
-                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_debit(accounts, date1, date2)
         credit = self._sum_credit(accounts, date1, date2)
-        return (debit-credit)
+        return (debit - credit)
 
     def _sum_quantity(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT sum(unit_amount) \
                 FROM account_analytic_line \
-                WHERE account_id IN %s AND date>=%s AND date<=%s", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s", (tuple(ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
 

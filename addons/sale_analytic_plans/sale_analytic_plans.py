@@ -21,11 +21,13 @@
 
 from openerp.osv import fields, osv
 
+
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = {
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
+
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

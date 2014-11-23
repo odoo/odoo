@@ -50,11 +50,11 @@ become 'confirmed'. When the manufacturing order is done, all operations
 must become done.
 
 The field 'Working Hours' is the delay(stop date - start date).
-So, that we can compare the theoretic delay and real delay. 
+So, that we can compare the theoretic delay and real delay.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'images': ['images/work_order_analysis.jpeg','images/work_order_planning.jpeg','images/work_order.jpeg'],
+    'images': ['images/work_order_analysis.jpeg', 'images/work_order_planning.jpeg', 'images/work_order.jpeg'],
     'depends': ['mrp'],
     'data': [
         'security/ir.model.access.csv',
@@ -65,10 +65,10 @@ So, that we can compare the theoretic delay and real delay.
         'report/mrp_workorder_analysis_view.xml',
         'mrp_operations_workflow_instance.xml'
     ],
-    'demo': [ 
+    'demo': [
              'mrp_operations_demo.yml'
     ],
-    'test': [ 
+    'test': [
         'test/workcenter_operations.yml',
     ],
     'installable': True,

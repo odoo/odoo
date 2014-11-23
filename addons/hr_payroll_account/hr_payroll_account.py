@@ -26,6 +26,7 @@ from openerp.osv import fields, osv
 from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
 
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -34,8 +35,8 @@ class hr_payslip(osv.osv):
     _description = 'Pay Slip'
 
     _columns = {
-        'period_id': fields.many2one('account.period', 'Force Period',states={'draft': [('readonly', False)]}, readonly=True, domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
-        'journal_id': fields.many2one('account.journal', 'Salary Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
+        'period_id': fields.many2one('account.period', 'Force Period', states={'draft': [('readonly', False)]}, readonly=True, domain=[('state', '<>', 'done')], help="Keep empty to use the period of the validation(Payslip) date."),
+        'journal_id': fields.many2one('account.journal', 'Salary Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True, copy=False),
     }
 
@@ -113,43 +114,43 @@ class hr_payslip(osv.osv):
                 if debit_account_id:
 
                     debit_line = (0, 0, {
-                    'name': line.name,
-                    'date': timenow,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_debit.type in ('receivable', 'payable')) and partner_id or False,
-                    'account_id': debit_account_id,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
-                    'debit': amt > 0.0 and amt or 0.0,
-                    'credit': amt < 0.0 and -amt or 0.0,
-                    'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                    'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
-                    'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
-                })
+                        'name': line.name,
+                        'date': timenow,
+                        'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_debit.type in ('receivable', 'payable')) and partner_id or False,
+                        'account_id': debit_account_id,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
+                        'debit': amt > 0.0 and amt or 0.0,
+                        'credit': amt < 0.0 and -amt or 0.0,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
+                        'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                        'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
+                        })
                     line_ids.append(debit_line)
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
                 if credit_account_id:
 
                     credit_line = (0, 0, {
-                    'name': line.name,
-                    'date': timenow,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_credit.type in ('receivable', 'payable')) and partner_id or False,
-                    'account_id': credit_account_id,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
-                    'debit': amt < 0.0 and -amt or 0.0,
-                    'credit': amt > 0.0 and amt or 0.0,
-                    'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
-                    'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
-                    'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
-                })
+                        'name': line.name,
+                        'date': timenow,
+                        'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_credit.type in ('receivable', 'payable')) and partner_id or False,
+                        'account_id': credit_account_id,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
+                        'debit': amt < 0.0 and -amt or 0.0,
+                        'credit': amt > 0.0 and amt or 0.0,
+                        'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
+                        'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
+                        'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
+                        })
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
             if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_credit_account_id.id
                 if not acc_id:
-                    raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Credit Account!')%(slip.journal_id.name))
+                    raise osv.except_osv(_('Configuration Error!'), _('The Expense Journal "%s" has not properly configured the Credit Account!') % (slip.journal_id.name))
                 adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
                     'date': timenow,
@@ -165,7 +166,7 @@ class hr_payslip(osv.osv):
             elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_debit_account_id.id
                 if not acc_id:
-                    raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Debit Account!')%(slip.journal_id.name))
+                    raise osv.except_osv(_('Configuration Error!'), _('The Expense Journal "%s" has not properly configured the Debit Account!') % (slip.journal_id.name))
                 adjust_debit = (0, 0, {
                     'name': _('Adjustment Entry'),
                     'date': timenow,
@@ -180,7 +181,7 @@ class hr_payslip(osv.osv):
 
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
-            self.write(cr, uid, [slip.id], {'move_id': move_id, 'period_id' : period_id}, context=context)
+            self.write(cr, uid, [slip.id], {'move_id': move_id, 'period_id': period_id}, context=context)
             if slip.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
@@ -189,20 +190,22 @@ class hr_payslip(osv.osv):
 class hr_salary_rule(osv.osv):
     _inherit = 'hr.salary.rule'
     _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'account_tax_id':fields.many2one('account.tax.code', 'Tax Code'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_tax_id': fields.many2one('account.tax.code', 'Tax Code'),
         'account_debit': fields.many2one('account.account', 'Debit Account'),
         'account_credit': fields.many2one('account.account', 'Credit Account'),
     }
+
 
 class hr_contract(osv.osv):
 
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'journal_id': fields.many2one('account.journal', 'Salary Journal'),
     }
+
 
 class hr_payslip_run(osv.osv):
 

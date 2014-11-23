@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from datetime import datetime
 
+
 class stock_transfer_details(models.TransientModel):
     _name = 'stock.transfer_details'
     _description = 'Picking wizard'
@@ -35,7 +36,8 @@ class stock_transfer_details(models.TransientModel):
     picking_destination_location_id = fields.Many2one('stock.location', string="Head destination location", related='picking_id.location_dest_id', store=False, readonly=True)
 
     def default_get(self, cr, uid, fields, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(stock_transfer_details, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
@@ -61,7 +63,7 @@ class stock_transfer_details(models.TransientModel):
                 'sourceloc_id': op.location_id.id,
                 'destinationloc_id': op.location_dest_id.id,
                 'result_package_id': op.result_package_id.id,
-                'date': op.date, 
+                'date': op.date,
                 'owner_id': op.owner_id.id,
             }
             if op.product_id:
@@ -142,13 +144,11 @@ class stock_transfer_details_items(models.TransientModel):
     date = fields.Datetime('Date')
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
 
-
-
     @api.multi
     def split_quantities(self):
         for det in self:
-            if det.quantity>1:
-                det.quantity = (det.quantity-1)
+            if det.quantity > 1:
+                det.quantity = (det.quantity - 1)
                 new_id = det.copy(context=self.env.context)
                 new_id.quantity = 1
                 new_id.packop_id = False
@@ -172,7 +172,7 @@ class stock_transfer_details_items(models.TransientModel):
         if product:
             prod = self.env['product.product'].browse(product)
             result['product_uom_id'] = prod.uom_id and prod.uom_id.id
-        return {'value': result, 'domain': {}, 'warning':{} }
+        return {'value': result, 'domain': {}, 'warning': {}}
 
     @api.multi
     def source_package_change(self, sourcepackage):
@@ -180,4 +180,4 @@ class stock_transfer_details_items(models.TransientModel):
         if sourcepackage:
             pack = self.env['stock.quant.package'].browse(sourcepackage)
             result['sourceloc_id'] = pack.location_id and pack.location_id.id
-        return {'value': result, 'domain': {}, 'warning':{} }
+        return {'value': result, 'domain': {}, 'warning': {}}

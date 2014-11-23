@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.models import AbstractModel
 
+
 class publisher_warranty_contract(AbstractModel):
     _inherit = "publisher_warranty.contract"
 

@@ -38,7 +38,7 @@ Allow users to login through OpenID.
     ],
     'qweb': ['static/src/xml/auth_openid.xml'],
     'external_dependencies': {
-        'python' : ['openid'],
+        'python': ['openid'],
     },
     'installable': True,
     'auto_install': False,

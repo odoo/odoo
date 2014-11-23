@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,14 +16,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import sys, zipfile, xml.dom.minidom
 import StringIO
 
-class OpenDocumentTextFile :
+
+class OpenDocumentTextFile:
     def __init__ (self, filepath):
         zip = zipfile.ZipFile(filepath)
         self.content = xml.dom.minidom.parseString(zip.read("content.xml"))
@@ -32,22 +33,22 @@ class OpenDocumentTextFile :
         """ Converts the document to a string. """
         buffer = u""
         for val in ["text:p", "text:h", "text:list"]:
-            for paragraph in self.content.getElementsByTagName(val) :
+            for paragraph in self.content.getElementsByTagName(val):
                 buffer += self.textToString(paragraph) + "\n"
         return buffer
 
     def textToString(self, element):
         buffer = u""
-        for node in element.childNodes :
-            if node.nodeType == xml.dom.Node.TEXT_NODE :
+        for node in element.childNodes:
+            if node.nodeType == xml.dom.Node.TEXT_NODE:
                 buffer += node.nodeValue
-            elif node.nodeType == xml.dom.Node.ELEMENT_NODE :
+            elif node.nodeType == xml.dom.Node.ELEMENT_NODE:
                 buffer += self.textToString(node)
         return buffer
 
-if __name__ == "__main__" :
-    s =StringIO.StringIO(file(sys.argv[1]).read())
+if __name__ == "__main__":
+    s = StringIO.StringIO(file(sys.argv[1]).read())
     odt = OpenDocumentTextFile(s)
-    print odt.toString().encode('ascii','replace')
+    print odt.toString().encode('ascii', 'replace')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

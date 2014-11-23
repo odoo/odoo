@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp import tools
 
+
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"
     _description = "Follow-up Statistics"
@@ -29,14 +30,14 @@ class account_followup_stat(osv.osv):
     _auto = False
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'date_move':fields.date('First move', readonly=True),
-        'date_move_last':fields.date('Last move', readonly=True),
-        'date_followup':fields.date('Latest followup', readonly=True),
+        'date_move': fields.date('First move', readonly=True),
+        'date_move_last': fields.date('Last move', readonly=True),
+        'date_followup': fields.date('Latest followup', readonly=True),
         'followup_id': fields.many2one('account_followup.followup.line',
                                     'Follow Ups', readonly=True, ondelete="cascade"),
-        'balance':fields.float('Balance', readonly=True),
-        'debit':fields.float('Debit', readonly=True),
-        'credit':fields.float('Credit', readonly=True),
+        'balance': fields.float('Balance', readonly=True),
+        'debit': fields.float('Debit', readonly=True),
+        'credit': fields.float('Credit', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'blocked': fields.boolean('Blocked', readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
@@ -44,12 +45,12 @@ class account_followup_stat(osv.osv):
     _order = 'date_move'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
-                context=None, count=False):
+               context=None, count=False):
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                args.append(['period_id','in',ids])
+                args.append(['period_id', 'in', ids])
                 args.remove(arg)
         return super(account_followup_stat, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
@@ -59,7 +60,7 @@ class account_followup_stat(osv.osv):
             if arg[0] == 'period_id' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                 ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                domain.append(['period_id','in',ids])
+                domain.append(['period_id', 'in', ids])
                 domain.remove(arg)
         return super(account_followup_stat, self).read_group(cr, uid, domain, *args, **kwargs)
 

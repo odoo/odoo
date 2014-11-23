@@ -18,25 +18,24 @@
 #
 ##############################################################################
 {
-    'name' : 'Claim on Deliveries',
-    'version' : '1.0',
-    'author' : 'OpenERP SA',
-    'category' : 'Warehouse Management',
-    'depends' : ['base', 'crm_claim', 'stock'],
-    'demo' : [],
+    'name': 'Claim on Deliveries',
+    'version': '1.0',
+    'author': 'OpenERP SA',
+    'category': 'Warehouse Management',
+    'depends': ['base', 'crm_claim', 'stock'],
+    'demo': [],
     'description': """
 Create a claim from a delivery order.
 =====================================
 
 Adds a Claim link to the delivery order.
 """,
-    'data' : [
+    'data': [
               'claim_delivery_view.xml',
-              'claim_delivery_data.xml',],
+              'claim_delivery_data.xml', ],
     'auto_install': False,
     'installable': True,
     'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

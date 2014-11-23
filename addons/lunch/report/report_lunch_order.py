@@ -20,7 +20,8 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class report_lunch_order(osv.osv):
     _name = "report.lunch.order.line"
@@ -30,15 +31,16 @@ class report_lunch_order(osv.osv):
     _columns = {
         'date': fields.date('Date Order', readonly=True, select=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
+            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id': fields.many2one('res.users', 'User Name'),
-        'price_total':fields.float('Total Price', readonly=True),
-        'note' : fields.text('Note', readonly=True),
+        'price_total': fields.float('Total Price', readonly=True),
+        'note': fields.text('Note', readonly=True),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_lunch_order_line')
         cr.execute("""

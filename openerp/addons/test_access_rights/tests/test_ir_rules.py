@@ -1,6 +1,7 @@
 import openerp.exceptions
 from openerp.tests.common import TransactionCase
 
+
 class TestRules(TransactionCase):
     def setUp(self):
         super(TestRules, self).setUp()

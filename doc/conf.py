@@ -185,6 +185,7 @@ intersphinx_mapping = {
 github_user = 'odoo'
 github_project = 'odoo'
 
+
 def setup(app):
     app.connect('html-page-context', canonicalize)
     app.add_config_value('canonical_root', None, 'env')
@@ -196,6 +197,7 @@ def setup(app):
     app.connect('html-page-context', analytics)
     app.add_config_value('google_analytics_key', False, 'env')
 
+
 def canonicalize(app, pagename, templatename, context, doctree):
     """ Adds a 'canonical' URL for the current document in the rendering
     context. Requires the ``canonical_root`` setting being set. The canonical
@@ -206,6 +208,7 @@ def canonicalize(app, pagename, templatename, context, doctree):
 
     context['canonical'] = _build_url(
         app.config.canonical_root, app.config.canonical_branch, pagename)
+
 
 def versionize(app, pagename, templatename, context, doctree):
     """ Adds a version switcher below the menu, requires ``canonical_root``
@@ -221,11 +224,13 @@ def versionize(app, pagename, templatename, context, doctree):
         if vs != app.config.version
     ]
 
+
 def analytics(app, pagename, templatename, context, doctree):
     if not app.config.google_analytics_key:
         return
 
     context['google_analytics_key'] = app.config.google_analytics_key
+
 
 def _build_url(root, branch, pagename):
     return "{canonical_url}{canonical_branch}/{canonical_page}".format(
@@ -234,4 +239,3 @@ def _build_url(root, branch, pagename):
         canonical_page=(pagename + '.html').replace('index.html', '')
                                            .replace('index/', ''),
     )
-

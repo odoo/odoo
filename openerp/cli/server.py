@@ -48,13 +48,15 @@ __version__ = openerp.release.version
 # Also use the `openerp` logger for the main script.
 _logger = logging.getLogger('openerp')
 
+
 def check_root_user():
     """ Exit if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
         import pwd
-        if pwd.getpwuid(os.getuid())[0] == 'root' :
+        if pwd.getpwuid(os.getuid())[0] == 'root':
             sys.stderr.write("Running as user 'root' is a security risk, aborting.\n")
             sys.exit(1)
+
 
 def check_postgres_user():
     """ Exit if the configured database user is 'postgres'.
@@ -65,6 +67,7 @@ def check_postgres_user():
     if config['db_user'] == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
+
 
 def report_configuration():
     """ Log the server version and some configuration values.
@@ -79,6 +82,7 @@ def report_configuration():
                         ('database user', config['db_user'])]:
         _logger.info("%s: %s", name, value)
 
+
 def rm_pid_file():
     config = openerp.tools.config
     if not openerp.evented and config['pidfile']:
@@ -86,6 +90,7 @@ def rm_pid_file():
             os.unlink(config['pidfile'])
         except OSError:
             pass
+
 
 def setup_pid_file():
     """ Create a file with the process id written in it.
@@ -122,6 +127,7 @@ def export_translation():
 
     _logger.info('translation file written successfully')
 
+
 def import_translation():
     config = openerp.tools.config
     context = {'overwrite': config["overwrite_existing_translations"]}
@@ -133,6 +139,7 @@ def import_translation():
             openerp.tools.trans_load(
                 cr, config["translate_in"], config["language"], context=context,
             )
+
 
 def main(args):
     check_root_user()
@@ -168,8 +175,10 @@ def main(args):
     rc = openerp.service.server.start(preload=preload, stop=stop)
     sys.exit(rc)
 
+
 class Server(Command):
     """Start the odoo server (default command)"""
+
     def run(self, args):
         main(args)
 

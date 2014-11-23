@@ -35,8 +35,8 @@ This module overrides openerp web interface to display a simple
 Homepage that explains what's the posbox and show the status,
 and where to find documentation.
 
-If you activate this module, you won't be able to access the 
-regular openerp interface anymore. 
+If you activate this module, you won't be able to access the
+regular openerp interface anymore.
 
 """,
     'author': 'OpenERP SA',

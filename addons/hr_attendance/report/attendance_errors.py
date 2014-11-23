@@ -33,7 +33,7 @@ class attendance_print(report_sxw.rml_parse):
             'time': time,
             'lst': self._lst,
             'total': self._lst_total,
-            'get_employees':self._get_employees,
+            'get_employees': self._get_employees,
         })
 
     def _get_employees(self, emp_ids):
@@ -49,7 +49,7 @@ class attendance_print(report_sxw.rml_parse):
             temp = r['delay'].seconds
 
             r['delay'] = str(r['delay']).split('.')[0]
-            if abs(temp) < max*60:
+            if abs(temp) < max * 60:
                 r['delay2'] = r['delay']
             else:
                 r['delay2'] = '/'
@@ -59,14 +59,14 @@ class attendance_print(report_sxw.rml_parse):
         self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         if not res:
-            return ('/','/')
+            return ('/', '/')
         total2 = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
         total = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
         for r in res:
             if r['action'] == 'sign_out':
                 r['delay'] = -r['delay']
             total += r['delay']
-            if abs(r['delay'].seconds) < max*60:
+            if abs(r['delay'].seconds) < max * 60:
                 total2 += r['delay']
 
         result_dict = {

@@ -9,8 +9,8 @@ import openerp.addons.product.product
 class res_users(osv.osv):
     _inherit = 'res.users'
     _columns = {
-        'ean13' : fields.char('EAN13', size=13, help="BarCode"),
-        'pos_config' : fields.many2one('pos.config', 'Default Point of Sale', domain=[('state', '=', 'active')]),
+        'ean13': fields.char('EAN13', size=13, help="BarCode"),
+        'pos_config': fields.many2one('pos.config', 'Default Point of Sale', domain=[('state', '=', 'active')]),
     }
 
     def _check_ean(self, cr, uid, ids, context=None):
@@ -22,4 +22,3 @@ class res_users(osv.osv):
     _constraints = [
         (_check_ean, "Error: Invalid ean code", ['ean13'],),
     ]
-

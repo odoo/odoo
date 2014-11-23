@@ -33,7 +33,7 @@ Barcode Scanner Hardware Driver
 
 This module allows the web client to access a remotely installed barcode
 scanner, and is used by the posbox to provide barcode scanner support to the
-point of sale module. 
+point of sale module.
 
 """,
     'author': 'OpenERP SA',

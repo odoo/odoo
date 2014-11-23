@@ -59,6 +59,7 @@ request = _request_stack()
     A global proxy that always redirect to the current request object.
 """
 
+
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
@@ -66,6 +67,7 @@ def replace_request_password(args):
         args = list(args)
         args[2] = '*'
     return tuple(args)
+
 
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
@@ -103,7 +105,7 @@ def dispatch_rpc(service_name, method, params):
             end_time = time.time()
             end_rss, end_vms = 0, 0
             end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms) / 1024)
             if rpc_response_flag:
                 openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
             else:
@@ -123,6 +125,7 @@ def dispatch_rpc(service_name, method, params):
         openerp.tools.debugger.post_mortem(openerp.tools.config, sys.exc_info())
         raise
 
+
 def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
     url = path
     if not query:
@@ -136,6 +139,7 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     else:
         return werkzeug.utils.redirect(url, code)
 
+
 def redirect_with_hash(url, code=303):
     # Most IE and Safari versions decided not to preserve location.hash upon
     # redirect. And even if IE10 pretends to support it, it still fails
@@ -144,6 +148,7 @@ def redirect_with_hash(url, code=303):
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
+
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
@@ -164,6 +169,7 @@ class WebRequest(object):
         useful as they're provided directly to the handler method as keyword
         arguments
     """
+
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
@@ -250,12 +256,11 @@ class WebRequest(object):
         self.endpoint = endpoint
         self.auth_method = auth
 
-
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
-        self._failed = exception # prevent tx commit
+           be used as response."""
+        self._failed = exception  # prevent tx commit
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -338,6 +343,7 @@ class WebRequest(object):
         """
         return self.session
 
+
 def route(route=None, **kw):
     """
     Decorator marking the decorated method as being a handler for
@@ -366,6 +372,7 @@ def route(route=None, **kw):
     """
     routing = kw.copy()
     assert not 'type' in routing or routing['type'] in ("http", "json")
+
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -373,6 +380,7 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             response = f(*args, **kw)
@@ -391,6 +399,7 @@ def route(route=None, **kw):
         response_wrap.original_func = f
         return response_wrap
     return decorator
+
 
 class JsonRequest(WebRequest):
     """ Request handler for `JSON-RPC 2
@@ -443,13 +452,13 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
                 self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
                 self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
+                headers = [('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
                 return r
             self.jsonp_handler = handler
@@ -527,6 +536,7 @@ class JsonRequest(WebRequest):
         except Exception, e:
             return self._handle_exception(e)
 
+
 def serialize_exception(e):
     tmp = {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
@@ -544,8 +554,9 @@ def serialize_exception(e):
         tmp["exception_type"] = "access_denied"
     return tmp
 
+
 def to_jsonable(o):
-    if isinstance(o, str) or isinstance(o,unicode) or isinstance(o, int) or isinstance(o, long) \
+    if isinstance(o, str) or isinstance(o, unicode) or isinstance(o, int) or isinstance(o, long) \
         or isinstance(o, bool) or o is None or isinstance(o, float):
         return o
     if isinstance(o, list) or isinstance(o, tuple):
@@ -557,8 +568,9 @@ def to_jsonable(o):
         return tmp
     return ustr(o)
 
+
 def jsonrequest(f):
-    """ 
+    """
         .. deprecated:: 8.0
             Use the :func:`~openerp.http.route` decorator instead.
     """
@@ -566,6 +578,7 @@ def jsonrequest(f):
     if f.__name__ == "index":
         base = ""
     return route([base, base + "/<path:_ignored_path>"], type="json", auth="user", combine=True)(f)
+
 
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
@@ -669,8 +682,9 @@ class HttpRequest(WebRequest):
         """
         return werkzeug.exceptions.NotFound(description)
 
+
 def httprequest(f):
-    """ 
+    """
         .. deprecated:: 8.0
 
         Use the :func:`~openerp.http.route` decorator instead.
@@ -687,6 +701,7 @@ addons_module = {}
 addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
+
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
@@ -701,7 +716,7 @@ class ControllerType(type):
                 if routing_type is not None and routing_type is not parent_routing_type:
                     routing_type = parent_routing_type
                     _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
-                                    " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
+                                 " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
                 v.original_func.routing_type = routing_type or parent_routing_type
 
                 spec = inspect.getargspec(v.original_func)
@@ -722,8 +737,10 @@ class ControllerType(type):
             return
         controllers_per_module[module].append(name_class)
 
+
 class Controller(object):
     __metaclass__ = ControllerType
+
 
 class EndPoint(object):
     def __init__(self, method, routing):
@@ -739,6 +756,7 @@ class EndPoint(object):
 
     def __call__(self, *args, **kw):
         return self.method(*args, **kw)
+
 
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
@@ -795,17 +813,22 @@ def routing_map(modules, nodb_only, converters=None):
 #----------------------------------------------------------
 # HTTP Sessions
 #----------------------------------------------------------
+
+
 class AuthenticationError(Exception):
     pass
 
+
 class SessionExpiredException(Exception):
     pass
+
 
 class Service(object):
     """
         .. deprecated:: 8.0
             Use :func:`dispatch_rpc` instead.
     """
+
     def __init__(self, session, service_name):
         self.session = session
         self.service_name = service_name
@@ -816,11 +839,13 @@ class Service(object):
             return result
         return proxy_method
 
+
 class Model(object):
     """
         .. deprecated:: 8.0
             Use the registry and cursor in :data:`request` instead.
     """
+
     def __init__(self, session, model):
         self.session = session
         self.model = model
@@ -828,13 +853,14 @@ class Model(object):
 
     def __getattr__(self, method):
         self.session.assert_valid()
+
         def proxy(*args, **kw):
             # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
             # to tell the programmer to adapt his code
             if not request.db or not request.uid or self.session.db != request.db \
                 or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
-                
+
             if method.startswith('_'):
                 raise Exception("Access denied")
             mod = request.registry[self.model]
@@ -851,6 +877,7 @@ class Model(object):
             return result
         return proxy
 
+
 class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
@@ -862,6 +889,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
     def __getattr__(self, attr):
         return self.get(attr, None)
+
     def __setattr__(self, k, v):
         if getattr(self, "inited", False):
             try:
@@ -897,7 +925,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         request.uid = uid
         request.disable_db = False
 
-        if uid: self.get_context()
+        if uid:
+            self.get_context()
         return uid
 
     def check_security(self):
@@ -965,24 +994,31 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     @property
     def _db(self):
         return self.db
+
     @_db.setter
     def _db(self, value):
         self.db = value
+
     @property
     def _uid(self):
         return self.uid
+
     @_uid.setter
     def _uid(self, value):
         self.uid = value
+
     @property
     def _login(self):
         return self.login
+
     @_login.setter
     def _login(self, value):
         self.login = value
+
     @property
     def _password(self):
         return self.password
+
     @_password.setter
     def _password(self, value):
         self.password = value
@@ -1094,10 +1130,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         saved_actions = self.get('saved_actions', {})
         return saved_actions.get("actions", {}).get(key)
 
+
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
-        last_week = time.time() - 60*60*24*7
+        last_week = time.time() - 60 * 60 * 24 * 7
         for fname in os.listdir(session_store.path):
             path = os.path.join(session_store.path, fname)
             try:
@@ -1113,6 +1150,7 @@ def session_gc(session_store):
 mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
+
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
@@ -1133,6 +1171,7 @@ class Response(werkzeug.wrappers.Response):
     :class:`werkzeug.wrappers.Response`.
     """
     default_mimetype = 'text/html'
+
     def __init__(self, *args, **kw):
         template = kw.pop('template', None)
         qcontext = kw.pop('qcontext', None)
@@ -1174,9 +1213,11 @@ class Response(werkzeug.wrappers.Response):
         self.response.append(self.render())
         self.template = None
 
+
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
+
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
             referer = environ.get('HTTP_REFERER', '')
@@ -1196,9 +1237,11 @@ class DisableCacheMiddleware(object):
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
+
     def __init__(self):
         self._loaded = False
 
@@ -1377,9 +1420,11 @@ class Root(object):
             return self.nodb_routing_map
         return request.registry['ir.http'].routing_map()
 
+
 def db_list(force=False, httprequest=None):
     dbs = dispatch_rpc("db", "list", [force])
     return db_filter(dbs, httprequest=httprequest)
+
 
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
@@ -1390,6 +1435,7 @@ def db_filter(dbs, httprequest=None):
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
+
 
 def db_monodb(httprequest=None):
     """
@@ -1415,6 +1461,7 @@ def db_monodb(httprequest=None):
     if len(dbs) == 1:
         return dbs[0]
     return None
+
 
 def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
               add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
@@ -1480,7 +1527,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     data = wrap_file(request.httprequest.environ, file)
     rv = Response(data, mimetype=mimetype, headers=headers,
-                                    direct_passthrough=True)
+                  direct_passthrough=True)
 
     if isinstance(mtime, str):
         try:
@@ -1516,6 +1563,8 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 #----------------------------------------------------------
 # RPC controller
 #----------------------------------------------------------
+
+
 class CommonController(Controller):
 
     @route('/jsonrpc', type='json', auth="none")

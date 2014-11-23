@@ -14,6 +14,7 @@ import openerp.tools
 
 Field = E.field
 
+
 class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
@@ -22,6 +23,7 @@ class ViewCase(common.TransactionCase):
 
     def browse(self, id, context=None):
         return self.Views.browse(self.cr, self.uid, id, context=context)
+
     def create(self, value, context=None):
         return self.Views.create(self.cr, self.uid, value, context=context)
 
@@ -50,6 +52,7 @@ class TestNodeLocator(common.TransactionCase):
     The node locator returns None when it can not find a node, and the first
     match when it finds something (no jquery-style node sets)
     """
+
     def setUp(self):
         super(TestNodeLocator, self).setUp()
         self.Views = self.registry('ir.ui.view')
@@ -69,7 +72,6 @@ class TestNodeLocator(common.TransactionCase):
             E.root(E.foo(), bar, E.baz()),
             E.xpath(expr="//bar"))
         self.assertIs(node, bar)
-
 
     def test_no_match_field(self):
         """
@@ -91,7 +93,6 @@ class TestNodeLocator(common.TransactionCase):
             E.root(Field(name="foo"), bar, Field(name="baz")),
             Field(name="bar"))
         self.assertIs(node, bar)
-
 
     def test_no_match_other(self):
         """
@@ -135,6 +136,7 @@ class TestNodeLocator(common.TransactionCase):
             E.foo(attr='1', version='3'))
         self.assertIsNone(node)
 
+
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -177,7 +179,7 @@ class TestViewInheritance(ViewCase):
             'name': name,
             'arch': arch or self.arch_for(name, parent=parent),
             'inherit_id': parent,
-            'priority': 5, # higher than default views
+            'priority': 5,  # higher than default views
         })
         self.ids[name] = view_id
         return view_id
@@ -243,6 +245,7 @@ class TestViewInheritance(ViewCase):
             self.View.default_view(
                 self.cr, self.uid, model=self.model, view_type='graph'))
 
+
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
@@ -250,6 +253,7 @@ class TestApplyInheritanceSpecs(ViewCase):
 
     The base architecture is altered in-place.
     """
+
     def setUp(self):
         super(TestApplyInheritanceSpecs, self).setUp()
         self.View = self.registry('ir.ui.view')
@@ -390,9 +394,11 @@ class TestApplyInheritanceSpecs(ViewCase):
                                               self.base_arch,
                                               spec, None)
 
+
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
     """
+
 
 class TestNoModel(ViewCase):
     def test_create_view_nomodel(self):
@@ -435,7 +441,7 @@ class TestNoModel(ViewCase):
         self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
         orig_text = "Copyright copyrighter"
         translated_text = u"Copyrighter, tous droits réservés"
-        self.text_para.text = orig_text 
+        self.text_para.text = orig_text
         self.registry('ir.translation').create(self.cr, self.uid, {
             'name': 'website',
             'type': 'view',
@@ -447,6 +453,7 @@ class TestNoModel(ViewCase):
 
         self.text_para.text = translated_text
         self.assertEqual(sarch, self.arch)
+
 
 class TestTemplating(ViewCase):
     def setUp(self):
@@ -622,6 +629,7 @@ class TestTemplating(ViewCase):
             "t-ignore should apply to injected sub-view branding, not just to"
             " the main view's"
         )
+
 
 class test_views(ViewCase):
 
@@ -820,6 +828,7 @@ class test_views(ViewCase):
                 string="Replacement title", version="7.0"
             ))
 
+
 class ViewModeField(ViewCase):
     """
     This should probably, eventually, be folded back into other test case
@@ -900,6 +909,7 @@ class ViewModeField(ViewCase):
 
         view.write({'mode': 'primary'})
 
+
 class TestDefaultView(ViewCase):
     def testDefaultViewBase(self):
         self.create({
@@ -948,6 +958,7 @@ class TestDefaultView(ViewCase):
             "default_view should get the view with the lowest priority for "
             "a (model, view_type) pair in all the primary tables"
         )
+
 
 class TestViewCombined(ViewCase):
     """
@@ -1080,6 +1091,7 @@ class TestViewCombined(ViewCase):
                 E.a2(),
             ), arch)
 
+
 class TestOptionalViews(ViewCase):
     """
     Tests ability to enable/disable inherited views, formerly known as
@@ -1163,6 +1175,7 @@ class TestOptionalViews(ViewCase):
                 E.v3(),
             )
         )
+
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):

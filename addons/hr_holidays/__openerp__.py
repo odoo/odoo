@@ -36,7 +36,7 @@ This application controls the holiday schedule of your company. It allows employ
 
 You can configure several kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
 
-You can keep track of leaves in different ways by following reports: 
+You can keep track of leaves in different ways by following reports:
 
 * Leaves Summary
 * Leaves by Department
@@ -58,7 +58,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
         ],
-    'demo': ['hr_holidays_demo.xml',],
+    'demo': ['hr_holidays_demo.xml', ],
     'qweb': [
         'static/src/xml/*.xml',
     ],

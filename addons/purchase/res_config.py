@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class purchase_config_settings(osv.osv_memory):
     _name = 'purchase.config.settings'
     _inherit = 'res.config.settings'
@@ -32,14 +33,14 @@ class purchase_config_settings(osv.osv_memory):
              ('picking', 'Based on incoming shipments'),
              ('order', 'Pre-generate draft invoices based on purchase orders'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
-        'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
+        'group_purchase_pricelist': fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
             help='Allows to manage different prices based on rules per category of Supplier.\n'
                  'Example: 10% for retailers, promotion of 5 EUR on this product, etc.'),
-        'group_uom':fields.boolean("Manage different units of measure for products",
+        'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_costing_method':fields.boolean("Use 'Real Price' or 'Average' costing methods.",
+        'group_costing_method': fields.boolean("Use 'Real Price' or 'Average' costing methods.",
             implied_group='stock_account.group_inventory_valuation',
             help="""Allows you to compute product cost price based on average cost."""),
         'module_warning': fields.boolean("Alerts by products or supplier",
@@ -77,7 +78,6 @@ class purchase_config_settings(osv.osv_memory):
         if not module_purchase_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
-
 
 
 class account_config_settings(osv.osv_memory):

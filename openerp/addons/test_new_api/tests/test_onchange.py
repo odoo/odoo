@@ -2,6 +2,7 @@
 
 from openerp.tests import common
 
+
 class TestOnChange(common.TransactionCase):
 
     def setUp(self):
@@ -84,7 +85,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('messages'), '1')
 
         # FIXME: commented out because currently not supported by the client
-        # # modify messages
+        # modify messages
         # values = {
         #     'name': "Foo",
         #     'categories': [],

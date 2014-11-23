@@ -22,11 +22,12 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class open_questionnaire_line(osv.osv_memory):
     _name = 'open.questionnaire.line'
     _rec_name = 'question_id'
     _columns = {
-        'question_id': fields.many2one('crm_profiling.question','Question', required=True),
+        'question_id': fields.many2one('crm_profiling.question', 'Question', required=True),
         'answer_id': fields.many2one('crm_profiling.answer', 'Answer'),
         'wizard_id': fields.many2one('open.questionnaire', 'Questionnaire'),
     }
@@ -40,7 +41,8 @@ class open_questionnaire(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(open_questionnaire, self).default_get(cr, uid, fields, context=context)
         questionnaire_id = context.get('questionnaire_id', False)
         if questionnaire_id and 'question_ans_ids' in fields:
@@ -58,11 +60,10 @@ class open_questionnaire(osv.osv_memory):
         if model == 'res.partner':
             data = self.browse(cr, uid, ids[0], context=context)
             for d in data.question_ans_ids:
-                 if d.answer_id:
-                     answers.append(d.answer_id.id)
+                if d.answer_id:
+                    answers.append(d.answer_id.id)
             self.pool[model]._questionnaire_compute(cr, uid, answers, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
 
     def build_form(self, cr, uid, ids, context=None):
         """ Dynamically generates form according to selected questionnaire """
@@ -78,10 +79,9 @@ class open_questionnaire(osv.osv_memory):
             'view_mode': 'form',
             'res_model': 'open.questionnaire',
             'type': 'ir.actions.act_window',
-            'views': [(res_id,'form')],
+            'views': [(res_id, 'form')],
             'target': 'new',
             'context': context
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

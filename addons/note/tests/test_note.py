@@ -21,6 +21,7 @@
 
 from openerp.tests import common
 
+
 class TestNote(common.TransactionCase):
 
     def test_bug_lp_1156215(self):

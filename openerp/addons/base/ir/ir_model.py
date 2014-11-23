@@ -39,28 +39,31 @@ _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
+
 def _get_fields_type(self, cr, uid, context=None):
     # Avoid too many nested `if`s below, as RedHat's Python 2.6
     # break on it. See bug 939653.
-    return sorted([(k,k) for k,v in fields.__dict__.iteritems()
-                      if type(v) == types.TypeType and \
-                         issubclass(v, fields._column) and \
-                         v != fields._column and \
-                         not v._deprecated and \
-                         not issubclass(v, fields.function)])
+    return sorted([(k, k) for k, v in fields.__dict__.iteritems()
+                   if type(v) == types.TypeType and \
+                   issubclass(v, fields._column) and \
+                   v != fields._column and \
+                   not v._deprecated and \
+                   not issubclass(v, fields.function)])
+
 
 def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
-    #pseudo-method used by fields.function in ir.model/ir.model.fields
+    # pseudo-method used by fields.function in ir.model/ir.model.fields
     module_pool = self.pool["ir.module.module"]
-    installed_module_ids = module_pool.search(cr, uid, [('state','=','installed')])
+    installed_module_ids = module_pool.search(cr, uid, [('state', '=', 'installed')])
     installed_module_names = module_pool.read(cr, uid, installed_module_ids, ['name'], context=context)
     installed_modules = set(x['name'] for x in installed_module_names)
 
     result = {}
     xml_ids = osv.osv._get_xml_ids(self, cr, uid, ids)
-    for k,v in xml_ids.iteritems():
+    for k, v in xml_ids.iteritems():
         result[k] = ', '.join(sorted(installed_modules & set(xml_id.split('.')[0] for xml_id in v)))
     return result
+
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -111,7 +114,7 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True, copy=True),
         'inherited_model_ids': fields.function(_inherited_models, type="many2many", obj="ir.model", string="Inherited models",
             help="The list of models that extends the current model."),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
+        'state': fields.selection([('manual', 'Custom Object'), ('base', 'Base Object')], 'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
@@ -122,15 +125,15 @@ class ir_model(osv.osv):
 
     _defaults = {
         'model': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self, cr, uid, ctx=None: (ctx and ctx.get('manual', False)) and 'manual' or 'base',
     }
 
     def _check_model_name(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context=context):
-            if model.state=='manual':
+            if model.state == 'manual':
                 if not model.model.startswith('x_'):
                     return False
-            if not re.match('^[a-z_A-Z0-9.]+$',model.model):
+            if not re.match('^[a-z_A-Z0-9.]+$', model.model):
                 return False
         return True
 
@@ -167,7 +170,8 @@ class ir_model(osv.osv):
 
     def unlink(self, cr, user, ids, context=None):
         # Prevent manual deletion of module tables
-        if context is None: context = {}
+        if context is None:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not context.get(MODULE_UNINSTALL_FLAG):
@@ -180,7 +184,7 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
-            cr.commit() # must be committed before reloading registry in new cursor
+            cr.commit()  # must be committed before reloading registry in new cursor
             api.Environment.reset()
             RegistryManager.new(cr.dbname)
             RegistryManager.signal_registry_change(cr.dbname)
@@ -195,15 +199,15 @@ class ir_model(osv.osv):
         # always write (4,id,False) even for non dirty items
         if 'field_id' in vals:
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
-        return super(ir_model,self).write(cr, user, ids, vals, context)
+        return super(ir_model, self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
         if context and context.get('manual'):
-            vals['state']='manual'
-        res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
+            vals['state'] = 'manual'
+        res = super(ir_model, self).create(cr, user, vals, context)
+        if vals.get('state', 'base') == 'manual':
             # add model in registry
             self.instanciate(cr, user, vals['model'], context)
             self.pool.setup_models(cr, partial=(not self.pool.ready))
@@ -215,7 +219,7 @@ class ir_model(osv.osv):
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True)
             model._auto_init(cr, ctx)
-            model._auto_end(cr, ctx) # actually create FKs!
+            model._auto_end(cr, ctx)  # actually create FKs!
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -229,6 +233,7 @@ class ir_model(osv.osv):
             _custom = True
 
         CustomModel._build_model(self.pool, cr)
+
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -253,10 +258,10 @@ class ir_model_fields(osv.osv):
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
-        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
+        'select_level': fields.selection([('0', 'Not Searchable'), ('1', 'Always Searchable'), ('2', 'Advanced Search (deprecated)')], 'Searchable', required=True),
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
+        'state': fields.selection([('manual', 'Custom Field'), ('base', 'Base Field')], 'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
                                       'On Delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', help="The optional domain to restrict possible values for relationship fields, "
@@ -271,12 +276,12 @@ class ir_model_fields(osv.osv):
                                                                            "of having its own database column. This cannot be "
                                                                            "changed after creation."),
     }
-    _rec_name='field_description'
+    _rec_name = 'field_description'
     _defaults = {
         'selection': "",
         'domain': "[]",
         'name': 'x_',
-        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self, cr, uid, ctx=None: (ctx and ctx.get('manual', False)) and 'manual' or 'base',
         'on_delete': 'set null',
         'select_level': '0',
         'field_description': '',
@@ -298,20 +303,20 @@ class ir_model_fields(osv.osv):
             check = False
         else:
             for item in selection_list:
-                if not (isinstance(item, (tuple,list)) and len(item) == 2):
+                if not (isinstance(item, (tuple, list)) and len(item) == 2):
                     check = False
                     break
 
         if not check:
-                raise except_orm(_('Error'),
-                    _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
+            raise except_orm(_('Error'),
+                _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 0 !')
 
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
+        ('size_gt_zero', 'CHECK (size>=0)', _size_gt_zero_msg),
     ]
 
     def _drop_column(self, cr, uid, ids, context=None):
@@ -321,7 +326,7 @@ class ir_model_fields(osv.osv):
             model = self.pool[field.model]
             cr.execute('select relkind from pg_class where relname=%s', (model._table,))
             result = cr.fetchone()
-            cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" %(model._table, field.name))
+            cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" % (model._table, field.name))
             column_name = cr.fetchone()
             if column_name and (result and result[0] == 'r'):
                 cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
@@ -338,7 +343,8 @@ class ir_model_fields(osv.osv):
 
     def unlink(self, cr, user, ids, context=None):
         # Prevent manual deletion of module columns
-        if context is None: context = {}
+        if context is None:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         if not context.get(MODULE_UNINSTALL_FLAG) and \
@@ -362,18 +368,18 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context is None:
             context = {}
-        if context and context.get('manual',False):
+        if context and context.get('manual', False):
             vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
-            if not vals.get('selection',False):
+            if not vals.get('selection', False):
                 raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
-        res = super(ir_model_fields,self).create(cr, user, vals, context)
-        if vals.get('state','base') == 'manual':
+        res = super(ir_model_fields, self).create(cr, user, vals, context)
+        if vals.get('state', 'base') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
-            if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
+            if vals.get('relation', False) and not self.pool['ir.model'].search(cr, user, [('model', '=', vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
@@ -396,7 +402,7 @@ class ir_model_fields(osv.osv):
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
                 model._auto_init(cr, ctx)
-                model._auto_end(cr, ctx) # actually create FKs!
+                model._auto_end(cr, ctx)  # actually create FKs!
                 RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -404,16 +410,16 @@ class ir_model_fields(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context is None:
             context = {}
-        if context and context.get('manual',False):
+        if context and context.get('manual', False):
             vals['state'] = 'manual'
 
-        #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
+        # For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise except_orm(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.')%field.name)
+                    raise except_orm(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.') % field.name)
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
+                    raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed') % field.name)
 
         # if set, *one* column can be renamed here
         column_rename = None
@@ -422,7 +428,7 @@ class ir_model_fields(osv.osv):
         patches = defaultdict(lambda: defaultdict(dict))
 
         # static table of properties
-        model_props = [ # (our-name, fields.prop, set_fn)
+        model_props = [  # (our-name, fields.prop, set_fn)
             ('field_description', 'string', tools.ustr),
             ('required', 'required', bool),
             ('readonly', 'readonly', bool),
@@ -435,7 +441,7 @@ class ir_model_fields(osv.osv):
         ]
 
         if vals and ids:
-            checked_selection = False # need only check it once, so defer
+            checked_selection = False  # need only check it once, so defer
 
             for item in self.browse(cr, user, ids, context=context):
                 obj = self.pool.get(item.model)
@@ -487,7 +493,7 @@ class ir_model_fields(osv.osv):
             if column_name in vals:
                 del vals[column_name]
 
-        res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
+        res = super(ir_model_fields, self).write(cr, user, ids, vals, context=context)
 
         if column_rename:
             obj, rename = column_rename
@@ -519,12 +525,13 @@ class ir_model_fields(osv.osv):
                 # update database schema
                 self.pool.setup_models(cr, partial=(not self.pool.ready))
                 obj._auto_init(cr, ctx)
-                obj._auto_end(cr, ctx) # actually create FKs!
+                obj._auto_end(cr, ctx)  # actually create FKs!
 
         if column_rename or patches:
             RegistryManager.signal_registry_change(cr.dbname)
 
         return res
+
 
 class ir_model_constraint(Model):
     """
@@ -554,7 +561,7 @@ class ir_model_constraint(Model):
     def _module_data_uninstall(self, cr, uid, ids, context=None):
         """
         Delete PostgreSQL foreign keys and constraints tracked by this model.
-        """ 
+        """
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
@@ -573,7 +580,7 @@ class ir_model_constraint(Model):
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if set(external_ids)-ids_set:
+            if set(external_ids) - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -595,6 +602,7 @@ class ir_model_constraint(Model):
 
         self.unlink(cr, uid, ids, context)
 
+
 class ir_model_relation(Model):
     """
     This model tracks PostgreSQL tables used to implement OpenERP many2many
@@ -615,7 +623,7 @@ class ir_model_relation(Model):
     def _module_data_uninstall(self, cr, uid, ids, context=None):
         """
         Delete PostgreSQL many2many relations tracked by this model.
-        """ 
+        """
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
@@ -631,7 +639,7 @@ class ir_model_relation(Model):
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if set(external_ids)-ids_set:
+            if set(external_ids) - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -643,17 +651,18 @@ class ir_model_relation(Model):
 
         # drop m2m relation tables
         for table in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% table,)
+            cr.execute('DROP TABLE %s CASCADE' % table,)
             _logger.info('Dropped table %s', table)
 
         cr.commit()
+
 
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', required=True, select=True),
         'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory', '=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
@@ -673,7 +682,7 @@ class ir_model_access(osv.osv):
 
     def check_group(self, cr, uid, model, mode, group_ids):
         """ Check if a specific group has the access mode to the specified model"""
-        assert mode in ['read','write','create','unlink'], 'Invalid access mode'
+        assert mode in ['read', 'write', 'create', 'unlink'], 'Invalid access mode'
 
         if isinstance(model, BaseModel):
             assert model._name == 'ir.model', 'Invalid model object'
@@ -711,7 +720,7 @@ class ir_model_access(osv.osv):
            the model ``model_name``.
            :rtype: list
         """
-        assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
+        assert access_mode in ['read', 'write', 'create', 'unlink'], 'Invalid access mode: %s' % access_mode
         cr.execute('''SELECT
                         c.name, g.name
                       FROM
@@ -727,12 +736,12 @@ class ir_model_access(osv.osv):
 
     @tools.ormcache()
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
-        if uid==1:
+        if uid == 1:
             # User root have all accesses
             # TODO: exclude xml-rpc requests
             return True
 
-        assert mode in ['read','write','create','unlink'], 'Invalid access mode'
+        assert mode in ['read', 'write', 'create', 'unlink'], 'Invalid access mode'
 
         if isinstance(model, BaseModel):
             assert model._name == 'ir.model', 'Invalid model object'
@@ -753,8 +762,7 @@ class ir_model_access(osv.osv):
                    '  JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
                    ' WHERE m.model = %s '
                    '   AND gu.uid = %s '
-                   '   AND a.active IS True '
-                   , (model_name, uid,)
+                   '   AND a.active IS True ', (model_name, uid,)
                    )
         r = cr.fetchone()[0]
 
@@ -765,8 +773,7 @@ class ir_model_access(osv.osv):
                        '  JOIN ir_model m ON (m.id = a.model_id) '
                        ' WHERE a.group_id IS NULL '
                        '   AND m.model = %s '
-                       '   AND a.active IS True '
-                       , (model_name,)
+                       '   AND a.active IS True ', (model_name,)
                        )
             r = cr.fetchone()[0]
 
@@ -827,6 +834,7 @@ class ir_model_access(osv.osv):
         res = super(ir_model_access, self).unlink(cr, uid, ids, context=context)
         return res
 
+
 class ir_model_data(osv.osv):
     """Holds external identifier keys for records in the database.
        This has two main uses:
@@ -864,7 +872,7 @@ class ir_model_data(osv.osv):
     def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}
         for res in self.browse(cr, uid, ids, context=context):
-            result[res.id] = (res.module and (res.module + '.') or '')+res.name
+            result[res.id] = (res.module and (res.module + '.') or '') + res.name
         return result
 
     _columns = {
@@ -911,7 +919,7 @@ class ir_model_data(osv.osv):
         Return (id, res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
-        ids = self.search(cr, uid, [('module','=',module), ('name','=', name)])
+        ids = self.search(cr, uid, [('module', '=', module), ('name', '=', name)])
         if not ids:
             raise ValueError('External ID not found in the system: %s' % (xmlid))
         # the sql constraints ensure us we have only one result
@@ -919,7 +927,7 @@ class ir_model_data(osv.osv):
         if not res['res_id']:
             raise ValueError('External ID not found in the system: %s' % (xmlid))
         return ids[0], res['model'], res['res_id']
-    
+
     def xmlid_to_res_model_res_id(self, cr, uid, xmlid, raise_if_not_found=False):
         """ Return (res_model, res_id)"""
         try:
@@ -936,7 +944,7 @@ class ir_model_data(osv.osv):
     def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
         """ Return a browse_record
         if not found and raise_if_not_found is True return None
-        """ 
+        """
         t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
         res_model, res_id = t
 
@@ -961,7 +969,7 @@ class ir_model_data(osv.osv):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
         to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
         model, res_id = self.get_object_reference(cr, uid, module, xml_id)
-        #search on id found in result to check if current user has read access right
+        # search on id found in result to check if current user has read access right
         check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
         if check_right:
             return model, res_id
@@ -976,12 +984,12 @@ class ir_model_data(osv.osv):
         """
         return self.xmlid_to_object(cr, uid, "%s.%s" % (module, xml_id), raise_if_not_found=True, context=context)
 
-    def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
+    def _update_dummy(self, cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
             return False
         try:
             id = self.read(cr, uid, [self._get_id(cr, uid, module, xml_id)], ['res_id'])[0]['res_id']
-            self.loads[(module,xml_id)] = (model,id)
+            self.loads[(module, xml_id)] = (model, id)
         except:
             id = False
         return id
@@ -997,25 +1005,25 @@ class ir_model_data(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         """ Regular unlink method, but make sure to clear the caches. """
         self.clear_caches()
-        return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
+        return super(ir_model_data, self).unlink(cr, uid, ids, context=context)
 
-    def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
+    def _update(self, cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
         model_obj = self.pool[model]
         if not context:
             context = {}
         # records created during module install should not display the messages of OpenChatter
         context = dict(context, install_mode=True)
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
+            assert len(xml_id.split('.')) == 2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
             module, xml_id = xml_id.split('.')
         action_id = False
         if xml_id:
             cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model, imd.noupdate
                           FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
                           WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
-                          (module, xml_id))
+                       (module, xml_id))
             results = cr.fetchall()
-            for imd_id2,res_id2,real_id2,real_model,noupdate_imd in results:
+            for imd_id2, res_id2, real_id2, real_model, noupdate_imd in results:
                 # In update mode, do not update a record if it's ir.model.data is flagged as noupdate
                 if mode == 'update' and noupdate_imd:
                     return res_id2
@@ -1026,56 +1034,56 @@ class ir_model_data(osv.osv):
                 else:
                     assert model == real_model, "External ID conflict, %s already refers to a `%s` record,"\
                         " you can't define a `%s` record with this ID." % (xml_id, real_model, model)
-                    res_id,action_id = res_id2,imd_id2
+                    res_id, action_id = res_id2, imd_id2
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             self.write(cr, uid, [action_id], {
                 'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
-                },context=context)
+                }, context=context)
         elif res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             if xml_id:
                 if model_obj._inherits:
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
-                                res_id,context=context)[model_obj._inherits[table]]
+                                res_id, context=context)[model_obj._inherits[table]]
                         self.create(cr, uid, {
                             'name': xml_id + '_' + table.replace('.', '_'),
                             'model': table,
                             'module': module,
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
-                            },context=context)
+                            }, context=context)
                 self.create(cr, uid, {
                     'name': xml_id,
                     'model': model,
-                    'module':module,
-                    'res_id':res_id,
+                    'module': module,
+                    'res_id': res_id,
                     'noupdate': noupdate,
-                    },context=context)
+                    }, context=context)
         else:
-            if mode=='init' or (mode=='update' and xml_id):
+            if mode == 'init' or (mode == 'update' and xml_id):
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
                     if model_obj._inherits:
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
-                                    res_id,context=context)[model_obj._inherits[table]]
+                                    res_id, context=context)[model_obj._inherits[table]]
                             self.create(cr, uid, {
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
                                 'module': module,
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
-                                },context=context)
+                                }, context=context)
                     self.create(cr, uid, {
                         'name': xml_id,
                         'model': model,
                         'module': module,
                         'res_id': res_id,
                         'noupdate': noupdate
-                        },context=context)
+                        }, context=context)
         if xml_id and res_id:
             self.loads[(module, xml_id)] = (model, res_id)
             for table, inherit_field in model_obj._inherits.iteritems():
@@ -1086,9 +1094,9 @@ class ir_model_data(osv.osv):
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
         if isinstance(models[0], (list, tuple)):
-            model,res_id = models[0]
+            model, res_id = models[0]
         else:
-            res_id=None
+            res_id = None
             model = models[0]
 
         if res_id:
@@ -1101,13 +1109,13 @@ class ir_model_data(osv.osv):
         else:
             where += ' and (key2 is null)'
 
-        cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
+        cr.execute('select * from ir_values where model=%s and key=%s and name=%s' + where, (model, key, name))
         res = cr.fetchone()
         ir_values_obj = openerp.registry(cr.dbname)['ir.values']
         if not res:
             ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
-            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
+            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s' + where, (value, model, key, name))
             ir_values_obj.invalidate_cache(cr, uid, ['value'])
         return True
 
@@ -1116,11 +1124,11 @@ class ir_model_data(osv.osv):
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
         ir.model.data entry holding a reference to them (which indicates that
-        they are still owned by another module). 
+        they are still owned by another module).
         Attempts to perform the deletion in an appropriate order to maximize
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
-        """ 
+        """
 
         ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
 
@@ -1128,7 +1136,7 @@ class ir_model_data(osv.osv):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
         context = dict(context or {})
-        context[MODULE_UNINSTALL_FLAG] = True # enable model/field deletion
+        context[MODULE_UNINSTALL_FLAG] = True  # enable model/field deletion
 
         ids_set = set(ids)
         wkf_todo = []
@@ -1149,10 +1157,10 @@ class ir_model_data(osv.osv):
                 # to move out before deleting them
                 cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                 wkf_todo.extend(cr.fetchall())
-                cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id, res_id))
                 self.invalidate_cache(cr, uid, context=context)
 
-        for model,res_id in wkf_todo:
+        for model, res_id in wkf_todo:
             try:
                 openerp.workflow.trg_write(uid, model, res_id, cr)
             except Exception:
@@ -1160,8 +1168,8 @@ class ir_model_data(osv.osv):
 
         def unlink_if_refcount(to_unlink):
             for model, res_id in to_unlink:
-                external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-                if set(external_ids)-ids_set:
+                external_ids = self.search(cr, uid, [('model', '=', model), ('res_id', '=', res_id)])
+                if set(external_ids) - ids_set:
                     # if other modules have defined this record, we must not delete it
                     continue
                 if model == 'ir.model.fields':
@@ -1188,9 +1196,9 @@ class ir_model_data(osv.osv):
 
         # Remove non-model records first, then model fields, and finish with models
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
-                                if model not in ('ir.model','ir.model.fields','ir.model.constraint'))
+                           if model not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
-                                if model == 'ir.model.constraint')
+                           if model == 'ir.model.constraint')
 
         ir_module_module = self.pool['ir.module.module']
         ir_model_constraint = self.pool['ir.model.constraint']
@@ -1199,14 +1207,14 @@ class ir_model_data(osv.osv):
         ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
 
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
-                                if model == 'ir.model.fields')
+                           if model == 'ir.model.fields')
 
         ir_model_relation = self.pool['ir.model.relation']
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
 
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
-                                if model == 'ir.model')
+                           if model == 'ir.model')
 
         cr.commit()
 
@@ -1225,15 +1233,16 @@ class ir_model_data(osv.osv):
         to_unlink = []
         cr.execute("""SELECT id,name,model,res_id,module FROM ir_model_data
                       WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC""",
-                      (tuple(modules), False))
+                   (tuple(modules), False))
         for (id, name, model, res_id, module) in cr.fetchall():
-            if (module,name) not in self.loads:
-                to_unlink.append((model,res_id))
+            if (module, name) not in self.loads:
+                to_unlink.append((model, res_id))
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
                 if model in self.pool:
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool[model].unlink(cr, uid, [res_id])
+
 
 class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
@@ -1261,6 +1270,6 @@ class wizard_model_menu(osv.osv_memory):
                 'action': 'ir.actions.act_window,%d' % (action_id,),
                 'icon': 'STOCK_INDENT'
             }, context)
-        return {'type':'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

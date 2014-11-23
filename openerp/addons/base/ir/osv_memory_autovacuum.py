@@ -21,6 +21,7 @@
 
 import openerp
 
+
 class osv_memory_autovacuum(openerp.osv.osv.osv_memory):
     """ Expose the osv_memory.vacuum() method to the cron jobs mechanism. """
     _name = 'osv_memory.autovacuum'

@@ -1,7 +1,8 @@
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.addons.decimal_precision import decimal_precision as dp
+
 
 class hr_timesheet_report(osv.osv):
     _name = "hr.timesheet.report"
@@ -9,13 +10,13 @@ class hr_timesheet_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'name': fields.char('Description', size=64,readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product',readonly=True),
-        'journal_id' : fields.many2one('account.analytic.journal', 'Journal',readonly=True),
-        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),
+        'name': fields.char('Description', size=64, readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        'journal_id': fields.many2one('account.analytic.journal', 'Journal', readonly=True),
+        'general_account_id': fields.many2one('account.account', 'General Account', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'cost': fields.float('Cost', readonly=True, digits_compute=dp.get_precision('Account')),
         'quantity': fields.float('Time', readonly=True),  # TDE FIXME master: rename into time
     }

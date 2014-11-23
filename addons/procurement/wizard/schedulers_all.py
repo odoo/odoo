@@ -29,6 +29,7 @@ from openerp.api import Environment
 
 _logger = logging.getLogger(__name__)
 
+
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
@@ -43,7 +44,7 @@ class procurement_compute_all(osv.osv_memory):
         """
         with Environment.manage():
             proc_obj = self.pool.get('procurement.order')
-            #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
+            # As this function is in a new thread, i need to open a new cursor, because the old one may be closed
 
             new_cr = self.pool.cursor()
             scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
@@ -60,7 +61,7 @@ class procurement_compute_all(osv.osv_memory):
             comps = [x.id for x in user.company_ids]
             for comp in comps:
                 proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
-            #close the new cursor
+            # close the new cursor
             new_cr.close()
             return {}
 

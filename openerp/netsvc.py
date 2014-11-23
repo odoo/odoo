@@ -35,12 +35,14 @@ import tools
 
 _logger = logging.getLogger(__name__)
 
+
 def log(logger, level, prefix, msg, depth=None):
-    indent=''
-    indent_after=' '*len(prefix)
+    indent = ''
+    indent_after = ' ' * len(prefix)
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
-        logger.log(level, indent+line)
-        indent=indent_after
+        logger.log(level, indent + line)
+        indent = indent_after
+
 
 def LocalService(name):
     """
@@ -70,10 +72,12 @@ def LocalService(name):
 
 path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
+
 class PostgreSQLHandler(logging.Handler):
     """ PostgreSQL Loggin Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
     """
+
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
@@ -90,15 +94,15 @@ class PostgreSQLHandler(logging.Handler):
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix) + 1:], record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
-#The background is set with 40 plus the number of the color, and the foreground with 30
-#These are the sequences need to get colored ouput
+# The background is set with 40 plus the number of the color, and the foreground with 30
+# These are the sequences need to get colored ouput
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
@@ -111,11 +115,13 @@ LEVEL_COLOR_MAPPING = {
     logging.CRITICAL: (WHITE, RED),
 }
 
+
 class DBFormatter(logging.Formatter):
     def format(self, record):
         record.pid = os.getpid()
         record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
+
 
 class ColoredFormatter(DBFormatter):
     def format(self, record):
@@ -124,6 +130,8 @@ class ColoredFormatter(DBFormatter):
         return DBFormatter.format(self, record)
 
 _logger_init = False
+
+
 def init_logger():
     global _logger_init
     if _logger_init:
@@ -145,7 +153,7 @@ def init_logger():
         else:
             handler = logging.handlers.SysLogHandler()
         format = '%s %s' % (release.description, release.version) \
-                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+            + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -212,8 +220,8 @@ DEFAULT_LOG_CONFIGURATION = [
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG', 'openerp.http.rpc.response:DEBUG'],
-    'debug_rpc': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG'],
+    'debug_rpc_answer': ['openerp:DEBUG', 'openerp.http.rpc.request:DEBUG', 'openerp.http.rpc.response:DEBUG'],
+    'debug_rpc': ['openerp:DEBUG', 'openerp.http.rpc.request:DEBUG'],
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],

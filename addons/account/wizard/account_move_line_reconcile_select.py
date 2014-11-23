@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_move_line_reconcile_select(osv.osv_memory):
     _name = "account.move.line.reconcile.select"
     _description = "Move line reconcile select"

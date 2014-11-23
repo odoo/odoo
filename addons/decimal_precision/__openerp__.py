@@ -30,16 +30,15 @@ The decimal precision is configured per company.
     'author': 'OpenERP SA',
     'version': '0.1',
     'depends': ['base'],
-    'category' : 'Hidden/Dependency',
+    'category': 'Hidden/Dependency',
     'data': [
         'decimal_precision_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/1_decimal_accuracy_form.jpeg','images/1_decimal_accuracy_list.jpeg'],
+    'images': ['images/1_decimal_accuracy_form.jpeg', 'images/1_decimal_accuracy_list.jpeg'],
 }
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

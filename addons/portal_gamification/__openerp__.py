@@ -30,7 +30,7 @@ This module adds security rules for gamification to allow portal users to partic
 ===================================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['gamification','portal'],
+    'depends': ['gamification', 'portal'],
     'data': [
         'security/ir.model.access.csv',
         'security/portal_security.xml',
@@ -39,4 +39,3 @@ This module adds security rules for gamification to allow portal users to partic
     'auto_install': True,
     'category': 'Hidden',
 }
-

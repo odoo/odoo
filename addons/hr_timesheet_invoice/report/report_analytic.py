@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 from openerp.addons.decimal_precision import decimal_precision as dp
 
@@ -37,6 +37,7 @@ class report_analytic_account_close(osv.osv):
         'balance': fields.float('Balance', readonly=True),
         'date_deadline': fields.date('Deadline', readonly=True),
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_analytic_account_close')
         cr.execute("""
@@ -61,20 +62,21 @@ class report_analytic_account_close(osv.osv):
                     a.date <= current_date
             )""")
 
+
 class report_account_analytic_line_to_invoice(osv.osv):
     _name = "report.account.analytic.line.to.invoice"
     _description = "Analytic lines to invoice report"
     _auto = False
     _columns = {
         'name': fields.char('Year', required=False, readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
-        'product_uom_id':fields.many2one('product.uom', 'Unit of Measure', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
+        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
         'unit_amount': fields.float('Units', readonly=True),
         'sale_price': fields.float('Sale price', readonly=True, digits_compute=dp.get_precision('Product Price')),
         'amount': fields.float('Amount', readonly=True, digits_compute=dp.get_precision('Account')),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc, product_id asc, account_id asc'
 
@@ -106,4 +108,3 @@ class report_account_analytic_line_to_invoice(osv.osv):
         """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -5,6 +5,8 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 # defined for access rules
+
+
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
@@ -19,7 +21,7 @@ class sale_order(osv.Model):
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
-        values = super(sale_order,self)._website_product_id_change(cr, uid, ids, order_id, product_id, qty=qty, line_id=line_id, context=None)
+        values = super(sale_order, self)._website_product_id_change(cr, uid, ids, order_id, product_id, qty=qty, line_id=line_id, context=None)
 
         event_ticket_id = None
         if context.get("event_ticket_id"):
@@ -36,7 +38,7 @@ class sale_order(osv.Model):
         if event_ticket_id:
             ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)
             if product_id != ticket.product_id.id:
-                raise osv.except_osv(_('Error!'),_("The ticket doesn't match with this product."))
+                raise osv.except_osv(_('Error!'), _("The ticket doesn't match with this product."))
 
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id

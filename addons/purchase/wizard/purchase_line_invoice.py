@@ -31,7 +31,6 @@ class purchase_line_invoice(osv.osv_memory):
     _description = 'Purchase Order Line Make Invoice'
 
     def makeInvoices(self, cr, uid, ids, context=None):
-
         """
              To get Purchase Order line and create Invoice
              @param self: The object pointer.
@@ -42,9 +41,9 @@ class purchase_line_invoice(osv.osv_memory):
         """
 
         if context is None:
-            context={}
+            context = {}
 
-        record_ids =  context.get('active_ids',[])
+        record_ids =  context.get('active_ids', [])
         if record_ids:
             res = False
             invoices = {}
@@ -59,8 +58,6 @@ class purchase_line_invoice(osv.osv_memory):
                 for order in orders:
                     notes += "%s \n" % order.notes
                 return notes
-
-
 
             def make_invoice_by_partner(partner, orders, lines_ids):
                 """
@@ -77,12 +74,12 @@ class purchase_line_invoice(osv.osv_memory):
                     'name': name,
                     'origin': name,
                     'type': 'in_invoice',
-                    'journal_id':journal_id,
-                    'reference' : partner.ref,
+                    'journal_id': journal_id,
+                    'reference': partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
-                    'invoice_line': [(6,0,lines_ids)],
-                    'currency_id' : orders[0].currency_id.id,
+                    'invoice_line': [(6, 0, lines_ids)],
+                    'currency_id': orders[0].currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
                     'payment_term': orders[0].payment_term_id.id,
                     'fiscal_position': partner.property_account_position.id
@@ -101,17 +98,17 @@ class purchase_line_invoice(osv.osv_memory):
                     inv_line_data.update({'origin': line.order_id.name})
                     inv_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
                     purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True, 'invoice_lines': [(4, inv_id)]})
-                    invoices[line.partner_id.id].append((line,inv_id))
+                    invoices[line.partner_id.id].append((line, inv_id))
 
             res = []
             for result in invoices.values():
                 il = map(lambda x: x[1], result)
-                orders = list(set(map(lambda x : x[0].order_id, result)))
+                orders = list(set(map(lambda x: x[0].order_id, result)))
 
                 res.append(make_invoice_by_partner(orders[0].partner_id, orders, il))
 
         return {
-            'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, res)) + "])]",
             'name': _('Supplier Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
@@ -123,4 +120,3 @@ class purchase_line_invoice(osv.osv_memory):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

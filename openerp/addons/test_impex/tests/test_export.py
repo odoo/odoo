@@ -25,6 +25,7 @@ class CreatorCase(common.TransactionCase):
         record = self.make(value)
         return record._BaseModel__export_rows([f.split('/') for f in fields])
 
+
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
 
@@ -32,6 +33,7 @@ class test_boolean_field(CreatorCase):
         self.assertEqual(
             self.export(True),
             [[u'True']])
+
     def test_false(self):
         """ ``False`` value to boolean fields is unique in being exported as a
         (unicode) string, not a boolean
@@ -40,12 +42,14 @@ class test_boolean_field(CreatorCase):
             self.export(False),
             [[u'False']])
 
+
 class test_integer_field(CreatorCase):
     model_name = 'export.integer'
 
     def test_empty(self):
         self.assertEqual(self.model.search(self.cr, openerp.SUPERUSER_ID, []), [],
                          "Test model should have no records")
+
     def test_0(self):
         self.assertEqual(
             self.export(0),
@@ -63,8 +67,9 @@ class test_integer_field(CreatorCase):
 
     def test_huge(self):
         self.assertEqual(
-            self.export(2**31-1),
-            [[unicode(2**31-1)]])
+            self.export(2 ** 31 - 1),
+            [[unicode(2 ** 31 - 1)]])
+
 
 class test_float_field(CreatorCase):
     model_name = 'export.float'
@@ -93,6 +98,7 @@ class test_float_field(CreatorCase):
         self.assertEqual(
             self.export(87654321.4678),
             [[u'87654321.4678']])
+
 
 class test_decimal_field(CreatorCase):
     model_name = 'export.decimal'
@@ -123,6 +129,7 @@ class test_decimal_field(CreatorCase):
         self.assertEqual(
             self.export(87654321.4678), [[u'87654321.468']])
 
+
 class test_string_field(CreatorCase):
     model_name = 'export.string.bounded'
 
@@ -130,10 +137,12 @@ class test_string_field(CreatorCase):
         self.assertEqual(
             self.export(""),
             [[False]])
+
     def test_within_bounds(self):
         self.assertEqual(
             self.export("foobar"),
             [[u"foobar"]])
+
     def test_out_of_bounds(self):
         self.assertEqual(
             self.export("C for Sinking, "
@@ -142,6 +151,7 @@ class test_string_field(CreatorCase):
                         "...and Power to the Penguin!"),
             [[u"C for Sinking, J"]])
 
+
 class test_unbound_string_field(CreatorCase):
     model_name = 'export.string'
 
@@ -149,10 +159,12 @@ class test_unbound_string_field(CreatorCase):
         self.assertEqual(
             self.export(""),
             [[False]])
+
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
             [[u"foobar"]])
+
     def test_big(self):
         self.assertEqual(
             self.export("We flew down weekly to meet with IBM, but they "
@@ -164,6 +176,7 @@ class test_unbound_string_field(CreatorCase):
               u"when really the better the software, the fewer lines of "
               u"code."]])
 
+
 class test_text(CreatorCase):
     model_name = 'export.text'
 
@@ -171,10 +184,12 @@ class test_text(CreatorCase):
         self.assertEqual(
             self.export(""),
             [[False]])
+
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
             [[u"foobar"]])
+
     def test_big(self):
         self.assertEqual(
             self.export("So, `bind' is `let' and monadic programming is"
@@ -184,6 +199,7 @@ class test_text(CreatorCase):
               u" programming in the A-normal form. That is indeed all there"
               u" is to monads"]])
 
+
 class test_date(CreatorCase):
     model_name = 'export.date'
 
@@ -191,10 +207,12 @@ class test_date(CreatorCase):
         self.assertEqual(
             self.export(False),
             [[False]])
+
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07'),
             [[u'2011-11-07']])
+
 
 class test_datetime(CreatorCase):
     model_name = 'export.datetime'
@@ -203,10 +221,12 @@ class test_datetime(CreatorCase):
         self.assertEqual(
             self.export(False),
             [[False]])
+
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07 21:05:48'),
             [[u'2011-11-07 21:05:48']])
+
     def test_tz(self):
         """ Export ignores the timezone and always exports to UTC
 
@@ -216,6 +236,7 @@ class test_datetime(CreatorCase):
         self.assertEqual(
             self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
             [[u'2011-11-07 21:05:48']])
+
 
 class test_selection(CreatorCase):
     model_name = 'export.selection'
@@ -259,6 +280,7 @@ class test_selection(CreatorCase):
             self.export(2, context={'lang': 'fr_FR'}),
             [[u'Bar']])
 
+
 class test_selection_function(CreatorCase):
     model_name = 'export.selection.function'
 
@@ -280,6 +302,7 @@ class test_selection_function(CreatorCase):
             self.export(0),
             [[False]])
 
+
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'
 
@@ -287,16 +310,18 @@ class test_m2o(CreatorCase):
         self.assertEqual(
             self.export(False),
             [[False]])
+
     def test_basic(self):
         """ Exported value is the name_get of the related object
         """
         integer_id = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
         name = dict(self.registry('export.integer').name_get(
-            self.cr, openerp.SUPERUSER_ID,[integer_id]))[integer_id]
+            self.cr, openerp.SUPERUSER_ID, [integer_id]))[integer_id]
         self.assertEqual(
             self.export(integer_id),
             [[name]])
+
     def test_path(self):
         """ Can recursively export fields of m2o via path
         """
@@ -305,6 +330,7 @@ class test_m2o(CreatorCase):
         self.assertEqual(
             self.export(integer_id, fields=['value/.id', 'value/value']),
             [[unicode(integer_id), u'42']])
+
     def test_external_id(self):
         integer_id = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
@@ -314,6 +340,7 @@ class test_m2o(CreatorCase):
         self.assertEqual(
             self.export(integer_id, fields=['value/id']),
             [[external_id]])
+
 
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
@@ -388,14 +415,14 @@ class test_o2m(CreatorCase):
     def test_multiple_records_with_name_before(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value', 'value/value']),
-            [[ # exports sub-fields of very first o2m
+            [[  # exports sub-fields of very first o2m
                 u'4', u','.join(self.names), u'4'
             ]])
 
     def test_multiple_records_with_name_after(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value/value', 'value']),
-            [ # completely ignores name_get request
+            [  # completely ignores name_get request
                 [u'4', u'4', ''],
                 ['', u'42', ''],
                 ['', u'36', ''],
@@ -405,7 +432,7 @@ class test_o2m(CreatorCase):
 
     def test_multiple_subfields_neighbour(self):
         self.assertEqual(
-            self.export(self.commands, fields=['const', 'value/str','value/value']),
+            self.export(self.commands, fields=['const', 'value/str', 'value/value']),
             [
                 [u'4', u'record1', u'4'],
                 ['', u'record2', u'42'],
@@ -425,11 +452,13 @@ class test_o2m(CreatorCase):
                 [u'record5', '', u'13'],
             ])
 
+
 class test_o2m_multiple(CreatorCase):
     model_name = 'export.one2many.multiple'
 
     def make(self, value=None, **values):
-        if value is not None: values['value'] = value
+        if value is not None:
+            values['value'] = value
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, values)
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
 
@@ -518,6 +547,7 @@ class test_o2m_multiple(CreatorCase):
                 ['', '', u'13'],
             ])
 
+
 class test_m2m(CreatorCase):
     model_name = 'export.many2many'
     commands = [
@@ -569,12 +599,13 @@ class test_m2m(CreatorCase):
     def test_multiple_records_name(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value']),
-            [[ # FIXME: hardcoded comma, import uses config.csv_internal_sep
+            [[  # FIXME: hardcoded comma, import uses config.csv_internal_sep
                # resolution: remove configurable csv_internal_sep
                 u'4', u','.join(self.names)
             ]])
 
     # essentially same as o2m, so boring
+
 
 class test_function(CreatorCase):
     model_name = 'export.function'

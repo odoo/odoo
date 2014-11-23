@@ -46,7 +46,7 @@ Vrste konta
 Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika
 Porezne grupe prema poreznoj prijavi
 Porezi PDV obrasca
-Ostali porezi 
+Ostali porezi
 Osnovne fiskalne pozicije
 
 Izvori podataka:

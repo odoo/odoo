@@ -2,6 +2,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
     _description = "Picking Wave"

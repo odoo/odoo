@@ -35,6 +35,7 @@ AVAILABLE_PRIORITIES = [
     ('4', 'Excellent')
 ]
 
+
 class hr_recruitment_source(osv.osv):
     """ Sources of HR Recruitment """
     _name = "hr.recruitment.source"
@@ -42,6 +43,7 @@ class hr_recruitment_source(osv.osv):
     _columns = {
         'name': fields.char('Source Name', required=True, translate=True),
     }
+
 
 class hr_recruitment_stage(osv.osv):
     """ Stage of HR Recruitment """
@@ -51,7 +53,7 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
+        'department_id': fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
         'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'fold': fields.boolean('Folded in Kanban View',
@@ -61,6 +63,7 @@ class hr_recruitment_stage(osv.osv):
     _defaults = {
         'sequence': 1,
     }
+
 
 class hr_recruitment_degree(osv.osv):
     """ Degree of HR Recruitment """
@@ -76,6 +79,7 @@ class hr_recruitment_degree(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
+
 
 class hr_applicant(osv.Model):
     _name = "hr.applicant"
@@ -124,7 +128,7 @@ class hr_applicant(osv.Model):
             company_id = department.company_id.id if department and department.company_id else False
         if not company_id:
             company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
-        return company_id            
+        return company_id
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -145,7 +149,7 @@ class hr_applicant(osv.Model):
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -543,7 +547,7 @@ class hr_job(osv.osv):
         Applicant = self.pool['hr.applicant']
         return {
             job_id: {
-                'application_count': Applicant.search_count(cr,uid, [('job_id', '=', job_id)], context=context),
+                'application_count': Applicant.search_count(cr, uid, [('job_id', '=', job_id)], context=context),
                 'documents_count': len(self._get_attached_docs(cr, uid, [job_id], field_name, arg, context=context)[job_id])
             }
             for job_id in ids
@@ -598,7 +602,7 @@ class hr_job(osv.osv):
         return self.pool.get('survey.survey').action_print_survey(cr, uid, [survey_id], context=context)
 
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
+        # open attachments of job and related applicantions.
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
         action = self.pool.get(model).read(cr, uid, action_id, context=context)
         applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)

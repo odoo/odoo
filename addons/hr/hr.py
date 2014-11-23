@@ -35,12 +35,12 @@ class hr_employee_category(osv.Model):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
@@ -62,7 +62,7 @@ class hr_employee_category(osv.Model):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -100,7 +100,7 @@ class hr_job(osv.Model):
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
-                'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
+                'hr.job': (lambda self, cr, uid, ids, c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
@@ -185,7 +185,7 @@ class hr_employee(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        #we need a related field in order to be able to sort the employee by name
+        # we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -355,8 +355,8 @@ class hr_employee(osv.osv):
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id', (tuple(ids),))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -395,8 +395,8 @@ class hr_department(osv.osv):
             context = {}
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            cr.execute('select distinct parent_id from hr_department where id IN %s', (tuple(ids),))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -411,12 +411,12 @@ class hr_department(osv.osv):
             context = {}
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 

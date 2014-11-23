@@ -23,12 +23,14 @@
 ##############################################################################
 from openerp.osv.orm import TransientModel
 
+
 class WizardMultiChartsAccounts(TransientModel):
 
-    _inherit ='wizard.multi.charts.accounts'
+    _inherit = 'wizard.multi.charts.accounts'
 
     def onchange_chart_template_id(self, cursor, uid, ids, chart_template_id=False, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(WizardMultiChartsAccounts, self).onchange_chart_template_id(cursor, uid, ids,
                                                                                 chart_template_id=chart_template_id,
                                                                                 context=context)

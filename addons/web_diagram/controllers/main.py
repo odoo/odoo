@@ -1,21 +1,22 @@
 import openerp
 
+
 class DiagramView(openerp.http.Controller):
 
     @openerp.http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 
-        visible_node_fields = kw.get('visible_node_fields',[])
-        invisible_node_fields = kw.get('invisible_node_fields',[])
-        node_fields_string = kw.get('node_fields_string',[])
-        connector_fields = kw.get('connector_fields',[])
-        connector_fields_string = kw.get('connector_fields_string',[])
+        visible_node_fields = kw.get('visible_node_fields', [])
+        invisible_node_fields = kw.get('invisible_node_fields', [])
+        node_fields_string = kw.get('node_fields_string', [])
+        connector_fields = kw.get('connector_fields', [])
+        connector_fields_string = kw.get('connector_fields_string', [])
 
         bgcolors = {}
         shapes = {}
-        bgcolor = kw.get('bgcolor','')
-        shape = kw.get('shape','')
+        bgcolor = kw.get('bgcolor', '')
+        shape = kw.get('shape', '')
 
         if bgcolor:
             for color_spec in bgcolor.split(';'):
@@ -39,7 +40,7 @@ class DiagramView(openerp.http.Controller):
         for blnk_node in graphs['blank_nodes']:
             isolate_nodes[blnk_node['id']] = blnk_node
         else:
-            y = map(lambda t: t['y'],filter(lambda x: x['y'] if x['x']==20 else None, nodes.values()))
+            y = map(lambda t: t['y'], filter(lambda x: x['y'] if x['x'] == 20 else None, nodes.values()))
             y_max = (y and max(y)) or 120
 
         connectors = {}
@@ -55,7 +56,7 @@ class DiagramView(openerp.http.Controller):
         connector_tr = req.session.model(connector)
         connector_ids = connector_tr.search([('id', 'in', list_tr)], 0, 0, 0, req.session.context)
 
-        data_connectors =connector_tr.read(connector_ids, connector_fields, req.session.context)
+        data_connectors = connector_tr.read(connector_ids, connector_fields, req.session.context)
 
         for tr in data_connectors:
             transition_id = str(tr['id'])

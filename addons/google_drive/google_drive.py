@@ -71,7 +71,7 @@ class config(osv.Model):
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
-        #For Getting New Access Token With help of old Refresh Token
+        # For Getting New Access Token With help of old Refresh Token
 
         data = werkzeug.url_encode(dict(client_id=google_drive_client_id,
                                      refresh_token=google_drive_refresh_token,
@@ -139,7 +139,7 @@ class config(osv.Model):
                     urllib2.urlopen(req)
                 except urllib2.HTTPError:
                     pass
-        return res 
+        return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
@@ -161,7 +161,7 @@ class config(osv.Model):
         for config in self.browse(cr, uid, config_ids, context=context):
             if config.filter_id:
                 if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
-                    #Private
+                    # Private
                     continue
                 domain = [('id', 'in', [res_id])] + eval(config.filter_id.domain)
                 local_context = context and context.copy() or {}

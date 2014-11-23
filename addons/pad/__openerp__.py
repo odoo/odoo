@@ -21,7 +21,7 @@ pads (by default, http://ietherpad.com/).
     'installable': True,
     'auto_install': False,
     'web': True,
-    'qweb' : ['static/src/xml/*.xml'],
+    'qweb': ['static/src/xml/*.xml'],
     'images': ['static/src/img/pad_link_companies.jpeg'],
 }
 

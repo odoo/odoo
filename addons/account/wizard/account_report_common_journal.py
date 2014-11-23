@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_common_journal_report(osv.osv_memory):
     _name = 'account.common.journal.report'
     _description = 'Account Common Journal Report'

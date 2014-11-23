@@ -28,6 +28,7 @@ class campaign_analysis(osv.osv):
     _description = "Campaign Analysis"
     _auto = False
     _rec_name = 'date'
+
     def _total_cost(self, cr, uid, ids, field_name, arg, context=None):
         """
             @param cr: the current row, from the database cursor,
@@ -40,36 +41,37 @@ class campaign_analysis(osv.osv):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
                         [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
-                                ((ca_obj.campaign_id.fixed_cost or 1.00) / len(wi_ids))
+                ((ca_obj.campaign_id.fixed_cost or 1.00) / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
     _columns = {
-        'res_id' : fields.integer('Resource', readonly=True),
+        'res_id': fields.integer('Resource', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01','January'), ('02','February'),
-                                     ('03','March'), ('04','April'),('05','May'), ('06','June'),
-                                     ('07','July'), ('08','August'), ('09','September'),
-                                     ('10','October'), ('11','November'), ('12','December')],
+        'month': fields.selection([('01', 'January'), ('02', 'February'),
+                                   ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                   ('07', 'July'), ('08', 'August'), ('09', 'September'),
+                                   ('10', 'October'), ('11', 'November'), ('12', 'December')],
                                   'Month', readonly=True),
         'day': fields.char('Day', size=10, readonly=True),
         'date': fields.date('Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                                                readonly=True),
+                                       readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
-                                                                 readonly=True),
+                                       readonly=True),
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
-                                                                readonly=True),
+                                      readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'country_id': fields.related('partner_id', 'country_id',
-                    type='many2one', relation='res.country',string='Country'),
-        'total_cost' : fields.function(_total_cost, string='Cost',
+                    type='many2one', relation='res.country', string='Country'),
+        'total_cost': fields.function(_total_cost, string='Cost',
                                     type="float", digits_compute=dp.get_precision('Account')),
         'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Account')),
-        'count' : fields.integer('# of Actions', readonly=True),
+        'count': fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'Status', readonly=True),
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')
         cr.execute("""

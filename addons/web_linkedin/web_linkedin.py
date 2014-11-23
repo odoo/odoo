@@ -27,6 +27,7 @@ import openerp
 import openerp.addons.web
 from openerp.osv import fields, osv
 
+
 class Binary(openerp.http.Controller):
     @openerp.http.route('/web_linkedin/binary/url2binary', type='json', auth='user')
     def url2binary(self, url):
@@ -37,22 +38,24 @@ class Binary(openerp.http.Controller):
         url = urlunparse(('http', 'media.licdn.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
-    
+
+
 class web_linkedin_settings(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'api_key': fields.char(string="API Key", size=50),
         'server_domain': fields.char(),
     }
-    
+
     def get_default_linkedin(self, cr, uid, fields, context=None):
         key = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.linkedin.apikey") or ""
         dom = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        return {'api_key': key, 'server_domain': dom,}
-    
+        return {'api_key': key, 'server_domain': dom, }
+
     def set_linkedin(self, cr, uid, ids, context=None):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
         self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key, groups=['base.group_user'])
+
 
 class web_linkedin_fields(osv.Model):
     _inherit = 'res.partner'
@@ -67,8 +70,8 @@ class web_linkedin_fields(osv.Model):
         res = []
         res_partner = self.pool.get('res.partner')
         for linkedin_data in linkedin_datas:
-            partner_ids = res_partner.search(cr, uid, ["|", ("linkedin_id", "=", linkedin_data['id']), 
-                    "&", ("linkedin_id", "=", False), 
+            partner_ids = res_partner.search(cr, uid, ["|", ("linkedin_id", "=", linkedin_data['id']),
+                    "&", ("linkedin_id", "=", False),
                     "|", ("name", "ilike", linkedin_data['firstName'] + "%" + linkedin_data['lastName']), ("name", "ilike", linkedin_data['lastName'] + "%" + linkedin_data['firstName'])], context=context)
             if partner_ids:
                 partner = res_partner.read(cr, uid, partner_ids[0], ["image", "mobile", "phone", "parent_id", "name", "email", "function", "linkedin_id"], context=context)
@@ -87,6 +90,6 @@ class web_linkedin_fields(osv.Model):
     _columns = {
         'linkedin_id': fields.char(string="LinkedIn ID"),
         'linkedin_url': fields.char(string="LinkedIn url", store=True),
-        'linkedin_public_url': fields.function(_get_url, type='text', string="LinkedIn url", 
+        'linkedin_public_url': fields.function(_get_url, type='text', string="LinkedIn url",
             help="This url is set automatically when you join the partner with a LinkedIn account."),
     }

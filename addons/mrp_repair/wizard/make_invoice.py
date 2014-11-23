@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class make_invoice(osv.osv_memory):
     _name = 'mrp.repair.make_invoice'
     _description = 'Make Invoice'
@@ -44,7 +45,7 @@ class make_invoice(osv.osv_memory):
         order_obj = self.pool.get('mrp.repair')
         mod_obj = self.pool.get('ir.model.data')
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
-                                                 group=inv.group,context=context)
+                                                 group=inv.group, context=context)
 
         # We have to trigger the workflow of the given repairs, otherwise they remain 'to be invoiced'.
         # Note that the signal 'action_invoice_create' will trigger another call to the method 'action_invoice_create',
@@ -57,17 +58,16 @@ class make_invoice(osv.osv_memory):
         tree_id = tree_res and tree_res[1] or Fals
 
         return {
-            'domain': [('id','in', newinv.values())],
+            'domain': [('id', 'in', newinv.values())],
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'views': [(tree_id, 'tree'),(form_id, 'form')],
+            'views': [(tree_id, 'tree'), (form_id, 'form')],
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

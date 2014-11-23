@@ -31,16 +31,16 @@ class bank_statement_balance_report(report_sxw.rml_parse):
         cr = self.cr
 
         cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance ' \
-                        'FROM account_bank_statement s ' \
-                        'INNER JOIN account_journal j on s.journal_id = j.id ' \
-                        'INNER JOIN ' \
-                            '(SELECT journal_id, max(date) as max_date FROM account_bank_statement ' \
-                                'GROUP BY journal_id) d ' \
-                                'ON (s.journal_id = d.journal_id AND s.date = d.max_date) ' \
-                        'ORDER BY j.code')
+                   'FROM account_bank_statement s ' \
+                   'INNER JOIN account_journal j on s.journal_id = j.id ' \
+                   'INNER JOIN ' \
+                   '(SELECT journal_id, max(date) as max_date FROM account_bank_statement ' \
+                   'GROUP BY journal_id) d ' \
+                   'ON (s.journal_id = d.journal_id AND s.date = d.max_date) ' \
+                   'ORDER BY j.code')
         lines = cr.dictfetchall()
 
-        self.localcontext.update( {
+        self.localcontext.update({
             'lines': lines,
         })
         super(bank_statement_balance_report, self).set_context(objects, data, ids, report_type=report_type)
@@ -49,7 +49,7 @@ class bank_statement_balance_report(report_sxw.rml_parse):
         if context is None:
             context = {}
         super(bank_statement_balance_report, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
         })
         self.context = context

@@ -35,25 +35,32 @@ _logger = logging.getLogger(__name__)
 
 
 """ Some tools for parsing / creating email fields """
+
+
 def decode(text):
     """Returns unicode() string conversion of the the given encoded smtp header text"""
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
+
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
         self.fed = []
+
     def handle_data(self, d):
         self.fed.append(d)
+
     def get_data(self):
         return ''.join(self.fed)
+
 
 def strip_tags(html):
     s = MLStripper()
     s.feed(html)
     return s.get_data()
+
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -119,7 +126,7 @@ class mail_message(osv.Model):
                         ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
-                        ], 'Type', size=12, 
+                        ], 'Type', size=12,
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
@@ -342,10 +349,10 @@ class mail_message(osv.Model):
             partner_ids = []
             if message.subtype_id:
                 partner_ids = [partner_tree[partner.id] for partner in message.notified_partner_ids
-                                if partner.id in partner_tree]
+                               if partner.id in partner_tree]
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
-                                if partner.id in partner_tree]
+                               if partner.id in partner_tree]
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -478,7 +485,7 @@ class mail_message(osv.Model):
             # make groups of unread messages
             id_min, id_max, nb = max(child_ids), 0, 0
             for child_id in child_ids:
-                if not child_id in message_ids:
+                if child_id not in message_ids:
                     nb += 1
                     if id_min > child_id:
                         id_min = child_id
@@ -502,7 +509,7 @@ class mail_message(osv.Model):
 
     @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
-                        thread_level=0, context=None, parent_id=False, limit=None):
+                     thread_level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured
             messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.

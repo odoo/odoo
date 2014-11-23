@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import osv 
+from openerp.osv import osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
 
 RES_CURRENCY_EDI_STRUCT = {
-    #custom: 'code'
+    # custom: 'code'
     'symbol': True,
     'rate': True,
 }
+
 
 class res_currency(osv.osv, EDIMixin):
     _inherit = "res.currency"
@@ -37,20 +38,20 @@ class res_currency(osv.osv, EDIMixin):
         edi_doc_list = []
         for currency in records:
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
-            edi_doc = super(res_currency,self).edi_export(cr, uid, [currency], edi_struct, context)[0]
+            edi_doc = super(res_currency, self).edi_export(cr, uid, [currency], edi_struct, context)[0]
             edi_doc.update(code=currency.name)
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
-        self._edi_requires_attributes(('code','symbol'), edi_document)
+        self._edi_requires_attributes(('code', 'symbol'), edi_document)
         external_id = edi_document['__id']
         existing_currency = self._edi_get_object_by_external_id(cr, uid, external_id, 'res_currency', context=context)
         if existing_currency:
             return existing_currency.id
 
         # find with unique ISO code
-        existing_ids = self.search(cr, uid, [('name','=',edi_document['code'])])
+        existing_ids = self.search(cr, uid, [('name', '=', edi_document['code'])])
         if existing_ids:
             return existing_ids[0]
 

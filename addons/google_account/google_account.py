@@ -25,7 +25,7 @@ class google_service(osv.osv_memory):
         client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_secret' % service)
         redirect_uri = ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri')
 
-        #Get the Refresh Token From Google And store it in ir.config_parameter
+        # Get the Refresh Token From Google And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         data = dict(code=authorization_code, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, grant_type="authorization_code")
         data = werkzeug.url_encode(data)

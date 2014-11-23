@@ -8,7 +8,7 @@ Openerp Web Diagram view.
 """,
     'version': '2.0',
     'depends': ['web'],
-    'data' : [
+    'data': [
         'views/web_diagram.xml',
     ],
     'qweb': [

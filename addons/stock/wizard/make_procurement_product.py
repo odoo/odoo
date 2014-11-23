@@ -23,24 +23,25 @@
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
+
 class make_procurement(osv.osv_memory):
     _name = 'make.procurement'
     _description = 'Make Procurements'
-    
+
     def onchange_product_id(self, cr, uid, ids, prod_id):
         """ On Change of Product ID getting the value of related UoM.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param ids: List of IDs selected 
-         @param prod_id: Changed ID of Product 
-         @return: A dictionary which gives the UoM of the changed Product 
+         @param ids: List of IDs selected
+         @param prod_id: Changed ID of Product
+         @return: A dictionary which gives the UoM of the changed Product
         """
         product = self.pool.get('product.product').browse(cr, uid, prod_id)
         return {'value': {'uom_id': product.uom_id.id}}
-    
+
     _columns = {
-        'qty': fields.float('Quantity', digits=(16,2), required=True),
+        'qty': fields.float('Quantity', digits=(16, 2), required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=1),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
@@ -69,7 +70,7 @@ class make_procurement(osv.osv_memory):
         for proc in self.browse(cr, uid, ids, context=context):
             wh = wh_obj.browse(cr, uid, proc.warehouse_id.id, context=context)
             procure_id = procurement_obj.create(cr, uid, {
-                'name':'INT: '+str(user),
+                'name': 'INT: ' + str(user),
                 'date_planned': proc.date_planned,
                 'product_id': proc.product_id.id,
                 'product_qty': proc.qty,
@@ -91,8 +92,8 @@ class make_procurement(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'procurement.order',
-            'res_id' : procure_id,
-            'views': [(id3,'form'),(id2,'tree')],
+            'res_id': procure_id,
+            'views': [(id3, 'form'), (id2, 'tree')],
             'type': 'ir.actions.act_window',
          }
 
@@ -135,4 +136,3 @@ class make_procurement(osv.osv_memory):
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

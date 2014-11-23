@@ -42,7 +42,7 @@ class grant_badge_wizard(osv.TransientModel):
             if uid == wiz.user_id.id:
                 raise osv.except_osv(_('Warning!'), _('You can not grant a badge to yourself'))
 
-            #create the badge
+            # create the badge
             values = {
                 'user_id': wiz.user_id.id,
                 'sender_id': uid,

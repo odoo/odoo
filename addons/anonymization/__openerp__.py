@@ -48,7 +48,7 @@ anonymization process to recover your previous data.
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/anonymization1.jpeg','images/anonymization2.jpeg','images/anonymization3.jpeg'],
+    'images': ['images/anonymization1.jpeg', 'images/anonymization2.jpeg', 'images/anonymization3.jpeg'],
 }
 
 

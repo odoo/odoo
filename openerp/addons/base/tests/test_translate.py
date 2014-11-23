@@ -22,16 +22,17 @@
 import unittest
 from openerp.tools.translate import quote, unquote
 
+
 class TranslationToolsTestCase(unittest.TestCase):
 
     def test_quote_unquote(self):
 
         def test_string(str):
             quoted = quote(str)
-            #print "\n1:", repr(str)
-            #print "2:", repr(quoted)
+            # print "\n1:", repr(str)
+            # print "2:", repr(quoted)
             unquoted = unquote("".join(quoted.split('"\n"')))
-            #print "3:", repr(unquoted)
+            # print "3:", repr(unquoted)
             self.assertEquals(str, unquoted)
 
         test_string("""test \nall kinds\n \n o\r

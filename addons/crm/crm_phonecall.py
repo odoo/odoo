@@ -25,17 +25,18 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
+
 class crm_phonecall(osv.osv):
     """ Model for CRM phonecalls """
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
     _inherit = ['mail.thread']
-    
+
     _columns = {
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
@@ -62,7 +63,7 @@ class crm_phonecall(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone'),
         'partner_mobile': fields.char('Mobile'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
@@ -106,7 +107,7 @@ class crm_phonecall(osv.osv):
         for phonecall in self.browse(cr, uid, ids, context=context):
             if phonecall.duration <= 0:
                 duration = datetime.now() - datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                values = {'duration': duration.seconds/float(60)}
+                values = {'duration': duration.seconds / float(60)}
                 self.write(cr, uid, [phonecall.id], values, context=context)
         return True
 
@@ -131,15 +132,15 @@ class crm_phonecall(osv.osv):
             if not schedule_time:
                 schedule_time = call.date
             vals = {
-                    'name' : call_summary,
-                    'user_id' : user_id or False,
-                    'categ_id' : categ_id or False,
-                    'description' : call.description or False,
-                    'date' : schedule_time,
-                    'section_id' : section_id or False,
+                    'name': call_summary,
+                    'user_id': user_id or False,
+                    'categ_id': categ_id or False,
+                    'description': call.description or False,
+                    'date': schedule_time,
+                    'section_id': section_id or False,
                     'partner_id': call.partner_id and call.partner_id.id or False,
-                    'partner_phone' : call.partner_phone,
-                    'partner_mobile' : call.partner_mobile,
+                    'partner_phone': call.partner_phone,
+                    'partner_mobile': call.partner_mobile,
                     'priority': call.priority,
                     'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
             }
@@ -164,15 +165,15 @@ class crm_phonecall(osv.osv):
         if opportunity_id:
             opportunity = self.pool.get('crm.lead').browse(cr, uid, opportunity_id, context=context)
             values = {
-                'section_id' : opportunity.section_id and opportunity.section_id.id or False,
-                'partner_phone' : opportunity.phone,
-                'partner_mobile' : opportunity.mobile,
-                'partner_id' : opportunity.partner_id and opportunity.partner_id.id or False,
+                'section_id': opportunity.section_id and opportunity.section_id.id or False,
+                'partner_phone': opportunity.phone,
+                'partner_mobile': opportunity.mobile,
+                'partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
             }
-        return {'value' : values}
+        return {'value': values}
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
-        write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        write_res = self.write(cr, uid, ids, {'partner_id': partner_id}, context=context)
         self._call_set_partner_send_note(cr, uid, ids, context)
         return write_res
 
@@ -195,7 +196,7 @@ class crm_phonecall(osv.osv):
         :param int partner_id: partner to assign if any
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        #TODO this is a duplication of the handle_partner_assignation method of crm_lead
+        # TODO this is a duplication of the handle_partner_assignation method of crm_lead
         partner_ids = {}
         # If a partner_id is given, force this partner for all elements
         force_partner_id = partner_id
@@ -208,7 +209,6 @@ class crm_phonecall(osv.osv):
             partner_ids[call.id] = partner_id
         return partner_ids
 
-
     def redirect_phonecall_view(self, cr, uid, phonecall_id, context=None):
         model_data = self.pool.get('ir.model.data')
         # Select the view
@@ -220,7 +220,7 @@ class crm_phonecall(osv.osv):
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'crm.phonecall',
-                'res_id' : int(phonecall_id),
+                'res_id': int(phonecall_id),
                 'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view and search_view[1] or False,
@@ -288,7 +288,7 @@ class crm_phonecall(osv.osv):
         :return dict: containing view information
         """
         if len(ids) != 1:
-            raise osv.except_osv(_('Warning!'),_('It\'s only possible to convert one phonecall at a time.'))
+            raise osv.except_osv(_('Warning!'), _('It\'s only possible to convert one phonecall at a time.'))
 
         opportunity_dict = self.convert_opportunity(cr, uid, ids, context=context)
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, opportunity_dict[ids[0]], context)

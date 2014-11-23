@@ -14,7 +14,7 @@ This module provides the core of the OpenERP Web Client.
     'data': [
         'views/webclient_templates.xml',
     ],
-    'qweb' : [
+    'qweb': [
         "static/src/xml/*.xml",
     ],
 }

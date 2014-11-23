@@ -78,7 +78,7 @@
 # versie 5.0.1.2
 #   Correctie op diverse rekening types van user_type_asset -> user_type_liability en user_type_equity
 # versie 5.0.1.3
-#   Kleine correctie op BTW te vorderen hoog, id was hetzelfde voor beide, waardoor hoog werd overschreven door #   overig. Verduidelijking van omschrijvingen in belastingcodes t.b.v. aangifte overzicht.
+# Kleine correctie op BTW te vorderen hoog, id was hetzelfde voor beide, waardoor hoog werd overschreven door #   overig. Verduidelijking van omschrijvingen in belastingcodes t.b.v. aangifte overzicht.
 # versie 5.0.1.4
 #   BTW omschrijvingen aangepast, zodat rapporten er beter uitzien. 2a en 5b e.d. verwijderd en enkele omschrijvingen toegevoegd.
 # versie 5.0.1.5 - Switch to English
@@ -86,8 +86,8 @@
 #   Changed naming of 7020 and 7030 to Kostprijs omzet xxxx
 
 {
-    'name' : 'Netherlands - Accounting',
-    'version' : '1.5',
+    'name': 'Netherlands - Accounting',
+    'version': '1.5',
     'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart for Netherlands in OpenERP.
@@ -115,22 +115,21 @@ cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verho
 De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
 
     """,
-    'author'  : 'Veritos - Jan Verlaan',
-    'website' : 'http://www.veritos.nl',
-    'depends' : ['account',
-                 'base_vat',
-                 'base_iban',
-                 'account_chart'
+    'author': 'Veritos - Jan Verlaan',
+    'website': 'http://www.veritos.nl',
+    'depends': ['account',
+                'base_vat',
+                'base_iban',
+                'account_chart'
     ],
-    'data' : ['account_chart_netherlands.xml',
+    'data': ['account_chart_netherlands.xml',
               "account_fiscal_position_template.xml",
               "account_fiscal_position_tax_template.xml",
               "account_fiscal_position_account_template.xml",
               'l10n_nl_wizard.xml'
     ],
-    'demo' : [],
+    'demo': [],
     'installable': True,
-    'images': ['images/config_chart_l10n_nl.jpeg','images/l10n_nl_chart.jpeg'],
+    'images': ['images/config_chart_l10n_nl.jpeg', 'images/l10n_nl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

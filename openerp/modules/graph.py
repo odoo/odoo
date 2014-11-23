@@ -47,6 +47,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class Graph(dict):
     """ Modules dependency graph.
 
@@ -70,15 +71,15 @@ class Graph(dict):
         if not len(self):
             return
         # update the graph with values from the database (if exist)
-        ## First, we set the default values for each package in graph
+        # First, we set the default values for each package in graph
         additional_data = dict((key, {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None}) for key in self.keys())
-        ## Then we get the values from the database
+        # Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
-                   ' WHERE name IN %s',(tuple(additional_data),)
+                   ' WHERE name IN %s', (tuple(additional_data),)
                    )
 
-        ## and we update the default values with values from the database
+        # and we update the default values with values from the database
         additional_data.update((x['name'], x) for x in cr.dictfetchall())
 
         for package in self.values():
@@ -99,7 +100,7 @@ class Graph(dict):
             # done by db.initialize, so it is possible to not do it again here.
             info = openerp.modules.module.load_information_from_description_file(module)
             if info and info['installable']:
-                packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
+                packages.append((module, info))  # TODO directly a dict, like in get_modules_with_version
             else:
                 _logger.warning('module %s: not installable, skipped', module)
 
@@ -112,7 +113,7 @@ class Graph(dict):
 
             # if all dependencies of 'package' are already in the graph, add 'package' in the graph
             if reduce(lambda x, y: x and y in self, deps, True):
-                if not package in current:
+                if package not in current:
                     packages.pop(0)
                     continue
                 later.clear()
@@ -137,12 +138,11 @@ class Graph(dict):
             _logger.warning('Some modules were not loaded.')
         return result
 
-
     def __iter__(self):
         level = 0
         done = set(self.keys())
         while done:
-            level_modules = sorted((name, module) for name, module in self.items() if module.depth==level)
+            level_modules = sorted((name, module) for name, module in self.items() if module.depth == level)
             for name, module in level_modules:
                 done.remove(name)
                 yield module
@@ -150,6 +150,7 @@ class Graph(dict):
 
     def __str__(self):
         return '\n'.join(str(n) for n in self if n.depth == 0)
+
 
 class Node(object):
     """ One module in the modules dependency graph.
@@ -210,7 +211,7 @@ class Node(object):
     def _pprint(self, depth=0):
         s = '%s\n' % self.name
         for c in self.children:
-            s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
+            s += '%s`-> %s' % ('   ' * depth, c._pprint(depth + 1))
         return s
 
 

@@ -59,7 +59,7 @@ class stock_landed_cost(osv.osv):
 
         for picking in picking_obj.browse(cr, uid, picking_ids):
             for move in picking.move_lines:
-                #it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
+                # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
                 if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
                     continue
                 total_cost = 0.0
@@ -135,8 +135,8 @@ class stock_landed_cost(osv.osv):
             'credit': line.additional_landed_cost,
             'account_id': credit_account_id
         }, context=context)
-        
-        #Create account move lines for quants already out of stock
+
+        # Create account move lines for quants already out of stock
         if qty_out > 0:
             aml_obj.create(cr, uid, {
                                      'name': line.name + ": " + str(qty_out) + _(' already out'),
@@ -297,6 +297,7 @@ class stock_landed_cost_lines(osv.osv):
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
     }
+
 
 class stock_valuation_adjustment_lines(osv.osv):
     _name = 'stock.valuation.adjustment.lines'

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class test_inherits(common.TransactionCase):
 
     def test_access_from_child_to_parent_model(self):

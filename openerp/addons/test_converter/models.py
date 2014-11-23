@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import orm, fields
 
+
 class test_model(orm.Model):
     _name = 'test_converter.test_model'
 

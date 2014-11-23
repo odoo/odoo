@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv,orm
+from openerp.osv import fields, osv, orm
+
 
 class crm_segmentation(osv.osv):
     '''
@@ -37,8 +38,8 @@ class crm_segmentation(osv.osv):
 added to partners that match the segmentation criterions after computation.'),
         'exclusif': fields.boolean('Exclusive', help='Check if the category is limited to partners that match the segmentation criterions.\
                         \nIf checked, remove the category from partners that doesn\'t match segmentation criterions'),
-        'state': fields.selection([('not running','Not Running'),\
-                    ('running','Running')], 'Execution Status', readonly=True),
+        'state': fields.selection([('not running', 'Not Running'),\
+                    ('running', 'Running')], 'Execution Status', readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', \
                             'segmentation_id', 'Criteria', required=True, copy=True),
@@ -50,7 +51,6 @@ added to partners that match the segmentation criterions after computation.'),
     }
 
     def process_continue(self, cr, uid, ids, start=False):
-
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -71,7 +71,7 @@ added to partners that match the segmentation criterions after computation.'),
             partners = [x[0] for x in cr.fetchall()]
 
             if categ['sales_purchase_active']:
-                to_remove_list=[]
+                to_remove_list = []
                 cr.execute('select id from crm_segmentation_line where segmentation_id=%s', (id,))
                 line_ids = [x[0] for x in cr.fetchall()]
 
@@ -88,27 +88,26 @@ added to partners that match the segmentation criterions after computation.'),
                             values (%s,%s)', (categ['categ_id'][0], partner.id))
                     partner_obj.invalidate_cache(cr, uid, ['category_id'], [partner.id])
 
-            self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
+            self.write(cr, uid, [id], {'state': 'not running', 'partner_id': 0})
         return True
 
     def process_stop(self, cr, uid, ids, *args):
-
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of Process stop’s IDs"""
 
-        return self.write(cr, uid, ids, {'state':'not running', 'partner_id':0})
+        return self.write(cr, uid, ids, {'state': 'not running', 'partner_id': 0})
 
     def process_start(self, cr, uid, ids, *args):
-
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of Process start’s IDs """
 
-        self.write(cr, uid, ids, {'state':'running', 'partner_id':0})
+        self.write(cr, uid, ids, {'state': 'running', 'partner_id': 0})
         return self.process_continue(cr, uid, ids, start=True)
+
 
 class crm_segmentation_line(osv.osv):
     """ Segmentation line """
@@ -118,63 +117,63 @@ class crm_segmentation_line(osv.osv):
     _columns = {
         'name': fields.char('Rule Name', required=True),
         'segmentation_id': fields.many2one('crm.segmentation', 'Segmentation'),
-        'expr_name': fields.selection([('sale','Sale Amount'),
-                        ('purchase','Purchase Amount')], 'Control Variable', required=True),
-        'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
+        'expr_name': fields.selection([('sale', 'Sale Amount'),
+                        ('purchase', 'Purchase Amount')], 'Control Variable', required=True),
+        'expr_operator': fields.selection([('<', '<'), ('=', '='), ('>', '>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
-        'operator': fields.selection([('and','Mandatory Expression'),\
-                        ('or','Optional Expression')],'Mandatory / Optional', required=True),
+        'operator': fields.selection([('and', 'Mandatory Expression'),\
+                        ('or', 'Optional Expression')], 'Mandatory / Optional', required=True),
     }
     _defaults = {
         'expr_name': lambda *a: 'sale',
         'expr_operator': lambda *a: '>',
         'operator': lambda *a: 'and'
     }
-    def test(self, cr, uid, ids, partner_id):
 
+    def test(self, cr, uid, ids, partner_id):
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of Test’s IDs """
 
-        expression = {'<': lambda x,y: x<y, '=':lambda x,y:x==y, '>':lambda x,y:x>y}
+        expression = {'<': lambda x, y: x < y, '=': lambda x, y: x == y, '>': lambda x, y: x > y}
         ok = False
         lst = self.read(cr, uid, ids)
         for l in lst:
-            cr.execute('select * from ir_module_module where name=%s and state=%s', ('account','installed'))
+            cr.execute('select * from ir_module_module where name=%s and state=%s', ('account', 'installed'))
             if cr.fetchone():
-                if l['expr_name']=='sale':
+                if l['expr_name'] == 'sale':
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %s '\
-                                'AND i.type = \'out_invoice\'',
+                               'AND i.partner_id = %s '\
+                               'AND i.type = \'out_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %s '\
-                                'AND i.type = \'out_refund\'',
+                               'AND i.partner_id = %s '\
+                               'AND i.type = \'out_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0
-                elif l['expr_name']=='purchase':
+                elif l['expr_name'] == 'purchase':
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %s '\
-                                'AND i.type = \'in_invoice\'',
+                               'AND i.partner_id = %s '\
+                               'AND i.type = \'in_invoice\'',
                             (partner_id,))
                     value = cr.fetchone()[0] or 0.0
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \
-                                'AND i.partner_id = %s '\
-                                'AND i.type = \'in_refund\'',
+                               'AND i.partner_id = %s '\
+                               'AND i.type = \'in_refund\'',
                             (partner_id,))
                     value -= cr.fetchone()[0] or 0.0
                 res = expression[l['expr_operator']](value, l['expr_value'])
-                if (not res) and (l['operator']=='and'):
+                if (not res) and (l['operator'] == 'and'):
                     return False
                 if res:
                     return True
@@ -182,4 +181,3 @@ class crm_segmentation_line(osv.osv):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -50,6 +50,7 @@ hooked = False
 # Modules already loaded
 loaded = []
 
+
 class AddonsImportHook(object):
     """
     Import hook to load OpenERP addons from multiple paths.
@@ -65,7 +66,7 @@ class AddonsImportHook(object):
     def find_module(self, module_name, package_path):
         module_parts = module_name.split('.')
         if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
-            return self # We act as a loader too.
+            return self  # We act as a loader too.
 
     def load_module(self, module_name):
         if module_name in sys.modules:
@@ -77,6 +78,7 @@ class AddonsImportHook(object):
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
+
 
 def initialize_sys_path():
     """
@@ -108,6 +110,7 @@ def initialize_sys_path():
         sys.meta_path.append(AddonsImportHook())
         hooked = True
 
+
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
 
@@ -126,6 +129,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
     if display_warning:
         _logger.warning('module %s: module not found', module)
     return False
+
 
 def get_module_filetree(module, dir='.'):
     path = get_module_path(module)
@@ -146,7 +150,7 @@ def get_module_filetree(module, dir='.'):
             continue
 
         if dir:
-            f = f[len(dir)+int(not dir.endswith('/')):]
+            f = f[len(dir) + int(not dir.endswith('/')):]
         lst = f.split(os.sep)
         current = tree
         while len(lst) != 1:
@@ -154,6 +158,7 @@ def get_module_filetree(module, dir='.'):
         current[lst.pop(0)] = None
 
     return tree
+
 
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.
@@ -168,7 +173,8 @@ def get_module_resource(module, *args):
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
-    if not mod_path: return False
+    if not mod_path:
+        return False
     resource_path = opj(mod_path, *args)
     if os.path.isdir(mod_path):
         # the module is a directory - ignore zip behavior
@@ -176,11 +182,13 @@ def get_module_resource(module, *args):
             return resource_path
     return False
 
+
 def get_module_icon(module):
     iconpath = ['static', 'description', 'icon.png']
     if get_module_resource(module, *iconpath):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
+
 
 def get_module_root(path):
     """
@@ -208,6 +216,7 @@ def get_module_root(path):
             return None
         path = new_path
     return path
+
 
 def load_information_from_description_file(module, mod_path=None):
     """
@@ -263,10 +272,11 @@ def load_information_from_description_file(module, mod_path=None):
             info['version'] = adapt_version(info['version'])
             return info
 
-    #TODO: refactor the logger in this file to follow the logging guidelines
+    # TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
     _logger.debug('module %s: no %s file found.', module, MANIFEST)
     return {}
+
 
 def init_module_models(cr, module_name, obj_list):
     """ Initialize a list of models.
@@ -293,6 +303,7 @@ def init_module_models(cr, module_name, obj_list):
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()
+
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.
@@ -326,6 +337,7 @@ def load_openerp_module(module_name):
     else:
         loaded.append(module_name)
 
+
 def get_modules():
     """Returns the list of module names
     """
@@ -348,6 +360,7 @@ def get_modules():
         plist.extend(listdir(ad))
     return list(set(plist))
 
+
 def get_modules_with_version():
     modules = get_modules()
     res = dict.fromkeys(modules, adapt_version('1.0'))
@@ -359,11 +372,13 @@ def get_modules_with_version():
             continue
     return res
 
+
 def adapt_version(version):
     serie = release.major_version
     if version == serie or not version.startswith(serie + '.'):
         version = '%s.%s' % (serie, version)
     return version
+
 
 def get_test_modules(module):
     """ Return a list of module for the addons potentialy containing tests to
@@ -380,18 +395,22 @@ def get_test_modules(module):
 
     # include submodules too
     result = [mod_obj for name, mod_obj in sys.modules.iteritems()
-              if mod_obj # mod_obj can be None
+              if mod_obj  # mod_obj can be None
               if name.startswith(module)
               if re.search(r'test_\w+$', name)]
     return result
 
 # Use a custom stream object to log the test executions.
+
+
 class TestStream(object):
     def __init__(self, logger_name='openerp.tests'):
         self.logger = logging.getLogger(logger_name)
         self.r = re.compile(r'^-*$|^ *... *$|^ok$')
+
     def flush(self):
         pass
+
     def write(self, s):
         if self.r.match(s):
             return
@@ -404,6 +423,7 @@ class TestStream(object):
             self.logger.log(level, c)
 
 current_test = None
+
 
 def runs_at(test, hook, default):
     # by default, tests do not run post install
@@ -420,6 +440,7 @@ def runs_at(test, hook, default):
 
 runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
 runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
+
 
 def run_unit_tests(module_name, dbname, position=runs_at_install):
     """
@@ -448,6 +469,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
 
     current_test = None
     return r
+
 
 def unwrap_suite(test):
     """

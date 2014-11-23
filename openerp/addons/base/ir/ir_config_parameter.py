@@ -62,11 +62,10 @@ class ir_config_parameter(osv.osv):
         """
         for key, func in _default_parameters.iteritems():
             # force=True skips search and always performs the 'if' body (because ids=False)
-            ids = not force and self.search(cr, SUPERUSER_ID, [('key','=',key)])
+            ids = not force and self.search(cr, SUPERUSER_ID, [('key', '=', key)])
             if not ids:
                 value, groups = func()
                 self.set_param(cr, SUPERUSER_ID, key, value, groups=groups)
-
 
     def get_param(self, cr, uid, key, default=False, context=None):
         """Retrieve the value for a given key.
@@ -76,7 +75,7 @@ class ir_config_parameter(osv.osv):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        ids = self.search(cr, uid, [('key','=',key)], context=context)
+        ids = self.search(cr, uid, [('key', '=', key)], context=context)
         if not ids:
             return default
         param = self.browse(cr, uid, ids[0], context=context)
@@ -93,7 +92,7 @@ class ir_config_parameter(osv.osv):
                  not exist.
         :rtype: string
         """
-        ids = self.search(cr, uid, [('key','=',key)], context=context)
+        ids = self.search(cr, uid, [('key', '=', key)], context=context)
 
         gids = []
         for group_xml in groups:

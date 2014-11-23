@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -44,9 +44,10 @@ def listdir(dir, recursive=False):
 
     res = []
     for root, dirs, files in walksymlinks(dir):
-        root = root[len(dir)+1:]
+        root = root[len(dir) + 1:]
         res.extend([opj(root, f) for f in files])
     return res
+
 
 def walksymlinks(top, topdown=True, onerror=None):
     """
@@ -65,6 +66,7 @@ def walksymlinks(top, topdown=True, onerror=None):
         if not topdown:
             yield dirpath, dirnames, filenames
 
+
 @contextmanager
 def tempdir():
     tmpdir = tempfile.mkdtemp()
@@ -72,6 +74,7 @@ def tempdir():
         yield tmpdir
     finally:
         shutil.rmtree(tmpdir)
+
 
 def zip_dir(path, stream, include_dir=True):      # TODO add ignore list
     path = os.path.normpath(path)
@@ -96,6 +99,7 @@ if os.name != 'nt':
 else:
     # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
     _TH32CS_SNAPPROCESS = 0x00000002
+
     class _PROCESSENTRY32(ctypes.Structure):
         _fields_ = [("dwSize", ctypes.c_ulong),
                     ("cntUsage", ctypes.c_ulong),

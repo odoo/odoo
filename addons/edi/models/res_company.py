@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 
+
 class res_company(osv.osv):
     """Helper subclass for res.company providing util methods for working with
        companies in the context of EDI import/export. The res.company object
@@ -44,16 +45,16 @@ class res_company(osv.osv):
             address = res_partner.browse(cr, uid, addr_id, context=context)
             result = res_partner.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
         if company.logo:
-            result['logo'] = company.logo # already base64-encoded
+            result['logo'] = company.logo  # already base64-encoded
         if company.paypal_account:
             result['paypal_account'] = company.paypal_account
         # bank info: include only bank account supposed to be displayed in document footers
         res_partner_bank = self.pool.get('res.partner.bank')
-        bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id),('footer','=',True)], context=context)
+        bank_ids = res_partner_bank.search(cr, uid, [('company_id', '=', company.id), ('footer', '=', True)], context=context)
         if bank_ids:
             result['bank_ids'] = res_partner.edi_m2m(cr, uid,
-                                                             res_partner_bank.browse(cr, uid, bank_ids, context=context),
-                                                             context=context)
+                                                     res_partner_bank.browse(cr, uid, bank_ids, context=context),
+                                                     context=context)
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

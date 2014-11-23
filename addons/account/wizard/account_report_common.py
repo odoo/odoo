@@ -26,6 +26,7 @@ from openerp.osv import fields, osv
 from openerp.osv.orm import setup_modifiers
 from openerp.tools.translate import _
 
+
 class account_common_report(osv.osv_memory):
     _name = "account.common.report"
     _description = "Account Common Report"
@@ -41,7 +42,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     _columns = {
-        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
+        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id', '=', False)]),
         'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
@@ -68,11 +69,12 @@ class account_common_report(osv.osv_memory):
         return True
 
     _constraints = [
-        (_check_company_id, 'The fiscalyear, periods or chart of account chosen have to belong to the same company.', ['chart_account_id','fiscalyear_id','period_from','period_to']),
+        (_check_company_id, 'The fiscalyear, periods or chart of account chosen have to belong to the same company.', ['chart_account_id', 'fiscalyear_id', 'period_from', 'period_to']),
     ]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
+        if context is None:
+            context = {}
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
@@ -87,7 +89,7 @@ class account_common_report(osv.osv_memory):
     def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
         res = {'value': {}}
         if filter == 'filter_no':
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
+            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False, 'date_to': False}
         if filter == 'filter_date':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
         if filter == 'filter_period' and fiscalyear_id:
@@ -136,11 +138,11 @@ class account_common_report(osv.osv_memory):
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):
-        return self.pool.get('account.journal').search(cr, uid ,[])
+        return self.pool.get('account.journal').search(cr, uid, [])
 
     _defaults = {
             'fiscalyear_id': _get_fiscalyear,
-            'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report',context=c),
+            'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report', context=c),
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
@@ -160,7 +162,7 @@ class account_common_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
+                raise osv.except_osv(_('Error!'), _('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result

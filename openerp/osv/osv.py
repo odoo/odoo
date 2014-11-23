@@ -29,6 +29,6 @@ except_osv = except_orm
 # Deprecated, kept for backward compatibility.
 osv = Model
 osv_memory = TransientModel
-osv_abstract = AbstractModel # ;-)
+osv_abstract = AbstractModel  # ;-)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

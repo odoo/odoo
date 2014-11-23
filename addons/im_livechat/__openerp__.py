@@ -1,5 +1,5 @@
 {
-    'name' : 'Live Chat',
+    'name': 'Live Chat',
     'author': 'OpenERP SA',
     'version': '1.0',
     'summary': 'Live Chat with Visitors/Customers',
@@ -25,7 +25,7 @@ chat operators.
     'demo': [
         "im_livechat_demo.xml",
     ],
-    'depends' : ["mail", "im_chat"],
+    'depends': ["mail", "im_chat"],
     'installable': True,
     'auto_install': False,
     'application': True,

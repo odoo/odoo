@@ -25,6 +25,7 @@ from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split, html2plaintext
 from openerp.tools.mail import html_sanitize
 
+
 class test_mail(TestMail):
 
     def test_000_alias_setup(self):
@@ -431,10 +432,10 @@ class test_mail(TestMail):
                             'message_post: mail.message attachments were not linked to the document')
             if 'List' in attach.name:
                 self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
-                                'message_post: mail.message attachment name / data incorrect')
+                              'message_post: mail.message attachment name / data incorrect')
                 dl_attach = self.mail_message.download_attachment(cr, user_raoul.id, id_message=msg.id, attachment_id=attach.id)
                 self.assertIn((dl_attach['filename'], dl_attach['base64'].decode('base64')), _attachments,
-                                'message_post: mail.message download_attachment is incorrect')
+                              'message_post: mail.message download_attachment is incorrect')
 
         # Test: followers: same as before (author was already subscribed)
         group_pigs.refresh()
@@ -460,15 +461,15 @@ class test_mail(TestMail):
             self.assertEqual(len(sent_email['email_to']), 1,
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
-                            'message_post: notification email email_to incorrect')
+                          'message_post: notification email email_to incorrect')
             self.assertEqual(sent_email['reply_to'], u'"YourCompany \\"Pigs\\" !ù $%-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
-                            'message_post: notification email body incorrect')
+                          'message_post: notification email body incorrect')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the body')
+                          'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
             self.assertFalse(sent_email['references'],
@@ -527,19 +528,19 @@ class test_mail(TestMail):
             self.assertEqual(len(sent_email['email_to']), 1,
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
-                            'message_post: notification email email_to incorrect')
+                          'message_post: notification email email_to incorrect')
             self.assertEqual(email_split(sent_email['reply_to']), ['r@r'],  # was '"Followers of Pigs" <r@r>', but makes no sense
                             'message_post: notification email reply_to incorrect: should have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
-                            'message_post: notification email does not contain the body')
+                          'message_post: notification email does not contain the body')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the body')
+                          'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
             self.assertIn(msg_message_id, sent_email['references'],
-                            'message_post: notification email references lacks parent message message_id')
+                          'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
         for attach in msg.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group',
@@ -664,7 +665,7 @@ class test_mail(TestMail):
         # Test: mail.compose.message: attachments
         for attach in compose.attachment_ids:
             self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test,
-                            'compose wizard: mail.message attachment name / data incorrect')
+                          'compose wizard: mail.message attachment name / data incorrect')
 
         # --------------------------------------------------
         # CASE3: mass_mail on Pigs and Bird

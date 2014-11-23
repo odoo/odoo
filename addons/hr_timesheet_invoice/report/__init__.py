@@ -24,4 +24,3 @@ import report_analytic
 import hr_timesheet_invoice_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

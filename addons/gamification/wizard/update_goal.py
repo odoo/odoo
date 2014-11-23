@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class goal_manual_wizard(osv.TransientModel):
     """Wizard to update a manual goal"""
     _name = 'gamification.goal.wizard'

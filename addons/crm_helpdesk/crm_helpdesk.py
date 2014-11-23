@@ -42,8 +42,8 @@ class crm_helpdesk(osv.osv):
             'date_action_last': fields.datetime('Last Action', readonly=1),
             'date_action_next': fields.datetime('Next Action', readonly=1),
             'description': fields.text('Description'),
-            'create_date': fields.datetime('Creation Date' , readonly=True),
-            'write_date': fields.datetime('Update Date' , readonly=True),
+            'create_date': fields.datetime('Creation Date', readonly=True),
+            'write_date': fields.datetime('Update Date', readonly=True),
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
@@ -51,7 +51,7 @@ class crm_helpdesk(osv.osv):
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
             'partner_id': fields.many2one('res.partner', 'Partner'),
-            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+            'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
             'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
@@ -59,7 +59,7 @@ class crm_helpdesk(osv.osv):
             'channel_id': fields.many2one('crm.tracking.medium', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
+            'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
             'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\

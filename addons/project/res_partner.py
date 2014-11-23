@@ -19,16 +19,17 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class res_partner(osv.osv):
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         Task = self.pool['project.task']
         return {
-            partner_id: Task.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+            partner_id: Task.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
     _columns = {

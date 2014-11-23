@@ -29,6 +29,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
 
@@ -47,7 +48,6 @@ class gamification_badge_user(osv.Model):
         'create_date': fields.datetime('Created', readonly=True),
         'create_uid': fields.many2one('res.users', string='Creator', readonly=True),
     }
-
 
     def _send_badge(self, cr, uid, ids, context=None):
         """Send a notification to a user for receiving a badge

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class res_partner_bank(osv.osv):
     """Add fields and behavior for French RIB"""
     _inherit = "res.partner.bank"
@@ -32,7 +33,7 @@ class res_partner_bank(osv.osv):
             # Ignore the accounts of type other than rib
             if bank_acc.state != 'rib':
                 continue
-            # Fail if the needed values are empty of too short 
+            # Fail if the needed values are empty of too short
             if (not bank_acc.bank_code
             or len(bank_acc.bank_code) != 5
             or not bank_acc.office or len(bank_acc.office) != 5
@@ -46,12 +47,12 @@ class res_partner_bank(osv.osv):
             table = dict((ord(a), b) for a, b in zip(
                 u'abcdefghijklmnopqrstuvwxyz', u'12345678912345678923456789'))
             rib = rib.lower().translate(table)
-            # compute the key	
+            # compute the key
             key = 97 - (100 * int(rib)) % 97
             if int(bank_acc.key) != key:
                 raise osv.except_osv(_('Error!'),
                     _("The RIB key %s does not correspond to the other codes: %s %s %s.") % \
-                        (bank_acc.key, bank_acc.bank_code, bank_acc.office, bank_acc.rib_acc_number) )
+                        (bank_acc.key, bank_acc.bank_code, bank_acc.office, bank_acc.rib_acc_number))
             if bank_acc.acc_number:
                 if not self.is_iban_valid(cr, uid, bank_acc.acc_number):
                     raise osv.except_osv(_('Error!'), _("The IBAN %s is not valid.") % bank_acc.acc_number)
@@ -63,7 +64,7 @@ class res_partner_bank(osv.osv):
                                                         context=context)
         if bank_id:
             value = result.setdefault('value', {})
-            bank = self.pool.get('res.bank').browse(cr, uid, bank_id, 
+            bank = self.pool.get('res.bank').browse(cr, uid, bank_id,
                                                     context=context)
             value['bank_code'] = bank.rib_code
         return result
@@ -90,16 +91,15 @@ class res_bank(osv.osv):
         """Search by bank code in addition to the standard search"""
         # Get the standard results
         results = super(res_bank, self).name_search(cr, user,
-             name, args=args ,operator=operator, context=context, limit=limit)
+             name, args=args, operator=operator, context=context, limit=limit)
         # Get additional results using the RIB code
         ids = self.search(cr, user, [('rib_code', operator, name)],
-                              limit=limit, context=context)
+                          limit=limit, context=context)
         # Merge the results
         results = list(set(results + self.name_get(cr, user, ids, context)))
         return results
-        
+
     _columns = {
         'rib_code': fields.char('RIB Bank Code'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

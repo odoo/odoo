@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.osv import orm
 
 from openerp.tools.translate import _
+
 
 def _get_answers(cr, uid, ids):
     """
@@ -61,7 +62,7 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id IN %s""",(tuple(ids),))
+     and id IN %s""", (tuple(ids),))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 
@@ -78,7 +79,6 @@ def _get_parents(cr, uid, ids):
 
 
 def test_prof(cr, uid, seg_id, pid, answers_ids=None):
-
     """ return True if the partner pid fetch the segmentation rule seg_id
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -127,7 +127,7 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
         from crm_segmentation
         where profiling_active = true'''
     if ok != []:
-        query = query +''' and categ_id not in(%s)'''% ','.join([str(i) for i in ok ])
+        query = query + ''' and categ_id not in(%s)''' % ','.join([str(i) for i in ok ])
     query = query + ''' order by id '''
 
     cr.execute(query)
@@ -142,45 +142,43 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
 class question(osv.osv):
     """ Question """
 
-    _name="crm_profiling.question"
-    _description= "Question"
+    _name = "crm_profiling.question"
+    _description = "Question"
 
-    _columns={
+    _columns = {
         'name': fields.char("Question", required=True),
         'answers_ids': fields.one2many("crm_profiling.answer", "question_id", "Available Answers", copy=True),
         }
 
 
-
 class questionnaire(osv.osv):
     """ Questionnaire """
 
-    _name="crm_profiling.questionnaire"
-    _description= "Questionnaire"
+    _name = "crm_profiling.questionnaire"
+    _description = "Questionnaire"
 
     _columns = {
         'name': fields.char("Questionnaire", required=True),
-        'description':fields.text("Description", required=True),
-        'questions_ids': fields.many2many('crm_profiling.question','profile_questionnaire_quest_rel',\
+        'description': fields.text("Description", required=True),
+        'questions_ids': fields.many2many('crm_profiling.question', 'profile_questionnaire_quest_rel',\
                                 'questionnaire', 'question', "Questions"),
     }
 
 
-
 class answer(osv.osv):
-    _name="crm_profiling.answer"
-    _description="Answer"
-    _columns={
+    _name = "crm_profiling.answer"
+    _description = "Answer"
+    _columns = {
         "name": fields.char("Answer", required=True),
-        "question_id": fields.many2one('crm_profiling.question',"Question"),
+        "question_id": fields.many2one('crm_profiling.question', "Question"),
         }
 
 
 class partner(osv.osv):
-    _inherit="res.partner"
-    _columns={
-        "answers_ids": fields.many2many("crm_profiling.answer","partner_question_rel",\
-                                "partner","answer","Answers"),
+    _inherit = "res.partner"
+    _columns = {
+        "answers_ids": fields.many2many("crm_profiling.answer", "partner_question_rel",\
+                                "partner", "answer", "Answers"),
         }
 
     def _questionnaire_compute(self, cr, uid, answers, context=None):
@@ -198,7 +196,6 @@ class partner(osv.osv):
         self.write(cr, uid, [partner_id], {'answers_ids': [[6, 0, answers]]}, context=context)
         return {}
 
-
     def write(self, cr, uid, ids, vals, context=None):
         """
             @param self: The object pointer
@@ -208,21 +205,20 @@ class partner(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         if 'answers_ids' in vals:
-            vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
+            vals['category_id'] = [[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
 
         return super(partner, self).write(cr, uid, ids, vals, context=context)
-
 
 
 class crm_segmentation(osv.osv):
     """ CRM Segmentation """
 
-    _inherit="crm.segmentation"
-    _columns={
-        "answer_yes": fields.many2many("crm_profiling.answer","profile_question_yes_rel",\
-                            "profile","answer","Included Answers"),
-        "answer_no": fields.many2many("crm_profiling.answer","profile_question_no_rel",\
-                            "profile","answer","Excluded Answers"),
+    _inherit = "crm.segmentation"
+    _columns = {
+        "answer_yes": fields.many2many("crm_profiling.answer", "profile_question_yes_rel",\
+                            "profile", "answer", "Included Answers"),
+        "answer_no": fields.many2many("crm_profiling.answer", "profile_question_no_rel",\
+                            "profile", "answer", "Excluded Answers"),
         'parent_id': fields.many2one('crm.segmentation', 'Parent Profile'),
         'child_ids': fields.one2many('crm.segmentation', 'parent_id', 'Child Profiles'),
         'profiling_active': fields.boolean('Use The Profiling Rules', help='Check\
@@ -242,7 +238,7 @@ class crm_segmentation(osv.osv):
             @param ids: List of crm segmentation’s IDs """
 
         partner_obj = self.pool.get('res.partner')
-        categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', \
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id', \
                             'sales_purchase_active', 'profiling_active'])
         for categ in categs:
             if start:
@@ -257,7 +253,7 @@ class crm_segmentation(osv.osv):
             partners = [x[0] for x in cr.fetchall()]
 
             if categ['sales_purchase_active']:
-                to_remove_list=[]
+                to_remove_list = []
                 cr.execute('select id from crm_segmentation_line where segmentation_id=%s', (id,))
                 line_ids = [x[0] for x in cr.fetchall()]
 
@@ -271,7 +267,7 @@ class crm_segmentation(osv.osv):
                 to_remove_list = []
                 for pid in partners:
 
-                    cr.execute('select distinct(answer) from partner_question_rel where partner=%s',(pid,))
+                    cr.execute('select distinct(answer) from partner_question_rel where partner=%s', (pid,))
                     answers_ids = [x[0] for x in cr.fetchall()]
 
                     if (not test_prof(cr, uid, id, pid, answers_ids)):
@@ -282,12 +278,11 @@ class crm_segmentation(osv.osv):
             for partner in partner_obj.browse(cr, uid, partners):
                 category_ids = [categ_id.id for categ_id in partner.category_id]
                 if categ['categ_id'][0] not in category_ids:
-                    cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner.id))
+                    cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0], partner.id))
                     partner_obj.invalidate_cache(cr, uid, ['category_id'], [partner.id])
 
-            self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
+            self.write(cr, uid, [id], {'state': 'not running', 'partner_id': 0})
         return True
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

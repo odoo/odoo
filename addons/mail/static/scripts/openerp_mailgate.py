@@ -36,6 +36,7 @@ from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import Encoders
 
+
 class DefaultConfig(object):
     """
     Default configuration
@@ -65,19 +66,20 @@ def send_mail(_from_, to_, subject, text, files=None, server=config.MAIL_SERVER,
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
-    msg.attach( MIMEText(text) )
+    msg.attach(MIMEText(text))
 
     for file_name, file_content in files:
         part = MIMEBase('application', "octet-stream")
-        part.set_payload( file_content )
+        part.set_payload(file_content)
         Encoders.encode_base64(part)
         part.add_header('Content-Disposition', 'attachment; filename="%s"'
                        % file_name)
         msg.attach(part)
 
     smtp = smtplib.SMTP(server, port=port)
-    smtp.sendmail(_from_, to_, msg.as_string() )
+    smtp.sendmail(_from_, to_, msg.as_string())
     smtp.close()
+
 
 class RPCProxy(object):
     def __init__(self, uid, passwd,
@@ -93,6 +95,7 @@ class RPCProxy(object):
     def __call__(self, *request, **kwargs):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request, **kwargs)
 
+
 class EmailParser(object):
     def __init__(self, uid, password, dbname, host, port, model=False, email_default=False):
         self.rpc = RPCProxy(uid, password, host=host, port=port, dbname=dbname)
@@ -105,7 +108,6 @@ class EmailParser(object):
                 self.model = str(model)
             self.email_default = email_default
 
-
     def parse(self, message, custom_values=None, save_original=None):
         # pass message as bytes because we don't know its encoding until we parse its headers
         # and hence can't convert it to utf-8 for transport
@@ -115,6 +117,7 @@ class EmailParser(object):
                         xmlrpclib.Binary(message),
                         custom_values or {},
                         save_original or False)
+
 
 def configure_parser():
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.1')
@@ -153,6 +156,7 @@ def configure_parser():
 
     return parser
 
+
 def main():
     """
     Receive the email via the stdin and send it to the OpenERP Server
@@ -170,7 +174,7 @@ def main():
     msg_txt = sys.stdin.read()
     custom_values = {}
     try:
-        custom_values = dict(eval(options.custom_values or "{}" ))
+        custom_values = dict(eval(options.custom_values or "{}"))
     except:
         import traceback
         traceback.print_exc()

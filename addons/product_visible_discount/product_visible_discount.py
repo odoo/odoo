@@ -23,10 +23,11 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class product_pricelist(osv.osv):
     _inherit = 'product.pricelist'
 
-    _columns ={
+    _columns = {
         'visible_discount': fields.boolean('Visible Discount'),
     }
     _defaults = {
@@ -63,18 +64,17 @@ class sale_order_line(osv.osv):
                 factor = self.pool['product.uom']._compute_qty(cr, uid, uom, 1.0, product.uom_id.id)
             return product_read[field_name] * factor
 
-
-        res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax, date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         context = {'lang': lang, 'partner_id': partner_id}
-        result=res['value']
-        pricelist_obj=self.pool.get('product.pricelist')
+        result = res['value']
+        pricelist_obj = self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
         if product and pricelist and self.pool.get('res.users').has_group(cr, uid, 'sale.group_discount_per_so_line'):
-            if result.get('price_unit',False):
-                price=result['price_unit']
+            if result.get('price_unit', False):
+                price = result['price_unit']
             else:
                 return res
             uom = result.get('product_uom', uom)

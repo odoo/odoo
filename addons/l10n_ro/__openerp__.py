@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    @author -  Fekete Mihai <feketemihai@gmail.com>
-#    Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
+#    Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro).
 #    Copyright (C) 2009 (<http://www.filsystem.ro>)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,12 @@
 #
 ##############################################################################
 {
-    "name" : "Romania - Accounting",
-    "version" : "1.0",
-    "author" : "TOTAL PC SYSTEMS",
+    "name": "Romania - Accounting",
+    "version": "1.0",
+    "author": "TOTAL PC SYSTEMS",
     "website": "http://www.erpsystems.ro",
-    "category" : "Localization/Account Charts",
-    "depends" : ['account','account_chart','base_vat'],
+    "category": "Localization/Account Charts",
+    "depends": ['account', 'account_chart', 'base_vat'],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
 It also adds the Registration Number for Romania in OpenERP.
@@ -33,16 +33,15 @@ It also adds the Registration Number for Romania in OpenERP.
 
 Romanian accounting chart and localization.
     """,
-    "demo" : [],
-    "data" : ['partner_view.xml',
-              'account_chart.xml',
-              'account_tax_code_template.xml',
-              'account_chart_template.xml',
-              'account_tax_template.xml',
-              'fiscal_position_template.xml',
-              'l10n_chart_ro_wizard.xml',
+    "demo": [],
+    "data": ['partner_view.xml',
+             'account_chart.xml',
+             'account_tax_code_template.xml',
+             'account_chart_template.xml',
+             'account_tax_template.xml',
+             'fiscal_position_template.xml',
+             'l10n_chart_ro_wizard.xml',
               ],
     "installable": True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

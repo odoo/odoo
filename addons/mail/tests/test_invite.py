@@ -45,4 +45,4 @@ class test_invite(TestMail):
             self.assertEqual(sent_email.get('subject'), 'Invitation to follow Discussion group: Pigs',
                             'invite: subject of invitation email is incorrect')
             self.assertIn('Raoul Grosbedon invited you to follow Discussion group document: Pigs', sent_email.get('body'),
-                            'invite: body of invitation email is incorrect')
+                          'invite: body of invitation email is incorrect')

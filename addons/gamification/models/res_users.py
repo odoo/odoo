@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from challenge import MAX_VISIBILITY_RANKING
 
+
 class res_users_gamification_group(osv.Model):
     """ Update of res.users class
         - if adding groups to an user, check gamification.challenge linked to

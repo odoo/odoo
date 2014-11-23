@@ -33,24 +33,24 @@ class hr_expense_report(osv.osv):
     _columns = {
         'date': fields.date('Date ', readonly=True),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
-        'product_qty':fields.float('Product Quantity', readonly=True),
+        'product_qty': fields.float('Product Quantity', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True),
         'date_valid': fields.date('Validation Date', readonly=True),
-        'department_id':fields.many2one('hr.department','Department', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
+        'department_id': fields.many2one('hr.department', 'Department', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'user_id': fields.many2one('res.users', 'Validation User', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True, digits_compute=dp.get_precision('Account')),
-        'delay_valid':fields.float('Delay to Valid', readonly=True),
-        'delay_confirm':fields.float('Delay to Confirm', readonly=True),
-        'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
-        'price_average':fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
-        'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'no_of_products':fields.integer('# of Products', readonly=True),
-        'no_of_account':fields.integer('# of Accounts', readonly=True),
+        'price_total': fields.float('Total Price', readonly=True, digits_compute=dp.get_precision('Account')),
+        'delay_valid': fields.float('Delay to Valid', readonly=True),
+        'delay_confirm': fields.float('Delay to Confirm', readonly=True),
+        'analytic_account': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
+        'price_average': fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
+        'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
+        'no_of_products': fields.integer('# of Products', readonly=True),
+        'no_of_account': fields.integer('# of Accounts', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -60,6 +60,7 @@ class hr_expense_report(osv.osv):
             'Status', readonly=True),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_expense_report')
         cr.execute("""

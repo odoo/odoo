@@ -24,6 +24,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
@@ -44,7 +45,7 @@ class sale_configuration(osv.osv_memory):
             help='Allows you to add delivery methods in sales orders and delivery orders.\n'
                  'You can define your own carrier and delivery grids for prices.\n'
                  '-This installs the module delivery.'),
-        'default_picking_policy' : fields.boolean("Deliver all at once when all products are available.",
+        'default_picking_policy': fields.boolean("Deliver all at once when all products are available.",
             help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
         'group_mrp_properties': fields.boolean('Product properties on order lines',
             implied_group='sale.group_mrp_properties',

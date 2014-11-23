@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import threading
 import types
-import time # used to eval time.strftime expressions
+import time  # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
@@ -25,11 +25,14 @@ import assertion_report
 
 _logger = logging.getLogger(__name__)
 
+
 class YamlImportException(Exception):
     pass
 
+
 class YamlImportAbortion(Exception):
     pass
+
 
 def _is_yaml_mapping(node, tag_constructor):
     value = isinstance(node, types.DictionaryType) \
@@ -37,69 +40,89 @@ def _is_yaml_mapping(node, tag_constructor):
         and isinstance(node.keys()[0], tag_constructor)
     return value
 
+
 def is_comment(node):
     return isinstance(node, types.StringTypes)
+
 
 def is_assert(node):
     return isinstance(node, yaml_tag.Assert) \
         or _is_yaml_mapping(node, yaml_tag.Assert)
 
+
 def is_record(node):
     return _is_yaml_mapping(node, yaml_tag.Record)
 
+
 def is_python(node):
     return _is_yaml_mapping(node, yaml_tag.Python)
+
 
 def is_menuitem(node):
     return isinstance(node, yaml_tag.Menuitem) \
         or _is_yaml_mapping(node, yaml_tag.Menuitem)
 
+
 def is_function(node):
     return isinstance(node, yaml_tag.Function) \
         or _is_yaml_mapping(node, yaml_tag.Function)
 
+
 def is_report(node):
     return isinstance(node, yaml_tag.Report)
+
 
 def is_workflow(node):
     return isinstance(node, yaml_tag.Workflow)
 
+
 def is_act_window(node):
     return isinstance(node, yaml_tag.ActWindow)
+
 
 def is_delete(node):
     return isinstance(node, yaml_tag.Delete)
 
+
 def is_context(node):
     return isinstance(node, yaml_tag.Context)
+
 
 def is_url(node):
     return isinstance(node, yaml_tag.Url)
 
+
 def is_eval(node):
     return isinstance(node, yaml_tag.Eval)
+
 
 def is_ref(node):
     return isinstance(node, yaml_tag.Ref) \
         or _is_yaml_mapping(node, yaml_tag.Ref)
 
+
 def is_ir_set(node):
     return _is_yaml_mapping(node, yaml_tag.IrSet)
 
+
 def is_string(node):
     return isinstance(node, basestring)
+
 
 class RecordDictWrapper(dict):
     """
     Used to pass a record as locals in eval:
     records do not strictly behave like dict, so we force them to.
     """
+
     def __init__(self, record):
         self.record = record
+
     def __getitem__(self, key):
         if key in self.record:
             return self.record[key]
         return dict.__getitem__(self, key)
+
 
 class YamlInterpreter(object):
     def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False, loglevel=logging.DEBUG):
@@ -115,9 +138,9 @@ class YamlInterpreter(object):
         self.loglevel = loglevel
         self.pool = openerp.registry(cr.dbname)
         self.uid = 1
-        self.context = {} # opererp context
+        self.context = {}  # opererp context
         self.eval_context = {'ref': self._ref(),
-                             '_ref': self._ref(), # added '_ref' so that record['ref'] is possible
+                             '_ref': self._ref(),  # added '_ref' so that record['ref'] is possible
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
@@ -143,13 +166,13 @@ class YamlInterpreter(object):
                 module_count = self.pool['ir.module.module'].search_count(self.cr, self.uid, \
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
-        if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
+        if len(id) > 64:  # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
             _logger.error('id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
         if xml_id is False or xml_id is None:
             return False
-        #if not xml_id:
+        # if not xml_id:
         #    raise YamlImportException("The xml_id should be a non empty string.")
         elif isinstance(xml_id, types.IntType):
             id = xml_id
@@ -244,7 +267,7 @@ class YamlInterpreter(object):
                         args = (assertion.string, test)
                         for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
                             if aop in test:
-                                left, right = test.split(aop,1)
+                                left, right = test.split(aop, 1)
                                 lmsg = ''
                                 rmsg = ''
                                 try:
@@ -258,12 +281,12 @@ class YamlInterpreter(object):
                                     rmsg = '<exc>'
 
                                 msg += 'values: ! %s %s %s'
-                                args += ( lmsg, aop, rmsg )
+                                args += (lmsg, aop, rmsg)
                                 break
 
                         self._log_assert_failure(msg, *args)
                         return
-            else: # all tests were successful for this assertion tag (no break)
+            else:  # all tests were successful for this assertion tag (no break)
                 self.assertion_report.record_success()
 
     def _coerce_bool(self, value, default=False):
@@ -293,11 +316,11 @@ class YamlInterpreter(object):
         if view_id and (view_id is not True) and isinstance(view_id, basestring):
             module = self.module
             if '.' in view_id:
-                module, view_id = view_id.split('.',1)
+                module, view_id = view_id.split('.', 1)
             view_id = self.pool['ir.model.data'].get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
-            record_dict=self.create_osv_memory_record(record, fields)
+            record_dict = self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
             try:
@@ -316,14 +339,14 @@ class YamlInterpreter(object):
                     if not self._coerce_bool(record.forcecreate):
                         return None
 
-
             #context = self.get_context(record, self.eval_context)
-            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            # TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             context = record.context
             view_info = False
             if view_id:
                 varg = view_id
-                if view_id is True: varg = False
+                if view_id is True:
+                    varg = False
                 view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
             record_dict = self._create_record(model, fields, view_info, default=default)
@@ -354,10 +377,10 @@ class YamlInterpreter(object):
 
         def process_val(key, val):
             if fg[key]['type'] == 'many2one':
-                if type(val) in (tuple,list):
+                if type(val) in (tuple, list):
                     val = val[0]
             elif fg[key]['type'] == 'one2many':
-                if val and isinstance(val, (list,tuple)) and isinstance(val[0], dict):
+                if val and isinstance(val, (list, tuple)) and isinstance(val[0], dict):
                     # we want to return only the fields that aren't readonly
                     # For that, we need to first get the right tree view to consider for the field `key´
                     one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
@@ -369,18 +392,18 @@ class YamlInterpreter(object):
                             # if field is missing in view or has a readonly modifier, drop it
                             field_elem = arch.xpath("//field[@name='%s']" % field_key)
                             if field_elem and (field_elem[0].get('modifiers', '{}').find('"readonly": true') >= 0):
-                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in
                                 # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
                                 del rec[field_key]
                     # now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
-                    val = map(lambda x: (0,0,x), val)
+                    val = map(lambda x: (0, 0, x), val)
             elif fg[key]['type'] == 'many2many':
-                if val and isinstance(val,(list,tuple)) and isinstance(val[0], (int,long)):
-                    val = [(6,0,val)]
+                if val and isinstance(val, (list, tuple)) and isinstance(val[0], (int, long)):
+                    val = [(6, 0, val)]
 
             # we want to return only the fields that aren't readonly
             if el.get('modifiers', '{}').find('"readonly": true') >= 0:
-                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in
                 # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
                 return False
 
@@ -407,25 +430,25 @@ class YamlInterpreter(object):
             nodes = [view]
             while nodes:
                 el = nodes.pop(0)
-                if el.tag=='field':
+                if el.tag == 'field':
                     field_name = el.attrib['name']
                     assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                     if field_name in fields:
                         one2many_form_view = None
-                        if (view is not False) and (fg[field_name]['type']=='one2many'):
+                        if (view is not False) and (fg[field_name]['type'] == 'one2many'):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
 
                         field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
 
-                        #call process_val to not update record_dict if values were given for readonly fields
+                        # call process_val to not update record_dict if values were given for readonly fields
                         val = process_val(field_name, field_value)
                         if val:
                             record_dict[field_name] = val
-                        #if (field_name in defaults) and defaults[field_name] == field_value:
+                        # if (field_name in defaults) and defaults[field_name] == field_value:
                         #    print '*** You can remove these lines:', field_name, field_value
 
-                    #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
+                    # if field_name has a default value or a value is given in the yaml file, we must call its on_change()
                     elif field_name not in defaults:
                         continue
 
@@ -445,6 +468,7 @@ class YamlInterpreter(object):
                         class parent2(object):
                             def __init__(self, d):
                                 self.d = d
+
                             def __getattr__(self, name):
                                 return self.d.get(name, False)
 
@@ -467,9 +491,9 @@ class YamlInterpreter(object):
                                 record_dict[key] = process_val(key, val)
                         else:
                             _logger.debug("The returning field '%s' from your on_change call '%s'"
-                                            " does not exist either on the object '%s', either in"
-                                            " the view '%s'",
-                                            key, match.group(1), model._name, view_info['name'])
+                                          " does not exist either on the object '%s', either in"
+                                          " the view '%s'",
+                                          key, match.group(1), model._name, view_info['name'])
                 else:
                     nodes = list(el) + nodes
         else:
@@ -518,8 +542,8 @@ class YamlInterpreter(object):
             elements = self.process_ref(expression, field)
             if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
-            else: # many2one
-                if isinstance(elements, (list,tuple)):
+            else:  # many2one
+                if isinstance(elements, (list, tuple)):
                     value = self._get_first_result(elements)
                 else:
                     value = elements
@@ -539,7 +563,7 @@ class YamlInterpreter(object):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
-        else: # scalar field
+        else:  # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
             else:
@@ -613,7 +637,7 @@ class YamlInterpreter(object):
         else:
             uid = self.uid
         self.cr.execute('select distinct signal, sequence, id from wkf_transition ORDER BY sequence,id')
-        signals=[x['signal'] for x in self.cr.dictfetchall()]
+        signals = [x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
         openerp.workflow.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
@@ -627,7 +651,7 @@ class YamlInterpreter(object):
                 value = self.process_ref(param)
             elif is_eval(param):
                 value = self.process_eval(param)
-            elif isinstance(param, types.DictionaryType): # supports XML syntax
+            elif isinstance(param, types.DictionaryType):  # supports XML syntax
                 param_model = self.get_model(param.get('model', model))
                 if 'search' in param:
                     q = eval(param['search'], self.eval_context)
@@ -640,7 +664,7 @@ class YamlInterpreter(object):
                 else:
                     raise YamlImportException('You must provide either a !ref or at least a "eval" or a "search" to function parameter #%d.' % i)
             else:
-                value = param # scalar value
+                value = param  # scalar value
             args.append(value)
         return args
 
@@ -683,8 +707,8 @@ class YamlInterpreter(object):
             if node.name:
                 values['name'] = node.name
             try:
-                res = [ self.get_id(node.id) ]
-            except: # which exception ?
+                res = [self.get_id(node.id)]
+            except:  # which exception ?
                 res = None
 
         if node.action:
@@ -701,7 +725,7 @@ class YamlInterpreter(object):
                 self.cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (action_id,))
                 ir_act_window_result = self.cr.fetchone()
                 assert ir_act_window_result, "No window action defined for this id %s !\n" \
-                        "Verify that this is a window action or add a type argument." % (node.action,)
+                    "Verify that this is a window action or add a type argument." % (node.action,)
                 action_type, action_mode, action_name, view_id, target = ir_act_window_result
                 if view_id:
                     self.cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (view_id,))
@@ -760,7 +784,7 @@ class YamlInterpreter(object):
         if node.view:
             view_id = self.get_id(node.view)
         if not node.context:
-            node.context={}
+            node.context = {}
         context = eval(str(node.context), self.eval_context)
         values = {
             'name': node.name,
@@ -835,15 +859,15 @@ class YamlInterpreter(object):
                 value = expression
             res[fieldname] = value
         self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
-                res['name'], res['models'], res['value'], replace=res.get('replace',True), \
-                isobject=res.get('isobject', False), meta=res.get('meta',None))
+                res['name'], res['models'], res['value'], replace=res.get('replace', True), \
+                isobject=res.get('isobject', False), meta=res.get('meta', None))
 
     def process_report(self, node):
         values = {}
-        for dest, f in (('name','string'), ('model','model'), ('report_name','name')):
+        for dest, f in (('name', 'string'), ('model', 'model'), ('report_name', 'name')):
             values[dest] = getattr(node, f)
             assert values[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field, dest in (('rml', 'report_rml'), ('file', 'report_rml'), ('xml', 'report_xml'), ('xsl', 'report_xsl'), ('attachment', 'attachment'), ('attachment_use', 'attachment_use')):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
         if node.auto:
@@ -879,7 +903,6 @@ class YamlInterpreter(object):
         Empty node or commented node should not pass silently.
         """
         self._log_assert_failure("You have an empty block in your tests.")
-
 
     def process(self, yaml_string):
         """
@@ -948,6 +971,7 @@ class YamlInterpreter(object):
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment
+
 
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:

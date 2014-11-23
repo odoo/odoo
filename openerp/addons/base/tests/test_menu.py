@@ -1,9 +1,10 @@
 import openerp.tests.common as common
 
+
 class test_menu(common.TransactionCase):
 
     def setUp(self):
-        super(test_menu,self).setUp()
+        super(test_menu, self).setUp()
         self.Menus = self.registry('ir.ui.menu')
 
     def test_00_menu_deletion(self):
@@ -11,7 +12,7 @@ class test_menu(common.TransactionCase):
            are indeed made orphans"""
         cr, uid, Menus = self.cr, self.uid, self.Menus
 
-        # Generic trick necessary for search() calls to avoid hidden menus 
+        # Generic trick necessary for search() calls to avoid hidden menus
         ctx = {'ir.ui.menu.full_list': True}
 
         root_id = Menus.create(cr, uid, {'name': 'Test root'})

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_fiscalyear_close(osv.osv_memory):
     """
     Closes Account Fiscalyear and Generate Opening entries for New Fiscalyear
@@ -30,7 +31,7 @@ class account_fiscalyear_close(osv.osv_memory):
     _description = "Fiscalyear Close"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
+                                'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', 'Opening Entries Journal', domain="[('type','=','situation')]", required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.'),
@@ -56,12 +57,12 @@ class account_fiscalyear_close(osv.osv_memory):
             object is really resource greedy (not supposed to work on reconciliation between thousands of records) and
             it does a lot of different computation that are useless in this particular case.
             """
-            #check that the reconcilation concern journal entries from only one company
-            cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
+            # check that the reconcilation concern journal entries from only one company
+            cr.execute('select distinct(company_id) from account_move_line where id in %s', (tuple(ids),))
             if len(cr.fetchall()) > 1:
                 raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
             r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
-            cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+            cr.execute('update account_move_line set reconcile_id = %s where id in %s', (r_id, tuple(ids),))
             obj_acc_move_line.invalidate_cache(cr, uid, ['reconcile_id'], ids, context=context)
             return r_id
 
@@ -103,7 +104,7 @@ class account_fiscalyear_close(osv.osv_memory):
             raise osv.except_osv(_('User Error!'),
                     _('The journal must have centralized counterpart without the Skipping draft state option checked.'))
 
-        #delete existing move and move lines if any
+        # delete existing move and move lines if any
         move_ids = obj_acc_move.search(cr, uid, [
             ('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
         if move_ids:
@@ -117,7 +118,7 @@ class account_fiscalyear_close(osv.osv_memory):
         fy_ids = ','.join([str(x['id']) for x in result])
         query_line = obj_acc_move_line._query_get(cr, uid,
                 obj='account_move_line', context={'fiscalyear': fy_ids})
-        #create the opening move
+        # create the opening move
         vals = {
             'name': '/',
             'ref': '',
@@ -127,7 +128,7 @@ class account_fiscalyear_close(osv.osv_memory):
         }
         move_id = obj_acc_move.create(cr, uid, vals, context=context)
 
-        #1. report of the accounts with defferal method == 'unreconciled'
+        # 1. report of the accounts with defferal method == 'unreconciled'
         cr.execute('''
             SELECT a.id
             FROM account_account a
@@ -154,8 +155,8 @@ class account_fiscalyear_close(osv.osv_memory):
                      AND ''' + query_line + '''
                      AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
-            #We have also to consider all move_lines that were reconciled
-            #on another fiscal year, and report them too
+            # We have also to consider all move_lines that were reconciled
+            # on another fiscal year, and report them too
             cr.execute('''
                 INSERT INTO account_move_line (
                      name, create_uid, create_date, write_uid, write_date,
@@ -172,13 +173,13 @@ class account_fiscalyear_close(osv.osv_memory):
                      FROM account_move_line b
                      WHERE b.account_id IN %s
                        AND b.reconcile_id IS NOT NULL
-                       AND b.period_id IN ('''+fy_period_set+''')
+                       AND b.period_id IN (''' + fy_period_set + ''')
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
-                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
+                                          WHERE a.period_id IN (''' + fy2_period_set + ''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
             self.invalidate_cache(cr, uid, context=context)
 
-        #2. report of the accounts with defferal method == 'detail'
+        # 2. report of the accounts with defferal method == 'detail'
         cr.execute('''
             SELECT a.id
             FROM account_account a
@@ -207,7 +208,7 @@ class account_fiscalyear_close(osv.osv_memory):
                      ''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
             self.invalidate_cache(cr, uid, context=context)
 
-        #3. report of the accounts with defferal method == 'balance'
+        # 3. report of the accounts with defferal method == 'balance'
         cr.execute('''
             SELECT a.id
             FROM account_account a
@@ -247,18 +248,18 @@ class account_fiscalyear_close(osv.osv_memory):
             cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
             self.invalidate_cache(cr, uid, context=context)
 
-        #validate and centralize the opening move
+        # validate and centralize the opening move
         obj_acc_move.validate(cr, uid, [move_id], context=context)
 
-        #reconcile all the move.line of the opening move
+        # reconcile all the move.line of the opening move
         ids = obj_acc_move_line.search(cr, uid, [('journal_id', '=', new_journal.id),
-            ('period_id.fiscalyear_id','=',new_fyear.id)])
+            ('period_id.fiscalyear_id', '=', new_fyear.id)])
         if ids:
             reconcile_id = _reconcile_fy_closing(cr, uid, ids, context=context)
-            #set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance
+            # set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance
             self.pool.get('account.move.reconcile').write(cr, uid, [reconcile_id], {'create_date': new_fyear.date_start}, context=context)
 
-        #create the journal.period object and link it to the old fiscalyear
+        # create the journal.period object and link it to the old fiscalyear
         new_period = data[0].period_id.id
         ids = obj_acc_journal_period.search(cr, uid, [('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
         if not ids:
@@ -268,8 +269,8 @@ class account_fiscalyear_close(osv.osv_memory):
                    'period_id': period.id
                })]
         cr.execute('UPDATE account_fiscalyear ' \
-                    'SET end_journal_period_id = %s ' \
-                    'WHERE id = %s', (ids[0], old_fyear.id))
+                   'SET end_journal_period_id = %s ' \
+                   'WHERE id = %s', (ids[0], old_fyear.id))
         obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
 
         return {'type': 'ir.actions.act_window_close'}

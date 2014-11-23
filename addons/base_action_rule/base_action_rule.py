@@ -38,6 +38,7 @@ DATE_RANGE_FUNCTION = {
     False: lambda interval: timedelta(0),
 }
 
+
 def get_datetime(date_str):
     '''Return a datetime from a date string or a datetime string'''
     # complete date time if date_str contains only a date
@@ -167,6 +168,7 @@ class base_action_rule(osv.osv):
 
         def make_create():
             """ instanciate a create method that processes action rules """
+
             def create(self, cr, uid, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -192,6 +194,7 @@ class base_action_rule(osv.osv):
 
         def make_write():
             """ instanciate a write method that processes action rules """
+
             def write(self, cr, uid, ids, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -314,7 +317,7 @@ class base_action_rule(osv.osv):
                     # as we are usually running this as super-user in background
                     [filter_meta] = action.filter_id.get_metadata()
                     user_id = filter_meta['write_uid'] and filter_meta['write_uid'][0] or \
-                                    filter_meta['create_uid'][0]
+                        filter_meta['create_uid'][0]
                     ctx['lang'] = self.pool['res.users'].browse(cr, uid, user_id).lang
             record_ids = model.search(cr, uid, domain, context=ctx)
 

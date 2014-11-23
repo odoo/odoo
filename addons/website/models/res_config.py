@@ -1,6 +1,7 @@
 
 from openerp.osv import fields, osv
 
+
 class website_config_settings(osv.osv_memory):
     _name = 'website.config.settings'
     _inherit = 'res.config.settings'
@@ -12,7 +13,7 @@ class website_config_settings(osv.osv_memory):
         'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
         'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),
         'google_analytics_key': fields.related('website_id', 'google_analytics_key', type="char", string='Google Analytics Key'),
-        
+
         'social_twitter': fields.related('website_id', 'social_twitter', type="char", string='Twitter Account'),
         'social_facebook': fields.related('website_id', 'social_facebook', type="char", string='Facebook Account'),
         'social_github': fields.related('website_id', 'social_github', type="char", string='GitHub Account'),
@@ -27,9 +28,9 @@ class website_config_settings(osv.osv_memory):
         for fname, v in website_data.items():
             if fname in self._columns:
                 values[fname] = v[0] if v and self._columns[fname]._type == 'many2one' else v
-        return {'value' : values}
+        return {'value': values}
 
-    # FIXME in trunk for god sake. Change the fields above to fields.char instead of fields.related, 
+    # FIXME in trunk for god sake. Change the fields above to fields.char instead of fields.related,
     # and create the function set_website who will set the value on the website_id
     # create does not forward the values to the related many2one. Write does.
     def create(self, cr, uid, vals, context=None):
@@ -38,5 +39,5 @@ class website_config_settings(osv.osv_memory):
         return config_id
 
     _defaults = {
-        'website_id': lambda self,cr,uid,c: self.pool.get('website').search(cr, uid, [], context=c)[0],
+        'website_id': lambda self, cr, uid, c: self.pool.get('website').search(cr, uid, [], context=c)[0],
     }

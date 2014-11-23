@@ -19,19 +19,19 @@
 #
 ##############################################################################
 {
-    'name' : 'Fleet Management',
-    'version' : '0.1',
-    'author' : 'OpenERP S.A.',
+    'name': 'Fleet Management',
+    'version': '0.1',
+    'author': 'OpenERP S.A.',
     'sequence': 110,
     'category': 'Managing vehicles and contracts',
-    'website' : 'https://www.odoo.com/page/fleet',
-    'summary' : 'Vehicle, leasing, insurances, costs',
-    'description' : """
+    'website': 'https://www.odoo.com/page/fleet',
+    'summary': 'Vehicle, leasing, insurances, costs',
+    'description': """
 Vehicle, leasing, insurances, cost
 ==================================
 With this module, OpenERP helps you managing all your vehicles, the
 contracts associated to those vehicle as well as services, fuel log
-entries, costs and many other features necessary to the management 
+entries, costs and many other features necessary to the management
 of your fleet of vehicle(s)
 
 Main Features
@@ -43,12 +43,12 @@ Main Features
 * Show all costs associated to a vehicle or to a type of service
 * Analysis graph for costs
 """,
-    'depends' : [
+    'depends': [
         'base',
         'mail',
         'board'
     ],
-    'data' : [
+    'data': [
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
         'fleet_view.xml',
@@ -56,10 +56,10 @@ Main Features
         'fleet_data.xml',
         'fleet_board_view.xml',
     ],
-    'images': ['images/costs_analysis.jpeg','images/indicative_costs_analysis.jpeg','images/vehicles.jpeg','images/vehicles_contracts.jpeg','images/vehicles_fuel.jpeg','images/vehicles_odometer.jpeg','images/vehicles_services.jpeg'],
+    'images': ['images/costs_analysis.jpeg', 'images/indicative_costs_analysis.jpeg', 'images/vehicles.jpeg', 'images/vehicles_contracts.jpeg', 'images/vehicles_fuel.jpeg', 'images/vehicles_odometer.jpeg', 'images/vehicles_services.jpeg'],
 
     'demo': ['fleet_demo.xml'],
 
-    'installable' : True,
-    'application' : True,
+    'installable': True,
+    'application': True,
 }

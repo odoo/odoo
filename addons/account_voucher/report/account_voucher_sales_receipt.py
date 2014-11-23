@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp import tools
 
+
 class sale_receipt_report(osv.osv):
     _name = "sale.receipt.report"
     _description = "Sales Receipt Statistics"
@@ -35,29 +36,30 @@ class sale_receipt_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
         'price_total_tax': fields.float('Total With Tax', readonly=True),
-        'nbr':fields.integer('# of Voucher Lines', readonly=True),
+        'nbr': fields.integer('# of Voucher Lines', readonly=True),
         'type': fields.selection([
-            ('sale','Sale'),
-            ('purchase','Purchase'),
-            ('payment','Payment'),
-            ('receipt','Receipt'),
-            ],'Type', readonly=True),
+            ('sale', 'Sale'),
+            ('purchase', 'Purchase'),
+            ('payment', 'Payment'),
+            ('receipt', 'Receipt'),
+            ], 'Type', readonly=True),
         'state': fields.selection([
-            ('draft','Draft'),
-             ('proforma','Pro-forma'),
-             ('posted','Posted'),
-             ('cancel','Cancelled')
+            ('draft', 'Draft'),
+             ('proforma', 'Pro-forma'),
+             ('posted', 'Posted'),
+             ('cancel', 'Cancelled')
             ], 'Voucher Status', readonly=True),
-        'pay_now':fields.selection([
-            ('pay_now','Pay Directly'),
-            ('pay_later','Pay Later or Group Funds'),
-        ],'Payment', readonly=True),
+        'pay_now': fields.selection([
+            ('pay_now', 'Pay Directly'),
+            ('pay_later', 'Pay Later or Group Funds'),
+        ], 'Payment', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
         'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg")
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_receipt_report')
         cr.execute("""

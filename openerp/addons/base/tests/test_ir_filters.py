@@ -4,17 +4,20 @@ import functools
 from openerp import exceptions
 from openerp.tests import common
 
+
 def noid(d):
     """ Removes values that are not relevant for the test comparisons """
     d.pop('id', None)
     d.pop('action_id', None)
     return d
 
+
 class FiltersCase(common.TransactionCase):
     def build(self, model, *args):
         Model = self.registry(model)
         for vars in args:
             Model.create(self.cr, common.ADMIN_USER_ID, vars, {})
+
 
 class TestGetFilters(FiltersCase):
     def setUp(self):
@@ -65,7 +68,7 @@ class TestGetFilters(FiltersCase):
             dict(name='a', user_id=False, model_id='ir.filters'),
             dict(name='b', user_id=common.ADMIN_USER_ID, model_id='ir.filters'),
             dict(name='c', user_id=self.USER_ID, model_id='ir.filters'),
-            dict(name='d', user_id=common.ADMIN_USER_ID, model_id='ir.filters')  )
+            dict(name='d', user_id=common.ADMIN_USER_ID, model_id='ir.filters'))
 
         filters = self.registry('ir.filters').get_filters(
             self.cr, self.USER_ID, 'ir.filters')
@@ -75,11 +78,12 @@ class TestGetFilters(FiltersCase):
             dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
         ])
 
+
 class TestOwnDefaults(FiltersCase):
     def setUp(self):
         super(TestOwnDefaults, self).setUp()
         self.USER = self.registry('res.users').name_search(self.cr, self.uid, 'demo')[0]
-        self.USER_ID = self.USER[0]                 
+        self.USER_ID = self.USER[0]
 
     def test_new_no_filter(self):
         """
@@ -176,6 +180,7 @@ class TestOwnDefaults(FiltersCase):
             dict(name='a', user_id=self.USER, is_default=True, domain='[]', context='{}'),
             dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
         ])
+
 
 class TestGlobalDefaults(FiltersCase):
     def setUp(self):

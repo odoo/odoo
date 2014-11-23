@@ -29,14 +29,17 @@ if re.search('github.com[:/]odoo/odoo.git$', sys.argv[2]):
     sys.exit(1)
 """
 
-def printf(f,*l):
+
+def printf(f, *l):
     print "odoo:" + f % l
+
 
 def run(*l):
     if isinstance(l[0], list):
         l = l[0]
     printf("running %s", " ".join(l))
     subprocess.check_call(l)
+
 
 def git_locate():
     # Locate git dir
@@ -58,71 +61,76 @@ def git_locate():
         path = None
     return path
 
+
 def cmd_setup_git():
     git_dir = git_locate()
     if git_dir:
-        printf('git repo found at %s',git_dir)
+        printf('git repo found at %s', git_dir)
     else:
         run("git", "init", "odoo")
         os.chdir('odoo')
         git_dir = os.getcwd()
     if git_dir:
         # push sane config for git < 2.0, and hooks
-        #run('git','config','push.default','simple')
+        # run('git','config','push.default','simple')
         # alias
-        run('git','config','alias.st','status')
+        run('git', 'config', 'alias.st', 'status')
         # merge bzr style
-        run('git','config','merge.commit','no')
+        run('git', 'config', 'merge.commit', 'no')
         # pull let me choose between merge or rebase only works in git > 2.0, use an alias for 1
-        run('git','config','pull.ff','only')
-        run('git','config','alias.pl','pull --ff-only')
+        run('git', 'config', 'pull.ff', 'only')
+        run('git', 'config', 'alias.pl', 'pull --ff-only')
         pre_push_path = os.path.join(git_dir, '.git/hooks/pre-push')
-        open(pre_push_path,'w').write(GIT_HOOKS_PRE_PUSH.strip())
+        open(pre_push_path, 'w').write(GIT_HOOKS_PRE_PUSH.strip())
         os.chmod(pre_push_path, 0755)
         # setup odoo remote
-        run('git','config','remote.odoo.url','https://github.com/odoo/odoo.git')
-        run('git','config','remote.odoo.pushurl','git@github.com:odoo/odoo.git')
-        run('git','config','--add','remote.odoo.fetch','dummy')
-        run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git', 'config', 'remote.odoo.url', 'https://github.com/odoo/odoo.git')
+        run('git', 'config', 'remote.odoo.pushurl', 'git@github.com:odoo/odoo.git')
+        run('git', 'config', '--add', 'remote.odoo.fetch', 'dummy')
+        run('git', 'config', '--unset-all', 'remote.odoo.fetch')
+        run('git', 'config', '--add', 'remote.odoo.fetch', '+refs/heads/*:refs/remotes/odoo/heads/*')
         # setup odoo-dev remote
-        run('git','config','remote.odoo-dev.url','https://github.com/odoo-dev/odoo.git')
-        run('git','config','remote.odoo-dev.pushurl','git@github.com:odoo-dev/odoo.git')
-        run('git','remote','update')
+        run('git', 'config', 'remote.odoo-dev.url', 'https://github.com/odoo-dev/odoo.git')
+        run('git', 'config', 'remote.odoo-dev.pushurl', 'git@github.com:odoo-dev/odoo.git')
+        run('git', 'remote', 'update')
         # setup master branch
-        run('git','config','branch.master.remote','odoo')
-        run('git','config','branch.master.merge','refs/heads/master')
-        run('git','checkout','master')
+        run('git', 'config', 'branch.master.remote', 'odoo')
+        run('git', 'config', 'branch.master.merge', 'refs/heads/master')
+        run('git', 'checkout', 'master')
     else:
         printf('no git repo found')
+
 
 def cmd_setup_git_dev():
     git_dir = git_locate()
     if git_dir:
         # setup odoo-dev remote
-        run('git','config','--add','remote.odoo-dev.fetch','dummy')
-        run('git','config','--unset-all','remote.odoo-dev.fetch')
-        run('git','config','--add','remote.odoo-dev.fetch','+refs/heads/*:refs/remotes/odoo-dev/heads/*')
-        run('git','config','--add','remote.odoo-dev.fetch','+refs/pull/*:refs/remotes/odoo-dev/pull/*')
-        run('git','remote','update')
+        run('git', 'config', '--add', 'remote.odoo-dev.fetch', 'dummy')
+        run('git', 'config', '--unset-all', 'remote.odoo-dev.fetch')
+        run('git', 'config', '--add', 'remote.odoo-dev.fetch', '+refs/heads/*:refs/remotes/odoo-dev/heads/*')
+        run('git', 'config', '--add', 'remote.odoo-dev.fetch', '+refs/pull/*:refs/remotes/odoo-dev/pull/*')
+        run('git', 'remote', 'update')
+
 
 def cmd_setup_git_review():
     git_dir = git_locate()
     if git_dir:
         # setup odoo-dev remote
-        run('git','config','--add','remote.odoo.fetch','dummy')
-        run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
-        run('git','config','--add','remote.odoo.fetch','+refs/tags/*:refs/remotes/odoo/tags/*')
-        run('git','config','--add','remote.odoo.fetch','+refs/pull/*:refs/remotes/odoo/pull/*')
+        run('git', 'config', '--add', 'remote.odoo.fetch', 'dummy')
+        run('git', 'config', '--unset-all', 'remote.odoo.fetch')
+        run('git', 'config', '--add', 'remote.odoo.fetch', '+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git', 'config', '--add', 'remote.odoo.fetch', '+refs/tags/*:refs/remotes/odoo/tags/*')
+        run('git', 'config', '--add', 'remote.odoo.fetch', '+refs/pull/*:refs/remotes/odoo/pull/*')
+
 
 def setup_deps_debian(git_dir):
     debian_control_path = os.path.join(git_dir, 'debian/control')
     debian_control = open(debian_control_path).read()
-    debs = re.findall('python-[0-9a-z]+',debian_control)
+    debs = re.findall('python-[0-9a-z]+', debian_control)
     debs += ["postgresql"]
-    proc = subprocess.Popen(['sudo','apt-get','install'] + debs, stdin=open('/dev/tty'))
+    proc = subprocess.Popen(['sudo', 'apt-get', 'install'] + debs, stdin=open('/dev/tty'))
     proc.communicate()
+
 
 def cmd_setup_deps():
     git_dir = git_locate()
@@ -130,9 +138,11 @@ def cmd_setup_deps():
         if os.path.isfile('/etc/debian_version'):
             setup_deps_debian(git_dir)
 
+
 def setup_pg_debian(git_dir):
-    cmd = ['sudo','su','-','postgres','-c','createuser -s %s' % os.environ['USER']]
+    cmd = ['sudo', 'su', '-', 'postgres', '-c', 'createuser -s %s' % os.environ['USER']]
     subprocess.call(cmd)
+
 
 def cmd_setup_pg():
     git_dir = git_locate()
@@ -140,15 +150,17 @@ def cmd_setup_pg():
         if os.path.isfile('/etc/debian_version'):
             setup_pg_debian(git_dir)
 
+
 def cmd_setup():
     cmd_setup_git()
     cmd_setup_deps()
     cmd_setup_pg()
 
+
 def main():
     # regsitry of commands
     g = globals()
-    cmds = dict([(i[4:],g[i]) for i in g if i.startswith('cmd_')])
+    cmds = dict([(i[4:], g[i]) for i in g if i.startswith('cmd_')])
     # if curl URL | python2 then use command setup
     if len(sys.argv) == 1 and __file__ == '<stdin>':
         cmd_setup()
@@ -160,4 +172,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

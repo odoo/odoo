@@ -11,7 +11,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-MAX_FILE_SIZE = 100 * 1024 * 1024 # in megabytes
+MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
+
 
 class view(osv.osv):
     _inherit = "ir.module.module"

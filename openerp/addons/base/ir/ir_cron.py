@@ -38,6 +38,7 @@ _logger = logging.getLogger(__name__)
 
 BASE_VERSION = load_information_from_description_file('base')['version']
 
+
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
 
@@ -45,10 +46,11 @@ _intervalTypes = {
     'work_days': lambda interval: relativedelta(days=interval),
     'days': lambda interval: relativedelta(days=interval),
     'hours': lambda interval: relativedelta(hours=interval),
-    'weeks': lambda interval: relativedelta(days=7*interval),
+    'weeks': lambda interval: relativedelta(days=7 * interval),
     'months': lambda interval: relativedelta(months=interval),
     'minutes': lambda interval: relativedelta(minutes=interval),
 }
+
 
 class ir_cron(osv.osv):
     """ Model describing cron jobs (also called actions or tasks).
@@ -65,12 +67,12 @@ class ir_cron(osv.osv):
         'name': fields.char('Name', required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'active': fields.boolean('Active'),
-        'interval_number': fields.integer('Interval Number',help="Repeat every x."),
-        'interval_type': fields.selection( [('minutes', 'Minutes'),
-            ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
+        'interval_number': fields.integer('Interval Number', help="Repeat every x."),
+        'interval_type': fields.selection([('minutes', 'Minutes'),
+            ('hours', 'Hours'), ('work_days', 'Work Days'), ('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
-        'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
-        'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
+        'doall': fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
+        'nextcall': fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
         'model': fields.char('Object', help="Model name on which the method to be called is located, e.g. 'res.partner'."),
         'function': fields.char('Method', help="Name of the method to be called when this job is processed."),
         'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
@@ -78,13 +80,13 @@ class ir_cron(osv.osv):
     }
 
     _defaults = {
-        'nextcall' : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'priority' : 5,
-        'user_id' : lambda obj,cr,uid,context: uid,
-        'interval_number' : 1,
-        'interval_type' : 'months',
-        'numbercall' : 1,
-        'active' : 1,
+        'nextcall': lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'priority': 5,
+        'user_id': lambda obj, cr, uid, context: uid,
+        'interval_number': 1,
+        'interval_type': 'months',
+        'numbercall': 1,
+        'active': 1,
     }
 
     def _check_args(self, cr, uid, ids, context=None):
@@ -132,7 +134,7 @@ class ir_cron(osv.osv):
                 model = registry[model_name]
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname, uid, '*', model_name, method_name) + tuple(args), depth=log_depth)
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
                     getattr(model, method_name)(cr, uid, *args)
@@ -175,7 +177,7 @@ class ir_cron(osv.osv):
                 addsql = ''
                 if not numbercall:
                     addsql = ', active=False'
-                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
+                cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s" + addsql + " WHERE id=%s",
                            (nextcall.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
                 self.invalidate_cache(job_cr, SUPERUSER_ID)
 
@@ -265,7 +267,7 @@ class ir_cron(osv.osv):
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
 
-        if hasattr(threading.current_thread(), 'dbname'): # cron job could have removed it as side-effect
+        if hasattr(threading.current_thread(), 'dbname'):  # cron job could have removed it as side-effect
             del threading.current_thread().dbname
 
     def _try_lock(self, cr, uid, ids, context=None):
@@ -276,7 +278,7 @@ class ir_cron(osv.osv):
             cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
                        (tuple(ids),), log_exceptions=False)
         except psycopg2.OperationalError:
-            cr.rollback() # early rollback to allow translations to work for the user feedback
+            cr.rollback()  # early rollback to allow translations to work for the user feedback
             raise osv.except_osv(_("Record cannot be modified right now"),
                                  _("This cron task is currently being executed and may not be modified, "
                                   "please try again in a few minutes"))

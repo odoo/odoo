@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 
+
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
@@ -34,7 +35,7 @@ class res_users(osv.osv):
     def _get_users_from_group(self, cr, uid, ids, context=None):
         result = set()
         groups = self.pool['res.groups'].browse(cr, uid, ids, context=context)
-        # Clear cache to avoid perf degradation on databases with thousands of users 
+        # Clear cache to avoid perf degradation on databases with thousands of users
         groups.invalidate_cache()
         for group in groups:
             result.update(user.id for user in group.users)
@@ -69,7 +70,6 @@ class res_groups(osv.osv):
             domain = []
         domain.append(('share', '=', False))
         return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

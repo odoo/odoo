@@ -179,6 +179,7 @@ class res_users_mail_group(osv.Model):
             mail_group_obj.message_subscribe_users(cr, uid, mail_group_ids, ids, context=context)
         return write_res
 
+
 class res_groups_mail_group(osv.Model):
     """ Update of res.groups class
         - if adding users from a group, check mail.groups linked to this user

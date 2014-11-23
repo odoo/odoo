@@ -101,7 +101,7 @@ try:
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
         # is needed, apparently.
-        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
+        'relativedelta': lambda *a, **kw: relativedelta.relativedelta(*a, **kw),
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
@@ -243,7 +243,7 @@ class email_template(osv.osv):
         'name': fields.char('Name'),
         'model_id': fields.many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used"),
         'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                 select=True, store=True, readonly=True),
+                                select=True, store=True, readonly=True),
         'lang': fields.char('Language',
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
@@ -323,10 +323,10 @@ class email_template(osv.osv):
                  'src_model': src_obj,
                  'view_type': 'form',
                  'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
-                 'view_mode':'form,tree',
+                 'view_mode': 'form,tree',
                  'view_id': res_id,
                  'target': 'new',
-                 'auto_refresh':1
+                 'auto_refresh': 1
             }, context)
             ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
                  'name': button_name,
@@ -515,8 +515,8 @@ class email_template(osv.osv):
                         result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
-            
-            	    # TODO in trunk, change return format to binary to match message_post expected format
+
+                    # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service

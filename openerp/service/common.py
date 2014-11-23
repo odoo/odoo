@@ -17,6 +17,7 @@ RPC_VERSION_1 = {
         'protocol_version': 1,
 }
 
+
 def dispatch(method, params):
     if method not in ['login', 'about', 'timezone_get',
                       'version', 'authenticate', 'set_loglevel']:
@@ -24,6 +25,7 @@ def dispatch(method, params):
 
     fn = globals()['exp_' + method]
     return fn(*params)
+
 
 def exp_login(db, login, password):
     # TODO: legacy indirection through 'security', should use directly
@@ -33,12 +35,15 @@ def exp_login(db, login, password):
     _logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
     return res or False
 
+
 def exp_authenticate(db, login, password, user_agent_env):
     res_users = openerp.registry(db)['res.users']
     return res_users.authenticate(db, login, password, user_agent_env)
 
+
 def exp_version():
     return RPC_VERSION_1
+
 
 def exp_about(extended=False):
     """Return information about the OpenERP Server.
@@ -53,8 +58,10 @@ def exp_about(extended=False):
         return info, openerp.release.version
     return info
 
+
 def exp_timezone_get(db, login, password):
     return openerp.tools.misc.get_server_timezone()
+
 
 def exp_set_loglevel(loglevel, logger=None):
     # TODO Previously, the level was set on the now deprecated

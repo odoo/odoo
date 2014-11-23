@@ -458,9 +458,9 @@ class WebsiteForum(http.Controller):
 
         obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(obj_ids)/3+1)]
+        users = [[] for i in range(len(obj_ids) / 3 + 1)]
         for index, user in enumerate(User.browse(cr, SUPERUSER_ID, obj_ids, context=context)):
-            users[index/3].append(user)
+            users[index / 3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)
@@ -533,11 +533,11 @@ class WebsiteForum(http.Controller):
         que_ids = Post.search(cr, uid, [('id', 'in', post_ids), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
         followed = Post.browse(cr, uid, que_ids, context=context)
 
-        #showing Favourite questions of user.
+        # showing Favourite questions of user.
         fav_que_ids = Post.search(cr, uid, [('favourite_ids', '=', user.id), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
         favourite = Post.browse(cr, uid, fav_que_ids, context=context)
 
-        #votes which given on users questions and answers.
+        # votes which given on users questions and answers.
         data = Vote.read_group(cr, uid, [('forum_id', '=', forum.id), ('recipient_id', '=', user.id)], ["vote"], groupby=["vote"], context=context)
         up_votes, down_votes = 0, 0
         for rec in data:
@@ -546,13 +546,13 @@ class WebsiteForum(http.Controller):
             elif rec['vote'] == '-1':
                 down_votes = rec['vote_count']
 
-        #Votes which given by users on others questions and answers.
+        # Votes which given by users on others questions and answers.
         post_votes = Vote.search(cr, uid, [('user_id', '=', user.id)], context=context)
         vote_ids = Vote.browse(cr, uid, post_votes, context=context)
 
-        #activity by user.
+        # activity by user.
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
-        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_question_ids+user_answer_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100, context=context)
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_question_ids + user_answer_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100, context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
 
         posts = {}

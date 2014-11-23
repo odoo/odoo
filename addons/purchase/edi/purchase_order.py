@@ -36,23 +36,24 @@ PURCHASE_ORDER_LINE_EDI_STRUCT = {
 }
 
 PURCHASE_ORDER_EDI_STRUCT = {
-    'company_id': True, # -> to be changed into partner
+    'company_id': True,  # -> to be changed into partner
     'name': True,
     'partner_ref': True,
     'origin': True,
     'date_order': True,
     'partner_id': True,
-    #custom: 'partner_address',
+    # custom: 'partner_address',
     'notes': True,
     'order_line': PURCHASE_ORDER_LINE_EDI_STRUCT,
-    #custom: currency_id
+    # custom: currency_id
 
     # fields used for web preview only - discarded on import
     'amount_total': True,
     'amount_untaxed': True,
     'amount_tax': True,
-    'state':True,
+    'state': True,
 }
+
 
 class purchase_order(osv.osv, EDIMixin):
     _inherit = 'purchase.order'
@@ -68,7 +69,7 @@ class purchase_order(osv.osv, EDIMixin):
             self._edi_generate_report_attachment(cr, uid, order, context=context)
 
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
-            edi_doc = super(purchase_order,self).edi_export(cr, uid, [order], edi_struct, context)[0]
+            edi_doc = super(purchase_order, self).edi_export(cr, uid, [order], edi_struct, context)[0]
             edi_doc.update({
                     # force trans-typing to purchase.order upon import
                     '__import_model': 'sale.order',
@@ -90,7 +91,7 @@ class purchase_order(osv.osv, EDIMixin):
         #       user's current company, but we should perhaps foresee a way to select
         #       the desired company among the user's allowed companies
 
-        self._edi_requires_attributes(('company_id','company_address'), edi_document)
+        self._edi_requires_attributes(('company_id', 'company_address'), edi_document)
         res_partner = self.pool.get('res.partner')
 
         xid, company_name = edi_document.pop('company_id')
@@ -109,7 +110,7 @@ class purchase_order(osv.osv, EDIMixin):
         partner = res_partner.browse(cr, uid, partner_id, context=context)
         partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
         edi_document['partner_id'] = partner_edi_m2o
-        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
+        edi_document.pop('partner_address', None)  # ignored, that's supposed to be our own address!
         return partner_id
 
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
@@ -124,8 +125,8 @@ class purchase_order(osv.osv, EDIMixin):
             # look for a pricelist with the right type and currency, or make a new one
             pricelist_type = 'purchase'
             product_pricelist = self.pool.get('product.pricelist')
-            match_pricelist_ids = product_pricelist.search(cr, uid,[('type','=',pricelist_type),
-                                                                    ('currency_id','=',currency.id)])
+            match_pricelist_ids = product_pricelist.search(cr, uid, [('type', '=', pricelist_type),
+                                                                    ('currency_id', '=', currency.id)])
             if match_pricelist_ids:
                 pricelist_id = match_pricelist_ids[0]
             else:
@@ -149,9 +150,9 @@ class purchase_order(osv.osv, EDIMixin):
         return self.edi_m2o(cr, uid, location, context=context)
 
     def edi_import(self, cr, uid, edi_document, context=None):
-        self._edi_requires_attributes(('company_id','company_address','order_line','date_order','currency'), edi_document)
+        self._edi_requires_attributes(('company_id', 'company_address', 'order_line', 'date_order', 'currency'), edi_document)
 
-        #import company as a new partner
+        # import company as a new partner
         partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
 
         # currency for rounding the discount calculations and for the pricelist
@@ -186,8 +187,8 @@ class purchase_order(osv.osv, EDIMixin):
 
             # discard web preview fields, if present
             order_line.pop('price_subtotal', None)
-        return super(purchase_order,self).edi_import(cr, uid, edi_document, context=context)
+        return super(purchase_order, self).edi_import(cr, uid, edi_document, context=context)
+
 
 class purchase_order_line(osv.osv, EDIMixin):
-    _inherit='purchase.order.line'
-
+    _inherit = 'purchase.order.line'

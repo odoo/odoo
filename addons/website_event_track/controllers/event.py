@@ -30,12 +30,13 @@ import openerp.tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
+
 class website_event(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
     def event_track_view(self, event, track, **post):
         track_obj = request.registry.get('event.track')
         track = track_obj.browse(request.cr, openerp.SUPERUSER_ID, track.id, context=request.context)
-        values = { 'track': track, 'event': track.event_id, 'main_object': track }
+        values = {'track': track, 'event': track.event_id, 'main_object': track}
         return request.website.render("website_event_track.track_view", values)
 
     def _prepare_calendar(self, event, event_track_ids):
@@ -53,7 +54,7 @@ class website_event(http.Controller):
             locations.setdefault(location, [])
 
             # New TR, align all events
-            if forcetr or (start_date>dates[-1][0]) or not location:
+            if forcetr or (start_date > dates[-1][0]) or not location:
                 dates.append((start_date, {}, bool(location)))
                 for loc in locations.keys():
                     if locations[loc] and (locations[loc][-1][2] > start_date):
@@ -73,13 +74,13 @@ class website_event(http.Controller):
             'dates': dates
         }
 
-
     # TODO: not implemented
     @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
         for track in sorted(event.track_ids, key=lambda x: (x.date, bool(x.location_id))):
-            if not track.date: continue
+            if not track.date:
+                continue
             days_tracks[track.date[:10]].append(track)
 
         days = {}
@@ -136,7 +137,7 @@ class website_event(http.Controller):
 
     @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
-        values = { 'event': event }
+        values = {'event': event}
         return request.website.render("website_event_track.event_track_proposal", values)
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True)
@@ -147,7 +148,7 @@ class website_event(http.Controller):
 
         tags = []
         for tag in event.allowed_track_tag_ids:
-            if post.get('tag_'+str(tag.id)):
+            if post.get('tag_' + str(tag.id)):
                 tags.append(tag.id)
 
         e = openerp.tools.escape
@@ -166,7 +167,7 @@ class website_event(http.Controller):
             </div>
         </div>
     </div>
-</section>''' % (e(post['track_name']), 
+</section>''' % (e(post['track_name']),
             e(post['description']), e(post['biography']))
 
         track_id = tobj.create(cr, openerp.SUPERUSER_ID, {
@@ -179,9 +180,9 @@ class website_event(http.Controller):
 
         tobj.message_post(cr, openerp.SUPERUSER_ID, [track_id], body="""Proposed By: %s<br/>
           Mail: <a href="mailto:%s">%s</a><br/>
-          Phone: %s""" % (e(post['partner_name']), e(post['email_from']), 
+          Phone: %s""" % (e(post['partner_name']), e(post['email_from']),
             e(post['email_from']), e(post['phone'])), context=context)
 
         track = tobj.browse(cr, uid, track_id, context=context)
-        values = {'track': track, 'event':event}
+        values = {'track': track, 'event': event}
         return request.website.render("website_event_track.event_track_proposal_success", values)

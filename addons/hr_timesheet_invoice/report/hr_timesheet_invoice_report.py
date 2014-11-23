@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.tools.sql import drop_view_if_exists
+
 
 class report_timesheet_line(osv.osv):
     _name = "report.timesheet.line"
@@ -33,14 +34,15 @@ class report_timesheet_line(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'cost': fields.float('Cost', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'general_account_id': fields.many2one('account.account', 'General Account', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
-        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,user_id desc'
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_line')
         cr.execute("""
@@ -73,21 +75,20 @@ class report_timesheet_line(osv.osv):
         """)
 
 
-
-
 class report_timesheet_user(osv.osv):
     _name = "report_timesheet.user"
     _description = "Timesheet per day"
     _auto = False
     _columns = {
         'name': fields.char('Year', required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'cost': fields.float('Cost', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,user_id desc'
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_user')
         cr.execute("""
@@ -107,20 +108,22 @@ class report_timesheet_user(osv.osv):
             )
         """)
 
+
 class report_timesheet_account(osv.osv):
     _name = "report_timesheet.account"
     _description = "Timesheet per account"
     _auto = False
     _columns = {
         'name': fields.char('Year', required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Time', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'name desc,account_id desc,user_id desc'
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_account')
         cr.execute("""
@@ -146,11 +149,11 @@ class report_timesheet_account_date(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year', required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Time', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
 
@@ -178,14 +181,15 @@ class report_timesheet_invoice(osv.osv):
     _description = "Costs to invoice"
     _auto = False
     _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'account_id':fields.many2one('account.analytic.account', 'Project', readonly=True),
-        'manager_id':fields.many2one('res.users', 'Manager', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Project', readonly=True),
+        'manager_id': fields.many2one('res.users', 'Manager', readonly=True),
         'quantity': fields.float('Time', readonly=True),
         'amount_invoice': fields.float('To invoice', readonly=True)
     }
     _rec_name = 'user_id'
     _order = 'user_id desc'
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_invoice')
         cr.execute("""

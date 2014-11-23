@@ -33,6 +33,7 @@ STATE = [
     ('paid', 'Paid Member'),
 ]
 
+
 class report_membership(osv.osv):
     '''Membership Analysis'''
 

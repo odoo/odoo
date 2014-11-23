@@ -25,7 +25,7 @@ class TestACL(common.TransactionCase):
         column = model._columns[field_name]
         old_groups = field.groups
         old_prefetch = column._prefetch
-    
+
         field.groups = groups
         column.groups = groups
         column._prefetch = False
@@ -71,7 +71,7 @@ class TestACL(common.TransactionCase):
         self.assertNotEquals(view_arch.xpath("//field[@name='accuracy']"), [],
                              "Field 'accuracy' must be found in view definition again")
 
-        #cleanup
+        # cleanup
         self.tech_group.write({'users': [(3, self.demo_uid)]})
 
     @mute_logger('openerp.models')
@@ -98,7 +98,7 @@ class TestACL(common.TransactionCase):
         self.assert_(self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids']))
         self.assert_(self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []}))
 
-        #cleanup
+        # cleanup
         self.tech_group.write({'users': [(3, self.demo_uid)]})
 
     @mute_logger('openerp.models')

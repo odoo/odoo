@@ -19,23 +19,23 @@
 ##############################################################################
 
 {
-    'name' : 'Authentication via LDAP',
-    'version' : '1.0',
-    'depends' : ['base'],
-    'images' : ['images/ldap_configuration.jpeg'],
-    'author' : 'OpenERP SA',
+    'name': 'Authentication via LDAP',
+    'version': '1.0',
+    'depends': ['base'],
+    'images': ['images/ldap_configuration.jpeg'],
+    'author': 'OpenERP SA',
     #'description': < auto-loaded from README file
-    'website' : 'https://www.odoo.com',
-    'category' : 'Authentication',
-    'data' : [
+    'website': 'https://www.odoo.com',
+    'category': 'Authentication',
+    'data': [
         'users_ldap_view.xml',
         'user_ldap_installer.xml',
         'security/ir.model.access.csv',
     ],
     'auto_install': False,
     'installable': True,
-    'external_dependencies' : {
-        'python' : ['ldap'],
+    'external_dependencies': {
+        'python': ['ldap'],
     }
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,10 +22,13 @@ import security
 
 _logger = logging.getLogger(__name__)
 
+
 class DatabaseExists(Warning):
     pass
 
 # This should be moved to openerp.modules.db, along side initialize().
+
+
 def _initialize_db(id, db_name, demo, lang, user_password):
     try:
         db = openerp.sql_db.db_connect(db_name)
@@ -53,6 +56,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
     except Exception, e:
         _logger.exception('CREATE DATABASE failed:')
 
+
 def dispatch(method, params):
     if method in ['create', 'get_progress', 'drop', 'dump', 'restore', 'rename',
                   'change_admin_password', 'migrate_databases',
@@ -69,6 +73,7 @@ def dispatch(method, params):
     fn = globals()['exp_' + method]
     return fn(*params)
 
+
 def _create_empty_database(name):
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
@@ -81,12 +86,14 @@ def _create_empty_database(name):
             cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
+
 def exp_create_database(db_name, demo, lang, user_password='admin'):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
     _initialize_db(id, db_name, demo, lang, user_password)
     return True
+
 
 def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
@@ -101,6 +108,7 @@ def exp_duplicate_database(db_original_name, db_name):
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
         shutil.copytree(from_fs, to_fs)
     return True
+
 
 def _drop_conn(cr, db_name):
     # Try to terminate all other connections that might prevent
@@ -127,7 +135,7 @@ def exp_drop(db_name):
 
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
-        cr.autocommit(True) # avoid transaction block
+        cr.autocommit(True)  # avoid transaction block
         _drop_conn(cr, db_name)
 
         try:
@@ -142,6 +150,7 @@ def exp_drop(db_name):
     if os.path.exists(fs):
         shutil.rmtree(fs)
     return True
+
 
 def _set_pg_password_in_environment(func):
     """ On systems where pg_restore/pg_dump require an explicit
@@ -171,11 +180,13 @@ def _set_pg_password_in_environment(func):
                 del os.environ['PGPASSWORD']
     return wrapper
 
+
 def exp_dump(db_name):
     with tempfile.TemporaryFile() as t:
         dump_db(db_name, t)
         t.seek(0)
         return t.read().encode('base64')
+
 
 @_set_pg_password_in_environment
 def dump_db(db, stream):
@@ -208,6 +219,7 @@ def dump_db(db, stream):
 
     _logger.info('DUMP DB successful: %s', db)
 
+
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
@@ -217,6 +229,7 @@ def exp_restore(db_name, data, copy=False):
     finally:
         os.unlink(data_file.name)
     return True
+
 
 @_set_pg_password_in_environment
 def restore_db(db, dump_file, copy=False):
@@ -278,6 +291,7 @@ def restore_db(db, dump_file, copy=False):
 
     _logger.info('RESTORE DB: %s', db)
 
+
 def exp_rename(old_name, new_name):
     openerp.modules.registry.RegistryManager.delete(old_name)
     openerp.sql_db.close_db(old_name)
@@ -299,10 +313,12 @@ def exp_rename(old_name, new_name):
         shutil.move(old_fs, new_fs)
     return True
 
+
 @openerp.tools.mute_logger('openerp.sql_db')
 def exp_db_exist(db_name):
-    ## Not True: in fact, check if connection to database is possible. The database may exists
+    # Not True: in fact, check if connection to database is possible. The database may exists
     return bool(openerp.sql_db.db_connect(db_name))
+
 
 def exp_list(document=False):
     if not openerp.tools.config['list_db'] and not document:
@@ -330,19 +346,23 @@ def exp_list(document=False):
     res.sort()
     return res
 
+
 def exp_change_admin_password(new_password):
     openerp.tools.config['admin_passwd'] = new_password
     openerp.tools.config.save()
     return True
 
+
 def exp_list_lang():
     return openerp.tools.scan_languages()
+
 
 def exp_server_version():
     """ Return the version of the server
         Used by the client to verify the compatibility with its own version
     """
     return openerp.release.version
+
 
 def exp_migrate_databases(databases):
     for db in databases:

@@ -28,9 +28,9 @@ class account_vat_declaration(osv.osv_memory):
     _inherit = "account.common.report"
     _columns = {
         'based_on': fields.selection([('invoices', 'Invoices'),
-                                      ('payments', 'Payments'),],
-                                      'Based on', required=True),
-        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
+                                      ('payments', 'Payments'), ],
+                                     'Based on', required=True),
+        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id', '=', False)]),
         'display_detail': fields.boolean('Display Detail'),
     }
 

@@ -22,6 +22,8 @@
 from openerp.osv import osv, fields
 
 # TODO for trunk, remove me
+
+
 class MailThread(osv.AbstractModel):
     _inherit = 'mail.thread'
 
@@ -35,4 +37,3 @@ class MailThread(osv.AbstractModel):
             help="Website communication history",
         ),
     }
-

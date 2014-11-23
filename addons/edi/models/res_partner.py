@@ -42,11 +42,12 @@ RES_PARTNER_EDI_STRUCT = {
     'mobile': True,
 }
 
+
 class res_partner(osv.osv, EDIMixin):
     _inherit = "res.partner"
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        return super(res_partner,self).edi_export(cr, uid, records,
+        return super(res_partner, self).edi_export(cr, uid, records,
                                                   edi_struct or dict(RES_PARTNER_EDI_STRUCT),
                                                   context=context)
 
@@ -61,10 +62,10 @@ class res_partner(osv.osv, EDIMixin):
         # not always appropriate: we need a free-form bank type for max flexibility (users can correct
         # data manually after import)
         code, label = 'edi_generic', 'Generic Bank Type (auto-created for EDI)'
-        bank_code_ids = res_partner_bank_type.search(cr, uid, [('code','=',code)], context=context)
+        bank_code_ids = res_partner_bank_type.search(cr, uid, [('code', '=', code)], context=context)
         if not bank_code_ids:
             _logger.info('Normal bank account type is missing, creating '
-                                                      'a generic bank account type for EDI.')
+                         'a generic bank account type for EDI.')
             self.res_partner_bank_type.create(cr, SUPERUSER_ID, {'name': label,
                                                                  'code': label})
         return code
@@ -72,7 +73,7 @@ class res_partner(osv.osv, EDIMixin):
     def edi_import(self, cr, uid, edi_document, context=None):
         # handle bank info, if any
         edi_bank_ids = edi_document.pop('bank_ids', None)
-        contact_id = super(res_partner,self).edi_import(cr, uid, edi_document, context=context)
+        contact_id = super(res_partner, self).edi_import(cr, uid, edi_document, context=context)
         if edi_bank_ids:
             contact = self.browse(cr, uid, contact_id, context=context)
             import_ctx = dict((context or {}),
@@ -85,8 +86,8 @@ class res_partner(osv.osv, EDIMixin):
                 except osv.except_osv:
                     # failed to import it, try again with unrestricted default type
                     _logger.warning('Failed to import bank account using'
-                                                                 'bank type: %s, ignoring', import_ctx['default_state'],
-                                                                 exc_info=True)
+                                    'bank type: %s, ignoring', import_ctx['default_state'],
+                                    exc_info=True)
         return contact_id
 
 

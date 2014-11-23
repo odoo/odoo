@@ -25,6 +25,7 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
+
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # View
@@ -39,7 +40,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
-                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
                     return request.registry['ir.http'].reroute(first_menu.url)
@@ -81,7 +82,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         ira = request.registry['ir.attachment']
         iuv = request.registry['ir.ui.view']
-        mimetype ='application/xml;charset=utf-8'
+        mimetype = 'application/xml;charset=utf-8'
         content = None
 
         def create_sitemap(url, content):
@@ -93,7 +94,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 url=url,
             ), context=context)
 
-        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+        sitemap = ira.search_read(cr, uid, [('url', '=', '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
         if sitemap:
             # Check if stored version is still valid
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -104,7 +105,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
+            sitemap_ids = ira.search(cr, uid, [('url', '=like', '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
             if sitemap_ids:
                 ira.unlink(cr, uid, sitemap_ids, context=context)
 
@@ -147,8 +148,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         except Exception, e:
             return request.registry['ir.http']._handle_exception(e, 404)
         irm = request.env()['ir.module.module'].sudo()
-        apps = irm.search([('state','=','installed'),('application','=',True)])
-        modules = irm.search([('state','=','installed'),('application','=',False)])
+        apps = irm.search([('state', '=', 'installed'), ('application', '=', True)])
+        modules = irm.search([('state', '=', 'installed'), ('application', '=', False)])
         values = {
             'apps': apps,
             'modules': modules,
@@ -274,7 +275,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value', 'state', 'gengo_translation'], context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -323,7 +324,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             website_url = url
             name = url.split("/").pop()
             attachment_id = Attachments.create(request.cr, request.uid, {
-                'name':name,
+                'name': name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
@@ -333,7 +334,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 image_data = upload.read()
                 image = Image.open(cStringIO.StringIO(image_data))
                 w, h = image.size
-                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
                     raise ValueError(
                         u"Image size excessive, uploaded images must be smaller "
                         u"than 42 million pixel")
@@ -465,4 +466,3 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
-

@@ -17,24 +17,27 @@ from openerp.addons.bus.bus import TIMEOUT
 _logger = logging.getLogger(__name__)
 
 DISCONNECTION_TIMER = TIMEOUT + 5
-AWAY_TIMER = 600 # 10 minutes
+AWAY_TIMER = 600  # 10 minutes
 
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
+
+
 class im_chat_conversation_state(osv.Model):
     """ Adds a state on the m2m between user and session.  """
     _name = 'im_chat.conversation_state'
     _table = "im_chat_session_res_users_rel"
 
     _columns = {
-        "state" : fields.selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')]),
-        "session_id" : fields.many2one('im_chat.session', 'Session', required=True, ondelete="cascade"),
-        "user_id" : fields.many2one('res.users', 'Users', required=True, ondelete="cascade"),
+        "state": fields.selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')]),
+        "session_id": fields.many2one('im_chat.session', 'Session', required=True, ondelete="cascade"),
+        "user_id": fields.many2one('res.users', 'Users', required=True, ondelete="cascade"),
     }
     _defaults = {
-        "state" : 'open'
+        "state": 'open'
     }
+
 
 class im_chat_session(osv.Model):
     """ Conversations."""
@@ -56,19 +59,19 @@ class im_chat_session(osv.Model):
         """ return if the given user_id is in the session """
         sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
         for session in self.browse(cr, uid, sids, context=context):
-                return user_id and user_id in [u.id for u in session.user_ids]
+            return user_id and user_id in [u.id for u in session.user_ids]
         return False
 
     def users_infos(self, cr, uid, ids, context=None):
         """ get the user infos for all the user in the session """
         for session in self.pool["im_chat.session"].browse(cr, uid, ids, context=context):
-            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
+            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id', 'name', 'im_status'], context=context)
             return users_infos
 
     def is_private(self, cr, uid, ids, context=None):
         for session_id in ids:
             """ return true if the session is private between users no external messages """
-            mess_ids = self.pool["im_chat.message"].search(cr, uid, [('to_id','=',session_id),('from_id','=',None)], context=context)
+            mess_ids = self.pool["im_chat.message"].search(cr, uid, [('to_id', '=', session_id), ('from_id', '=', None)], context=context)
             return len(mess_ids) == 0
 
     def session_info(self, cr, uid, ids, context=None):
@@ -81,7 +84,7 @@ class im_chat_session(osv.Model):
             }
             # add uid_state if available
             if uid:
-                domain = [('user_id','=',uid), ('session_id','=',session.id)]
+                domain = [('user_id', '=', uid), ('session_id', '=', session.id)]
                 uid_state = self.pool['im_chat.conversation_state'].search_read(cr, uid, domain, ['state'], context=context)
                 if uid_state:
                     info['state'] = uid_state[0]['state']
@@ -91,18 +94,18 @@ class im_chat_session(osv.Model):
         """ returns the canonical session between 2 users, create it if needed """
         session_id = False
         if user_to:
-            sids = self.search(cr, uid, [('user_ids','in', user_to),('user_ids', 'in', [uid])], context=context, limit=1)
+            sids = self.search(cr, uid, [('user_ids', 'in', user_to), ('user_ids', 'in', [uid])], context=context, limit=1)
             for sess in self.browse(cr, uid, sids, context=context):
                 if len(sess.user_ids) == 2 and sess.is_private():
                     session_id = sess.id
                     break
             else:
-                session_id = self.create(cr, uid, { 'user_ids': [(6,0, (user_to, uid))] }, context=context)
+                session_id = self.create(cr, uid, {'user_ids': [(6, 0, (user_to, uid))]}, context=context)
         return self.session_info(cr, uid, [session_id], context=context)
 
     def update_state(self, cr, uid, uuid, state=None, context=None):
         """ modify the fold_state of the given session, and broadcast to himself (e.i. : to sync multiple tabs) """
-        domain = [('user_id','=',uid), ('session_id.uuid','=',uuid)]
+        domain = [('user_id', '=', uid), ('session_id.uuid', '=', uuid)]
         ids = self.pool['im_chat.conversation_state'].search(cr, uid, domain, context=context)
         for sr in self.pool['im_chat.conversation_state'].browse(cr, uid, ids, context=context):
             if not state:
@@ -135,17 +138,18 @@ class im_chat_session(osv.Model):
 
     def get_image(self, cr, uid, uuid, user_id, context=None):
         """ get the avatar of a user in the given session """
-        #default image
+        # default image
         image_b64 = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
         # get the session
         if user_id:
-            session_id = self.pool["im_chat.session"].search(cr, uid, [('uuid','=',uuid), ('user_ids','in', user_id)])
+            session_id = self.pool["im_chat.session"].search(cr, uid, [('uuid', '=', uuid), ('user_ids', 'in', user_id)])
             if session_id:
                 # get the image of the user
                 res = self.pool["res.users"].read(cr, uid, [user_id], ["image_small"])[0]
                 if res["image_small"]:
                     image_b64 = res["image_small"]
         return image_b64
+
 
 class im_chat_message(osv.Model):
     """ Sessions messsages type can be 'message' or 'meta'.
@@ -158,11 +162,11 @@ class im_chat_message(osv.Model):
         'create_date': fields.datetime('Create Date', required=True, select=True),
         'from_id': fields.many2one('res.users', 'Author'),
         'to_id': fields.many2one('im_chat.session', 'Session To', required=True, select=True, ondelete='cascade'),
-        'type': fields.selection([('message','Message'), ('meta','Meta')], 'Type'),
+        'type': fields.selection([('message', 'Message'), ('meta', 'Meta')], 'Type'),
         'message': fields.char('Message'),
     }
     _defaults = {
-        'type' : 'message',
+        'type': 'message',
     }
 
     def init_messages(self, cr, uid, context=None):
@@ -172,19 +176,19 @@ class im_chat_message(osv.Model):
         # get the message since the AWAY_TIMER
         threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
         threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        domain = [('to_id.user_ids', 'in', [uid]), ('create_date','>',threshold)]
+        domain = [('to_id.user_ids', 'in', [uid]), ('create_date', '>', threshold)]
 
         # get the message since the last poll of the user
         presence_ids = self.pool['im_chat.presence'].search(cr, uid, [('user_id', '=', uid)], context=context)
         if presence_ids:
             presence = self.pool['im_chat.presence'].browse(cr, uid, presence_ids, context=context)[0]
             threshold = presence.last_poll
-            domain.append(('create_date','>',threshold))
-        messages = self.search_read(cr, uid, domain, ['from_id','to_id','create_date','type','message'], order='id asc', context=context)
+            domain.append(('create_date', '>', threshold))
+        messages = self.search_read(cr, uid, domain, ['from_id', 'to_id', 'create_date', 'type', 'message'], order='id asc', context=context)
 
         # get the session of the messages and the not-closed ones
         session_ids = map(lambda m: m['to_id'][0], messages)
-        domain = [('user_id','=',uid), '|', ('state','!=','closed'), ('session_id', 'in', session_ids)]
+        domain = [('user_id', '=', uid), '|', ('state', '!=', 'closed'), ('session_id', 'in', session_ids)]
         session_rels_ids = self.pool['im_chat.conversation_state'].search(cr, uid, domain, context=context)
         # re-open the session where a message have been recieve recently
         session_rels = self.pool['im_chat.conversation_state'].browse(cr, uid, session_rels_ids, context=context)
@@ -197,9 +201,9 @@ class im_chat_message(osv.Model):
             if sr.state == 'closed':
                 si['state'] = 'folded'
                 reopening_session.append(sr.id)
-            notifications.append([(cr.dbname,'im_chat.session', uid), si])
+            notifications.append([(cr.dbname, 'im_chat.session', uid), si])
         for m in messages:
-            notifications.append([(cr.dbname,'im_chat.session', uid), m])
+            notifications.append([(cr.dbname, 'im_chat.session', uid), m])
         self.pool['im_chat.conversation_state'].write(cr, uid, reopening_session, {'state': 'folded'}, context=context)
         return notifications
 
@@ -207,7 +211,7 @@ class im_chat_message(osv.Model):
         """ post and broadcast a message, return the message id """
         message_id = False
         Session = self.pool['im_chat.session']
-        session_ids = Session.search(cr, uid, [('uuid','=',uuid)], context=context)
+        session_ids = Session.search(cr, uid, [('uuid', '=', uuid)], context=context)
         notifications = []
         for session in Session.browse(cr, uid, session_ids, context=context):
             # build the new message
@@ -220,7 +224,7 @@ class im_chat_message(osv.Model):
             # save it
             message_id = self.create(cr, uid, vals, context=context)
             # broadcast it to channel (anonymous users) and users_ids
-            data = self.read(cr, uid, [message_id], ['from_id','to_id','create_date','type','message'], context=context)[0]
+            data = self.read(cr, uid, [message_id], ['from_id', 'to_id', 'create_date', 'type', 'message'], context=context)[0]
             notifications.append([uuid, data])
             for user in session.user_ids:
                 notifications.append([(cr.dbname, 'im_chat.session', user.id), data])
@@ -234,7 +238,7 @@ class im_chat_message(osv.Model):
             domain = [("to_id.uuid", "=", uuid)]
             if last_id:
                 domain.append(("id", "<", last_id));
-            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+            return self.search_read(cr, uid, domain, ['id', 'create_date', 'to_id', 'from_id', 'type', 'message'], limit=limit, context=context)
         return False
 
 
@@ -245,17 +249,17 @@ class im_chat_presence(osv.Model):
     _name = 'im_chat.presence'
 
     _columns = {
-        'user_id' : fields.many2one('res.users', 'Users', required=True, select=True),
+        'user_id': fields.many2one('res.users', 'Users', required=True, select=True),
         'last_poll': fields.datetime('Last Poll'),
         'last_presence': fields.datetime('Last Presence'),
-        'status' : fields.selection([('online','Online'), ('away','Away'), ('offline','Offline')], 'IM Status'),
+        'status': fields.selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status'),
     }
     _defaults = {
-        'last_poll' : fields.datetime.now,
-        'last_presence' : fields.datetime.now,
-        'status' : 'offline'
+        'last_poll': fields.datetime.now,
+        'last_presence': fields.datetime.now,
+        'status': 'offline'
     }
-    _sql_constraints = [('im_chat_user_status_unique','unique(user_id)', 'A user can only have one IM status.')]
+    _sql_constraints = [('im_chat_user_status_unique', 'unique(user_id)', 'A user can only have one IM status.')]
 
     def update(self, cr, uid, presence=True, context=None):
         """ register the poll, and change its im status if necessary. It also notify the Bus if the status has changed. """
@@ -265,7 +269,7 @@ class im_chat_presence(osv.Model):
         send_notification = True
         vals = {
             'last_poll': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'status' : presences and presences[0].status or 'offline'
+            'status': presences and presences[0].status or 'offline'
         }
         # update the user or a create a new one
         if not presences:
@@ -289,7 +293,7 @@ class im_chat_presence(osv.Model):
         cr.commit()
         # notify if the status has changed
         if send_notification:
-            self.pool['bus.bus'].sendone(cr, uid, (cr.dbname,'im_chat.presence'), {'id': uid, 'im_status': vals['status']})
+            self.pool['bus.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.presence'), {'id': uid, 'im_status': vals['status']})
         # gc : disconnect the users having a too old last_poll. 1 on 100 chance to do it.
         if random.random() < 0.01:
             self.check_users_disconnection(cr, uid, context=context)
@@ -298,14 +302,15 @@ class im_chat_presence(osv.Model):
     def check_users_disconnection(self, cr, uid, context=None):
         """ disconnect the users having a too old last_poll """
         dt = (datetime.datetime.now() - datetime.timedelta(0, DISCONNECTION_TIMER)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        presence_ids = self.search(cr, uid, [('last_poll', '<', dt), ('status' , '!=', 'offline')], context=context)
+        presence_ids = self.search(cr, uid, [('last_poll', '<', dt), ('status', '!=', 'offline')], context=context)
         self.write(cr, uid, presence_ids, {'status': 'offline'}, context=context)
         presences = self.browse(cr, uid, presence_ids, context=context)
         notifications = []
         for presence in presences:
-            notifications.append([(cr.dbname,'im_chat.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
+            notifications.append([(cr.dbname, 'im_chat.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
         self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return True
+
 
 class res_users(osv.Model):
     _inherit = "res.users"
@@ -320,7 +325,7 @@ class res_users(osv.Model):
         return r
 
     _columns = {
-        'im_status' : fields.function(_get_im_status, type="char", string="IM Status"),
+        'im_status': fields.function(_get_im_status, type="char", string="IM Status"),
     }
 
     def im_search(self, cr, uid, name, limit=20, context=None):
@@ -333,14 +338,14 @@ class res_users(osv.Model):
         query_params = ()
         if name:
             where_clause_base += " AND P.name ILIKE %s "
-            query_params = query_params + ('%'+name+'%',)
+            query_params = query_params + ('%' + name + '%',)
 
         # first query to find online employee
         cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
                 FROM im_chat_presence S
                     JOIN res_users U ON S.user_id = U.id
                     JOIN res_partner P ON P.id = U.partner_id
-                WHERE   '''+where_clause_base+'''
+                WHERE   ''' + where_clause_base + '''
                         AND U.id != %s
                         AND EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id)
                         AND S.status = 'online'
@@ -355,12 +360,12 @@ class res_users(osv.Model):
                 FROM im_chat_presence S
                     JOIN res_users U ON S.user_id = U.id
                     JOIN res_partner P ON P.id = U.partner_id
-                WHERE   '''+where_clause_base+'''
+                WHERE   ''' + where_clause_base + '''
                         AND U.id NOT IN %s
                         AND S.status = 'online'
                 ORDER BY P.name
                 LIMIT %s
-            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit - len(result)))
             result = result + cr.dictfetchall()
 
         # third query to find all other people
@@ -369,28 +374,30 @@ class res_users(osv.Model):
                 FROM res_users U
                     LEFT JOIN im_chat_presence S ON S.user_id = U.id
                     LEFT JOIN res_partner P ON P.id = U.partner_id
-                WHERE   '''+where_clause_base+'''
+                WHERE   ''' + where_clause_base + '''
                         AND U.id NOT IN %s
                 ORDER BY P.name
                 LIMIT %s
-            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit - len(result)))
             result = result + cr.dictfetchall()
         return result
 
 #----------------------------------------------------------
 # Controllers
 #----------------------------------------------------------
+
+
 class Controller(openerp.addons.bus.bus.Controller):
     def _poll(self, dbname, channels, last, options):
         if request.session.uid:
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
             registry.get('im_chat.presence').update(cr, uid, options.get('im_presence', False), context=context)
-            ## For performance issue, the real time status notification is disabled. This means a change of status are still braoadcasted
-            ## but not received by anyone. Otherwise, all listening user restart their longpolling at the same time and cause a 'ConnectionPool Full Error'
-            ## since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
-            ##channels.append((request.db,'im_chat.presence'))
+            # For performance issue, the real time status notification is disabled. This means a change of status are still braoadcasted
+            # but not received by anyone. Otherwise, all listening user restart their longpolling at the same time and cause a 'ConnectionPool Full Error'
+            # since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
+            # channels.append((request.db,'im_chat.presence'))
             # channel to receive message
-            channels.append((request.db,'im_chat.session', request.uid))
+            channels.append((request.db, 'im_chat.session', request.uid))
         return super(Controller, self)._poll(dbname, channels, last, options)
 
     @openerp.http.route('/im_chat/init', type="json", auth="none")

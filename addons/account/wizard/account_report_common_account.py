@@ -21,14 +21,15 @@
 
 from openerp.osv import fields, osv
 
+
 class account_common_account_report(osv.osv_memory):
     _name = 'account.common.account.report'
     _description = 'Account Common Account Report'
     _inherit = "account.common.report"
     _columns = {
-        'display_account': fields.selection([('all','All'), ('movement','With movements'),
-                                            ('not_zero','With balance is not equal to 0'),
-                                            ],'Display Accounts', required=True),
+        'display_account': fields.selection([('all', 'All'), ('movement', 'With movements'),
+                                            ('not_zero', 'With balance is not equal to 0'),
+                                            ], 'Display Accounts', required=True),
 
     }
     _defaults = {
@@ -42,6 +43,6 @@ class account_common_account_report(osv.osv_memory):
         return data
 
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,8 +7,11 @@ from lxml.html import builder as h
 
 from openerp.tests import common
 
+
 def attrs(**kwargs):
     return dict(('data-oe-%s' % key, str(value)) for key, value in kwargs.iteritems())
+
+
 class TestViewSaving(common.TransactionCase):
     def eq(self, a, b):
         self.assertEqual(a.tag, b.tag)
@@ -183,11 +186,10 @@ class TestViewSaving(common.TransactionCase):
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
 
-        self.registry('ir.ui.view').save(self.cr, self.uid, res_id=company_id,value=node)
+        self.registry('ir.ui.view').save(self.cr, self.uid, res_id=company_id, value=node)
 
         company = Company.browse(self.cr, self.uid, company_id)
         self.assertEqual(company.name, "Acme Corporation")
-
 
     def test_field_tail(self):
         View = self.registry('ir.ui.view')

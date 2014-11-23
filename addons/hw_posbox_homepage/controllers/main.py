@@ -29,7 +29,7 @@ index_template = """
     <body>
         <h1>Your PosBox is up and running</h1>
         <p>
-        The PosBox is an hardware adapter that allows you to use 
+        The PosBox is an hardware adapter that allows you to use
         receipt printers and barcode scanners with Odoo's Point of
         Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.openerp.com/start'>online free trial</a>,
         or <a href='https://www.openerp.com/start?download'>download and install</a> it yourself.
@@ -39,11 +39,11 @@ index_template = """
         the PosBox, please refer to <a href='/hw_proxy/static/doc/manual.pdf'>the manual</a>
         </p>
         <p>
-        To see the status of the connected hardware, please refer 
+        To see the status of the connected hardware, please refer
         to the <a href='/hw_proxy/status'>hardware status page</a>
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 6</b>, 
+        The PosBox software installed on this posbox is <b>version 6</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>
         </p>
@@ -58,6 +58,5 @@ index_template = """
 class PosboxHomepage(openerp.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
-        #return request.render('hw_posbox_homepage.index',mimetype='text/html')
+        # return request.render('hw_posbox_homepage.index',mimetype='text/html')
         return index_template
-        

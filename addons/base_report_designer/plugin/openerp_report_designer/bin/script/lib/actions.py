@@ -31,22 +31,24 @@ import os
 #  python procedure, passing it...
 #   1. the oActionEvent
 #   2. any other parameters you specified to this object's constructor (as a tuple).
-if __name__<>"package":
-    os.system( "ooffice '-accept=socket,host=localhost,port=2002;urp;'" )
-passwd=""
-database=""
-uid=""
-loginstatus=False
+if __name__ <> "package":
+    os.system("ooffice '-accept=socket,host=localhost,port=2002;urp;'")
+passwd = ""
+database = ""
+uid = ""
+loginstatus = False
 from com.sun.star.awt import XActionListener
-class ActionListenerProcAdapter( unohelper.Base, XActionListener ):
-    def __init__( self, oProcToCall, tParams=() ):
-        self.oProcToCall = oProcToCall # a python procedure
-        self.tParams = tParams # a tuple
+
+
+class ActionListenerProcAdapter(unohelper.Base, XActionListener):
+    def __init__(self, oProcToCall, tParams=()):
+        self.oProcToCall = oProcToCall  # a python procedure
+        self.tParams = tParams  # a tuple
 
     # oActionEvent is a com.sun.star.awt.ActionEvent struct.
-    def actionPerformed( self, oActionEvent ):
-        if callable( self.oProcToCall ):
-            apply( self.oProcToCall, (oActionEvent,) + self.tParams )
+    def actionPerformed(self, oActionEvent):
+        if callable(self.oProcToCall):
+            apply(self.oProcToCall, (oActionEvent,) + self.tParams)
 
 #--------------------------------------------------
 # An ItemListener adapter.
@@ -56,15 +58,17 @@ class ActionListenerProcAdapter( unohelper.Base, XActionListener ):
 #   1. the oItemEvent
 #   2. any other parameters you specified to this object's constructor (as a tuple).
 from com.sun.star.awt import XItemListener
-class ItemListenerProcAdapter( unohelper.Base, XItemListener ):
-    def __init__( self, oProcToCall, tParams=() ):
-        self.oProcToCall = oProcToCall # a python procedure
-        self.tParams = tParams # a tuple
+
+
+class ItemListenerProcAdapter(unohelper.Base, XItemListener):
+    def __init__(self, oProcToCall, tParams=()):
+        self.oProcToCall = oProcToCall  # a python procedure
+        self.tParams = tParams  # a tuple
 
     # oItemEvent is a com.sun.star.awt.ItemEvent struct.
-    def itemStateChanged( self, oItemEvent ):
-        if callable( self.oProcToCall ):
-            apply( self.oProcToCall, (oItemEvent,) + self.tParams )
+    def itemStateChanged(self, oItemEvent):
+        if callable(self.oProcToCall):
+            apply(self.oProcToCall, (oItemEvent,) + self.tParams)
 
 #--------------------------------------------------
 # An TextListener adapter.
@@ -74,16 +78,17 @@ class ItemListenerProcAdapter( unohelper.Base, XItemListener ):
 #   1. the oTextEvent
 #   2. any other parameters you specified to this object's constructor (as a tuple).
 from com.sun.star.awt import XTextListener
-class TextListenerProcAdapter( unohelper.Base, XTextListener ):
-    def __init__( self, oProcToCall, tParams=() ):
-        self.oProcToCall = oProcToCall # a python procedure
-        self.tParams = tParams # a tuple
+
+
+class TextListenerProcAdapter(unohelper.Base, XTextListener):
+    def __init__(self, oProcToCall, tParams=()):
+        self.oProcToCall = oProcToCall  # a python procedure
+        self.tParams = tParams  # a tuple
 
     # oTextEvent is a com.sun.star.awt.TextEvent struct.
-    def textChanged( self, oTextEvent ):
-        if callable( self.oProcToCall ):
-            apply( self.oProcToCall, (oTextEvent,) + self.tParams )
-
+    def textChanged(self, oTextEvent):
+        if callable(self.oProcToCall):
+            apply(self.oProcToCall, (oTextEvent,) + self.tParams)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

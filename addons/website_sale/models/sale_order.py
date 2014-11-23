@@ -106,16 +106,17 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
             s -= set(l.product_id.id for l in order.order_line)
-            product_ids = random.sample(s, min(len(s),3))
+            product_ids = random.sample(s, min(len(s), 3))
             return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
+
 
 class website(orm.Model):
     _inherit = 'website'
 
     _columns = {
-        'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
+        'pricelist_id': fields.related('user_id', 'partner_id', 'property_product_pricelist',
             type='many2one', relation='product.pricelist', string='Default Pricelist'),
-        'currency_id': fields.related('pricelist_id','currency_id',
+        'currency_id': fields.related('pricelist_id', 'currency_id',
             type='many2one', relation='res.currency', string='Default Currency'),
     }
 
@@ -127,7 +128,7 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
-        if not sale_order_id and (force_create or code):  
+        if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
 
@@ -170,7 +171,7 @@ class website(orm.Model):
 
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
                 if values.get('fiscal_position'):
-                    order_lines = map(int,sale_order.order_line)
+                    order_lines = map(int, sale_order.order_line)
                     values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
                         values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
 
@@ -211,5 +212,3 @@ class website(orm.Model):
             'sale_transaction_id': False,
             'sale_order_code_pricelist_id': False,
         })
-
-

@@ -51,6 +51,7 @@ builtins = lambda *args: os.path.join(
     'templates',
     *args)
 
+
 def snake(s):
     """ snake cases ``s``
 
@@ -62,11 +63,14 @@ def snake(s):
     s = re.sub(r'(?<=[^A-Z])\B([A-Z])', r' \1', s)
     # lowercase everything, split on whitespace and join
     return '_'.join(s.lower().split())
+
+
 def pascal(s):
     return ''.join(
         ss.capitalize()
         for ss in re.sub('[_\s]+', ' ', s).split()
     )
+
 
 def directory(p, create=False):
     expanded = os.path.abspath(
@@ -81,6 +85,8 @@ def directory(p, create=False):
 env = jinja2.Environment()
 env.filters['snake'] = snake
 env.filters['pascal'] = pascal
+
+
 class template(object):
     def __init__(self, identifier):
         # TODO: directories, archives (zipfile, tarfile)
@@ -125,11 +131,12 @@ class template(object):
                        .stream(params or {})\
                        .dump(f, encoding='utf-8')
 
+
 def die(message, code=1):
     print >>sys.stderr, message
     sys.exit(code)
 
+
 def warn(message):
     # ASK: shall we use logger ?
     print "WARNING: " + message
-

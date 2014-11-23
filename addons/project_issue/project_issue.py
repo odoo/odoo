@@ -41,6 +41,7 @@ class project_issue_version(osv.Model):
         'active': 1,
     }
 
+
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
@@ -116,7 +117,7 @@ class project_issue(osv.Model):
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -186,7 +187,7 @@ class project_issue(osv.Model):
             progress = 0.0
             if issue.task_id:
                 progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}
+            res[issue.id] = {'progress': progress}
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
@@ -200,7 +201,7 @@ class project_issue(osv.Model):
         issues = []
         issue_pool = self.pool.get('project.issue')
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
+            issues += issue_pool.search(cr, uid, [('task_id', '=', task.id)])
         return issues
 
     def _get_issue_work(self, cr, uid, ids, context=None):
@@ -208,7 +209,7 @@ class project_issue(osv.Model):
         issue_pool = self.pool.get('project.issue')
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id:
-                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
+                issues += issue_pool.search(cr, uid, [('task_id', '=', work.task_id.id)])
         return issues
 
     _columns = {
@@ -226,7 +227,7 @@ class project_issue(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -242,7 +243,7 @@ class project_issue(osv.Model):
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel': fields.char('Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
@@ -379,7 +380,7 @@ class project_issue(osv.Model):
         # OR all section_ids and OR with case_default
         search_domain = []
         if section_ids:
-            search_domain += [('|')] * (len(section_ids)-1)
+            search_domain += [('|')] * (len(section_ids) - 1)
             for section_id in section_ids:
                 search_domain.append(('project_ids', '=', section_id))
         search_domain += list(domain)
@@ -469,7 +470,7 @@ class project(osv.Model):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
         return {
-            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
+            project_id: Issue.search_count(cr, uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
     _columns = {
@@ -546,14 +547,15 @@ class project_project(osv.Model):
         self._check_create_write_values(cr, uid, vals, context=context)
         return super(project_project, self).write(cr, uid, ids, vals, context=context)
 
+
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
         return {
-            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
+            partner_id: Issue.search_count(cr, uid, [('partner_id', '=', partner_id)])
             for partner_id in ids
         }
-    
+
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {

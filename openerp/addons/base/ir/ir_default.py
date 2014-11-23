@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
+
 
 class ir_default(osv.osv):
     _name = 'ir.default'
@@ -30,8 +31,8 @@ class ir_default(osv.osv):
         'uid': fields.many2one('res.users', 'Users'),
         'page': fields.char('View'),
         'ref_table': fields.char('Table Ref.'),
-        'ref_id': fields.integer('ID Ref.',size=64),
-        'company_id': fields.many2one('res.company','Company')
+        'ref_id': fields.integer('ID Ref.', size=64),
+        'company_id': fields.many2one('res.company', 'Company')
     }
 
     def _get_company_id(self, cr, uid, context=None):

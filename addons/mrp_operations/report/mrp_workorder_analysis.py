@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 import openerp.addons.decimal_precision as dp
+
 
 class mrp_workorder(osv.osv):
     _name = "mrp.workorder"
@@ -32,7 +33,7 @@ class mrp_workorder(osv.osv):
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
-        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('startworking', 'In Progress'), ('pause', 'Pause'), ('cancel', 'Cancelled'), ('done', 'Finished')], 'Status', readonly=True),
         'total_hours': fields.float('Total Hours', readonly=True),
         'total_cycles': fields.float('Total Cycles', readonly=True),
         'delay': fields.float('Delay', readonly=True),

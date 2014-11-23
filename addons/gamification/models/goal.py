@@ -145,7 +145,7 @@ class gamification_goal_definition(osv.Model):
                 obj.search(cr, uid, domain, context=context, count=True)
             except (ValueError, SyntaxError), e:
                 msg = e.message or (e.msg + '\n' + e.text)
-                raise osv.except_osv(_('Error!'),_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
+                raise osv.except_osv(_('Error!'), _("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -169,6 +169,7 @@ class gamification_goal_definition(osv.Model):
         model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
         # format (6, 0, []) to construct the domain ('model_id', 'in', m and m[0] and m[0][2])
         return {'value': {'model_inherited_model_ids': [(6, 0, [m.id for m in model.inherited_model_ids])]}}
+
 
 class gamification_goal(osv.Model):
     """Goal instance for a user
@@ -304,7 +305,7 @@ class gamification_goal(osv.Model):
                         'object': goal,
                         'pool': self.pool,
                         'cr': cr,
-                        'context': dict(context), # copy context to prevent side-effects of eval
+                        'context': dict(context),  # copy context to prevent side-effects of eval
                         'uid': uid,
                         'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
                     }
@@ -331,7 +332,7 @@ class gamification_goal(osv.Model):
                     for goal in goals:
                         start_date = field_date_name and goal.start_date or False
                         end_date = field_date_name and goal.end_date or False
-                        subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
+                        subqueries.setdefault((start_date, end_date), {}).update({goal.id: safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
                     # the global query should be split by time periods (especially for recurrent goals)
                     for (start_date, end_date), query_goals in subqueries.items():
@@ -355,7 +356,7 @@ class gamification_goal(osv.Model):
                                 if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], (int, long)):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
-                                    new_value = user_value.get(field_name+'_count', goal.current)
+                                    new_value = user_value.get(field_name + '_count', goal.current)
                                     if new_value != goal.current:
                                         goals_to_write[goal.id]['current'] = new_value
 
@@ -390,7 +391,7 @@ class gamification_goal(osv.Model):
 
                 # check goal target reached
                 if (goal.definition_id.condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
-                  or (goal.definition_id.condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
+                    or (goal.definition_id.condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
                     value['state'] = 'reached'
 
                 # check goal failure

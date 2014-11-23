@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+
 
 class asset_depreciation_confirmation_wizard(osv.osv_memory):
     _name = "asset.depreciation.confirmation.wizard"
@@ -28,20 +29,20 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     _columns = {
        'period_id': fields.many2one('account.period', 'Period', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
     }
-   
+
     def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False
- 
+
     _defaults = {
         'period_id': _get_period,
     }
 
     def asset_compute(self, cr, uid, ids, context):
         ass_obj = self.pool.get('account.asset.asset')
-        asset_ids = ass_obj.search(cr, uid, [('state','=','open')], context=context)
+        asset_ids = ass_obj.search(cr, uid, [('state', '=', 'open')], context=context)
         data = self.browse(cr, uid, ids, context=context)
         period_id = data[0].period_id.id
         created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, period_id, context=context)
@@ -51,7 +52,7 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.move',
             'view_id': False,
-            'domain': "[('id','in',["+','.join(map(str,created_move_ids))+"])]",
+            'domain': "[('id','in',[" + ','.join(map(str, created_move_ids)) + "])]",
             'type': 'ir.actions.act_window',
         }
 

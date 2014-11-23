@@ -32,6 +32,8 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 # Inspired by http://stackoverflow.com/questions/517923
+
+
 def remove_accents(input_str):
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
@@ -76,10 +78,10 @@ class mail_alias(osv.Model):
                                           # (have a few false positives, though)
                                           domain="[('field_id.name', '=', 'message_ids')]"),
         'alias_user_id': fields.many2one('res.users', 'Owner',
-                                           help="The owner of records created upon receiving emails on this alias. "
-                                                "If this field is not set the system will attempt to find the right owner "
-                                                "based on the sender (From) address, or will use the Administrator account "
-                                                "if no system user is found for that address."),
+                                         help="The owner of records created upon receiving emails on this alias. "
+                                         "If this field is not set the system will attempt to find the right owner "
+                                         "based on the sender (From) address, or will use the Administrator account "
+                                         "if no system user is found for that address."),
         'alias_defaults': fields.text('Default Values', required=True,
                                       help="A Python dictionary that will be evaluated to provide "
                                            "default values when creating new records for this alias."),

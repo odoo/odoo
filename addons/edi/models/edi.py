@@ -36,18 +36,20 @@ _logger = logging.getLogger(__name__)
 
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?db=%s&token=%s'
-EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
+EDI_PROTOCOL_VERSION = 1  # arbitrary ever-increasing version number
 EDI_GENERATOR = 'Odoo' + release.major_version
 EDI_GENERATOR_VERSION = release.version_info
+
 
 def split_external_id(ext_id):
     match = EXTERNAL_ID_PATTERN.match(ext_id)
     assert match, \
-            _("'%s' is an invalid external ID") % (ext_id)
+        _("'%s' is an invalid external ID") % (ext_id)
     return {'module': match.group(1),
             'db_uuid': match.group(2),
             'id': match.group(3),
             'full': match.group(0)}
+
 
 def safe_unique_id(database_id, model, record_id):
     """Generate a unique string to represent a (database_uuid,model,record_id) pair
@@ -56,10 +58,11 @@ def safe_unique_id(database_id, model, record_id):
     msg = "%s-%s-%s-%s" % (time.time(), database_id, model, record_id)
     digest = hashlib.sha1(msg).digest()
     # fold the sha1 20 bytes digest to 9 bytes
-    digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
+    digest = ''.join(chr(ord(x) ^ ord(y)) for (x, y) in zip(digest[:9], digest[9:-2]))
     # b64-encode the 9-bytes folded digest to a reasonable 12 chars ASCII ID
     digest = base64.urlsafe_b64encode(digest)
-    return '%s-%s' % (model.replace('.','_'), digest)
+    return '%s-%s' % (model.replace('.', '_'), digest)
+
 
 def last_update_for(record):
     """Returns the last update timestamp for the given record,
@@ -125,14 +128,14 @@ class edi(osv.AbstractModel):
         for edi_document in edi_documents:
             module = edi_document.get('__import_module') or edi_document.get('__module')
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
-            if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
+            if module != 'base' and not ir_module.search(cr, uid, [('name', '=', module), ('state', '=', 'installed')]):
                 raise osv.except_osv(_('Missing Application.'),
                             _("The document you are trying to import requires the Odoo `%s` application. "
-                              "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
+                              "You can install it by connecting as the administrator and opening the configuration assistant.") % (module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
             assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
             assert model in self.pool, 'model `%s` cannot be found, despite module `%s` being available - '\
-                              'this EDI document seems invalid or unsupported.' % (model,module)
+                'this EDI document seems invalid or unsupported.' % (model, module)
             model_obj = self.pool[model]
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             record_action = model_obj._edi_record_display_action(cr, uid, record_id, context=context)
@@ -282,19 +285,19 @@ class EDIMixin(object):
             edi_dict = {
                 '__id': ext_id,
                 '__last_update': last_update_for(record),
-                '__model' : record._name,
-                '__module' : record._original_module,
+                '__model': record._name,
+                '__module': record._original_module,
                 '__version': EDI_PROTOCOL_VERSION,
                 '__generator': EDI_GENERATOR,
                 '__generator_version': EDI_GENERATOR_VERSION,
             }
-            attachment_ids = ir_attachment.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
+            attachment_ids = ir_attachment.search(cr, uid, [('res_model', '=', record._name), ('res_id', '=', record.id)])
             if attachment_ids:
                 attachments = []
                 for attachment in ir_attachment.browse(cr, uid, attachment_ids, context=context):
                     attachments.append({
-                            'name' : attachment.name,
-                            'content': attachment.datas, # already base64 encoded!
+                            'name': attachment.name,
+                            'content': attachment.datas,  # already base64 encoded!
                             'file_name': attachment.datas_fname,
                     })
                 edi_dict.update(__attachments=attachments)
@@ -412,9 +415,9 @@ class EDIMixin(object):
            This must be called explicitly by models that need it, usually
            at the beginning of ``edi_export``, before the call to ``super()``."""
         ir_actions_report = self.pool.get('ir.actions.report.xml')
-        matching_reports = ir_actions_report.search(cr, uid, [('model','=',self._name),
-                                                              ('report_type','=','pdf'),
-                                                              ('usage','=','default')])
+        matching_reports = ir_actions_report.search(cr, uid, [('model', '=', self._name),
+                                                              ('report_type', '=', 'pdf'),
+                                                              ('usage', '=', 'default')])
         if matching_reports:
             report = ir_actions_report.browse(cr, uid, matching_reports[0])
             result, format = openerp.report.render_report(cr, uid, [record.id], report.report_name, {'model': self._name}, context=context)
@@ -457,7 +460,6 @@ class EDIMixin(object):
                                            'datas': str(attachment['content']),
                                            }, context=context)
 
-
     def _edi_get_object_by_external_id(self, cr, uid, external_id, model, context=None):
         """Returns browse_record representing object identified by the model and external_id,
            or None if no record was found with this external id.
@@ -479,9 +481,9 @@ class EDIMixin(object):
         if ext_db_uuid is None or ext_db_uuid == db_uuid:
             # local records may also be registered without the db_uuid
             modules.append(module)
-        data_ids = ir_model_data.search(cr, uid, [('model','=',model),
-                                                  ('name','=',ext_id),
-                                                  ('module','in',modules)])
+        data_ids = ir_model_data.search(cr, uid, [('model', '=', model),
+                                                  ('name', '=', ext_id),
+                                                  ('module', 'in', modules)])
         if data_ids:
             model = self.pool[model]
             data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
@@ -541,9 +543,9 @@ class EDIMixin(object):
            :return: the database ID of the imported record
         """
         assert self._name == edi.get('__import_model') or \
-                ('__import_model' not in edi and self._name == edi.get('__model')), \
-                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)." % \
-                   (edi.get('__model'), self._name)
+            ('__import_model' not in edi and self._name == edi.get('__model')), \
+            "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)." % \
+            (edi.get('__model'), self._name)
 
         # First check the record is now already known in the database, in which case it is ignored
         ext_id_members = split_external_id(edi['__id'])
@@ -553,7 +555,7 @@ class EDIMixin(object):
             return existing.id
 
         record_values = {}
-        o2m_todo = {} # o2m values are processed after their parent already exists
+        o2m_todo = {}  # o2m values are processed after their parent already exists
         for field_name, field_value in edi.iteritems():
             # skip metadata and empty fields
             if field_name.startswith('__') or field_value is None or field_value is False:
@@ -569,11 +571,11 @@ class EDIMixin(object):
             relation_model = field.comodel_name
             if field.type == 'many2one':
                 record_values[field_name] = self.edi_import_relation(cr, uid, relation_model,
-                                                                      field_value[1], field_value[0],
-                                                                      context=context)
+                                                                     field_value[1], field_value[0],
+                                                                     context=context)
             elif field.type == 'many2many':
                 record_values[field_name] = [self.edi_import_relation(cr, uid, relation_model, m2m_value[1],
-                                                                       m2m_value[0], context=context)
+                                                                      m2m_value[0], context=context)
                                              for m2m_value in field_value]
             elif field.type == 'one2many':
                 # must wait until parent report is imported, as the parent relationship

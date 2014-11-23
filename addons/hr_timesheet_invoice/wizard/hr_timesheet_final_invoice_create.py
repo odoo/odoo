@@ -31,6 +31,8 @@ from openerp.tools.translate import _
 #
 # TODO: check unit of measure !!!
 #
+
+
 class final_invoice_create(osv.osv_memory):
     _name = 'hr.timesheet.invoice.create.final'
     _description = 'Create invoice from timesheet final'
@@ -47,14 +49,14 @@ class final_invoice_create(osv.osv_memory):
         # hack for fixing small issue (context should not propagate implicitly between actions)
         if 'default_type' in context:
             del context['default_type']
-        ids = self.pool.get('account.analytic.line').search(cr, uid, [('invoice_id','=',False),('to_invoice','<>', False), ('account_id', 'in', context['active_ids'])], context=context)
+        ids = self.pool.get('account.analytic.line').search(cr, uid, [('invoice_id', '=', False), ('to_invoice', '<>', False), ('account_id', 'in', context['active_ids'])], context=context)
         invs = self.pool.get('account.analytic.line').invoice_cost_create(cr, uid, ids, data, context=context)
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
         res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
         act_win = act_obj.read(cr, uid, [res_id], context=context)[0]
-        act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
+        act_win['domain'] = [('id', 'in', invs), ('type', '=', 'out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
 

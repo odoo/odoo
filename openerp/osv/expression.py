@@ -430,6 +430,7 @@ def select_distinct_from_where_not_null(cr, select_field, from_table):
     cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (select_field, from_table, select_field))
     return [r[0] for r in cr.fetchall()]
 
+
 def get_unaccent_wrapper(cr):
     if openerp.modules.registry.RegistryManager.get(cr.dbname).has_unaccent:
         return lambda x: "unaccent(%s)" % (x,)
@@ -438,6 +439,7 @@ def get_unaccent_wrapper(cr):
 # --------------------------------------------------
 # ExtendedLeaf class for managing leafs and contexts
 # -------------------------------------------------
+
 
 class ExtendedLeaf(object):
     """ Class wrapping a domain leaf, and giving some services and management
@@ -603,6 +605,7 @@ class ExtendedLeaf(object):
         self.leaf = normalize_leaf(self.leaf)
         return True
 
+
 def create_substitution_leaf(leaf, new_elements, new_model=None):
     """ From a leaf, create a new leaf (based on the new_elements tuple
         and new_model), that will have the same join context. Used to
@@ -612,6 +615,7 @@ def create_substitution_leaf(leaf, new_elements, new_model=None):
     new_join_context = [tuple(context) for context in leaf.join_context]
     new_leaf = ExtendedLeaf(new_elements, new_model, join_context=new_join_context)
     return new_leaf
+
 
 class expression(object):
     """ Parse a domain expression
@@ -937,7 +941,7 @@ class expression(object):
 
                     if not ids2:
                         if operator in ['like', 'ilike', 'in', '=']:
-                            #no result found with given search criteria
+                            # no result found with given search criteria
                             call_null = False
                             push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                     else:
@@ -953,7 +957,7 @@ class expression(object):
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
-                #FIXME
+                # FIXME
                 if operator == 'child_of':
                     def _rec_convert(ids):
                         if comodel == model:
@@ -978,7 +982,7 @@ class expression(object):
                                 res_ids = right
                         if not res_ids:
                             if operator in ['like', 'ilike', 'in', '=']:
-                                #no result found with given search criteria
+                                # no result found with given search criteria
                                 call_null_m2m = False
                                 push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                             else:
@@ -1007,7 +1011,7 @@ class expression(object):
                             context = {}
                         c = context.copy()
                         c['active_test'] = False
-                        #Special treatment to ill-formed domains
+                        # Special treatment to ill-formed domains
                         operator = (operator in ['<', '>', '<=', '>=']) and 'in' or operator
 
                         dict_op = {'not in': '!=', 'in': '=', '=': 'in', '!=': 'not in'}
@@ -1066,15 +1070,15 @@ class expression(object):
 
                     subselect = """WITH temp_irt_current (id, name) as (
                             SELECT ct.id, coalesce(it.value,ct.{quote_left})
-                            FROM {current_table} ct 
-                            LEFT JOIN ir_translation it ON (it.name = %s and 
-                                        it.lang = %s and 
-                                        it.type = %s and 
-                                        it.res_id = ct.id and 
+                            FROM {current_table} ct
+                            LEFT JOIN ir_translation it ON (it.name = %s and
+                                        it.lang = %s and
+                                        it.type = %s and
+                                        it.res_id = ct.id and
                                         it.value != '')
-                            ) 
+                            )
                             SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
-                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'), 
+                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
                                        operator=sql_operator, right=instr)
 
                     params = (
@@ -1210,8 +1214,8 @@ class expression(object):
                 column = '%s.%s' % (table_alias, _quote(left))
                 query = '(%s%s %s %s)' % (unaccent(column), cast, sql_operator, unaccent(format))
             elif left in MAGIC_COLUMNS:
-                    query = "(%s.\"%s\"%s %s %%s)" % (table_alias, left, cast, sql_operator)
-                    params = right
+                query = "(%s.\"%s\"%s %s %%s)" % (table_alias, left, cast, sql_operator)
+                params = right
             else:  # Must not happen
                 raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
 

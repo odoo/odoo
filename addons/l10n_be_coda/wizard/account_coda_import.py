@@ -30,6 +30,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'
     _description = 'Import CODA File'
@@ -64,7 +65,7 @@ class account_coda_import(osv.osv_memory):
             if not line:
                 pass
             elif line[0] == '0':
-                #Begin of a new Bank statement
+                # Begin of a new Bank statement
                 statement = {}
                 statements.append(statement)
                 statement['version'] = line[127]
@@ -74,7 +75,7 @@ class account_coda_import(osv.osv_memory):
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
             elif line[0] == '1':
-                #Statement details
+                # Statement details
                 if statement['version'] == '1':
                     statement['acc_number'] = rmspaces(line[5:17])
                     statement['currency'] = rmspaces(line[18:21])
@@ -127,7 +128,7 @@ class account_coda_import(osv.osv_memory):
                 statement['codaSeqNumber'] = rmspaces(line[125:128])
             elif line[0] == '2':
                 if line[1] == '1':
-                    #New statement line
+                    # New statement line
                     statementLine = {}
                     statementLine['ref'] = rmspaces(line[2:10])
                     statementLine['ref_move'] = rmspaces(line[2:6])
@@ -143,12 +144,12 @@ class account_coda_import(osv.osv_memory):
                     statementLine['transaction_code'] = rmspaces(line[56:58])
                     statementLine['transaction_category'] = rmspaces(line[58:61])
                     if line[61] == '1':
-                        #Structured communication
+                        # Structured communication
                         statementLine['communication_struct'] = True
                         statementLine['communication_type'] = line[62:65]
                         statementLine['communication'] = '+++' + line[65:68] + '/' + line[68:72] + '/' + line[72:77] + '+++'
                     else:
-                        #Non-structured communication
+                        # Non-structured communication
                         statementLine['communication_struct'] = False
                         statementLine['communication'] = rmspaces(line[62:115])
                     statementLine['entryDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[115:121]), '%d%m%y'))
@@ -208,12 +209,12 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
             elif line[0] == '4':
-                    comm_line = {}
-                    comm_line['type'] = 'communication'
-                    comm_line['sequence'] = len(statement['lines']) + 1
-                    comm_line['ref'] = rmspaces(line[2:10])
-                    comm_line['communication'] = rmspaces(line[32:112])
-                    statement['lines'].append(comm_line)
+                comm_line = {}
+                comm_line['type'] = 'communication'
+                comm_line['sequence'] = len(statement['lines']) + 1
+                comm_line['ref'] = rmspaces(line[2:10])
+                comm_line['communication'] = rmspaces(line[32:112])
+                statement['lines'].append(comm_line)
             elif line[0] == '8':
                 # new balance record
                 statement['debit'] = line[41]
@@ -296,8 +297,8 @@ class account_coda_import(osv.osv_memory):
                             bank_account_id = ids[0]
                             partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
                         else:
-                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
-                            #chosen at the bank statement final confirmation time.
+                            # create the bank account, not linked to any partner. The reconciliation will link the partner manually
+                            # chosen at the bank statement final confirmation time.
                             try:
                                 type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
                                 type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
@@ -332,9 +333,9 @@ class account_coda_import(osv.osv_memory):
             'type': 'ir.actions.client',
         }
 
+
 def rmspaces(s):
     return " ".join(s.split())
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

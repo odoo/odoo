@@ -20,10 +20,11 @@
 ##############################################################################
 from openerp.osv import fields, osv
 
+
 class lunch_cancel(osv.Model):
     """ lunch cancel """
     _name = 'lunch.cancel'
     _description = 'cancel lunch order'
 
-    def cancel(self,cr,uid,ids,context=None):
+    def cancel(self, cr, uid, ids, context=None):
         return self.pool.get('lunch.order.line').cancel(cr, uid, ids, context=context)

@@ -25,6 +25,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
+
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
 
@@ -36,7 +37,7 @@ class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
-        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
+        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id', 'property_id', 'Properties'),
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
@@ -47,12 +48,12 @@ class procurement_order(osv.osv):
 
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
-            #make a manufacturing order for the procurement
+            # make a manufacturing order for the procurement
             return self.make_mo(cr, uid, [procurement.id], context=context)[procurement.id]
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
+        if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method?
             return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
@@ -92,7 +93,7 @@ class procurement_order(osv.osv):
                 res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
                 newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
                 newdate = newdate - relativedelta(days=company.manufacturing_lead)
-                #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+                # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
                 produce_id = production_obj.create(cr, SUPERUSER_ID, {
                     'origin': procurement.origin,
                     'product_id': procurement.product_id.id,

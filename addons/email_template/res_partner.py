@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class res_partner(osv.osv):
     """Inherit res.partner to add a generic opt-out field that can be used
        to restrict usage of automatic email templates.

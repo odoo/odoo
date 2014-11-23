@@ -2,6 +2,7 @@ from openerp import SUPERUSER_ID
 from openerp.tests import common
 from .. import test_models
 
+
 class base_action_rule_test(common.TransactionCase):
 
     def setUp(self):
@@ -28,7 +29,7 @@ class base_action_rule_test(common.TransactionCase):
             'name': "Lead is in draft state",
             'is_default': False,
             'model_id': "base.action.rule.lead.test",
-            'domain' : "[('state','=','draft')]",
+            'domain': "[('state','=','draft')]",
             }, context=context)
 
     def create_lead_test_1(self, cr, uid, context=None):
@@ -44,9 +45,9 @@ class base_action_rule_test(common.TransactionCase):
         """
             The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to user "demo"
         """
-        return self.base_action_rule.create(cr,uid,{
+        return self.base_action_rule.create(cr, uid, {
             'name': "Rule 1",
-            'model_id': self.registry('ir.model').search(cr, uid, [('model','=','base.action.rule.lead.test')], context=context)[0],
+            'model_id': self.registry('ir.model').search(cr, uid, [('model', '=', 'base.action.rule.lead.test')], context=context)[0],
             'kind': kind,
             'filter_pre_id': filter_pre_id,
             'filter_id': filter_id,

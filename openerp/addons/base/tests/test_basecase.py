@@ -3,6 +3,7 @@ import unittest2
 
 from openerp.tests import common
 
+
 class test_single_transaction_case(common.SingleTransactionCase):
     """
     Check the whole-class transaction behavior of SingleTransactionCase.
@@ -31,6 +32,7 @@ class test_single_transaction_case(common.SingleTransactionCase):
                                        'module': 'base',
                                        'model': 'res.partner',
                                        'res_id': pid})
+
     def test_20b(self):
         """ Resolve xml id with ref() and browse_ref() """
         cr, uid = self.cr, self.uid
@@ -41,7 +43,6 @@ class test_single_transaction_case(common.SingleTransactionCase):
         partner = res_partner.browse(cr, uid, p_ref)
         p_browse_ref = self.browse_ref(xid)
         self.assertEqual(partner, p_browse_ref, "browse_ref() should resolve xid to browse records")
-    
 
 
 class test_transaction_case(common.TransactionCase):
@@ -63,7 +64,6 @@ class test_transaction_case(common.TransactionCase):
         cr, uid = self.cr, self.uid
         ids = self.registry('res.partner').search(cr, uid, [('name', '=', 'test_per_class_teardown_partner')])
         self.assertEqual(0, len(ids), "Test partner found.")
-
 
     def test_20a(self):
         """ Create a partner with a XML ID then resolve xml id with ref() and browse_ref() """

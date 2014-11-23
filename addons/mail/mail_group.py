@@ -27,6 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 
+
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
         group. The group mechanics are based on the followers. """

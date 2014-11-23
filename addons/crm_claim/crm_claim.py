@@ -41,7 +41,7 @@ class crm_claim_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
-        'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
+        'section_ids': fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
@@ -50,6 +50,7 @@ class crm_claim_stage(osv.osv):
     _defaults = {
         'sequence': lambda *args: 1,
     }
+
 
 class crm_claim(osv.osv):
     """ Crm claim
@@ -76,8 +77,8 @@ class crm_claim(osv.osv):
         'date_action_next': fields.datetime('Next Action Date'),
         'description': fields.text('Description'),
         'resolution': fields.text('Resolution'),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'write_date': fields.datetime('Update Date', readonly=True),
         'date_deadline': fields.date('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Claim Date', select=True),
@@ -85,8 +86,8 @@ class crm_claim(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
-        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority'),
+        'type_action': fields.selection([('correction', 'Corrective Action'), ('prevention', 'Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
         'user_fault': fields.char('Trouble Responsible'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
@@ -191,12 +192,14 @@ class crm_claim(osv.osv):
         defaults.update(custom_values)
         return super(crm_claim, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
+
 class res_partner(osv.osv):
     _inherit = 'res.partner'
+
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
         Claim = self.pool['crm.claim']
         return {
-            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
+            partner_id: Claim.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
             for partner_id in ids
         }
 

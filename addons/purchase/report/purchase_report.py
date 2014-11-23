@@ -23,8 +23,9 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
+
 
 class purchase_report(osv.osv):
     _name = "purchase.report"
@@ -33,25 +34,25 @@ class purchase_report(osv.osv):
     _columns = {
         'date': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created"),  # TDE FIXME master: rename into date_order
         'state': fields.selection([('draft', 'Request for Quotation'),
-                                     ('confirmed', 'Waiting Supplier Ack'),
-                                      ('approved', 'Approved'),
-                                      ('except_picking', 'Shipping Exception'),
-                                      ('except_invoice', 'Invoice Exception'),
-                                      ('done', 'Done'),
-                                      ('cancel', 'Cancelled')],'Order Status', readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+                                   ('confirmed', 'Waiting Supplier Ack'),
+                                   ('approved', 'Approved'),
+                                   ('except_picking', 'Shipping Exception'),
+                                   ('except_invoice', 'Invoice Exception'),
+                                   ('done', 'Done'),
+                                   ('cancel', 'Cancelled')], 'Order Status', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'picking_type_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),
-        'date_approve':fields.date('Date Approved', readonly=True),
-        'expected_date':fields.date('Expected Date', readonly=True),
-        'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
-        'product_uom' : fields.many2one('product.uom', 'Reference Unit of Measure', required=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
-        'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Supplier', readonly=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
+        'date_approve': fields.date('Date Approved', readonly=True),
+        'expected_date': fields.date('Expected Date', readonly=True),
+        'validator': fields.many2one('res.users', 'Validated By', readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Reference Unit of Measure', required=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
+        'delay': fields.float('Days to Validate', digits=(16, 2), readonly=True),
+        'delay_pass': fields.float('Days to Deliver', digits=(16, 2), readonly=True),
         'quantity': fields.integer('Unit Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
@@ -62,6 +63,7 @@ class purchase_report(osv.osv):
 
     }
     _order = 'date desc, price_total desc'
+
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""

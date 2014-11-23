@@ -29,6 +29,7 @@ import base64
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class l10n_be_vat_declaration(osv.osv_memory):
     """ Vat Declaration """
     _name = "l1on_be.vat.declaration"
@@ -41,12 +42,12 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
     _columns = {
         'name': fields.char('File Name'),
-        'period_id': fields.many2one('account.period','Period', required=True),
+        'period_id': fields.many2one('account.period', 'Period', required=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to make or not?'),
-        'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to make or not?'),
+        'ask_restitution': fields.boolean('Ask Restitution', help='It indicates whether a restitution is to make or not?'),
+        'ask_payment': fields.boolean('Ask Payment', help='It indicates whether a payment is to make or not?'),
         'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
             'no clients to be included in the client listing.'),
         'comments': fields.text('Comments'),
@@ -76,7 +77,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         if context is None:
             context = {}
 
-        list_of_tags = ['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','72','81','82','83','84','85','86','87','88','91']
+        list_of_tags = ['00', '01', '02', '03', '44', '45', '46', '47', '48', '49', '54', '55', '56', '57', '59', '61', '62', '63', '64', '71', '72', '81', '82', '83', '84', '85', '86', '87', '88', '91']
         data_tax = self.browse(cr, uid, ids[0])
         if data_tax.tax_code_id:
             obj_company = data_tax.tax_code_id.company_id
@@ -85,18 +86,18 @@ class l10n_be_vat_declaration(osv.osv_memory):
         vat_no = obj_company.partner_id.vat
         if not vat_no:
             raise osv.except_osv(_('Insufficient Data!'), _('No VAT number associated with your company.'))
-        vat_no = vat_no.replace(' ','').upper()
+        vat_no = vat_no.replace(' ', '').upper()
         vat = vat_no[2:]
 
-        tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id','child_of',data_tax.tax_code_id.id), ('company_id','=',obj_company.id)], context=context)
+        tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id', 'child_of', data_tax.tax_code_id.id), ('company_id', '=', obj_company.id)], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
         ctx['period_id'] = data['period_id'][0]
-        tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
+        tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code', 'sum_period'], context=ctx)
 
         default_address = obj_partner.address_get(cr, uid, [obj_company.partner_id.id])
         default_address_id = default_address.get("default", obj_company.partner_id.id)
-        address_id= obj_partner.browse(cr, uid, default_address_id, context)
+        address_id = obj_partner.browse(cr, uid, default_address_id, context)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
         issued_by = vat_no[:2]
@@ -109,20 +110,20 @@ class l10n_be_vat_declaration(osv.osv_memory):
         quarter = str(((int(starting_month) - 1) / 3) + 1)
 
         if not address_id.email:
-            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No email address associated with the company.'))
         if not address_id.phone:
-            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No phone associated with the company.'))
         file_data = {
                         'issued_by': issued_by,
                         'vat_no': vat_no,
                         'only_vat': vat_no[2:],
                         'cmpny_name': obj_company.name,
-                        'address': "%s %s"%(address_id.street or "",address_id.street2 or ""),
+                        'address': "%s %s" % (address_id.street or "", address_id.street2 or ""),
                         'post_code': address_id.zip or "",
                         'city': address_id.city or "",
                         'country_code': address_id.country_id and address_id.country_id.code or "",
                         'email': address_id.email or "",
-                        'phone': address_id.phone.replace('.','').replace('/','').replace('(','').replace(')','').replace(' ',''),
+                        'phone': address_id.phone.replace('.', '').replace('/', '').replace('(', '').replace(')', '').replace(' ', ''),
                         'send_ref': send_ref,
                         'quarter': quarter,
                         'month': starting_month,
@@ -160,8 +161,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
     """ % (file_data)
 
         if starting_month != ending_month:
-            #starting month and ending month of selected period are not the same
-            #it means that the accounting isn't based on periods of 1 month but on quarters
+            # starting month and ending month of selected period are not the same
+            # it means that the accounting isn't based on periods of 1 month but on quarters
             data_of_file += '\t\t<ns2:Quarter>%(quarter)s</ns2:Quarter>\n\t\t' % (file_data)
         else:
             data_of_file += '\t\t<ns2:Month>%(month)s</ns2:Month>\n\t\t' % (file_data)
@@ -171,7 +172,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         cases_list = []
         for item in tax_info:
             if item['code'] == '91' and ending_month != 12:
-                #the tax code 91 can only be send for the declaration of December
+                # the tax code 91 can only be send for the declaration of December
                 continue
             if item['code'] and item['sum_period']:
                 if item['code'] == 'VI':
@@ -194,7 +195,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file += '\n\t\t<ns2:Ask Restitution="%(ask_restitution)s" Payment="%(ask_payment)s"/>' % (file_data)
         data_of_file += '\n\t\t<ns2:Comment>%(comments)s</ns2:Comment>' % (file_data)
         data_of_file += '\n\t</ns2:VATDeclaration> \n</ns2:VATConsignment>'
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context = dict(context or {})
         context['file_save'] = data_of_file
@@ -204,7 +205,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'l1on_be.vat.declaration',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'view_id': 'view_vat_save',
             'type': 'ir.actions.act_window',
             'target': 'new',
