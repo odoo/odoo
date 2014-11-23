@@ -64,7 +64,7 @@ class hr_payroll_structure(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'parent_id': _get_parent,
     }
@@ -157,7 +157,7 @@ class contrib_register(osv.osv):
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
@@ -180,7 +180,7 @@ class hr_salary_rule_category(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
@@ -299,7 +299,7 @@ class hr_payslip(osv.osv):
         'state': 'draft',
         'credit_note': False,
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
@@ -415,12 +415,12 @@ class hr_payslip(osv.osv):
                 # fill only if the contract as a working schedule linked
                 continue
             attendances = {
-                 'name': _("Normal Working Days paid at 100%"),
-                 'sequence': 1,
-                 'code': 'WORK100',
-                 'number_of_days': 0.0,
-                 'number_of_hours': 0.0,
-                 'contract_id': contract.id,
+                'name': _("Normal Working Days paid at 100%"),
+                'sequence': 1,
+                'code': 'WORK100',
+                'number_of_days': 0.0,
+                'number_of_hours': 0.0,
+                'contract_id': contract.id,
             }
             leaves = {}
             day_from = datetime.strptime(date_from, "%Y-%m-%d")
@@ -467,9 +467,9 @@ class hr_payslip(osv.osv):
                 if rule.input_ids:
                     for input in rule.input_ids:
                         inputs = {
-                             'name': input.name,
-                             'code': input.code,
-                             'contract_id': contract.id,
+                            'name': input.name,
+                            'code': input.code,
+                            'contract_id': contract.id,
                         }
                         res += [inputs]
         return res
@@ -645,22 +645,22 @@ class hr_payslip(osv.osv):
 
         # defaults
         res = {'value': {
-                      'line_ids': [],
-                      'input_line_ids': [],
-                      'worked_days_line_ids': [],
-                      #'details_by_salary_head':[], TODO put me back
-                      'name': '',
-                      'contract_id': False,
-                      'struct_id': False,
-                      }
-               }
+            'line_ids': [],
+            'input_line_ids': [],
+            'worked_days_line_ids': [],
+            #'details_by_salary_head':[], TODO put me back
+            'name': '',
+            'contract_id': False,
+            'struct_id': False,
+        }
+        }
         if (not employee_id) or (not date_from) or (not date_to):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
-                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                    'company_id': employee_id.company_id.id
+            'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+            'company_id': employee_id.company_id.id
         })
 
         if not context.get('contract', False):
@@ -678,30 +678,30 @@ class hr_payslip(osv.osv):
             return res
         contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
         res['value'].update({
-                    'contract_id': contract_record and contract_record.id or False
+            'contract_id': contract_record and contract_record.id or False
         })
         struct_record = contract_record and contract_record.struct_id or False
         if not struct_record:
             return res
         res['value'].update({
-                    'struct_id': struct_record.id,
+            'struct_id': struct_record.id,
         })
         # computation of the salary input
         worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
         input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
         res['value'].update({
-                    'worked_days_line_ids': worked_days_line_ids,
-                    'input_line_ids': input_line_ids,
+            'worked_days_line_ids': worked_days_line_ids,
+            'input_line_ids': input_line_ids,
         })
         return res
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
         # TODO it seems to be the mess in the onchanges, we should have onchange_employee => onchange_contract => doing all the things
         res = {'value': {
-                 'line_ids': [],
-                 'name': '',
-                 }
-               }
+            'line_ids': [],
+            'name': '',
+        }
+        }
         context = dict(context or {}, contract=True)
         if not contract_id:
             res['value'].update({'struct_id': False})
@@ -819,7 +819,7 @@ result = rules.NET > categories.NET * 0.10''',
         'appears_on_payslip': True,
         'active': True,
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'condition_select': 'none',
         'amount_select': 'fix',

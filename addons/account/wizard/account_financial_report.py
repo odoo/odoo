@@ -51,9 +51,9 @@ class accounting_report(osv.osv_memory):
         return report_ids and report_ids[0] or False
 
     _defaults = {
-            'filter_cmp': 'filter_no',
-            'target_move': 'posted',
-            'account_report_id': _get_account_report,
+        'filter_cmp': 'filter_no',
+        'target_move': 'posted',
+        'account_report_id': _get_account_report,
     }
 
     def _build_comparison_context(self, cr, uid, ids, data, context=None):

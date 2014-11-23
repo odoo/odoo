@@ -79,7 +79,7 @@ class report_printscreen_list(report_int):
         if self.groupby:
             rows = []
 
-            def get_groupby_data(groupby = [], domain = []):
+            def get_groupby_data(groupby=[], domain=[]):
                 records =  model.read_group(cr, uid, domain, fields_order, groupby, 0, None, context)
                 for rec in records:
                     rec['__group'] = True

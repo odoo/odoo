@@ -134,12 +134,12 @@ class report_custom(report_int):
         # For add the report header on the top of the report.
         tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Center Loads", line_style=None)
         tb.draw()
-        ar = area.T(legend = legend.T(),
-                    x_grid_style = line_style.gray70_dash1,
-                    x_axis = axis.X(label="Periods", format="/a90/hC%s"),
-                    x_coord = category_coord.T(x_index, 0),
-                    y_axis = axis.Y(label=y_label),
-                    y_range = (0, None),
+        ar = area.T(legend=legend.T(),
+                    x_grid_style=line_style.gray70_dash1,
+                    x_axis=axis.X(label="Periods", format="/a90/hC%s"),
+                    x_coord=category_coord.T(x_index, 0),
+                    y_axis=axis.Y(label=y_label),
+                    y_range=(0, None),
                     size = (640, 480))
         bar_plot.fill_styles.reset();
         # select workcenters
@@ -196,10 +196,10 @@ class report_custom(report_int):
 
     def _empty_graph(self, date):
         data = [[date, 0]]
-        ar = area.T(x_coord = category_coord.T(data, 0), y_range = (0, None),
+        ar = area.T(x_coord=category_coord.T(data, 0), y_range=(0, None),
                     x_axis = axis.X(label="Periods"),
                     y_axis = axis.Y(label="Load"))
-        ar.add_plot(bar_plot.T(data = data, label="No production order"))
+        ar.add_plot(bar_plot.T(data=data, label="No production order"))
         return ar
 
 report_custom('report.mrp.workcenter.load')

@@ -60,8 +60,8 @@ class attendance_print(report_sxw.rml_parse):
         res = self.cr.dictfetchall()
         if not res:
             return ('/', '/')
-        total2 = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
-        total = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
+        total2 = datetime.timedelta(seconds=0, minutes=0, hours=0)
+        total = datetime.timedelta(seconds=0, minutes=0, hours=0)
         for r in res:
             if r['action'] == 'sign_out':
                 r['delay'] = -r['delay']
@@ -70,9 +70,9 @@ class attendance_print(report_sxw.rml_parse):
                 total2 += r['delay']
 
         result_dict = {
-                'total': total and str(total).split('.')[0],
-                'total2': total2  and str(total2).split('.')[0]
-                }
+            'total': total and str(total).split('.')[0],
+            'total2': total2  and str(total2).split('.')[0]
+        }
         return [result_dict]
 
 

@@ -303,15 +303,15 @@ class pos_session(osv.osv):
         'cash_register_balance_end_real': fields.related('cash_register_id', 'balance_end_real',
                 type='float',
                 digits_compute=dp.get_precision('Account'),
-                string="Ending Balance",
-                help="Total of closing cash control lines.",
-                readonly=True),
+            string="Ending Balance",
+            help="Total of closing cash control lines.",
+            readonly=True),
         'cash_register_balance_start': fields.related('cash_register_id', 'balance_start',
                 type='float',
                 digits_compute=dp.get_precision('Account'),
-                string="Starting Balance",
-                help="Total of opening cash control lines.",
-                readonly=True),
+            string="Starting Balance",
+            help="Total of opening cash control lines.",
+            readonly=True),
         'cash_register_total_entry_encoding': fields.related('cash_register_id', 'total_entry_encoding',
                 string='Total Cash Transaction',
                 readonly=True,
@@ -319,9 +319,9 @@ class pos_session(osv.osv):
         'cash_register_balance_end': fields.related('cash_register_id', 'balance_end',
                 type='float',
                 digits_compute=dp.get_precision('Account'),
-                string="Theoretical Closing Balance",
-                help="Sum of opening balance and transactions.",
-                readonly=True),
+            string="Theoretical Closing Balance",
+            help="Sum of opening balance and transactions.",
+            readonly=True),
         'cash_register_difference': fields.related('cash_register_id', 'difference',
                 type='float',
                 string='Difference',
@@ -542,8 +542,8 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=context):
             if session.user_id.id != uid:
                 raise osv.except_osv(
-                        _('Error!'),
-                        _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
+                    _('Error!'),
+                    _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
             'type': 'ir.actions.act_url',
@@ -732,7 +732,7 @@ class pos_order(osv.osv):
 
     def _get_out_picking_type(self, cr, uid, context=None):
         return self.pool.get('ir.model.data').xmlid_to_res_id(
-                    cr, uid, 'point_of_sale.picking_type_posout', context=context)
+            cr, uid, 'point_of_sale.picking_type_posout', context=context)
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
@@ -976,7 +976,7 @@ class pos_order(osv.osv):
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
-                                                               line.qty, partner_id = order.partner_id.id,
+                                                               line.qty, partner_id=order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount

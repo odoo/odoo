@@ -37,8 +37,8 @@ class hr_timesheet_invoice_create(osv.osv_memory):
     }
 
     _defaults = {
-         'date': 1,
-         'name': 1,
+        'date': 1,
+        'name': 1,
     }
 
     def view_init(self, cr, uid, fields, context=None):

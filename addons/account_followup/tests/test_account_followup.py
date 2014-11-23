@@ -38,11 +38,11 @@ class TestAccountFollowup(TransactionCase):
                                                         'account_id': self.account_id,
                                                         'journal_id': self.journal_id,
                                                         'invoice_line': [(0, 0, {
-                                                                            'name': "LCD Screen",
-                                                                            'product_id': self.product_id,
-                                                                            'quantity': 5,
-                                                                            'price_unit': 200
-                                                                                 })]})
+                                                            'name': "LCD Screen",
+                                                            'product_id': self.product_id,
+                                                            'quantity': 5,
+                                                            'price_unit': 200
+                                                        })]})
         self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id], 'invoice_open')
 
         self.voucher = self.registry("account.voucher")
@@ -84,9 +84,9 @@ class TestAccountFollowup(TransactionCase):
         delta = datetime.timedelta(days=15)
         result = current_date + delta
         self.wizard_id = self.wizard.create(cr, uid, {
-                                                      'date': result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
-                                                      'followup_id': self.followup_id
-                                                      }, context={"followup_id": self.followup_id})
+            'date': result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
+            'followup_id': self.followup_id
+        }, context={"followup_id": self.followup_id})
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz': 'UTC'})
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id.id, self.first_followup_line_id,
                          "Not updated to the correct follow-up level")
@@ -140,7 +140,7 @@ class TestAccountFollowup(TransactionCase):
         self.invoice.pay_and_reconcile(cr, uid, [self.invoice_id], 1000.0, self.pay_account_id,
                                        self.period_id, self.journal_id, self.pay_account_id,
                                        self.period_id, self.journal_id,
-                                       name = "Payment for test customer invoice follow-up")
+                                       name="Payment for test customer invoice follow-up")
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id, "Level not empty")
         self.wizard_id = self.wizard.create(cr, uid, {'date': result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
                                                       'followup_id': self.followup_id

@@ -57,11 +57,11 @@ class account_analytic_profit(report_sxw.rml_parse):
         product_obj = self.pool['product.product']
         price_obj = self.pool['product.pricelist']
         ids = line_obj.search(self.cr, self.uid, [
-                ('date', '>=', form['date_from']),
-                ('date', '<=', form['date_to']),
-                ('journal_id', 'in', journal_ids),
-                ('user_id', 'in', user_ids),
-                ])
+            ('date', '>=', form['date_from']),
+            ('date', '<=', form['date_to']),
+            ('journal_id', 'in', journal_ids),
+            ('user_id', 'in', user_ids),
+        ])
         res = {}
         for line in line_obj.browse(self.cr, self.uid, ids):
             if line.account_id.pricelist_id:

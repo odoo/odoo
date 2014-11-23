@@ -116,9 +116,9 @@ class ir_filters(osv.osv):
                 # should be turned off
                 action_domain = self._get_action_domain(cr, uid, action_id)
                 act_ids = self.search(cr, uid, action_domain + [
-                        ('model_id', '=', vals['model_id']),
-                        ('user_id', '=', vals['user_id']),
-                        ('is_default', '=', True),
+                    ('model_id', '=', vals['model_id']),
+                    ('user_id', '=', vals['user_id']),
+                    ('is_default', '=', True),
                 ], context=context)
                 if act_ids:
                     self.write(cr, uid, act_ids, {'is_default': False}, context=context)

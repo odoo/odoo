@@ -130,11 +130,11 @@ class note_note(osv.osv):
                 stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
 
                 result = [{  # notes by stage for stages user
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': self.search(cr, uid, domain + [('stage_ids', '=', stage.id)], context=context, count=True),
-                        '__fold': stage.fold,
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                    'stage_id': (stage.id, stage.name),
+                    'stage_id_count': self.search(cr, uid, domain + [('stage_ids', '=', stage.id)], context=context, count=True),
+                    '__fold': stage.fold,
                 } for stage in stages]
 
                 # note without user's stage

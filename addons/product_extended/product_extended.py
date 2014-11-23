@@ -26,7 +26,7 @@ class product_product(osv.osv):
     _name = 'product.product'
     _inherit = 'product.product'
 
-    def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting = False, context=None):
+    def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting=False, context=None):
         '''
         Will return test dict when the test = False
         Multiple ids at once?
@@ -35,7 +35,7 @@ class product_product(osv.osv):
         testdict = {}
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
-            bom_id = bom_obj._bom_find(cr, uid, product_id = prod_id, context=context)
+            bom_id = bom_obj._bom_find(cr, uid, product_id=prod_id, context=context)
             if bom_id:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:
@@ -44,11 +44,11 @@ class product_product(osv.osv):
 
                     # Call compute_price on these subproducts
                     prod_set = set([x.product_id.id for x in bom.bom_line_ids])
-                    res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
+                    res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting=real_time_accounting, context=context)
                     if test:
                         testdict.update(res)
                 # Use calc price to calculate and put the price on the product of the BoM if necessary
-                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
+                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting=real_time_accounting, context=context)
                 if test:
                     testdict.update({prod_id: price})
         if test:
@@ -56,7 +56,7 @@ class product_product(osv.osv):
         else:
             return True
 
-    def _calc_price(self, cr, uid, bom, test = False, real_time_accounting=False, context=None):
+    def _calc_price(self, cr, uid, bom, test=False, real_time_accounting=False, context=None):
         if context is None:
             context = {}
         price = 0

@@ -73,7 +73,7 @@ class PptxIndex(indexer):
         return ['.pptx']
 
     def _doIndexFile(self, fname):
-        def toString ():
+        def toString():
             """ Converts the document to a string. """
             buffer = u""
             for val in ["a:t"]:
@@ -126,7 +126,7 @@ class DocxIndex(indexer):
         zip = zipfile.ZipFile(fname)
         content = xml.dom.minidom.parseString(zip.read("word/document.xml"))
 
-        def toString ():
+        def toString():
             """ Converts the document to a string. """
             buffer = u""
             for val in ["w:p", "w:h", "text:list"]:
@@ -152,7 +152,7 @@ class XlsxIndex(indexer):
         zip = zipfile.ZipFile(fname)
         content = xml.dom.minidom.parseString(zip.read("xl/sharedStrings.xml"))
 
-        def toString ():
+        def toString():
             """ Converts the document to a string. """
             buffer = u""
             for val in ["t"]:

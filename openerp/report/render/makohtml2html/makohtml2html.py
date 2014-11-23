@@ -130,7 +130,7 @@ class makohtml2html(object):
             _logger.exception('report :')
 
 
-def parseNode(html, localcontext = {}):
+def parseNode(html, localcontext={}):
     r = makohtml2html(html, localcontext)
     return r.render()
 

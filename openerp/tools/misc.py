@@ -102,7 +102,7 @@ def exec_pg_command_pipe(name, *args):
         raise Exception('Couldn\'t find %s' % name)
     # on win32, passing close_fds=True is not compatible
     # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+    pop = subprocess.Popen((prog,) + args, bufsize=-1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name == "posix"))
     return pop.stdin, pop.stdout
@@ -114,7 +114,7 @@ def exec_command_pipe(name, *args):
         raise Exception('Couldn\'t find %s' % name)
     # on win32, passing close_fds=True is not compatible
     # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+    pop = subprocess.Popen((prog,) + args, bufsize=-1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name == "posix"))
     return pop.stdin, pop.stdout
@@ -470,89 +470,89 @@ def get_iso_codes(lang):
     return lang
 
 ALL_LANGUAGES = {
-        'ab_RU': u'Abkhazian / аҧсуа',
-        'am_ET': u'Amharic / አምሃርኛ',
-        'ar_SY': u'Arabic / الْعَرَبيّة',
-        'bg_BG': u'Bulgarian / български език',
-        'bs_BA': u'Bosnian / bosanski jezik',
-        'ca_ES': u'Catalan / Català',
-        'cs_CZ': u'Czech / Čeština',
-        'da_DK': u'Danish / Dansk',
-        'de_DE': u'German / Deutsch',
-        'el_GR': u'Greek / Ελληνικά',
-        'en_CA': u'English (CA)',
-        'en_GB': u'English (UK)',
-        'en_US': u'English (US)',
-        'es_AR': u'Spanish (AR) / Español (AR)',
-        'es_BO': u'Spanish (BO) / Español (BO)',
-        'es_CL': u'Spanish (CL) / Español (CL)',
-        'es_CO': u'Spanish (CO) / Español (CO)',
-        'es_CR': u'Spanish (CR) / Español (CR)',
-        'es_DO': u'Spanish (DO) / Español (DO)',
-        'es_EC': u'Spanish (EC) / Español (EC)',
-        'es_ES': u'Spanish / Español',
-        'es_GT': u'Spanish (GT) / Español (GT)',
-        'es_HN': u'Spanish (HN) / Español (HN)',
-        'es_MX': u'Spanish (MX) / Español (MX)',
-        'es_NI': u'Spanish (NI) / Español (NI)',
-        'es_PA': u'Spanish (PA) / Español (PA)',
-        'es_PE': u'Spanish (PE) / Español (PE)',
-        'es_PR': u'Spanish (PR) / Español (PR)',
-        'es_PY': u'Spanish (PY) / Español (PY)',
-        'es_SV': u'Spanish (SV) / Español (SV)',
-        'es_UY': u'Spanish (UY) / Español (UY)',
-        'es_VE': u'Spanish (VE) / Español (VE)',
-        'et_EE': u'Estonian / Eesti keel',
-        'fa_IR': u'Persian / فارس',
-        'fi_FI': u'Finnish / Suomi',
-        'fr_BE': u'French (BE) / Français (BE)',
-        'fr_CA': u'French (CA) / Français (CA)',
-        'fr_CH': u'French (CH) / Français (CH)',
-        'fr_FR': u'French / Français',
-        'gl_ES': u'Galician / Galego',
-        'gu_IN': u'Gujarati / ગુજરાતી',
-        'he_IL': u'Hebrew / עִבְרִי',
-        'hi_IN': u'Hindi / हिंदी',
-        'hr_HR': u'Croatian / hrvatski jezik',
-        'hu_HU': u'Hungarian / Magyar',
-        'id_ID': u'Indonesian / Bahasa Indonesia',
-        'it_IT': u'Italian / Italiano',
-        'iu_CA': u'Inuktitut / ᐃᓄᒃᑎᑐᑦ',
-        'ja_JP': u'Japanese / 日本語',
-        'ko_KP': u'Korean (KP) / 한국어 (KP)',
-        'ko_KR': u'Korean (KR) / 한국어 (KR)',
-        'lo_LA': u'Lao / ພາສາລາວ',
-        'lt_LT': u'Lithuanian / Lietuvių kalba',
-        'lv_LV': u'Latvian / latviešu valoda',
-        'mk_MK': u'Macedonian / македонски јазик',
-        'ml_IN': u'Malayalam / മലയാളം',
-        'mn_MN': u'Mongolian / монгол',
-        'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
-        'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Flemish (BE) / Vlaams (BE)',
-        'oc_FR': u'Occitan (FR, post 1500) / Occitan',
-        'pl_PL': u'Polish / Język polski',
-        'pt_BR': u'Portuguese (BR) / Português (BR)',
-        'pt_PT': u'Portuguese / Português',
-        'ro_RO': u'Romanian / română',
-        'ru_RU': u'Russian / русский язык',
-        'si_LK': u'Sinhalese / සිංහල',
-        'sl_SI': u'Slovenian / slovenščina',
-        'sk_SK': u'Slovak / Slovenský jazyk',
-        'sq_AL': u'Albanian / Shqip',
-        'sr_RS': u'Serbian (Cyrillic) / српски',
-        'sr@latin': u'Serbian (Latin) / srpski',
-        'sv_SE': u'Swedish / svenska',
-        'te_IN': u'Telugu / తెలుగు',
-        'tr_TR': u'Turkish / Türkçe',
-        'vi_VN': u'Vietnamese / Tiếng Việt',
-        'uk_UA': u'Ukrainian / українська',
-        'ur_PK': u'Urdu / اردو',
-        'zh_CN': u'Chinese (CN) / 简体中文',
-        'zh_HK': u'Chinese (HK)',
-        'zh_TW': u'Chinese (TW) / 正體字',
-        'th_TH': u'Thai / ภาษาไทย',
-        'tlh_TLH': u'Klingon',
+    'ab_RU': u'Abkhazian / аҧсуа',
+    'am_ET': u'Amharic / አምሃርኛ',
+    'ar_SY': u'Arabic / الْعَرَبيّة',
+    'bg_BG': u'Bulgarian / български език',
+    'bs_BA': u'Bosnian / bosanski jezik',
+    'ca_ES': u'Catalan / Català',
+    'cs_CZ': u'Czech / Čeština',
+    'da_DK': u'Danish / Dansk',
+    'de_DE': u'German / Deutsch',
+    'el_GR': u'Greek / Ελληνικά',
+    'en_CA': u'English (CA)',
+    'en_GB': u'English (UK)',
+    'en_US': u'English (US)',
+    'es_AR': u'Spanish (AR) / Español (AR)',
+    'es_BO': u'Spanish (BO) / Español (BO)',
+    'es_CL': u'Spanish (CL) / Español (CL)',
+    'es_CO': u'Spanish (CO) / Español (CO)',
+    'es_CR': u'Spanish (CR) / Español (CR)',
+    'es_DO': u'Spanish (DO) / Español (DO)',
+    'es_EC': u'Spanish (EC) / Español (EC)',
+    'es_ES': u'Spanish / Español',
+    'es_GT': u'Spanish (GT) / Español (GT)',
+    'es_HN': u'Spanish (HN) / Español (HN)',
+    'es_MX': u'Spanish (MX) / Español (MX)',
+    'es_NI': u'Spanish (NI) / Español (NI)',
+    'es_PA': u'Spanish (PA) / Español (PA)',
+    'es_PE': u'Spanish (PE) / Español (PE)',
+    'es_PR': u'Spanish (PR) / Español (PR)',
+    'es_PY': u'Spanish (PY) / Español (PY)',
+    'es_SV': u'Spanish (SV) / Español (SV)',
+    'es_UY': u'Spanish (UY) / Español (UY)',
+    'es_VE': u'Spanish (VE) / Español (VE)',
+    'et_EE': u'Estonian / Eesti keel',
+    'fa_IR': u'Persian / فارس',
+    'fi_FI': u'Finnish / Suomi',
+    'fr_BE': u'French (BE) / Français (BE)',
+    'fr_CA': u'French (CA) / Français (CA)',
+    'fr_CH': u'French (CH) / Français (CH)',
+    'fr_FR': u'French / Français',
+    'gl_ES': u'Galician / Galego',
+    'gu_IN': u'Gujarati / ગુજરાતી',
+    'he_IL': u'Hebrew / עִבְרִי',
+    'hi_IN': u'Hindi / हिंदी',
+    'hr_HR': u'Croatian / hrvatski jezik',
+    'hu_HU': u'Hungarian / Magyar',
+    'id_ID': u'Indonesian / Bahasa Indonesia',
+    'it_IT': u'Italian / Italiano',
+    'iu_CA': u'Inuktitut / ᐃᓄᒃᑎᑐᑦ',
+    'ja_JP': u'Japanese / 日本語',
+    'ko_KP': u'Korean (KP) / 한국어 (KP)',
+    'ko_KR': u'Korean (KR) / 한국어 (KR)',
+    'lo_LA': u'Lao / ພາສາລາວ',
+    'lt_LT': u'Lithuanian / Lietuvių kalba',
+    'lv_LV': u'Latvian / latviešu valoda',
+    'mk_MK': u'Macedonian / македонски јазик',
+    'ml_IN': u'Malayalam / മലയാളം',
+    'mn_MN': u'Mongolian / монгол',
+    'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
+    'nl_NL': u'Dutch / Nederlands',
+    'nl_BE': u'Flemish (BE) / Vlaams (BE)',
+    'oc_FR': u'Occitan (FR, post 1500) / Occitan',
+    'pl_PL': u'Polish / Język polski',
+    'pt_BR': u'Portuguese (BR) / Português (BR)',
+    'pt_PT': u'Portuguese / Português',
+    'ro_RO': u'Romanian / română',
+    'ru_RU': u'Russian / русский язык',
+    'si_LK': u'Sinhalese / සිංහල',
+    'sl_SI': u'Slovenian / slovenščina',
+    'sk_SK': u'Slovak / Slovenský jazyk',
+    'sq_AL': u'Albanian / Shqip',
+    'sr_RS': u'Serbian (Cyrillic) / српски',
+    'sr@latin': u'Serbian (Latin) / srpski',
+    'sv_SE': u'Swedish / svenska',
+    'te_IN': u'Telugu / తెలుగు',
+    'tr_TR': u'Turkish / Türkçe',
+    'vi_VN': u'Vietnamese / Tiếng Việt',
+    'uk_UA': u'Ukrainian / українська',
+    'ur_PK': u'Urdu / اردو',
+    'zh_CN': u'Chinese (CN) / 简体中文',
+    'zh_HK': u'Chinese (HK)',
+    'zh_TW': u'Chinese (TW) / 正體字',
+    'th_TH': u'Thai / ภาษาไทย',
+    'tlh_TLH': u'Klingon',
 }
 
 
@@ -844,43 +844,43 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
 # the C standard (1989 version), always available on platforms
 # with a C standard implementation.
 DATETIME_FORMATS_MAP = {
-        '%C': '',  # century
-        '%D': '%m/%d/%Y',  # modified %y->%Y
-        '%e': '%d',
-        '%E': '',  # special modifier
-        '%F': '%Y-%m-%d',
-        '%g': '%Y',  # modified %y->%Y
-        '%G': '%Y',
-        '%h': '%b',
-        '%k': '%H',
-        '%l': '%I',
-        '%n': '\n',
-        '%O': '',  # special modifier
-        '%P': '%p',
-        '%R': '%H:%M',
-        '%r': '%I:%M:%S %p',
-        '%s': '',  # num of seconds since epoch
-        '%T': '%H:%M:%S',
-        '%t': ' ',  # tab
-        '%u': ' %w',
-        '%V': '%W',
-        '%y': '%Y',  # Even if %y works, it's ambiguous, so we should use %Y
-        '%+': '%Y-%m-%d %H:%M:%S',
+    '%C': '',  # century
+    '%D': '%m/%d/%Y',  # modified %y->%Y
+    '%e': '%d',
+    '%E': '',  # special modifier
+    '%F': '%Y-%m-%d',
+    '%g': '%Y',  # modified %y->%Y
+    '%G': '%Y',
+    '%h': '%b',
+    '%k': '%H',
+    '%l': '%I',
+    '%n': '\n',
+    '%O': '',  # special modifier
+    '%P': '%p',
+    '%R': '%H:%M',
+    '%r': '%I:%M:%S %p',
+    '%s': '',  # num of seconds since epoch
+    '%T': '%H:%M:%S',
+    '%t': ' ',  # tab
+    '%u': ' %w',
+    '%V': '%W',
+    '%y': '%Y',  # Even if %y works, it's ambiguous, so we should use %Y
+    '%+': '%Y-%m-%d %H:%M:%S',
 
-        # %Z is a special case that causes 2 problems at least:
-        #  - the timezone names we use (in res_user.context_tz) come
-        #    from pytz, but not all these names are recognized by
-        #    strptime(), so we cannot convert in both directions
-        #    when such a timezone is selected and %Z is in the format
-        #  - %Z is replaced by an empty string in strftime() when
-        #    there is not tzinfo in a datetime value (e.g when the user
-        #    did not pick a context_tz). The resulting string does not
-        #    parse back if the format requires %Z.
-        # As a consequence, we strip it completely from format strings.
-        # The user can always have a look at the context_tz in
-        # preferences to check the timezone.
-        '%z': '',
-        '%Z': '',
+    # %Z is a special case that causes 2 problems at least:
+    #  - the timezone names we use (in res_user.context_tz) come
+    #    from pytz, but not all these names are recognized by
+    #    strptime(), so we cannot convert in both directions
+    #    when such a timezone is selected and %Z is in the format
+    #  - %Z is replaced by an empty string in strftime() when
+    #    there is not tzinfo in a datetime value (e.g when the user
+    #    did not pick a context_tz). The resulting string does not
+    #    parse back if the format requires %Z.
+    # As a consequence, we strip it completely from format strings.
+    # The user can always have a look at the context_tz in
+    # preferences to check the timezone.
+    '%z': '',
+    '%Z': '',
 }
 
 POSIX_TO_LDML = {

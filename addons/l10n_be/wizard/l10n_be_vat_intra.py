@@ -56,7 +56,7 @@ class partner_vat_intra(osv.osv_memory):
       YYYY stands for the year (4 positions).
     '''
                                    ),
-        'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
+        'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help='Select here the period(s) you want to include in your intracom declaration'),
         'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id': fields.char('Reference', help="Reference given by the Representative of the sending company."),
@@ -149,22 +149,22 @@ class partner_vat_intra(osv.osv_memory):
         if not phone:
             raise osv.except_osv(_('Insufficient Data!'), _('No phone associated with the company.'))
         xmldict.update({
-                        'company_name': data_company.name,
-                        'company_vat': company_vat,
-                        'vatnum': company_vat[2:],
-                        'mand_id': wiz_data.mand_id,
-                        'sender_date': str(time.strftime('%Y-%m-%d')),
-                        'street': street,
-                        'city': city,
-                        'post_code': post_code,
-                        'country': country,
-                        'email': email,
-                        'phone': phone.replace('/', '').replace('.', '').replace('(', '').replace(')', '').replace(' ', ''),
-                        'period': wiz_data.period_code,
-                        'clientlist': [],
-                        'comments': comments,
-                        'issued_by': issued_by,
-                        })
+            'company_name': data_company.name,
+            'company_vat': company_vat,
+            'vatnum': company_vat[2:],
+            'mand_id': wiz_data.mand_id,
+            'sender_date': str(time.strftime('%Y-%m-%d')),
+            'street': street,
+            'city': city,
+            'post_code': post_code,
+            'country': country,
+            'email': email,
+            'phone': phone.replace('/', '').replace('.', '').replace('(', '').replace(')', '').replace(' ', ''),
+            'period': wiz_data.period_code,
+            'clientlist': [],
+            'comments': comments,
+            'issued_by': issued_by,
+        })
         # tax code 44: services
         # tax code 46L: normal good deliveries
         # tax code 46T: ABC good deliveries
@@ -198,14 +198,14 @@ class partner_vat_intra(osv.osv_memory):
             intra_code = row['intra_code'] == '44' and 'S' or (row['intra_code'] == '46L' and 'L' or (row['intra_code'] == '46T' and 'T' or ''))
 
             xmldict['clientlist'].append({
-                                        'partner_name': row['partner_name'],
-                                        'seq': seq,
-                                        'vatnum': row['vat'][2:].replace(' ', '').upper(),
-                                        'vat': row['vat'],
-                                        'country': row['vat'][:2],
-                                        'amount': round(amt, 2),
-                                        'intra_code': row['intra_code'],
-                                        'code': intra_code})
+                'partner_name': row['partner_name'],
+                'seq': seq,
+                'vatnum': row['vat'][2:].replace(' ', '').upper(),
+                'vat': row['vat'],
+                'country': row['vat'][:2],
+                'amount': round(amt, 2),
+                'intra_code': row['intra_code'],
+                'code': intra_code})
 
         xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': round(amount_sum, 2), 'partner_wo_vat': p_count})
         return xmldict
@@ -274,9 +274,9 @@ class partner_vat_intra(osv.osv_memory):
     def preview(self, cr, uid, ids, context=None):
         xml_data = self._get_datas(cr, uid, ids, context=context)
         datas = {
-             'ids': [],
-             'model': 'partner.vat.intra',
-             'form': xml_data
+            'ids': [],
+            'model': 'partner.vat.intra',
+            'form': xml_data
         }
         return self.pool['report'].get_action(
             cr, uid, [], 'l10n_be.report_l10nvatintraprint', data=datas, context=context

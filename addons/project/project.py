@@ -206,9 +206,9 @@ class project(osv.osv):
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-             '|',
-             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
-             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
+            '|',
+            '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
+            '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
@@ -238,22 +238,22 @@ class project(osv.osv):
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
@@ -378,12 +378,12 @@ class project(osv.osv):
                 end_date = date(*time.strptime(proj.date, '%Y-%m-%d')[:3])
                 new_date_end = (datetime(*time.strptime(new_date_start, '%Y-%m-%d')[:3]) + (end_date - start_date)).strftime('%Y-%m-%d')
             context.update({'copy': True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name': _("%s (copy)") % (proj.name),
-                                    'state': 'open',
-                                    'date_start': new_date_start,
-                                    'date': new_date_end,
-                                    'parent_id': parent_id}, context=context)
+            new_id = self.copy(cr, uid, proj.id, default={
+                'name': _("%s (copy)") % (proj.name),
+                'state': 'open',
+                'date_start': new_date_start,
+                'date': new_date_end,
+                'parent_id': parent_id}, context=context)
             result.append(new_id)
 
             child_ids = self.search(cr, uid, [('parent_id', '=', proj.analytic_account_id.id)], context=context)
@@ -749,7 +749,7 @@ class task(osv.osv):
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
-            store = {
+            store={
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),

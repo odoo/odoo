@@ -37,20 +37,20 @@ class res_company(osv.osv):
 
     _inherit = "res.company"
     _columns = {
-                'header_image': fields.many2many(
-                                                    'ir.header_img',
-                                                    'company_img_rel',
-                                                    'company_id',
-                                                    'img_id',
-                                                    'Available Images',
-                                                ),
-                'header_webkit': fields.many2many(
-                                                    'ir.header_webkit',
-                                                    'company_html_rel',
-                                                    'company_id',
-                                                    'html_id',
-                                                    'Available html',
-                                                ),
+        'header_image': fields.many2many(
+            'ir.header_img',
+            'company_img_rel',
+            'company_id',
+            'img_id',
+            'Available Images',
+        ),
+        'header_webkit': fields.many2many(
+            'ir.header_webkit',
+            'company_html_rel',
+            'company_id',
+            'html_id',
+            'Available html',
+        ),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

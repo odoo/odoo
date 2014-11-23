@@ -177,13 +177,13 @@ class account_asset_asset(osv.osv):
                 amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
-                     'amount': amount,
-                     'asset_id': asset.id,
-                     'sequence': i,
-                     'name': str(asset.id) + '/' + str(i),
-                     'remaining_value': residual_amount,
-                     'depreciated_value': (asset.purchase_value - asset.salvage_value) - (residual_amount + amount),
-                     'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
+                    'amount': amount,
+                    'asset_id': asset.id,
+                    'sequence': i,
+                    'name': str(asset.id) + '/' + str(i),
+                    'remaining_value': residual_amount,
+                    'depreciated_value': (asset.purchase_value - asset.salvage_value) - (residual_amount + amount),
+                    'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
                 # Considering Depr. Period as months
@@ -315,13 +315,13 @@ class account_asset_asset(osv.osv):
         if category_id:
             category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
             res['value'] = {
-                            'method': category_obj.method,
-                            'method_number': category_obj.method_number,
-                            'method_time': category_obj.method_time,
-                            'method_period': category_obj.method_period,
-                            'method_progress_factor': category_obj.method_progress_factor,
-                            'method_end': category_obj.method_end,
-                            'prorata': category_obj.prorata,
+                'method': category_obj.method,
+                'method_number': category_obj.method_number,
+                'method_time': category_obj.method_time,
+                'method_period': category_obj.method_period,
+                'method_progress_factor': category_obj.method_progress_factor,
+                'method_end': category_obj.method_end,
+                'prorata': category_obj.prorata,
             }
         return res
 

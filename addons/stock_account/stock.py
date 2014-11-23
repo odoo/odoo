@@ -129,7 +129,7 @@ class stock_move(osv.osv):
                         move_line.product_id.id, move_line.product_uom_qty, move_line.partner_id.id, {
                             'uom': move_line.product_uom.id,
                             'date': move_line.date,
-                        })[pricelist]
+                })[pricelist]
                 if price:
                     return price
         return move_line.product_id.list_price
@@ -204,7 +204,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-            fnct_inv = _set_inv_state,
+            fnct_inv=_set_inv_state,
             store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),

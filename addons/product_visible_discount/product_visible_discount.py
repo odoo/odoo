@@ -31,7 +31,7 @@ class product_pricelist(osv.osv):
         'visible_discount': fields.boolean('Visible Discount'),
     }
     _defaults = {
-         'visible_discount': True,
+        'visible_discount': True,
     }
 
 

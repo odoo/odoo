@@ -147,13 +147,13 @@ class WebKitParser(report_sxw):
             return webkit_path
 
         raise except_osv(
-                         _('Wkhtmltopdf library path is not set'),
-                         _('Please install executable on your system'
+            _('Wkhtmltopdf library path is not set'),
+            _('Please install executable on your system'
                          ' (sudo apt-get install wkhtmltopdf) or download it from here:'
                          ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'
                          ' path in the ir.config_parameter with the webkit_path key.'
                          'Minimal version is 0.9.9')
-                        )
+        )
 
     def generate_pdf(self, comm_path, report_xml, header, footer, html_list, webkit_header=False):
         """Call webkit in order to generate pdf"""
@@ -290,8 +290,8 @@ class WebKitParser(report_sxw):
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.use_global_header:
             raise except_osv(
-                  _('No header defined for this Webkit report!'),
-                  _('Please set a header in company settings.')
+                _('No header defined for this Webkit report!'),
+                _('Please set a header in company settings.')
               )
         if not report_xml.use_global_header:
             header = ''

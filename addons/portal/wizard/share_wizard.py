@@ -49,11 +49,11 @@ class share_wizard_portal(osv.TransientModel):
         if wizard_data.user_type == 'existing':
             self._assert(wizard_data.user_ids,
                      _('Please select at least one user to share with'),
-                     context=context)
+                context=context)
         elif wizard_data.user_type == 'groups':
             self._assert(wizard_data.group_ids,
                      _('Please select at least one group to share with'),
-                     context=context)
+                context=context)
         return super(share_wizard_portal, self)._check_preconditions(cr, uid, wizard_data, context=context)
 
     def _create_or_get_submenu_named(self, cr, uid, parent_menu_id, menu_name, context=None):

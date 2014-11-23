@@ -49,7 +49,7 @@ class indexer(object):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
         mts = self._getMimeTypes();
-        if len (mts):
+        if len(mts):
             return mts[0]
         return None
 

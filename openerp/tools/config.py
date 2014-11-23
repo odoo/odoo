@@ -383,7 +383,7 @@ class configmanager(object):
 
         self.rcfile = os.path.abspath(
             self.config_file or opt.config
-                or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
@@ -454,8 +454,8 @@ class configmanager(object):
             self.options['addons_path'] = '%s,%s' % (base_addons, main_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
-                      for x in self.options['addons_path'].split(','))
+                os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
+                for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}

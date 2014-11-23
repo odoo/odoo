@@ -62,9 +62,9 @@ class report_custom(report_rml):
                 pricelist =  prod.seller_id.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr, uid, [pricelist.id],
                      prod.id, number * prod_qtty or 1.0, prod.seller_id.id, {
-                        'uom': prod.uom_po_id.id,
-                        'date': time.strftime('%Y-%m-%d'),
-                        })[pricelist.id]
+                    'uom': prod.uom_po_id.id,
+                    'date': time.strftime('%Y-%m-%d'),
+                })[pricelist.id]
                 main_sp_price = """<b>""" + rml_obj.formatLang(price) + ' ' + (company_currency_symbol) + """</b>\r\n"""
                 sum += prod_qtty * price
             std_price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, prod.standard_price, to_uom_id=product_uom.id)
@@ -77,9 +77,9 @@ class report_custom(report_rml):
                 pricelist = seller_id.name.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr, uid, [pricelist.id],
                      prod.id, number * prod_qtty or 1.0, seller_id.name.id, {
-                        'uom': prod.uom_po_id.id,
-                        'date': time.strftime('%Y-%m-%d'),
-                        })[pricelist.id]
+                    'uom': prod.uom_po_id.id,
+                    'date': time.strftime('%Y-%m-%d'),
+                })[pricelist.id]
                 sellers_price += """<i>""" + rml_obj.formatLang(price) + ' ' + (company_currency_symbol) + """</i>\r\n"""
             xml += """<col para='yes'> """ + prod_name + """ </col>
                     <col para='yes'> """ + main_sp_name + sellers + """ </col>
@@ -173,10 +173,10 @@ class report_custom(report_rml):
                 total = 0
                 total_strd = 0
                 parent_bom = {
-                        'product_qty': bom.product_qty,
-                        'name': bom.product_id.name,
-                        'product_uom': bom.product_uom.id,
-                        'product_id': bom.product_id.id
+                    'product_qty': bom.product_qty,
+                    'name': bom.product_id.name,
+                    'product_uom': bom.product_uom.id,
+                    'product_id': bom.product_id.id
                 }
                 xml_tmp = ''
                 for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:

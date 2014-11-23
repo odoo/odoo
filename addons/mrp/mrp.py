@@ -165,7 +165,7 @@ class mrp_bom(osv.osv):
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal', 'Normal'), ('phantom', 'Set')], 'BoM Type', required=True,
-                help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
+                help="Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
         'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
         'product_tmpl_id': fields.many2one('product.template', 'Product', domain="[('type', '!=', 'service')]", required=True),
         'product_id': fields.many2one('product.product', 'Product Variant',
@@ -212,10 +212,10 @@ class mrp_bom(osv.osv):
                 product_tmpl_id = self.pool['product.product'].browse(cr, uid, product_id, context=context).product_tmpl_id.id
             domain = [
                 '|',
-                    ('product_id', '=', product_id),
-                    '&',
-                        ('product_id', '=', False),
-                        ('product_tmpl_id', '=', product_tmpl_id)
+                ('product_id', '=', product_id),
+                '&',
+                ('product_id', '=', False),
+                ('product_tmpl_id', '=', product_tmpl_id)
             ]
         elif product_tmpl_id:
             domain = [('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]
@@ -1102,7 +1102,7 @@ class mrp_production(osv.osv):
         if wh:
             domain += [('warehouse_id', '=', wh)]
         types = type_obj.search(cr, uid, domain, context=context)
-        move = stock_move.copy(cr, uid, move_id, default = {
+        move = stock_move.copy(cr, uid, move_id, default={
             'location_id': source_location_id,
             'location_dest_id': dest_location_id,
             'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),

@@ -86,9 +86,9 @@ class product_pricelist(report_sxw.rml_parse):
             products = []
             for product in self.pool.get('product.product').read(self.cr, self.uid, product_ids, ['name', 'code'], context=self.localcontext):
                 val = {
-                     'id': product['id'],
-                     'name': product['name'],
-                     'code': product['code']
+                    'id': product['id'],
+                    'name': product['name'],
+                    'code': product['code']
                 }
                 i = 1
                 for qty in self.quantity:

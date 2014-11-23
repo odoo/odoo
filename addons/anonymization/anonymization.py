@@ -159,10 +159,10 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         res = {'value': {
-                    'field_name': False,
-                    'field_id': False,
-                    'model_name': False,
-              }}
+            'field_name': False,
+            'field_id': False,
+            'model_name': False,
+        }}
 
         if model_id:
             ir_model_obj = self.pool.get('ir.model')
@@ -175,10 +175,10 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_model_name(self, cr, uid, ids, model_name, context=None):
         res = {'value': {
-                    'field_name': False,
-                    'field_id': False,
-                    'model_id': False,
-              }}
+            'field_name': False,
+            'field_id': False,
+            'model_id': False,
+        }}
 
         if model_name:
             ir_model_obj = self.pool.get('ir.model')
@@ -190,7 +190,7 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_field_name(self, cr, uid, ids, field_name, model_name):
         res = {'value': {
-                'field_id': False,
+            'field_id': False,
         }}
 
         if field_name and model_name:
@@ -203,8 +203,8 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_field_id(self, cr, uid, ids, field_id, model_name):
         res = {'value': {
-                    'field_name': False,
-              }}
+            'field_name': False,
+        }}
 
         if field_id:
             ir_model_fields_obj = self.pool.get('ir.model.fields')
@@ -495,14 +495,14 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
 
         return {
-                'res_id': ids[0],
-                'view_id': [view_id],
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.model.fields.anonymize.wizard',
-                'type': 'ir.actions.act_window',
-                'context': {'step': 'just_anonymized'},
-                'target': 'new',
+            'res_id': ids[0],
+            'view_id': [view_id],
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.model.fields.anonymize.wizard',
+            'type': 'ir.actions.act_window',
+            'context': {'step': 'just_anonymized'},
+            'target': 'new',
         }
 
     def reverse_anonymize_database(self, cr, uid, ids, context=None):
@@ -599,14 +599,14 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
 
             return {
-                    'res_id': ids[0],
-                    'view_id': [view_id],
-                    'view_type': 'form',
-                    "view_mode": 'form',
-                    'res_model': 'ir.model.fields.anonymize.wizard',
-                    'type': 'ir.actions.act_window',
-                    'context': {'step': 'just_desanonymized'},
-                    'target': 'new',
+                'res_id': ids[0],
+                'view_id': [view_id],
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.model.fields.anonymize.wizard',
+                'type': 'ir.actions.act_window',
+                'context': {'step': 'just_desanonymized'},
+                'target': 'new',
             }
 
     def _id_get(self, cr, uid, model, id_str, mod):

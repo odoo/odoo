@@ -137,16 +137,16 @@ class mail_thread(osv.AbstractModel):
                         </p>
                         %(static_help)s"""
                      ) % {
-                        'document': document_name,
-                        'email': alias_email,
-                        'static_help': help or ''
-                    }
+                'document': document_name,
+                'email': alias_email,
+                'static_help': help or ''
+            }
 
         if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
             return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
-                        'document': document_name,
-                        'static_help': help or '',
-                    }
+                'document': document_name,
+                'static_help': help or '',
+            }
 
         return help
 
@@ -575,11 +575,11 @@ class mail_thread(osv.AbstractModel):
         limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
         ir_attachment_obj = self.pool.get('ir.attachment')
         attach_ids = ir_attachment_obj.search(cr, uid, [
-                            ('res_model', '=', 'mail.compose.message'),
-                            ('res_id', '=', 0),
-                            ('create_date', '<', limit_date_str),
-                            ('write_date', '<', limit_date_str),
-                            ], context=context)
+            ('res_model', '=', 'mail.compose.message'),
+            ('res_id', '=', 0),
+            ('create_date', '<', limit_date_str),
+            ('write_date', '<', limit_date_str),
+        ], context=context)
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
@@ -793,14 +793,14 @@ class mail_thread(osv.AbstractModel):
         def _create_bounce_email():
             mail_mail = self.pool.get('mail.mail')
             mail_id = mail_mail.create(cr, uid, {
-                            'body_html': '<div><p>Hello,</p>'
-                                '<p>The following email sent to %s cannot be accepted because this is '
-                                'a private email address. Only allowed people can contact us at this address.</p></div>'
-                                '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
-                            'subject': 'Re: %s' % message.get('subject'),
-                            'email_to': message.get('from'),
-                            'auto_delete': True,
-                        }, context=context)
+                'body_html': '<div><p>Hello,</p>'
+                '<p>The following email sent to %s cannot be accepted because this is '
+                'a private email address. Only allowed people can contact us at this address.</p></div>'
+                '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
+                'subject': 'Re: %s' % message.get('subject'),
+                'email_to': message.get('from'),
+                'auto_delete': True,
+            }, context=context)
             mail_mail.send(cr, uid, [mail_id], context=context)
 
         def _warn(message):
@@ -987,14 +987,14 @@ class mail_thread(osv.AbstractModel):
         # 3. Reply to a private message
         if in_reply_to:
             mail_message_ids = mail_msg_obj.search(cr, uid, [
-                                ('message_id', '=', in_reply_to),
-                                '!', ('message_id', 'ilike', 'reply_to')
-                            ], limit=1, context=context)
+                ('message_id', '=', in_reply_to),
+                '!', ('message_id', 'ilike', 'reply_to')
+            ], limit=1, context=context)
             if mail_message_ids:
                 mail_message = mail_msg_obj.browse(cr, uid, mail_message_ids[0], context=context)
                 route = self.message_route_verify(cr, uid, message, message_dict,
                                 (mail_message.model, mail_message.res_id, custom_values, uid, None),
-                                update_author=True, assert_model=True, create_fallback=True, allow_private=True, context=context)
+                    update_author=True, assert_model=True, create_fallback=True, allow_private=True, context=context)
                 if route:
                     _logger.info(
                         'Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
@@ -1048,7 +1048,7 @@ class mail_thread(osv.AbstractModel):
                 thread_id = False
         route = self.message_route_verify(cr, uid, message, message_dict,
                         (fallback_model, thread_id, custom_values, uid, None),
-                        update_author=True, assert_model=True, context=context)
+            update_author=True, assert_model=True, context=context)
         if route:
             _logger.info(
                 'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
@@ -1057,9 +1057,9 @@ class mail_thread(osv.AbstractModel):
 
         # ValueError if no routes found and if no bounce occured
         raise ValueError(
-                'No possible route found for incoming message from %s to %s (Message-Id %s:). '
-                'Create an appropriate mail.alias or force the destination model.' %
-                (email_from, email_to, message_id)
+            'No possible route found for incoming message from %s to %s (Message-Id %s:). '
+            'Create an appropriate mail.alias or force the destination model.' %
+            (email_from, email_to, message_id)
         )
 
     def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
@@ -1155,8 +1155,8 @@ class mail_thread(osv.AbstractModel):
 
         if msg.get('message_id'):   # should always be True as message_parse generate one if missing
             existing_msg_ids = self.pool.get('mail.message').search(cr, SUPERUSER_ID, [
-                                                                ('message_id', '=', msg.get('message_id')),
-                                                                ], context=context)
+                ('message_id', '=', msg.get('message_id')),
+            ], context=context)
             if existing_msg_ids:
                 _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
                              msg.get('from'), msg.get('to'), msg.get('message_id'))
@@ -1445,16 +1445,16 @@ class mail_thread(osv.AbstractModel):
             # second try: check in partners that are also users
             if not partner_id:
                 ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address),
-                                                ('user_ids', '!=', False)
-                                            ], limit=1, context=context)
+                    ('email', 'ilike', email_address),
+                    ('user_ids', '!=', False)
+                ], limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             # third try: check in partners
             if not partner_id:
                 ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address)
-                                            ], limit=1, context=context)
+                    ('email', 'ilike', email_address)
+                ], limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             partner_ids.append(partner_id)
@@ -1478,11 +1478,11 @@ class mail_thread(osv.AbstractModel):
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
-                                    '|',
-                                    ('email_from', '=', email_address),
-                                    ('email_from', 'ilike', '<%s>' % email_address),
-                                    ('author_id', '=', False)
-                                ], context=context)
+                    '|',
+                    ('email_from', '=', email_address),
+                    ('email_from', 'ilike', '<%s>' % email_address),
+                    ('author_id', '=', False)
+                ], context=context)
                 if message_ids:
                     mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': partner_info['partner_id']}, context=context)
         return result
@@ -1960,13 +1960,13 @@ class mail_thread(osv.AbstractModel):
         # get the ids of the comment and none-comment of the thread
         message_obj = self.pool.get('mail.message')
         msg_ids_comment = message_obj.search(cr, uid, [
-                    ('model', '=', self._name),
-                    ('res_id', '=', id),
-                    ('subtype_id', '=', subtype_res_id)], context=context)
+            ('model', '=', self._name),
+            ('res_id', '=', id),
+            ('subtype_id', '=', subtype_res_id)], context=context)
         msg_ids_not_comment = message_obj.search(cr, uid, [
-                    ('model', '=', self._name),
-                    ('res_id', '=', id),
-                    ('subtype_id', '!=', subtype_res_id)], context=context)
+            ('model', '=', self._name),
+            ('res_id', '=', id),
+            ('subtype_id', '!=', subtype_res_id)], context=context)
 
         # update the messages
         message_obj.write(cr, uid, msg_ids_comment, {"res_id": new_res_id, "model": new_model}, context=context)

@@ -168,7 +168,7 @@ class fleet_vehicle_model_brand(osv.Model):
             help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized logo of the brand. It is automatically "
@@ -176,7 +176,7 @@ class fleet_vehicle_model_brand(osv.Model):
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the brand. It is automatically "

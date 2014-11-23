@@ -204,7 +204,7 @@ class account_invoice(osv.osv):
                         product.property_stock_account_output.id
                     if not counterpart_acct_id:
                         counterpart_acct_id = product.categ_id.property_stock_account_output_categ and \
-                                product.categ_id.property_stock_account_output_categ.id
+                            product.categ_id.property_stock_account_output_categ.id
                     if counterpart_acct_id:
                         fpos = invoice.fiscal_position or False
                         line_dict['account_id'] = fiscal_position.map_account(cr, uid,

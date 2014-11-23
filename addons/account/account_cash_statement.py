@@ -159,9 +159,9 @@ class account_cash_statement(osv.osv):
 
         statement_ids = self.search(cr, uid,
                 [('journal_id', '=', journal_id), ('state', '=', 'confirm')],
-                order='create_date desc',
-                limit=1,
-                context=context
+            order='create_date desc',
+            limit=1,
+            context=context
         )
 
         opening_details_ids = self._get_cash_open_box_lines(cr, uid, journal_id, context)
@@ -178,7 +178,7 @@ class account_cash_statement(osv.osv):
 
     _columns = {
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Transactions",
-            store = {
+            store={
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids', 'move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement_from_line, ['amount'], 10),
             },

@@ -83,11 +83,11 @@ class account_invoice(osv.osv, EDIMixin):
             self._edi_generate_report_attachment(cr, uid, invoice, context=context)
             edi_doc = super(account_invoice, self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
-                    'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
-                    'company_paypal_account': invoice.company_id.paypal_account,
-                    'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
-                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
-                    'partner_ref': invoice.reference or False,
+                'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
+                'company_paypal_account': invoice.company_id.paypal_account,
+                'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
+                'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
+                'partner_ref': invoice.reference or False,
             })
             edi_doc_list.append(edi_doc)
         return edi_doc_list

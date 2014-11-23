@@ -845,7 +845,7 @@ class YamlInterpreter(object):
             replace = node.replace or True
             self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action',
                     keyword, node.url, ["ir.actions.act_url"], value, replace=replace,
-                    noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
+                noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
     def process_ir_set(self, node):
         if not self.mode == 'init':
@@ -860,7 +860,7 @@ class YamlInterpreter(object):
             res[fieldname] = value
         self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'],
                 res['name'], res['models'], res['value'], replace=res.get('replace', True),
-                isobject=res.get('isobject', False), meta=res.get('meta', None))
+            isobject=res.get('isobject', False), meta=res.get('meta', None))
 
     def process_report(self, node):
         values = {}

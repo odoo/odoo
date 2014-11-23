@@ -314,7 +314,7 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
     from lxml import etree
     from StringIO import StringIO
 
-    tool = PyOpenOffice(output, save_pict = save_pict)
+    tool = PyOpenOffice(output, save_pict=save_pict)
     res = tool.unpackNormalize(sxw_file)
 
     f = StringIO(xsl)
@@ -345,7 +345,7 @@ if __name__ == "__main__":
     import optparse
     parser = optparse.OptionParser(
         version="Odoo Report v%s" % __version__,
-        usage = 'openerp_sxw2rml.py [options] file.sxw')
+        usage='openerp_sxw2rml.py [options] file.sxw')
     parser.add_option("-v", "--verbose", default=False, dest="verbose", help="enable basic debugging")
     parser.add_option("-o", "--output", dest="output", default='.', help="directory of image output")
     (opt, args) = parser.parse_args()

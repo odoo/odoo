@@ -30,12 +30,12 @@ EXCLUDED_FIELDS = set((
 
 #: Possible slots to bind an action to with :meth:`~.set_action`
 ACTION_SLOTS = [
-                "client_action_multi",  # sidebar wizard action
-                "client_print_multi",   # sidebar report printing button
-                "client_action_relate",  # sidebar related link
-                "tree_but_open",        # double-click on item in tree view
-                "tree_but_action",      # deprecated: same as tree_but_open
-               ]
+    "client_action_multi",  # sidebar wizard action
+    "client_print_multi",   # sidebar report printing button
+    "client_action_relate",  # sidebar related link
+    "tree_but_open",        # double-click on item in tree view
+    "tree_but_action",      # deprecated: same as tree_but_open
+]
 
 
 class ir_values(osv.osv):
@@ -130,7 +130,7 @@ class ir_values(osv.osv):
             return {}
         act = self.pool.get('ir.model').browse(cr, uid, object_id, context=context)
         return {
-                'value': {'model': act.model}
+            'value': {'model': act.model}
         }
 
     def onchange_action_id(self, cr, uid, ids, action_id, context=None):
@@ -138,7 +138,7 @@ class ir_values(osv.osv):
             return {}
         act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
         return {
-                'value': {'value_unpickle': act.type + ',' + str(act.id)}
+            'value': {'value_unpickle': act.type + ',' + str(act.id)}
         }
 
     _columns = {

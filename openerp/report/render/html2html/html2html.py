@@ -87,7 +87,7 @@ class html2html(object):
         return root
 
 
-def parseString(node, localcontext = {}):
+def parseString(node, localcontext={}):
     r = html2html(node, localcontext)
     root = r.render()
     root = r.url_modify(root)

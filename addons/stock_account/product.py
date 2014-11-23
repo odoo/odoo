@@ -130,19 +130,19 @@ class product_template(osv.osv):
                             credit_account_id = datas['stock_account_output']
 
                         move_line_obj.create(cr, uid, {
-                                        'name': _('Standard Price changed'),
-                                        'account_id': debit_account_id,
-                                        'debit': amount_diff,
-                                        'credit': 0,
-                                        'move_id': move_id,
-                                        }, context=context)
+                            'name': _('Standard Price changed'),
+                            'account_id': debit_account_id,
+                            'debit': amount_diff,
+                            'credit': 0,
+                            'move_id': move_id,
+                        }, context=context)
                         move_line_obj.create(cr, uid, {
-                                        'name': _('Standard Price changed'),
-                                        'account_id': credit_account_id,
-                                        'debit': 0,
-                                        'credit': amount_diff,
-                                        'move_id': move_id
-                                        }, context=context)
+                            'name': _('Standard Price changed'),
+                            'account_id': credit_account_id,
+                            'debit': 0,
+                            'credit': amount_diff,
+                            'move_id': move_id
+                        }, context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
 

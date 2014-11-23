@@ -209,11 +209,11 @@ class mrp_repair(osv.osv):
         if product_id:
             product = self.pool.get("product.product").browse(cr, uid, product_id)
         return {'value': {
-                    'guarantee_limit': False,
-                    'lot_id': False,
-                    'product_uom': product and product.uom_id.id or False,
-                }
-                }
+            'guarantee_limit': False,
+            'lot_id': False,
+            'product_uom': product and product.uom_id.id or False,
+        }
+        }
 
     def onchange_product_uom(self, cr, uid, ids, product_id, product_uom, context=None):
         res = {'value': {}}
@@ -245,20 +245,20 @@ class mrp_repair(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         if not part:
             return {'value': {
-                        'address_id': False,
-                        'partner_invoice_id': False,
-                        'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
-                    }
-                    }
+                'address_id': False,
+                'partner_invoice_id': False,
+                'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
+            }
+            }
         addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': addr['delivery'] or addr['default'],
-                    'partner_invoice_id': addr['invoice'],
-                    'pricelist_id': pricelist
-                }
-                }
+            'address_id': addr['delivery'] or addr['default'],
+            'partner_invoice_id': addr['invoice'],
+            'pricelist_id': pricelist
+        }
+        }
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         """ Cancels repair order when it is in 'Draft' state.
@@ -584,11 +584,11 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True, copy=False),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'state': fields.selection([
-                    ('draft', 'Draft'),
-                    ('confirmed', 'Confirmed'),
-                    ('done', 'Done'),
-                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
-                    help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
+            ('draft', 'Draft'),
+            ('confirmed', 'Confirmed'),
+            ('done', 'Done'),
+            ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
+            help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
                         \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
                         \n* The \'Done\' status is set automatically when repair order is completed.\
                         \n* The \'Cancelled\' status is set automatically when user cancel repair order.'),

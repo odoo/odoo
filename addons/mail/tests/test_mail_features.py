@@ -127,10 +127,10 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set(default_group_subtypes),
@@ -144,17 +144,17 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: 2 lines in mail.followers (no duplicate for Raoul)
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+        ])
         self.assertEqual(len(fol_ids), 2,
                         'message_subscribe: subscribing an already-existing follower should not create new entries in mail.followers')
         # Test: Raoul follows only specified subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
@@ -170,10 +170,10 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
@@ -187,9 +187,9 @@ class test_mail(TestMail):
         self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
         # Test: 1 lines in mail.followers (no duplicate for Raoul)
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id)
+        ])
         self.assertEqual(len(fol_ids), 1,
                         'message_subscribe: group should have only 1 entry in mail.follower for 1 follower')
 
@@ -402,7 +402,7 @@ class test_mail(TestMail):
         msg1_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id,
                             body=_body1, subject=_subject, partner_ids=[p_b_id, p_c_id],
                             attachment_ids=[attach1_id, attach2_id], attachments=_attachments,
-                            type='comment', subtype='mt_comment')
+            type='comment', subtype='mt_comment')
         msg = self.mail_message.browse(cr, uid, msg1_id)
         msg_message_id = msg.message_id
         msg_pids = [partner.id for partner in msg.notified_partner_ids]
@@ -497,7 +497,7 @@ class test_mail(TestMail):
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id,
                         body=_body2, type='email', subtype='mt_comment',
                         partner_ids=[p_d_id], parent_id=msg1_id, attachment_ids=[attach3_id],
-                        context={'mail_post_autofollow': True})
+            context={'mail_post_autofollow': True})
         msg = self.mail_message.browse(cr, uid, msg2_id)
         msg_pids = [partner.id for partner in msg.notified_partner_ids]
         msg_aids = [attach.id for attach in msg.attachment_ids]
@@ -687,9 +687,9 @@ class test_mail(TestMail):
 
         # Do: Post the comment, get created message for each group
         mail_compose.send_mail(cr, user_raoul.id, [compose_id], context={
-                        'default_res_id': -1,
-                        'active_ids': [self.group_pigs_id, group_bird_id]
-                    })
+            'default_res_id': -1,
+            'active_ids': [self.group_pigs_id, group_bird_id]
+        })
         # check mail_mail
         mail_mail_ids = self.mail_mail.search(cr, uid, [('subject', '=', _subject)])
         for mail_mail in self.mail_mail.browse(cr, uid, mail_mail_ids):

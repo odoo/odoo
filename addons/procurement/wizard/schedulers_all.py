@@ -60,7 +60,7 @@ class procurement_compute_all(osv.osv_memory):
             user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
             comps = [x.id for x in user.company_ids]
             for comp in comps:
-                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
+                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id=comp, context=context)
             # close the new cursor
             new_cr.close()
             return {}

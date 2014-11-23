@@ -1156,10 +1156,10 @@ class node_dir(node_database):
 
         #objname = uri2[-1]
         val = {
-                'name': objname,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id': obj and obj.id or False
+            'name': objname,
+            'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+            'ressource_id': object2 and object2.id or False,
+            'parent_id': obj and obj.id or False
         }
 
         return dirobj.create(cr, uid, val)
@@ -1564,7 +1564,7 @@ class node_res_obj(node_class):
                 continue
             if dirr.type == 'directory':
                 klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id))
+                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo=bo, res_id=self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
                 klass = dirr.get_node_class(dirr, context=ctx)
@@ -1589,7 +1589,7 @@ class node_res_obj(node_class):
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
                     klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id)
+                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo=bo, res_id=self.res_id)
                     rnode.res_find_all = dirr.resource_find_all
                     res.append(rnode)
                 if dirr.type == 'ressource':
@@ -1617,11 +1617,11 @@ class node_res_obj(node_class):
             raise OSError(1, 'Operation is not permitted.')
 
         val = {
-                'name': objname,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id': False,
-                'resource_find_all': False,
+            'name': objname,
+            'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+            'ressource_id': object2 and object2.id or False,
+            'parent_id': False,
+            'resource_find_all': False,
         }
         if (obj and (obj.type in ('directory'))) or not object2:
             val['parent_id'] =  obj and obj.id or False

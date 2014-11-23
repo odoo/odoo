@@ -79,10 +79,9 @@ this campaign to be run"),
                                            "Only easily comparable fields like textfields, integers, selections or single relationships may be used."),
         'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
-                                ('manual', 'With Manual Confirmation'),
-                                ('active', 'Normal')],
-                                 'Mode', required=True, help=
-            """Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
+            ('manual', 'With Manual Confirmation'),
+            ('active', 'Normal')],
+            'Mode', required=True, help="""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
@@ -377,11 +376,11 @@ class marketing_campaign_activity(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                       required = True, ondelete='cascade', select=1),
+                                       required=True, ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id', 'object_id',
                                     type='many2one', relation='ir.model',
                                     string='Object', readonly=True),
-        'start': fields.boolean('Start', help= "This activity is launched when the campaign starts.", select=True),
+        'start': fields.boolean('Start', help="This activity is launched when the campaign starts.", select=True),
         'condition': fields.text('Condition', size=256, required=True,
                                  help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."
                                  "The expression may use the following [browsable] variables:\n"
@@ -401,7 +400,7 @@ class marketing_campaign_activity(osv.osv):
         'report_directory_id': fields.many2one('document.directory', 'Directory',
                                 help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
-                                help= "The action to perform when this activity is activated"),
+                                help="The action to perform when this activity is activated"),
         'to_ids': fields.one2many('marketing.campaign.transition',
                                   'activity_from_id',
                                   'Next Activities'),
@@ -554,7 +553,7 @@ class marketing_campaign_transition(osv.osv):
         return True
 
     _constraints = [
-            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
+        (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
     ]
 
     _sql_constraints = [
@@ -780,7 +779,7 @@ class marketing_campaign_workitem(osv.osv):
                 'target': 'new',
                 'nodestroy': True,
                 'context': "{'template_id':%d,'default_res_id':%d}" %
-                                (wi_obj.activity_id.email_template_id.id,
+                (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
 

@@ -25,7 +25,7 @@ import math
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
         not (precision_digits and precision_rounding),\
-         "exactly one of precision_digits and precision_rounding must be specified"
+        "exactly one of precision_digits and precision_rounding must be specified"
     if precision_digits is not None:
         return 10 ** -precision_digits
     return precision_rounding

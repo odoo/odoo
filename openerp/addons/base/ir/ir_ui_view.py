@@ -359,13 +359,13 @@ class view(osv.osv):
                    "\n[view_id: %(viewid)s, xml_id: %(xmlid)s, "
                    "model: %(model)s, parent_id: %(parent)s]") % \
             {
-                          'view_name': view.name or not_avail,
-                          'viewid': view_id or not_avail,
-                          'xmlid': view.xml_id or not_avail,
-                          'model': view.model or not_avail,
-                          'parent': view.inherit_id.id or not_avail,
-                          'msg': message,
-                        }
+            'view_name': view.name or not_avail,
+            'viewid': view_id or not_avail,
+            'xmlid': view.xml_id or not_avail,
+            'model': view.model or not_avail,
+            'parent': view.inherit_id.id or not_avail,
+            'msg': message,
+        }
         _logger.error(message)
         raise AttributeError(message)
 
@@ -836,7 +836,7 @@ class view(osv.osv):
                 fields[field].update(fields_def[field])
             else:
                 message = _("Field `%(field_name)s` does not exist") % \
-                                dict(field_name=field)
+                    dict(field_name=field)
                 self.raise_view_error(cr, user, message, view_id, context)
         return arch, fields
 

@@ -64,7 +64,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
             self.win = DBModalDialog(60, 50, 180, 70, "Add Attachment to Server")
             self.win.addFixedText("lblResourceType", 2, 5, 100, 10, "Select Appropriate Resource Type:")
             self.win.addComboListBox("lstResourceType", -2, 25, 176, 15, True)
-            self.win.addButton('btnOkWithoutInformation', -2, -5, 25, 15, 'OK', actionListenerProc = self.btnOkWithoutInformation_clicked)
+            self.win.addButton('btnOkWithoutInformation', -2, -5, 25, 15, 'OK', actionListenerProc=self.btnOkWithoutInformation_clicked)
         else:
             self.win = DBModalDialog(60, 50, 180, 190, "Add Attachment to Server")
             self.win.addFixedText("lblModuleName", 2, 9, 42, 20, "Select Module:")
@@ -93,7 +93,7 @@ class AddAttachment(unohelper.Base, XJobExecutor):
 
             self.win.addFixedText("lblSearchName", 2, 25, 60, 10, "Enter Search String:")
             self.win.addEdit("txtSearchName", 2, 35, 149, 15,)
-            self.win.addButton('btnSearch', -2, 35, 25, 15, 'Search', actionListenerProc = self.btnSearch_clicked)
+            self.win.addButton('btnSearch', -2, 35, 25, 15, 'Search', actionListenerProc=self.btnSearch_clicked)
 
             self.win.addFixedText("lblSearchRecord", 2, 55, 60, 10, "Search Result:")
             self.win.addComboListBox("lstResource", -2, 65, 176, 70, False)
@@ -102,13 +102,13 @@ class AddAttachment(unohelper.Base, XJobExecutor):
             self.win.addFixedText("lblResourceType", 2, 137, 100, 20, "Select Appropriate Resource Type:")
             self.win.addComboListBox("lstResourceType", -2, 147, 176, 15, True)
 
-            self.win.addButton('btnOkWithInformation', -2, -5, 25, 15, 'OK', actionListenerProc = self.btnOkWithInformation_clicked)
+            self.win.addButton('btnOkWithInformation', -2, -5, 25, 15, 'OK', actionListenerProc=self.btnOkWithInformation_clicked)
 
         self.lstResourceType = self.win.getControl("lstResourceType")
         for kind in self.Kind.keys():
             self.lstResourceType.addItem(kind, self.lstResourceType.getItemCount())
 
-        self.win.addButton('btnCancel', -2 - 27, -5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnCancel', -2 - 27, -5, 30, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
         self.win.doModalDialog("lstResourceType", self.Kind.keys()[0])
 
     def btnSearch_clicked(self, oActionEvent):

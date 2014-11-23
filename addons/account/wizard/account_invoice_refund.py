@@ -177,7 +177,7 @@ class account_invoice_refund(osv.osv_memory):
                     for account in to_reconcile_ids:
                         account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
                                         writeoff_period_id=period,
-                                        writeoff_journal_id = inv.journal_id.id,
+                                        writeoff_journal_id=inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
                                                      )
                     if mode == 'modify':

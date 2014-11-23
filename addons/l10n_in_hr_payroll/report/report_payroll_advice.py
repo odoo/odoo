@@ -45,8 +45,8 @@ class payroll_advice_report(report_sxw.rml_parse):
     def get_month(self, input_date):
         payslip_pool = self.pool.get('hr.payslip')
         res = {
-               'from_name': '', 'to_name': ''
-               }
+            'from_name': '', 'to_name': ''
+        }
         slip_ids = payslip_pool.search(self.cr, self.uid, [('date_from', '<=', input_date), ('date_to', '>=', input_date)], context=self.context)
         if slip_ids:
             slip = payslip_pool.browse(self.cr, self.uid, slip_ids, context=self.context)[0]
@@ -68,12 +68,12 @@ class payroll_advice_report(report_sxw.rml_parse):
         for l in line_ids:
             res = {}
             res.update({
-                    'name': l.employee_id.name,
-                    'acc_no': l.name,
-                    'ifsc_code': l.ifsc_code,
-                    'bysal': l.bysal,
-                    'debit_credit': l.debit_credit,
-                    })
+                'name': l.employee_id.name,
+                'acc_no': l.name,
+                'ifsc_code': l.ifsc_code,
+                'bysal': l.bysal,
+                'debit_credit': l.debit_credit,
+            })
             self.total_bysal += l.bysal
             result.append(res)
         return result

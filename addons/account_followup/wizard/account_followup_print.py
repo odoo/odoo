@@ -120,7 +120,7 @@ class account_followup_print(osv.osv_memory):
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True,
                             help="This field allow you to select a forecast date to plan your follow-ups"),
-        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
+        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly=True),
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel',
                                         'osv_memory_id', 'partner_id', 'Partners', required=True),
         'company_id': fields.related('followup_id', 'company_id', type='many2one',
@@ -267,16 +267,16 @@ class account_followup_print(osv.osv_memory):
         cr.execute(
             "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "
             "FROM account_move_line AS l "
-                "LEFT JOIN account_account AS a "
-                "ON (l.account_id=a.id) "
+            "LEFT JOIN account_account AS a "
+            "ON (l.account_id=a.id) "
             "WHERE (l.reconcile_id IS NULL) "
-                "AND (a.type='receivable') "
-                "AND (l.state<>'draft') "
-                "AND (l.partner_id is NOT NULL) "
-                "AND (a.active) "
-                "AND (l.debit > 0) "
-                "AND (l.company_id = %s) "
-                "AND (l.blocked = False)"
+            "AND (a.type='receivable') "
+            "AND (l.state<>'draft') "
+            "AND (l.partner_id is NOT NULL) "
+            "AND (a.active) "
+            "AND (l.debit > 0) "
+            "AND (l.company_id = %s) "
+            "AND (l.blocked = False)"
             "ORDER BY l.date", (company_id,))  #l.blocked added to take litigation into account and it is not necessary to change follow-up level of account move lines without debit
         move_lines = cr.fetchall()
         old = None

@@ -50,11 +50,11 @@ class account_analytic_profit(osv.osv_memory):
         data = {}
         data['form'] = self.read(cr, uid, ids, context=context)[0]
         ids_chk = line_obj.search(cr, uid, [
-                ('date', '>=', data['form']['date_from']),
-                ('date', '<=', data['form']['date_to']),
-                ('journal_id', 'in', data['form']['journal_ids']),
-                ('user_id', 'in', data['form']['employee_ids']),
-                ], context=context)
+            ('date', '>=', data['form']['date_from']),
+            ('date', '<=', data['form']['date_to']),
+            ('journal_id', 'in', data['form']['journal_ids']),
+            ('user_id', 'in', data['form']['employee_ids']),
+        ], context=context)
         if not ids_chk:
             raise osv.except_osv(_('Insufficient Data!'), _('No record(s) found for this report.'))
 

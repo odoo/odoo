@@ -197,10 +197,10 @@ class res_company(osv.osv):
             return True
         fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name
         return {'value': {
-                        'rml_header': _change_header(rml_header, fontname),
-                        'rml_header2': _change_header(rml_header2, fontname),
-                        'rml_header3': _change_header(rml_header3, fontname)
-                        }}
+            'rml_header': _change_header(rml_header, fontname),
+            'rml_header2': _change_header(rml_header2, fontname),
+            'rml_header3': _change_header(rml_header3, fontname)
+        }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         res = {'domain': {'state_id': []}}

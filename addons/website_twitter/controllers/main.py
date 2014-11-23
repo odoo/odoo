@@ -28,10 +28,10 @@ class Twitter(http.Controller):
             return []
         twitter_tweets = request.registry['website.twitter.tweet']
         tweets = twitter_tweets.search_read(
-                cr, uid,
-                [('website_id', '=', request.website.id),
+            cr, uid,
+            [('website_id', '=', request.website.id),
                  ('screen_name', '=', screen_name)],
-                ['tweet'], limit=int(limit), order="tweet_id desc", context=request.context)
+            ['tweet'], limit=int(limit), order="tweet_id desc", context=request.context)
         if len(tweets) < 12:
             if debug:
                 return {"error": _("Twitter user @%(username)s has less than 12 favorite tweets. "

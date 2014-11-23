@@ -41,8 +41,8 @@ class report_webkit_actions(osv.osv_memory):
        'open_action': fields.boolean('Open added action', help="Check this to view the newly added internal print action after creating it (technical view) "),
     }
     _defaults = {
-             'print_button': lambda *a: True,
-             'open_action': lambda *a: False,
+        'print_button': lambda *a: True,
+        'open_action': lambda *a: False,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -63,17 +63,17 @@ class report_webkit_actions(osv.osv_memory):
             return res
 
         report = self.pool['ir.actions.report.xml'].browse(
-                                                    cr,
-                                                    uid,
-                                                    context.get('active_id'),
-                                                    context=context
-                                                )
+            cr,
+            uid,
+            context.get('active_id'),
+            context=context
+        )
         ir_values_obj = self.pool['ir.values']
         ids = ir_values_obj.search(
-                            cr,
-                            uid,
-                            [('value', '=', report.type + ',' + str(context.get('active_id')))]
-                        )
+            cr,
+            uid,
+            [('value', '=', report.type + ',' + str(context.get('active_id')))]
+        )
 
         if ids:
             res['arch'] = '''<form string="Add Print Buttons">
@@ -97,35 +97,35 @@ class report_webkit_actions(osv.osv_memory):
         report_obj = self.pool['ir.actions.report.xml']
         for current in self.browse(cr, uid, ids, context=context):
             report = report_obj.browse(
-                                                        cr,
-                                                        uid,
-                                                        context.get('active_id'),
-                                                        context=context
-                                                    )
+                cr,
+                uid,
+                context.get('active_id'),
+                context=context
+            )
             if current.print_button:
                 ir_values_obj = self.pool['ir.values']
                 res = ir_values_obj.set(
-                                cr,
-                                uid,
-                                'action',
-                                'client_print_multi',
-                                 report.report_name,
-                                 [report.model],
-                                 'ir.actions.report.xml,%d' % context.get('active_id', False),
-                                 isobject=True
-                                )
+                    cr,
+                    uid,
+                    'action',
+                    'client_print_multi',
+                    report.report_name,
+                    [report.model],
+                    'ir.actions.report.xml,%d' % context.get('active_id', False),
+                    isobject=True
+                )
             else:
                 ir_values_obj = self.pool['ir.values']
                 res = ir_values_obj.set(
-                                    cr,
-                                    uid,
-                                    'action',
-                                    'client_print_multi',
-                                    report.report_name,
-                                    [report.model, 0],
-                                    'ir.actions.report.xml,%d' % context.get('active_id', False),
-                                    isobject=True
-                                )
+                    cr,
+                    uid,
+                    'action',
+                    'client_print_multi',
+                    report.report_name,
+                    [report.model, 0],
+                    'ir.actions.report.xml,%d' % context.get('active_id', False),
+                    isobject=True
+                )
             if res[0]:
                 if not current.open_action:
                     return {'type': 'ir.actions.act_window_close'}

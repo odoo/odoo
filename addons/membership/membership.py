@@ -146,12 +146,12 @@ class membership_line(osv.osv):
         'date_to': fields.date('To', readonly=True),
         'date_cancel': fields.date('Cancel date'),
         'date': fields.date('Join Date', help="Date on which member has joined the membership"),
-        'member_price': fields.float('Membership Fee', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
+        'member_price': fields.float('Membership Fee', digits_compute=dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
                         string='Membership Status', type='selection',
-                        selection=STATE, store = {
+                        selection=STATE, store={
                             'account.invoice': (_get_membership_lines, ['state'], 10),
                             'res.partner': (_get_partners, ['membership_state'], 12),
                         }, help="""It indicates the membership status.
@@ -277,9 +277,9 @@ class Partner(osv.osv):
             else:
                 partner_id = partner.id
             res[partner.id] = {
-                 'membership_start': False,
-                 'membership_stop': False,
-                 'membership_cancel': False
+                'membership_start': False,
+                'membership_stop': False,
+                'membership_cancel': False
             }
             if name == 'membership_start':
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id), ('date_cancel', '=', False)],
@@ -315,49 +315,49 @@ class Partner(osv.osv):
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate Member', help="A member with whom you want to associate your membership.It will consider the membership state of the associated member."),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
-        'free_member': fields.boolean('Free Member', help = "Select if you want to give free membership."),
+        'free_member': fields.boolean('Free Member', help="Select if you want to give free membership."),
         'membership_amount': fields.float(
-                    'Membership Amount', digits=(16, 2),
-                    help = 'The price negotiated by the partner'),
+            'Membership Amount', digits=(16, 2),
+            help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
-                    __get_membership_state,
-                    string = 'Current Membership Status', type = 'selection',
-                    selection = STATE,
-                    store = {
-                        'account.invoice': (_get_invoice_partner, ['state'], 10),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
-                    }, help='It indicates the membership state.\n'
-                            '-Non Member: A partner who has not applied for any membership.\n'
-                            '-Cancelled Member: A member who has cancelled his membership.\n'
-                            '-Old Member: A member whose membership date has expired.\n'
-                            '-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n'
-                            '-Invoiced Member: A member whose invoice has been created.\n'
-                            '-Paying member: A member who has paid the membership fee.'),
+            __get_membership_state,
+            string = 'Current Membership Status', type = 'selection',
+            selection = STATE,
+            store = {
+                'account.invoice': (_get_invoice_partner, ['state'], 10),
+                'membership.membership_line': (_get_partner_id, ['state'], 10),
+                'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
+            }, help='It indicates the membership state.\n'
+            '-Non Member: A partner who has not applied for any membership.\n'
+            '-Cancelled Member: A member who has cancelled his membership.\n'
+            '-Old Member: A member whose membership date has expired.\n'
+            '-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n'
+            '-Invoiced Member: A member whose invoice has been created.\n'
+            '-Paying member: A member who has paid the membership fee.'),
         'membership_start': fields.function(
-                    _membership_date, multi = 'membeship_start',
-                    string = 'Membership Start Date', type = 'date',
-                    store = {
-                        'account.invoice': (_get_invoice_partner, ['state'], 10),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10, ),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
-                    }, help="Date from which membership becomes active."),
+            _membership_date, multi = 'membeship_start',
+            string = 'Membership Start Date', type = 'date',
+            store = {
+                'account.invoice': (_get_invoice_partner, ['state'], 10),
+                'membership.membership_line': (_get_partner_id, ['state'], 10, ),
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+            }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
-                    _membership_date,
-                    string = 'Membership End Date', type='date', multi='membership_stop',
-                    store = {
-                        'account.invoice': (_get_invoice_partner, ['state'], 10),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
-                    }, help="Date until which membership remains active."),
+            _membership_date,
+            string = 'Membership End Date', type='date', multi='membership_stop',
+            store = {
+                'account.invoice': (_get_invoice_partner, ['state'], 10),
+                'membership.membership_line': (_get_partner_id, ['state'], 10),
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+            }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
-                    _membership_date,
-                    string = 'Cancel Membership Date', type='date', multi='membership_cancel',
-                    store = {
-                        'account.invoice': (_get_invoice_partner, ['state'], 11),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10),
-                        'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
-                    }, help="Date on which membership has been cancelled"),
+            _membership_date,
+            string = 'Cancel Membership Date', type='date', multi='membership_cancel',
+            store = {
+                'account.invoice': (_get_invoice_partner, ['state'], 11),
+                'membership.membership_line': (_get_partner_id, ['state'], 10),
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
+            }, help="Date on which membership has been cancelled"),
     }
     _defaults = {
         'free_member': False,
@@ -501,14 +501,14 @@ class account_invoice_line(osv.osv):
                     if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                         date_from = line.invoice_id.date_invoice
                     member_line_obj.create(cr, uid, {
-                                    'partner': line.invoice_id.partner_id.id,
-                                    'membership_id': line.product_id.id,
-                                    'member_price': line.price_unit,
-                                    'date': time.strftime('%Y-%m-%d'),
-                                    'date_from': date_from,
-                                    'date_to': date_to,
-                                    'account_invoice_line': line.id,
-                                    }, context=context)
+                        'partner': line.invoice_id.partner_id.id,
+                        'membership_id': line.product_id.id,
+                        'member_price': line.price_unit,
+                        'date': time.strftime('%Y-%m-%d'),
+                        'date_from': date_from,
+                        'date_to': date_to,
+                        'account_invoice_line': line.id,
+                    }, context=context)
                 if line.product_id and not line.product_id.membership and ml_ids:
                     # Product line has changed to a non membership product
                     member_line_obj.unlink(cr, uid, ml_ids, context=context)
@@ -538,14 +538,14 @@ class account_invoice_line(osv.osv):
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
                 member_line_obj.create(cr, uid, {
-                            'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
-                            'membership_id': line.product_id.id,
-                            'member_price': line.price_unit,
-                            'date': time.strftime('%Y-%m-%d'),
-                            'date_from': date_from,
-                            'date_to': date_to,
-                            'account_invoice_line': line.id,
-                        }, context=context)
+                    'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
+                    'membership_id': line.product_id.id,
+                    'member_price': line.price_unit,
+                    'date': time.strftime('%Y-%m-%d'),
+                    'date_from': date_from,
+                    'date_to': date_to,
+                    'account_invoice_line': line.id,
+                }, context=context)
         return result
 
 

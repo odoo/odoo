@@ -154,7 +154,7 @@ def _to_days(src):
                       "thu": 3,
                       "fri": 4,
                       "sat": 5,
-                      "sun": 6} [lower(t.strip())]
+                      "sun": 6}[lower(t.strip())]
             result[index] = 1
         except:
             raise ValueError("%s is not a day" % (t))
@@ -421,9 +421,9 @@ def strftime(dt, format):
             .replace("%im", iso_date.strftime("%m"))
     else:
         format = format \
-                 .replace("%IB", "%B")\
-                 .replace("%ib", "%b")\
-                 .replace("%im", "%m")
+            .replace("%IB", "%B")\
+            .replace("%ib", "%b")\
+            .replace("%im", "%m")
 
     format = format \
         .replace("%IW", str(iso[1]))\

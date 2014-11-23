@@ -64,7 +64,7 @@ class website_sale_options(website_sale):
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
 
         return request.website._render("website_sale_options.modal", {
-                'product': product,
-                'compute_currency': compute_currency,
-                'get_attribute_value_ids': self.get_attribute_value_ids,
+            'product': product,
+            'compute_currency': compute_currency,
+            'get_attribute_value_ids': self.get_attribute_value_ids,
         })

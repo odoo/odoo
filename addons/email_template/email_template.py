@@ -317,23 +317,23 @@ class email_template(osv.osv):
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             button_name = _('Send Mail (%s)') % template.name
             act_id = action_obj.create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'type': 'ir.actions.act_window',
-                 'res_model': 'mail.compose.message',
-                 'src_model': src_obj,
-                 'view_type': 'form',
-                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
-                 'view_mode': 'form,tree',
-                 'view_id': res_id,
-                 'target': 'new',
-                 'auto_refresh': 1
+                'name': button_name,
+                'type': 'ir.actions.act_window',
+                'res_model': 'mail.compose.message',
+                'src_model': src_obj,
+                'view_type': 'form',
+                'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
+                'view_mode': 'form,tree',
+                'view_id': res_id,
+                'target': 'new',
+                'auto_refresh': 1
             }, context)
             ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'model': src_obj,
-                 'key2': 'client_action_multi',
-                 'value': "ir.actions.act_window,%s" % act_id,
-                 'object': True,
+                'name': button_name,
+                'model': src_obj,
+                'key2': 'client_action_multi',
+                'value': "ir.actions.act_window,%s" % act_id,
+                'object': True,
              }, context)
 
             template.write({
@@ -408,9 +408,9 @@ class email_template(osv.osv):
                     })
             else:
                 result.update({
-                        'copyvalue': self.build_expression(field_value.name, False, null_value or False),
-                        'null_value': null_value or False
-                        })
+                    'copyvalue': self.build_expression(field_value.name, False, null_value or False),
+                    'null_value': null_value or False
+                })
         return {'value': result}
 
     def generate_recipients_batch(self, cr, uid, results, template_id, res_ids, context=None):

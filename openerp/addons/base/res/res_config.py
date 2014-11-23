@@ -79,7 +79,7 @@ class res_config_configurable(osv.osv_memory):
 
         active_todos = Todos.browse(cr, uid,
             Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state', '=', 'open')]),
-                                    context=context)
+            context=context)
 
         user_groups = set(map(
             lambda g: g.id,
@@ -349,12 +349,12 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
 
         additionals = set(
             module for requirements, consequences
-                       in self._install_if.iteritems()
-                   if base.issuperset(requirements)
-                   for module in consequences)
+            in self._install_if.iteritems()
+            if base.issuperset(requirements)
+            for module in consequences)
 
         return (base | hooks_results | additionals).difference(
-                    self.already_installed(cr, uid, context))
+            self.already_installed(cr, uid, context))
 
     def default_get(self, cr, uid, fields_list, context=None):
         ''' If an addon is already installed, check it by default
@@ -380,8 +380,8 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                 continue
             fields[name].update(
                 readonly=True,
-                help= ustr(fields[name].get('help', '')) +
-                     _('\n\nThis addon is already installed on your system'))
+                help=ustr(fields[name].get('help', '')) +
+                _('\n\nThis addon is already installed on your system'))
         return fields
 
     def execute(self, cr, uid, ids, context=None):
@@ -475,7 +475,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             return {'warning': {'title': _('Warning!'),
                     'message':
                     _('Disabling this option will also uninstall the following modules \n%s' % message)
-                   }}
+            }}
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):

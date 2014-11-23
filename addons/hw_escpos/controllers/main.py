@@ -130,7 +130,7 @@ class EscposDriver(Thread):
         printer.cashdraw(2)
         printer.cashdraw(5)
 
-    def set_status(self, status, message = None):
+    def set_status(self, status, message=None):
         _logger.info(status + ' : ' + (message or 'no message'))
         if status == self.status['status']:
             if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
@@ -182,7 +182,7 @@ class EscposDriver(Thread):
                 errmsg = str(e) + '\n' + '-' * 60 + '\n' + traceback.format_exc() + '-' * 60 + '\n'
                 _logger.error(errmsg);
 
-    def push_task(self, task, data = None):
+    def push_task(self, task, data=None):
         self.lockedstart()
         self.queue.put((time.time(), task, data))
 

@@ -53,7 +53,7 @@ class res_partner(osv.Model):
         res = {}
         for partner in self.browse(cr, uid, ids, context):
             res[partner.id] = bool(partner.signup_token) and \
-                                (not partner.signup_expiration or dt <= partner.signup_expiration)
+                (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
     def _get_signup_url_for_action(self, cr, uid, ids, action=None, view_type=None, menu_id=None, res_id=None, model=None, context=None):
@@ -199,7 +199,7 @@ class res_users(osv.Model):
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
             partner = res_partner._signup_retrieve_partner(
-                            cr, uid, token, check_validity=True, raise_exception=True, context=None)
+                cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 

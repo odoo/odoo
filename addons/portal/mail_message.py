@@ -58,6 +58,6 @@ class mail_message(osv.Model):
             if cr.fetchall():
                 raise orm.except_orm(_('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                        (self._description, operation))
+                    (self._description, operation))
 
         return super(mail_message, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)

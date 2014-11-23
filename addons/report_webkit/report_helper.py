@@ -65,10 +65,10 @@ class WebKitHelper(object):
         """Return logo by name"""
         header_obj = self.pool.get('ir.header_img')
         header_img_id = header_obj.search(
-                                            self.cursor,
-                                            self.uid,
-                                            [('name', '=', name)]
-                                        )
+            self.cursor,
+            self.uid,
+            [('name', '=', name)]
+        )
         if not header_img_id:
             return u''
         if isinstance(header_img_id, list):

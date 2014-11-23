@@ -44,8 +44,8 @@ class sale_order(osv.Model):
             if linked_line_id and linked_line_id in map(int, so.order_line):
                 linked = sol.browse(cr, SUPERUSER_ID, linked_line_id, context=context)
                 line.write({
-                        "name": _("%s\nOption for: %s") % (line.name, linked.product_id.name_get()[0][1]),
-                        "linked_line_id": linked_line_id
+                    "name": _("%s\nOption for: %s") % (line.name, linked.product_id.name_get()[0][1]),
+                    "linked_line_id": linked_line_id
                 })
 
             # select linked product
@@ -54,7 +54,7 @@ class sale_order(osv.Model):
             if option_ids:
                 # update line
                 sol.write(cr, SUPERUSER_ID, option_ids, {
-                        'product_uom_qty': value.get('quantity')
+                    'product_uom_qty': value.get('quantity')
                 }, context=context)
 
         value['option_ids'] = option_ids

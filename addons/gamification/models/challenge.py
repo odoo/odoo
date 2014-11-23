@@ -122,9 +122,9 @@ class gamification_challenge(osv.Model):
         'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
         'state': fields.selection([
-                ('draft', 'Draft'),
-                ('inprogress', 'In Progress'),
-                ('done', 'Done'),
+            ('draft', 'Draft'),
+            ('inprogress', 'In Progress'),
+            ('done', 'Done'),
         ], copy=False,
             string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
@@ -136,11 +136,11 @@ class gamification_challenge(osv.Model):
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
 
         'period': fields.selection([
-                ('once', 'Non recurring'),
-                ('daily', 'Daily'),
-                ('weekly', 'Weekly'),
-                ('monthly', 'Monthly'),
-                ('yearly', 'Yearly')
+            ('once', 'Non recurring'),
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('monthly', 'Monthly'),
+            ('yearly', 'Yearly')
         ],
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
@@ -167,18 +167,18 @@ class gamification_challenge(osv.Model):
             help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."),
 
         'visibility_mode': fields.selection([
-                ('personal', 'Individual Goals'),
-                ('ranking', 'Leader Board (Group Ranking)'),
+            ('personal', 'Individual Goals'),
+            ('ranking', 'Leader Board (Group Ranking)'),
         ],
             string="Display Mode", required=True),
 
         'report_message_frequency': fields.selection([
-                ('never', 'Never'),
-                ('onchange', 'On change'),
-                ('daily', 'Daily'),
-                ('weekly', 'Weekly'),
-                ('monthly', 'Monthly'),
-                ('yearly', 'Yearly')
+            ('never', 'Never'),
+            ('onchange', 'On change'),
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('monthly', 'Monthly'),
+            ('yearly', 'Yearly')
         ],
             string="Report Frequency", required=True),
         'report_message_group_id': fields.many2one('mail.group',
@@ -304,12 +304,12 @@ class gamification_challenge(osv.Model):
         goal_ids = goal_obj.search(cr, uid, [
             ('challenge_id', 'in', ids),
             '|',
-                ('state', '=', 'inprogress'),
-                '&',
-                    ('state', 'in', ('reached', 'failed')),
-                    '|',
-                        ('end_date', '>=', yesterday.strftime(DF)),
-                        ('end_date', '=', False)
+            ('state', '=', 'inprogress'),
+            '&',
+            ('state', 'in', ('reached', 'failed')),
+            '|',
+            ('end_date', '>=', yesterday.strftime(DF)),
+            ('end_date', '=', False)
         ], context=context)
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)

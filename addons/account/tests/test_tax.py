@@ -16,11 +16,11 @@ class TestTax(TransactionCase):
     def test_programmatic_tax(self):
         cr, uid = self.cr, self.uid
         tax_id = self.tax_model.create(cr, uid, dict(
-                name="Programmatic tax",
-                type='code',
-                python_compute='result = 12.0',
-                python_compute_inv='result = 11.0',
-                ))
+            name="Programmatic tax",
+            type='code',
+            python_compute='result = 12.0',
+            python_compute_inv='result = 11.0',
+        ))
 
         tax_records = self.tax_model.browse(cr, uid, [tax_id])
         res = self.tax_model.compute_all(cr, uid, tax_records, 50.0, 2)
@@ -33,10 +33,10 @@ class TestTax(TransactionCase):
         """Test computations done by a 10 percent tax."""
         cr, uid = self.cr, self.uid
         tax_id = self.tax_model.create(cr, uid, dict(
-                name="Percent tax",
-                type='percent',
-                amount='0.1',
-                ))
+            name="Percent tax",
+            type='percent',
+            amount='0.1',
+        ))
 
         tax_records = self.tax_model.browse(cr, uid, [tax_id])
         res = self.tax_model.compute_all(cr, uid, tax_records, 50.0, 2)

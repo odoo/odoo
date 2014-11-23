@@ -110,7 +110,7 @@ class TxBuckaroo(osv.Model):
     _buckaroo_reject_tx_status = [690]
 
     _columns = {
-         'buckaroo_txnid': fields.char('Transaction ID'),
+        'buckaroo_txnid': fields.char('Transaction ID'),
     }
 
     # --------------------------------------------------

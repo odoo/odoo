@@ -91,7 +91,7 @@ class mrp_production_workcenter_line(osv.osv):
        'production_state': fields.related('production_id', 'state',
             type='selection',
             selection=[('draft', 'Draft'), ('confirmed', 'Waiting Goods'), ('ready', 'Ready to Produce'), ('in_production', 'In Production'), ('cancel', 'Canceled'), ('done', 'Done')],
-            string='Production Status', readonly=True),
+           string='Production Status', readonly=True),
        'product': fields.related('production_id', 'product_id', type='many2one', relation='product.product', string='Product',
             readonly=True),
        'qty': fields.related('production_id', 'product_qty', type='float', string='Qty', readonly=True, store=True),
@@ -126,9 +126,9 @@ class mrp_production_workcenter_line(osv.osv):
             open_count = self.search_count(cr, uid, [('production_id', '=', prod_obj.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
             if flag:
-                for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
+                for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context=None):
                     if production.move_lines or production.move_created_ids:
-                        prod_obj_pool.action_produce(cr, uid, production.id, production.product_qty, 'consume_produce', context = None)
+                        prod_obj_pool.action_produce(cr, uid, production.id, production.product_qty, 'consume_produce', context=None)
                 prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
         return
 

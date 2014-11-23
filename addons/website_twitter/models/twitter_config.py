@@ -10,21 +10,21 @@ class twitter_config_settings(osv.osv_memory):
     _inherit = 'website.config.settings'
 
     _columns = {
-         'twitter_api_key': fields.related(
-                'website_id', 'twitter_api_key', type="char",
-                string='Twitter API Key',
-                help="Twitter API key you can get it from https://apps.twitter.com/app/new"),
-         'twitter_api_secret': fields.related(
-                'website_id', 'twitter_api_secret', type="char",
-                string='Twitter API secret',
-                help="Twitter API secret you can get it from https://apps.twitter.com/app/new"),
-         'twitter_tutorial': fields.dummy(
-                type="boolean", string="Show me how to obtain the Twitter API Key and Secret"),
-         'twitter_screen_name': fields.related(
-                'website_id', 'twitter_screen_name',
-                type="char", string='Get favorites from this screen name',
-                help="Screen Name of the Twitter Account from which you want to load favorites."
-                "It does not have to match the API Key/Secret."),
+        'twitter_api_key': fields.related(
+            'website_id', 'twitter_api_key', type="char",
+            string='Twitter API Key',
+            help="Twitter API key you can get it from https://apps.twitter.com/app/new"),
+        'twitter_api_secret': fields.related(
+            'website_id', 'twitter_api_secret', type="char",
+            string='Twitter API secret',
+            help="Twitter API secret you can get it from https://apps.twitter.com/app/new"),
+        'twitter_tutorial': fields.dummy(
+            type="boolean", string="Show me how to obtain the Twitter API Key and Secret"),
+        'twitter_screen_name': fields.related(
+            'website_id', 'twitter_screen_name',
+            type="char", string='Get favorites from this screen name',
+            help="Screen Name of the Twitter Account from which you want to load favorites."
+            "It does not have to match the API Key/Secret."),
     }
 
     def _check_twitter_authorization(self, cr, uid, config_id, context=None):

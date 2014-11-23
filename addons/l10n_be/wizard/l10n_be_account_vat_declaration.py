@@ -114,25 +114,25 @@ class l10n_be_vat_declaration(osv.osv_memory):
         if not address_id.phone:
             raise osv.except_osv(_('Insufficient Data!'), _('No phone associated with the company.'))
         file_data = {
-                        'issued_by': issued_by,
-                        'vat_no': vat_no,
-                        'only_vat': vat_no[2:],
-                        'cmpny_name': obj_company.name,
-                        'address': "%s %s" % (address_id.street or "", address_id.street2 or ""),
-                        'post_code': address_id.zip or "",
-                        'city': address_id.city or "",
-                        'country_code': address_id.country_id and address_id.country_id.code or "",
-                        'email': address_id.email or "",
-                        'phone': address_id.phone.replace('.', '').replace('/', '').replace('(', '').replace(')', '').replace(' ', ''),
-                        'send_ref': send_ref,
-                        'quarter': quarter,
-                        'month': starting_month,
-                        'year': str(account_period.date_stop[:4]),
-                        'client_nihil': (data['client_nihil'] and 'YES' or 'NO'),
-                        'ask_restitution': (data['ask_restitution'] and 'YES' or 'NO'),
-                        'ask_payment': (data['ask_payment'] and 'YES' or 'NO'),
-                        'comments': comments,
-                     }
+            'issued_by': issued_by,
+            'vat_no': vat_no,
+            'only_vat': vat_no[2:],
+            'cmpny_name': obj_company.name,
+            'address': "%s %s" % (address_id.street or "", address_id.street2 or ""),
+            'post_code': address_id.zip or "",
+            'city': address_id.city or "",
+            'country_code': address_id.country_id and address_id.country_id.code or "",
+            'email': address_id.email or "",
+            'phone': address_id.phone.replace('.', '').replace('/', '').replace('(', '').replace(')', '').replace(' ', ''),
+            'send_ref': send_ref,
+            'quarter': quarter,
+            'month': starting_month,
+            'year': str(account_period.date_stop[:4]),
+            'client_nihil': (data['client_nihil'] and 'YES' or 'NO'),
+            'ask_restitution': (data['ask_restitution'] and 'YES' or 'NO'),
+            'ask_payment': (data['ask_payment'] and 'YES' or 'NO'),
+            'comments': comments,
+        }
 
         data_of_file = """<?xml version="1.0"?>
 <ns2:VATConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment" VATDeclarationsNbr="1">
@@ -185,9 +185,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         cases_list.sort()
         for item in cases_list:
             grid_amount_data = {
-                    'code': str(int(item['code'])),
-                    'amount': '%.2f' % abs(item['sum_period']),
-                    }
+                'code': str(int(item['code'])),
+                'amount': '%.2f' % abs(item['sum_period']),
+            }
             data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
 
         data_of_file += '\n\t\t</ns2:Data>'

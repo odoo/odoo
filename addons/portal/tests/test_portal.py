@@ -43,7 +43,7 @@ class test_portal(TestMail):
         # Create a PigsPortal group
         self.group_port_id = self.mail_group.create(cr, uid,
                         {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id},
-                        {'mail_create_nolog': True})
+            {'mail_create_nolog': True})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})

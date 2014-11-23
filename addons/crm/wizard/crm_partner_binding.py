@@ -36,9 +36,9 @@ class crm_partner_binding(osv.osv_memory):
     _description = 'Handle partner binding or generation in CRM wizards.'
     _columns = {
         'action': fields.selection([
-                ('exist', 'Link to an existing customer'),
-                ('create', 'Create a new customer'),
-                ('nothing', 'Do not link to a customer')
+            ('exist', 'Link to an existing customer'),
+            ('create', 'Create a new customer'),
+            ('nothing', 'Do not link to a customer')
         ], 'Related Customer', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer'),
     }
@@ -80,7 +80,7 @@ class crm_partner_binding(osv.osv_memory):
                     partner_id = partner_ids[0]
             elif active_model.contact_name:
                 partner_ids = partner_obj.search(cr, uid, [
-                        ('name', 'ilike', '%' + active_model.contact_name + '%')], context=context)
+                    ('name', 'ilike', '%' + active_model.contact_name + '%')], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
 

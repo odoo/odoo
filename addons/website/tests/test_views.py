@@ -199,7 +199,7 @@ class TestViewSaving(common.TransactionCase):
                         field='phone', expression="edmund")),
                  "whop whop"
                  ), encoding="utf-8")
-        View.save(self.cr, self.uid, res_id = self.view_id, value=replacement,
+        View.save(self.cr, self.uid, res_id=self.view_id, value=replacement,
                   xpath='/div/div[2]/ul/li[3]')
 
         self.eq(

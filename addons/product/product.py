@@ -365,9 +365,9 @@ class product_attribute_value(osv.osv):
             p_obj.write(cr, uid, p_ids, {'price_extra': value}, context=context)
         else:
             p_obj.create(cr, uid, {
-                    'product_tmpl_id': context['active_id'],
-                    'value_id': id,
-                    'price_extra': value,
+                'product_tmpl_id': context['active_id'],
+                'value_id': id,
+                'price_extra': value,
             }, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
@@ -518,7 +518,7 @@ class product_template(osv.osv):
         'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price': fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'),
+        'standard_price': fields.property(type='float', digits_compute=dp.get_precision('Product Price'),
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
@@ -536,7 +536,7 @@ class product_template(osv.osv):
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id': fields.many2one('product.uom', 'Unit of Sale',
             help='Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),
-        'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
+        'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute=dp.get_precision('Product UoS'),
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
@@ -1039,17 +1039,17 @@ class product_product(osv.osv):
                 for s in sellers:
                     seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
                     mydict = {
-                              'id': product.id,
-                              'name': seller_variant or name,
-                              'default_code': s.product_code or product.default_code,
-                              }
+                        'id': product.id,
+                        'name': seller_variant or name,
+                        'default_code': s.product_code or product.default_code,
+                    }
                     result.append(_name_get(mydict))
             else:
                 mydict = {
-                          'id': product.id,
-                          'name': name,
-                          'default_code': product.default_code,
-                          }
+                    'id': product.id,
+                    'name': name,
+                    'default_code': product.default_code,
+                }
                 result.append(_name_get(mydict))
         return result
 
@@ -1233,7 +1233,7 @@ class product_supplierinfo(osv.osv):
         return result
 
     _columns = {
-        'name': fields.many2one('res.partner', 'Supplier', required=True, domain = [('supplier', '=', True)], ondelete='cascade', help="Supplier of this product"),
+        'name': fields.many2one('res.partner', 'Supplier', required=True, domain=[('supplier', '=', True)], ondelete='cascade', help="Supplier of this product"),
         'product_name': fields.char('Supplier Product Name', help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence': fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),

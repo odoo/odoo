@@ -47,7 +47,7 @@ class procurement_compute(osv.osv_memory):
             new_cr = self.pool.cursor()
             user_obj = self.pool.get('res.users')
             company_id = user_obj.browse(new_cr, uid, uid, context=context).company_id.id
-            proc_obj._procure_orderpoint_confirm(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = company_id, context=context)
+            proc_obj._procure_orderpoint_confirm(new_cr, uid, use_new_cursor=new_cr.dbname, company_id=company_id, context=context)
             # close the new cursor
             new_cr.close()
             return {}

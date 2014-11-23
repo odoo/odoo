@@ -66,7 +66,7 @@ So, that we can compare the theoretic delay and real delay.
         'mrp_operations_workflow_instance.xml'
     ],
     'demo': [
-             'mrp_operations_demo.yml'
+        'mrp_operations_demo.yml'
     ],
     'test': [
         'test/workcenter_operations.yml',

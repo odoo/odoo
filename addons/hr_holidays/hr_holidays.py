@@ -246,7 +246,7 @@ class hr_holidays(osv.osv):
                 }
         elif holiday_type != 'employee':
             result['value'] = {
-                    'employee_id': False
+                'employee_id': False
             }
         return result
 

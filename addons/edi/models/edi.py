@@ -179,7 +179,7 @@ class EDIMixin(object):
         model_name = edi.get('__imported_model') or edi.get('__model') or self._name
         for attribute in attributes:
             assert edi.get(attribute),\
-                 'Attribute `%s` is required in %s EDI documents.' % (attribute, model_name)
+                'Attribute `%s` is required in %s EDI documents.' % (attribute, model_name)
 
     # private method, not RPC-exposed as it creates ir.model.data entries as
     # SUPERUSER based on its parameters
@@ -296,9 +296,9 @@ class EDIMixin(object):
                 attachments = []
                 for attachment in ir_attachment.browse(cr, uid, attachment_ids, context=context):
                     attachments.append({
-                            'name': attachment.name,
-                            'content': attachment.datas,  # already base64 encoded!
-                            'file_name': attachment.datas_fname,
+                        'name': attachment.name,
+                        'content': attachment.datas,  # already base64 encoded!
+                        'file_name': attachment.datas_fname,
                     })
                 edi_dict.update(__attachments=attachments)
             results.append(edi_dict)

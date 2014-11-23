@@ -60,7 +60,7 @@ class AuthProvider:
     def log(self, msg):
         print msg
 
-    def checkRequest(self, handler, path = '/'):
+    def checkRequest(self, handler, path='/'):
         """ Check if we are allowed to process that request
         """
         pass

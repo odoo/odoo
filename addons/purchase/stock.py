@@ -102,9 +102,9 @@ class stock_move(osv.osv):
                 pricelist = partner.property_product_pricelist.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist],
                                     move.product_id.id, move.product_uom_qty, partner, {
-                                                                                'uom': move.product_uom.id,
-                                                                                'date': move.date,
-                                                                                })[pricelist]
+                    'uom': move.product_uom.id,
+                    'date': move.date,
+                })[pricelist]
                 if price:
                     return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
         super(stock_move, self).attribute_price(cr, uid, move, context=context)

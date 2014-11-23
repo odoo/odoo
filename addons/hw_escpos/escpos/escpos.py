@@ -606,15 +606,15 @@ class Escpos:
             elif elem.tag == 'value':
                 serializer.start_inline(stylestack)
                 serializer.pre(format_value(
-                                              elem.text,
-                                              decimals=stylestack.get('value-decimals'),
-                                              width=stylestack.get('value-width'),
-                                              decimals_separator=stylestack.get('value-decimals-separator'),
-                                              thousands_separator=stylestack.get('value-thousands-separator'),
-                                              autoint=(stylestack.get('value-autoint') == 'on'),
-                                              symbol=stylestack.get('value-symbol'),
-                                              position=stylestack.get('value-symbol-position')
-                                            ))
+                    elem.text,
+                    decimals=stylestack.get('value-decimals'),
+                    width=stylestack.get('value-width'),
+                    decimals_separator=stylestack.get('value-decimals-separator'),
+                    thousands_separator=stylestack.get('value-thousands-separator'),
+                    autoint=(stylestack.get('value-autoint') == 'on'),
+                    symbol=stylestack.get('value-symbol'),
+                    position=stylestack.get('value-symbol-position')
+                ))
                 serializer.end_entity()
 
             elif elem.tag == 'line':
@@ -735,28 +735,28 @@ class Escpos:
             encoded  = ''
             encoding = self.encoding  # we reuse the last encoding to prevent code page switches at every character
             encodings = {
-                    # TODO use ordering to prevent useless switches
-                    # TODO Support other encodings not natively supported by python ( Thai, Khazakh, Kanjis )
-                    'cp437': TXT_ENC_PC437,
-                    'cp850': TXT_ENC_PC850,
-                    'cp852': TXT_ENC_PC852,
-                    'cp857': TXT_ENC_PC857,
-                    'cp858': TXT_ENC_PC858,
-                    'cp860': TXT_ENC_PC860,
-                    'cp863': TXT_ENC_PC863,
-                    'cp865': TXT_ENC_PC865,
-                    'cp866': TXT_ENC_PC866,
-                    'cp862': TXT_ENC_PC862,
-                    'cp720': TXT_ENC_PC720,
-                    'iso8859_2': TXT_ENC_8859_2,
-                    'iso8859_7': TXT_ENC_8859_7,
-                    'iso8859_9': TXT_ENC_8859_9,
-                    'cp1254': TXT_ENC_WPC1254,
-                    'cp1255': TXT_ENC_WPC1255,
-                    'cp1256': TXT_ENC_WPC1256,
-                    'cp1257': TXT_ENC_WPC1257,
-                    'cp1258': TXT_ENC_WPC1258,
-                    'katakana': TXT_ENC_KATAKANA,
+                # TODO use ordering to prevent useless switches
+                # TODO Support other encodings not natively supported by python ( Thai, Khazakh, Kanjis )
+                'cp437': TXT_ENC_PC437,
+                'cp850': TXT_ENC_PC850,
+                'cp852': TXT_ENC_PC852,
+                'cp857': TXT_ENC_PC857,
+                'cp858': TXT_ENC_PC858,
+                'cp860': TXT_ENC_PC860,
+                'cp863': TXT_ENC_PC863,
+                'cp865': TXT_ENC_PC865,
+                'cp866': TXT_ENC_PC866,
+                'cp862': TXT_ENC_PC862,
+                'cp720': TXT_ENC_PC720,
+                'iso8859_2': TXT_ENC_8859_2,
+                'iso8859_7': TXT_ENC_8859_7,
+                'iso8859_9': TXT_ENC_8859_9,
+                'cp1254': TXT_ENC_WPC1254,
+                'cp1255': TXT_ENC_WPC1255,
+                'cp1256': TXT_ENC_WPC1256,
+                'cp1257': TXT_ENC_WPC1257,
+                'cp1258': TXT_ENC_WPC1258,
+                'katakana': TXT_ENC_KATAKANA,
             }
             remaining = copy.copy(encodings)
 

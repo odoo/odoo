@@ -295,7 +295,7 @@ class rml_parse(object):
                     found.getparent().replace(found, tag)
         return True
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         self.localcontext['data'] = data
         self.localcontext['objects'] = objects
         self.localcontext['digits_fmt'] = self.digits_fmt
@@ -595,7 +595,7 @@ class report_sxw(report_rml, preprocess.report):
         # created empty zip writing sxw contents to avoid duplication
         sxw_out = StringIO.StringIO()
         sxw_out_zip = zipfile.ZipFile(sxw_out, mode='w')
-        sxw_template_zip = zipfile.ZipFile (sxw_io, 'r')
+        sxw_template_zip = zipfile.ZipFile(sxw_io, 'r')
         for item in sxw_template_zip.infolist():
             if item.filename not in sxw_contents:
                 buffer = sxw_template_zip.read(item.filename)

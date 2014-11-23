@@ -208,7 +208,7 @@ class account_analytic_account(osv.osv):
                                   'Status', required=True,
                                   track_visibility='onchange', copy=False),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,  # the currency_id field is readonly except if it's a view account and if there is no company
-            store = {
+            store={
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }

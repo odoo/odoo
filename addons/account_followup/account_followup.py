@@ -32,7 +32,7 @@ class followup(osv.osv):
     _columns = {
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up', copy=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.related('company_id', 'name', string = "Name", readonly=True, type="char"),
+        'name': fields.related('company_id', 'name', string="Name", readonly=True, type="char"),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -186,9 +186,9 @@ class res_partner(osv.osv):
             return {}
         data['partner_ids'] = wizard_partner_ids
         datas = {
-             'ids': wizard_partner_ids,
-             'model': 'account_followup.followup',
-             'form': data
+            'ids': wizard_partner_ids,
+            'model': 'account_followup.followup',
+            'form': data
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_followup.report_followup', data=datas, context=context)
 
@@ -288,11 +288,11 @@ class res_partner(osv.osv):
                     # Find partner_id of user put as responsible
                     responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
                     self.pool.get("mail.thread").message_post(cr, uid, 0,
-                                      body = _("You became responsible to do the next action for the payment follow-up of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
-                                      type = 'comment',
-                                      subtype = "mail.mt_comment", context = context,
-                                      model = 'res.partner', res_id = part.id,
-                                      partner_ids = [responsible_partner_id])
+                                      body=_("You became responsible to do the next action for the payment follow-up of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
+                        type='comment',
+                        subtype="mail.mt_comment", context=context,
+                        model='res.partner', res_id=part.id,
+                        partner_ids=[responsible_partner_id])
         return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
@@ -304,12 +304,12 @@ class res_partner(osv.osv):
         # search if the partner has accounting entries to print. If not, it may not be present in the
         # psql view the report is based on, so we need to stop the user here.
         if not self.pool.get('account.move.line').search(cr, uid, [
-                                                                   ('partner_id', '=', ids[0]),
-                                                                   ('account_id.type', '=', 'receivable'),
-                                                                   ('reconcile_id', '=', False),
-                                                                   ('state', '!=', 'draft'),
-                                                                   ('company_id', '=', company_id),
-                                                                  ], context=context):
+            ('partner_id', '=', ids[0]),
+            ('account_id.type', '=', 'receivable'),
+            ('reconcile_id', '=', False),
+            ('state', '!=', 'draft'),
+            ('company_id', '=', company_id),
+        ], context=context):
             raise osv.except_osv(_('Error!'), _("The partner does not have any accounting entries to print in the overdue report for the current company."))
         self.message_post(cr, uid, [ids[0]], body=_('Printed overdue payments report'), context=context)
         # build the id of this partner in the psql view. Could be replaced by a search with [('company_id', '=', company_id),('partner_id', '=', ids[0])]
@@ -471,15 +471,15 @@ class res_partner(osv.osv):
             multi="latest"),
         'payment_amount_due': fields.function(_get_amounts_and_date,
                                               type='float', string="Amount Due",
-                                              store = False, multi="followup",
+                                              store=False, multi="followup",
                                               fnct_search=_payment_due_search),
         'payment_amount_overdue': fields.function(_get_amounts_and_date,
                                                  type='float', string="Amount Overdue",
-                                                 store = False, multi="followup",
-                                                 fnct_search = _payment_overdue_search),
+                                                 store=False, multi="followup",
+                                                 fnct_search=_payment_overdue_search),
         'payment_earliest_due_date': fields.function(_get_amounts_and_date,
                                                     type='date',
-                                                    string = "Worst Due Date",
+                                                    string="Worst Due Date",
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
     }
@@ -493,11 +493,11 @@ class account_config_settings(osv.TransientModel):
         res_ids = self.pool.get('account_followup.followup').search(cr, uid, [], context=context)
 
         return {
-                 'type': 'ir.actions.act_window',
-                 'name': 'Payment Follow-ups',
-                 'res_model': 'account_followup.followup',
-                 'res_id': res_ids and res_ids[0] or False,
-                 'view_mode': 'form,tree',
+            'type': 'ir.actions.act_window',
+            'name': 'Payment Follow-ups',
+            'res_model': 'account_followup.followup',
+            'res_id': res_ids and res_ids[0] or False,
+            'view_mode': 'form,tree',
          }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

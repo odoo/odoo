@@ -10,7 +10,7 @@ class CashBox(osv.osv_memory):
         # Attention, we don't set a domain, because there is a journal_type key
         # in the context of the action
         'amount': fields.float('Amount',
-                               digits_compute = dp.get_precision('Account'),
+                               digits_compute=dp.get_precision('Account'),
                                required=True),
     }
 

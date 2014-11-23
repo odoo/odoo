@@ -107,16 +107,16 @@ class stock_location(osv.osv):
         'name': fields.char('Location Name', required=True, translate=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
         'usage': fields.selection([
-                        ('supplier', 'Supplier Location'),
-                        ('view', 'View'),
-                        ('internal', 'Internal Location'),
-                        ('customer', 'Customer Location'),
-                        ('inventory', 'Inventory'),
-                        ('procurement', 'Procurement'),
-                        ('production', 'Production'),
-                        ('transit', 'Transit Location')],
-                'Location Type', required=True,
-                help="""* Supplier Location: Virtual location representing the source location for products coming from your suppliers
+            ('supplier', 'Supplier Location'),
+            ('view', 'View'),
+            ('internal', 'Internal Location'),
+            ('customer', 'Customer Location'),
+            ('inventory', 'Inventory'),
+            ('procurement', 'Procurement'),
+            ('production', 'Production'),
+            ('transit', 'Transit Location')],
+            'Location Type', required=True,
+            help="""* Supplier Location: Virtual location representing the source location for products coming from your suppliers
                        \n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products
                        \n* Internal Location: Physical locations inside your own warehouses,
                        \n* Customer Location: Virtual location representing the destination location for products sent to your customers
@@ -1039,11 +1039,11 @@ class stock_picking(osv.osv):
             pack_quant_ids = pack_obj.get_content(cr, uid, [pack.id], context=context)
             pack_quants = quant_obj.browse(cr, uid, pack_quant_ids, context=context)
             vals.append({
-                    'picking_id': picking.id,
-                    'package_id': pack.id,
-                    'product_qty': 1.0,
-                    'location_id': pack.location_id.id,
-                    'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                'picking_id': picking.id,
+                'package_id': pack.id,
+                'product_qty': 1.0,
+                'location_id': pack.location_id.id,
+                'location_dest_id': quants_suggested_locations[pack_quants[0]],
             })
             # remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
@@ -1298,7 +1298,7 @@ class stock_picking(osv.osv):
         This can be used to provide a button that rereserves taking into account the existing pack operations
         """
         for pick in self.browse(cr, uid, ids, context=context):
-            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
+            self.rereserve_quants(cr, uid, pick, move_ids=[x.id for x in pick.move_lines], context=context)
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
@@ -1519,7 +1519,7 @@ class stock_production_lot(osv.osv):
                 'context': {'tree_view_ref': 'stock.view_move_tree'},
                 'res_model': 'stock.move',
                 'type': 'ir.actions.act_window',
-                    }
+            }
         return False
 
 
@@ -1658,20 +1658,20 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
         'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, _type='float', store={
-                'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
-                'product.product': (_get_moves_from_prod, ['uom_id'], 20),
+            'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
+            'product.product': (_get_moves_from_prod, ['uom_id'], 20),
         }, string='Quantity',
             digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
             help="This is the quantity of products from an inventory "
-                "point of view. For moves in the state 'done', this is the "
-                "quantity of products that were actually moved. For other "
-                "moves, this is the quantity of product that is planned to "
-                "be moved. Lowering this quantity does not generate a "
-                "backorder. Changing this quantity on assigned moves affects "
-                "the product reservation, and should be done with care."
+            "point of view. For moves in the state 'done', this is the "
+            "quantity of products that were actually moved. For other "
+            "moves, this is the quantity of product that is planned to "
+            "be moved. Lowering this quantity does not generate a "
+            "backorder. Changing this quantity on assigned moves affects "
+            "the product reservation, and should be done with care."
         ),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]}),
         'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
@@ -1697,7 +1697,7 @@ class stock_move(osv.osv):
                                    ('assigned', 'Available'),
                                    ('done', 'Done'),
                                    ], 'Status', readonly=True, select=True, copy=False,
-                 help= "* New: When the stock move is created and not yet confirmed.\n"
+                 help="* New: When the stock move is created and not yet confirmed.\n"
                        "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
                        "* Available: When products are reserved, it is set to \'Available\'.\n"
@@ -2009,10 +2009,10 @@ class stock_move(osv.osv):
         """
         pick_obj = self.pool.get("stock.picking")
         picks = pick_obj.search(cr, uid, [
-                ('group_id', '=', procurement_group),
-                ('location_id', '=', location_from),
-                ('location_dest_id', '=', location_to),
-                ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
+            ('group_id', '=', procurement_group),
+            ('location_id', '=', location_from),
+            ('location_dest_id', '=', location_to),
+            ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
         if picks:
             pick = picks[0]
         else:
@@ -2729,17 +2729,17 @@ class stock_inventory_line(osv.osv):
         'theoretical_qty': fields.float('Theoretical Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
         'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
-                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20), }),
+            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20), }),
         'product_code': fields.related('product_id', 'default_code', type='char', string='Product Code', store={
-                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20), }),
+            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20), }),
         'location_name': fields.related('location_id', 'complete_name', type='char', string='Location Name', store={
                                                                                             'stock.location': (_get_location_change, ['name', 'location_id', 'active'], 20),
                                                                                             'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id'], 20), }),
         'prodlot_name': fields.related('prod_lot_id', 'name', type='char', string='Serial Number Name', store={
-                                                                                            'stock.production.lot': (_get_prodlot_change, ['name'], 20),
-                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20), }),
+            'stock.production.lot': (_get_prodlot_change, ['name'], 20),
+            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20), }),
     }
 
     _defaults = {
@@ -2830,12 +2830,12 @@ class stock_warehouse(osv.osv):
             ('one_step', 'Receive goods directly in stock (1 step)'),
             ('two_steps', 'Unload in input location then go to stock (2 steps)'),
             ('three_steps', 'Unload in input location, go through a quality control before being admitted in stock (3 steps)')], 'Incoming Shipments',
-                                            help="Default incoming route to follow", required=True),
+            help="Default incoming route to follow", required=True),
         'delivery_steps': fields.selection([
             ('ship_only', 'Ship directly from stock (Ship only)'),
             ('pick_ship', 'Bring goods to output location before shipping (Pick + Ship)'),
             ('pick_pack_ship', 'Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)')], 'Outgoing Shippings',
-                                           help="Default outgoing route to follow", required=True),
+            help="Default outgoing route to follow", required=True),
         'wh_input_stock_loc_id': fields.many2one('stock.location', 'Input Location'),
         'wh_qc_stock_loc_id': fields.many2one('stock.location', 'Quality Control Location'),
         'wh_output_stock_loc_id': fields.many2one('stock.location', 'Output Location'),
@@ -3279,9 +3279,9 @@ class stock_warehouse(osv.osv):
 
         # create view location for warehouse
         loc_vals = {
-                'name': _(vals.get('code')),
-                'usage': 'view',
-                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
+            'name': _(vals.get('code')),
+            'usage': 'view',
+            'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
         }
         if vals.get('company_id'):
             loc_vals['company_id'] = vals.get('company_id')
@@ -3531,9 +3531,9 @@ class stock_location_path(osv.osv):
             'Automatic Move',
             required=True, select=1,
             help="This is used to define paths the product has to follow within the location tree.\n"
-                "The 'Automatic Move' value will create a stock move after the current one that will be "
-                "validated automatically. With 'Manual Operation', the stock move has to be validated "
-                "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+            "The 'Automatic Move' value will create a stock move after the current one that will be "
+            "validated automatically. With 'Manual Operation', the stock move has to be validated "
+            "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
         ),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when the previous move is cancelled or split, the move generated by this move will too'),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
@@ -3556,16 +3556,16 @@ class stock_location_path(osv.osv):
     def _prepare_push_apply(self, cr, uid, rule, move, context=None):
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {
-                'location_id': move.location_dest_id.id,
-                'location_dest_id': rule.location_dest_id.id,
-                'date': newdate,
-                'company_id': rule.company_id and rule.company_id.id or False,
-                'date_expected': newdate,
-                'picking_id': False,
-                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'propagate': rule.propagate,
-                'push_rule_id': rule.id,
-                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
+            'location_id': move.location_dest_id.id,
+            'location_dest_id': rule.location_dest_id.id,
+            'date': newdate,
+            'company_id': rule.company_id and rule.company_id.id or False,
+            'date_expected': newdate,
+            'picking_id': False,
+            'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
+            'propagate': rule.propagate,
+            'push_rule_id': rule.id,
+            'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
         }
 
     def _apply(self, cr, uid, rule, move, context=None):
@@ -3679,8 +3679,8 @@ class stock_package(osv.osv):
                                     }, readonly=True, select=True),
         'owner_id': fields.function(_get_package_info, type='many2one', relation='res.partner', string='Owner', multi="package",
                                 store={
-                                       'stock.quant': (_get_packages, ['owner_id'], 10),
-                                       'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
+                                    'stock.quant': (_get_packages, ['owner_id'], 10),
+                                    'stock.quant.package': (_get_packages_to_relocate, ['quant_ids', 'children_ids', 'parent_id'], 10),
                                 }, readonly=True, select=True),
     }
     _defaults = {

@@ -40,14 +40,14 @@ class base_language_export(osv.osv_memory):
         return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + [(lang.code, lang.name) for lang in langs]
 
     _columns = {
-            'name': fields.char('File Name', readonly=True),
-            'lang': fields.selection(_get_languages, 'Language', required=True),
-            'format': fields.selection([('csv', 'CSV File'),
+        'name': fields.char('File Name', readonly=True),
+        'lang': fields.selection(_get_languages, 'Language', required=True),
+        'format': fields.selection([('csv', 'CSV File'),
                                         ('po', 'PO File'),
                                         ('tgz', 'TGZ Archive')], 'File Format', required=True),
-            'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules To Export', domain=[('state', '=', 'installed')]),
-            'data': fields.binary('File', readonly=True),
-            'state': fields.selection([('choose', 'choose'),   # choose language
+        'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules To Export', domain=[('state', '=', 'installed')]),
+        'data': fields.binary('File', readonly=True),
+        'state': fields.selection([('choose', 'choose'),   # choose language
                                        ('get', 'get')])        # get the file
     }
     _defaults = {

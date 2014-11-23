@@ -648,10 +648,10 @@ class test_m2o(ImporterCase):
 
         # Because name_search all the things. Fallback schmallback
         result = self.import_(['value'], [
-                # import by id, without specifying it
-                [integer_id1],
-                [integer_id2],
-                [integer_id1],
+            # import by id, without specifying it
+            [integer_id1],
+            [integer_id2],
+            [integer_id1],
         ])
         self.assertEqual(result['messages'], [
             message(u"No matching record found for name '%s' in field 'unknown'" % id,
@@ -721,15 +721,15 @@ class test_m2m(ImporterCase):
     # m2m/.id, m2m/id or m2m[/anythingelse]
     def test_ids(self):
         id1 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
         id2 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
         id3 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
         id4 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         id5 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
 
         result = self.import_(['value/.id'], [
             ['%d,%d' % (id1, id2)],

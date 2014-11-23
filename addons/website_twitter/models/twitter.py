@@ -61,10 +61,10 @@ class TwitterClient(osv.osv):
                 continue
             params = {'screen_name': website.twitter_screen_name}
             last_tweet = website_tweets.search_read(
-                    cr, uid, [('website_id', '=', website.id),
+                cr, uid, [('website_id', '=', website.id),
                               ('screen_name', '=', website.twitter_screen_name)],
-                    ['tweet_id'],
-                    limit=1, order='tweet_id desc', context=context)
+                ['tweet_id'],
+                limit=1, order='tweet_id desc', context=context)
             if last_tweet:
                 params['since_id'] = int(last_tweet[0]['tweet_id'])
             _logger.debug("Fetching favorite tweets using params %r", params)
@@ -74,14 +74,14 @@ class TwitterClient(osv.osv):
                 tweet_ids = website_tweets.search(cr, uid, [('tweet_id', '=', tweet_id)])
                 if not tweet_ids:
                     new_tweet = website_tweets.create(
-                            cr, uid,
-                            {
-                              'website_id': website.id,
-                              'tweet': json.dumps(tweet_dict),
-                              'tweet_id': tweet_id,  # stored in NUMERIC PG field
-                              'screen_name': website.twitter_screen_name,
-                            },
-                            context=context)
+                        cr, uid,
+                        {
+                            'website_id': website.id,
+                            'tweet': json.dumps(tweet_dict),
+                            'tweet_id': tweet_id,  # stored in NUMERIC PG field
+                            'screen_name': website.twitter_screen_name,
+                        },
+                        context=context)
                     _logger.debug("Found new favorite: %r, %r", tweet_id, tweet_dict)
                     tweet_ids.append(new_tweet)
         return tweet_ids

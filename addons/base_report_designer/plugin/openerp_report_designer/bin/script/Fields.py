@@ -57,8 +57,8 @@ class Fields(unohelper.Base, XJobExecutor):
         self.win.addFixedText("lblUName", 8, 187, 60, 15, "Displayed name :")
         self.win.addEdit("txtUName", 180 - 120 - 2, 185, 130, 15,)
 
-        self.win.addButton('btnOK', -5, -5, 45, 15, 'Ok', actionListenerProc = self.btnOk_clicked)
-        self.win.addButton('btnCancel', -5 - 45 - 5, -5, 45, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnOK', -5, -5, 45, 15, 'Ok', actionListenerProc=self.btnOk_clicked)
+        self.win.addButton('btnCancel', -5 - 45 - 5, -5, 45, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
 
         global passwd
         self.password = passwd

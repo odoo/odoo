@@ -247,7 +247,7 @@ class website_event(http.Controller):
             if country_code and event.country_id.code == country_code:
                 result['country'] = country_obj.browse(cr, uid, country_ids[0], context=context)
             result['events'].append({
-                 "date": self.get_formated_date(event),
-                 "event": event,
-                 "url": event.website_url})
+                "date": self.get_formated_date(event),
+                "event": event,
+                "url": event.website_url})
         return request.website.render("website_event.country_events_list", result)

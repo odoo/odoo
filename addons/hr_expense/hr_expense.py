@@ -70,7 +70,7 @@ class hr_expense_expense(osv.osv):
         'name': fields.char('Description', required=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
-        'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', help="The journal used when the expense is done."),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, copy=False,
@@ -214,7 +214,7 @@ class hr_expense_expense(osv.osv):
                 i['amount_currency'] = i['price']
                 i['price'] = cur_obj.compute(cr, uid, exp.currency_id.id,
                         company_currency, i['price'],
-                        context=context)
+                    context=context)
             else:
                 i['amount_currency'] = False
                 i['currency_id'] = False
@@ -245,15 +245,15 @@ class hr_expense_expense(osv.osv):
             total, total_currency, eml = self.compute_expense_totals(cr, uid, exp, company_currency, exp.name, eml, context=context)
             acc = exp.employee_id.address_home_id.property_account_payable.id
             eml.append({
-                    'type': 'dest',
-                    'name': '/',
-                    'price': total,
-                    'account_id': acc,
-                    'date_maturity': exp.date_confirm,
-                    'amount_currency': diff_currency_p and total_currency or False,
-                    'currency_id': diff_currency_p and exp.currency_id.id or False,
-                    'ref': exp.name
-                    })
+                'type': 'dest',
+                'name': '/',
+                'price': total,
+                'account_id': acc,
+                'date_maturity': exp.date_confirm,
+                'amount_currency': diff_currency_p and total_currency or False,
+                'currency_id': diff_currency_p and exp.currency_id.id or False,
+                'ref': exp.name
+            })
 
             # convert eml into an osv-valid format
             lines = map(lambda x: (0, 0, self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)), eml)
@@ -320,15 +320,15 @@ class hr_expense_expense(osv.osv):
                     base_tax_amount = base_tax_amount * tax['base_sign']
 
                 assoc_tax = {
-                             'type': 'tax',
-                             'name': tax['name'],
-                             'price_unit': tax['price_unit'],
-                             'quantity': 1,
-                             'price': tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'] or mres['account_id'],
-                             'tax_code_id': tax['tax_code_id'],
-                             'tax_amount': tax['amount'] * tax['base_sign'],
-                             }
+                    'type': 'tax',
+                    'name': tax['name'],
+                    'price_unit': tax['price_unit'],
+                    'quantity': 1,
+                    'price': tax['amount'] * tax['base_sign'] or 0.0,
+                    'account_id': tax['account_collected_id'] or mres['account_id'],
+                    'tax_code_id': tax['tax_code_id'],
+                    'tax_amount': tax['amount'] * tax['base_sign'],
+                }
                 tax_l.append(assoc_tax)
 
             res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
@@ -413,7 +413,7 @@ class hr_expense_line(osv.osv):
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
-        'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
+        'unit_quantity': fields.float('Quantities', digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok', '=', True)]),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),

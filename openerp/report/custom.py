@@ -349,8 +349,8 @@ class report_custom(report_int):
 
         ar = area.T(size=(350, 350),
         #x_coord = category_coord.T(['2005-09-01','2005-10-22'],0),
-        x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
-        y_axis = axis.Y(label = ', '.join(map(lambda x: x['name'], fields[1:]))))
+        x_axis = axis.X(label=fields[0]['name'], format="/a-30{}%s"),
+        y_axis = axis.Y(label=', '.join(map(lambda x: x['name'], fields[1:]))))
 
         process_date = {
             'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
@@ -427,7 +427,7 @@ class report_custom(report_int):
                     if fields[idx + 1]['cumulate']:
                         prev += data[k]
                 idx0 = 0
-                plot = line_plot.T(label=fields[idx + 1]['name'] + ' ' + str(line), data = data_cum, line_style=colors[idx0 * (len(fields) - 1) + idx])
+                plot = line_plot.T(label=fields[idx + 1]['name'] + ' ' + str(line), data=data_cum, line_style=colors[idx0 * (len(fields) - 1) + idx])
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
                 idx0 += 1
@@ -462,8 +462,8 @@ class report_custom(report_int):
         }
 
         ar = area.T(size=(350, 350),
-            x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
-            y_axis = axis.Y(label = ', '.join(map(lambda x: x['name'], fields[1:]))))
+            x_axis = axis.X(label=fields[0]['name'], format="/a-30{}%s"),
+            y_axis = axis.Y(label=', '.join(map(lambda x: x['name'], fields[1:]))))
 
         idx = 0
         date_idx = None
@@ -527,7 +527,7 @@ class report_custom(report_int):
                         prev += data[k]
 
                 idx0 = 0
-                plot = bar_plot.T(label=fields[idx + 1]['name'] + ' ' + str(line), data = data_cum, cluster=(idx0 * (len(fields) - 1) + idx, nb_bar), fill_style=colors[idx0 * (len(fields) - 1) + idx])
+                plot = bar_plot.T(label=fields[idx + 1]['name'] + ' ' + str(line), data=data_cum, cluster=(idx0 * (len(fields) - 1) + idx, nb_bar), fill_style=colors[idx0 * (len(fields) - 1) + idx])
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
             idx0 += 1
@@ -553,7 +553,7 @@ class report_custom(report_int):
             raise except_osv(_('Error'), _("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
 
         plot = pie_plot.T(data=results, arc_offsets=[0, 10, 0, 10],
-                          shadow = (2, -2, fill_style.gray50),
+                          shadow=(2, -2, fill_style.gray50),
                           label_offset = 25,
                           arrow_style = arrow.a3,
                           fill_styles=colors)

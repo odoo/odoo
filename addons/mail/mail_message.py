@@ -123,10 +123,10 @@ class mail_message(osv.Model):
 
     _columns = {
         'type': fields.selection([
-                        ('email', 'Email'),
-                        ('comment', 'Comment'),
-                        ('notification', 'System notification'),
-                        ], 'Type', size=12,
+            ('email', 'Email'),
+            ('comment', 'Comment'),
+            ('notification', 'System notification'),
+        ], 'Type', size=12,
             help="Message type: email for email message, notification for system "
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
@@ -892,7 +892,7 @@ class mail_message(osv.Model):
             partners_to_parent_notify = set(message.notified_partner_ids).difference(message.parent_id.notified_partner_ids)
             for partner in partners_to_parent_notify:
                 notification_obj.create(cr, uid, {
-                        'message_id': message.parent_id.id,
-                        'partner_id': partner.id,
-                        'is_read': True,
+                    'message_id': message.parent_id.id,
+                    'partner_id': partner.id,
+                    'is_read': True,
                 }, context=context)

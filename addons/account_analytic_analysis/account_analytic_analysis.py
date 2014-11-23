@@ -51,7 +51,7 @@ class account_analytic_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'price_unit': fields.float('Unit Price', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float", digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float", digits_compute=dp.get_precision('Account')),
     }
     _defaults = {
         'quantity': 1,
@@ -466,8 +466,8 @@ class account_analytic_account(osv.osv):
     _columns = {
         'is_overdue_quantity': fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                store={
-                                                    'account.analytic.line': (_get_analytic_account, None, 20),
-                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
+                                                   'account.analytic.line': (_get_analytic_account, None, 20),
+                                                   'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",

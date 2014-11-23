@@ -33,17 +33,17 @@ class hr_holidays_summary_employee(osv.osv_memory):
     }
 
     _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved',
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'holiday_type': 'Approved',
     }
 
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         data['emp'] = context['active_ids']
         datas = {
-             'ids': [],
-             'model': 'hr.employee',
-             'form': data
+            'ids': [],
+            'model': 'hr.employee',
+            'form': data
         }
         return {
             'type': 'ir.actions.report.xml',

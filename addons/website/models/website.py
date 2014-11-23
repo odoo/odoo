@@ -171,7 +171,7 @@ class website(osv.osv):
         'user_id': fields.many2one('res.users', string='Public User'),
         'partner_id': fields.related('user_id', 'partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
+            store={
                 'website.menu': (_get_menu_website, ['sequence', 'parent_id', 'website_id'], 10)
             })
     }
@@ -728,7 +728,7 @@ class ir_attachment(osv.osv):
         'datas_checksum': fields.function(_datas_checksum, size=40,
               string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
-        'datas_big': fields.function (_datas_big, type='binary', store=True,
+        'datas_big': fields.function(_datas_big, type='binary', store=True,
                                       string="Resized file content"),
         'mimetype': fields.char('Mime Type', readonly=True),
     }

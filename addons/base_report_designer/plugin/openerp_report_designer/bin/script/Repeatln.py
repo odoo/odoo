@@ -63,9 +63,9 @@ class RepeatIn(unohelper.Base, XJobExecutor):
         self.win.addFixedText("lblUName", 8, 207, 60, 15, "Displayed name :")
         self.win.addEdit("txtUName", 180 - 120 - 2, 205, 120, 15,)
 
-        self.win.addButton('btnOK', -2, -10, 45, 15, 'Ok', actionListenerProc = self.btnOk_clicked)
+        self.win.addButton('btnOK', -2, -10, 45, 15, 'Ok', actionListenerProc=self.btnOk_clicked)
 
-        self.win.addButton('btnCancel', -2 - 45 - 5, -10, 45, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnCancel', -2 - 45 - 5, -10, 45, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
 
         global passwd
         self.password = passwd

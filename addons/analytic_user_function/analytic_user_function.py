@@ -111,14 +111,14 @@ class hr_analytic_timesheet(osv.osv):
                 raise osv.except_osv(_('Error!'),
                         _('There is no expense account defined '
                           'for this product: "%s" (id:%d)') %
-                                (r.product_id.name, r.product_id.id,))
+                    (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
             if unit_amount:
                 amount_unit = self.on_change_unit_amount(cr, uid, ids,
                             r.product_id.id, unit_amount, False, r.product_id.uom_id.id)['value']['amount']
                 amount = unit_amount *  amount_unit
-                res ['value']['amount'] = - round(amount, 2)
-            res ['value']['general_account_id'] = a
+                res['value']['amount'] = - round(amount, 2)
+            res['value']['general_account_id'] = a
         return res
 
     def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
@@ -140,22 +140,22 @@ class hr_analytic_timesheet(osv.osv):
                     raise osv.except_osv(_('Error!'),
                             _('There is no expense account defined '
                               'for this product: "%s" (id:%d)') %
-                                    (r.product_id.name, r.product_id.id,))
+                        (r.product_id.name, r.product_id.id,))
                 # Compute based on pricetype
                 if unit_amount:
                     amount_unit = self.on_change_unit_amount(cr, uid, ids,
                         r.product_id.id, unit_amount, False, r.product_id.uom_id.id)['value']['amount']
 
                     amount = unit_amount * amount_unit
-                    res ['value']['amount'] = - round(amount, 2)
-                res ['value']['general_account_id'] = a
+                    res['value']['amount'] = - round(amount, 2)
+                res['value']['general_account_id'] = a
         return res
 
 
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
 
-    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context={}):
         for grid in account.user_product_ids:
             if grid.user_id.id == user_id:
                 return grid.price

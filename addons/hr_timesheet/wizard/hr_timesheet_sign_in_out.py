@@ -37,7 +37,7 @@ class hr_so_project(osv.osv_memory):
         'state': fields.related('emp_id', 'state', string='Current Status', type='selection', selection=[('present', 'Present'), ('absent', 'Absent')], required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
-                }
+    }
 
     def _get_empid(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
@@ -115,7 +115,7 @@ class hr_si_project(osv.osv_memory):
         'date': fields.datetime('Starting Date'),
         'server_date': fields.datetime('Current Date', readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
-                }
+    }
 
     def view_init(self, cr, uid, fields, context=None):
         """

@@ -39,7 +39,7 @@ class hr_recruitment_report(osv.Model):
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
+        'stage_id': fields.many2one('hr.recruitment.stage', 'Stage'),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department', readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
@@ -51,7 +51,7 @@ class hr_recruitment_report(osv.Model):
         'available': fields.float("Availability"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16, 2), readonly=True, group_operator="avg",
                                     help="Number of Days to close the project issue"),
-        'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
+        'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage'),
     }
 
     def init(self, cr):

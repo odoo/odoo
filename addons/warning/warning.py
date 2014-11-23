@@ -23,10 +23,10 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 WARNING_MESSAGE = [
-                   ('no-message', 'No Message'),
-                   ('warning', 'Warning'),
-                   ('block', 'Blocking Message')
-                   ]
+    ('no-message', 'No Message'),
+    ('warning', 'Warning'),
+    ('block', 'Blocking Message')
+]
 
 WARNING_HELP = _('Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.')
 
@@ -44,10 +44,10 @@ class res_partner(osv.osv):
         'invoice_warn_msg': fields.text('Message for Invoice'),
     }
     _defaults = {
-         'sale_warn': 'no-message',
-         'purchase_warn': 'no-message',
-         'picking_warn': 'no-message',
-         'invoice_warn': 'no-message',
+        'sale_warn': 'no-message',
+        'purchase_warn': 'no-message',
+        'picking_warn': 'no-message',
+        'invoice_warn': 'no-message',
     }
 
 
@@ -65,8 +65,8 @@ class sale_order(osv.osv):
             title =  _("Warning for %s") % partner.name
             message = partner.sale_warn_msg
             warning = {
-                    'title': title,
-                    'message': message,
+                'title': title,
+                'message': message,
             }
             if partner.sale_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
@@ -179,15 +179,15 @@ class stock_picking(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.template'
     _columns = {
-         'sale_line_warn': fields.selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True),
-         'sale_line_warn_msg': fields.text('Message for Sales Order Line'),
-         'purchase_line_warn': fields.selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True),
-         'purchase_line_warn_msg': fields.text('Message for Purchase Order Line'),
+        'sale_line_warn': fields.selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True),
+        'sale_line_warn_msg': fields.text('Message for Sales Order Line'),
+        'purchase_line_warn': fields.selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True),
+        'purchase_line_warn_msg': fields.text('Message for Purchase Order Line'),
      }
 
     _defaults = {
-         'sale_line_warn': 'no-message',
-         'purchase_line_warn': 'no-message',
+        'sale_line_warn': 'no-message',
+        'purchase_line_warn': 'no-message',
     }
 
 

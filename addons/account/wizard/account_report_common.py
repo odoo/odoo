@@ -42,7 +42,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     _columns = {
-        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id', '=', False)]),
+        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain=[('parent_id', '=', False)]),
         'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
@@ -141,12 +141,12 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid, [])
 
     _defaults = {
-            'fiscalyear_id': _get_fiscalyear,
-            'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report', context=c),
-            'journal_ids': _get_all_journal,
-            'filter': 'filter_no',
-            'chart_account_id': _get_account,
-            'target_move': 'posted',
+        'fiscalyear_id': _get_fiscalyear,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report', context=c),
+        'journal_ids': _get_all_journal,
+        'filter': 'filter_no',
+        'chart_account_id': _get_account,
+        'target_move': 'posted',
     }
 
     def _build_contexts(self, cr, uid, ids, data, context=None):

@@ -40,7 +40,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, witm_trans, processed_subflo
             processed_subflows.add(n['subflow_id'])  # don't create multiple times the same cluster.
             cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
-            graph2 = pydot.Cluster('subflow' + str(n['subflow_id']), fontsize='12', label = "\"Subflow: %s\\nOSV: %s\"" % (n['name'], wkfinfo['osv']))
+            graph2 = pydot.Cluster('subflow' + str(n['subflow_id']), fontsize='12', label="\"Subflow: %s\\nOSV: %s\"" % (n['name'], wkfinfo['osv']))
             (s1, s2) = graph_get(cr, graph2, [n['subflow_id']], True, workitem, witm_trans, processed_subflows)
             graph.add_subgraph(graph2)
             actfrom[n['id']] = s2

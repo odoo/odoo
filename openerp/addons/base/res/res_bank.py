@@ -167,8 +167,8 @@ class res_partner_bank(osv.osv):
                 if field.name in res:
                     res[field.name].setdefault('states', {})
                     res[field.name]['states'][type.code] = [
-                            ('readonly', field.readonly),
-                            ('required', field.required)]
+                        ('readonly', field.readonly),
+                        ('required', field.required)]
         return res
 
     def _prepare_name_get(self, cr, uid, bank_dicts, context=None):

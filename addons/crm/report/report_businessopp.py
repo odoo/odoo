@@ -109,7 +109,7 @@ class report_custom(report_int):
 #-echelle variable
 
         pdf_string = StringIO.StringIO()
-        can = canvas.init(fname = pdf_string, format = 'pdf')
+        can = canvas.init(fname=pdf_string, format='pdf')
 
         chart_object.set_defaults(line_plot.T, line_style=None)
 
@@ -122,7 +122,7 @@ class report_custom(report_int):
             y_range_a += 0.0001
 
         ar = area.T(
-            size = (300, 200),
+            size=(300, 200),
             y_grid_interval = 10000,
             y_grid_style = None,
             x_range = (x_range_a, x_range_b),
@@ -141,19 +141,19 @@ class report_custom(report_int):
         ar.draw(can)
 
         # second graph (top right)
-        ar = area.T(legend = legend.T(),
-                    size = (200, 100),
+        ar = area.T(legend=legend.T(),
+                    size=(200, 100),
                     loc = (100, 250),
                     x_grid_interval = lambda min, max: [40, 60, 80, 100],
                     x_grid_style = line_style.gray70_dash1,
                     x_range = (33, 100),
-                    x_axis = axis.X(label=None, minor_tic_interval = lambda min, max: [50, 70, 90],
+                    x_axis = axis.X(label=None, minor_tic_interval=lambda min, max: [50, 70, 90],
                                     format=lambda x: ""),
                     y_axis = axis.Y(label="Planned amounts"))
 
         bar_plot.fill_styles.reset();
         plot1 = bar_plot.T(label="Cost", data=data, fill_style=fill_style.red)
-        plot2 = bar_plot.T(label="Revenue", data=data, hcol=2, stack_on = plot1, fill_style=fill_style.blue)
+        plot2 = bar_plot.T(label="Revenue", data=data, hcol=2, stack_on=plot1, fill_style=fill_style.blue)
 
         ar.add_plot(plot1, plot2)
 

@@ -74,8 +74,8 @@ class NewReport(unohelper.Base, XJobExecutor):
         for i in range(len(res)):
             self.lstModule.addItem(res[i]['name'], self.lstModule.getItemCount())
             self.aModuleName.append(res[i]['model'])
-        self.win.addButton('btnOK', -2, -5, 70, 15, 'Use Module in Report', actionListenerProc = self.btnOk_clicked)
-        self.win.addButton('btnCancel', -2 - 70 - 5, -5, 35, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnOK', -2, -5, 70, 15, 'Use Module in Report', actionListenerProc=self.btnOk_clicked)
+        self.win.addButton('btnCancel', -2 - 70 - 5, -5, 35, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
         self.win.doModalDialog("", None)
 
     def btnOk_clicked(self, oActionEvent):
@@ -93,8 +93,8 @@ if __name__ <> "package" and __name__ == "__main__":
     NewReport(None)
 elif __name__ == "package":
     g_ImplementationHelper.addImplementation(
-            NewReport,
-            "org.openoffice.openerp.report.opennewreport",
-            ("com.sun.star.task.Job",),)
+        NewReport,
+        "org.openoffice.openerp.report.opennewreport",
+        ("com.sun.star.task.Job",),)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

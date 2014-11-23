@@ -190,10 +190,10 @@ class ir_mail_server(osv.osv):
     }
 
     _defaults = {
-         'smtp_port': 25,
-         'active': True,
-         'sequence': 10,
-         'smtp_encryption': 'none',
+        'smtp_port': 25,
+        'active': True,
+        'sequence': 10,
+        'smtp_encryption': 'none',
      }
 
     def __init__(self, *args, **kwargs):
@@ -241,8 +241,8 @@ class ir_mail_server(osv.osv):
         if encryption == 'ssl':
             if not 'SMTP_SSL' in smtplib.__all__:
                 raise osv.except_osv(
-                             _("SMTP-over-SSL mode unavailable"),
-                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                    _("SMTP-over-SSL mode unavailable"),
+                    _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
                                "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
             connection = smtplib.SMTP_SSL(host, port)
         else:
@@ -459,8 +459,8 @@ class ir_mail_server(osv.osv):
 
         if not smtp_server:
             raise osv.except_osv(
-                         _("Missing SMTP Server"),
-                         _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
+                _("Missing SMTP Server"),
+                _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
             message_id = message['Message-Id']
@@ -469,7 +469,7 @@ class ir_mail_server(osv.osv):
             if smtp_server.startswith('maildir:/'):
                 from mailbox import Maildir
                 maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path, factory=None, create = True)
+                mdir = Maildir(maildir_path, factory=None, create=True)
                 mdir.add(message.as_string(True))
                 return message_id
 

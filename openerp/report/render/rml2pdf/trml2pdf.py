@@ -52,7 +52,7 @@ encoding = 'utf-8'
 
 def select_fontname(fontname, default_fontname):
     if fontname not in pdfmetrics.getRegisteredFontNames()\
-         or fontname not in pdfmetrics.standardFonts:
+        or fontname not in pdfmetrics.standardFonts:
         # let reportlab attempt to find it
         try:
             pdfmetrics.getFont(fontname)
@@ -108,8 +108,8 @@ class NumberedCanvas(canvas.Canvas):
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0] - 30), (self._pagesize[1] - 40),
             " %(this)i / %(total)i" % {
-               'this': self._pageNumber,
-               'total': page_count,
+            'this': self._pageNumber,
+            'total': page_count,
         }
         )
 
@@ -744,7 +744,7 @@ class _rml_flowable(object):
             rowheights = [utils.unit_get(f.strip()) for f in node.get('rowHeights').split(',')]
             if len(rowheights) == 1:
                 rowheights = rowheights[0]
-        table = platypus.LongTable(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'], {'repeatRows': 'int', 'repeatCols': 'int'})))
+        table = platypus.LongTable(data=data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'], {'repeatRows': 'int', 'repeatCols': 'int'})))
         if node.get('style'):
             table.setStyle(self.styles.table_styles[node.get('style')])
         for s in styles:

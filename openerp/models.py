@@ -445,7 +445,7 @@ class BaseModel(object):
                     %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], 'base',
+                    vals['relation'], 'base',
                     vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
@@ -465,9 +465,9 @@ class BaseModel(object):
                             select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'],
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
+                            vals['model_id'], vals['field_description'], vals['ttype'],
+                            vals['relation'],
+                            vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                         ))
                         break
         self.invalidate_cache(cr, SUPERUSER_ID)
@@ -1010,7 +1010,7 @@ class BaseModel(object):
             for res_id, xml_id, res, info in self._convert_records(cr, uid,
                             self._extract_records(cr, uid, fields, datas,
                                                   context=context, log=log),
-                            context=context, log=log):
+                context=context, log=log):
                 ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
@@ -1072,8 +1072,7 @@ class BaseModel(object):
                 # broken transaction, exit and hope the source error was
                 # already logged
                 if not any(message['type'] == 'error' for message in messages):
-                    messages.append(dict(info, type='error', message=
-                        u"Unknown database error: '%s'" % e))
+                    messages.append(dict(info, type='error', message=u"Unknown database error: '%s'" % e))
                 break
             try:
                 ids.append(ModelData._update(cr, uid, self._name,
@@ -1161,7 +1160,7 @@ class BaseModel(object):
             record_span = list(itertools.chain([row], record_span))
             for relfield in set(
                     field[0] for field in fields_
-                             if is_relational(field[0])):
+                if is_relational(field[0])):
                 # FIXME: how to not use _obj without relying on fields_get?
                 Model = self.pool[fields[relfield].comodel_name]
 
@@ -1277,7 +1276,7 @@ class BaseModel(object):
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 errors.append(
                     _("Field(s) `%s` failed against a constraint: %s") %
-                        (', '.join(names), res_msg)
+                    (', '.join(names), res_msg)
                 )
         if errors:
             raise ValidationError('\n'.join(errors))
@@ -3217,12 +3216,12 @@ class BaseModel(object):
                     WHERE %(table)s.id IN %%s AND (%(extra)s)
                     ORDER BY %(order)s
                 """ % {
-                    'qual_names': ",".join(qual_names),
-                    'tables': ",".join(tables),
-                    'table': self._table,
-                    'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
-                    'order': self._parent_order or self._order,
-                }
+            'qual_names': ",".join(qual_names),
+            'tables': ",".join(tables),
+            'table': self._table,
+            'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
+            'order': self._parent_order or self._order,
+        }
 
         result = []
         for sub_ids in cr.split_for_in_conditions(self.ids):
@@ -3556,7 +3555,7 @@ class BaseModel(object):
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
                     ['|', ('value', 'in', ['%s,%s' % (self._name, sid) for sid in sub_ids]), '&', ('res_id', 'in', list(sub_ids)), ('model', '=', self._name)],
-                    context=context)
+                context=context)
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
@@ -3737,11 +3736,11 @@ class BaseModel(object):
             parent_val = vals[self._parent_name]
             if parent_val:
                 query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, self._parent_name, parent_order)
+                    (self._table, self._parent_name, self._parent_name, parent_order)
                 cr.execute(query, (tuple(ids), parent_val))
             else:
                 query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, parent_order)
+                    (self._table, self._parent_name, parent_order)
                 cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
@@ -4698,8 +4697,8 @@ class BaseModel(object):
                     continue
 
                 trans_ids = trans_obj.search(cr, uid, [
-                        ('name', '=', trans_name),
-                        ('res_id', '=', source_id)
+                    ('name', '=', trans_name),
+                    ('res_id', '=', source_id)
                 ])
                 user_lang = context.get('lang')
                 for record in trans_obj.read(cr, uid, trans_ids, context=context):

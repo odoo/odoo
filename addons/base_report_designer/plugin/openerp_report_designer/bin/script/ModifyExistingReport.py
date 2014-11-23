@@ -93,9 +93,9 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
         for id, report_name, model_name in self.report_with_id:
             self.lstReport.addItem(report_name, self.lstReport.getItemCount())
 
-        self.win.addButton('btnSave', 10, -5, 50, 15, 'Open Report', actionListenerProc = self.btnOk_clicked)
-        self.win.addButton('btnCancel', -10, -5, 50, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
-        self.win.addButton('btnDelete', 15 - 80, -5, 50, 15, 'Delete Report', actionListenerProc = self.btnDelete_clicked)
+        self.win.addButton('btnSave', 10, -5, 50, 15, 'Open Report', actionListenerProc=self.btnOk_clicked)
+        self.win.addButton('btnCancel', -10, -5, 50, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
+        self.win.addButton('btnDelete', 15 - 80, -5, 50, 15, 'Delete Report', actionListenerProc=self.btnDelete_clicked)
         self.win.doModalDialog("lstReport", self.report_with_id[0][1])
 
     def btnOk_clicked(self, oActionEvent):
@@ -162,7 +162,7 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
         docinfo = doc.getDocumentInfo()
 
         selectedItemPos = self.win.getListBoxSelectedItemPos("lstReport")
-        name = self.win.getListBoxSelectedItem ("lstReport")
+        name = self.win.getListBoxSelectedItem("lstReport")
         id = self.report_with_id[selectedItemPos][0]
         temp = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'unlink', id,)
         str_value = 'ir.actions.report.xml,' + str(id)

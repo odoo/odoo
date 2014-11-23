@@ -71,14 +71,14 @@ class analytic_account_budget_report(report_sxw.rml_parse):
             for i in range(0, len(budget_ids)):
                 budget_name = obj_c_budget.browse(self.cr, self.uid, [budget_ids[i][0]])
                 res = {
-                     'b_id': '-1',
-                     'a_id': '-1',
-                     'name': budget_name[0].name,
-                     'status': 1,
-                     'theo': 0.00,
-                     'pln': 0.00,
-                     'prac': 0.00,
-                     'perc': 0.00
+                    'b_id': '-1',
+                    'a_id': '-1',
+                    'name': budget_name[0].name,
+                    'status': 1,
+                    'theo': 0.00,
+                    'pln': 0.00,
+                    'prac': 0.00,
+                    'perc': 0.00
                 }
                 result.append(res)
 
@@ -105,14 +105,14 @@ class analytic_account_budget_report(report_sxw.rml_parse):
                                     tot_perc += line.percentage
                         else:
                             res1 = {
-                                 'b_id': line.general_budget_id.id,
-                                 'a_id': line.analytic_account_id.id,
-                                 'name': line.general_budget_id.name,
-                                 'status': 2,
-                                 'theo': theo,
-                                 'pln': line.planned_amount,
-                                 'prac': pract,
-                                 'perc': line.percentage
+                                'b_id': line.general_budget_id.id,
+                                'a_id': line.analytic_account_id.id,
+                                'name': line.general_budget_id.name,
+                                'status': 2,
+                                'theo': theo,
+                                'pln': line.planned_amount,
+                                'prac': pract,
+                                'perc': line.percentage
                             }
                             tot_theo += theo
                             tot_pln += line.planned_amount
@@ -125,14 +125,14 @@ class analytic_account_budget_report(report_sxw.rml_parse):
                             continue
                         else:
                             res1 = {
-                                    'b_id': line.general_budget_id.id,
-                                    'a_id': line.analytic_account_id.id,
-                                     'name': line.general_budget_id.name,
-                                     'status': 2,
-                                     'theo': 0.00,
-                                     'pln': 0.00,
-                                     'prac': 0.00,
-                                     'perc': 0.00
+                                'b_id': line.general_budget_id.id,
+                                'a_id': line.analytic_account_id.id,
+                                'name': line.general_budget_id.name,
+                                'status': 2,
+                                'theo': 0.00,
+                                'pln': 0.00,
+                                'prac': 0.00,
+                                'perc': 0.00
                             }
                             result.append(res1)
                             done_budget.append(line.general_budget_id.id)
@@ -158,10 +158,10 @@ class analytic_account_budget_report(report_sxw.rml_parse):
         result = []
         res = {}
         res = {
-             'tot_theo': tot['theo'],
-             'tot_pln': tot['pln'],
-             'tot_prac': tot['prac'],
-             'tot_perc': tot['perc']
+            'tot_theo': tot['theo'],
+            'tot_pln': tot['pln'],
+            'tot_prac': tot['prac'],
+            'tot_perc': tot['perc']
         }
         result.append(res)
         return result

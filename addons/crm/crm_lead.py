@@ -561,8 +561,8 @@ class crm_lead(format_address, osv.osv):
         for opportunity in opportunities:
             for history in opportunity.message_ids:
                 message.write(cr, uid, history.id, {
-                        'res_id': opportunity_id,
-                        'subject': _("From %s : %s") % (opportunity.name, history.subject)
+                    'res_id': opportunity_id,
+                    'subject': _("From %s : %s") % (opportunity.name, history.subject)
                 }, context=context)
 
         return True

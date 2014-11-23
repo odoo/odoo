@@ -195,7 +195,7 @@ class hr_applicant(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
+        'stage_id': fields.many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'last_stage_id': fields.many2one('hr.recruitment.stage', 'Last Stage',
                                          help='Stage of the applicant before being in the current stage. Used for lost cases analysis.'),

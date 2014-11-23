@@ -697,9 +697,9 @@ class resource_resource(osv.osv):
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
             resource_objs[user.id] = {
-                 'name': user.name,
-                 'vacation': [],
-                 'efficiency': 1.0,
+                'name': user.name,
+                'vacation': [],
+                'efficiency': 1.0,
             }
 
             resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)

@@ -77,9 +77,9 @@ class Change(unohelper.Base, XJobExecutor):
         self.win.addComboListBox("lstProtocol", -2, 48, 60, 15, True)
         self.lstProtocol = self.win.getControl("lstProtocol")
 
-        self.win.addButton('btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked)
+        self.win.addButton('btnNext', -2, -5, 30, 15, 'Next', actionListenerProc=self.btnNext_clicked)
 
-        self.win.addButton('btnCancel', -2 - 30 - 5, -5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnCancel', -2 - 30 - 5, -5, 30, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
 
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i, self.lstProtocol.getItemCount())

@@ -303,7 +303,7 @@ class account_invoice_line(osv.osv):
 
     def move_line_get_item(self, cr, uid, line, context=None):
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
-        res ['analytics_id'] = line.analytics_id and line.analytics_id.id or False
+        res['analytics_id'] = line.analytics_id and line.analytics_id.id or False
         return res
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):

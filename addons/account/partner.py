@@ -212,7 +212,7 @@ class res_partner(osv.osv):
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
             map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator': x[1]}, args))
+                'operator': x[1]}, args))
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM '
                     '(SELECT CASE WHEN bal IS NOT NULL THEN bal '
@@ -316,13 +316,13 @@ class res_partner(osv.osv):
         'property_payment_term': fields.property(
             type='many2one',
             relation='account.payment.term',
-            string ='Customer Payment Term',
+            string='Customer Payment Term',
             help="This payment term will be used instead of the default one for sale orders and customer invoices"),
         'property_supplier_payment_term': fields.property(
-             type='many2one',
-             relation='account.payment.term',
-             string ='Supplier Payment Term',
-             help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
+            type='many2one',
+            relation='account.payment.term',
+            string='Supplier Payment Term',
+            help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
         'last_reconciliation_date': fields.datetime(

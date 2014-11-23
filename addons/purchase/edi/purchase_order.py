@@ -71,13 +71,13 @@ class purchase_order(osv.osv, EDIMixin):
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
             edi_doc = super(purchase_order, self).edi_export(cr, uid, [order], edi_struct, context)[0]
             edi_doc.update({
-                    # force trans-typing to purchase.order upon import
-                    '__import_model': 'sale.order',
-                    '__import_module': 'sale',
+                # force trans-typing to purchase.order upon import
+                '__import_model': 'sale.order',
+                '__import_module': 'sale',
 
-                    'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'partner_address': res_partner_obj.edi_export(cr, uid, [order.partner_id], context=context)[0],
-                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
+                'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
+                'partner_address': res_partner_obj.edi_export(cr, uid, [order.partner_id], context=context)[0],
+                'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
                                                                          context=context)[0],
             })
             if edi_doc.get('order_line'):

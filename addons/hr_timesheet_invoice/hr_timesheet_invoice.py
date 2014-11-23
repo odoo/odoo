@@ -141,7 +141,7 @@ class account_analytic_line(osv.osv):
                         _('You cannot modify an invoiced analytic line!'))
         return True
 
-    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context={}):
         pro_price_obj = self.pool.get('product.pricelist')
         if account.pricelist_id:
             pl = account.pricelist_id.id

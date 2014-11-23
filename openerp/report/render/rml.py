@@ -29,7 +29,7 @@ import makohtml2html as makohtml
 
 
 class rml(render.render):
-    def __init__(self, rml, localcontext = None, datas=None, path='.', title=None):
+    def __init__(self, rml, localcontext=None, datas=None, path='.', title=None):
         render.render.__init__(self, datas, path)
         self.localcontext = localcontext
         self.rml = rml
@@ -41,7 +41,7 @@ class rml(render.render):
 
 
 class rml2html(render.render):
-    def __init__(self, rml, localcontext = None, datas=None):
+    def __init__(self, rml, localcontext=None, datas=None):
         super(rml2html, self).__init__(datas)
         self.rml = rml
         self.localcontext = localcontext
@@ -52,7 +52,7 @@ class rml2html(render.render):
 
 
 class rml2txt(render.render):
-    def __init__(self, rml, localcontext= None, datas=None):
+    def __init__(self, rml, localcontext=None, datas=None):
         super(rml2txt, self).__init__(datas)
         self.rml = rml
         self.localcontext = localcontext
@@ -85,7 +85,7 @@ class html2html(render.render):
 
 
 class makohtml2html(render.render):
-    def __init__(self, html, localcontext = None):
+    def __init__(self, html, localcontext=None):
         render.render.__init__(self)
         self.html = html
         self.localcontext = localcontext

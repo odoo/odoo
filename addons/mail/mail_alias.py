@@ -97,14 +97,14 @@ class mail_alias(osv.Model):
         'alias_parent_thread_id': fields.integer('Parent Record Thread ID',
             help="ID of the parent record holding the alias (example: project holding the task creation alias)"),
         'alias_contact': fields.selection([
-                ('everyone', 'Everyone'),
-                ('partners', 'Authenticated Partners'),
-                ('followers', 'Followers only'),
+            ('everyone', 'Everyone'),
+            ('partners', 'Authenticated Partners'),
+            ('followers', 'Followers only'),
         ], string='Alias Contact Security', required=True,
             help="Policy to post a message on the document using the mailgateway.\n"
-                    "- everyone: everyone can post\n"
-                    "- partners: only authenticated partners\n"
-                    "- followers: only followers of the related document\n"),
+            "- everyone: everyone can post\n"
+            "- partners: only authenticated partners\n"
+            "- followers: only followers of the related document\n"),
     }
 
     _defaults = {

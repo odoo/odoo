@@ -30,9 +30,9 @@ class mail_vote(osv.Model):
     _name = 'mail.vote'
     _description = 'Mail Vote'
     _columns = {
-            'message_id': fields.many2one('mail.message', 'Message', select=1,
+        'message_id': fields.many2one('mail.message', 'Message', select=1,
                 ondelete='cascade', required=True),
-            'user_id': fields.many2one('res.users', 'User', select=1,
+        'user_id': fields.many2one('res.users', 'User', select=1,
                 ondelete='cascade', required=True),
     }
 

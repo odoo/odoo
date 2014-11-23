@@ -78,7 +78,7 @@ class payroll_advice(osv.osv):
         'date': lambda * a: time.strftime('%Y-%m-%d'),
         'state': lambda * a: 'draft',
         'company_id': lambda self, cr, uid, context:
-                self.pool.get('res.users').browse(cr, uid, uid,
+        self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
     }
@@ -109,11 +109,11 @@ class payroll_advice(osv.osv):
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
                     advice_line = {
-                            'advice_id': advice.id,
-                            'name': slip.employee_id.bank_account_id.acc_number,
-                            'employee_id': slip.employee_id.id,
-                            'bysal': line.total
-                            }
+                        'advice_id': advice.id,
+                        'name': slip.employee_id.bank_account_id.acc_number,
+                        'employee_id': slip.employee_id.id,
+                        'bysal': line.total
+                    }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
                 payslip_pool.write(cr, uid, slip_ids, {'advice_id': advice.id}, context=context)
         return True
@@ -184,12 +184,12 @@ class hr_payslip_run(osv.osv):
             if run.available_advice:
                 raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name))
             advice_data = {
-                        'batch_id': run.id,
-                        'company_id': users[0].company_id.id,
-                        'name': run.name,
-                        'date': run.date_end,
-                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
-                    }
+                'batch_id': run.id,
+                'company_id': users[0].company_id.id,
+                'name': run.name,
+                'date': run.date_end,
+                'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+            }
             advice_id = advice_pool.create(cr, uid, advice_data, context=context)
             slip_ids = []
             for slip_id in run.slip_ids:
@@ -205,10 +205,10 @@ class hr_payslip_run(osv.osv):
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
                     advice_line = {
-                            'advice_id': advice_id,
-                            'name': slip.employee_id.bank_account_id.acc_number,
-                            'employee_id': slip.employee_id.id,
-                            'bysal': line.total
+                        'advice_id': advice_id,
+                        'name': slip.employee_id.bank_account_id.acc_number,
+                        'employee_id': slip.employee_id.id,
+                        'bysal': line.total
                     }
                     advice_line_pool.create(cr, uid, advice_line, context=context)
         return self.write(cr, uid, ids, {'available_advice': True})

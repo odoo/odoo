@@ -113,8 +113,8 @@ class TestSanitizer(unittest2.TestCase):
 
         emails = [("Charles <charles.bidule@truc.fr>", "Charles &lt;charles.bidule@truc.fr&gt;"),
                 ("Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>", "Dupuis &lt;'tr/-: ${dupuis#$'@truc.baz.fr&gt;"),
-                ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
-                ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
+            ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
+            ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
         for email in emails:
             self.assertIn(email[1], html_sanitize(email[0]), 'html_sanitize stripped emails of original html')
 

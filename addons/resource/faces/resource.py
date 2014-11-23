@@ -53,9 +53,9 @@ _ = plocale.get_gettext()
 
 def _isattrib(obj, a):
     return a[0] != "_" \
-           and not callable(getattr(obj, a)) \
-           and not a.endswith("_members") \
-           and a not in ("name")
+        and not callable(getattr(obj, a)) \
+        and not a.endswith("_members") \
+        and a not in ("name")
 #@-node:_isattrib
 #@+node:class ResourceCalendar
 

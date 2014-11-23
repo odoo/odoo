@@ -21,16 +21,16 @@ import openerp
 from openerp.osv import fields, osv
 
 TAX_CODE_COLUMNS = {
-                    'domain': fields.char('Domain',
+    'domain': fields.char('Domain',
                                          help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-                    'tax_discount': fields.boolean('Discount this Tax in Prince',
+    'tax_discount': fields.boolean('Discount this Tax in Prince',
                                                    help="Mark it for (ICMS, PIS, COFINS and others taxes included)."),
-                    }
+}
 
 TAX_DEFAULTS = {
-                'base_reduction': 0,
-                'amount_mva': 0,
-                }
+    'base_reduction': 0,
+    'amount_mva': 0,
+}
 
 
 class account_tax_code_template(osv.osv):
@@ -103,22 +103,22 @@ class account_tax_template(osv.osv):
     _inherit = 'account.tax.template'
 
     _columns = {
-               'tax_discount': fields.boolean('Discount this Tax in Prince',
+        'tax_discount': fields.boolean('Discount this Tax in Prince',
                                               help="Mark it for (ICMS, PIS e etc.)."),
-               'base_reduction': fields.float('Redution', required=True,
+        'base_reduction': fields.float('Redution', required=True,
                                               digits_compute=get_precision_tax(),
                                               help="Um percentual decimal em % entre 0-1."),
-               'amount_mva': fields.float('MVA Percent', required=True,
+        'amount_mva': fields.float('MVA Percent', required=True,
                                           digits_compute=get_precision_tax(),
                                           help="Um percentual decimal em % entre 0-1."),
-               'type': fields.selection([('percent', 'Percentage'),
+        'type': fields.selection([('percent', 'Percentage'),
                                          ('fixed', 'Fixed Amount'),
                                          ('none', 'None'),
                                          ('code', 'Python Code'),
                                          ('balance', 'Balance'),
                                          ('quantity', 'Quantity')], 'Tax Type', required=True,
                                         help="The computation method for the tax amount."),
-               }
+    }
     _defaults = TAX_DEFAULTS
 
     def _generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
@@ -168,22 +168,22 @@ class account_tax(osv.osv):
     _inherit = 'account.tax'
 
     _columns = {
-               'tax_discount': fields.boolean('Discount this Tax in Prince',
+        'tax_discount': fields.boolean('Discount this Tax in Prince',
                                               help="Mark it for (ICMS, PIS e etc.)."),
-               'base_reduction': fields.float('Redution', required=True,
+        'base_reduction': fields.float('Redution', required=True,
                                               digits_compute=get_precision_tax(),
                                               help="Um percentual decimal em % entre 0-1."),
-               'amount_mva': fields.float('MVA Percent', required=True,
+        'amount_mva': fields.float('MVA Percent', required=True,
                                           digits_compute=get_precision_tax(),
                                           help="Um percentual decimal em % entre 0-1."),
-               'type': fields.selection([('percent', 'Percentage'),
+        'type': fields.selection([('percent', 'Percentage'),
                                          ('fixed', 'Fixed Amount'),
                                          ('none', 'None'),
                                          ('code', 'Python Code'),
                                          ('balance', 'Balance'),
                                          ('quantity', 'Quantity')], 'Tax Type', required=True,
                                         help="The computation method for the tax amount."),
-               }
+    }
     _defaults = TAX_DEFAULTS
 
     def onchange_tax_code_id(self, cr, uid, ids, tax_code_id, context=None):

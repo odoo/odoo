@@ -99,14 +99,14 @@ class hr_job(osv.Model):
         'name': fields.char('Job Name', required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
-            store = {
+            store={
                 'hr.job': (lambda self, cr, uid, ids, c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
         'no_of_employee': fields.function(_get_nbr_employees, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
-            store = {
+            store={
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
@@ -215,7 +215,7 @@ class hr_employee(osv.osv):
             help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the employee. It is automatically "
@@ -223,7 +223,7 @@ class hr_employee(osv.osv):
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "

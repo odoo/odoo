@@ -170,7 +170,7 @@ def main():
                                options.host,
                                options.port,
                                model=options.model,
-                               email_default= options.default)
+                               email_default=options.default)
     msg_txt = sys.stdin.read()
     custom_values = {}
     try:

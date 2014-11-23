@@ -43,6 +43,6 @@ class res_partner(osv.osv):
 
         default['task_ids'] = []
         return super(res_partner, self).copy(
-                cr, uid, record_id, default=default, context=context)
+            cr, uid, record_id, default=default, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

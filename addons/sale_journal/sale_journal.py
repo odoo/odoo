@@ -45,11 +45,11 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'property_invoice_type': fields.property(
-            type = 'many2one',
-            relation = 'sale_journal.invoice.type',
-            string = "Invoicing Type",
-            group_name = "Accounting Properties",
-            help = "This invoicing type will be used, by default, to invoice the current partner."),
+            type='many2one',
+            relation='sale_journal.invoice.type',
+            string="Invoicing Type",
+            group_name="Accounting Properties",
+            help="This invoicing type will be used, by default, to invoice the current partner."),
     }
 
     def _commercial_fields(self, cr, uid, context=None):

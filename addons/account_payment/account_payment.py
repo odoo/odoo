@@ -55,7 +55,7 @@ class payment_mode(osv.osv):
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
-    def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         result = {}
         if company_id:
             partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
@@ -166,8 +166,8 @@ class payment_line(osv.osv):
 
     def translate(self, orig):
         return {
-                "due_date": "date_maturity",
-                "reference": "ref"}.get(orig, orig)
+            "due_date": "date_maturity",
+            "reference": "ref"}.get(orig, orig)
 
     def _info_owner(self, cr, uid, ids, name=None, args=None, context=None):
         result = {}

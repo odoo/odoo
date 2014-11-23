@@ -109,8 +109,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
         for kind in self.Kind.keys():
             self.lstResourceType.addItem(kind, self.lstResourceType.getItemCount())
 
-        self.win.addButton("btnSend", -5, -5, 80, 15, "Send Report to Server", actionListenerProc = self.btnOk_clicked)
-        self.win.addButton("btnCancel", -5 - 80 - 5, -5, 40, 15, "Cancel", actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton("btnSend", -5, -5, 80, 15, "Send Report to Server", actionListenerProc=self.btnOk_clicked)
+        self.win.addButton("btnCancel", -5 - 80 - 5, -5, 40, 15, "Cancel", actionListenerProc=self.btnCancel_clicked)
 
         self.win.doModalDialog("lstResourceType", self.Kind.keys()[0])
 
@@ -139,13 +139,13 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                         id = self.getID()
                         docinfo.setUserFieldValue(2, id)
                         rec = {
-                                'name': self.win.getEditText("txtReportName"),
-                                'key': 'action',
-                                'model': docinfo.getUserFieldValue(3),
-                                'value': 'ir.actions.report.xml,' + str(id),
-                                'key2': 'client_print_multi',
-                                'object': True,
-                                'user_id': uid
+                            'name': self.win.getEditText("txtReportName"),
+                            'key': 'action',
+                            'model': docinfo.getUserFieldValue(3),
+                            'value': 'ir.actions.report.xml,' + str(id),
+                            'key2': 'client_print_multi',
+                            'object': True,
+                            'user_id': uid
                         }
                         res = self.sock.execute(database, uid, self.password, 'ir.values', 'create', rec)
                     else:

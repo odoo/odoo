@@ -231,7 +231,7 @@ class purchase_order(osv.osv):
         'dest_address_id': fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
             states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer. "
-                "Otherwise, keep empty to deliver to your own company."
+            "Otherwise, keep empty to deliver to your own company."
         ),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage', '<>', 'view')], states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
@@ -265,11 +265,11 @@ class purchase_order(osv.osv):
         'invoice_method': fields.selection([('manual', 'Based on Purchase Order lines'), ('order', 'Based on generated draft invoice'), ('picking', 'Based on incoming shipments')], 'Invoicing Control', required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
-                "Based on generated invoice: create a draft invoice you can validate later.\n"
-                "Based on incoming shipments: let you create an invoice when receipts are validated."
+            "Based on generated invoice: create a draft invoice you can validate later.\n"
+            "Based on incoming shipments: let you create an invoice when receipts are validated."
         ),
         'minimum_planned_date': fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
-            store = {
+            store={
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
             }
         ),
@@ -592,14 +592,14 @@ class purchase_order(osv.osv):
            :return: dict of value to create() the invoice
         """
         journal_ids = self.pool['account.journal'].search(
-                            cr, uid, [('type', '=', 'purchase'),
+            cr, uid, [('type', '=', 'purchase'),
                                       ('company_id', '=', order.company_id.id)],
-                            limit=1)
+            limit=1)
         if not journal_ids:
             raise osv.except_osv(
                 _('Error!'),
                 _('Define purchase journal for this company: "%s" (id:%d).') %
-                    (order.company_id.name, order.company_id.id))
+                (order.company_id.name, order.company_id.id))
         return {
             'name': order.partner_ref or order.name,
             'reference': order.partner_ref or order.name,
@@ -983,8 +983,8 @@ class purchase_order_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),

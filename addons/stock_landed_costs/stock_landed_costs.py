@@ -139,21 +139,21 @@ class stock_landed_cost(osv.osv):
         # Create account move lines for quants already out of stock
         if qty_out > 0:
             aml_obj.create(cr, uid, {
-                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
-                                     'move_id': move_id,
-                                     'product_id': line.product_id.id,
-                                     'quantity': qty_out,
-                                     'credit': line.additional_landed_cost * qty_out / line.quantity,
-                                     'account_id': debit_account_id
-                                     }, context=context)
+                'name': line.name + ": " + str(qty_out) + _(' already out'),
+                'move_id': move_id,
+                'product_id': line.product_id.id,
+                'quantity': qty_out,
+                'credit': line.additional_landed_cost * qty_out / line.quantity,
+                'account_id': debit_account_id
+            }, context=context)
             aml_obj.create(cr, uid, {
-                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
-                                     'move_id': move_id,
-                                     'product_id': line.product_id.id,
-                                     'quantity': qty_out,
-                                     'debit': line.additional_landed_cost * qty_out / line.quantity,
-                                     'account_id': already_out_account_id
-                                     }, context=context)
+                'name': line.name + ": " + str(qty_out) + _(' already out'),
+                'move_id': move_id,
+                'product_id': line.product_id.id,
+                'quantity': qty_out,
+                'debit': line.additional_landed_cost * qty_out / line.quantity,
+                'account_id': already_out_account_id
+            }, context=context)
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):

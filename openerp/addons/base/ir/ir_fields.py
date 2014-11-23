@@ -157,7 +157,7 @@ class ir_fields_converter(models.Model):
 
         return True, [ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
-                % (value, yes), {
+            % (value, yes), {
                 'moreinfo': _(u"Use '1' for yes and '0' for no")
             })]
 

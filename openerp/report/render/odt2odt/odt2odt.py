@@ -50,7 +50,7 @@ class odt2odt(object):
         return self._node
 
 
-def parseNode(node, localcontext = {}):
+def parseNode(node, localcontext={}):
     r = odt2odt(node, localcontext)
     return r.render()
 

@@ -149,10 +149,10 @@ class event_event(models.Model):
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('confirm', 'Confirmed'),
-            ('done', 'Done')
+        ('draft', 'Unconfirmed'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'),
+        ('done', 'Done')
     ], string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     email_registration_id = fields.Many2one(
@@ -321,10 +321,10 @@ class event_registration(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
         store=True, readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('open', 'Confirmed'),
-            ('done', 'Attended'),
+        ('draft', 'Unconfirmed'),
+        ('cancel', 'Cancelled'),
+        ('open', 'Confirmed'),
+        ('done', 'Attended'),
     ], string='Status', default='draft', readonly=True, copy=False)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')

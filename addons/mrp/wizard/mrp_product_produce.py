@@ -109,10 +109,10 @@ class mrp_product_produce(osv.osv_memory):
         return prod and prod_obj.browse(cr, uid, prod, context=context).track_production or False
 
     _defaults = {
-         'product_qty': _get_product_qty,
-         'mode': lambda *x: 'consume_produce',
-         'product_id': _get_product_id,
-         'track_production': _get_track,
+        'product_qty': _get_product_qty,
+        'mode': lambda *x: 'consume_produce',
+        'product_id': _get_product_id,
+        'track_production': _get_track,
     }
 
     def do_produce(self, cr, uid, ids, context=None):

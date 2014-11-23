@@ -87,13 +87,13 @@ class sale_order(osv.osv):
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
         'order_policy': fields.selection([
-                ('manual', 'On Demand'),
-                ('picking', 'On Delivery Order'),
-                ('prepaid', 'Before Delivery'),
+            ('manual', 'On Demand'),
+            ('picking', 'On Delivery Order'),
+            ('prepaid', 'Before Delivery'),
         ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
-                'procurement.order': (_get_orders_procurements, ['state'], 10)
+            'procurement.order': (_get_orders_procurements, ['state'], 10)
         }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
@@ -140,9 +140,9 @@ class sale_order(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice=False, context=None):
         move_obj = self.pool.get("stock.move")
-        res = super(sale_order, self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
+        res = super(sale_order, self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice=date_invoice, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.order_policy == 'picking':
                 for picking in order.picking_ids:
@@ -273,11 +273,11 @@ class sale_order_line(osv.osv):
                                 "But it's not compatible with the selected packaging.\n"
                                 "Here is a proposition of quantities according to the packaging:\n"
                                 "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
+                        (qty, ean, qty_pack, type_ul.name)
                     warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
                 warning = {
-                       'title': _('Configuration Error!'),
-                       'message': warning_msgs
+                    'title': _('Configuration Error!'),
+                    'message': warning_msgs
                 }
             result['product_uom_qty'] = qty
 
@@ -350,9 +350,9 @@ class sale_order_line(osv.osv):
         # update of warning messages
         if warning_msgs:
             warning = {
-                       'title': _('Configuration Error!'),
-                       'message': warning_msgs
-                    }
+                'title': _('Configuration Error!'),
+                'message': warning_msgs
+            }
         res.update({'warning': warning})
         return res
 

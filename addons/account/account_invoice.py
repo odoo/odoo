@@ -195,10 +195,10 @@ class account_invoice(models.Model):
         help="The reference of this invoice as provided by the supplier.",
         readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([
-            ('out_invoice', 'Customer Invoice'),
-            ('in_invoice', 'Supplier Invoice'),
-            ('out_refund', 'Customer Refund'),
-            ('in_refund', 'Supplier Refund'),
+        ('out_invoice', 'Customer Invoice'),
+        ('in_invoice', 'Supplier Invoice'),
+        ('out_refund', 'Customer Refund'),
+        ('in_refund', 'Supplier Refund'),
     ], string='Type', readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
@@ -215,12 +215,12 @@ class account_invoice(models.Model):
     comment = fields.Text('Additional Information')
 
     state = fields.Selection([
-            ('draft', 'Draft'),
-            ('proforma', 'Pro-forma'),
-            ('proforma2', 'Pro-forma'),
-            ('open', 'Open'),
-            ('paid', 'Paid'),
-            ('cancel', 'Cancelled'),
+        ('draft', 'Draft'),
+        ('proforma', 'Pro-forma'),
+        ('proforma2', 'Pro-forma'),
+        ('open', 'Open'),
+        ('paid', 'Paid'),
+        ('cancel', 'Cancelled'),
     ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
@@ -1267,13 +1267,13 @@ class account_invoice_line(models.Model):
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
-        digits= dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         default=_default_price_unit)
-    price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
+    price_subtotal = fields.Float(string='Amount', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_price')
-    quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
+    quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
-    discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
+    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'),
         default=0.0)
     invoice_line_tax_id = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',

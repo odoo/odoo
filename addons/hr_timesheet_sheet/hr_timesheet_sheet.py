@@ -353,10 +353,10 @@ class hr_timesheet_line(osv.osv):
         'sheet_id': fields.function(_sheet, string='Sheet', select="1",
             type='many2one', relation='hr_timesheet_sheet.sheet', ondelete="cascade",
             store={
-                    'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
-                    'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
-                    'hr.analytic.timesheet': (lambda self, cr, uid, ids, context=None: ids, None, 10),
-                  },
+                'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
+                'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
+                'hr.analytic.timesheet': (lambda self, cr, uid, ids, context=None: ids, None, 10),
+            },
         ),
     }
 
@@ -452,8 +452,8 @@ class hr_attendance(osv.osv):
             date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         att_tz_date_str = self._get_attendance_employee_tz(
-                cr, uid, employee_id,
-                date=date, context=context)
+            cr, uid, employee_id,
+            date=date, context=context)
         sheet_ids = sheet_obj.search(cr, uid,
             [('date_from', '<=', att_tz_date_str),
              ('date_to', '>=', att_tz_date_str),
@@ -465,17 +465,17 @@ class hr_attendance(osv.osv):
         res = {}.fromkeys(ids, False)
         for attendance in self.browse(cursor, user, ids, context=context):
             res[attendance.id] = self._get_current_sheet(
-                    cursor, user, attendance.employee_id.id, attendance.name,
-                    context=context)
+                cursor, user, attendance.employee_id.id, attendance.name,
+                context=context)
         return res
 
     _columns = {
         'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
             store={
-                      'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
-                      'hr.attendance': (lambda self, cr, uid, ids, context=None: ids, ['employee_id', 'name', 'day'], 10),
-                  },
+                'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
+                'hr.attendance': (lambda self, cr, uid, ids, context=None: ids, ['employee_id', 'name', 'day'], 10),
+            },
         )
     }
     _defaults = {
@@ -489,8 +489,8 @@ class hr_attendance(osv.osv):
         sheet_id = context.get('sheet_id') or self._get_current_sheet(cr, uid, vals.get('employee_id'), vals.get('name'), context=context)
         if sheet_id:
             att_tz_date_str = self._get_attendance_employee_tz(
-                    cr, uid, vals.get('employee_id'),
-                   date=vals.get('name'), context=context)
+                cr, uid, vals.get('employee_id'),
+                date=vals.get('name'), context=context)
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, sheet_id, context=context)
             if ts.state not in ('draft', 'new'):
                 raise osv.except_osv(_('Error!'), _('You can not enter an attendance in a submitted timesheet. Ask your manager to reset it before adding attendance.'))

@@ -45,9 +45,9 @@ class sale_receipt_report(osv.osv):
         ], 'Type', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
-             ('proforma', 'Pro-forma'),
-             ('posted', 'Posted'),
-             ('cancel', 'Cancelled')
+            ('proforma', 'Pro-forma'),
+            ('posted', 'Posted'),
+            ('cancel', 'Cancelled')
         ], 'Voucher Status', readonly=True),
         'pay_now': fields.selection([
             ('pay_now', 'Pay Directly'),

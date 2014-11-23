@@ -290,10 +290,10 @@ class account_move_line(osv.osv):
                 # set the context for the multi currency change
                 compute_ctx = context.copy()
                 compute_ctx.update({
-                        # the following 2 parameters are used to choose the currency rate, in case where the account
-                        # doesn't work with an outgoing currency rate method 'at date' but 'average'
-                        'res.currency.compute.account': account,
-                        'res.currency.compute.account_invert': True,
+                    # the following 2 parameters are used to choose the currency rate, in case where the account
+                    # doesn't work with an outgoing currency rate method 'at date' but 'average'
+                    'res.currency.compute.account': account,
+                    'res.currency.compute.account_invert': True,
                 })
                 if data.get('date'):
                     compute_ctx.update({'date': data['date']})
@@ -457,7 +457,7 @@ class account_move_line(osv.osv):
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2, copy=False),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2, copy=False),
         'reconcile_ref': fields.function(_get_reconcile, type='char', string='Reconcile Ref', oldname='reconcile', store={
-                    'account.move.line': (lambda self, cr, uid, ids, c={}: ids, ['reconcile_id', 'reconcile_partial_id'], 50), 'account.move.reconcile': (_get_move_from_reconcile, None, 50)}),
+            'account.move.line': (lambda self, cr, uid, ids, c={}: ids, ['reconcile_id', 'reconcile_partial_id'], 50), 'account.move.reconcile': (_get_move_from_reconcile, None, 50)}),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount in Currency', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
         'amount_residual': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
@@ -475,7 +475,7 @@ class account_move_line(osv.osv):
         'date_maturity': fields.date('Due date', select=True, help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id', 'date', string='Effective date', type='date', required=True, select=True,
                                store = {
-                                    'account.move': (_get_move_lines, ['date'], 20)
+                                   'account.move': (_get_move_lines, ['date'], 20)
                                 }),
         'date_created': fields.date('Creation date', select=True),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
@@ -665,8 +665,8 @@ class account_move_line(osv.osv):
                 acc = x
         context = dict(context)
         context.update({
-                'date': date,
-                'res.currency.compute.account': acc,
+            'date': date,
+            'res.currency.compute.account': acc,
         })
         v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, context=context)
         result['value'] = {
@@ -850,7 +850,7 @@ class account_move_line(osv.osv):
 
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
-             """SELECT partner_id FROM (
+            """SELECT partner_id FROM (
                 SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)

@@ -40,9 +40,9 @@ class stock_picking(osv.osv):
                 total_weight_net += move.weight_net
 
             res[picking.id] = {
-                                'weight': total_weight,
-                                'weight_net': total_weight_net,
-                              }
+                'weight': total_weight,
+                'weight_net': total_weight_net,
+            }
         return res
 
     def _get_picking_line(self, cr, uid, ids, context=None):
@@ -54,16 +54,16 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id': fields.many2one("delivery.carrier", "Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute=dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
-                 }),
-        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+            'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
+            'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
+        }),
+        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute=dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
-                 }),
+            'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
+            'stock.move': (_get_picking_line, ['picking_id', 'product_id', 'product_uom_qty', 'product_uom'], 40),
+        }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight",),
@@ -89,7 +89,7 @@ class stock_picking(osv.osv):
         if not grid_id:
             raise osv.except_osv(_('Warning!'),
                     _('The carrier %s (id: %d) has no delivery grid!')
-                            % (picking.carrier_id.name,
+                % (picking.carrier_id.name,
                                 picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
@@ -98,7 +98,7 @@ class stock_picking(osv.osv):
         account_id = picking.carrier_id.product_id.property_account_income.id
         if not account_id:
             account_id = picking.carrier_id.product_id.categ_id\
-                    .property_account_income_categ.id
+                .property_account_income_categ.id
 
         taxes = picking.carrier_id.product_id.taxes_id
         partner = picking.partner_id or False
@@ -154,20 +154,20 @@ class stock_move(osv.osv):
                     weight_net = (converted_qty * move.product_id.weight_net)
 
             res[move.id] =  {
-                            'weight': weight,
-                            'weight_net': weight_net,
-                            }
+                'weight': weight,
+                'weight_net': weight_net,
+            }
         return res
 
     _columns = {
-        'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+        'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute=dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
-                 'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
-                 }),
-        'weight_net': fields.function(_cal_move_weight, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+            'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
+        }),
+        'weight_net': fields.function(_cal_move_weight, type='float', string='Net weight', digits_compute=dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
-                 'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
-                 }),
+            'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
+        }),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly="1", help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
     }
 

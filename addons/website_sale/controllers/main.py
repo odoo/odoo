@@ -329,7 +329,7 @@ class website_sale(http.Controller):
             return None
         value['cart_quantity'] = order.cart_quantity
         value['website_sale.total'] = request.website._render("website_sale.total", {
-                'website_sale_order': request.website.sale_get_order()
+            'website_sale_order': request.website.sale_get_order()
         })
         return value
 

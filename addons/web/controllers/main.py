@@ -638,8 +638,8 @@ class WebClient(http.Controller):
         translations_per_module = {}
         messages = ir_translation.search_read(request.cr, uid, [('module', 'in', mods), ('lang', '=', lang),
                                                ('comments', 'like', 'openerp-web'), ('value', '!=', False),
-                                               ('value', '!=', '')],
-                                              ['module', 'src', 'value', 'lang'], order='module')
+            ('value', '!=', '')],
+            ['module', 'src', 'value', 'lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({'id': m['src'],
@@ -818,7 +818,7 @@ class Session(http.Controller):
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
         old_password, new_password, confirm_password = operator.itemgetter('old_pwd', 'new_password', 'confirm_pwd')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
+            dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
             return {'error': _('You cannot leave any password empty.'), 'title': _('Change Password')}
         if new_password != confirm_password:
@@ -1318,7 +1318,7 @@ class Export(http.Controller):
         return fields
 
     @http.route('/web/export/get_fields', type='json', auth="user")
-    def get_fields(self, model, prefix='', parent_name= '',
+    def get_fields(self, model, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    exclude=None):
 
@@ -1641,7 +1641,7 @@ class Reports(http.Controller):
                  ('Content-Disposition', content_disposition(file_name)),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
-             cookies={'fileToken': token})
+            cookies={'fileToken': token})
 
 
 class Apps(http.Controller):

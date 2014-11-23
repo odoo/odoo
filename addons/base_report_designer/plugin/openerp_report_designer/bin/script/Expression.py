@@ -44,8 +44,8 @@ class Expression(unohelper.Base, XJobExecutor):
         self.win.addEdit("txtExpression", -5, 5, 123, 15)
         self.win.addFixedText("lblName", 2, 30, 50, 15, "Displayed Name :")
         self.win.addEdit("txtName", -5, 25, 123, 15)
-        self.win.addButton("btnOK", -5, -5, 40, 15, "OK", actionListenerProc = self.btnOk_clicked)
-        self.win.addButton("btnCancel", -5 - 40 - 5, -5, 40, 15, "Cancel", actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton("btnOK", -5, -5, 40, 15, "OK", actionListenerProc=self.btnOk_clicked)
+        self.win.addButton("btnCancel", -5 - 40 - 5, -5, 40, 15, "Cancel", actionListenerProc=self.btnCancel_clicked)
         self.bModify = bFromModify
         if self.bModify == True:
             self.win.setEditText("txtExpression", sExpression)

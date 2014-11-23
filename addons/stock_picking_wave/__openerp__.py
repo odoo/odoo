@@ -37,7 +37,7 @@ This module adds the picking wave option in warehouse management.
              ],
     'demo': [
             'stock_picking_wave_demo.xml',
-             ],
+    ],
     'installable': True,
     'auto_install': False,
 }

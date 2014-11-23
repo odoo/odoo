@@ -45,7 +45,7 @@ class crm_lead_report_assign(osv.osv):
         'probability_max': fields.float('Max Probability', digits=(16, 2), readonly=True, group_operator="max"),
         'planned_revenue': fields.float('Planned Revenue', digits=(16, 2), readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16, 2), readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True),
         'opening_date': fields.datetime('Opening Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),

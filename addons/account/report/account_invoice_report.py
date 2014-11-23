@@ -227,8 +227,8 @@ class account_invoice_report(osv.osv):
                                     OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
-                    self._table,
-                    self._select(), self._sub_select(), self._from(), self._group_by()))
+            self._table,
+            self._select(), self._sub_select(), self._from(), self._group_by()))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

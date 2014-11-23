@@ -100,7 +100,7 @@ class ir_import(orm.TransientModel):
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
                            for attr, value in itertools.chain.from_iterable(
-                                states.itervalues())):
+                               states.itervalues())):
                     continue
 
             f = {
@@ -253,7 +253,7 @@ class ir_import(orm.TransientModel):
                 # in case of UnicodeDecodeError (or csv.Error
                 # compounded with UnicodeDecodeError)
                 'preview': record.file[:ERROR_PREVIEW_BYTES]
-                                .decode('iso-8859-1'),
+                .decode('iso-8859-1'),
             }
 
     def _convert_import_data(self, record, fields, options, context=None):

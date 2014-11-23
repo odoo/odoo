@@ -256,13 +256,13 @@ class share_wizard(osv.TransientModel):
                     continue
                 new_pass = generate_random_pass()
                 user_id = user_obj.create(cr, UID_ROOT, {
-                        'login': new_user,
-                        'password': new_pass,
-                        'name': new_user,
-                        'email': new_user,
-                        'groups_id': [(6, 0, [group_id])],
-                        'company_id': current_user.company_id.id,
-                        'company_ids': [(6, 0, [current_user.company_id.id])],
+                    'login': new_user,
+                    'password': new_pass,
+                    'name': new_user,
+                    'email': new_user,
+                    'groups_id': [(6, 0, [group_id])],
+                    'company_id': current_user.company_id.id,
+                    'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
                 new_line = {'user_id': user_id,
                             'password': new_pass,
@@ -533,7 +533,7 @@ class share_wizard(osv.TransientModel):
                         else:
                             # otherwise we can simply link the rule to keep it dynamic
                             rule_obj.write(cr, SUPERUSER_ID, [rule.id], {
-                                    'groups': [(4, group_id)]
+                                'groups': [(4, group_id)]
                             })
                             _logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
 
@@ -550,9 +550,9 @@ class share_wizard(osv.TransientModel):
         rule_obj = self.pool.get('ir.rule')
         new_id = rule_obj.copy(cr, UID_ROOT, rule.id,
                                default={
-                                       'name': '%s %s' % (rule.name, _('(Duplicated for modified sharing permissions)')),
-                                       'groups': [(6, 0, [group_id])],
-                                       'domain_force': rule.domain_force,  # non evaluated!
+                                   'name': '%s %s' % (rule.name, _('(Duplicated for modified sharing permissions)')),
+                                   'groups': [(6, 0, [group_id])],
+                                   'domain_force': rule.domain_force,  # non evaluated!
                                })
         _logger.debug("Duplicating rule %s (%s) (domain: %s) for modified access ", rule.name, rule.id, rule.domain_force)
         # then disconnect from group_id:
@@ -579,7 +579,7 @@ class share_wizard(osv.TransientModel):
            """
         if rule_name is None:
             rule_name = _('Sharing filter created by user %s (%s) for group %s') % \
-                            (current_user.name, current_user.login, group_id)
+                (current_user.name, current_user.login, group_id)
         rule_obj = self.pool.get('ir.rule')
         rule_ids = rule_obj.search(cr, UID_ROOT, [('groups', 'in', group_id), ('model_id', '=', model_id)])
         if rule_ids:
@@ -616,7 +616,7 @@ class share_wizard(osv.TransientModel):
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):
         rule_name = _('Indirect sharing filter created by user %s (%s) for group %s') % \
-                            (current_user.name, current_user.login, group_id)
+            (current_user.name, current_user.login, group_id)
         try:
             domain = safe_eval(wizard_data.domain)
             if domain:
@@ -651,7 +651,7 @@ class share_wizard(osv.TransientModel):
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
                      _('Please indicate the emails of the persons to share with, one per line.'),
-                     context=context)
+                context=context)
 
     def _create_share_users_group(self, cr, uid, wizard_data, context=None):
         """Creates the appropriate share group and share users, and populates
@@ -667,8 +667,8 @@ class share_wizard(osv.TransientModel):
         if existing_ids:
             # existing users still need to join the new group
             self.pool.get('res.users').write(cr, UID_ROOT, existing_ids, {
-                                                'groups_id': [(4, group_id)],
-                                             })
+                'groups_id': [(4, group_id)],
+            })
             # existing user don't need their home action replaced, only a new shortcut
             self._setup_action_and_shortcut(cr, uid, wizard_data, existing_ids, make_home=False, context=context)
         if new_ids:
@@ -873,10 +873,10 @@ class share_wizard(osv.TransientModel):
             body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
-                    'email_from': user.email,
-                    'email_to': email_to,
-                    'subject': subject,
-                    'body_html': '<pre>%s</pre>' % body}, context=context))
+                'email_from': user.email,
+                'email_to': email_to,
+                'subject': subject,
+                'body_html': '<pre>%s</pre>' % body}, context=context))
         # force direct delivery, as users expect instant notification
         mail_mail.send(cr, uid, mail_ids, context=context)
         _logger.info('%d share notification(s) sent.', len(mail_ids))

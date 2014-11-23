@@ -52,7 +52,7 @@ class crm_lead_report(osv.Model):
         'probability': fields.float('Probability', digits=(16, 2), readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Total Revenue', digits=(16, 2), readonly=True),  # TDE FIXME master: rename into total_revenue
         'probable_revenue': fields.float('Expected Revenue', digits=(16, 2), readonly=True),  # TDE FIXME master: rename into expected_revenue
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),

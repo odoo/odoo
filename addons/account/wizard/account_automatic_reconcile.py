@@ -30,7 +30,7 @@ class account_automatic_reconcile(osv.osv_memory):
     _description = 'Automatic Reconcile'
 
     _columns = {
-        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile', '=', 1)],),
+        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain=[('reconcile', '=', 1)],),
         'writeoff_acc_id': fields.many2one('account.account', 'Account'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'period_id': fields.many2one('account.period', 'Period'),

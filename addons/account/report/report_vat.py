@@ -71,9 +71,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
-            self.cr.execute ("select id from account_fiscalyear")
+            self.cr.execute("select id from account_fiscalyear")
             fy = self.cr.fetchall()
-            self.cr.execute ("select id from account_period where fiscalyear_id = %s", (fy[0][0],))
+            self.cr.execute("select id from account_period where fiscalyear_id = %s", (fy[0][0],))
             periods = self.cr.fetchall()
             for p in periods:
                 period_list.append(p[0])

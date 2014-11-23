@@ -130,7 +130,7 @@ class ir_actions_report_xml(osv.osv):
                 elif r['report_xsl'] and r['report_xml']:
                     new_report = report_rml('report.' + r['report_name'], r['model'],
                             opj('addons', r['report_xml']),
-                            r['report_xsl'] and opj('addons', r['report_xsl']), register=False)
+                        r['report_xsl'] and opj('addons', r['report_xsl']), register=False)
                 else:
                     raise Exception, "Unhandled report type: %s" % r
             else:
@@ -167,11 +167,11 @@ class ir_actions_report_xml(osv.osv):
         'model': fields.char('Model', required=True),
         'report_type': fields.selection([('qweb-pdf', 'PDF'),
                     ('qweb-html', 'HTML'),
-                    ('controller', 'Controller'),
-                    ('pdf', 'RML pdf (deprecated)'),
-                    ('sxw', 'RML sxw (deprecated)'),
-                    ('webkit', 'Webkit (deprecated)'),
-                    ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
+            ('controller', 'Controller'),
+            ('pdf', 'RML pdf (deprecated)'),
+            ('sxw', 'RML sxw (deprecated)'),
+            ('webkit', 'Webkit (deprecated)'),
+        ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
         'report_name': fields.char('Template Name', required=True, help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
 
@@ -359,7 +359,7 @@ class ir_actions_act_window(osv.osv):
         :return: A read() view of the ir.actions.act_window
         """
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
+        data_id = dataobj._get_id(cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, [res_id], [], context)[0]
 

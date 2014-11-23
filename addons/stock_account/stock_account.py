@@ -200,28 +200,28 @@ class stock_quant(osv.osv):
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id.id,
-                    'quantity': qty,
-                    'product_uom_id': move.product_id.uom_id.id,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
-                    'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount or 0,
-                    'account_id': debit_account_id,
+            'name': move.name,
+            'product_id': move.product_id.id,
+            'quantity': qty,
+            'product_uom_id': move.product_id.uom_id.id,
+            'ref': move.picking_id and move.picking_id.name or False,
+            'date': move.date,
+            'partner_id': partner_id,
+            'debit': valuation_amount > 0 and valuation_amount or 0,
+            'credit': valuation_amount < 0 and -valuation_amount or 0,
+            'account_id': debit_account_id,
         }
         credit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id.id,
-                    'quantity': qty,
-                    'product_uom_id': move.product_id.uom_id.id,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
-                    'partner_id': partner_id,
-                    'credit': valuation_amount > 0 and valuation_amount or 0,
-                    'debit': valuation_amount < 0 and -valuation_amount or 0,
-                    'account_id': credit_account_id,
+            'name': move.name,
+            'product_id': move.product_id.id,
+            'quantity': qty,
+            'product_uom_id': move.product_id.uom_id.id,
+            'ref': move.picking_id and move.picking_id.name or False,
+            'date': move.date,
+            'partner_id': partner_id,
+            'credit': valuation_amount > 0 and valuation_amount or 0,
+            'debit': valuation_amount < 0 and -valuation_amount or 0,
+            'account_id': credit_account_id,
         }
         return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 

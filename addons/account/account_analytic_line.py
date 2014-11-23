@@ -96,7 +96,7 @@ class account_analytic_line(osv.osv):
                 raise osv.except_osv(_('Error!'),
                         _('There is no expense account defined '
                           'for this product: "%s" (id:%d).') %
-                                (prod.name, prod.id,))
+                    (prod.name, prod.id,))
         else:
             a = prod.property_account_income.id
             if not a:
@@ -105,7 +105,7 @@ class account_analytic_line(osv.osv):
                 raise osv.except_osv(_('Error!'),
                         _('There is no income account defined '
                           'for this product: "%s" (id:%d).') %
-                                (prod.name, prod_id,))
+                    (prod.name, prod_id,))
 
         flag = False
         # Compute based on pricetype

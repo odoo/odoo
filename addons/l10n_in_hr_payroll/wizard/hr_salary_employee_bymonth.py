@@ -39,9 +39,9 @@ class hr_salary_employee_bymonth(osv.osv_memory):
         return category_ids and category_ids[0] or False
 
     _defaults = {
-         'start_date': lambda *a: time.strftime('%Y-01-01'),
-         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
-         'category_id': _get_default_category
+        'start_date': lambda *a: time.strftime('%Y-01-01'),
+        'end_date': lambda *a: time.strftime('%Y-%m-%d'),
+        'category_id': _get_default_category
     }
 
     def print_report(self, cr, uid, ids, context=None):

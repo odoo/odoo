@@ -99,7 +99,7 @@ class crm_claim(osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone'),
-        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
+        'stage_id': fields.many2one('crm.claim.stage', 'Stage', track_visibility='onchange',
                 domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
     }
@@ -164,8 +164,8 @@ class crm_claim(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         claim = self.browse(cr, uid, id, context=context)
         default = dict(default or {},
-            stage_id = self._get_default_stage_id(cr, uid, context=context),
-            name = _('%s (copy)') % claim.name)
+            stage_id=self._get_default_stage_id(cr, uid, context=context),
+            name=_('%s (copy)') % claim.name)
         return super(crm_claim, self).copy(cr, uid, id, default, context=context)
 
     # -------------------------------------------------------

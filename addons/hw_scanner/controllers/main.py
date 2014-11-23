@@ -93,7 +93,7 @@ class Scanner(Thread):
                 self.daemon = True
                 self.start()
 
-    def set_status(self, status, message = None):
+    def set_status(self, status, message=None):
         if status == self.status['status']:
             if message != None and message != self.status['messages'][-1]:
                 self.status['messages'].append(message)

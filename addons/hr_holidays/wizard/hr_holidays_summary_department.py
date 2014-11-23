@@ -35,8 +35,8 @@ class hr_holidays_summary_dept(osv.osv_memory):
     }
 
     _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved'
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'holiday_type': 'Approved'
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -44,9 +44,9 @@ class hr_holidays_summary_dept(osv.osv_memory):
         if not data['depts']:
             raise osv.except_osv(_('Error!'), _('You have to select at least one Department. And try again.'))
         datas = {
-             'ids': [],
-             'model': 'ir.ui.menu',
-             'form': data
+            'ids': [],
+            'model': 'ir.ui.menu',
+            'form': data
         }
         return {
             'type': 'ir.actions.report.xml',

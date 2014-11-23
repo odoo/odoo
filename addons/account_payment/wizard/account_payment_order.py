@@ -44,7 +44,7 @@ class payment_order_create(osv.osv_memory):
         'entries': fields.many2many('account.move.line', 'line_pay_rel', 'pay_id', 'line_id', 'Entries')
     }
     _defaults = {
-         'duedate': lambda *a: time.strftime('%Y-%m-%d'),
+        'duedate': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -84,15 +84,15 @@ class payment_order_create(osv.osv_memory):
             elif payment.date_prefered == 'fixed':
                 date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid, {
-                    'move_line_id': line.id,
-                    'amount_currency': line.amount_residual_currency,
-                    'bank_id': line2bank.get(line.id),
-                    'order_id': payment.id,
-                    'partner_id': line.partner_id and line.partner_id.id or False,
-                    'communication': line.ref or '/',
-                    'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
-                    'date': date_to_pay,
-                    'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
+                'move_line_id': line.id,
+                'amount_currency': line.amount_residual_currency,
+                'bank_id': line2bank.get(line.id),
+                'order_id': payment.id,
+                'partner_id': line.partner_id and line.partner_id.id or False,
+                'communication': line.ref or '/',
+                'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
+                'date': date_to_pay,
+                'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

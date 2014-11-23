@@ -37,10 +37,10 @@ class TestQWebTField(common.TransactionCase):
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
-                  'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-expression="company.name">%s</span>' % (
-                      company_id,
-                      "My Test Company",))
+            'data-oe-field="name" data-oe-type="char" '
+            'data-oe-expression="company.name">%s</span>' % (
+                company_id,
+                "My Test Company",))
 
     def test_i18n(self):
         field = etree.Element('span', {'t-field': u'company.name'})
@@ -57,10 +57,10 @@ class TestQWebTField(common.TransactionCase):
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
-                  'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-expression="company.name">%s</span>' % (
-                      company_id,
-                      cgi.escape(s.encode('utf-8')),))
+            'data-oe-field="name" data-oe-type="char" '
+            'data-oe-expression="company.name">%s</span>' % (
+                company_id,
+                cgi.escape(s.encode('utf-8')),))
 
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': u'company.name'})

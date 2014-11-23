@@ -55,9 +55,9 @@ class sale_quote_line(osv.osv):
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'website_description': fields.related('product_id', 'product_tmpl_id', 'quote_description', string='Line Description', type='html', translate=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
-        'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
+        'product_uom_qty': fields.float('Quantity', required=True, digits_compute=dp.get_precision('Product UoS')),
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
     }
     _defaults = {
@@ -254,10 +254,10 @@ class sale_quote_option(osv.osv):
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'website_description': fields.html('Option Description', translate=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
-        'quantity': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
+        'quantity': fields.float('Quantity', required=True, digits_compute=dp.get_precision('Product UoS')),
     }
     _defaults = {
         'quantity': 1,
@@ -284,11 +284,11 @@ class sale_order_option(osv.osv):
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
         'website_description': fields.html('Line Description'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
         'quantity': fields.float('Quantity', required=True,
-            digits_compute= dp.get_precision('Product UoS')),
+            digits_compute=dp.get_precision('Product UoS')),
     }
 
     _defaults = {

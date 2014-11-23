@@ -118,11 +118,11 @@ class QWeb(orm.AbstractModel):
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
     _format_regex = re.compile(
         '(?:'
-            # ruby-style pattern
-            '#\{(.+?)\}'
+        # ruby-style pattern
+        '#\{(.+?)\}'
         ')|(?:'
-            # jinja-style pattern
-            '\{\{(.+?)\}\}'
+        # jinja-style pattern
+        '\{\{(.+?)\}\}'
         ')')
 
     def __init__(self, pool, cr):
@@ -376,7 +376,7 @@ class QWeb(orm.AbstractModel):
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def _iterate(self, iterable):
-        if isinstance (iterable, collections.Mapping):
+        if isinstance(iterable, collections.Mapping):
             return iterable.iteritems()
 
         return itertools.izip(*itertools.tee(iterable))
@@ -1258,11 +1258,11 @@ class AssetsBundle(object):
             ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
         url = url_prefix + self.version
         ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=content.encode('utf8').encode('base64'),
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
+            datas=content.encode('utf8').encode('base64'),
+            type='binary',
+            name=url,
+            url=url,
+        ), context=self.context)
 
     def css_message(self, message):
         return """

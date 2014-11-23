@@ -59,9 +59,9 @@ class ServerParameter(unohelper.Base, XJobExecutor):
         self.win.addEdit("txtPassword", -2, 67, 123, 15,)
         self.win.setEchoChar("txtPassword", 42)
 
-        self.win.addButton('btnOK', -2, -5, 60, 15, 'Connect', actionListenerProc = self.btnOk_clicked)
-        self.win.addButton('btnPrevious', 15 - 80, -5, 50, 15, 'Previous', actionListenerProc = self.btnPrevious_clicked)
-        self.win.addButton('btnCancel', -2 - 110 - 5, -5, 35, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked)
+        self.win.addButton('btnOK', -2, -5, 60, 15, 'Connect', actionListenerProc=self.btnOk_clicked)
+        self.win.addButton('btnPrevious', 15 - 80, -5, 50, 15, 'Previous', actionListenerProc=self.btnPrevious_clicked)
+        self.win.addButton('btnCancel', -2 - 110 - 5, -5, 35, 15, 'Cancel', actionListenerProc=self.btnCancel_clicked)
 
         sValue = ""
         if docinfo.getUserFieldValue(0) <> "":

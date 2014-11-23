@@ -87,10 +87,10 @@ class product_product(osv.osv):
         # bom specific to this variant or global to template
         domain = [
             '|',
-                ('product_id', 'in', ids),
-                '&',
-                    ('product_id', '=', False),
-                    ('product_tmpl_id', 'in', list(products)),
+            ('product_id', 'in', ids),
+            '&',
+            ('product_id', '=', False),
+            ('product_tmpl_id', 'in', list(products)),
         ]
         result['context'] = "{}"
         result['domain'] = str(domain)

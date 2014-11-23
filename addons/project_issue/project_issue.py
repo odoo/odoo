@@ -245,7 +245,7 @@ class project_issue(osv.Model):
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'stage_id': fields.many2one ('project.task.type', 'Stage',
+        'stage_id': fields.many2one('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
@@ -271,7 +271,7 @@ class project_issue(osv.Model):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
-            store = {
+            store={
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
                 'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_issue_work, ['hours'], 10),

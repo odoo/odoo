@@ -263,8 +263,8 @@ class TestApplyInheritanceSpecs(ViewCase):
 
     def test_replace(self):
         spec = Field(
-                Field(name="replacement"),
-                name="target", position="replace")
+            Field(name="replacement"),
+            name="target", position="replace")
 
         self.View.apply_inheritance_specs(self.cr, self.uid,
                                           self.base_arch,
@@ -287,8 +287,8 @@ class TestApplyInheritanceSpecs(ViewCase):
 
     def test_insert_after(self):
         spec = Field(
-                Field(name="inserted"),
-                name="target", position="after")
+            Field(name="inserted"),
+            name="target", position="after")
 
         self.View.apply_inheritance_specs(self.cr, self.uid,
                                           self.base_arch,
@@ -304,8 +304,8 @@ class TestApplyInheritanceSpecs(ViewCase):
 
     def test_insert_before(self):
         spec = Field(
-                Field(name="inserted"),
-                name="target", position="before")
+            Field(name="inserted"),
+            name="target", position="before")
 
         self.View.apply_inheritance_specs(self.cr, self.uid,
                                           self.base_arch,
@@ -340,10 +340,10 @@ class TestApplyInheritanceSpecs(ViewCase):
 
     def test_unpack_data(self):
         spec = E.data(
-                Field(Field(name="inserted 0"), name="target"),
-                Field(Field(name="inserted 1"), name="target"),
-                Field(Field(name="inserted 2"), name="target"),
-                Field(Field(name="inserted 3"), name="target"),
+            Field(Field(name="inserted 0"), name="target"),
+            Field(Field(name="inserted 1"), name="target"),
+            Field(Field(name="inserted 2"), name="target"),
+            Field(Field(name="inserted 3"), name="target"),
         )
 
         self.View.apply_inheritance_specs(self.cr, self.uid,
@@ -364,8 +364,8 @@ class TestApplyInheritanceSpecs(ViewCase):
     @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = Field(
-                Field(name="whoops"),
-                name="target", position="serious_series")
+            Field(name="whoops"),
+            name="target", position="serious_series")
 
         with self.assertRaises(AttributeError):
             self.View.apply_inheritance_specs(self.cr, self.uid,

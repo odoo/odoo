@@ -235,15 +235,15 @@ class account_fiscalyear_close(osv.osv_memory):
                 query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
                        account.balance < 0 and -account.balance or 0.0,
                        data[0].report_name,
-                       period.date_start,
-                       move_id,
-                       new_journal.id,
-                       period.id,
-                       account.id,
-                       account.currency_id and account.currency_id.id or None,
-                       account.foreign_balance if account.currency_id else 0.0,
-                       account.company_id.id,
-                       'draft')
+                    period.date_start,
+                    move_id,
+                    new_journal.id,
+                    period.id,
+                    account.id,
+                    account.currency_id and account.currency_id.id or None,
+                    account.foreign_balance if account.currency_id else 0.0,
+                    account.company_id.id,
+                    'draft')
         if query_2nd_part:
             cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
             self.invalidate_cache(cr, uid, context=context)

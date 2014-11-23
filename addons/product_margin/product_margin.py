@@ -105,7 +105,7 @@ class product_product(osv.osv):
         'date_from': fields.function(_product_margin, type='date', string='Margin Date From', multi='product_margin'),
         'date_to': fields.function(_product_margin, type='date', string='Margin Date To', multi='product_margin'),
         'invoice_state': fields.function(_product_margin, type='selection', selection=[
-                ('paid', 'Paid'), ('open_paid', 'Open and Paid'), ('draft_open_paid', 'Draft, Open and Paid')
+            ('paid', 'Paid'), ('open_paid', 'Open and Paid'), ('draft_open_paid', 'Draft, Open and Paid')
         ], string='Invoice State', multi='product_margin', readonly=True),
         'sale_avg_price': fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Customer Invoices."),

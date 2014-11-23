@@ -506,7 +506,7 @@ class JsonRequest(WebRequest):
             body = simplejson.dumps(response)
 
         return Response(
-                    body, headers=[('Content-Type', mime),
+            body, headers=[('Content-Type', mime),
                                    ('Content-Length', len(body))])
 
     def _handle_exception(self, exception):
@@ -518,9 +518,9 @@ class JsonRequest(WebRequest):
         except Exception:
             _logger.exception("Exception during JSON request handling.")
             error = {
-                    'code': 200,
-                    'message': "OpenERP Server Error",
-                    'data': serialize_exception(exception)
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': serialize_exception(exception)
             }
             if isinstance(exception, AuthenticationError):
                 error['code'] = 100

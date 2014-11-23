@@ -50,12 +50,12 @@ class report_rappel(report_sxw.rml_parse):
     def _lines_get_with_partner(self, partner, company_id):
         moveline_obj = self.pool['account.move.line']
         moveline_ids = moveline_obj.search(self.cr, self.uid, [
-                            ('partner_id', '=', partner.id),
-                            ('account_id.type', '=', 'receivable'),
-                            ('reconcile_id', '=', False),
-                            ('state', '!=', 'draft'),
-                            ('company_id', '=', company_id),
-                        ])
+            ('partner_id', '=', partner.id),
+            ('account_id.type', '=', 'receivable'),
+            ('reconcile_id', '=', False),
+            ('state', '!=', 'draft'),
+            ('company_id', '=', company_id),
+        ])
 
         # lines_per_currency = {currency: [line data, ...], ...}
         lines_per_currency = defaultdict(list)

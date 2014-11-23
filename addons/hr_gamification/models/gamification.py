@@ -85,10 +85,10 @@ class hr_employee(osv.osv):
         for employee in self.browse(cr, uid, ids, context=context):
             res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [
                 '|',
-                    ('employee_id', '=', employee.id),
-                    '&',
-                        ('employee_id', '=', False),
-                        ('user_id', '=', employee.user_id.id)
+                ('employee_id', '=', employee.id),
+                '&',
+                ('employee_id', '=', False),
+                ('user_id', '=', employee.user_id.id)
             ], context=context)
         return res
 
@@ -98,10 +98,10 @@ class hr_employee(osv.osv):
         for employee in self.browse(cr, uid, ids, context=context):
             employee_badge_ids = self.pool.get('gamification.badge.user').search(cr, uid, [
                 '|',
-                    ('employee_id', '=', employee.id),
-                    '&',
-                        ('employee_id', '=', False),
-                        ('user_id', '=', employee.user_id.id)
+                ('employee_id', '=', employee.id),
+                '&',
+                ('employee_id', '=', False),
+                ('user_id', '=', employee.user_id.id)
             ], context=context)
             res[employee.id] = len(employee_badge_ids) > 0
         return res

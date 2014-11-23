@@ -56,7 +56,7 @@ def getServiceManager(cHost="localhost", cPort="2002"):
         # Connect to the running OpenOffice.org and get its context.
         if __name__ <> "package":
             oLocalResolver = oLocalContext.ServiceManager.createInstanceWithContext(
-                                    "com.sun.star.bridge.UnoUrlResolver", oLocalContext)
+                "com.sun.star.bridge.UnoUrlResolver", oLocalContext)
             oContext = oLocalResolver.resolve("uno:socket,host=" + cHost + ",port=" + cPort + ";urp;StarOffice.ComponentContext")
         # Get the ServiceManager object
             goServiceManager = oContext.ServiceManager

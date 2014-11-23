@@ -270,7 +270,7 @@ class ir_model_fields(osv.osv):
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'selectable': fields.boolean('Selectable'),
         'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the field is defined'),
-        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
+        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain="[('ttype','=','serialized')]",
                                                   ondelete='cascade', help="If set, this field will be stored in the sparse "
                                                                            "structure of the serialization field, instead "
                                                                            "of having its own database column. This cannot be "

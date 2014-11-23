@@ -204,8 +204,8 @@ class test_preview(TransactionCase):
     def test_encoding(self):
         Import, id = self.make_import()
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': '"',
-                'separator': ',',
+            'quoting': '"',
+            'separator': ',',
         })
         self.assertTrue('error' in result)
 
@@ -213,9 +213,9 @@ class test_preview(TransactionCase):
         Import, id = self.make_import()
 
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': 'foo',
-                'separator': ',',
-                'encoding': 'euc_kr',
+            'quoting': 'foo',
+            'separator': ',',
+            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
@@ -223,9 +223,9 @@ class test_preview(TransactionCase):
         Import, id = self.make_import()
 
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': '"',
-                'separator': 'bob',
-                'encoding': 'euc_kr',
+            'quoting': '"',
+            'separator': 'bob',
+            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 

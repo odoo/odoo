@@ -159,10 +159,10 @@ class account_account_type(osv.osv):
         obj_financial_report = self.pool.get('account.financial.report')
         financial_report_ref = {}
         for key, financial_report in [
-                    ('asset', 'account_financial_report_assets0'),
-                    ('liability', 'account_financial_report_liability0'),
-                    ('income', 'account_financial_report_income0'),
-                    ('expense', 'account_financial_report_expense0'),
+            ('asset', 'account_financial_report_assets0'),
+            ('liability', 'account_financial_report_liability0'),
+            ('income', 'account_financial_report_income0'),
+            ('expense', 'account_financial_report_expense0'),
         ]:
             try:
                 financial_report_ref[key] = obj_financial_report.browse(cr, uid,
@@ -206,7 +206,7 @@ class account_account_type(osv.osv):
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
         'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
-            selection= [('none', '/'),
+            selection=[('none', '/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
                         ('asset', _('Balance Sheet (Asset account)')),
@@ -512,8 +512,8 @@ class account_account(osv.osv):
             required=True),
         'level': fields.function(_get_level, string='Level', method=True, type='integer',
              store={
-                    'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
-                   }),
+                 'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
+             }),
     }
 
     _defaults = {
@@ -752,7 +752,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date': fields.boolean('Check Date in Period', help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period'),
+        'allow_date': fields.boolean('Check Date in Period', help='If checked, the entry won\'t be created if the entry date is not included into the selected period'),
         'profit_account_id': fields.many2one('account.account', 'Profit Account'),
         'loss_account_id': fields.many2one('account.account', 'Loss Account'),
         'internal_account_id': fields.many2one('account.account', 'Internal Transfers Account', select=1),
@@ -880,8 +880,8 @@ class account_fiscalyear(osv.osv):
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
         'state': fields.selection([('draft', 'Open'), ('done', 'Closed')], 'Status', readonly=True, copy=False),
         'end_journal_period_id': fields.many2one(
-             'account.journal.period', 'End of Year Entries Journal',
-             readonly=True, copy=False),
+            'account.journal.period', 'End of Year Entries Journal',
+            readonly=True, copy=False),
     }
     _defaults = {
         'state': 'draft',
@@ -907,12 +907,12 @@ class account_fiscalyear(osv.osv):
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             period_obj.create(cr, uid, {
-                    'name': "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
-                    'code': ds.strftime('00/%Y'),
-                    'date_start': ds,
-                    'date_stop': ds,
-                    'special': True,
-                    'fiscalyear_id': fy.id,
+                'name': "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
+                'code': ds.strftime('00/%Y'),
+                'date_start': ds,
+                'date_stop': ds,
+                'special': True,
+                'fiscalyear_id': fy.id,
             })
             while ds.strftime('%Y-%m-%d') < fy.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
@@ -1218,7 +1218,7 @@ class account_move(osv.osv):
         period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
         return period_ids[0]
 
-    def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
+    def _amount_compute(self, cr, uid, ids, name, args, context, where=''):
         if not ids:
             return {}
         cr.execute( 'SELECT move_id, SUM(debit) '
@@ -1260,13 +1260,13 @@ class account_move(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted': [('readonly', True)]}),
         'state': fields.selection(
-              [('draft', 'Unposted'), ('posted', 'Posted')], 'Status',
-              required=True, readonly=True, copy=False,
-              help='All manually created new journal entries are usually in the status \'Unposted\', '
-                   'but you can set the option to skip that status on the related journal. '
-                   'In that case, they will behave as journal entries automatically created by the '
-                   'system on document validation (invoices, bank statements...) and will be created '
-                   'in \'Posted\' status.'),
+            [('draft', 'Unposted'), ('posted', 'Posted')], 'Status',
+            required=True, readonly=True, copy=False,
+            help='All manually created new journal entries are usually in the status \'Unposted\', '
+            'but you can set the option to skip that status on the related journal. '
+            'In that case, they will behave as journal entries automatically created by the '
+            'system on document validation (invoices, bank statements...) and will be created '
+            'in \'Posted\' status.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries',
                                    states={'posted': [('readonly', True)]},
                                    copy=True),
@@ -1424,12 +1424,12 @@ class account_move(osv.osv):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') %
-                                move['name'])
+                    move['name'])
             for line in move.line_id:
                 if line.invoice:
                     raise osv.except_osv(_('User Error!'),
                             _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") %
-                                    (line.invoice.number, move.name))
+                        (line.invoice.number, move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
             context['period_id'] = move.period_id.id
@@ -1719,7 +1719,7 @@ class account_tax_code(osv.osv):
     This code is used for some tax declarations.
     """
 
-    def _sum(self, cr, uid, ids, name, args, context, where ='', where_params=()):
+    def _sum(self, cr, uid, ids, name, args, context, where='', where_params=()):
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
@@ -3472,14 +3472,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             raise osv.except_osv(_('Error!'), _('Cannot generate an unused journal code.'))
 
         vals = {
-                'name': line['acc_name'],
-                'code': journal_code,
-                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
-                'company_id': company_id,
-                'analytic_journal_id': False,
-                'currency': False,
-                'default_credit_account_id': default_account_id,
-                'default_debit_account_id': default_account_id,
+            'name': line['acc_name'],
+            'code': journal_code,
+            'type': line['account_type'] == 'cash' and 'cash' or 'bank',
+            'company_id': company_id,
+            'analytic_journal_id': False,
+            'currency': False,
+            'default_credit_account_id': default_account_id,
+            'default_debit_account_id': default_account_id,
         }
         if line['currency_id']:
             vals['currency'] = line['currency_id']
@@ -3509,13 +3509,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
         bank_type = tmp and tmp[1] or False
         return {
-                'name': line['acc_name'],
-                'currency_id': line['currency_id'],
-                'code': new_code,
-                'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
-                'company_id': company_id,
+            'name': line['acc_name'],
+            'currency_id': line['currency_id'],
+            'code': new_code,
+            'type': 'liquidity',
+            'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
+            'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+            'company_id': company_id,
         }
 
     def _create_bank_journals_from_o2m(self, cr, uid, obj_wizard, company_id, acc_template_ref, context=None):

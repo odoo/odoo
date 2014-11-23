@@ -29,7 +29,7 @@ from openerp.report.render.rml2pdf import utils
 
 
 class _flowable(object):
-    def __init__(self, template, doc, localcontext = None):
+    def __init__(self, template, doc, localcontext=None):
         self._tags = {
             'title': self._tag_title,
             'spacer': self._tag_spacer,
@@ -163,7 +163,7 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
 
 
 class _rml_tmpl_draw_string(_rml_tmpl_tag):
-    def __init__(self, node, style, localcontext = {}):
+    def __init__(self, node, style, localcontext={}):
         self.localcontext = localcontext
         self.posx = utils.unit_get(node.get('x'))
         self.posy =  utils.unit_get(node.get('y'))
@@ -201,7 +201,7 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
 
 
 class _rml_tmpl_draw_lines(_rml_tmpl_tag):
-    def __init__(self, node, style, localcontext = {}):
+    def __init__(self, node, style, localcontext={}):
         self.localcontext = localcontext
         coord = [utils.unit_get(x) for x in utils._process_text(self, node.text).split(' ')]
         self.ok = False
@@ -392,7 +392,7 @@ class _rml_doc(object):
         list_story = []
         for story in utils._child_get(self.dom, self, 'story'):
             template = _rml_template(self.dom.findall('template')[0], self.localcontext)
-            f = _flowable(template, self.dom, localcontext = self.localcontext)
+            f = _flowable(template, self.dom, localcontext=self.localcontext)
             story_text = f.render(story)
             list_story.append(story_text)
         del f
@@ -436,7 +436,7 @@ class _rml_doc(object):
         out.write(self.result)
 
 
-def parseString(data, localcontext = {}, fout=None):
+def parseString(data, localcontext={}, fout=None):
     r = _rml_doc(data, localcontext)
     if fout:
         fp = file(fout, 'wb')
