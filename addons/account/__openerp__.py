@@ -42,7 +42,6 @@
         'views/account_financial_report_data.xml',
         'wizard/account_report_common_view.xml',
         'wizard/account_invoice_refund_view.xml',
-        'wizard/account_tax_chart_view.xml',
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
         'wizard/account_vat_view.xml',
