@@ -31,6 +31,4 @@ class account_partner_ledger(models.TransientModel):
     def _print_report(self, data):
         data = self.pre_print_report(data)
         data['form'].update(self.read(['initial_balance', 'filter', 'page_split', 'amount_currency'])[0])
-        if data['form'].get('page_split') is True: 
-            return self.env['report'].get_action(self.env['account.partner.ledger'], 'account.report_partnerledgerother', data=data)
         return self.env['report'].get_action(self.env['account.partner.ledger'], 'account.report_partnerledger', data=data)
