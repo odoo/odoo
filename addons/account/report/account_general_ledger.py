@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from openerp import models,api
+from openerp import models, api
 from openerp.tools.translate import _
 from common_report_header import common_report_header
 

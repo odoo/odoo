@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp import models,api
+from openerp import models, api
 from openerp.tools.translate import _
 from common_report_header import common_report_header
 
 
-class PartnerBbalanceReport(models.AbstractModel, common_report_header):
+class PartnerBalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_partnerbalance'
 
     def _get_partners(self, data):
@@ -44,14 +44,6 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
             move_state = ['posted']
         if not data.get('form', False) and data['form'].get('ids', []):
             return 0.0
-
-        self._cr.execute("SELECT a.id " \
-                "FROM account_account a " \
-                "LEFT JOIN account_account_type t " \
-                    "ON (t.id = a.user_type) " \
-                    "WHERE t.code IN (%s) " \
-                    "AND NOT a.deprecated", (self.ACCOUNT_TYPE))
-
         self._cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l " \
@@ -301,20 +293,20 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
             'doc_ids': self.ids,
             'doc_model': module_report.model,
             'docs': [],
-            'get_start_date': self._get_start_date(data),
-            'get_end_date': self._get_end_date(data),
-            'get_account': self._get_account(data),
-            'get_fiscalyear': self._get_fiscalyear(data),
-            'get_journal': self._get_journal(data),
-            'get_filter': self._get_filter(data),
-            'get_target_move': self._get_target_move(data),
-            'get_partners':self._get_partners(data),
-            'sum_debit': self._sum_debit(data),
-            'sum_credit': self._sum_credit(data),
-            'sum_litige': self._sum_litige(data),
-            'lines': self._lines(data)
+            'data': data,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
+            'get_account': self._get_account,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_journal': self._get_journal,
+            'get_filter': self._get_filter,
+            'get_target_move': self._get_target_move,
+            'get_partners':self._get_partners,
+            'sum_debit': self._sum_debit,
+            'sum_credit': self._sum_credit,
+            'sum_litige': self._sum_litige,
+            'lines': self._lines
         }
-
         return report_obj.render('account.report_partnerbalance', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

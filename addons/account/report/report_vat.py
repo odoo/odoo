@@ -19,25 +19,22 @@
 #
 ##############################################################################
 
-from openerp import models,api
+from openerp import models, api
 from common_report_header import common_report_header
-
 
 class AccountTaxReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_vat'
 
-    @api.multi
+    @api.model
     def _get_basedon(self, data):
         return data.get('form', False) and data['form'].get('based_on', False)
 
     @api.multi
     def _get_lines(self, based_on, company_id=False, parent=False, level=0):
         res = self._get_codes(based_on, company_id, parent, level)
-
         i = 0
         top_result = []
         while i < len(res):
-
             res_dict = { 'code': res[i][1].code,
                 'name': res[i][1].name,
                 'debit': 0,
@@ -47,7 +44,6 @@ class AccountTaxReport(models.AbstractModel, common_report_header):
                 'level': res[i][0],
                 'pos': 0
             }
-
             top_result.append(res_dict)
             res_general = self._get_general(res[i][1].id, company_id, based_on)
             ind_general = 0

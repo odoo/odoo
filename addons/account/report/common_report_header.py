@@ -22,7 +22,6 @@
 from openerp import models,api
 from openerp.tools.translate import _
 
-# Mixin to use with rml_parse, so self.pool will be defined.
 class common_report_header(object):
 
     def _sum_debit(self, date=False, journal_id=False):
@@ -81,7 +80,7 @@ class common_report_header(object):
             return data['form']['period_to']
         return ''
 
-    @api.multi
+    @api.model
     def _get_account(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return self.env['account.account'].browse(data['form']['chart_account_id']).name
@@ -106,7 +105,6 @@ class common_report_header(object):
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
                         'WHERE date=%s AND journal_id IN %s '+ self.query_get_clause +'',
                         (date, tuple(journals)))
-
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit_period(self, date, journal_id=None):
@@ -118,7 +116,7 @@ class common_report_header(object):
                         (date, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-    @api.multi
+    @api.model
     def _get_fiscalyear(self, data):
         if data.get('form', False) and data['form'].get('fiscalyear_id', False):
             return self.env['account.fiscalyear'].browse(data['form']['fiscalyear_id']).name
@@ -129,7 +127,7 @@ class common_report_header(object):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
         return ''
 
-    @api.multi
+    @api.model
     def _get_journal(self, data):
         codes = []
         if data.get('form', False) and data['form'].get('journal_ids', False):

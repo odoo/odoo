@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from openerp import models,api
+from openerp import models, api
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from common_report_header import common_report_header
 
@@ -40,7 +40,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.type IN %s)\
+                    AND (at.code IN %s)\
                     AND NOT account_account.deprecated\
                     AND ((reconcile_id IS NULL)\
                        OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
@@ -53,7 +53,6 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         self.total_account = []
         for i in range(7):
             self.total_account.append(0)
-        #
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [x['id'] for x in partners]
         if not partner_ids:
@@ -66,7 +65,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.type IN %s)\
+                    AND (at.code IN %s)\
                     AND (l.partner_id IN %s)\
                     AND ((l.reconcile_id IS NULL)\
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
@@ -86,7 +85,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id) \
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.type IN %s)\
+                        AND (at.code IN %s)\
                         AND (COALESCE(l.date_maturity, l.date) < %s)\
                         AND (l.partner_id IN %s)\
                         AND ((l.reconcile_id IS NULL)\
@@ -104,7 +103,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.type IN %s)\
+                        AND (at.code IN %s)\
                         AND (COALESCE(l.date_maturity,l.date) > %s)\
                         AND (l.partner_id IN %s)\
                         AND ((l.reconcile_id IS NULL)\
@@ -134,10 +133,11 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
             self._cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
-                    FROM account_move_line AS l, account_account, account_move am 
+                    FROM account_move_line AS l, account_account, account_move am, account_account_type at 
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)
                         AND (am.state IN %s)
-                        AND (account_account.type IN %s)
+                        AND (account_account.user_type = at.id)
+                        AND (at.code IN %s)
                         AND (l.partner_id IN %s)
                         AND ((l.reconcile_id IS NULL)
                           OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
@@ -227,7 +227,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     AND (am.state IN %s)\
                     AND (l.partner_id IS NULL)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.type IN %s)\
+                    AND (at.code IN %s)\
                     AND ((l.reconcile_id IS NULL) \
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     ' + self.query + '\
@@ -244,7 +244,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                         AND (am.state IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.type IN %s)\
+                        AND (at.code IN %s)\
                         AND (COALESCE(l.date_maturity, l.date) < %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
@@ -260,7 +260,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                         AND (am.state IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.type IN %s)\
+                        AND (at.code IN %s)\
                         AND (COALESCE(l.date_maturity,l.date) > %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
@@ -289,7 +289,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.type IN %s)\
+                        AND (at.code IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
@@ -349,6 +349,10 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         period = self.total_account[int(pos)]
         return period or 0.0
 
+    def _get_for_period(self,pos):
+        period = self.total_account[int(pos)]
+        return period or 0.0
+
     def _get_direction(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
@@ -357,8 +361,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
     def render_html(self, data=None):
         ctx = data['form'].get('used_context', {})
         ctx.update({'fiscalyear': False, 'all_fiscalyear': True})
-        obj_move = self.env['account.move.line'].with_context(ctx)
-        self.query = obj_move._query_get(obj='l')
+        self.query = self.env['account.move.line'].with_context(ctx)._query_get(obj='l')
 
         self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
@@ -383,6 +386,8 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
             'get_end_date': self._get_end_date,
             'get_target_move': self._get_target_move,
             'get_lines': self._get_lines,
+            'get_direction': self._get_direction,
+            'get_for_period': self._get_for_period,
             'get_lines_with_out_partner': self._get_lines_with_out_partner,
         }
 

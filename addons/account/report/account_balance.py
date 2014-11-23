@@ -19,11 +19,8 @@
 #
 ##############################################################################
 
-import time
-
-from openerp import models,api
+from openerp import models, api
 from common_report_header import common_report_header
-
 
 class AccountBalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_trialbalance'
@@ -31,11 +28,7 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
     @api.multi
     def _lines(self, data, ids=None, done=None):
         def _process_child(accounts, disp_acc, parent):
-            return []
             account_recs = [acct for acct in accounts if acct.id == parent]
-            currency_obj = self.env['res.currency']
-            # acc_id = self.env['account.account'].browse(account_rec.id)
-            # currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
             res = []
             i = 0
             for account_rec in account_recs:
@@ -53,11 +46,12 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
                 }
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
+                currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
                 if disp_acc == 'movement':
-                    if not currency_obj.is_zero(currency, res[i]['credit']) or not currency_obj.is_zero(currency, res[i]['debit']) or not currency_obj.is_zero(currency, res[i]['balance']):
+                    if not currency.is_zero(res[i]['credit']) or not currency.is_zero(res[i]['debit']) or not currency.is_zero(res[i]['balance']):
                         self.result_acc.append(res[i])
                 elif disp_acc == 'not_zero':
-                    if not currency_obj.is_zero(currency, res[i]['balance']):
+                    if not currency.is_zero(res[i]['balance']):
                         self.result_acc.append(res[i])
                 else:
                     self.result_acc.append(res[i])
@@ -67,15 +61,12 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
                 i+=1
 
         obj_account = self.env['account.account']
-
         if not data.get('ids'):
             return []
         ids = data.get('ids')
         if not done:
             done={}
-
         ctx = self._context.copy()
-
         ctx['fiscalyear'] = data['form']['fiscalyear_id']
         if data['form']['filter'] == 'filter_period':
             ctx['period_from'] = data['form']['period_from']
@@ -85,18 +76,16 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
             ctx['date_to'] =  data['form']['date_to']
         ctx['state'] = data['form']['target_move']
         parents = ids
-        obj_account.with_context(ctx)
-        child_ids = obj_account._get_children_and_consol()
+        child_ids = obj_account.with_context(ctx)._get_children_and_consol()
         if child_ids:
             ids = child_ids
-        # accounts = obj_account.with_context(ctx).read_group([('id', 'in', ids)], ['type','code','name','debit','credit','balance','parent_id','level','child_id'])
-        accounts = obj_account.with_context(ctx).browse(ids)
+        accounts = obj_account.browse(ids)
 
         for parent in parents:
-                if parent in done:
-                    continue
-                done[parent] = 1
-                _process_child(accounts, data['form']['display_account'], parent)
+            if parent in done:
+                continue
+            done[parent] = 1
+            _process_child(accounts, data['form']['display_account'], parent)
         return self.result_acc
 
     @api.model
@@ -112,8 +101,6 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
     @api.model
     def _get_filter(self, data):
         return data.get('form', False) and data['form'].get('filter', False)
-
-
 
     @api.multi
     def render_html(self, data=None):

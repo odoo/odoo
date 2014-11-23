@@ -18,7 +18,7 @@
 #
 ##############################################################################
 
-from openerp import models,api
+from openerp import models, api
 from openerp.tools.translate import _
 from common_report_header import common_report_header
 
@@ -88,7 +88,6 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
                         flag = True
                 if flag:
                     lines.append(vals)
-
         return lines
 
     @api.model
@@ -123,8 +122,6 @@ class PartnerBbalanceReport(models.AbstractModel, common_report_header):
             'get_target_move': self._get_target_move(data),
             'get_lines': self._get_lines(data)
         }
-
         return report_obj.render('account.report_financial', docargs)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
