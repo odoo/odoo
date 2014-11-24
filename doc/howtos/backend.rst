@@ -1725,12 +1725,12 @@ server with the library ``xmlrpclib``::
             print "Logged in as %s (uid:%d)" % (USER,uid)
 
             call = functools.partial(
-                xmlcprlib.ServerProxy(ROOT + 'object').execute,
+                xmlrpclib.ServerProxy(ROOT + 'object').execute,
                 DB, uid, PASS)
 
             # 2. Read the sessions
             sessions = call('openacademy.session','search_read', [], ['name','seats'])
-            for session in sessions :
+            for session in sessions:
                 print "Session %s (%s seats)" % (session['name'], session['seats'])
             # 3.create a new session
             session_id = call('openacademy.session', 'create', {
