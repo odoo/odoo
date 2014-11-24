@@ -131,11 +131,16 @@ class mrp_production(osv.Model):
                 total = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, total, bom.product_id.uom_id.id)
         return total
 
-
     def _update_cost_price(self, cr, uid, ids, context=None):
+        """Rectify cost of finished product after production
+
+        This should be done in post-process as original production (action_produce)
+        will first generate moves for the finished product and then the components.
+        The components are valuated only once consumed so need to rectify the price.
+        """
         for mo in self.browse(cr, uid, ids, context=context):
-            if mo.product_id.cost_method != 'real':
-                # only real time product need to have specific cost
+            if mo.product_id.cost_method == 'standard':
+                # cost price is specified on product form
                 continue
 
             total_cost = self._get_production_costs(cr, uid, mo, context=context)
@@ -143,7 +148,20 @@ class mrp_production(osv.Model):
                 finished_quant_ids = [q.id for q in move.quant_ids]
                 self.pool['stock.quant'].write(cr, uid, finished_quant_ids,
                     {'cost': total_cost/move.product_qty}, context=context)
+                self.pool['stock.move'].write(cr, uid, [move.id],
+                    {'price_unit': total_cost/move.product_qty}, context=context)
 
+            if mo.product_id.cost_method == 'average':
+                qty_available = mo.product_id.product_tmpl_id.qty_available
+                amount_unit = mo.product_id.standard_price
+                # current stock valuation at average price
+                current_stock_price = amount_unit * qty_available
+                rectified_qty = qty_available - mo.product_qty
+                new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                tmpl_dict[prod_tmpl_id] += move.product_qty
+                # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
+                self.pool['stock.move'].product_price_update_before_done(cr, uid, [m.id for m in mo.move_created_ids2], context=context)
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
