@@ -10,40 +10,30 @@ class TestTax(TransactionCase):
 
     def setUp(self):
         super(TestTax, self).setUp()
-        self.tax_model = self.registry('account.tax')
+        self.account_tax = self.env['account.tax']
 
     def test_programmatic_tax(self):
-        cr, uid = self.cr, self.uid
-        tax_id = self.tax_model.create(cr, uid, dict(
-                name="Programmatic tax",
-                type='code',
-                python_compute='result = 12.0',
-                python_compute_inv='result = 11.0',
-                ))
+        # Test computations done by Programmatic tax
+        compute_programmatic_tax = self.account_tax.create({
+            'name': "Programmatic tax",
+            'type': 'code',
+            'python_compute': 'result = 12.0',
+            'python_compute_inv':'result = 11.0',
+        }).compute_all(50.0, 2)
 
-        tax_records = self.tax_model.browse(cr, uid, [tax_id])
-        res = self.tax_model.compute_all(cr, uid, tax_records, 50.0, 2)
-
-        tax_detail = res['taxes'][0]
-        self.assertEquals(tax_detail['amount'], 24.0)
-        self.assertEquals(res['total_included'], 124.0)
-
+        self.assertEquals(compute_programmatic_tax['taxes'][0]['amount'], 24.0)
+        self.assertEquals(compute_programmatic_tax['total_included'], 124.0)
+    
     def test_percent_tax(self):
-        """Test computations done by a 10 percent tax."""
-        cr, uid = self.cr, self.uid
-        tax_id = self.tax_model.create(cr, uid, dict(
-                name="Percent tax",
-                type='percent',
-                amount='0.1',
-                ))
-
-        tax_records = self.tax_model.browse(cr, uid, [tax_id])
-        res = self.tax_model.compute_all(cr, uid, tax_records, 50.0, 2)
-
-        tax_detail = res['taxes'][0]
-        self.assertEquals(tax_detail['amount'], 10.0)
-        self.assertEquals(res['total_included'], 110.0)
+        #Test computations done by a 10 percent tax."""
+        percent_tax = self.account_tax.create({
+            'name': "Percent tax",
+            'type': 'percent',
+            'amount': '0.1',
+        })
+        
+        self.assertEquals(percent_tax.compute_all(50.0, 2)['taxes'][0]['amount'], 10.0)
+        self.assertEquals(percent_tax.compute_all(50.0, 2)['total_included'], 110.0)
 
         # now the inverse computation
-        res = self.tax_model.compute_inv(cr, uid, tax_records, 55.0, 2)
-        self.assertEquals(res[0]['amount'], 10.0)
+        self.assertEquals(percent_tax.compute_inv(55.0, 2)[0]['amount'], 10.0)
