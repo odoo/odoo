@@ -105,6 +105,27 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
+    def add_follower(self, cr, uid, ids, employee_id, context=None):
+        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        if employee and employee.user_id:
+            self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        employee_id = vals.get('employee_id', False)
+        hr_expense_id = super(hr_expense_expense, self).create(cr, uid, vals, context=context)
+        self.add_follower(cr, uid, [hr_expense_id], employee_id, context=context)
+        return hr_expense_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        employee_id = vals.get('employee_id', False)
+        hr_expense_id = super(hr_expense_expense, self).write(cr, uid, ids, vals, context=context)
+        self.add_follower(cr, uid, ids, employee_id, context=context)
+        return hr_expense_id
+
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state != 'draft':

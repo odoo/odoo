@@ -352,19 +352,32 @@ class hr_holidays(osv.osv):
             result['value']['number_of_days_temp'] = 0
         return result
 
+    def add_follower(self, cr, uid, ids, employee_id, context=None):
+        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        if employee and employee.user_id:
+            self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
+
     def create(self, cr, uid, values, context=None):
         """ Override to avoid automatic logging of creation """
         if context is None:
             context = {}
+        employee_id = values.get('employee_id', False)
         context = dict(context, mail_create_nolog=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-        return super(hr_holidays, self).create(cr, uid, values, context=context)
+        hr_holiday_id = super(hr_holidays, self).create(cr, uid, values, context=context)
+        self.add_follower(cr, uid, [hr_holiday_id], employee_id, context=context)
+        return hr_holiday_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        employee_id = vals.get('employee_id', False)
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
-        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        hr_holiday_id = super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+        self.add_follower(cr, uid, ids, employee_id, context=context)
+        return hr_holiday_id
 
     def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
