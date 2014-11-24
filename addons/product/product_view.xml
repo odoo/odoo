@@ -424,7 +424,7 @@
                                 <field name="factor"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                            'readonly':[('uom_type','=','bigger')]}"/>
                                 <field name="factor_inv"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','bigger')],
