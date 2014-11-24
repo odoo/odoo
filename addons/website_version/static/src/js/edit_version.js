@@ -80,9 +80,6 @@
     });
 
     website.EditorBarCustomize.include({
-        start: function() {
-            return this._super();
-        },
         load_menu: function () {
             var self = this;
             if(this.loaded) {
@@ -91,7 +88,7 @@
             openerp.jsonRpc('/website_version/customize_template_get', 'call', { 'key': this.view_name }).then(
                 function(result) {
                     _.each(result, function (item) {
-                        if (!window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                         if (item.header) {
                             self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
                         } else {
