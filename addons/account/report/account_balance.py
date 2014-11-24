@@ -55,9 +55,9 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
                         self.result_acc.append(res[i])
                 else:
                     self.result_acc.append(res[i])
-                # if account_rec['child_id']:
-                    # for child in account_rec['child_id']:
-                        # _process_child(accounts,disp_acc,child)
+                if account_rec['child_id']:
+                    for child in account_rec['child_id']:
+                        _process_child(accounts, disp_acc, child)
                 i+=1
 
         obj_account = self.env['account.account']
@@ -76,7 +76,7 @@ class AccountBalanceReport(models.AbstractModel, common_report_header):
             ctx['date_to'] =  data['form']['date_to']
         ctx['state'] = data['form']['target_move']
         parents = ids
-        child_ids = obj_account.with_context(ctx)._get_children_and_consol()
+        child_ids = obj_account.with_context(ctx).browse(ids)._get_children_and_consol()
         if child_ids:
             ids = child_ids
         accounts = obj_account.browse(ids)

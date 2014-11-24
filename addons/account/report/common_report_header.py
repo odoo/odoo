@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 
 class common_report_header(object):
 
+    @api.multi
     def _sum_debit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
@@ -35,11 +36,12 @@ class common_report_header(object):
             date = self.date
         if not (date and journal_id):
             return 0.0
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
+        self._cr.execute('SELECT SUM(debit) FROM account_move_line l '
                         'WHERE date = %s AND journal_id IN %s ' + self.query_get_clause + ' ',
                         (date, tuple(journal_id)))
-        return self.cr.fetchone()[0] or 0.0
+        return self._cr.fetchone()[0] or 0.0
 
+    @api.multi
     def _sum_credit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
@@ -51,10 +53,10 @@ class common_report_header(object):
             date = self.date
         if not (date and journal_id):
             return 0.0
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
+        self._cr.execute('SELECT SUM(credit) FROM account_move_line l '
                         'WHERE date = %s AND journal_id IN %s '+ self.query_get_clause+'',
                         (date, tuple(journal_id)))
-        return self.cr.fetchone()[0] or 0.0
+        return self._cr.fetchone()[0] or 0.0
 
     @api.model
     def _get_start_date(self, data):
@@ -86,10 +88,11 @@ class common_report_header(object):
             return self.env['account.account'].browse(data['form']['chart_account_id']).name
         return ''
 
-
+    @api.model
     def _get_sortby(self, data):
         raise (_('Error!'), _('Not implemented.'))
 
+    @api.model
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):
             if data['form']['filter'] == 'filter_date':
@@ -98,15 +101,17 @@ class common_report_header(object):
                 return self._translate('Periods')
         return self._translate('No Filters')
 
+    @api.multi
     def _sum_debit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
+        self._cr.execute('SELECT SUM(debit) FROM account_move_line l '
                         'WHERE date=%s AND journal_id IN %s '+ self.query_get_clause +'',
                         (date, tuple(journals)))
-        return self.cr.fetchone()[0] or 0.0
+        return self._cr.fetchone()[0] or 0.0
 
+    @api.multi
     def _sum_credit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
@@ -122,6 +127,7 @@ class common_report_header(object):
             return self.env['account.fiscalyear'].browse(data['form']['fiscalyear_id']).name
         return ''
 
+    @api.model
     def _get_company(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
@@ -134,6 +140,7 @@ class common_report_header(object):
             codes = [x.code for x in self.env['account.journal'].browse(data['form']['journal_ids'])]
         return codes
 
+    @api.model
     def _get_currency(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
