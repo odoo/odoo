@@ -1509,7 +1509,6 @@
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
                     <field name="user_type"/>
-                    <field name="type"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type'}"/>
                    </group>
