@@ -330,7 +330,7 @@
                             <field name="date_invoice"/>
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
-                            <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
+                            <field domain="[('company_id', '=', company_id),('user_type.type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
                             <label for="currency_id" groups="base.group_multi_currency"/>
