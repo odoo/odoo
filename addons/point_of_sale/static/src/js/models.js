@@ -296,6 +296,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
+            order:   ['sequence','name'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
             context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
             loaded: function(self, products){
@@ -428,6 +429,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
+                    var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
                     progress += progress_step;
                     
 
@@ -435,7 +437,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         if (model.ids) {
                             var records = new instance.web.Model(model.model).call('read',[ids,fields],context);
                         } else {
-                            var records = new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                            var records = new instance.web.Model(model.model).query(fields).filter(domain).order_by(order).context(context).all()
                         }
                         records.then(function(result){
                                 try{    // catching exceptions in model.loaded(...)
