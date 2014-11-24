@@ -112,6 +112,44 @@ class product_bom(osv.osv):
         'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
     }
 
-product_bom()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class mrp_production(osv.Model):
+    _inherit = 'mrp.production'
 
+    def _get_production_costs(self, cr, uid, mo, context=None):
+        total = 0.0
+        for consumed_move in mo.move_lines2:
+            for consumed_quant in consumed_move.quant_ids:
+                total += consumed_quant.inventory_value
+
+        if mo.bom_id.routing_id:
+            bom = mo.bom_id
+            for wline in bom.routing_id.workcenter_lines:
+                wc = wline.workcenter_id
+                cycle = wline.cycle_nbr
+                hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
+                total += wc.costs_cycle * cycle + wc.costs_hour * hour
+                total = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, total, bom.product_id.uom_id.id)
+        return total
+
+
+    def _update_cost_price(self, cr, uid, ids, context=None):
+        for mo in self.browse(cr, uid, ids, context=context):
+            if mo.product_id.cost_method != 'real':
+                # only real time product need to have specific cost
+                continue
+
+            total_cost = self._get_production_costs(cr, uid, mo, context=context)
+            for move in mo.move_created_ids2:
+                finished_quant_ids = [q.id for q in move.quant_ids]
+                self.pool['stock.quant'].write(cr, uid, finished_quant_ids,
+                    {'cost': total_cost/move.product_qty}, context=context)
+
+        return True
+
+    def action_production_end(self, cr, uid, ids, context=None):
+        """ Changes production state to Finish and writes finished date.
+        @return: True
+        """
+        res = super(mrp_production, self).action_production_end(cr, uid, ids, context=context)
+        self._update_cost_price(cr, uid, ids, context=context)
+        return res

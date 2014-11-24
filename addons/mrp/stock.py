@@ -150,60 +150,6 @@ class StockMove(osv.osv):
         #we go further with the list of ids potentially changed by action_explode
         return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
 
-    def _calculate_cost_price(self, cr, uid, move, product, bom_id, bom_properties=None, context=None):
-        """ Calculate product cost price in real time on product BOM.
-        @param move: Browse record of the move.
-        @param product: Browse record of the product.
-        @param bom_properties: List of related properties.
-        @return: price
-        """
-
-        if context is None:
-            context = {}
-        if bom_properties is None:
-            bom_properties =  []
-        bom_obj = self.pool.get('mrp.bom')
-        uom_obj = self.pool.get('product.uom')
-        prod_obj = self.pool.get('product.product')
-
-        bom = bom_obj.browse(cr, uid, bom_id, context=context)
-        sub_products, routes = bom_obj._bom_explode(cr, uid, bom, product,
-                                                    factor=1,
-                                                    properties=bom_properties)
-        price = 0
-        for sub_product_dict in sub_products:
-            sub_product = prod_obj.browse(cr, uid, sub_product_dict['product_id'])
-            sub_bom_id = bom_obj._bom_find(cr, uid, product_id=sub_product.id, properties=bom_properties, context=context)
-            std_price = 0.0
-            if sub_bom_id: # recursive call in case of BOM of sub product
-                std_price += self._calculate_cost_price(cr, uid, move, sub_product, sub_bom_id, bom_properties=bom_properties, context=context)
-            else:
-                std_price = sub_product.standard_price
-
-            qty = uom_obj._compute_qty(cr, uid,
-                                       from_uom_id = sub_product_dict['product_uom'],
-                                       qty         = sub_product_dict['product_qty'],
-                                       to_uom_id   = sub_product.uom_id.id)
-            price += std_price * qty
-
-        if bom.routing_id:
-            for wline in bom.routing_id.workcenter_lines:
-                wc = wline.workcenter_id
-                cycle = wline.cycle_nbr
-                hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
-                price += wc.costs_cycle * cycle + wc.costs_hour * hour
-        price /= bom.product_qty
-        price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
-        return price
-
-    def get_price_unit(self, cr, uid, move, context=None):
-        price = super(StockMove, self).get_price_unit(cr, uid, move, context=context)
-        bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, product_id=move.product_id.id, context=context)
-        if not bom_id:
-            return price
-
-        return self._calculate_cost_price(cr, uid, move, move.product_id, bom_id, context=context)
-
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
         """ Consumed product with specific quantity from specific source location.
