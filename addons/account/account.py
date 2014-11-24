@@ -634,7 +634,7 @@ class account_move(models.Model):
         for move in self:
             if not move.journal_id.update_posted:
                 raise Warning(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
-        if ids:
+        if self.ids:
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(self.ids),))
