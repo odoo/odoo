@@ -174,6 +174,8 @@ class mail_notification(osv.Model):
             'email_from': email_from,
             'references': references,
         }
+        if 'mail_server_id' in context:
+            mail_values['mail_server_id'] = context['mail_server_id']
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
             return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
