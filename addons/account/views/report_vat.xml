@@ -10,22 +10,22 @@
                 <div class="row mt32 mb32">
                     <div class="col-xs-3">
                         <strong>Chart of Tax:</strong>
-                        <p t-esc="get_account"/>
+                        <p t-esc="get_account(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Fiscal Year:</strong>
-                        <p t-esc="get_fiscalyear"/>
+                        <p t-esc="get_fiscalyear(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Periods:</strong>
                         <p>
-                            Start Period: <span t-esc="get_start_date"/><br/>
-                            End Period: <span t-esc="get_end_date"/>
+                            Start Period: <span t-esc="get_start_date(data)"/><br/>
+                            End Period: <span t-esc="get_end_date(data)"/>
                         </p>
                     </div>
                     <div class="col-xs-3">
                         <strong>Based On:</strong>
-                        <p t-esc="get_basedon"/>
+                        <p t-esc="data['form']['based_on']"/>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines" t-as="taxline">
+                        <tr t-foreach="get_lines(data['form']['based_on'], data['form']['company_id'])" t-as="taxline">
                             <t t-if="len(taxline['level']) > 5">
                                 <t t-set="style" t-value="'font-weight:normal;'"/>
                             </t>
@@ -55,7 +55,7 @@
                             <td class="text-right"><span t-att-style="style" t-esc="taxline['debit']"/></td>
                             <td class="text-right"><span t-att-style="style" t-esc="taxline['credit']"/></td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="taxline['tax_amount']"/>
+                                <span t-att-style="style" t-esc="taxline['tax_amount']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                     </tbody>

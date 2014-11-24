@@ -23,79 +23,13 @@ from openerp import models, api
 from openerp.tools.translate import _
 from common_report_header import common_report_header
 
-
 class PartnerBalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_partnerbalance'
 
-    def _get_partners(self, data):
-        if data.get('form', False) and data['form'].get('result_selection', False):
-            result = data['form']['result_selection']
-            if result == 'customer':
-                return _('Receivable Accounts')
-            elif result == 'supplier':
-                return _('Payable Accounts')
-            elif result == 'customer_supplier':
-                return _('Receivable and Payable Accounts')
-        return ''
-
-    def _sum_debit(self, data):
-        move_state = ['draft','posted']
-        if data.get('form', False) and data['form'].get('target_move', False) == 'posted':
-            move_state = ['posted']
-        if not data.get('form', False) and data['form'].get('ids', []):
-            return 0.0
-        self._cr.execute(
-                "SELECT sum(debit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s"  \
-                    "AND am.state IN %s" \
-                    "" + self.query + "",
-                    (tuple(self.account_ids), tuple(move_state)))
-        temp_res = float(self._cr.fetchone()[0] or 0.0)
-
-        return temp_res
-
-    def _sum_credit(self, data):
-        move_state = ['draft','posted']
-        if data.get('form', False) and data['form'].get('target_move', False) == 'posted':
-            move_state = ['posted']
-        if not data.get('form', False) and data['form'].get('ids', []):
-            return 0.0
-        self._cr.execute(
-                "SELECT sum(credit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s" \
-                    "AND am.state IN %s" \
-                    "" + self.query + "",
-                    (tuple(self.account_ids), tuple(move_state)))
-        temp_res = float(self._cr.fetchone()[0] or 0.0)
-        return temp_res
-
-    def _sum_litige(self, data):
-        #gives the total of move lines with blocked boolean set to TRUE for the report selection
-        move_state = ['draft','posted']
-        if data.get('form', False) and data['form'].get('target_move', False) == 'posted':
-            move_state = ['posted']
-
-        if not data.get('form', False) and data['form'].get('ids', []):
-            return 0.0
-        self._cr.execute(
-                "SELECT sum(debit-credit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s" \
-                    "AND am.state IN %s" \
-                    "" + self.query + " " \
-                    "AND l.blocked=TRUE ",
-                    (tuple(self.account_ids), tuple(move_state), ))
-        temp_res = float(self._cr.fetchone()[0] or 0.0)
-        return temp_res
-
+    @api.model
     def _lines(self, data):
         move_state = ['draft','posted']
-        if data.get('form', False) and data['form'].get('target_move', False) == 'posted':
+        if self.target_move == 'posted':
             move_state = ['posted']
 
         full_account = []
@@ -119,14 +53,13 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
             "JOIN account_account ac ON (l.account_id = ac.id)" \
             "JOIN account_account_type at ON (ac.user_type = at.id)" \
             "JOIN account_move am ON (am.id = l.move_id)" \
-            "WHERE at.code IN %s " \
+            "WHERE at.type IN %s " \
             "AND am.state IN %s " \
             "" + self.query + "" \
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name",
             (self.ACCOUNT_TYPE, tuple(move_state)))
         res = self._cr.dictfetchall()
-
 
         if self.display_partner == 'non-zero_balance':
             full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
@@ -135,13 +68,13 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
 
         for rec in full_account:
             if not rec.get('name', False):
-                rec.update({'name': _('Unknown Partner')})
+                rec['name'] = _('Unknown Partner')
 
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         return subtotal_row
 
-
+    @api.model
     def _add_subtotal(self, cleanarray):
         i = 0
         completearray = []
@@ -260,31 +193,90 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
         return completearray
 
     @api.model
-    def _get_filter(self, data):
-        return data.get('form', False) and data['form'].get('filter', False)
+    def _sum_debit(self, data):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(debit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s"  \
+                    "AND am.state IN %s" \
+                    "" + self.query + "",
+                    (tuple(self.account_ids), tuple(move_state)))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
 
+    @api.model
+    def _sum_credit(self, data):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(credit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
+                    "" + self.query + "",
+                    (tuple(self.account_ids), tuple(move_state)))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
+
+    @api.model
+    def _sum_litige(self, data):
+        #gives the total of move lines with blocked boolean set to TRUE for the report selection
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(debit-credit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
+                    "" + self.query + " " \
+                    "AND l.blocked=TRUE ",
+                    (tuple(self.account_ids), tuple(move_state), ))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
+
+    @api.model
+    def _get_partners(self, data):
+        if self.result_selection == 'customer':
+            return _('Receivable Accounts')
+        elif self.result_selection == 'supplier':
+            return _('Payable Accounts')
+        elif self.result_selection == 'customer_supplier':
+            return _('Receivable and Payable Accounts')
+        return ''
 
     @api.multi
     def render_html(self, data=None):
-        # set context in self
+        self.target_move = data['form'].get('target_move', 'all')
         self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
-        obj_move = self.env['account.move.line']
         self.result_selection = data['form'].get('result_selection')
-        self.query = obj_move._query_get(obj='l')
-
+        self.query = self.env['account.move.line']._query_get(obj='l')
         if (self.result_selection == 'customer'):
             self.ACCOUNT_TYPE = ('receivable',)
         elif (self.result_selection == 'supplier'):
             self.ACCOUNT_TYPE = ('payable',)
         else:
             self.ACCOUNT_TYPE = ('payable', 'receivable')
-
         self._cr.execute("SELECT a.id " \
                 "FROM account_account a " \
                 "LEFT JOIN account_account_type t " \
-                    "ON (t.id = a.user_type) " \
-                    "WHERE t.code IN (%s) " \
-                    "AND NOT a.deprecated", (self.ACCOUNT_TYPE))
+                    "ON (a.user_type = t.id) " \
+                    "WHERE t.type IN (%s) " \
+                    "AND a.deprecated = 'f'", (self.ACCOUNT_TYPE))
         self.account_ids = [a for (a,) in self._cr.fetchall()]
 
         report_obj = self.env['report']
@@ -292,14 +284,13 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
         docargs = {
             'doc_ids': self.ids,
             'doc_model': module_report.model,
-            'docs': [],
+            'docs': self,
             'data': data,
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_account': self._get_account,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
-            'get_filter': self._get_filter,
             'get_target_move': self._get_target_move,
             'get_partners':self._get_partners,
             'sum_debit': self._sum_debit,

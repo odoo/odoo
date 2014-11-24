@@ -26,7 +26,7 @@ from common_report_header import common_report_header
 class PartnerLedgerReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_partnerledger'
 
-    @api.multi
+    @api.model
     def _get_lines(self, partner):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -62,7 +62,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
             full_account.append(r)
         return full_account
 
-    @api.multi
+    @api.model
     def _get_intial_balance(self, partner):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -86,7 +86,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
         self.init_bal_sum = res[0][2]
         return res
 
-    @api.multi
+    @api.model
     def _sum_debit_partner(self, partner):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -135,7 +135,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
 
         return result_tmp  + result_init
 
-    @api.multi
+    @api.model
     def _sum_credit_partner(self, partner):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -196,18 +196,15 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
 
     @api.multi
     def render_html(self, data=None):
-
         obj_move = self.env['account.move.line']
         obj_partner = self.env['res.partner']
         self.init_bal_sum = 0.0
         ctx = data['form'].get('used_context',{})
-        obj_move.with_context(ctx)
-        self.query = obj_move._query_get(obj='l')
+        self.query = obj_move.with_context(ctx)._query_get(obj='l')
         self.initial_balance = data['form'].get('initial_balance', True)
         if self.initial_balance:
-            ctx.update({'initial_bal': True})
-            obj_move.with_context(ctx)
-        self.init_query = obj_move._query_get(obj='l')
+            ctx['initial_bal'] = True
+            self.init_query = obj_move.with_context(ctx)._query_get(obj='l')
         self.reconcil = True
         if data['form']['filter'] == 'unreconciled':
             self.reconcil = False
@@ -229,9 +226,9 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
             "SELECT a.id " \
             "FROM account_account a " \
             "LEFT JOIN account_account_type t " \
-                "ON (a.user_type=t.id) " \
-                "WHERE t.code IN %s" \
-                "AND NOT a.deprecated", (tuple(self.ACCOUNT_TYPE), ))
+                "ON (a.user_type = t.id) " \
+                "WHERE t.type IN %s" \
+                "AND a.deprecated = 'f'", (tuple(self.ACCOUNT_TYPE), ))
         self.account_ids = [a for (a,) in self._cr.fetchall()]
         params = [tuple(move_state), tuple(self.account_ids)]
         #if we print from the partners, add a clause on active_ids
@@ -239,18 +236,17 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
             PARTNER_REQUEST =  "AND l.partner_id IN %s"
             params += [tuple(self.ids)]
 
-        self._cr.execute(
-                "SELECT DISTINCT l.partner_id " \
-                "FROM account_move_line AS l, account_account AS account, " \
-                " account_move AS am " \
-                "WHERE l.partner_id IS NOT NULL " \
-                    "AND l.account_id = account.id " \
-                    "AND am.id = l.move_id " \
-                    "AND am.state IN %s"
-                    " " + self.query +" " \
-                    "AND l.account_id IN %s " \
-                    " " + PARTNER_REQUEST + " " \
-                    "AND NOT account.deprecated ", tuple(params))
+        self._cr.execute("SELECT DISTINCT l.partner_id \
+                FROM account_move_line AS l, account_account AS account,\
+                account_move AS am \
+                WHERE l.partner_id IS NOT NULL \
+                    AND l.account_id = account.id \
+                    AND am.id = l.move_id \
+                    AND am.state IN %s \
+                    " + self.query + "\
+                    AND l.account_id IN %s \
+                    " + PARTNER_REQUEST + " \
+                    AND account.deprecated = 'f'", tuple(params))
         self.partner_ids = [res['partner_id'] for res in self._cr.dictfetchall()]
         objects = obj_partner.browse(self.partner_ids)
 

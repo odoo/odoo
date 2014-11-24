@@ -81,16 +81,16 @@
                                         <span t-esc="childrenaccount.name"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="sum_debit_account(childrenaccount)"/>
+                                        <span t-esc="sum_debit_account(childrenaccount)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="sum_credit_account(childrenaccount)"/>
+                                        <span t-esc="sum_credit_account(childrenaccount)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="sum_balance_account(childrenaccount)"/>
+                                        <span t-esc="sum_balance_account(childrenaccount)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                     <td class="text-right" t-if="data['form']['amount_currency']">
-                                        <span t-esc="sum_currency_amount_account(childrenaccount) if sum_currency_amount_account(childrenaccount) > 0.00 else ''"/>
+                                        <span t-esc="sum_currency_amount_account(childrenaccount)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                 </tr>
                                 <tr t-foreach="lines(childrenaccount)" t-as="line">
@@ -102,16 +102,16 @@
                                     <td><span t-esc="line['lname']"/></td>
                                     <td><span t-esc="line['line_corresp'].replace(',',', ')"/></td>
                                     <td class="text-right">
-                                        <span t-esc="line['debit']"/>
+                                        <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="line['credit']"/>
+                                        <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="line['progress']"/>
                                     </td>
                                     <td class="text-right" t-if="data['form']['amount_currency']">
-                                        <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>
+                                        <span t-esc="line['amount_currency']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                         <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
                                     </td>
                                 </tr>

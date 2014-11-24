@@ -71,7 +71,7 @@
                 <strong t-esc="sum_credit_partner(partner)"/>
             </td>
             <td class="text-right">
-                <strong t-esc="sum_debit_partner(partner) - sum_credit_partner(partner)"/>
+                <strong t-esc="sum_debit_partner(partner) - sum_credit_partner(partner)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
             </td>
         </tr>
         <tr t-if="initial_balance">
@@ -83,7 +83,7 @@
                 <span t-esc="get_intial_balance(partner)[0][1]"/>
             </td>
             <td>
-                <span t-esc="get_intial_balance(partner)[0][2]"/>
+                <span t-esc="get_intial_balance(partner)[0][2]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
             </td>
         </tr>
         <tr t-foreach="get_lines(partner)" t-as="line">
@@ -109,7 +109,7 @@
                 <span t-esc="line['credit']"/>
             </td>
             <td class="text-right">
-                <span t-esc="line['progress']"/>
+                <span t-esc="line['progress']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
             </td>
             <td t-if="amount_currency">
                 <span t-esc="line['amount_currency']"/>

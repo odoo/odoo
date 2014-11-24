@@ -40,12 +40,7 @@ import account_financial_report
 # also remove related view fiel
 
 import account_validate_account_move
-
 import account_state_open
-
-import account_report_print_journal
-import account_report_central_journal
-import account_report_general_journal
 import account_report_general_ledger
 import account_report_account_balance
 

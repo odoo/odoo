@@ -65,10 +65,10 @@
                                 <strong t-esc="sum_credit(data)"/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="sum_debit(data) - sum_credit(data)"/>
+                                <strong t-esc="sum_debit(data) - sum_credit(data)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="sum_litige(data)"/>
+                                <strong t-esc="sum_litige(data)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                         <tr t-foreach="lines(data)" t-as="line">
@@ -98,16 +98,16 @@
                                 <span t-esc="line['credit']"/>
                             </td>
                             <td t-if="line['type']==3" class="text-right">
-                                <strong t-esc="line['balance']"/>
+                                <strong t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="line['balance']"/>
+                                <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type'] == 3" class="text-right">
-                                <strong t-esc="line['enlitige'] or 0.0"/>
+                                <strong t-esc="line['enlitige'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="line['enlitige'] or 0.0"/>
+                                <span t-esc="line['enlitige'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                     </tbody>

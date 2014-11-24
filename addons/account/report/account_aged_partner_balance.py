@@ -27,27 +27,27 @@ from common_report_header import common_report_header
 class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_agedpartnerbalance'
 
-    @api.multi
+    @api.model
     def _get_lines(self, form):
         res = []
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-        self._cr.execute('SELECT DISTINCT res_partner.id AS id,\
+        self._cr.execute("SELECT DISTINCT res_partner.id AS id,\
                     res_partner.name AS name \
                 FROM res_partner,account_move_line AS l, account_account, account_move am, account_account_type at\
                 WHERE (l.account_id=account_account.id) \
                     AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.code IN %s)\
-                    AND NOT account_account.deprecated\
+                    AND (at.type IN %s)\
+                    AND account_account.deprecated = 'f'\
                     AND ((reconcile_id IS NULL)\
                        OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND (l.partner_id=res_partner.id)\
                     AND (l.date <= %s)\
-                    ' + self.query + '\
-                ORDER BY res_partner.name', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
+                    " + self.query + "\
+                ORDER BY res_partner.name", (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
         partners = self._cr.dictfetchall()
         ## mise a 0 du total
         self.total_account = []
@@ -60,19 +60,19 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
 
         totals = {}
-        self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+        self._cr.execute("SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.code IN %s)\
+                    AND (at.type IN %s)\
                     AND (l.partner_id IN %s)\
                     AND ((l.reconcile_id IS NULL)\
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                    ' + self.query + '\
-                    AND NOT account_account.deprecated\
+                    " + self.query + "\
+                    AND account_account.deprecated = 'f'\
                     AND (l.date <= %s)\
-                    GROUP BY l.partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from, self.date_from,))
+                    GROUP BY l.partner_id ", (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from, self.date_from,))
         t = self._cr.fetchall()
         for i in t:
             totals[i[0]] = i[1]
@@ -80,38 +80,38 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         # This dictionary will store the future or past of all partners
         future_past = {}
         if self.direction_selection == 'future':
-            self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            self._cr.execute("SELECT l.partner_id, SUM(l.debit-l.credit) \
                         FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id) \
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.code IN %s)\
+                        AND (at.type IN %s)\
                         AND (COALESCE(l.date_maturity, l.date) < %s)\
                         AND (l.partner_id IN %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        '+ self.query + '\
-                        AND NOT account_account.deprecated\
+                        "+ self.query + "\
+                        AND account_account.deprecated = 'f'\
                     AND (l.date <= %s)\
-                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from, self.date_from,))
+                        GROUP BY l.partner_id", (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from, self.date_from,))
             t = self._cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
-            self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            self._cr.execute("SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am, account_account_type at  \
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.code IN %s)\
+                        AND (at.type IN %s)\
                         AND (COALESCE(l.date_maturity,l.date) > %s)\
                         AND (l.partner_id IN %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        '+ self.query + '\
-                        AND NOT account_account.deprecated\
+                        "+ self.query + "\
+                        AND account_account.deprecated = 'f'\
                     AND (l.date <= %s)\
-                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from, self.date_from,))
+                        GROUP BY l.partner_id", (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from, self.date_from,))
             t = self._cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
@@ -137,12 +137,12 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)
                         AND (am.state IN %s)
                         AND (account_account.user_type = at.id)
-                        AND (at.code IN %s)
+                        AND (at.type IN %s)
                         AND (l.partner_id IN %s)
                         AND ((l.reconcile_id IS NULL)
                           OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
                         ''' + self.query + '''
-                        AND NOT account_account.deprecated
+                        AND account_account.deprecated = 'f'
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
                     GROUP BY l.partner_id, l.reconcile_partial_id''', args_list)
@@ -209,7 +209,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                 totals[str(i)] += float(r[str(i)] or 0.0)
         return res
 
-    @api.multi
+    @api.model
     def _get_lines_with_out_partner(self, form):
         res = []
         move_state = ['draft','posted']
@@ -217,55 +217,54 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
             move_state = ['posted']
 
         ## mise a 0 du total
-        self.total_account = []
         for i in range(7):
             self.total_account.append(0)
         totals = {}
-        self._cr.execute('SELECT SUM(l.debit-l.credit) \
+        self._cr.execute("SELECT SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
                     AND (am.state IN %s)\
                     AND (l.partner_id IS NULL)\
                     AND (account_account.user_type=at.id)\
-                    AND (at.code IN %s)\
+                    AND (at.type IN %s)\
                     AND ((l.reconcile_id IS NULL) \
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                    ' + self.query + '\
+                    " + self.query + "\
                     AND (l.date <= %s)\
-                    AND NOT account_account.deprecated ',(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
+                    AND account_account.deprecated = 'f'",(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
         t = self._cr.fetchall()
         for i in t:
             totals['Unknown Partner'] = i[0]
         future_past = {}
         if self.direction_selection == 'future':
-            self._cr.execute('SELECT SUM(l.debit-l.credit) \
+            self._cr.execute("SELECT SUM(l.debit-l.credit) \
                         FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.code IN %s)\
+                        AND (at.type IN %s)\
                         AND (COALESCE(l.date_maturity, l.date) < %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        '+ self.query + '\
-                        AND NOT account_account.deprecated ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
+                        "+ self.query + "\
+                        AND account_account.deprecated = 'f'", (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
             t = self._cr.fetchall()
             for i in t:
                 future_past['Unknown Partner'] = i[0]
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
-            self._cr.execute('SELECT SUM(l.debit-l.credit) \
+            self._cr.execute("SELECT SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.code IN %s)\
+                        AND (at.type IN %s)\
                         AND (COALESCE(l.date_maturity,l.date) > %s)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        '+ self.query + '\
-                        AND NOT account_account.deprecated ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
+                        "+ self.query + "\
+                        AND account_account.deprecated = 'f'", (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
             t = self._cr.fetchall()
             for i in t:
                 future_past['Unknown Partner'] = i[0]
@@ -284,20 +283,20 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                 dates_query += ' < %s)'
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
-            self._cr.execute('SELECT SUM(l.debit-l.credit)\
+            self._cr.execute("SELECT SUM(l.debit-l.credit)\
                     FROM account_move_line AS l, account_account, account_move am, account_account_type at \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
                         AND (account_account.user_type=at.id)\
-                        AND (at.code IN %s)\
+                        AND (at.type IN %s)\
                         AND (l.partner_id IS NULL)\
                         AND ((l.reconcile_id IS NULL)\
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        '+ self.query + '\
-                        AND NOT account_account.deprecated\
-                        AND ' + dates_query + '\
+                        "+ self.query + "\
+                        AND account_account.deprecated = 'f'\
+                        AND " + dates_query + "\
                     AND (l.date <= %s)\
-                    GROUP BY l.partner_id', args_list)
+                    GROUP BY l.partner_id", args_list)
             t = self._cr.fetchall()
             d = {}
             for i in t:
@@ -345,15 +344,18 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                 totals[str(i)] += float(r[str(i)] or 0.0)
         return res
 
+    @api.model
     def _get_total(self, pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
-    def _get_for_period(self,pos):
+    @api.model
+    def _get_direction(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
-    def _get_direction(self,pos):
+    @api.model
+    def _get_for_period(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
@@ -362,7 +364,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         ctx = data['form'].get('used_context', {})
         ctx.update({'fiscalyear': False, 'all_fiscalyear': True})
         self.query = self.env['account.move.line'].with_context(ctx)._query_get(obj='l')
-
+        self.total_account = []
         self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         self.direction_selection = data['form'].get('direction_selection', 'past')
@@ -378,7 +380,7 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         docargs = {
             'doc_ids': self.ids,
             'doc_model': module_report.model,
-            'docs': [],
+            'docs': self,
             'data': data,
             'get_account': self._get_account,
             'get_fiscalyear': self._get_fiscalyear,
@@ -390,7 +392,6 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
             'get_for_period': self._get_for_period,
             'get_lines_with_out_partner': self._get_lines_with_out_partner,
         }
-
         return report_obj.render('account.report_agedpartnerbalance', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

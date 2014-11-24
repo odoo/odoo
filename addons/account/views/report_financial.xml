@@ -5,35 +5,35 @@
     <t t-call="report.html_container">
         <t t-call="report.internal_layout">
             <div class="page">
-                <h2 t-esc="get_title"/>
+                <h2 t-esc="data['form']['account_report_id'][1]"/>
 
                 <div class="row mt32 mb32">
                     <div class="col-xs-3">
                         <strong>Chart of Accounts:</strong>
-                        <p t-esc="get_account"/>
+                        <p t-esc="get_account(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Fiscal Year:</strong>
-                        <p t-esc="get_fiscalyear"/>
+                        <p t-esc="get_fiscalyear(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Filter By:</strong>
                         <p>
-                            <span t-if="get_filter == 'filter_no'">Not filtered</span>
-                            <span t-if="get_filter == 'filter_date'">Filtered by date</span>
-                            <p t-if="get_filter == 'filter_date'">
-                                Date from : <span t-esc="get_start_date"/><br />
-                                Date to : <span t-esc="get_end_date"/>
+                            <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
+                            <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
+                            <p t-if="data['form']['filter'] == 'filter_date'">
+                                Date from : <span t-esc="get_start_date(data)"/><br />
+                                Date to : <span t-esc="get_end_date(data)"/>
                             </p>
                         </p>
                     </div>
                     <div class="col-xs-3">
                         <strong>Target Moves:</strong>
-                        <p t-esc="get_target_move"/>
+                        <p t-esc="get_target_move(data)"/>
                     </div>
                 </div>
 
-                <table class="table table-condensed" t-if="get_debit_credit">
+                <table class="table table-condensed" t-if="data['form']['debit_credit']">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -43,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines" t-as="a">
+                        <tr t-foreach="get_lines(data)" t-as="a">
                             <t t-if="a['level'] != 0">
                                 <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
                                 <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
@@ -53,20 +53,20 @@
                                     <span t-att-style="style" t-esc="a.get('name')"/>
                                 </td>
                                 <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('debit')"/>
+                                    <span t-att-style="style" t-esc="a.get('debit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                                 <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('credit')"/>
+                                    <span t-att-style="style" t-esc="a.get('credit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                                 <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('balance')"/>
+                                    <span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                             </t>
                         </tr>
                     </tbody>
                 </table>
 
-                <table class="table table-condensed" t-if="not get_enable_filter and not debit_credit">
+                <table class="table table-condensed" t-if="not data['form']['enable_filter'] and not data['form']['debit_credit']">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -74,7 +74,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines" t-as="a">
+                        <tr t-foreach="get_lines(data)" t-as="a">
                             <t t-if="a['level'] != 0">
                                 <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
                                 <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
@@ -83,22 +83,22 @@
                                     <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
                                     <span t-att-style="style" t-esc="a.get('name')"/>
                                 </td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')"/></td>
+                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                             </t>
                         </tr>
                     </tbody>
                 </table>
 
-                <table class="table table-condensed" t-if="get_enable_filter and not get_debit_credit">
+                <table class="table table-condensed" t-if="data['form']['enable_filter'] and not data['form']['debit_credit']">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th class="text-right">Balance</th>
-                            <th class="text-right"><span t-esc="get_label_filter"/></th>
+                            <th class="text-right"><span t-esc="data['form']['label_filter']"/></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines" t-as="a">
+                        <tr t-foreach="get_lines(data)" t-as="a">
                             <t t-if="a['level'] != 0">
                                 <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
                                 <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
@@ -107,8 +107,8 @@
                                     <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
                                     <span t-att-style="style" t-esc="a.get('name')"/>
                                 </td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')"/></td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance_cmp')"/></td>
+                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance_cmp')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                             </t>
                         </tr>
                     </tbody>

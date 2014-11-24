@@ -25,19 +25,19 @@ from openerp import api, models
 class Overdue(models.AbstractModel):
     _name = 'report.account.report_overdue'
 
-    @api.multi
+    @api.model
     def _lines_get(self, partner):
         return self.env['account.move.line'].search(
                 [('partner_id', '=', partner.id),
                   ('account_id.user_type.type', 'in', ['receivable', 'payable']),
                   ('reconcile_id', '=', False)])
 
-    @api.multi
+    @api.model
     def _message(self, obj, company):
         message = company.with_context({'lang':obj.lang}).overdue_msg
         return message.split('\n')
     
-    @api.multi
+    @api.model
     def get_amount(self, partner):
         move_line_ids = self._lines_get(partner)
         res = {}

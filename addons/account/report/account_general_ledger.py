@@ -34,7 +34,7 @@ from common_report_header import common_report_header
 class GeneralLedgerReport(models.AbstractModel, common_report_header):
     _name = 'report.account.report_generalledger'
 
-    @api.multi
+    @api.model
     def _sum_currency_amount_account(self, account):
         self._cr.execute('SELECT sum(l.amount_currency) AS tot_currency \
                 FROM account_move_line l \
@@ -47,13 +47,12 @@ class GeneralLedgerReport(models.AbstractModel, common_report_header):
             sum_currency += self._cr.fetchone()[0] or 0.0
         return sum_currency
 
-    @api.multi
+    @api.model
     def _get_children_accounts(self, account):
         res = []
-        account_obj = self.env['account.account']
         ids_acc = account._get_children_and_consol()
         currency = account.currency_id and account.currency_id or account.company_id.currency_id
-        for child_account in account_obj.browse(ids_acc):
+        for child_account in self.env['account.account'].browse(ids_acc):
             self._cr_execute('SELECT count(id) \
                                 FROM account_move_line AS l \
                                 WHERE l.account_id = %s %s' % (child_account.id, self.query))
@@ -73,82 +72,7 @@ class GeneralLedgerReport(models.AbstractModel, common_report_header):
             return [account]
         return res
 
-    @api.multi
-    def _sum_debit_account(self, account):
-        if account.user_type.type == 'view':
-            return account.debit
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted','']
-        self._cr.execute('SELECT sum(debit) \
-                FROM account_move_line l \
-                JOIN account_move am ON (am.id = l.move_id) \
-                WHERE (l.account_id = %s) \
-                AND (am.state IN %s)' + self.query
-                ,(account.id, tuple(move_state)))
-        sum_debit = self._cr.fetchone()[0] or 0.0
-        if self.init_balance:
-            self._cr.execute('SELECT sum(debit) \
-                    FROM account_move_line l \
-                    JOIN account_move am ON (am.id = l.move_id) \
-                    WHERE (l.account_id = %s) \
-                    AND (am.state IN %s)'+ self.init_query
-                    ,(account.id, tuple(move_state)))
-            # Add initial balance to the result
-            sum_debit += self._cr.fetchone()[0] or 0.0
-        return sum_debit
-
-    @api.multi
-    def _sum_credit_account(self, account):
-        if account.user_type.type == 'view':
-            return account.credit
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted','']
-        self._cr.execute('SELECT sum(credit) \
-                FROM account_move_line l \
-                JOIN account_move am ON (am.id = l.move_id) \
-                WHERE (l.account_id = %s) \
-                AND (am.state IN %s)' + self.query
-                ,(account.id, tuple(move_state)))
-        sum_credit = self._cr.fetchone()[0] or 0.0
-        if self.init_balance:
-            self._cr.execute('SELECT sum(credit) \
-                    FROM account_move_line l \
-                    JOIN account_move am ON (am.id = l.move_id) \
-                    WHERE (l.account_id = %s) \
-                    AND (am.state IN %s)' + self.init_query
-                    ,(account.id, tuple(move_state)))
-            # Add initial balance to the result
-            sum_credit += self._cr.fetchone()[0] or 0.0
-        return sum_credit
-
-    @api.multi
-    def _sum_balance_account(self, account):
-        if account.user_type.type == 'view':
-            return account.balance
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted','']
-        self._cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
-                FROM account_move_line l \
-                JOIN account_move am ON (am.id = l.move_id) \
-                WHERE (l.account_id = %s) \
-                AND (am.state IN %s)' + self.query
-                ,(account.id, tuple(move_state)))
-        sum_balance = self._cr.fetchone()[0] or 0.0
-        if self.init_balance:
-            self._cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
-                    FROM account_move_line l \
-                    JOIN account_move am ON (am.id = l.move_id) \
-                    WHERE (l.account_id = %s) \
-                    AND (am.state IN %s)' + self.init_query
-                    ,(account.id, tuple(move_state)))
-            # Add initial balance to the result
-            sum_balance += self._cr.fetchone()[0] or 0.0
-        return sum_balance
-
-    @api.multi
+    @api.model
     def _lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
         move_state = ['draft','posted']
@@ -233,6 +157,75 @@ class GeneralLedgerReport(models.AbstractModel, common_report_header):
         return res
 
     @api.model
+    def _sum_debit_account(self, account):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self._cr.execute('SELECT sum(debit) \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s)' + self.query
+                ,(account.id, tuple(move_state)))
+        sum_debit = self._cr.fetchone()[0] or 0.0
+        if self.init_balance:
+            self._cr.execute('SELECT sum(debit) \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s)'+ self.init_query
+                    ,(account.id, tuple(move_state)))
+            # Add initial balance to the result
+            sum_debit += self._cr.fetchone()[0] or 0.0
+        return sum_debit
+
+    @api.model
+    def _sum_credit_account(self, account):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self._cr.execute('SELECT sum(credit) \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s)' + self.query
+                ,(account.id, tuple(move_state)))
+        sum_credit = self._cr.fetchone()[0] or 0.0
+        if self.init_balance:
+            self._cr.execute('SELECT sum(credit) \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s)' + self.init_query
+                    ,(account.id, tuple(move_state)))
+            # Add initial balance to the result
+            sum_credit += self._cr.fetchone()[0] or 0.0
+        return sum_credit
+
+    @api.model
+    def _sum_balance_account(self, account):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self._cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s)' + self.query
+                ,(account.id, tuple(move_state)))
+        sum_balance = self._cr.fetchone()[0] or 0.0
+        if self.init_balance:
+            self._cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s)' + self.init_query
+                    ,(account.id, tuple(move_state)))
+            # Add initial balance to the result
+            sum_balance += self._cr.fetchone()[0] or 0.0
+        return sum_balance
+
+    @api.model
     def _get_sortby(self):
         if self.sortby == 'sort_journal_partner':
             return _('Journal & Partner')
@@ -243,16 +236,13 @@ class GeneralLedgerReport(models.AbstractModel, common_report_header):
         self.tot_currency = 0.0
         self.sold_accounts = {}
         new_ids = self.ids
-        obj_move = self.env['account.move.line']
         self.sortby = data['form'].get('sortby', 'sort_date')
-        obj_move.with_context(data['form'].get('used_context',{}))
-        self.query = obj_move._query_get(obj='l')
+        self.query = self.env['account.move.line'].with_context(data['form'].get('used_context',{}))._query_get(obj='l')
         self.init_balance = data['form'].get('initial_balance', True)
         if self.init_balance:
             ctx2 = data['form'].get('used_context',{})
-            ctx2.update({'initial_bal': True})
-            obj_move.with_context(ctx2)
-        self.init_query = obj_move._query_get(obj='l')
+            ctx2['initial_bal'] = True
+            self.init_query.with_context(ctx2)._query_get(obj='l')
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
         if (data['model'] == 'ir.ui.menu'):
@@ -280,7 +270,6 @@ class GeneralLedgerReport(models.AbstractModel, common_report_header):
             'get_children_accounts': self._get_children_accounts,
             'lines': self._lines
         }
-
         return report_obj.render('account.report_generalledger', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

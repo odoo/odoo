@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp import models,api
+from openerp import models, api
 from openerp.tools.translate import _
 
 class common_report_header(object):
 
-    @api.multi
+    @api.model
     def _sum_debit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
@@ -41,7 +41,7 @@ class common_report_header(object):
                         (date, tuple(journal_id)))
         return self._cr.fetchone()[0] or 0.0
 
-    @api.multi
+    @api.model
     def _sum_credit(self, date=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
@@ -101,7 +101,7 @@ class common_report_header(object):
                 return self._translate('Periods')
         return self._translate('No Filters')
 
-    @api.multi
+    @api.model
     def _sum_debit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
@@ -111,7 +111,7 @@ class common_report_header(object):
                         (date, tuple(journals)))
         return self._cr.fetchone()[0] or 0.0
 
-    @api.multi
+    @api.model
     def _sum_credit_period(self, date, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
