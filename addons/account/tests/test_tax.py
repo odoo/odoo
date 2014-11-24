@@ -11,33 +11,26 @@ class TestTax(AccountTestUsers):
     """
 
     def test_programmatic_tax(self):
-        tax_id = self.tax_model.create(dict(
+        programmatic_tax = self.tax_model.create(dict(
             name="Programmatic tax",
             type='code',
             python_compute='result = 12.0',
             python_compute_inv='result = 11.0',
-        ))
+        )).compute_all(50.0, 2)
 
-        res = tax_id.compute_all(50.0, 2)
-
-        tax_detail = res['taxes'][0]
-        self.assertEquals(tax_detail['amount'], 24.0)
-        self.assertEquals(res['total_included'], 124.0)
+        self.assertEquals(programmatic_tax['taxes'][0]['amount'], 24.0)
+        self.assertEquals(programmatic_tax['total_included'], 124.0)
 
     def test_percent_tax(self):
         """Test computations done by a 10 percent tax."""
-        tax_id = self.tax_model.create(dict(
+        percent_tax = self.tax_model.create(dict(
             name="Percent tax",
             type='percent',
             amount='0.1',
         ))
 
-        res = tax_id.compute_all(50.0, 2)
-
-        tax_detail = res['taxes'][0]
-        self.assertEquals(tax_detail['amount'], 10.0)
-        self.assertEquals(res['total_included'], 110.0)
+        self.assertEquals(percent_tax.compute_all(50.0, 2)['taxes'][0]['amount'], 10.0)
+        self.assertEquals(percent_tax.compute_all(50.0, 2)['total_included'], 110.0)
 
         # now the inverse computation
-        res = tax_id.compute_inv(55.0, 2)
-        self.assertEquals(res[0]['amount'], 10.0)
+        self.assertEquals(percent_tax.compute_inv(55.0, 2)[0]['amount'], 10.0)
