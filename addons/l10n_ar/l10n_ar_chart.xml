@@ -51,14 +51,14 @@
 	  <field name="name">Argentina</field>
 	  <field name="code">pcge</field>
 	  <field ref="account_account_type_view" name="user_type"/>
-	  <field name="type">view</field>
+	  <field name="type">other</field>
 	</record>
 		<record model="account.account.template" id="_1_BG">
 		  <field name="name">Cuentas Patrimoniales</field>
 		  <field name="code">.1.BG</field>
 		  <field name="reconcile" eval="False"/>
 		  <field ref="account_account_type_view" name="user_type"/>
-		  <field name="type">view</field>
+		  <field name="type">other</field>
 		  <field ref="pcge" name="parent_id"/>
 		</record>
 			<record id="1" model="account.account.template"><field name="name">ACTIVO</field><field name="code">1</field><field name="reconcile" eval="False"/><field ref="account_account_type_view" name="user_type"/><field name="type">view</field><field ref="_1_BG" name="parent_id"/></record>
