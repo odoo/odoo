@@ -5,7 +5,7 @@
             <field name="name">account.voucher.tree</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
@@ -13,7 +13,6 @@
                     <field name="journal_id" groups="account.group_account_user"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="audit" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -88,7 +87,6 @@
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
                                 <field name="date"/>
-                                <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">
                                <tree string="Journal Items">
@@ -126,7 +124,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <separator/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">

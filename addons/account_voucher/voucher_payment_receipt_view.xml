@@ -225,7 +225,6 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="audit"/>
                                 <field name="number"/>
                             </group>
                             <field name="move_ids" readonly="1">
@@ -507,7 +506,6 @@
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
                                 <field name="date"/>
-                                <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">
                                 <tree string="Journal Items">
