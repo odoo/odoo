@@ -152,6 +152,7 @@ class product_uom(osv.osv):
     _defaults = {
         'active': 1,
         'rounding': 0.01,
+        'factor': 1,
         'uom_type': 'reference',
     }
 
