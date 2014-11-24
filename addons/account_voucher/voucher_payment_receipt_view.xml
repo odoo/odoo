@@ -349,10 +349,10 @@
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"
                                         groups="account.group_account_user"/>
-                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('user_type.type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -366,9 +366,9 @@
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"/>
-                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('user_type.type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -448,10 +448,10 @@
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"
                                         groups="account.group_account_user"/>
-                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('user_type.type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -465,9 +465,9 @@
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"/>
-                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('user_type.type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
