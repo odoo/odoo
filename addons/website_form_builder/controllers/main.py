@@ -67,6 +67,8 @@ class form_builder(http.Controller):
     # Extract all data sent by the form and sort its on several properties
     def extractData(self, model, **kwargs):
         print kwargs
+        ref_model = request.registry[model['name']]
+
         data = {
             'files'     : [],                    # List of attached files
             'post'      : {},                    # Dict of values to create entry on the model
@@ -88,8 +90,8 @@ class form_builder(http.Controller):
                 field_value.field_name = field_name
                 data['files'].append(field_value)
 
-            elif field_name in request.registry[model['name']]._all_columns and field_name not in model['blacklist']:
-                type = request.registry[model['name']]._all_columns[field_name].column._type;
+            elif field_name in ref_model._all_columns and field_name not in model['blacklist']:
+                type = ref_model._all_columns[field_name].column._type;
                 field_filtered = self.filter[type](field_name,field_value);
                 if field_filtered: data['post'][field_name] = field_filtered
                 
@@ -103,13 +105,17 @@ class form_builder(http.Controller):
                                                                   "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
                                                                   "ACCEPT_LANGUAGE"   , environ.get("HTTP_ACCEPT_LANGUAGE"),
                                                                   "REFERER"           , environ.get("HTTP_REFERER"))
-        
+
+        if hasattr(ref_model, "website_form_input_filter"):
+            data = ref_model.website_form_input_filter(data)
+        print "Model %s \n\n" % model['name']
+        print data
         data['error'] = list(set(field for field in model['required'] if not data['post'].get(field)))
-        
         return data
     
     def insertMessage(self, model, data, id_record):
-        if model['name'] == 'mail.mail': return True;
+        if model['name'] == 'mail.mail': return True
+        if not data['message']['attachment_ids']: return True
         data['message']['res_id'] = id_record
         print data['message']
         return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context);

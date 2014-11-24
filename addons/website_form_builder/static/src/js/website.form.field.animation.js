@@ -40,9 +40,12 @@
             'input[type=file]': function($field) {
                 var args = {};
                 var size = $field.prop('files').length;
+                var self = this;
                 $.each($field.prop('files'), function (i, val) {
                     args[$field.attr('name')+(($field.prop('files').length > 1)? '['+i+']':'')] = val;
+                    self.file += 1;
                 });
+                console.log('really no files ????? ', self.file);
                 return ($.isEmptyObject(args)) ? null:args;
                 
             }
@@ -108,7 +111,9 @@
                     if(label.length > 1) this.field_list[label] = $(elem).find('.form-data').attr('name'); 
                 });
                 */
+                this.file = 0;
                 this.$target.find('.form-data').each(function(j,elem){
+                    
                     for (var i in getDataForm) {
                         if($(elem).is(i)) {
                             field_value = getDataForm[i].call(self, $(elem));
@@ -129,7 +134,8 @@
                 var progress = $(openerp.qweb.render('website.form.editor.progress'))
                                     .appendTo('body')
                                     .modal({"keyboard" :true});
-
+                console.log('files ????????   ', this.file);
+               if(!this.file) progress.addClass('hidden');
                 var display_size = function(size) {
                 
                     var order   = ['o', 'Ko', 'Mo', 'Go', 'To'];
@@ -143,6 +149,7 @@
                 };
 
                 var success_page = this.$target.data('success');
+                console.log(args);
                 openerp.post('/website_form/'+model,args)
                 .then(function(data) {
                         progress.modal('hide');
@@ -223,7 +230,7 @@
                     ext : {
                         itemManager: {
                             itemToString: function(i)    {return i.name;},
-                            stringToItem: function(str) {return {name:str,id:assocList[str]};}
+                            stringToItem: function(str)  {return {name:str,id:assocList[str]};}
                         }
                 }})
                 .bind('getSuggestions', function(e, data) {

@@ -11,6 +11,16 @@
         var form   = this.$target.closest('form');
 
         if(!model_field && !form.data('model')) return def.reject();
+
+
+        new openerp.Model(openerp.website.session,"website.form")
+            .call("search_read", [[['model_id', '=', form.data('model')]],['model_name', 'model_id', 'metadata_field_id']], {context: website.get_context()})
+            .then(function(options_list) {
+                console.log('elements', options_list);
+                form.attr('data-model-name', options_list[0].model_id[1]);
+                form.attr('data-default-field', options_list[0].metadata_field_id[1]);
+            });
+
         if(model_field == form.data('model') && !form.data('fields') && form.data('not-lock'))  return def.resolve();
 
         form.data('not-lock',0);
@@ -61,6 +71,7 @@
 
         init: function(parent) {
             this.parent = parent;
+            this.j = 3;
         },
         //Enable the widget with parameters : 
         // wizard : wizard dom pointer
@@ -100,7 +111,10 @@
         //enable events on the option editor to add or remove line
         onAddField: function() {
             var self = this;
-            self.table.find('.last .option-label')  .on('keydown', self.tabEvent());
+            self.table.find('.last .option-label').attr('tabindex', this.j ++);
+            self.table.find('.last .option-value').attr('tabindex', this.j ++);
+            self.table.find('.last .option-label')  .on('focus', self.tabEvent);
+            self.table.find('.last .option-value')  .on('focus', _.bind(self.tabEventWithCopy, this));
             self.table.find('td')                   .on('keyup', self.deleteIfEmpty);
             self.table.find('.last .option-value')  .on('keydown', self.addField(false));
             self.table.find('.o_form-editor-add')   .on('click',self.addField(true));
@@ -109,7 +123,7 @@
         offAddField: function() {
             var self = this;
             self.table.find('.last .option-value')  .off('keydown');
-            self.table.find('.last .option-value')  .on('keydown', self.tabEvent());
+            self.table.find('.last .option-value')  .on('focus', self.tabEvent);
             self.table.find('.o_form-editor-add')   .off('click');
             self.table.find('td')                   .off('td');
         },
@@ -130,22 +144,25 @@
                         parent = prev;
                     }
                     parent.next().focus();
+                /*
                     setTimeout(function() {
                         document.execCommand('selectAll',false,null);
                     },100);
+                */
                     parent.remove();
                 }
         },
         //select the text when user press tab
-        tabEvent: function () {
-            return function(e) {
-                if(e.keyCode === 9) {
-                    $(this).focus();
-                    setTimeout(function() {
-                        document.execCommand('selectAll',false,null);
-                    },100);
-                }
-            };
+        tabEvent: function (e) {
+            setTimeout(function() {
+                document.execCommand('selectAll',false,null);
+            },100);
+        },
+        tabEventWithCopy: function(e) {
+            if(!$('.last .option-value').html().length) {
+                $('.last .option-value').html(this.table.find('.last .option-label').html());
+            }
+            this.tabEvent(e);
         },
         //get a template of a line of the table for other internal functions 
         fieldModel : function() {
@@ -256,16 +273,17 @@
                 parent.append('<td colspan="3"><strong>'+_t('No Data')+'</strong></td>');
                 return;
             }
-            
+            this.j = 3;
             $.each(dataList,function (i,elem) {
 
                 var option = get(elem);
                 
                 if(option.last && !self.lock) tb_append = tb_last.clone();
                 else tb_append = tb_line.clone();
-                
-                tb_append.find('.option-label').html(option.label).on('keydown', self.tabEvent());
-                tb_append.find('.option-value').html(option.value).on('keydown', self.tabEvent());
+                tb_append.find('.option-label').attr('tabindex', self.j ++);
+                tb_append.find('.option-value').attr('tabindex', self.j ++);
+                tb_append.find('.option-label').html(option.label).on('focus', self.tabEvent);
+                tb_append.find('.option-value').html(option.value).on('focus', self.tabEvent);
                 if(!self.lock) tb_append.find('a.delete').on('click',function(e) {
                     $(this).parent().parent().remove();
                 });
@@ -277,10 +295,14 @@
                 parent.append(tb_append);
             
             });
-            this.table.find('.o_tb-actions input').prop('checked',true)
-                                                .on('click',this.checkAll(this));
-            this.table.find('input.delete').on('click',this.checkAllStates(this));
+            this.table.find('.o_tb-actions input')  .prop('checked',true)
+                                                    .on('click',this.checkAll(this));
+            this.table.find('input.delete')         .on('click',this.checkAllStates(this));
             this.checkAllStates(this)();
+            wizard.find('.form-group:not(:has(table)) input:not([tabindex]):visible').each(function(i,elem) {
+                console.log(elem);
+                $(elem).attr('tabindex', self.j++);
+            });
         }
         
     });
@@ -306,10 +328,6 @@
 
                 this.getModel(model_sel).then(function(){
                     var mail = self.wizard.find('.o_form-action-mailto textarea').val();
-                    var selectedModelOption = self.wizard.find(':selected');
-
-                    self.$target.attr('data-model-name', selectedModelOption.data('model-name'));
-                    self.$target.attr('data-default-field', selectedModelOption.data('default-field'));
 
                     if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
                     else if(mail.length > 0) {
@@ -338,7 +356,7 @@
                     $('#oe_snippets')   .removeClass('hidden')
                                         .find('.active')
                                         .removeClass('active');
-                    $('#oe_snippets').find('#snippet_form')
+                    $('#oe_snippets')   .find('#snippet_form')
                                         .addClass('active');
                 });
         },
@@ -369,7 +387,7 @@
             .then(function(options_list) {
                 var options = '';
                 $.each(options_list, function(i,elem) {
-                    options += '<option value="'+elem.model_name+'" data-model-name="'+elem.model_id[1]+'" data-default-field="'+elem.metadata_field_id[1]+'">'+elem.name+'</option>';
+                    options += '<option value="'+elem.model_name+'">'+elem.name+'</option>';
                 });
                 self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
                 self.wizard.appendTo('body').modal({"keyboard" :true});
@@ -439,6 +457,8 @@
             var options = '';
             var field_name = this.$target.find('.form-data').attr('name');
             var all_fields = this.$target.parent().find('.form-data');
+            var sorted_all_fields = {};
+            var keysSorted;
             var all_fields_name = [];
             var form = this.$target.closest('form');
 
@@ -452,10 +472,21 @@
 
             $.each(types, function (j,type) {
                 if(form.data('fields')[type]){
-                    $.each(form.data('fields')[type], function(i, val) {
-                        if(val && $.inArray(val.name,all_fields_name))
-                            options += '<option value="'+val.name+'">'+val.label+'</option>';
-                    });
+                    sorted_all_fields = _.extend(sorted_all_fields, form.data('fields')[type]);
+                }
+            });
+
+            // get a sorted list of keys to put option sorted alphabetically
+            console.log(sorted_all_fields);
+            keysSorted = Object.keys(sorted_all_fields).sort(function(a,b){
+                a = sorted_all_fields[a].label.toLowerCase();
+                b = sorted_all_fields[b].label.toLowerCase();
+                return a == b ? 0 : (a > b ? 1:-1);
+            });
+            console.log(keysSorted);
+            $.each(keysSorted, function(i,key) {
+                if(key) {
+                    options += '<option value="'+sorted_all_fields[key].name+'">'+sorted_all_fields[key].label+'</option>';
                 }
             });
             
@@ -467,6 +498,7 @@
             
             if(field === undefined) {
                     multiple.prop('disabled',false);
+                    multiple.parent().parent().removeClass('hidden');
                     return false;
                 }
                 
@@ -475,11 +507,13 @@
                 (field.type == 'manyBinary2many') ) {
                  if(multiple) {
                      multiple.prop('checked',true);
+                     multiple.parent().parent().addClass('hidden');
                      multiple.prop('disabled','disabled');
                  }
             }else {
                 if(multiple){
                      multiple.prop('checked',false);
+                     multiple.parent().parent().addClass('hidden');
                      multiple.prop('disabled','disabled');
                 }
                 if(!((field.type == 'many2one') || (field.type == 'selection'))) return false;
@@ -488,41 +522,42 @@
         },
         getValues: function (selectFields) {
             var target = function(data){
-                return {     values:        data,
-                                children:    function() {return this.values;}};
+                return {     values:      data,
+                             children:    function() {return this.values;}};
             };
-                var self = this;
-                var selected_field = selectFields.children(":selected").val();
-                var form  = this.$target.closest('form');
-                var field = form.data('fields').all[selected_field];
-               
-                this.lockCheckboxMultiple(field);
-                
-                if (!field) {
-                    this.optionEditor.restore();
-                    return;
-                }
-                
-                if(field.relation && field.relation != 'ir.attachment') {
-                    openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                                    model:  field.relation,
-                                    method: 'search_read',
-                                    args:[[],['display_name']],
-                                    kwargs:{"context": website.get_context()}
-                                    
-                        }).then(function (data) {
-                            self.optionEditor.loadData(self.wizard,target(data), function(data) {
-                                return {label: data.display_name, value: data.id, last: 0};
-                            });
+            var self = this;
+            var selected_field = selectFields.children(":selected").val();
+            var form  = this.$target.closest('form');
+            var field = form.data('fields').all[selected_field];
+           
+            this.lockCheckboxMultiple(field);
+            
+            if (!field) {
+                this.wizard.find('.form-field-label').val('');
+                this.optionEditor.restore();
+                return;
+            }
+            
+            if(field.relation && field.relation != 'ir.attachment') {
+                openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                                model:  field.relation,
+                                method: 'search_read',
+                                args:[[],['display_name']],
+                                kwargs:{"context": website.get_context()}
+                                
+                    }).then(function (data) {
+                        self.optionEditor.loadData(self.wizard,target(data), function(data) {
+                            return {label: data.display_name, value: data.id, last: 0};
                         });
-                }
-                else if(field.selection) {
-                    this.optionEditor.loadData(this.wizard,target(field.selection), function(data) {
-                        return {label: data[1], value: data[0], last: 0};
                     });
-                }
-                this.wizard.find('.form-field-label').val(field.label);
-                this.wizard.find('.form-field-required').prop('checked',field.required);
+            }
+            else if(field.selection) {
+                this.optionEditor.loadData(this.wizard,target(field.selection), function(data) {
+                    return {label: data[1], value: data[0], last: 0};
+                });
+            }
+            this.wizard.find('.form-field-label').val(field.label);
+            this.wizard.find('.form-field-required').prop('checked',field.required);
         },
         hiddenLoadData: function() {
             this.getFields(['integer', 'date','char','text','float']);
@@ -579,22 +614,22 @@
         inputLoadData: function() {
             this.wizard.find('.field_name').html(_t('Text Field'));
             this.getFields(['integer', 'date','char','text','float']);
-            this.wizard.find('.form-field-append-check')        .prop('checked',(this.$target.find('.append').length > 0));
-            this.wizard.find('.form-field-prepend-check')    .prop('checked',(this.$target.find('.prepend').length > 0));
-            this.wizard.find('.form-field-append')            .val(this.$target.find('.append').html());
-            this.wizard.find('.form-field-prepend')            .val(this.$target.find('.prepend').html());
+            this.wizard.find('.form-field-append-check') .prop('checked',(this.$target.find('.append').length > 0));
+            this.wizard.find('.form-field-prepend-check').prop('checked',(this.$target.find('.prepend').length > 0));
+            this.wizard.find('.form-field-append')       .val(this.$target.find('.append').html());
+            this.wizard.find('.form-field-prepend')      .val(this.$target.find('.prepend').html());
         },
         textareaLoadData: function() {
             this.wizard.find('.field_name').html(_t('Textarea'));
             this.getFields(['char','text']);
-            this.wizard.find('.form-field-placeholder')        .val(this.$target.find('.form-data').prop('placeholder'));        // Load placeholder on wizard
+            this.wizard.find('.form-field-placeholder')  .val(this.$target.find('.form-data').prop('placeholder'));        // Load placeholder on wizard
         },
         inputfileLoadData: function() {
-            this.wizard.find('.field_name').html(_t('Uplad Field'));
+            this.wizard.find('.field_name').html(_t('Upload Field'));
             this.getFields(['binary','manyBinary2many','oneBinary2many']);
-            this.wizard.find('.form-field-placeholder')        .val(this.$target.find('.form-data').prop('placeholder'));
-            this.wizard.find('.form-button-label')            .val(this.$target.find('.browse-label').html());
-            this.wizard.find('.form-field-multiple')        .prop('checked',this.$target.find('input[type=file]').attr('multiple') == "multiple");
+            this.wizard.find('.form-field-placeholder')  .val(this.$target.find('.form-data').prop('placeholder'));
+            this.wizard.find('.form-button-label')       .val(this.$target.find('.browse-label').html());
+            this.wizard.find('.form-field-multiple')     .prop('checked',this.$target.find('input[type=file]').attr('multiple') == "multiple");
         },
         searchLoadData: function() {
             var self = this;
@@ -760,12 +795,20 @@
             var name,help;
             var field_name; // custom or variable name from model
             var required;
-            
+            var field_label = this.wizard.find('.form-field-label');
             ValidOption = true;
+            if(!field_label.val().length) {
+                console.log('test warning on label');
+                field_label.parent().parent()
+                           .addClass('has-error has-feedback').children('div')
+                           .append('<i class="fa fa-close form-control-feedback"></i>');
+                return;
+            }
+
             field_name  = this.wizard.find('.form-select-field').val();
             
             // get name/id from label for custom or from field_name;
-            name        = (field_name  == 'custom') ? $.trim(this.wizard.find('.form-field-label').val()) : field_name;
+            name        = (field_name  == 'custom') ? $.trim(field_label.val()) : field_name;
     
             required    = (this.wizard.find('.form-field-required').is(':checked')) ? true:false;
             help        = this.wizard.find('.form-field-help').val();
@@ -779,14 +822,13 @@
             if(required)    this.$target.find('label').removeClass('o_light');
             else            this.$target.find('label').addClass('o_light');
 
-            
             if(help.length > 0) {
                 if(this.$target.find('.help-block').length)     this.$target.find('.help-block').html(help);
                 else                                            this.$target.find('.form-data').parent().append('<p class="help-block">'+help+'</p>');
             }
             else this.$target.find('.help-block').remove();
             
-            this.$target.find('.control-label').html(this.wizard.find('.form-field-label').val());
+            this.$target.find('.control-label').html(field_label.val());
             $('#oe_snippets').removeClass('hidden');
             this.wizard.modal('hide');
         },
@@ -804,7 +846,7 @@
         },
         
         on_prompt: function () {
-         
+            console.log('on_prompt fired');
             var fieldWizardTemplate;
             var type = this.$target.attr('data-form');
             var form = this.$target.closest('form');
@@ -837,8 +879,10 @@
                 this.loadData = this.defaultLoadData;
             }
              // Load template
-            this.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.default',{custom_label: label_for_custom, subTemplate: fieldWizardTemplate}));
+            this.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.default',{subTemplate: fieldWizardTemplate}));
 
+            this.wizard.find('.form-select-field').append('<option value="custom">'+label_for_custom+'</option>');
+          
             //Load field datas  
             this.loadData();
 

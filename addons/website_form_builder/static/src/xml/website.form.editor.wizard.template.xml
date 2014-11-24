@@ -69,15 +69,14 @@
                             <div class="form-group">
                                 <label for="formFieldEditor-select-action" class="col-md-3 col-sm-4 control-label">Field :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <select class="form-control form-select-field" id="formFieldEditor-select-action">
-                                        <option value="custom"><t t-esc='custom_label' /></option>
+                                    <select tabindex="1" class="form-control form-select-field" id="formFieldEditor-select-action">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="formFieldEditor-label" class="col-md-3 col-sm-4 control-label">Label :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <input type="text" class="form-control form-field-label" id="formFieldEditor-label" />
+                                    <input tabindex="2" type="text" class="form-control form-field-label" required="true" id="formFieldEditor-label" />
                                 </div>
                             </div>
                             <t t-raw="subTemplate" />
@@ -93,11 +92,11 @@
                                     <input type="checkbox" class="form-field-required" id="formFieldEditor-required" />
                                 </div>
                             </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-primary validate" value="Continue" />
+                                <button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                            </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary validate">Continue</button>
-                        <button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -176,7 +175,7 @@
                 </div>    
             </div>
             <div class="form-group">
-                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
+                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Display Horizontal :</label>
                 <div class="col-md-9 col-sm-8">
                     <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
                 </div>
@@ -203,7 +202,7 @@
                 </div>    
             </div>
             <div class="form-group">
-                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
+                <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Display Horizontal :</label>
                 <div class="col-md-9 col-sm-8">
                     <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
                 </div>
@@ -279,12 +278,6 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-                <div class="col-md-9 col-sm-8">
-                    <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
                 <div class="col-md-9 col-sm-8">
                     <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
@@ -330,7 +323,7 @@
     <t t-name="webiste.form.editor.wizard.option.template">
         <tr class="last">
             <td contenteditable="true" class="option-label">New Option Label</td>
-            <td contenteditable="true" class="option-value">New Option Value</td>
+            <td contenteditable="true" class="option-value"></td>
             <td class="option-trash">
                 <a class="delete" href="#"><i class="fa fa-trash-o"></i></a>
                 <input type="checkbox" class="delete" />
