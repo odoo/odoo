@@ -41,7 +41,7 @@ from tempfile import NamedTemporaryFile
 execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
 version = version.split('-')[0]
 
-timestamp = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
+timestamp = time.strftime("%Y%m%d", time.gmtime())
 PUBLISH_DIRS = {
     'tar.gz': 'src',
     'exe': 'exe',
@@ -96,18 +96,17 @@ def publish(o, releases):
         release_extension = PUBLISH_DIRS[extension][1] if isinstance(PUBLISH_DIRS[extension], list) else extension
         release_dir = PUBLISH_DIRS[extension][0] if isinstance(PUBLISH_DIRS[extension], list) else PUBLISH_DIRS[extension]
 
-        release_filename = 'odoo_%s-%s.%s' % (version, timestamp, release_extension)
+        arch = ""
+        if release_extension == 'deb':
+            arch = "_all"
+        elif release_extension == "changes":
+            arch = "_amd64"
+
+        release_filename = 'odoo_%s.%s%s.%s' % (version, timestamp, arch, release_extension)
         release_path = join(o.pub, release_dir, release_filename)
 
         system('mkdir -p %s' % join(o.pub, release_dir))
         shutil.move(join(o.build_dir, release), release_path)
-
-        if release_extension == 'deb':
-            temp_path = tempfile.mkdtemp(suffix='debPackages')
-            system(['cp', release_path, temp_path])
-            with open(os.path.join(o.pub, 'deb', 'Packages'), 'w') as out:
-                subprocess.call(['dpkg-scanpackages', '.'], stdout=out, cwd=temp_path)
-            shutil.rmtree(temp_path)
 
         # Latest/symlink handler
         release_abspath = abspath(release_path)
@@ -118,11 +117,15 @@ def publish(o, releases):
 
         os.symlink(release_abspath, latest_abspath)
 
+        return release_path
+
+    published = []
     if isinstance(releases, basestring):
-        _publish(o, releases)
+        published.append(_publish(o, releases))
     elif isinstance(releases, list):
         for release in releases:
-            _publish(o, release)
+            published.append(_publish(o, release))
+    return published
 
 class OdooDocker(object):
     def __init__(self):
@@ -257,7 +260,7 @@ def build_tgz(o):
     system(['cp', glob('%s/dist/openerp-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
 
 def build_deb(o):
-    system(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], o.build_dir)
+    system(['dpkg-buildpackage', '-rfakeroot'], o.build_dir)
     system(['cp', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s/odoo.deb' % o.build_dir])
     system(['cp', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s/odoo.dsc' % o.build_dir])
     system(['cp', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s/odoo_amd64.changes' % o.build_dir])
@@ -331,6 +334,38 @@ def test_rpm(o):
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
 
+#---------------------------------------------------------
+# Generates Packages, Sources and Release files of debian package
+#---------------------------------------------------------
+def gen_deb_package(o, published_files):
+    # Executes command to produce file_name in path, and moves it to o.pub/deb
+    def _gen_file(o, (command, file_name), path):
+        cur_tmp_file_path = os.path.join(path, file_name)
+        with open(cur_tmp_file_path, 'w') as out:
+            subprocess.call(command, stdout=out, cwd=path)
+        system(['cp', cur_tmp_file_path, os.path.join(o.pub, 'deb', file_name)])
+
+    # Copy files to a temp directory (required because the working directory must contain only the files of the last release)
+    temp_path = tempfile.mkdtemp(suffix='debPackages')
+    for pub_file_path in published_files:
+        system(['cp', pub_file_path, temp_path])
+
+    commands = [
+        (['dpkg-scanpackages', '.'], "Packages"), # Generate Packages file
+        (['dpkg-scansources', '.'], "Sources"), # Generate Sources file
+        (['apt-ftparchive', 'release', '.'], "Release") # Generate Release file
+        ]
+    # Generate files
+    for command in commands:
+        _gen_file(o, command, temp_path)
+    # Remove temp directory
+    shutil.rmtree(temp_path)
+
+    # Generate Release.gpg (= signed Release)
+    # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
+    subprocess.call(['rm', 'Release.gpg'], cwd=os.path.join(o.pub, 'deb'))
+    subprocess.call(['gpg', '-abs', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
+
 #----------------------------------------------------------
 # Options and Main
 #----------------------------------------------------------
@@ -362,6 +397,7 @@ def options():
     o.version_full = '%s-%s' % (o.version, timestamp)
     o.work = join(o.build_dir, 'openerp-%s' % o.version_full)
     o.work_addons = join(o.work, 'openerp', 'addons')
+
     return o
 
 def main():
@@ -381,7 +417,8 @@ def main():
             try:
                 if not o.no_testing:
                     test_deb(o)
-                publish(o, ['odoo.deb', 'odoo.dsc', 'odoo_amd64.changes', 'odoo.deb.tar.gz'])
+                published_files = publish(o, ['odoo.deb', 'odoo.dsc', 'odoo_amd64.changes', 'odoo.deb.tar.gz'])
+                gen_deb_package(o, published_files)
             except Exception, e:
                 print("Won't publish the deb release.\n Exception: %s" % str(e))
         if not o.no_rpm:
