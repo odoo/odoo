@@ -221,7 +221,7 @@ class mail_compose_message(osv.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
-            batch_size = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'mail.batch_size') or self._batch_size
+            batch_size = int(self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'mail.batch_size')) or self._batch_size
 
             sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
             for res_ids in sliced_res_ids:
