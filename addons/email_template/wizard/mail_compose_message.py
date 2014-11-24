@@ -76,6 +76,10 @@ class mail_compose_message(osv.TransientModel):
                     context[
                         'mail_server_id'
                         ] = template.mail_server_id.id
+                if template.email_from:
+                    context[
+                        'email_from'
+                        ] = template.email_from
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
             new_attachment_ids = []
