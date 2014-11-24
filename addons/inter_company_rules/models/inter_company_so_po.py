@@ -45,7 +45,6 @@ class sale_order(models.Model):
     @api.multi
     def action_button_confirm(self):
         """ Also generate inter company purchase order base on conditions."""
-
         res = super(sale_order, self).action_button_confirm()
         for order in self:
             #If company_id not found, return to normal behavior
@@ -142,7 +141,7 @@ class sale_order(models.Model):
 
         #auto-validate the purchase order if needed
         if company.auto_validation:
-            purchase.sudo(update_uid).signal_purchase_confirm()
+            purchase.sudo(update_uid).signal_workflow('purchase_confirm')
 
 
 class purchase_order(models.Model):
@@ -231,5 +230,5 @@ class purchase_order(models.Model):
 
         #Validation of sale order
         if company.auto_validation:
-            sale.sudo(update_uid).signal_order_confirm()
+            sale.sudo(update_uid).signal_workflow('order_confirm')
 
