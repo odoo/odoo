@@ -1498,7 +1498,6 @@
                 <tree string="Account Template">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="type" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                 </tree>
             </field>
@@ -1509,12 +1508,9 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
-                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
-                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="user_type"/>
                     <field name="type"/>
                     <group expand="0" string="Group By">
-                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type'}"/>
                    </group>
                 </search>
