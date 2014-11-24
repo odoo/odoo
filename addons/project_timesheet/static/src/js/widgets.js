@@ -59,6 +59,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.search_model = options.search_model;
             this.classname = options.classname;
             this.label = options.label;
+            this.placeholder = options.placeholder;
             this.id_for_input = options.id_for_input;
             this.project_timesheet_db = project_timesheet.project_timesheet_model.project_timesheet_db;
             this._drop_shown = false;
@@ -258,7 +259,8 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                     data[0] = parseInt(data[0]) + 1;
                 }
             }
-            return data.join(":");
+            //return data.join(":");
+            return data;
         },
         get_total: function() {
             var total = 0;

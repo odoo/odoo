@@ -422,10 +422,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
 
             this.pad_table_to(11);
-            //Add, Add Activity row prior to activities listview
+            //Add, Add Activity row after activities listview
             var $row = $("<tr><td><span class='pt_add_activity pt_pointer'>+ Add Activity</a></td></tr>");
             if(!this.$el.find(".pt_add_activity").length) {
-                $row.prependTo(this.$el.find(".activity_row:first").parent());
+                $row.appendTo(this.$el.find(".activity_row:last").parent());
             }
 
             this.is_available_timer_activity();
@@ -487,9 +487,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
             console.log("current_date is ::: ", current_date);
             var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
             this.project_timesheet_db.set_current_timer_activity(data_to_set);
-            this.$el.find(".pt_duration span.hours").text((hours[0] || 0));
-            this.$el.find(".pt_duration span.minutes").text((hours[1] || 0));
-            this.$el.find(".pt_duration span.seconds").text(0);
+            //this.$el.find(".pt_duration span.hours").text((hours[0] || 0));
+            this.$el.find(".pt_duration span.hours").text(_.str.sprintf("%02d", parseInt((hours[0] || 0))));
+            //this.$el.find(".pt_duration span.minutes").text((hours[1] || 0));
+            this.$el.find(".pt_duration span.minutes").text(_.str.sprintf("%02d", parseInt((hours[1] || 0))));
+            //this.$el.find(".pt_duration span.seconds").text(0);
+            this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(0)));
             this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
             this.start_interval();
             this.initialize_timer();
@@ -522,7 +525,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if (!this.activity_list.get_total()) {
                 return;
             }
-            var duration = this.activity_list.get_total().split(":");
+            var duration = this.activity_list.get_total();
             return _.str.sprintf("%sh %smin", duration[0], (duration[1] || 0));
         },
         get_current_UTCDate: function() {
@@ -544,9 +547,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
                     seconds = (durationObj.asSeconds() % 60).toString().split(".")[0];
                 console.log("Hours, Minute and Seconds are ::: ", hours, minutes, seconds);
-                this.$el.find(".pt_duration span.hours").text(hours);
-                this.$el.find(".pt_duration span.minutes").text(minutes);
-                this.$el.find(".pt_duration span.seconds").text(seconds);
+                //this.$el.find(".pt_duration span.hours").text(hours);
+                this.$el.find(".pt_duration span.hours").text(_.str.sprintf("%02d", parseInt(hours)));
+                //this.$el.find(".pt_duration span.minutes").text(minutes);
+                this.$el.find(".pt_duration span.minutes").text(_.str.sprintf("%02d", parseInt(minutes)));
+                //this.$el.find(".pt_duration span.seconds").text(seconds);
+                this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(seconds)));
                 this.start_interval();
                 this.initialize_timer();
                 if (time_activity.project_id) {
@@ -562,7 +568,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
         },
         initialize_timer: function() {
-            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Select a project", id_for_input: "project_id"});
+            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", placeholder: "Select a project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
                 var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({project_id: project});
@@ -571,7 +577,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Select a task", id_for_input: "task_id"});
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", placeholder: "Select a task", id_for_input: "task_id"});
             this.task_m2o.on("change:value", this, function() {
                 var task = [this.task_m2o.get('value'), this.task_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({task_id: task});
@@ -605,6 +611,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 if (!activity.id) {
                     activity['id'] = this.project_timesheet_db.get_unique_id();
                     activity['command'] = 0; //By default command = 0, activity which is to_create
+                } else if(this.project_timesheet_db.virtual_id_regex.test(activity.id)) {
+                    console.log("Inside, there is activity ID but it is virtual id, so set command = 0");
+                    activity['command'] = 0;
                 } else {
                     activity['command'] = 1;
                 }
@@ -687,7 +696,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         get_form_data: function() {
             var self = this;
             var project_activity_data = {};
-            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val() || 0) * 100) / 60))/100)) || 0;
+            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val() || 0) + ((((parseInt(this.$("#minutes").val() || 0) * 100) / 60))/100)) || 0;
             project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
             project_activity_data['task_id'] = self.task_m2o.get("value") ? ([self.task_m2o.get("value"), self.task_m2o.get("display_string")]) : false;
             project_activity_data['name'] = this.$("#name").val();
