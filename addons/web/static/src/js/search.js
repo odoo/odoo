@@ -415,6 +415,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     view_loaded: function (r) {
         var self = this;
         this.fields_view_get = r;
+        this.view_id = this.view_id || r.view_id;
         this.prepare_search_inputs();
         if (this.$buttons) {
 
