@@ -1222,9 +1222,6 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    type = fields.Selection(related='user_type.type', string='Type', store=True,
-        selection=[('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'), ('liquidity','Liquidity'),
-        ('consolidation', 'Consolidation')])
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text(string='Note')
@@ -1275,7 +1272,6 @@ class account_account_template(models.Model):
                 'name': company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
-                'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
