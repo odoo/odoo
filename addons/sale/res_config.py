@@ -45,11 +45,11 @@ class sale_configuration(osv.TransientModel):
                  'You will be able to follow the progress of the contract and invoice automatically.\n'
                  '-It installs the account_analytic_analysis module.'),
         'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
-        'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
+        'group_sale_pricelist': fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow using different units of measure",
+        'group_uom': fields.boolean("Allow using different units of measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
@@ -131,6 +131,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             'timesheet': timesheet,
             'module_account_analytic_analysis': timesheet,
         }}
+
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'

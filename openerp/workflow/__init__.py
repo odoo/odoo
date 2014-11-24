@@ -24,8 +24,10 @@ from openerp.workflow.service import WorkflowService
 # The new API is in openerp.workflow.workflow_service
 # OLD API of the Workflow
 
+
 def clear_cache(cr, uid):
     WorkflowService.clear_cache(cr.dbname)
+
 
 def trg_write(uid, res_type, res_id, cr):
     """
@@ -38,6 +40,7 @@ def trg_write(uid, res_type, res_id, cr):
     :param cr: a database cursor
     """
     return WorkflowService.new(cr, uid, res_type, res_id).write()
+
 
 def trg_trigger(uid, res_type, res_id, cr):
     """
@@ -52,6 +55,7 @@ def trg_trigger(uid, res_type, res_id, cr):
     """
     return WorkflowService.new(cr, uid, res_type, res_id).trigger()
 
+
 def trg_delete(uid, res_type, res_id, cr):
     """
     Delete a workflow instance
@@ -62,6 +66,7 @@ def trg_delete(uid, res_type, res_id, cr):
     """
     return WorkflowService.new(cr, uid, res_type, res_id).delete()
 
+
 def trg_create(uid, res_type, res_id, cr):
     """
     Create a new workflow instance
@@ -71,6 +76,7 @@ def trg_create(uid, res_type, res_id, cr):
     :param cr: a database cursor
     """
     return WorkflowService.new(cr, uid, res_type, res_id).create()
+
 
 def trg_validate(uid, res_type, res_id, signal, cr):
     """
@@ -83,6 +89,7 @@ def trg_validate(uid, res_type, res_id, signal, cr):
     """
     assert isinstance(signal, basestring)
     return WorkflowService.new(cr, uid, res_type, res_id).validate(signal)
+
 
 def trg_redirect(uid, res_type, res_id, new_rid, cr):
     """

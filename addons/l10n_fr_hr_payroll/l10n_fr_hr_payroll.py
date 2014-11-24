@@ -44,6 +44,7 @@ class hr_contract(osv.osv):
         'coef': fields.char('Coefficient'),
     }
 
+
 class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
 

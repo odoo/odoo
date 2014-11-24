@@ -50,12 +50,12 @@ class report_rappel(report_sxw.rml_parse):
     def _lines_get_with_partner(self, partner, company_id):
         moveline_obj = self.pool['account.move.line']
         moveline_ids = moveline_obj.search(self.cr, self.uid, [
-                            ('partner_id', '=', partner.id),
-                            ('account_id.type', '=', 'receivable'),
-                            ('reconcile_id', '=', False),
-                            ('state', '!=', 'draft'),
-                            ('company_id', '=', company_id),
-                        ])
+            ('partner_id', '=', partner.id),
+            ('account_id.type', '=', 'receivable'),
+            ('reconcile_id', '=', False),
+            ('state', '!=', 'draft'),
+            ('company_id', '=', company_id),
+        ])
 
         # lines_per_currency = {currency: [line data, ...], ...}
         lines_per_currency = defaultdict(list)
@@ -79,8 +79,8 @@ class report_rappel(report_sxw.rml_parse):
         fp_obj = self.pool['account_followup.followup']
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
         if not fp_line:
-            raise osv.except_osv(_('Error!'),_("The followup plan defined for the current company does not have any followup action."))
-        #the default text will be the first fp_line in the sequence with a description.
+            raise osv.except_osv(_('Error!'), _("The followup plan defined for the current company does not have any followup action."))
+        # the default text will be the first fp_line in the sequence with a description.
         default_text = ''
         li_delay = []
         for line in fp_line:
@@ -89,8 +89,8 @@ class report_rappel(report_sxw.rml_parse):
             li_delay.append(line.delay)
         li_delay.sort(reverse=True)
         a = {}
-        #look into the lines of the partner that already have a followup level, and take the description of the higher level for which it is available
-        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconcile_id','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('state','!=','draft'),('debit','!=',False),('account_id.type','=','receivable'),('followup_line_id','!=',False)])
+        # look into the lines of the partner that already have a followup level, and take the description of the higher level for which it is available
+        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id', '=', stat_line.partner_id.id), ('reconcile_id', '=', False), ('company_id', '=', stat_line.company_id.id), ('blocked', '=', False), ('state', '!=', 'draft'), ('debit', '!=', False), ('account_id.type', '=', 'receivable'), ('followup_line_id', '!=', False)])
         partner_max_delay = 0
         partner_max_text = ''
         for i in self.pool['account.move.line'].browse(self.cr, self.uid, partner_line_ids, context=context):

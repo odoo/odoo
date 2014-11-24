@@ -32,7 +32,7 @@ class BuckarooController(http.Controller):
         request.registry['payment.transaction'].form_feedback(request.cr, SUPERUSER_ID, post, 'buckaroo', context=request.context)
         return_url = post.pop('return_url', '')
         if not return_url:
-            data ='' + post.pop('ADD_RETURNDATA', '{}').replace("'", "\"")
+            data = '' + post.pop('ADD_RETURNDATA', '{}').replace("'", "\"")
             custom = json.loads(data)
             return_url = custom.pop('return_url', '/')
         return werkzeug.utils.redirect(return_url)

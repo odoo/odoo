@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import re
 
+
 class crm_lead2opportunity_partner(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner'
     _description = 'Lead To Opportunity Partner'
@@ -30,9 +31,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
     _columns = {
         'name': fields.selection([
-                ('convert', 'Convert to opportunity'),
-                ('merge', 'Merge with existing opportunities')
-            ], 'Conversion Action', required=True),
+            ('convert', 'Convert to opportunity'),
+            ('merge', 'Merge with existing opportunities')
+        ], 'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True),
@@ -67,11 +68,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             tomerge = list(set(tomerge))
 
             if 'action' in fields:
-                res.update({'action' : partner_id and 'exist' or 'create'})
+                res.update({'action': partner_id and 'exist' or 'create'})
             if 'partner_id' in fields:
-                res.update({'partner_id' : partner_id})
+                res.update({'partner_id': partner_id})
             if 'name' in fields:
-                res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
+                res.update({'name': len(tomerge) >= 2 and 'merge' or 'convert'})
             if 'opportunity_ids' in fields and len(tomerge) >= 2:
                 res.update({'opportunity_ids': tomerge})
             if lead.user_id:
@@ -158,9 +159,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         Create partner based on action.
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        #TODO this method in only called by crm_lead2opportunity_partner
-        #wizard and would probably diserve to be refactored or at least
-        #moved to a better place
+        # TODO this method in only called by crm_lead2opportunity_partner
+        # wizard and would probably diserve to be refactored or at least
+        # moved to a better place
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
@@ -172,19 +173,20 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         res = lead.handle_partner_assignation(cr, uid, [lead_id], action, partner_id, context=context)
         return res.get(lead_id)
 
+
 class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner.mass'
     _description = 'Mass Lead To Opportunity Partner'
     _inherit = 'crm.lead2opportunity.partner'
 
     _columns = {
-        'user_ids':  fields.many2many('res.users', string='Salesmen'),
+        'user_ids': fields.many2many('res.users', string='Salesmen'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'deduplicate': fields.boolean('Apply deduplication', help='Merge with existing leads/opportunities of each partner'),        
+        'deduplicate': fields.boolean('Apply deduplication', help='Merge with existing leads/opportunities of each partner'),
         'action': fields.selection([
-                ('each_exist_or_create', 'Use existing partner or create'),
-                ('nothing', 'Do not link to a customer')
-            ], 'Related Customer', required=True),
+            ('each_exist_or_create', 'Use existing partner or create'),
+            ('nothing', 'Do not link to a customer')
+        ], 'Related Customer', required=True),
         'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
     }
 
@@ -208,7 +210,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     def on_change_action(self, cr, uid, ids, action, context=None):
         vals = {}
         if action != 'exist':
-            vals = {'value': {'partner_id': False}} 
+            vals = {'value': {'partner_id': False}}
         return vals
 
     def on_change_deduplicate(self, cr, uid, ids, deduplicate, context=None):

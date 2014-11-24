@@ -33,8 +33,8 @@ Canadian accounting charts and localizations.
 Fiscal positions
 ----------------
 
-When considering taxes to be applied, it is the province where the delivery occurs that matters. 
-Therefore we decided to implement the most common case in the fiscal positions: delivery is the 
+When considering taxes to be applied, it is the province where the delivery occurs that matters.
+Therefore we decided to implement the most common case in the fiscal positions: delivery is the
 responsibility of the supplier and done at the customer location.
 
 Some examples:
@@ -45,11 +45,11 @@ On the customer, set the fiscal position to his province.
 2) You have a customer from another province. However this customer comes to your location
 with their truck to pick up products. On the customer, do not set any fiscal position.
 
-3) An international supplier doesn't charge you any tax. Taxes are charged at customs 
+3) An international supplier doesn't charge you any tax. Taxes are charged at customs
 by the customs broker. On the supplier, set the fiscal position to International.
 
 4) An international supplier charge you your provincial tax. They are registered with your
-provincial government and remit taxes themselves. On the supplier, do not set any fiscal 
+provincial government and remit taxes themselves. On the supplier, do not set any fiscal
 position.
     """,
     'depends': [
@@ -75,7 +75,6 @@ position.
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
+    'images': ['images/config_chart_l10n_ca.jpeg', 'images/l10n_ca_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

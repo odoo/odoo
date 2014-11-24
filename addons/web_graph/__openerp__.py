@@ -14,10 +14,10 @@ Graph Views for Web Client.
 """,
     'version': '3.0',
     'depends': ['web'],
-    'data' : [
+    'data': [
         'views/web_graph.xml',
     ],
-    'qweb' : [
+    'qweb': [
         'static/src/xml/*.xml',
     ],
     'auto_install': True

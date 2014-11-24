@@ -12,6 +12,7 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
+
 class res_users(osv.Model):
     _inherit = 'res.users'
 

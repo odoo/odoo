@@ -250,8 +250,8 @@ class mail_mail(osv.Model):
                 # soft/hard mem limits with temporary data.
                 attachment_ids = [a.id for a in mail.attachment_ids]
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
-                                 for a in ir_attachment.read(cr, SUPERUSER_ID, attachment_ids,
-                                                             ['datas_fname', 'datas'])]
+                               for a in ir_attachment.read(cr, SUPERUSER_ID, attachment_ids,
+                                                           ['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
@@ -324,8 +324,8 @@ class mail_mail(osv.Model):
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
-                _logger.exception('MemoryError while processing mail with ID %r and Msg-Id %r. '\
-                                      'Consider raising the --limit-memory-hard startup option',
+                _logger.exception('MemoryError while processing mail with ID %r and Msg-Id %r. '
+                                  'Consider raising the --limit-memory-hard startup option',
                                   mail.id, mail.message_id)
                 raise
             except Exception as e:

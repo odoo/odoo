@@ -20,6 +20,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class crm_merge_opportunity(osv.osv_memory):
     """
     Merge opportunities together.
@@ -45,7 +46,7 @@ class crm_merge_opportunity(osv.osv_memory):
         wizard = self.browse(cr, uid, ids[0], context=context)
         opportunity2merge_ids = wizard.opportunity_ids
 
-        #TODO: why is this passed through the context ?
+        # TODO: why is this passed through the context ?
         context['lead_ids'] = [opportunity2merge_ids[0].id]
 
         merge_id = lead_obj.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], wizard.user_id.id, wizard.section_id.id, context=context)

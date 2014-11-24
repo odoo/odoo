@@ -13,6 +13,7 @@ import openerp.modules
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
 
+
 class TestQWebTField(common.TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
@@ -36,8 +37,8 @@ class TestQWebTField(common.TransactionCase):
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
-                  'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-expression="company.name">%s</span>' % (
+            'data-oe-field="name" data-oe-type="char" '
+            'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 "My Test Company",))
 
@@ -56,8 +57,8 @@ class TestQWebTField(common.TransactionCase):
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
-                  'data-oe-field="name" data-oe-type="char" '
-                  'data-oe-expression="company.name">%s</span>' % (
+            'data-oe-field="name" data-oe-type="char" '
+            'data-oe-expression="company.name">%s</span>' % (
                 company_id,
                 cgi.escape(s.encode('utf-8')),))
 
@@ -81,6 +82,7 @@ class TestQWebTField(common.TransactionCase):
                 'company': None
             }))
 
+
 class TestQWeb(common.TransactionCase):
     matcher = re.compile('^qweb-test-(.*)\.xml$')
 
@@ -95,6 +97,7 @@ class TestQWeb(common.TransactionCase):
             if f != 'qweb-test-extend.xml'
             if cls.matcher.match(f)
         )
+
     @classmethod
     def qweb_test_file_path(cls):
         path = os.path.dirname(
@@ -117,7 +120,8 @@ class TestQWeb(common.TransactionCase):
         doc = etree.parse(path).getroot()
         qweb.load_document(doc, None, context)
         for template in context.templates:
-            if template.startswith('_'): continue
+            if template.startswith('_'):
+                continue
             param = doc.find('params[@id="{}"]'.format(template))
             # OrderedDict to ensure JSON mappings are iterated in source order
             # so output is predictable & repeatable
@@ -131,6 +135,7 @@ class TestQWeb(common.TransactionCase):
                 (result or u'').strip().encode('utf-8'),
                 template
             )
+
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

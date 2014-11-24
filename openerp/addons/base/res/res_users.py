@@ -41,6 +41,7 @@ _logger = logging.getLogger(__name__)
 # Basic res.groups and res.users
 #----------------------------------------------------------
 
+
 class res_groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
@@ -96,7 +97,7 @@ class res_groups(osv.osv):
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
-        'comment' : fields.text('Comment', size=250, translate=True),
+        'comment': fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
     }
@@ -111,13 +112,13 @@ class res_groups(osv.osv):
             ids = super(res_groups, self).search(cr, uid, args, context=context)
             gs = self.browse(cr, uid, ids, context)
             gs.sort(key=lambda g: g.full_name, reverse=order.endswith('DESC'))
-            gs = gs[offset:offset+limit] if limit else gs[offset:]
+            gs = gs[offset:offset + limit] if limit else gs[offset:]
             return map(int, gs)
         return super(res_groups, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': _('%s (copy)')%group_name})
+        default.update({'name': _('%s (copy)') % group_name})
         return super(res_groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -129,6 +130,7 @@ class res_groups(osv.osv):
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
         return res
+
 
 class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
@@ -173,8 +175,8 @@ class res_users(osv.osv):
             help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, type='char', size=64,
             fnct_inv=_set_new_password, string='Set Password',
-            help="Specify a value only when creating a user or if you're "\
-                 "changing the user's password, otherwise leave empty. After "\
+            help="Specify a value only when creating a user or if you're "
+                 "changing the user's password, otherwise leave empty. After "
                  "a change of password, the user has to login again."),
         'signature': fields.html('Signature'),
         'active': fields.boolean('Active'),
@@ -185,7 +187,7 @@ class res_users(osv.osv):
         # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
-        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
+        'company_ids': fields.many2many('res.company', 'res_company_users_rel', 'user_id', 'cid', 'Companies'),
     }
 
     # overridden inherited fields to bypass access rights, in case you have
@@ -226,10 +228,10 @@ class res_users(osv.osv):
     ]
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
     ]
 
-    def _get_company(self,cr, uid, context=None, uid2=False):
+    def _get_company(self, cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
         # Use read() to compute default company, and pass load=_classic_write to
@@ -247,13 +249,13 @@ class res_users(osv.osv):
             return [c]
         return False
 
-    def _get_group(self,cr, uid, context=None):
+    def _get_group(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         result = []
         try:
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
+            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
             result.append(group_id)
-            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
+            dummy, group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
             result.append(group_id)
         except ValueError:
             # If these groups does not exists anymore
@@ -305,7 +307,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        if user.partner_id.company_id: 
+        if user.partner_id.company_id:
             user.partner_id.write({'company_id': user.company_id.id})
         return user_id
 
@@ -321,13 +323,13 @@ class res_users(osv.osv):
                     user = self.browse(cr, SUPERUSER_ID, uid, context=context)
                     if not (values['company_id'] in user.company_ids.ids):
                         del values['company_id']
-                uid = 1 # safe fields only, so we write as super-user to bypass access rights
+                uid = 1  # safe fields only, so we write as super-user to bypass access rights
 
         res = super(res_users, self).write(cr, uid, ids, values, context=context)
         if 'company_id' in values:
             for user in self.browse(cr, uid, ids, context=context):
                 # if partner is global we keep it that way
-                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
+                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
@@ -354,18 +356,18 @@ class res_users(osv.osv):
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         ids = []
         if name and operator in ['=', 'ilike']:
-            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('login', '=', name)] + args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        user2copy = self.read(cr, uid, [id], ['login','name'])[0]
+        user2copy = self.read(cr, uid, [id], ['login', 'name'])[0]
         default = dict(default or {})
         if ('name' not in default) and ('partner_id' not in default):
             default['name'] = _("%s (copy)") % user2copy['name']
@@ -404,7 +406,7 @@ class res_users(osv.osv):
 
     def check_credentials(self, cr, uid, password):
         """ Override this method to plug additional authentication methods"""
-        res = self.search(cr, SUPERUSER_ID, [('id','=',uid),('password','=',password)])
+        res = self.search(cr, SUPERUSER_ID, [('id', '=', uid), ('password', '=', password)])
         if not res:
             raise openerp.exceptions.AccessDenied()
 
@@ -420,7 +422,7 @@ class res_users(osv.osv):
             # of them rolled back due to a concurrent access.)
             cr.autocommit(True)
             # check if user exists
-            res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
+            res = self.search(cr, SUPERUSER_ID, [('login', '=', login)])
             if res:
                 user_id = res[0]
                 # check credentials
@@ -490,10 +492,10 @@ class res_users(osv.osv):
         cr = self.pool.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
-            if self._uid_cache.has_key(db):
+            if db in self._uid_cache:
                 self._uid_cache[db][uid] = passwd
             else:
-                self._uid_cache[db] = {uid:passwd}
+                self._uid_cache[db] = {uid: passwd}
         finally:
             cr.close()
 
@@ -549,28 +551,34 @@ class res_users(osv.osv):
 # automatically belongs to the implied groups (transitively).
 #----------------------------------------------------------
 
+
 class cset(object):
     """ A cset (constrained set) is a set of elements that may be constrained to
         be a subset of other csets.  Elements added to a cset are automatically
         added to its supersets.  Cycles in the subset constraints are supported.
     """
+
     def __init__(self, xs):
         self.supersets = set()
         self.elements = set(xs)
+
     def subsetof(self, other):
         if other is not self:
             self.supersets.add(other)
             other.update(self.elements)
+
     def update(self, xs):
         xs = set(xs) - self.elements
         if xs:      # xs will eventually be empty in case of a cycle
             self.elements.update(xs)
             for s in self.supersets:
                 s.update(xs)
+
     def __iter__(self):
         return iter(self.elements)
 
 concat = itertools.chain.from_iterable
+
 
 class groups_implied(osv.osv):
     _inherit = 'res.groups'
@@ -578,6 +586,7 @@ class groups_implied(osv.osv):
     def _get_trans_implied(self, cr, uid, ids, field, arg, context=None):
         "computes the transitive closure of relation implied_ids"
         memo = {}           # use a memo for performance and cycle avoidance
+
         def computed_set(g):
             if g not in memo:
                 memo[g] = cset(g.implied_ids)
@@ -615,6 +624,7 @@ class groups_implied(osv.osv):
                 super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
 
+
 class users_implied(osv.osv):
     _inherit = 'res.users'
 
@@ -628,7 +638,7 @@ class users_implied(osv.osv):
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
-        if not isinstance(ids,list):
+        if not isinstance(ids, list):
             ids = [ids]
         res = super(users_implied, self).write(cr, uid, ids, values, context)
         if values.get('groups_id'):
@@ -662,26 +672,34 @@ class users_implied(osv.osv):
 #       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
 #----------------------------------------------------------
 
+
 def name_boolean_group(id):
     return 'in_group_' + str(id)
+
 
 def name_selection_groups(ids):
     return 'sel_groups_' + '_'.join(map(str, ids))
 
+
 def is_boolean_group(name):
     return name.startswith('in_group_')
+
 
 def is_selection_groups(name):
     return name.startswith('sel_groups_')
 
+
 def is_reified_group(name):
     return is_boolean_group(name) or is_selection_groups(name)
+
 
 def get_boolean_group(name):
     return int(name[9:])
 
+
 def get_selection_groups(name):
     return map(int, name[11:].split('_'))
+
 
 def partition(f, xs):
     "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
@@ -689,6 +707,7 @@ def partition(f, xs):
     for x in xs:
         (yes if f(x) else nos).append(x)
     return yes, nos
+
 
 def parse_m2m(commands):
     "return a list of ids corresponding to a many2many value"
@@ -797,6 +816,7 @@ class groups_view(osv.osv):
         if others:
             res.append((False, 'boolean', others))
         return res
+
 
 class users_view(osv.osv):
     _inherit = 'res.users'
@@ -917,6 +937,7 @@ class users_view(osv.osv):
 # change password wizard
 #----------------------------------------------------------
 
+
 class change_password_wizard(osv.TransientModel):
     """
         A wizard to manage the change of users' passwords
@@ -956,6 +977,7 @@ class change_password_wizard(osv.TransientModel):
             }
 
         return {'type': 'ir.actions.act_window_close'}
+
 
 class change_password_user(osv.TransientModel):
     """

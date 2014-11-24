@@ -27,6 +27,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 
+
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
         group. The group mechanics are based on the followers. """
@@ -55,8 +56,8 @@ class mail_group(osv.Model):
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
-            help="Members of those groups will automatically added as followers. "\
-                 "Note that they will be able to manage their subscription manually "\
+            help="Members of those groups will automatically added as followers. "
+                 "Note that they will be able to manage their subscription manually "
                  "if necessary."),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
@@ -66,16 +67,16 @@ class mail_group(osv.Model):
             store={
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized photo of the group. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
+            help="Medium-sized photo of the group. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved. "
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
             store={
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized photo of the group. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized photo of the group. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="The email address associated with this group. New emails received will automatically "

@@ -38,14 +38,17 @@ from openerp.report.render.rml2pdf import customfonts
 # coerce any type to a unicode string (to preserve non-ascii characters)
 # and escape XML entities
 #
+
+
 def toxml(value):
     unicode_value = tools.ustr(value)
-    return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
+    return unicode_value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
 
 class report_int(object):
 
     _reports = {}
-    
+
     def __init__(self, name, register=True):
         if register:
             assert openerp.conf.deprecation.allow_report_int_registration
@@ -67,16 +70,18 @@ class report_int(object):
     def create(self, cr, uid, ids, datas, context=None):
         return False
 
+
 class report_rml(report_int):
     """
         Automatically builds a document using the transformation process:
             XML -> DATAS -> RML -> PDF -> HTML
         using a XSL:RML transformation
     """
+
     def __init__(self, name, table, tmpl, xsl, register=True):
         super(report_rml, self).__init__(name, register=register)
         self.table = table
-        self.internal_header=False
+        self.internal_header = False
         self.tmpl = tmpl
         self.xsl = xsl
         self.bin_datas = {}
@@ -87,8 +92,8 @@ class report_rml(report_int):
             'sxw': self.create_sxw,
             'txt': self.create_txt,
             'odt': self.create_odt,
-            'html2html' : self.create_html2html,
-            'makohtml2html' :self.create_makohtml2html,
+            'html2html': self.create_html2html,
+            'makohtml2html': self.create_makohtml2html,
         }
 
     def create(self, cr, uid, ids, datas, context):
@@ -104,16 +109,16 @@ class report_rml(report_int):
         rml = self.create_rml(cr, xml, uid, context)
         ir_actions_report_xml_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
-        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
+        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids)[0].name or 'OpenERP Report'
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
         return pdf, report_type
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         if not context:
-            context={}
+            context = {}
         doc = print_xml.document(cr, uid, datas, {})
-        self.bin_datas.update( doc.bin_datas  or {})
+        self.bin_datas.update(doc.bin_datas or {})
         doc.parse(self.tmpl, ids, self.table, context)
         xml = doc.xml_get()
         doc.close()
@@ -122,7 +127,7 @@ class report_rml(report_int):
     def post_process_xml_data(self, cr, uid, xml, context=None):
 
         if not context:
-            context={}
+            context = {}
         # find the position of the 3rd tag
         # (skip the <?xml ...?> and the "root" tag)
         iter = re.finditer('<[^>]*>', xml)
@@ -147,10 +152,10 @@ class report_rml(report_int):
     # TODO: The translation doesn't work for "<tag t="1">textext<tag> tex</tag>text</tag>"
     #
     def create_rml(self, cr, xml, uid, context=None):
-        if self.tmpl=='' and not self.internal_header:
-            self.internal_header=True
+        if self.tmpl == '' and not self.internal_header:
+            self.internal_header = True
         if not context:
-            context={}
+            context = {}
         registry = openerp.registry(cr.dbname)
         ir_translation_obj = registry['ir.translation']
 
@@ -171,7 +176,7 @@ class report_rml(report_int):
         finally:
             stylesheet_file.close()
 
-        #TODO: get all the translation in one query. That means we have to:
+        # TODO: get all the translation in one query. That means we have to:
         # * build a list of items to translate,
         # * issue the query to translate them,
         # * (re)build/update the stylesheet with the translated items
@@ -186,9 +191,9 @@ class report_rml(report_int):
                     text = None
                     tail = None
                     if node.text:
-                        text = node.text.strip().replace('\n',' ')
+                        text = node.text.strip().replace('\n', ' ')
                     if node.tail:
-                        tail = node.tail.strip().replace('\n',' ')
+                        tail = node.tail.strip().replace('\n', ' ')
                     if text:
                         translation1 = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, text)
                         if translation1:
@@ -208,10 +213,10 @@ class report_rml(report_int):
 
         return xml
 
-    def create_pdf(self, rml, localcontext = None, logo=None, title=None):
+    def create_pdf(self, rml, localcontext=None, logo=None, title=None):
         if not localcontext:
             localcontext = {}
-        localcontext.update({'internal_header':self.internal_header})
+        localcontext.update({'internal_header': self.internal_header})
         if logo:
             self.bin_datas['logo'] = logo
         else:
@@ -221,39 +226,38 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
-    def create_html(self, rml, localcontext = None, logo=None, title=None):
+    def create_html(self, rml, localcontext=None, logo=None, title=None):
         obj = render.rml2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
 
-    def create_txt(self, rml,localcontext, logo=None, title=None):
+    def create_txt(self, rml, localcontext, logo=None, title=None):
         obj = render.rml2txt(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get().encode('utf-8')
 
-    def create_html2html(self, rml, localcontext = None, logo=None, title=None):
+    def create_html2html(self, rml, localcontext=None, logo=None, title=None):
         obj = render.html2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
 
-
-    def create_raw(self,rml, localcontext = None, logo=None, title=None):
-        obj = render.odt2odt(etree.XML(rml),localcontext)
+    def create_raw(self, rml, localcontext=None, logo=None, title=None):
+        obj = render.odt2odt(etree.XML(rml), localcontext)
         obj.render()
         return etree.tostring(obj.get())
 
-    def create_sxw(self,rml,localcontext = None):
-        obj = render.odt2odt(rml,localcontext)
+    def create_sxw(self, rml, localcontext=None):
+        obj = render.odt2odt(rml, localcontext)
         obj.render()
         return obj.get()
 
-    def create_odt(self,rml,localcontext = None):
-        obj = render.odt2odt(rml,localcontext)
+    def create_odt(self, rml, localcontext=None):
+        obj = render.odt2odt(rml, localcontext)
         obj.render()
         return obj.get()
 
-    def create_makohtml2html(self,html,localcontext = None):
-        obj = render.makohtml2html(html,localcontext)
+    def create_makohtml2html(self, html, localcontext=None):
+        obj = render.makohtml2html(html, localcontext)
         obj.render()
         return obj.get()
 

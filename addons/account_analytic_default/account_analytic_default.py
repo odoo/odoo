@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 
+
 class account_analytic_default(osv.osv):
     _name = "account.analytic.default"
     _description = "Analytic Distribution"
@@ -43,7 +44,7 @@ class account_analytic_default(osv.osv):
         domain = []
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
-        domain += [('product_id','=', False)]
+        domain += [('product_id', '=', False)]
         if partner_id:
             domain += ['|', ('partner_id', '=', partner_id)]
         domain += [('partner_id', '=', False)]
@@ -51,8 +52,8 @@ class account_analytic_default(osv.osv):
             domain += ['|', ('company_id', '=', company_id)]
         domain += [('company_id', '=', False)]
         if user_id:
-            domain += ['|',('user_id', '=', user_id)]
-        domain += [('user_id','=', False)]
+            domain += ['|', ('user_id', '=', user_id)]
+        domain += [('user_id', '=', False)]
         if date:
             domain += ['|', ('date_start', '<=', date), ('date_start', '=', False)]
             domain += ['|', ('date_stop', '>=', date), ('date_stop', '=', False)]
@@ -60,12 +61,18 @@ class account_analytic_default(osv.osv):
         res = False
         for rec in self.browse(cr, uid, self.search(cr, uid, domain, context=context), context=context):
             index = 0
-            if rec.product_id: index += 1
-            if rec.partner_id: index += 1
-            if rec.company_id: index += 1
-            if rec.user_id: index += 1
-            if rec.date_start: index += 1
-            if rec.date_stop: index += 1
+            if rec.product_id:
+                index += 1
+            if rec.partner_id:
+                index += 1
+            if rec.company_id:
+                index += 1
+            if rec.user_id:
+                index += 1
+            if rec.date_start:
+                index += 1
+            if rec.date_stop:
+                index += 1
             if index > best_index:
                 res = rec
                 best_index = index
@@ -84,7 +91,6 @@ class account_invoice_line(osv.osv):
         else:
             res_prod['value'].update({'account_analytic_id': False})
         return res_prod
-
 
 
 class stock_picking(osv.osv):
@@ -118,8 +124,11 @@ class sale_order_line(osv.osv):
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
+
+
 class product_product(osv.Model):
     _inherit = 'product.product'
+
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
         Analytic = self.pool['account.analytic.default']
         return {
@@ -130,9 +139,10 @@ class product_product(osv.Model):
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
 
+
 class product_template(osv.Model):
     _inherit = 'product.template'
-    
+
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
         Analytic = self.pool['account.analytic.default']
         res = {}
@@ -143,7 +153,6 @@ class product_template(osv.Model):
     _columns = {
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
-
 
     def action_view_rules(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)

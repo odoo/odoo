@@ -23,6 +23,7 @@ from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools.mail import plaintext2html
 
+
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
         OpenERP. Partners can choose to follow documents (records) of any kind
@@ -67,7 +68,8 @@ class mail_followers(osv.Model):
         self.invalidate_cache(cr, uid, context=context)
         return res
 
-    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
+    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.')]
+
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners

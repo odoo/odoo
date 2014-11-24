@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
@@ -35,14 +36,14 @@ class procurement_order(osv.osv):
     def _assign(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
         if not res:
-            #if there isn't any specific procurement.rule defined for the product, we may want to create a task
+            # if there isn't any specific procurement.rule defined for the product, we may want to create a task
             if self._is_procurement_task(cr, uid, procurement, context=context):
                 return True
         return res
 
     def _run(self, cr, uid, procurement, context=None):
         if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
-            #create a task for the procurement
+            # create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
@@ -86,7 +87,7 @@ class procurement_order(osv.osv):
             'description': procurement.name + '\n',
             'project_id': project and project.id or False,
             'company_id': procurement.company_id.id,
-        },context=context)
+        }, context=context)
         self.write(cr, uid, [procurement.id], {'task_id': task_id}, context=context)
         self.project_task_create_note(cr, uid, [procurement.id], context=context)
         return task_id
@@ -138,6 +139,7 @@ class project_task(osv.osv):
                 self._validate_subflows(cr, uid, ids, context=context)
         return res
 
+
 class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
@@ -145,15 +147,12 @@ class product_template(osv.osv):
         'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
     }
 
+
 class product_product(osv.osv):
     _inherit = "product.product"
-    
+
     def need_procurement(self, cr, uid, ids, context=None):
         for product in self.browse(cr, uid, ids, context=context):
             if product.type == 'service' and product.auto_create_task:
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
-
-
-
-

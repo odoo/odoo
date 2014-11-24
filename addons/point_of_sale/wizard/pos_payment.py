@@ -46,6 +46,7 @@ class account_journal(osv.osv):
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
     _description = 'Point of Sale Payment'
+
     def check(self, cr, uid, ids, context=None):
         """Check the order:
         if the order is not paid: continue payment,
@@ -66,7 +67,7 @@ class pos_make_payment(osv.osv_memory):
 
         if order_obj.test_paid(cr, uid, [active_id]):
             order_obj.signal_workflow(cr, uid, [active_id], 'paid')
-            return {'type' : 'ir.actions.act_window_close' }
+            return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment(cr, uid, ids, context=context)
 
@@ -85,7 +86,7 @@ class pos_make_payment(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         active_id = context.get('active_id', [])
-        datas = {'ids' : [active_id]}
+        datas = {'ids': [active_id]}
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.receipt',
@@ -115,13 +116,13 @@ class pos_make_payment(osv.osv_memory):
         return False
 
     _columns = {
-        'journal_id' : fields.many2one('account.journal', 'Payment Mode', required=True),
-        'amount': fields.float('Amount', digits=(16,2), required= True),
+        'journal_id': fields.many2one('account.journal', 'Payment Mode', required=True),
+        'amount': fields.float('Amount', digits=(16, 2), required= True),
         'payment_name': fields.char('Payment Reference'),
         'payment_date': fields.date('Payment Date', required=True),
     }
     _defaults = {
-        'journal_id' : _default_journal,
+        'journal_id': _default_journal,
         'payment_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'amount': _default_amount,
     }

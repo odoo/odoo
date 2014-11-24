@@ -22,6 +22,7 @@
 
 from openerp.osv import fields, osv
 
+
 class email_template_preview(osv.osv_memory):
     _inherit = "email.template"
     _name = "email_template.preview"
@@ -40,7 +41,7 @@ class email_template_preview(osv.osv_memory):
         email_template = self.pool.get('email.template')
         template = email_template.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
-        model =  self.pool[template_object.model]
+        model = self.pool[template_object.model]
         record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
         default_id = context.get('default_res_id')
 
@@ -48,7 +49,6 @@ class email_template_preview(osv.osv_memory):
             record_ids.insert(0, default_id)
 
         return model.name_get(cr, uid, record_ids, context)
-
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -59,7 +59,7 @@ class email_template_preview(osv.osv_memory):
         template_id = context.get('template_id')
         if 'res_id' in fields and not result.get('res_id'):
             records = self._get_records(cr, uid, context=context)
-            result['res_id'] = records and records[0][0] or False # select first record as a Default
+            result['res_id'] = records and records[0][0] or False  # select first record as a Default
         if template_id and 'model_id' in fields and not result.get('model_id'):
             result['model_id'] = email_template.read(cr, uid, int(template_id), ['model_id'], context).get('model_id', False)
         return result

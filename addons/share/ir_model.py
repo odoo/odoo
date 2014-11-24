@@ -20,6 +20,7 @@
 ##############################################################################
 from openerp.osv import osv
 
+
 class ir_model_access(osv.Model):
     _inherit = 'ir.model.access'
 
@@ -30,7 +31,7 @@ class ir_model_access(osv.Model):
            the model ``model_name``.
            :rtype: list
         """
-        assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
+        assert access_mode in ['read', 'write', 'create', 'unlink'], 'Invalid access mode: %s' % access_mode
         cr.execute('''SELECT
                         c.name, g.name
                       FROM
@@ -44,6 +45,6 @@ class ir_model_access(osv.Model):
                         (g.share IS NULL or g.share IS false) AND
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
-    
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

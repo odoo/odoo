@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,14 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import os, sys
+import os
+import sys
 import re
 import smtplib
-import email, mimetypes
+import email
+import mimetypes
 from email.header import decode_header
 from email.mime.text import MIMEText
 import xmlrpclib
@@ -34,22 +36,25 @@ Le message avec le sujet "%s" n'a pu être archivé dans l'ERP.
 
 """.decode('utf-8')
 
+
 class EmailParser(object):
 
     def __init__(self, headers, dispatcher):
         self.headers = headers
         self.dispatcher = dispatcher
-    
+
     def parse(self, msg):
         dispatcher((self.headers, msg))
+
 
 class CommandDispatcher(object):
 
     def __init__(self, receiver):
         self.receiver = receiver
-    
+
     def __call__(self, request):
         return self.receiver(request)
+
 
 class RPCProxy(object):
 
@@ -57,9 +62,10 @@ class RPCProxy(object):
         self.rpc = xmlrpclib.ServerProxy('http://%s:%s/%s' % (host, port, path))
         self.user_id = uid
         self.passwd = passwd
-    
+
     def __call__(self, request):
         return self.rpc.execute(self.user_id, self.passwd, *request)
+
 
 class ReceiverEmail2Event(object):
 
@@ -74,13 +80,12 @@ class ReceiverEmail2Event(object):
 
     project_re = re.compile(r"^ *\[?(\d{4}\.?\d{0,3})\]?", re.UNICODE)
 
-
     def __init__(self, rpc):
         self.rpc = rpc
-    
+
     def get_addresses(self, headers, msg):
         hcontent = ''
-        for header in [h for h in headers if msg.has_key(h)]:
+        for header in [h for h in headers if h in msg]:
             hcontent += msg[header]
         return self.email_re.findall(hcontent)
 
@@ -114,7 +119,7 @@ class ReceiverEmail2Event(object):
         if msg.is_multipart():
             for message in [m for m in msg.get_payload() if m.get_content_type() == 'message/rfc822']:
                 self((headers, message.get_payload()[0]))
-    
+
     def save_mail(self, msg, subject, partners):
         counter, description = 1, u''
         if msg.is_multipart():
@@ -156,7 +161,7 @@ class ReceiverEmail2Event(object):
             project = ''
 
         for partner in partners:
-            self.rpc(('res.partner.event', 'create', {'name' : subject, 'partner_id' : partner, 'description' : description, 'project' : project}))
+            self.rpc(('res.partner.event', 'create', {'name': subject, 'partner_id': partner, 'description': description, 'project': project}))
 
 
 if __name__ == '__main__':
@@ -166,4 +171,3 @@ if __name__ == '__main__':
     parser.parse(email.message_from_file(sys.stdin))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -30,6 +30,7 @@ _logger = logging.getLogger(__name__)
 # now directly call into openerp as the web server is always
 # embedded in openerp.
 
+
 def _edi_dispatch(db_name, method_name, *method_args):
     try:
         registry = openerp.modules.registry.RegistryManager.get(db_name)
@@ -43,14 +44,17 @@ def _edi_dispatch(db_name, method_name, *method_args):
             method_name, method_args)
         raise
 
+
 def exp_import_edi_document(db_name, uid, passwd, edi_document, context=None):
     return _edi_dispatch(db_name, 'import_edi', uid, edi_document, None)
+
 
 def exp_import_edi_url(db_name, uid, passwd, edi_url, context=None):
     return _edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
 
+
 def dispatch(method, params):
-    if method in ['import_edi_document',  'import_edi_url']:
+    if method in ['import_edi_document', 'import_edi_url']:
         (db, uid, passwd) = params[0:3]
         openerp.service.security.check(db, uid, passwd)
     else:

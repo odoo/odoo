@@ -24,7 +24,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 
-#in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
+# in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
 
 class account_account_template(osv.osv):
     _inherit = 'account.account.template'
@@ -32,11 +32,13 @@ class account_account_template(osv.osv):
         'name': fields.char('Name', required=True, select=True, translate=True),
     }
 
+
 class account_account(osv.osv):
     _inherit = 'account.account'
     _columns = {
         'name': fields.char('Name', required=True, select=True, translate=True),
     }
+
 
 class account_tax(osv.osv):
     _inherit = 'account.tax'
@@ -61,7 +63,7 @@ class account_tax_code_template(osv.osv):
 
 class account_chart_template(osv.osv):
     _inherit = 'account.chart.template'
-    _columns={
+    _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'spoken_languages': fields.char('Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
     }

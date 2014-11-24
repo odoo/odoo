@@ -32,6 +32,8 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 # Inspired by http://stackoverflow.com/questions/517923
+
+
 def remove_accents(input_str):
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
@@ -76,10 +78,10 @@ class mail_alias(osv.Model):
                                           # (have a few false positives, though)
                                           domain="[('field_id.name', '=', 'message_ids')]"),
         'alias_user_id': fields.many2one('res.users', 'Owner',
-                                           help="The owner of records created upon receiving emails on this alias. "
-                                                "If this field is not set the system will attempt to find the right owner "
-                                                "based on the sender (From) address, or will use the Administrator account "
-                                                "if no system user is found for that address."),
+                                         help="The owner of records created upon receiving emails on this alias. "
+                                         "If this field is not set the system will attempt to find the right owner "
+                                         "based on the sender (From) address, or will use the Administrator account "
+                                         "if no system user is found for that address."),
         'alias_defaults': fields.text('Default Values', required=True,
                                       help="A Python dictionary that will be evaluated to provide "
                                            "default values when creating new records for this alias."),
@@ -95,14 +97,14 @@ class mail_alias(osv.Model):
         'alias_parent_thread_id': fields.integer('Parent Record Thread ID',
             help="ID of the parent record holding the alias (example: project holding the task creation alias)"),
         'alias_contact': fields.selection([
-                ('everyone', 'Everyone'),
-                ('partners', 'Authenticated Partners'),
-                ('followers', 'Followers only'),
-            ], string='Alias Contact Security', required=True,
+            ('everyone', 'Everyone'),
+            ('partners', 'Authenticated Partners'),
+            ('followers', 'Followers only'),
+        ], string='Alias Contact Security', required=True,
             help="Policy to post a message on the document using the mailgateway.\n"
-                    "- everyone: everyone can post\n"
-                    "- partners: only authenticated partners\n"
-                    "- followers: only followers of the related document\n"),
+            "- everyone: everyone can post\n"
+            "- partners: only authenticated partners\n"
+            "- followers: only followers of the related document\n"),
     }
 
     _defaults = {
@@ -218,8 +220,8 @@ class mail_alias(osv.Model):
         try:
             cr.execute('ALTER TABLE %s ALTER COLUMN alias_id SET NOT NULL' % (child_table_name))
         except Exception:
-            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
-                            "If you want to have it, you should update the records and execute manually:\n"\
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"
+                            "If you want to have it, you should update the records and execute manually:\n"
                             "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
                             child_table_name, 'alias_id', child_table_name, 'alias_id')
 

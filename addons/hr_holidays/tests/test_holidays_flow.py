@@ -27,6 +27,7 @@ from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
+
 class TestHolidaysFlow(TestHrHolidaysBase):
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')

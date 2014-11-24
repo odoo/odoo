@@ -44,7 +44,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 if res['periods'] == '':
                     res['periods'] = period['name']
                 else:
-                    res['periods'] += ", "+ period['name']
+                    res['periods'] += ", " + period['name']
         return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
@@ -71,9 +71,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
-            self.cr.execute ("select id from account_fiscalyear")
+            self.cr.execute("select id from account_fiscalyear")
             fy = self.cr.fetchall()
-            self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
+            self.cr.execute("select id from account_period where fiscalyear_id = %s", (fy[0][0],))
             periods = self.cr.fetchall()
             for p in periods:
                 period_list.append(p[0])
@@ -82,7 +82,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         i = 0
         top_result = []
         while i < len(res):
-            res_dict = { 'code': res[i][1].code,
+            res_dict = {'code': res[i][1].code,
                 'name': res[i][1].name,
                 'debit': 0,
                 'credit': 0,
@@ -90,7 +90,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
-            }
+                        }
 
             top_result.append(res_dict)
             res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
@@ -100,8 +100,8 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 res_general[ind_general]['pos'] = 0
                 res_general[ind_general]['level'] = res_dict['level']
                 top_result.append(res_general[ind_general])
-                ind_general+=1
-            i+=1
+                ind_general += 1
+            i += 1
         return top_result
 
     def _get_general(self, tax_code_id, period_list, company_id, based_on, context=None):
@@ -155,20 +155,20 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         res = self.cr.dictfetchall()
 
         i = 0
-        while i<len(res):
+        while i < len(res):
             res[i]['account'] = obj_account.browse(self.cr, self.uid, res[i]['account_id'], context=context)
-            i+=1
+            i += 1
         return res
 
     def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
+        ids = obj_tc.search(self.cr, self.uid, [('parent_id', '=', parent), ('company_id', '=', company_id)], order='sequence', context=context)
 
         res = []
         for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
-            res.append(('.'*2*level, code))
+            res.append(('.' * 2 * level, code))
 
-            res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
+            res += self._get_codes(based_on, company_id, code.id, level + 1, context=context)
         return res
 
     def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
@@ -182,7 +182,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         res = []
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
-            ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
+            ids = obj_tc.search(self.cr, self.uid, [('id', '=', account[1].id)], context=context)
             sum_tax_add = 0
             for period_ind in period_list:
                 context2 = dict(context, period_id=period_ind, based_on=based_on)
@@ -199,9 +199,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
     def sort_result(self, accounts, context=None):
         # On boucle sur notre rapport
         result_accounts = []
-        ind=0
-        old_level=0
-        while ind<len(accounts):
+        ind = 0
+        old_level = 0
+        while ind < len(accounts):
             #
             account_elem = accounts[ind]
             #
@@ -212,8 +212,8 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 bcl_current_level = old_level
                 bcl_rup_ind = ind - 1
 
-                while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0 ):
-                    res_tot = { 'code': accounts[bcl_rup_ind]['code'],
+                while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0):
+                    res_tot = {'code': accounts[bcl_rup_ind]['code'],
                         'name': '',
                         'debit': 0,
                         'credit': 0,
@@ -221,18 +221,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         'type': accounts[bcl_rup_ind]['type'],
                         'level': 0,
                         'pos': 0
-                    }
+                               }
 
                     if res_tot['type'] == 1:
                         # on change le type pour afficher le total
                         res_tot['type'] = 2
                         result_accounts.append(res_tot)
-                    bcl_current_level =  accounts[bcl_rup_ind]['level']
+                    bcl_current_level = accounts[bcl_rup_ind]['level']
                     bcl_rup_ind -= 1
 
             old_level = account_elem['level']
             result_accounts.append(account_elem)
-            ind+=1
+            ind += 1
 
         return result_accounts
 

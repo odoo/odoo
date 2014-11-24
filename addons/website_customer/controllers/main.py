@@ -7,6 +7,7 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 import werkzeug.urls
 
+
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
 

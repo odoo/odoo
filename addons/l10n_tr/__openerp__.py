@@ -31,8 +31,8 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
       bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
     """,
     'author': 'Ahmet Altınışık',
-    'maintainer':'https://launchpad.net/~openerp-turkey',
-    'website':'https://launchpad.net/openerp-turkey',
+    'maintainer': 'https://launchpad.net/~openerp-turkey',
+    'website': 'https://launchpad.net/openerp-turkey',
     'depends': [
         'account',
         'base_vat',
@@ -48,6 +48,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/chart_l10n_tr_1.jpg','images/chart_l10n_tr_2.jpg','images/chart_l10n_tr_3.jpg'],
+    'images': ['images/chart_l10n_tr_1.jpg', 'images/chart_l10n_tr_2.jpg', 'images/chart_l10n_tr_3.jpg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

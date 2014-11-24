@@ -55,6 +55,7 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
+
 def _symbol_set(symb):
     if symb is None or symb == False:
         return None
@@ -190,13 +191,13 @@ class _column(object):
         pass
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
-        cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%s', (self._symbol_set[1](value), id))
+        cr.execute('update ' + obj._table + ' set ' + name + '=' + self._symbol_set[0] + ' where id=%s', (self._symbol_set[1](value), id))
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         raise Exception(_('undefined get method !'))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        ids = obj.search(cr, uid, args+self._domain+[(name, 'ilike', value)], offset, limit, context=context)
+        ids = obj.search(cr, uid, args + self._domain + [(name, 'ilike', value)], offset, limit, context=context)
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
@@ -204,12 +205,12 @@ class _column(object):
         """Converts a field value to a suitable string representation for a record,
            e.g. when this field is used as ``rec_name``.
 
-           :param obj: the ``BaseModel`` instance this column belongs to 
+           :param obj: the ``BaseModel`` instance this column belongs to
            :param value: a proper value as returned by :py:meth:`~openerp.orm.osv.BaseModel.read`
                          for this column
         """
         # delegated to class method, so a column type A can delegate
-        # to a column type B. 
+        # to a column type B.
         return self._as_display_name(self, cr, uid, obj, value, context=None)
 
     @classmethod
@@ -221,6 +222,8 @@ class _column(object):
 # ---------------------------------------------------------
 # Simple fields
 # ---------------------------------------------------------
+
+
 class boolean(_column):
     _type = 'boolean'
     _symbol_c = '%s'
@@ -233,21 +236,23 @@ class boolean(_column):
             _logger.debug(
                 "required=True is deprecated: making a boolean field"
                 " `required` has no effect, as NULL values are "
-                "automatically turned into False. args: %r",args)
+                "automatically turned into False. args: %r", args)
+
 
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0
+    _symbol_get = lambda self, x: x or 0
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
 
+
 class reference(_column):
     _type = 'reference'
-    _classic_read = False # post-process to handle missing target
+    _classic_read = False  # post-process to handle missing target
 
     def __init__(self, string, selection, size=None, **args):
         if callable(selection):
@@ -284,9 +289,11 @@ class reference(_column):
         return tools.ustr(value)
 
 # takes a string (encoded in utf8) and returns a string (encoded in utf8)
+
+
 def _symbol_set_char(self, symb):
 
-    #TODO:
+    # TODO:
     # * we need to remove the "symb==False" from the next line BUT
     #   for now too many things rely on this broken behavior
     # * the symb==None test should be common to all data types
@@ -298,6 +305,7 @@ def _symbol_set_char(self, symb):
     u_symb = tools.ustr(symb)
     return u_symb[:self.size].encode('utf8')
 
+
 class char(_column):
     _type = 'char'
 
@@ -306,6 +314,7 @@ class char(_column):
         # self._symbol_set_char defined to keep the backward compatibility
         self._symbol_f = self._symbol_set_char = lambda x: _symbol_set_char(self, x)
         self._symbol_set = (self._symbol_c, self._symbol_f)
+
 
 class text(_column):
     _type = 'text'
@@ -336,12 +345,13 @@ class html(text):
 
 import __builtin__
 
+
 class float(_column):
     _type = 'float'
     _symbol_c = '%s'
     _symbol_f = lambda x: __builtin__.float(x or 0.0)
     _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0.0
+    _symbol_get = lambda self, x: x or 0.0
 
     def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
         _column.__init__(self, string=string, required=required, **args)
@@ -366,6 +376,7 @@ class float(_column):
             self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
                                                                        precision_digits=scale),
                                                            precision_digits=scale))
+
 
 class date(_column):
     _type = 'date'
@@ -412,12 +423,12 @@ class date(_column):
            :param dict context: the 'tz' key in the context should give the
                                 name of the User/Client timezone (otherwise
                                 UTC is used)
-           :rtype: str 
+           :rtype: str
         """
         today = timestamp or DT.datetime.now()
         context_today = None
         if context and context.get('tz'):
-            tz_name = context['tz']  
+            tz_name = context['tz']
         else:
             user = model.pool['res.users'].browse(cr, SUPERUSER_ID, uid)
             tz_name = user.tz
@@ -425,7 +436,7 @@ class date(_column):
             try:
                 utc = pytz.timezone('UTC')
                 context_tz = pytz.timezone(tz_name)
-                utc_today = utc.localize(today, is_dst=False) # UTC = no DST
+                utc_today = utc.localize(today, is_dst=False)  # UTC = no DST
                 context_today = utc_today.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific today date, "
@@ -505,12 +516,12 @@ class datetime(_column):
         """
         assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
         if context and context.get('tz'):
-            tz_name = context['tz']  
+            tz_name = context['tz']
         else:
             registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
             user = registry['res.users'].browse(cr, SUPERUSER_ID, uid)
             tz_name = user.tz
-        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False) # UTC = no DST
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
         if tz_name:
             try:
                 context_tz = pytz.timezone(tz_name)
@@ -520,6 +531,7 @@ class datetime(_column):
                               "using the UTC value",
                               exc_info=True)
         return utc_timestamp
+
 
 class binary(_column):
     _type = 'binary'
@@ -566,6 +578,7 @@ class binary(_column):
             else:
                 res[i] = val
         return res
+
 
 class selection(_column):
     _type = 'selection'
@@ -628,6 +641,7 @@ class selection(_column):
 #         (5)                    unlink all (only valid for one2many)
 #
 
+
 class many2one(_column):
     _classic_read = False
     _classic_write = True
@@ -654,31 +668,31 @@ class many2one(_column):
             context = {}
         obj = obj_src.pool[self._obj]
         self._table = obj._table
-        if type(values) == type([]):
+        if isinstance(values, type([])):
             for act in values:
                 if act[0] == 0:
                     id_new = obj.create(cr, act[2])
-                    cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (id_new, id))
+                    cr.execute('update ' + obj_src._table + ' set ' + field + '=%s where id=%s', (id_new, id))
                 elif act[0] == 1:
                     obj.write(cr, [act[1]], act[2], context=context)
                 elif act[0] == 2:
-                    cr.execute('delete from '+self._table+' where id=%s', (act[1],))
+                    cr.execute('delete from ' + self._table + ' where id=%s', (act[1],))
                 elif act[0] == 3 or act[0] == 5:
-                    cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
+                    cr.execute('update ' + obj_src._table + ' set ' + field + '=null where id=%s', (id,))
                 elif act[0] == 4:
-                    cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (act[1], id))
+                    cr.execute('update ' + obj_src._table + ' set ' + field + '=%s where id=%s', (act[1], id))
         else:
             if values:
-                cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (values, id))
+                cr.execute('update ' + obj_src._table + ' set ' + field + '=%s where id=%s', (values, id))
             else:
-                cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
+                cr.execute('update ' + obj_src._table + ' set ' + field + '=null where id=%s', (id,))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
+        return obj.pool[self._obj].search(cr, uid, args + self._domain + [('name', 'like', value)], offset, limit, context=context)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
-        return value[1] if isinstance(value, tuple) else tools.ustr(value) 
+        return value[1] if isinstance(value, tuple) else tools.ustr(value)
 
 
 class one2many(_column):
@@ -696,7 +710,7 @@ class one2many(_column):
         self._fields_id = fields_id
         self._limit = limit
         self._auto_join = auto_join
-        #one2many can't be used as condition for defaults
+        # one2many can't be used as condition for defaults
         assert(self.change_default != True)
 
     def to_field_args(self):
@@ -752,7 +766,7 @@ class one2many(_column):
                 if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, [act[1]], context=context)
                 else:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                    cr.execute('update ' + _table + ' set ' + self._fields_id + '=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # table of the field (parent_model in case of inherit)
                 field = obj.pool[self._obj]._fields[self._fields_id]
@@ -761,14 +775,14 @@ class one2many(_column):
                 cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
-                    obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
+                    obj.write(cr, user, [act[1]], {self._fields_id: id}, context=context or {})
             elif act[0] == 5:
                 inverse_field = obj._fields.get(self._fields_id)
                 assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
                 domain = self._domain(obj) if callable(self._domain) else self._domain
                 extra_domain = domain or []
-                ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
+                ids_to_unlink = obj.search(cr, user, [(self._fields_id, '=', id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
                 if inverse_field.ondelete == "cascade":
@@ -777,20 +791,20 @@ class one2many(_column):
                     obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
             elif act[0] == 6:
                 # Must use write() to recompute parent_store structure if needed
-                obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
+                obj.write(cr, user, act[2], {self._fields_id: id}, context=context or {})
                 ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
-                ids3 = map(lambda x:x[0], cr.fetchall())
-                obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                cr.execute('select id from ' + _table + ' where ' + self._fields_id + '=%s and id <> ALL (%s)', (id, ids2))
+                ids3 = map(lambda x: x[0], cr.fetchall())
+                obj.write(cr, user, ids3, {self._fields_id: False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         domain = self._domain(obj) if callable(self._domain) else self._domain
-        return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context,limit=limit)
+        return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context, limit=limit)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
-        raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
+        raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)')
 
 #
 # Values: (0, 0,  { fields })    create
@@ -801,6 +815,8 @@ class one2many(_column):
 #         (5, ID)                unlink all
 #         (6, ?, ids)            set a list of links
 #
+
+
 class many2many(_column):
     """Encapsulates the logic of a many-to-many bidirectional relationship, handling the
        low-level details of the intermediary relationship table transparently.
@@ -839,8 +855,8 @@ class many2many(_column):
         _column.__init__(self, string=string, **args)
         self._obj = obj
         if rel and '.' in rel:
-            raise Exception(_('The second argument of the many2many field %s must be a SQL table !'\
-                'You used %s, which is not a valid SQL table name.')% (string,rel))
+            raise Exception(_('The second argument of the many2many field %s must be a SQL table !'
+                'You used %s, which is not a valid SQL table name.') % (string, rel))
         self._rel = rel
         self._id1 = id1
         self._id2 = id2
@@ -920,7 +936,7 @@ class many2many(_column):
         if where_c:
             where_c = ' AND ' + where_c
 
-        order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
+        order_by = ' ORDER BY "%s".%s' % (obj._table, obj._order.split(',')[0])
 
         limit_str = ''
         if self._limit is not None:
@@ -935,9 +951,9 @@ class many2many(_column):
                'limit': limit_str,
                'order_by': order_by,
                'offset': offset,
-                }, where_params)
+                                                                                }, where_params)
 
-        cr.execute(query, [tuple(ids),] + where_params)
+        cr.execute(query, [tuple(ids), ] + where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -954,54 +970,55 @@ class many2many(_column):
                 continue
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2], context=context)
-                cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s,%s)', (id, idnew))
+                cr.execute('insert into ' + rel + ' (' + id1 + ',' + id2 + ') values (%s,%s)', (id, idnew))
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('delete from '+rel+' where ' + id1 + '=%s and '+ id2 + '=%s', (id, act[1]))
+                cr.execute('delete from ' + rel + ' where ' + id1 + '=%s and ' + id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
                 # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+' = %s and '+id2+' = %s', (id, act[1]))
+                cr.execute('SELECT 1 FROM ' + rel + ' WHERE ' + id1 + ' = %s and ' + id2 + ' = %s', (id, act[1]))
                 if not cr.fetchone():
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s,%s)', (id, act[1]))
+                    cr.execute('insert into ' + rel + ' (' + id1 + ',' + id2 + ') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
-                cr.execute('delete from '+rel+' where ' + id1 + ' = %s', (id,))
+                cr.execute('delete from ' + rel + ' where ' + id1 + ' = %s', (id,))
             elif act[0] == 6:
 
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+                d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
                 if d1:
                     d1 = ' and ' + ' and '.join(d1)
                 else:
                     d1 = ''
-                cr.execute('delete from '+rel+' where '+id1+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
+                cr.execute('delete from ' + rel + ' where ' + id1 + '=%s AND ' + id2 + ' IN (SELECT ' + rel + '.' + id2 + ' FROM ' + rel + ', ' + ','.join(tables) + ' WHERE ' + rel + '.' + id1 + '=%s AND ' + rel + '.' + id2 + ' = ' + obj._table + '.id ' + d1 + ')', [id, id] + d2)
 
                 for act_nbr in act[2]:
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s, %s)', (id, act_nbr))
+                    cr.execute('insert into ' + rel + ' (' + id1 + ',' + id2 + ') values (%s, %s)', (id, act_nbr))
 
     #
     # TODO: use a name_search
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+        return obj.pool[self._obj].search(cr, uid, args + self._domain + [('name', operator, value)], offset, limit, context=context)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
-        raise NotImplementedError('Many2Many columns should not be used as record name (_rec_name)') 
+        raise NotImplementedError('Many2Many columns should not be used as record name (_rec_name)')
 
 
 def get_nice_size(value):
     size = 0
-    if isinstance(value, (int,long)):
+    if isinstance(value, (int, long)):
         size = value
-    elif value: # this is supposed to be a string
+    elif value:  # this is supposed to be a string
         size = len(value)
     return tools.human_size(size)
 
 # See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
 # and http://bugs.python.org/issue10066
 invalid_xml_low_bytes = re.compile(r'[\x00-\x08\x0b-\x0c\x0e-\x1f]')
+
 
 def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
@@ -1014,7 +1031,7 @@ def sanitize_binary_value(value):
     # Handle invalid bytes values that will cause problems
     # for XML-RPC. See for more info:
     #  - http://bugs.python.org/issue10066
-    #  - http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+    # - http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
 
     # Coercing to unicode would normally allow it to properly pass via
     # XML-RPC, transparently encoded as UTF-8 by xmlrpclib.
@@ -1249,7 +1266,7 @@ class function(_column):
         if 'relation' in args:
             self._obj = args['relation']
 
-        self.digits = args.get('digits', (16,2))
+        self.digits = args.get('digits', (16, 2))
         self.digits_compute = args.get('digits_compute', None)
         if callable(args.get('selection')):
             from openerp import api
@@ -1270,8 +1287,8 @@ class function(_column):
                 # m2o fields need to return tuples with name_get, not just foreign keys
                 self._classic_read = True
             self._classic_write = True
-            if type=='binary':
-                self._symbol_get=lambda x:x and str(x)
+            if type == 'binary':
+                self._symbol_get = lambda x: x and str(x)
             else:
                 self._prefetch = True
 
@@ -1314,7 +1331,7 @@ class function(_column):
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
-            #CHECKME: should raise an exception
+            # CHECKME: should raise an exception
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
@@ -1388,6 +1405,7 @@ class function(_column):
 # Related fields
 # ---------------------------------------------------------
 
+
 class related(function):
     """Field that points to some data inside another field of the current record.
 
@@ -1449,9 +1467,9 @@ class related(function):
             pass
 
 
-class sparse(function):   
+class sparse(function):
 
-    def convert_value(self, obj, cr, uid, record, value, read_value, context=None):        
+    def convert_value(self, obj, cr, uid, record, value, read_value, context=None):
         """
             + For a many2many field, a list of tuples is expected.
               Here is the list of tuple that are accepted, with the corresponding semantics ::
@@ -1487,7 +1505,7 @@ class sparse(function):
                 read_value = []
             relation_obj = obj.pool[self.relation]
             for vals in value:
-                assert vals[0] in (0,1,2), 'Unsupported o2m value for sparse field: %s' % vals
+                assert vals[0] in (0, 1, 2), 'Unsupported o2m value for sparse field: %s' % vals
                 if vals[0] == 0:
                     read_value.append(relation_obj.create(cr, uid, vals[2], context=context))
                 elif vals[0] == 1:
@@ -1498,9 +1516,8 @@ class sparse(function):
             return read_value
         return value
 
-
-    def _fnct_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
-        if not type(ids) == list:
+    def _fnct_write(self, obj, cr, uid, ids, field_name, value, args, context=None):
+        if not isinstance(ids, list):
             ids = [ids]
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
@@ -1509,7 +1526,7 @@ class sparse(function):
             if value is None:
                 # simply delete the key to unset it.
                 serialized.pop(field_name, None)
-            else: 
+            else:
                 serialized[field_name] = self.convert_value(obj, cr, uid, record, value, serialized.get(field_name), context=context)
             obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
         return True
@@ -1524,13 +1541,13 @@ class sparse(function):
             for field_name in field_names:
                 field_type = obj._columns[field_name]._type
                 value = serialized.get(field_name, False)
-                if field_type in ('one2many','many2many'):
+                if field_type in ('one2many', 'many2many'):
                     value = value or []
                     if value:
                         # filter out deleted records as superuser
                         relation_obj = obj.pool[obj._columns[field_name].relation]
                         value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
-                if type(value) in (int,long) and field_type == 'many2one':
+                if type(value) in (int, long) and field_type == 'many2one':
                     relation_obj = obj.pool[obj._columns[field_name].relation]
                     # check for deleted record as superuser
                     if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
@@ -1541,7 +1558,6 @@ class sparse(function):
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
         super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
-     
 
 
 # ---------------------------------------------------------
@@ -1567,18 +1583,19 @@ class dummy(function):
 # Serialized fields
 # ---------------------------------------------------------
 
+
 class serialized(_column):
     """ A field able to store an arbitrary python data structure.
-    
+
         Note: only plain components allowed.
     """
-    
+
     def _symbol_set_struct(val):
         return simplejson.dumps(val)
 
     def _symbol_get_struct(self, val):
         return simplejson.loads(val or '{}')
-    
+
     _prefetch = False
     _type = 'serialized'
 
@@ -1588,6 +1605,8 @@ class serialized(_column):
     _symbol_get = _symbol_get_struct
 
 # TODO: review completly this class for speed improvement
+
+
 class property(function):
 
     def to_field_args(self):
@@ -1672,6 +1691,7 @@ class column_info(object):
             contains it i.e in case of multilevel inheritance, ``None`` for
             local columns.
     """
+
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
         self.column = column

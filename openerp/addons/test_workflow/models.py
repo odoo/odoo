@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import openerp.osv.orm
 
+
 class m(openerp.osv.orm.Model):
     """ A model for which we will define a workflow (see data.xml). """
     _name = 'test.workflow.model'
@@ -28,28 +29,34 @@ class m(openerp.osv.orm.Model):
     def trigger(self, cr, uid, context=None):
         return openerp.workflow.trg_trigger(uid, 'test.workflow.trigger', 1, cr)
 
+
 class n(openerp.osv.orm.Model):
     """ A model used for the trigger feature. """
     _name = 'test.workflow.trigger'
-    _columns = { 'value': openerp.osv.fields.boolean('Value') }
-    _defaults = { 'value': False }
+    _columns = {'value': openerp.osv.fields.boolean('Value')}
+    _defaults = {'value': False}
+
 
 class a(openerp.osv.orm.Model):
     _name = 'test.workflow.model.a'
-    _columns = { 'value': openerp.osv.fields.integer('Value') }
-    _defaults = { 'value': 0 }
+    _columns = {'value': openerp.osv.fields.integer('Value')}
+    _defaults = {'value': 0}
+
 
 class b(openerp.osv.orm.Model):
     _name = 'test.workflow.model.b'
     _inherit = 'test.workflow.model.a'
 
+
 class c(openerp.osv.orm.Model):
     _name = 'test.workflow.model.c'
     _inherit = 'test.workflow.model.a'
 
+
 class d(openerp.osv.orm.Model):
     _name = 'test.workflow.model.d'
     _inherit = 'test.workflow.model.a'
+
 
 class e(openerp.osv.orm.Model):
     _name = 'test.workflow.model.e'

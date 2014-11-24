@@ -49,24 +49,25 @@ INVOICE_TAX_LINE_EDI_STRUCT = {
 INVOICE_EDI_STRUCT = {
     'name': True,
     'origin': True,
-    'company_id': True, # -> to be changed into partner
-    'type': True, # -> reversed at import
-    'internal_number': True, # -> reference at import
+    'company_id': True,  # -> to be changed into partner
+    'type': True,  # -> reversed at import
+    'internal_number': True,  # -> reference at import
     'comment': True,
     'date_invoice': True,
     'date_due': True,
     'partner_id': True,
     'payment_term': True,
-    #custom: currency_id
+    # custom: currency_id
     'invoice_line': INVOICE_LINE_EDI_STRUCT,
     'tax_line': INVOICE_TAX_LINE_EDI_STRUCT,
 
     # fields used for web preview only - discarded on import
-    #custom: 'partner_ref'
+    # custom: 'partner_ref'
     'amount_total': True,
     'amount_untaxed': True,
     'amount_tax': True,
 }
+
 
 class account_invoice(osv.osv, EDIMixin):
     _inherit = 'account.invoice'
@@ -80,21 +81,21 @@ class account_invoice(osv.osv, EDIMixin):
         for invoice in records:
             # generate the main report
             self._edi_generate_report_attachment(cr, uid, invoice, context=context)
-            edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
+            edi_doc = super(account_invoice, self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
-                    'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
-                    'company_paypal_account': invoice.company_id.paypal_account,
-                    'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
-                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
-                    'partner_ref': invoice.reference or False,
+                'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
+                'company_paypal_account': invoice.company_id.paypal_account,
+                'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
+                'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
+                'partner_ref': invoice.reference or False,
             })
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 
     def _edi_tax_account(self, cr, uid, invoice_type='out_invoice', context=None):
-        #TODO/FIXME: should select proper Tax Account
+        # TODO/FIXME: should select proper Tax Account
         account_pool = self.pool.get('account.account')
-        account_ids = account_pool.search(cr, uid, [('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')])
+        account_ids = account_pool.search(cr, uid, [('type', '<>', 'view'), ('type', '<>', 'income'), ('type', '<>', 'closed')])
         tax_account = False
         if account_ids:
             tax_account = account_pool.browse(cr, uid, account_ids[0])
@@ -112,7 +113,7 @@ class account_invoice(osv.osv, EDIMixin):
     def _edi_product_account(self, cr, uid, product_id, invoice_type, context=None):
         product_pool = self.pool.get('product.product')
         product = product_pool.browse(cr, uid, product_id, context=context)
-        if invoice_type in ('out_invoice','out_refund'):
+        if invoice_type in ('out_invoice', 'out_refund'):
             account = product.property_account_income or product.categ_id.property_account_income_categ
         else:
             account = product.property_account_expense or product.categ_id.property_account_expense_categ
@@ -123,7 +124,7 @@ class account_invoice(osv.osv, EDIMixin):
         #       user's current company, but we should perhaps foresee a way to select
         #       the desired company among the user's allowed companies
 
-        self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
+        self._edi_requires_attributes(('company_id', 'company_address', 'type'), edi_document)
         res_partner = self.pool.get('res.partner')
 
         xid, company_name = edi_document.pop('company_id')
@@ -147,7 +148,7 @@ class account_invoice(osv.osv, EDIMixin):
         partner = res_partner.browse(cr, uid, partner_id, context=context)
         partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
         edi_document['partner_id'] = partner_edi_m2o
-        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
+        edi_document.pop('partner_address', None)  # ignored, that's supposed to be our own address!
 
         return partner_id
 
@@ -175,18 +176,18 @@ class account_invoice(osv.osv, EDIMixin):
         """
         if context is None:
             context = {}
-        self._edi_requires_attributes(('company_id','company_address','type','invoice_line','currency'), edi_document)
+        self._edi_requires_attributes(('company_id', 'company_address', 'type', 'invoice_line', 'currency'), edi_document)
 
         # extract currency info
         res_currency = self.pool.get('res.currency')
         currency_info = edi_document.pop('currency')
         currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
         currency = res_currency.browse(cr, uid, currency_id)
-        edi_document['currency_id'] =  self.edi_m2o(cr, uid, currency, context=context)
+        edi_document['currency_id'] = self.edi_m2o(cr, uid, currency, context=context)
 
         # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
         invoice_type = edi_document['type']
-        invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
+        invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_', 'out_') or invoice_type.replace('out_', 'in_')
         edi_document['type'] = invoice_type
 
         # import company as a new partner
@@ -231,8 +232,7 @@ class account_invoice(osv.osv, EDIMixin):
             edi_tax_line['account_id'] = tax_account_info
             edi_tax_line['manual'] = True
 
-        return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
-
+        return super(account_invoice, self).edi_import(cr, uid, edi_document, context=context)
 
     def _edi_record_display_action(self, cr, uid, id, context=None):
         """Returns an appropriate action definition dict for displaying
@@ -241,7 +241,7 @@ class account_invoice(osv.osv, EDIMixin):
            :param int id: database ID of record to display
            :return: action definition dict
         """
-        action = super(account_invoice,self)._edi_record_display_action(cr, uid, id, context=context)
+        action = super(account_invoice, self)._edi_record_display_action(cr, uid, id, context=context)
         try:
             invoice = self.browse(cr, uid, id, context=context)
             if 'out_' in invoice.type:
@@ -253,7 +253,7 @@ class account_invoice(osv.osv, EDIMixin):
             ctx = "{'type': '%s', 'journal_type': '%s'}" % (invoice.type, journal_type)
             action.update(context=ctx)
             view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', view_ext_id)[1]
-            action.update(views=[(view_id,'form'), (False, 'tree')])
+            action.update(views=[(view_id, 'form'), (False, 'tree')])
         except ValueError:
             # ignore if views are missing
             pass
@@ -283,11 +283,11 @@ class account_invoice(osv.osv, EDIMixin):
 
 
 class account_invoice_line(osv.osv, EDIMixin):
-    _inherit='account.invoice.line'
+    _inherit = 'account.invoice.line'
+
 
 class account_invoice_tax(osv.osv, EDIMixin):
     _inherit = "account.invoice.tax"
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,5 +1,6 @@
 from openerp.tests.common import TransactionCase
 
+
 class TestPricelist(TransactionCase):
     """Tests for unit of measure conversion"""
 
@@ -24,12 +25,12 @@ class TestPricelist(TransactionCase):
                 'name': 'v1.0',
                 'items_id': [(0, 0, {
                     'name': 'Discount 10%',
-                    'base': 1, # based on public price
+                    'base': 1,  # based on public price
                     'price_discount': -0.1,
                     'product_id': self.usb_adapter_id
                 }), (0, 0, {
                     'name': 'Discount -0.5',
-                    'base': 1, # based on public price
+                    'base': 1,  # based on public price
                     'price_surcharge': -0.5,
                     'product_id': self.datacard_id
                 })]
@@ -46,11 +47,11 @@ class TestPricelist(TransactionCase):
 
         usb_adapter_without_pricelist = self.product_product.browse(cr, uid, self.usb_adapter_id, context=public_context)
         usb_adapter_with_pricelist = self.product_product.browse(cr, uid, self.usb_adapter_id, context=pricelist_context)
-        self.assertEqual(usb_adapter_with_pricelist.price, usb_adapter_without_pricelist.price*0.9)
+        self.assertEqual(usb_adapter_with_pricelist.price, usb_adapter_without_pricelist.price * 0.9)
 
         datacard_without_pricelist = self.product_product.browse(cr, uid, self.datacard_id, context=public_context)
         datacard_with_pricelist = self.product_product.browse(cr, uid, self.datacard_id, context=pricelist_context)
-        self.assertEqual(datacard_with_pricelist.price, datacard_without_pricelist.price-0.5)
+        self.assertEqual(datacard_with_pricelist.price, datacard_without_pricelist.price - 0.5)
 
         # Make sure that changing the unit of measure does not break the unit
         # price (after converting)
@@ -63,8 +64,8 @@ class TestPricelist(TransactionCase):
 
         usb_adapter_unit = self.product_product.browse(cr, uid, self.usb_adapter_id, context=unit_context)
         usb_adapter_dozen = self.product_product.browse(cr, uid, self.usb_adapter_id, context=dozen_context)
-        self.assertAlmostEqual(usb_adapter_unit.price*12, usb_adapter_dozen.price)
+        self.assertAlmostEqual(usb_adapter_unit.price * 12, usb_adapter_dozen.price)
 
         datacard_unit = self.product_product.browse(cr, uid, self.datacard_id, context=unit_context)
         datacard_dozen = self.product_product.browse(cr, uid, self.datacard_id, context=dozen_context)
-        self.assertAlmostEqual(datacard_unit.price*12, datacard_dozen.price)
+        self.assertAlmostEqual(datacard_unit.price * 12, datacard_dozen.price)

@@ -4,6 +4,7 @@ from xml.etree import ElementTree
 from openerp.addons.web.controllers.main import load_actions_from_ir_values
 from openerp.http import Controller, route, request
 
+
 class Board(Controller):
     @route('/board/add_to_dashboard', type='json', auth='user')
     def add_to_dashboard(self, menu_id, action_id, context_to_save, domain, view_mode, name=''):

@@ -3,6 +3,7 @@
 from openerp import http
 from openerp.http import request
 
+
 class website_hr(http.Controller):
 
     @http.route(['/page/website.aboutus', '/page/aboutus'], type='http', auth="public", website=True)

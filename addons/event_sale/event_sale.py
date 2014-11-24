@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
@@ -36,6 +37,7 @@ class product_template(osv.osv):
         if event_ok:
             return {'value': {'type': 'service'}}
         return {}
+
 
 class product(osv.osv):
     _inherit = 'product.product'
@@ -57,8 +59,8 @@ class sale_order_line(osv.osv):
             help="Choose an event and it will automatically create a registration for this event."),
         'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket',
             help="Choose an event ticket and it will automatically create a registration for this event ticket."),
-        #those 2 fields are used for dynamic domains and filled by onchange
-        'event_type_id': fields.related('product_id','event_type_id', type='many2one', relation="event.type", string="Event Type"),
+        # those 2 fields are used for dynamic domains and filled by onchange
+        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type"),
         'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
     }
 
@@ -70,7 +72,7 @@ class sale_order_line(osv.osv):
         return res
 
     def product_id_change(self, cr, uid, ids,
-                          pricelist, 
+                          pricelist,
                           product,
                           qty=0,
                           uom=False,
@@ -87,7 +89,7 @@ class sale_order_line(osv.osv):
         """
         check product if event type
         """
-        res = super(sale_order_line,self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
         if product:
             product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
             if product_res.event_ok:
@@ -121,7 +123,7 @@ class sale_order_line(osv.osv):
                     message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
                 else:
                     message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
-                
+
                 context.update({'mail_create_nolog': True})
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
                 registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
@@ -163,6 +165,7 @@ class event_event(osv.osv):
     def _compute_seats_max(self):
         self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
+
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'
 
@@ -187,14 +190,14 @@ class event_ticket(osv.osv):
         #        than using UTC all the time.
         current_date = fields.date.context_today(self, cr, uid, context=context)
         return {ticket.id: ticket.deadline and ticket.deadline < current_date
-                      for ticket in self.browse(cr, uid, ids, context=context)}
+                for ticket in self.browse(cr, uid, ids, context=context)}
 
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for ticket in self.browse(cr, uid, ids, context=context):
             product = ticket.product_id
             discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
-            res[ticket.id] = (1.0-discount) * ticket.price
+            res[ticket.id] = (1.0 - discount) * ticket.price
         return res
 
     _columns = {
@@ -232,7 +235,7 @@ class event_ticket(osv.osv):
         return True
 
     _constraints = [
-        (_check_seats_limit, 'No more available tickets.', ['registration_ids','seats_max']),
+        (_check_seats_limit, 'No more available tickets.', ['registration_ids', 'seats_max']),
     ]
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
@@ -242,7 +245,7 @@ class event_ticket(osv.osv):
 
 class event_registration(osv.osv):
     """Event Registration"""
-    _inherit= 'event.registration'
+    _inherit = 'event.registration'
     _columns = {
         'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket'),
     }
@@ -254,5 +257,5 @@ class event_registration(osv.osv):
         return True
 
     _constraints = [
-        (_check_ticket_seats_limit, 'No more available tickets.', ['event_ticket_id','nb_register','state']),
+        (_check_ticket_seats_limit, 'No more available tickets.', ['event_ticket_id', 'nb_register', 'state']),
     ]

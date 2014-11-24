@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
+
 
 class res_partner(osv.osv):
     _name = 'res.partner'
@@ -30,8 +31,8 @@ class res_partner(osv.osv):
         Invoice = self.pool['account.invoice']
         return {
             partner_id: {
-                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context),
-                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', '=', partner_id), ('type','=','in_invoice')], context=context)
+                'purchase_order_count': PurchaseOrder.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                'supplier_invoice_count': Invoice.search_count(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'in_invoice')], context=context)
             }
             for partner_id in ids
         }
@@ -41,14 +42,13 @@ class res_partner(osv.osv):
 
     _columns = {
         'property_product_pricelist_purchase': fields.property(
-          type='many2one', 
-          relation='product.pricelist', 
-          domain=[('type','=','purchase')],
-          string="Purchase Pricelist", 
+          type='many2one',
+          relation='product.pricelist',
+          domain=[('type', '=', 'purchase')],
+          string="Purchase Pricelist",
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
         'purchase_order_count': fields.function(_purchase_invoice_count, string='# of Purchase Order', type='integer', multi="count"),
         'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Supplier Invoices', type='integer', multi="count"),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

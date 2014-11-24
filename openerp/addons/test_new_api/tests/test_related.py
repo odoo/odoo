@@ -6,6 +6,7 @@ import unittest
 from openerp.osv import fields
 from openerp.tests import common
 
+
 class TestRelatedField(common.TransactionCase):
 
     def setUp(self):
@@ -90,22 +91,22 @@ class TestPropertyField(common.TransactionCase):
 
         sub_company = self.company.create(cr, uid, {'name': 'MegaCorp', 'parent_id': parent_company_id})
         alice = self.user.create(cr, uid, {'name': 'Alice',
-            'login':'alice',
-            'email':'alice@youcompany.com',
-            'company_id':parent_company_id,
-            'company_ids':[(6, 0, [parent_company_id, sub_company])],
-            'country_id':country_be,
+            'login': 'alice',
+            'email': 'alice@youcompany.com',
+            'company_id': parent_company_id,
+            'company_ids': [(6, 0, [parent_company_id, sub_company])],
+            'country_id': country_be,
             'groups_id': [(6, 0, [group_partner_manager, group_multi_company])]
         })
         bob = self.user.create(cr, uid, {'name': 'Bob',
-            'login':'bob',
-            'email':'bob@megacorp.com',
-            'company_id':sub_company,
-            'company_ids':[(6, 0, [parent_company_id, sub_company])],
-            'country_id':country_fr,
+            'login': 'bob',
+            'email': 'bob@megacorp.com',
+            'company_id': sub_company,
+            'company_ids': [(6, 0, [parent_company_id, sub_company])],
+            'country_id': country_fr,
             'groups_id': [(6, 0, [group_partner_manager, group_multi_company])]
         })
-        
+
         self.partner._columns = dict(self.partner._columns)
         self.partner._columns.update({
             'property_country': fields.property(type='many2one', relation="res.country", string="Country by company"),

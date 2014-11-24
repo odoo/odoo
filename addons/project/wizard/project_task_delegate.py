@@ -25,6 +25,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
+
 class project_task_delegate(osv.osv_memory):
     _name = 'project.task.delegate'
     _description = 'Task Delegate'
@@ -35,18 +36,17 @@ class project_task_delegate(osv.osv_memory):
         'project_id': fields.many2one('project.project', 'Project', help="User you want to delegate this task to"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
-        'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
+        'planned_hours': fields.float('Planned Hours', help="Estimated time to close this task by the delegated user"),
         'planned_hours_me': fields.float('Hours to Validate', help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
-        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
+        'state': fields.selection([('pending', 'Pending'), ('done', 'Done'), ], 'Validation State', help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
     }
 
     def onchange_project_id(self, cr, uid, ids, project_id=False, context=None):
         project_project = self.pool.get('project.project')
         if not project_id:
-            return {'value':{'user_id': False}}
+            return {'value': {'user_id': False}}
         project = project_project.browse(cr, uid, project_id, context=context)
         return {'value': {'user_id': project.user_id and project.user_id.id or False}}
-        
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -60,7 +60,7 @@ class project_task_delegate(osv.osv_memory):
             return res
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
-        task_name =tools.ustr(task.name)
+        task_name = tools.ustr(task.name)
 
         if 'project_id' in fields:
             res['project_id'] = int(task.project_id.id) if task.project_id else False
@@ -84,7 +84,6 @@ class project_task_delegate(osv.osv_memory):
             res['new_task_description'] = task.description
         return res
 
-
     _defaults = {
        'planned_hours_me': 1.0,
        'state': 'pending',
@@ -95,13 +94,14 @@ class project_task_delegate(osv.osv_memory):
         users_pool = self.pool.get('res.users')
         obj_tm = users_pool.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
-        if tm in ['Hours','Hour']:
+        if tm in ['Hours', 'Hour']:
             return res
 
         eview = etree.fromstring(res['arch'])
+
         def _check_rec(eview):
-            if eview.attrib.get('widget','') == 'float_time':
-                eview.set('widget','float')
+            if eview.attrib.get('widget', '') == 'float_time':
+                eview.set('widget', 'float')
             for child in eview:
                 _check_rec(child)
             return True
@@ -110,7 +110,7 @@ class project_task_delegate(osv.osv_memory):
         res['arch'] = etree.tostring(eview)
         for field in res['fields']:
             if 'Hours' in res['fields'][field]['string']:
-                res['fields'][field]['string'] = res['fields'][field]['string'].replace('Hours',tm)
+                res['fields'][field]['string'] = res['fields'][field]['string'].replace('Hours', tm)
         return res
 
     def delegate(self, cr, uid, ids, context=None):
@@ -129,7 +129,7 @@ class project_task_delegate(osv.osv_memory):
         action['res_id'] = delegated_tasks[task_id]
         action['view_id'] = False
         action['views'] = [(task_view_form_id, 'form'), (task_view_tree_id, 'tree')]
-        action['help'] = False    
+        action['help'] = False
         return action
 
 

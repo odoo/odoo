@@ -28,7 +28,7 @@ Module for the Check Writing and Check Printing.
 ================================================
     """,
     'website': 'https://www.odoo.com/page/accounting',
-    'depends' : ['account_voucher'],
+    'depends': ['account_voucher'],
     'data': [
         'wizard/account_check_batch_printing_view.xml',
         'account_view.xml',

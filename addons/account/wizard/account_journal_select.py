@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 
+
 class account_journal_select(osv.osv_memory):
     """
         Account Journal Select

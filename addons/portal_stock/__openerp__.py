@@ -30,7 +30,7 @@ This module adds access rules to your portal if stock and portal are installed.
 ==========================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['sale_stock','portal'],
+    'depends': ['sale_stock', 'portal'],
     'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',

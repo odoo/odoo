@@ -47,7 +47,7 @@ import account_invoice_state
 import account_chart
 import account_tax_chart
 import account_financial_report
-#TODO: remove this file no moe used
+# TODO: remove this file no moe used
 # also remove related view fiel
 
 import account_validate_account_move

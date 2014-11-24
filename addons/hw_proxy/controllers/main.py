@@ -18,9 +18,10 @@ from openerp import http
 from openerp.http import request
 
 
-# drivers modules must add to drivers an object with a get_status() method 
+# drivers modules must add to drivers an object with a get_status() method
 # so that 'status' can return the status of all active drivers
 drivers = {}
+
 
 class Proxy(http.Controller):
 
@@ -78,10 +79,10 @@ class Proxy(http.Controller):
             else:
                 color = 'red'
 
-            resp += "<h3 style='color:"+color+";'>"+driver+' : '+status['status']+"</h3>\n"
+            resp += "<h3 style='color:" + color + ";'>" + driver + ' : ' + status['status'] + "</h3>\n"
             resp += "<ul>\n"
             for msg in status['messages']:
-                resp += '<li>'+msg+'</li>\n'
+                resp += '<li>' + msg + '</li>\n'
             resp += "</ul>\n"
         resp += """
             <h2>Connected Devices</h2>
@@ -90,8 +91,8 @@ class Proxy(http.Controller):
         devices = commands.getoutput("lsusb").split('\n')
         resp += "<div class='devices'>\n"
         for device in devices:
-            device_name = device[device.find('ID')+2:]
-            resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+            device_name = device[device.find('ID') + 2:]
+            resp += "<div class='device' data-device='" + device + "'>" + device_name + "</div>\n"
         resp += "</div>\n"
         resp += """
             <h2>Add New Printer</h2>
@@ -111,12 +112,12 @@ class Proxy(http.Controller):
         """
         resp += "</body>\n</html>\n\n"
 
-        return request.make_response(resp,{
-            'Cache-Control': 'no-cache', 
+        return request.make_response(resp, {
+            'Cache-Control': 'no-cache',
             'Content-Type': 'text/html; charset=utf-8',
-            'Access-Control-Allow-Origin':  '*',
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET',
-            })
+        })
 
     @http.route('/hw_proxy/status_json', type='json', auth='none', cors='*')
     def status_json(self):
@@ -153,15 +154,15 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/payment_request', type='json', auth='none', cors='*')
     def payment_request(self, price):
         """
-        The PoS will activate the method payment 
+        The PoS will activate the method payment
         """
-        print "payment_request: price:"+str(price)
+        print "payment_request: price:" + str(price)
         return 'ok'
 
     @http.route('/hw_proxy/payment_status', type='json', auth='none', cors='*')
     def payment_status(self):
         print "payment_status"
-        return { 'status':'waiting' } 
+        return {'status': 'waiting'}
 
     @http.route('/hw_proxy/payment_cancel', type='json', auth='none', cors='*')
     def payment_cancel(self):
@@ -193,12 +194,12 @@ class Proxy(http.Controller):
 
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
-        print 'is_scanner_connected?' 
+        print 'is_scanner_connected?'
         return False
 
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
-        print 'scanner' 
+        print 'scanner'
         time.sleep(10)
         return ''
 
@@ -209,5 +210,3 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/print_pdf_invoice', type='json', auth='none', cors='*')
     def print_pdf_invoice(self, pdfinvoice):
         print 'print_pdf_invoice' + str(pdfinvoice)
-
-

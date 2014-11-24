@@ -37,7 +37,7 @@ class account_check_write(osv.osv_memory):
 
     _defaults = {
         'check_number': _get_next_number,
-   }
+    }
 
     def print_check_write(self, cr, uid, ids, context=None):
         if context is None:
@@ -45,25 +45,25 @@ class account_check_write(osv.osv_memory):
         voucher_obj = self.pool.get('account.voucher')
         ir_sequence_obj = self.pool.get('ir.sequence')
 
-        #update the sequence to number the checks from the value encoded in the wizard
+        # update the sequence to number the checks from the value encoded in the wizard
         dummy, sequence_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_check_writing', 'sequence_check_number')
         increment = ir_sequence_obj.read(cr, uid, [sequence_id], ['number_increment'])[0]['number_increment']
         new_value = self.browse(cr, uid, ids[0], context=context).check_number
         ir_sequence_obj.write(cr, uid, sequence_id, {'number_next': new_value})
 
-        #validate the checks so that they get a number
+        # validate the checks so that they get a number
         voucher_ids = context.get('active_ids', [])
         for check in voucher_obj.browse(cr, uid, voucher_ids, context=context):
             new_value += increment
             if check.number:
-                raise osv.except_osv(_('Error!'),_("One of the printed check already got a number."))
+                raise osv.except_osv(_('Error!'), _("One of the printed check already got a number."))
         voucher_obj.proforma_voucher(cr, uid, voucher_ids, context=context)
 
-        #update the sequence again (because the assignation using next_val was made during the same transaction of
-        #the first update of sequence)
+        # update the sequence again (because the assignation using next_val was made during the same transaction of
+        # the first update of sequence)
         ir_sequence_obj.write(cr, uid, sequence_id, {'number_next': new_value})
 
-        #print the checks
+        # print the checks
         data = {
             'id': voucher_ids and voucher_ids[0],
             'ids': voucher_ids,

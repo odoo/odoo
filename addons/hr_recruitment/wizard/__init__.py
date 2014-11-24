@@ -22,4 +22,3 @@
 import hr_recruitment_create_partner_job
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -113,8 +113,8 @@ class TestSanitizer(unittest2.TestCase):
 
         emails = [("Charles <charles.bidule@truc.fr>", "Charles &lt;charles.bidule@truc.fr&gt;"),
                 ("Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>", "Dupuis &lt;'tr/-: ${dupuis#$'@truc.baz.fr&gt;"),
-                ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
-                ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
+            ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
+            ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
         for email in emails:
             self.assertIn(email[1], html_sanitize(email[0]), 'html_sanitize stripped emails of original html')
 
@@ -173,8 +173,8 @@ class TestCleaner(unittest2.TestCase):
         test_str = '''<div>
         <span>
         </span>
-        <p>Hello, <span>Raoul</span> 
-    <bold>You</bold> are 
+        <p>Hello, <span>Raoul</span>
+    <bold>You</bold> are
     pretty</p>
 <span>Really</span>
 </div>
@@ -194,8 +194,8 @@ class TestCleaner(unittest2.TestCase):
         self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
 
         # TEST: shorten in quote
-        test_str = '''<div> Blahble         
-            bluih      blouh   
+        test_str = '''<div> Blahble
+            bluih      blouh
         <blockquote>This is a quote
         <span>And this is quite a long quote, after all.</span>
         </blockquote>

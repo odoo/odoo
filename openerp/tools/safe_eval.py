@@ -51,7 +51,7 @@ _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
 
 _CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
-    'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
+    'POP_BLOCK', 'SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
     'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR', 'STORE_MAP'] if x in opmap)
 
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
@@ -63,8 +63,8 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
-    'INPLACE_XOR','INPLACE_OR'
-    ] if x in opmap))
+    'INPLACE_XOR', 'INPLACE_OR'
+] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
@@ -76,10 +76,11 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
-    'LOAD_GLOBAL', # Only allows access to restricted globals
-    ] if x in opmap))
+    'LOAD_GLOBAL',  # Only allows access to restricted globals
+] if x in opmap))
 
 _logger = logging.getLogger(__name__)
+
 
 def _get_opcodes(codeobj):
     """_get_opcodes(codeobj) -> [opcodes]
@@ -100,6 +101,7 @@ def _get_opcodes(codeobj):
             i += 3
         else:
             i += 1
+
 
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
@@ -123,6 +125,7 @@ def assert_no_dunder_name(code_obj, expr):
     for name in code_obj.co_names:
         if "__" in name or name in _UNSAFE_ATTRIBUTES:
             raise NameError('Access to forbidden name %r (%r)' % (name, expr))
+
 
 def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """ Asserts that the provided code object validates against the bytecode
@@ -150,6 +153,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     for const in code_obj.co_consts:
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
+
 
 def test_expr(expr, allowed_codes, mode="eval"):
     """test_expr(expression, allowed_codes[, mode]) -> code_object
@@ -195,6 +199,7 @@ def const_eval(expr):
     c = test_expr(expr, _CONST_OPCODES)
     return eval(c)
 
+
 def expr_eval(expr):
     """expr_eval(expression) -> value
 
@@ -216,6 +221,7 @@ def expr_eval(expr):
     c = test_expr(expr, _EXPR_OPCODES)
     return eval(c)
 
+
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if globals is None:
         globals = {}
@@ -226,6 +232,7 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if name in _ALLOWED_MODULES:
         return __import__(name, globals, locals, level)
     raise ImportError(name)
+
 
 def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
@@ -254,8 +261,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     # by taking a copy.
     if not nocopy:
         # isinstance() does not work below, we want *exactly* the dict class
-        if (globals_dict is not None and type(globals_dict) is not dict) \
-            or (locals_dict is not None and type(locals_dict) is not dict):
+        if (globals_dict is not None and not isinstance(globals_dict, dict)) \
+            or (locals_dict is not None and not isinstance(locals_dict, dict)):
             _logger.warning(
                 "Looks like you are trying to pass a dynamic environment, "
                 "you should probably pass nocopy=True to safe_eval().")

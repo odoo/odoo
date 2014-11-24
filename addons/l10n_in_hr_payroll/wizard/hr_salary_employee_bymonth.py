@@ -22,6 +22,7 @@
 import time
 from openerp.osv import fields, osv
 
+
 class hr_salary_employee_bymonth(osv.osv_memory):
 
     _name = 'hr.salary.employee.month'
@@ -38,9 +39,9 @@ class hr_salary_employee_bymonth(osv.osv_memory):
         return category_ids and category_ids[0] or False
 
     _defaults = {
-         'start_date': lambda *a: time.strftime('%Y-01-01'),
-         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
-         'category_id': _get_default_category
+        'start_date': lambda *a: time.strftime('%Y-01-01'),
+        'end_date': lambda *a: time.strftime('%Y-%m-%d'),
+        'category_id': _get_default_category
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -59,8 +60,8 @@ class hr_salary_employee_bymonth(osv.osv_memory):
         res = self.read(cr, uid, ids, context=context)
         res = res and res[0] or {}
         datas.update({'form': res})
-        return self.pool['report'].get_action(cr, uid, ids, 
-                        'l10n_in_hr_payroll.report_hrsalarybymonth', 
+        return self.pool['report'].get_action(cr, uid, ids,
+                        'l10n_in_hr_payroll.report_hrsalarybymonth',
                         data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

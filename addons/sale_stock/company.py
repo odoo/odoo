@@ -21,14 +21,15 @@
 
 from openerp.osv import fields, osv
 
+
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'security_lead': fields.float(
             'Security Days', required=True,
-            help="Margin of error for dates promised to customers. "\
-                 "Products will be scheduled for procurement and delivery "\
-                 "that many days earlier than the actual promised date, to "\
+            help="Margin of error for dates promised to customers. "
+                 "Products will be scheduled for procurement and delivery "
+                 "that many days earlier than the actual promised date, to "
                  "cope with unexpected delays in the supply chain."),
     }
     _defaults = {

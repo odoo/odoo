@@ -20,27 +20,29 @@
 ##############################################################################
 
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
+
 
 class report_document_user(osv.osv):
     _name = "report.document.user"
     _description = "Files details by Users"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64,readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id': fields.many2one('res.users', 'Owner', readonly=True),
         'user': fields.related('user_id', 'name', type='char', size=64, readonly=True),
-        'directory': fields.char('Directory',size=64,readonly=True),
-        'datas_fname': fields.char('File Name',size=64,readonly=True),
+        'directory': fields.char('Directory', size=64, readonly=True),
+        'datas_fname': fields.char('File Name', size=64, readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
         'file_size': fields.integer('File Size', readonly=True),
-        'nbr':fields.integer('# of Files', readonly=True),
-        'type':fields.char('Directory Type',size=64,readonly=True),
+        'nbr': fields.integer('# of Files', readonly=True),
+        'type': fields.char('Directory Type', size=64, readonly=True),
      }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_document_user')
         cr.execute("""
@@ -70,10 +72,11 @@ class report_document_file(osv.osv):
     _auto = False
     _columns = {
         'file_size': fields.integer('File Size', readonly=True),
-        'nbr':fields.integer('# of Files', readonly=True),
+        'nbr': fields.integer('# of Files', readonly=True),
         'month': fields.char('Month', size=24, readonly=True),
      }
     _order = "month"
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_document_file')
         cr.execute("""
@@ -88,4 +91,3 @@ class report_document_file(osv.osv):
         """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

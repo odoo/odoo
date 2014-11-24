@@ -71,6 +71,7 @@ class actions(osv.osv):
         todo_obj.unlink(cr, uid, todo_ids, context=context)
         return super(actions, self).unlink(cr, uid, ids, context=context)
 
+
 class ir_actions_report_xml(osv.osv):
 
     def _report_content(self, cursor, user, ids, name, arg, context=None):
@@ -91,7 +92,7 @@ class ir_actions_report_xml(osv.osv):
         return res
 
     def _report_content_inv(self, cursor, user, id, name, value, arg, context=None):
-        self.write(cursor, user, id, {name+'_data': value}, context=context)
+        self.write(cursor, user, id, {name + '_data': value}, context=context)
 
     def _report_sxw(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -121,15 +122,15 @@ class ir_actions_report_xml(osv.osv):
                     return r['report_name']
                 elif r['report_rml'] or r['report_rml_content_data']:
                     if r['parser']:
-                        kwargs = { 'parser': operator.attrgetter(r['parser'])(openerp.addons) }
+                        kwargs = {'parser': operator.attrgetter(r['parser'])(openerp.addons)}
                     else:
                         kwargs = {}
-                    new_report = report_sxw('report.'+r['report_name'], r['model'],
-                            opj('addons',r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
+                    new_report = report_sxw('report.' + r['report_name'], r['model'],
+                            opj('addons', r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
                 elif r['report_xsl'] and r['report_xml']:
-                    new_report = report_rml('report.'+r['report_name'], r['model'],
-                            opj('addons',r['report_xml']),
-                            r['report_xsl'] and opj('addons',r['report_xsl']), register=False)
+                    new_report = report_rml('report.' + r['report_name'], r['model'],
+                            opj('addons', r['report_xml']),
+                        r['report_xsl'] and opj('addons', r['report_xsl']), register=False)
                 else:
                     raise Exception, "Unhandled report type: %s" % r
             else:
@@ -166,11 +167,11 @@ class ir_actions_report_xml(osv.osv):
         'model': fields.char('Model', required=True),
         'report_type': fields.selection([('qweb-pdf', 'PDF'),
                     ('qweb-html', 'HTML'),
-                    ('controller', 'Controller'),
-                    ('pdf', 'RML pdf (deprecated)'),
-                    ('sxw', 'RML sxw (deprecated)'),
-                    ('webkit', 'Webkit (deprecated)'),
-                    ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
+            ('controller', 'Controller'),
+            ('pdf', 'RML pdf (deprecated)'),
+            ('sxw', 'RML sxw (deprecated)'),
+            ('webkit', 'Webkit (deprecated)'),
+        ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
         'report_name': fields.char('Template Name', required=True, help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
 
@@ -227,7 +228,7 @@ class ir_actions_act_window(osv.osv):
         return _('Invalid model name in the action definition.')
 
     _constraints = [
-        (_check_model, _invalid_model_msg, ['res_model','src_model'])
+        (_check_model, _invalid_model_msg, ['res_model', 'src_model'])
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context=None):
@@ -281,17 +282,17 @@ class ir_actions_act_window(osv.osv):
             help="Model name of the object to open in the view window"),
         'src_model': fields.char('Source Model',
             help="Optional model name of the objects on which this action should be visible"),
-        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
+        'target': fields.selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('inlineview', 'Inline View')], 'Target Window'),
         'view_mode': fields.char('View Mode', required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
+        'view_type': fields.selection((('tree', 'Tree'), ('form', 'Form')), string='View Type', required=True,
             help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view"),
         'usage': fields.char('Action Usage',
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, type='binary', string='Views',
-               help="This function field computes the ordered list of views that should be enabled " \
-                    "when displaying the result of an action, federating view mode, views and " \
+               help="This function field computes the ordered list of views that should be enabled "
+                    "when displaying the result of an action, federating view mode, views and "
                     "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."),
         'limit': fields.integer('Limit', help='Default limit for the list view'),
         'auto_refresh': fields.integer('Auto-Refresh',
@@ -300,8 +301,8 @@ class ir_actions_act_window(osv.osv):
             'act_id', 'gid', 'Groups'),
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
-        'auto_search':fields.boolean('Auto Search'),
-        'search_view' : fields.function(_search_view, type='text', string='Search View'),
+        'auto_search': fields.boolean('Auto Search'),
+        'search_view': fields.function(_search_view, type='text', string='Search View'),
         'multi': fields.boolean('Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views"),
     }
 
@@ -313,7 +314,7 @@ class ir_actions_act_window(osv.osv):
         'limit': 80,
         'target': 'current',
         'auto_refresh': 0,
-        'auto_search':True,
+        'auto_search': True,
         'multi': False,
     }
 
@@ -358,7 +359,7 @@ class ir_actions_act_window(osv.osv):
         :return: A read() view of the ir.actions.act_window
         """
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
+        data_id = dataobj._get_id(cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, [res_id], [], context)[0]
 
@@ -369,6 +370,8 @@ VIEW_TYPES = [
     ('calendar', 'Calendar'),
     ('gantt', 'Gantt'),
     ('kanban', 'Kanban')]
+
+
 class ir_actions_act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
@@ -385,6 +388,7 @@ class ir_actions_act_window_view(osv.osv):
     _defaults = {
         'multi': False,
     }
+
     def _auto_init(self, cr, context=None):
         super(ir_actions_act_window_view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
@@ -410,7 +414,7 @@ class ir_actions_act_url(osv.osv):
     _columns = {
         'name': fields.char('Action Name', translate=True),
         'type': fields.char('Action Type', required=True),
-        'url': fields.text('Action URL',required=True),
+        'url': fields.text('Action URL', required=True),
         'target': fields.selection((
             ('new', 'New Window'),
             ('self', 'This Window')),
@@ -1063,15 +1067,17 @@ class ir_server_object_lines(osv.osv):
 
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
-TODO_TYPES = [('manual', 'Launch Manually'),('once', 'Launch Manually Once'),
+TODO_TYPES = [('manual', 'Launch Manually'), ('once', 'Launch Manually Once'),
               ('automatic', 'Launch Automatically')]
+
+
 class ir_actions_todo(osv.osv):
     """
     Configuration Wizards
     """
     _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
-    _columns={
+    _columns = {
         'action_id': fields.many2one(
             'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
@@ -1084,12 +1090,12 @@ Launch Manually Once: after having been launched manually, it sets automatically
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
     }
-    _defaults={
+    _defaults = {
         'state': 'open',
         'sequence': 10,
         'type': 'manual',
     }
-    _order="sequence,id"
+    _order = "sequence,id"
 
     def name_get(self, cr, uid, ids, context=None):
         return [(rec.id, rec.action_id.name) for rec in self.browse(cr, uid, ids, context=context)]
@@ -1101,7 +1107,6 @@ Launch Manually Once: after having been launched manually, it sets automatically
             ids = self.search(cr, user, [('action_id', operator, name)] + args, limit=limit)
             return self.name_get(cr, user, ids, context=context)
         return super(ir_actions_todo, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
-
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
@@ -1116,7 +1121,7 @@ Launch Manually Once: after having been launched manually, it sets automatically
         res = self.pool[act_type].read(cr, uid, [wizard.action_id.id], [], context=context)[0]
         if act_type != 'ir.actions.act_window':
             return res
-        res.setdefault('context','{}')
+        res.setdefault('context', '{}')
         res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
@@ -1148,11 +1153,12 @@ Launch Manually Once: after having been launched manually, it sets automatically
         user_groups = set(map(
             lambda x: x.id,
             self.pool['res.users'].browse(cr, uid, [uid], context=context)[0].groups_id))
+
         def groups_match(todo):
             """ Checks if the todo's groups match those of the current user
             """
             return not todo.groups_id \
-                   or bool(user_groups.intersection((
+                or bool(user_groups.intersection((
                         group.id for group in todo.groups_id)))
 
         done = filter(
@@ -1201,12 +1207,12 @@ class ir_actions_act_client(osv.osv):
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
-        'res_model': fields.char('Destination Model', 
+        'res_model': fields.char('Destination Model',
             help="Optional model, mostly used for needactions."),
         'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
-                                  type='binary', 
+                                  type='binary',
                                   string="Supplementary arguments",
                                   help="Arguments sent to the client along with"
                                        "the view tag"),

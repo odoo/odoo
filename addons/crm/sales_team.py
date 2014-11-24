@@ -25,10 +25,10 @@ class crm_case_section(osv.Model):
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1])
         lead_pre_domain = [('create_date', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
                 ('create_date', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)),
-                              ('type', '=', 'lead')]
+            ('type', '=', 'lead')]
         opp_pre_domain = [('date_deadline', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
                       ('date_deadline', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
-                      ('type', '=', 'opportunity')]
+            ('type', '=', 'opportunity')]
         for id in ids:
             res[id] = dict()
             lead_domain = lead_pre_domain + [('section_id', '=', id)]

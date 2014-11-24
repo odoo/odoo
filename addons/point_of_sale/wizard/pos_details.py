@@ -52,8 +52,8 @@ class pos_details(osv.osv_memory):
         res = self.read(cr, uid, ids, ['date_start', 'date_end', 'user_ids'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
-        if res.get('id',False):
-            datas['ids']=[res['id']]
+        if res.get('id', False):
+            datas['ids'] = [res['id']]
         return self.pool['report'].get_action(cr, uid, [], 'point_of_sale.report_detailsofsales', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

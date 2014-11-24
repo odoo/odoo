@@ -12,6 +12,7 @@ from py_etherpad import EtherpadLiteClient
 
 _logger = logging.getLogger(__name__)
 
+
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
 
@@ -23,8 +24,8 @@ class pad_common(osv.osv_memory):
         company = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).company_id
 
         pad = {
-            "server" : company.pad_server,
-            "key" : company.pad_key,
+            "server": company.pad_server,
+            "key": company.pad_key,
         }
 
         # make sure pad server in the form of http://hostname
@@ -36,30 +37,30 @@ class pad_common(osv.osv_memory):
         # generate a salt
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
-        #path
-        path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
+        # path
+        path = '%s-%s-%s' % (cr.dbname.replace('_', '-'), self._name, salt)
         # contruct the url
         url = '%s/p/%s' % (pad["server"], path)
 
-        #if create with content
+        # if create with content
         if "field_name" in context and "model" in context and "object_id" in context:
-            myPad = EtherpadLiteClient( pad["key"], pad["server"]+'/api')
+            myPad = EtherpadLiteClient(pad["key"], pad["server"] + '/api')
             try:
                 myPad.createPad(path)
             except urllib2.URLError:
                 raise osv.except_osv(_("Error"), _("Pad creation failed, \
                 either there is a problem with your pad server URL or with your connection."))
 
-            #get attr on the field model
+            # get attr on the field model
             model = self.pool[context["model"]]
             field = model._fields[context['field_name']]
             real_field = field.pad_content_field
 
-            #get content of the real field
+            # get content of the real field
             for record in model.browse(cr, uid, [context["object_id"]]):
                 if record[real_field]:
                     myPad.setText(path, (html2plaintext(record[real_field]).encode('utf-8')))
-                    #Etherpad for html not functional
+                    # Etherpad for html not functional
                     #myPad.setHTML(path, record[real_field])
 
         return {
@@ -72,8 +73,8 @@ class pad_common(osv.osv_memory):
         content = ''
         if url:
             try:
-                page = urllib2.urlopen('%s/export/html'%url).read()
-                mo = re.search('<body>(.*)</body>',page)
+                page = urllib2.urlopen('%s/export/html' % url).read()
+                mo = re.search('<body>(.*)</body>', page)
                 if mo:
                     content = mo.group(1)
             except:
@@ -93,16 +94,16 @@ class pad_common(osv.osv_memory):
 
     # Set the pad content in vals
     def _set_pad_value(self, cr, uid, vals, context=None):
-        for k,v in vals.items():
+        for k, v in vals.items():
             field = self._fields[k]
-            if hasattr(field,'pad_content_field'):
-                vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)        
+            if hasattr(field, 'pad_content_field'):
+                vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         for k, field in self._fields.iteritems():
-            if hasattr(field,'pad_content_field'):
+            if hasattr(field, 'pad_content_field'):
                 pad = self.pad_generate_url(cr, uid, context)
                 default[k] = pad.get('url')
         return super(pad_common, self).copy(cr, uid, id, default, context)

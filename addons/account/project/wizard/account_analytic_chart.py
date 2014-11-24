@@ -20,6 +20,7 @@
 ##############################################################################
 from openerp.osv import fields, osv
 
+
 class account_analytic_chart(osv.osv_memory):
     _name = 'account.analytic.chart'
     _description = 'Account Analytic Chart'

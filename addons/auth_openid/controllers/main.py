@@ -45,6 +45,7 @@ from .. import utils
 _logger = logging.getLogger(__name__)
 oidutil.log = _logger.debug
 
+
 def get_system_user():
     """Return system user info string, such as USERNAME-EUID"""
     try:
@@ -59,13 +60,14 @@ def get_system_user():
         else:
             raise
 
-    euid = getattr(os, 'geteuid', None) # Non available on some platforms
+    euid = getattr(os, 'geteuid', None)  # Non available on some platforms
     if euid is not None:
         info = '%s-%d' % (info, euid())
     return info
 
-_storedir = os.path.join(tempfile.gettempdir(), 
+_storedir = os.path.join(tempfile.gettempdir(),
                          'openerp-auth_openid-%s-store' % get_system_user())
+
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
     def complete(self, message, endpoint, return_to):

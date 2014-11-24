@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+
 class portal_project(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
     _inherit = 'project.project'

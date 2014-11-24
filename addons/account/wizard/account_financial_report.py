@@ -47,15 +47,15 @@ class accounting_report(osv.osv_memory):
         report_ids = []
         if context.get('active_id'):
             menu = menu_obj.browse(cr, uid, context.get('active_id')).name
-            report_ids = report_obj.search(cr, uid, [('name','ilike',menu)])
+            report_ids = report_obj.search(cr, uid, [('name', 'ilike', menu)])
         return report_ids and report_ids[0] or False
 
     _defaults = {
-            'filter_cmp': 'filter_no',
-            'target_move': 'posted',
-            'account_report_id': _get_account_report,
+        'filter_cmp': 'filter_no',
+        'target_move': 'posted',
+        'account_report_id': _get_account_report,
     }
-    
+
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
@@ -69,7 +69,7 @@ class accounting_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to_cmp']
         elif data['form']['filter_cmp'] == 'filter_period':
             if not data['form']['period_from_cmp'] or not data['form']['period_to_cmp']:
-                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period'))
+                raise osv.except_osv(_('Error!'), _('Select a starting and an ending period'))
             result['period_from'] = data['form']['period_from_cmp']
             result['period_to'] = data['form']['period_to_cmp']
         return result
@@ -79,7 +79,7 @@ class accounting_report(osv.osv_memory):
             context = {}
         res = super(accounting_report, self).check_report(cr, uid, ids, context=context)
         data = {}
-        data['form'] = self.read(cr, uid, ids, ['account_report_id', 'date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'journal_ids', 'period_from_cmp', 'period_to_cmp',  'filter_cmp',  'chart_account_id', 'target_move'], context=context)[0]
+        data['form'] = self.read(cr, uid, ids, ['account_report_id', 'date_from_cmp', 'date_to_cmp', 'fiscalyear_id_cmp', 'journal_ids', 'period_from_cmp', 'period_to_cmp', 'filter_cmp', 'chart_account_id', 'target_move'], context=context)[0]
         for field in ['fiscalyear_id_cmp', 'chart_account_id', 'period_from_cmp', 'period_to_cmp', 'account_report_id']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
@@ -88,7 +88,7 @@ class accounting_report(osv.osv_memory):
         return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter','target_move'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp', 'debit_credit', 'date_to_cmp', 'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp', 'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter', 'target_move'], context=context)[0])
         return self.pool['report'].get_action(cr, uid, [], 'account.report_financial', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

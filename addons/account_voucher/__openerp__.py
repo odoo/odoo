@@ -20,16 +20,16 @@
 ##############################################################################
 
 {
-    'name' : 'Online Billing',
-    'version' : '1.0',
-    'author' : 'OpenERP SA',
+    'name': 'Online Billing',
+    'version': '1.0',
+    'author': 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',
     'description': """
 Invoicing & Payments by Accounting Voucher & Receipts
 =====================================================
-The specific and easy-to-use Invoicing system in OpenERP allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your suppliers and customers. 
+The specific and easy-to-use Invoicing system in OpenERP allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your suppliers and customers.
 
-You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. 
+You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments.
 
 The Invoicing system includes receipts and vouchers (an easy way to keep track of sales and purchases). It also offers you an easy method of registering payments, without having to encode complete abstracts of account.
 
@@ -41,11 +41,11 @@ This module manages:
     """,
     'category': 'Accounting & Finance',
     'sequence': 4,
-    'website' : 'https://www.odoo.com/page/billing',
-    'images' : ['images/customer_payment.jpeg','images/journal_voucher.jpeg','images/sales_receipt.jpeg','images/supplier_voucher.jpeg','images/customer_invoice.jpeg','images/customer_refunds.jpeg'],
-    'depends' : ['account'],
-    'demo' : [],
-    'data' : [
+    'website': 'https://www.odoo.com/page/billing',
+    'images': ['images/customer_payment.jpeg', 'images/journal_voucher.jpeg', 'images/sales_receipt.jpeg', 'images/supplier_voucher.jpeg', 'images/customer_invoice.jpeg', 'images/customer_refunds.jpeg'],
+    'depends': ['account'],
+    'demo': [],
+    'data': [
         'security/ir.model.access.csv',
         'account_voucher_sequence.xml',
         'account_voucher_workflow.xml',
@@ -58,7 +58,7 @@ This module manages:
         'security/account_voucher_security.xml',
         'account_voucher_data.xml',
     ],
-    'test' : [
+    'test': [
         'test/account_voucher_users.yml',
         'test/case5_suppl_usd_usd.yml',
         'test/account_voucher.yml',

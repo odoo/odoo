@@ -22,9 +22,10 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_invoice_onshipping(osv.osv_memory):
     _inherit = "stock.invoice.onshipping"
-    
+
     def _get_journal_type(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -39,8 +40,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             return 'purchase'
         else:
             return super(stock_invoice_onshipping, self)._get_journal_type(cr, uid, context=context)
-        
-        
+
     _defaults = {
         'journal_type': _get_journal_type,
-        }
+    }

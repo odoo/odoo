@@ -39,7 +39,7 @@ class res_users(osv.Model):
 
     _columns = {
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
-            help="Email address internally associated with this user. Incoming "\
+            help="Email address internally associated with this user. Incoming "
                  "emails will appear in the user's notifications.", copy=False, auto_join=True),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
@@ -178,6 +178,7 @@ class res_users_mail_group(osv.Model):
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
             mail_group_obj.message_subscribe_users(cr, uid, mail_group_ids, ids, context=context)
         return write_res
+
 
 class res_groups_mail_group(osv.Model):
     """ Update of res.groups class

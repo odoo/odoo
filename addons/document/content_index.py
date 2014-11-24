@@ -23,6 +23,8 @@ import os
 import tempfile
 from subprocess import Popen, PIPE
 _logger = logging.getLogger(__name__)
+
+
 class NhException(Exception):
     pass
 
@@ -46,8 +48,8 @@ class indexer(object):
     def _getDefMime(self, ext):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
-        mts = self._getMimeTypes();
-        if len (mts):
+        mts = self._getMimeTypes()
+        if len(mts):
             return mts[0]
         return None
 
@@ -59,18 +61,18 @@ class indexer(object):
         """
         res = ''
         try:
-            if content != None:
+            if content is not None:
                 return self._doIndexContent(content)
         except NhException:
             pass
 
-        if realfile != None:
+        if realfile is not None:
             try:
                 return self._doIndexFile(realfile)
             except NhException:
                 pass
 
-            fp = open(realfile,'rb')
+            fp = open(realfile, 'rb')
             try:
                 content2 = fp.read()
             finally:
@@ -79,11 +81,10 @@ class indexer(object):
             # The not-handled exception may be raised here
             return self._doIndexContent(content2)
 
-
         # last try, with a tmp file
         if content:
             try:
-                fname,ext = filename and os.path.splitext(filename) or ('','')
+                fname, ext = filename and os.path.splitext(filename) or ('', '')
                 fd, rfname = tempfile.mkstemp(suffix=ext)
                 os.write(fd, content)
                 os.close(fd)
@@ -102,17 +103,19 @@ class indexer(object):
         raise NhException("Content cannot be handled here.")
 
     def __repr__(self):
-        return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
+        return "<indexer %s.%s>" % (self.__module__, self.__class__.__name__)
+
 
 def mime_match(mime, mdict):
-    if mdict.has_key(mime):
+    if mime in mdict:
         return (mime, mdict[mime])
     if '/' in mime:
-        mpat = mime.split('/')[0]+'/*'
-        if mdict.has_key(mpat):
+        mpat = mime.split('/')[0] + '/*'
+        if mpat in mdict:
             return (mime, mdict[mpat])
 
     return (None, None)
+
 
 class contentIndex(object):
 
@@ -139,38 +142,38 @@ class contentIndex(object):
         fobj = None
         fname = None
         mime = None
-        if content_type and self.mimes.has_key(content_type):
+        if content_type and content_type in self.mimes:
             mime = content_type
             fobj = self.mimes[content_type]
         elif filename:
-            bname,ext = os.path.splitext(filename)
-            if self.exts.has_key(ext):
+            bname, ext = os.path.splitext(filename)
+            if ext in self.exts:
                 fobj = self.exts[ext]
                 mime = fobj._getDefMime(ext)
 
         if content_type and not fobj:
-            mime,fobj = mime_match(content_type, self.mimes)
+            mime, fobj = mime_match(content_type, self.mimes)
 
         if not fobj:
             try:
-                if realfname :
+                if realfname:
                     fname = realfname
                 else:
                     try:
-                        bname,ext = os.path.splitext(filename or 'test.tmp')
+                        bname, ext = os.path.splitext(filename or 'test.tmp')
                     except Exception:
                         bname, ext = filename, 'tmp'
                     fd, fname = tempfile.mkstemp(suffix=ext)
                     os.write(fd, content)
                     os.close(fd)
 
-                pop = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE)
+                pop = Popen(['file', '-b', '--mime', fname], shell=False, stdout=PIPE)
                 (result, _) = pop.communicate()
 
                 mime2 = result.split(';')[0]
                 _logger.debug('File gives us: %s', mime2)
                 # Note that the temporary file still exists now.
-                mime,fobj = mime_match(mime2, self.mimes)
+                mime, fobj = mime_match(mime2, self.mimes)
                 if not mime:
                     mime = mime2
             except Exception:
@@ -178,13 +181,13 @@ class contentIndex(object):
 
         try:
             if fobj:
-                res = (mime, fobj.indexContent(content,filename,fname or realfname) )
+                res = (mime, fobj.indexContent(content, filename, fname or realfname))
             else:
                 _logger.debug("Have no object, return (%s, None).", mime)
                 res = (mime, '')
         except Exception:
             _logger.exception("Cannot index file %s (%s).",
-                                    filename, fname or realfname)
+                              filename, fname or realfname)
             res = (mime, '')
 
         # If we created a tmp file, unlink it now

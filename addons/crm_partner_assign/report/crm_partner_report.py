@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 
 
@@ -29,17 +29,18 @@ class crm_partner_report_assign(osv.osv):
     _description = "CRM Partner Report"
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=False, readonly=True),
-        'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
-        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'date_review' : fields.date('Latest Partner Review'),
-        'date_partnership' : fields.date('Partnership Date'),
-        'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'grade_id': fields.many2one('res.partner.grade', 'Grade', readonly=True),
+        'activation': fields.many2one('res.partner.activation', 'Activation', select=1),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'date_review': fields.date('Latest Partner Review'),
+        'date_partnership': fields.date('Partnership Date'),
+        'country_id': fields.many2one('res.country', 'Country', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'opp': fields.integer('# of Opportunity', readonly=True),  # TDE FIXME master: rename into nbr_opportunities
         'turnover': fields.float('Turnover', readonly=True),
         'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
     }
+
     def init(self, cr):
         """
             CRM Lead Report

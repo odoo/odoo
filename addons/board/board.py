@@ -26,6 +26,7 @@ from textwrap import dedent
 from openerp import tools
 from openerp.osv import fields, osv
 
+
 class board_board(osv.osv):
     _name = 'board.board'
     _description = "Board"
@@ -81,6 +82,7 @@ class board_board(osv.osv):
 
     def _arch_preprocessing(self, cr, user, arch, context=None):
         from lxml import etree
+
         def remove_unauthorized_children(node):
             for child in node.iterchildren():
                 if child.tag == 'action' and child.get('invisible'):

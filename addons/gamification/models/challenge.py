@@ -33,6 +33,7 @@ _logger = logging.getLogger(__name__)
 # display top 3 in ranking, could be db variable
 MAX_VISIBILITY_RANKING = 3
 
+
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
 
@@ -103,7 +104,7 @@ class gamification_challenge(osv.Model):
                 res[challenge.id] = False
 
         return res
-    
+
     def _get_categories(self, cr, uid, context=None):
         return [
             ('hr', 'Human Ressources / Engagement'),
@@ -121,10 +122,10 @@ class gamification_challenge(osv.Model):
         'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
         'state': fields.selection([
-                ('draft', 'Draft'),
-                ('inprogress', 'In Progress'),
-                ('done', 'Done'),
-            ], copy=False,
+            ('draft', 'Draft'),
+            ('inprogress', 'In Progress'),
+            ('done', 'Done'),
+        ], copy=False,
             string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
@@ -135,12 +136,12 @@ class gamification_challenge(osv.Model):
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
 
         'period': fields.selection([
-                ('once', 'Non recurring'),
-                ('daily', 'Daily'),
-                ('weekly', 'Weekly'),
-                ('monthly', 'Monthly'),
-                ('yearly', 'Yearly')
-            ],
+            ('once', 'Non recurring'),
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('monthly', 'Monthly'),
+            ('yearly', 'Yearly')
+        ],
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
@@ -166,19 +167,19 @@ class gamification_challenge(osv.Model):
             help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."),
 
         'visibility_mode': fields.selection([
-                ('personal', 'Individual Goals'),
-                ('ranking', 'Leader Board (Group Ranking)'),
-            ],
+            ('personal', 'Individual Goals'),
+            ('ranking', 'Leader Board (Group Ranking)'),
+        ],
             string="Display Mode", required=True),
 
         'report_message_frequency': fields.selection([
-                ('never', 'Never'),
-                ('onchange', 'On change'),
-                ('daily', 'Daily'),
-                ('weekly', 'Weekly'),
-                ('monthly', 'Monthly'),
-                ('yearly', 'Yearly')
-            ],
+            ('never', 'Never'),
+            ('onchange', 'On change'),
+            ('daily', 'Daily'),
+            ('weekly', 'Weekly'),
+            ('monthly', 'Monthly'),
+            ('yearly', 'Yearly')
+        ],
             string="Report Frequency", required=True),
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
@@ -192,7 +193,7 @@ class gamification_challenge(osv.Model):
 
         'category': fields.selection(lambda s, *a, **k: s._get_categories(*a, **k),
             string="Appears in", help="Define the visibility of the challenge through menus", required=True),
-        }
+    }
 
     _defaults = {
         'period': 'once',
@@ -207,7 +208,6 @@ class gamification_challenge(osv.Model):
         'reward_realtime': True,
     }
 
-
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add the user of groups"""
 
@@ -221,7 +221,7 @@ class gamification_challenge(osv.Model):
         return super(gamification_challenge, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
 
         if vals.get('user_domain'):
@@ -251,7 +251,6 @@ class gamification_challenge(osv.Model):
                 raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
 
         return write_res
-
 
     ##### Update #####
 
@@ -295,7 +294,7 @@ class gamification_challenge(osv.Model):
         if not ids:
             return True
 
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
 
         goal_obj = self.pool.get('gamification.goal')
@@ -305,12 +304,12 @@ class gamification_challenge(osv.Model):
         goal_ids = goal_obj.search(cr, uid, [
             ('challenge_id', 'in', ids),
             '|',
-                ('state', '=', 'inprogress'),
-                '&',
-                    ('state', 'in', ('reached', 'failed')),
-                    '|',
-                        ('end_date', '>=', yesterday.strftime(DF)),
-                        ('end_date', '=', False)
+            ('state', '=', 'inprogress'),
+            '&',
+            ('state', 'in', ('reached', 'failed')),
+            '|',
+            ('end_date', '>=', yesterday.strftime(DF)),
+            ('end_date', '=', False)
         ], context=context)
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
@@ -378,12 +377,11 @@ class gamification_challenge(osv.Model):
 
     def action_report_progress(self, cr, uid, ids, context=None):
         """Manual report of a goal, does not influence automatic report frequency"""
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         for challenge in self.browse(cr, uid, ids, context=context):
             self.report_progress(cr, uid, challenge, context=context)
         return True
-
 
     ##### Automatic actions #####
 
@@ -417,7 +415,7 @@ class gamification_challenge(osv.Model):
                 if end_date:
                     date_clause += "AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
@@ -433,10 +431,9 @@ class gamification_challenge(osv.Model):
                 user_without_goal_ids = list(set(participant_user_ids) - set([user['user_id'] for user in user_with_goal_ids]))
                 user_squating_challenge_ids = list(set([user['user_id'] for user in user_with_goal_ids]) - set(participant_user_ids))
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge 
+                    # users that used to match the challenge
                     goal_to_remove_ids = goal_obj.search(cr, uid, [('challenge_id', '=', challenge.id), ('user_id', 'in', user_squating_challenge_ids)], context=context)
                     goal_obj.unlink(cr, uid, goal_to_remove_ids, context=context)
-
 
                 values = {
                     'definition_id': line.definition_id.id,
@@ -516,7 +513,7 @@ class gamification_challenge(osv.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
             'completeness': <percentage>,
             'current': <current value>,
         }
@@ -553,7 +550,7 @@ class gamification_challenge(osv.Model):
 
             if challenge.visibility_mode == 'personal':
                 if not user_id:
-                    raise osv.except_osv(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                    raise osv.except_osv(_('Error!'), _("Retrieving progress for personal challenge without user information"))
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1
@@ -650,7 +647,7 @@ class gamification_challenge(osv.Model):
                     continue
 
                 ctx.update({'challenge_lines': goals})
-                body_html = temp_obj.render_template(cr, user.id,  challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
+                body_html = temp_obj.render_template(cr, user.id, challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
                 # send message only to users, not on the challenge
                 self.message_post(cr, uid, 0,
@@ -706,7 +703,7 @@ class gamification_challenge(osv.Model):
             - when a challenge is manually closed
         (if no end date, a running challenge is never rewarded)
         """
-        if isinstance(ids, (int,long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         commit = context.get('commit_gamification', False)
         for challenge in self.browse(cr, uid, ids, context=context):
@@ -834,7 +831,7 @@ class gamification_challenge(osv.Model):
         :param badge_id: the concerned badge
         """
         badge_user_obj = self.pool.get('gamification.badge.user')
-        user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id, 'challenge_id':challenge_id}, context=context)
+        user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id, 'challenge_id': challenge_id}, context=context)
         return badge_user_obj._send_badge(cr, uid, [user_badge_id], context=context)
 
 

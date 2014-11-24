@@ -5,6 +5,7 @@ from openerp.osv.expression import get_unaccent_wrapper
 from openerp.osv.orm import BaseModel
 import openerp.tests.common as common
 
+
 class test_expression(common.TransactionCase):
 
     def _reinit_mock(self):
@@ -116,7 +117,7 @@ class test_expression(common.TransactionCase):
         # Test2: inheritance + relational fields
         user_ids = users_obj.search(cr, uid, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(set(user_ids), set([b1]), 'searching through inheritance failed')
-        
+
         # Special =? operator mean "is equal if right is set, otherwise always True"
         user_ids = users_obj.search(cr, uid, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(set(user_ids), set([a, b1, b2]), '(x =? False) failed')
@@ -186,7 +187,7 @@ class test_expression(common.TransactionCase):
         expected = "%s::text like %s" % (unaccent('"res_partner_bank"."name"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect where condition")
-        
+
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect parameter")
         sql_query = self.query_list[2].get_sql()
@@ -226,7 +227,7 @@ class test_expression(common.TransactionCase):
         expected = "%s::text like %s" % (unaccent('"res_partner__bank_ids"."name"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect where condition")
-        
+
         self.assertIn('"res_partner"."id"="res_partner__bank_ids"."partner_id"', sql_query[1],
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect join condition")
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
@@ -256,7 +257,7 @@ class test_expression(common.TransactionCase):
         # Test result
         self.assertEqual(set(partner_ids), set([p_a, p_b]),
             "_auto_join on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
-        # # Test produced queries
+        # Test produced queries
         self.assertEqual(len(self.query_list), 1,
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) should produce 1 query")
         sql_query = self.query_list[0].get_sql()
@@ -342,7 +343,7 @@ class test_expression(common.TransactionCase):
         expected = "%s::text like %s" % (unaccent('"res_country_state__country_id"."code"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
-        
+
         self.assertIn('"res_country_state"."country_id"="res_country_state__country_id"."id"', sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
@@ -376,7 +377,7 @@ class test_expression(common.TransactionCase):
         expected = "%s::text like %s" % (unaccent('"res_partner__state_id__country_id"."code"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
-        
+
         self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
         self.assertIn('"res_partner__state_id"."country_id"="res_partner__state_id__country_id"."id"', sql_query[1],
@@ -402,7 +403,7 @@ class test_expression(common.TransactionCase):
             "_auto_join on one2many with domains incorrect result")
         # Test produced queries that domains effectively present
         sql_query = self.query_list[0].get_sql()
-        
+
         expected = "%s::text like %s" % (unaccent('"res_partner__child_ids__bank_ids"."acc_number"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on one2many with domains incorrect result")
@@ -466,7 +467,7 @@ class test_expression(common.TransactionCase):
         domain = [('x', 'in', ['y', 'z']), ('a.v', '=', 'e'), '|', '|', ('a', '=', 'b'), '!', ('c', '>', 'd'), ('e', '!=', 'f'), ('g', '=', 'h')]
         norm_domain = ['&', '&', '&'] + domain
         assert norm_domain == expression.normalize_domain(domain), "Non-normalized domains should be properly normalized"
-        
+
     def test_translate_search(self):
         Country = self.registry('res.country')
         be = self.ref('base.be')

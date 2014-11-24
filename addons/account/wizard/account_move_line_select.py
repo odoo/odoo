@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 
+
 class account_move_line_select(osv.osv_memory):
     """
         Account move line select
@@ -64,7 +65,7 @@ class account_move_line_select(osv.osv_memory):
             acc_data = account_obj.browse(cr, uid, context['active_id']).child_consol_ids
             if acc_data:
                 result['context'].update({'consolidate_children': True})
-        result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
+        result['domain'] = result['domain'][0:-1] + ',' + domain + result['domain'][-1]
         return result
 
 

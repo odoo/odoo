@@ -35,26 +35,26 @@ For example, you can define the following analytic structure:
   * **Projects**
       * Project 1
           + SubProj 1.1
-          
+
           + SubProj 1.2
 
       * Project 2
-      
+
   * **Salesman**
       * Eric
-      
+
       * Fabien
 
 Here, we have two plans: Projects and Salesman. An invoice line must be able to write analytic entries in the 2 plans: SubProj 1.1 and Fabien. The amount can also be split.
- 
+
 The following example is for an invoice that touches the two subprojects and assigned to one salesman:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Plan1:**
 
     * SubProject 1.1 : 50%
-    
+
     * SubProject 1.2 : 50%
-    
+
 **Plan2:**
     Eric: 100%
 

@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-import os, time
+import os
+import time
 
 import random
 import StringIO
@@ -29,6 +30,7 @@ from openerp.report.interface import report_int
 from pychart import *
 
 theme.use_color = 1
+
 
 class external_pdf(render):
 
@@ -42,12 +44,12 @@ class external_pdf(render):
     def _render(self):
         return self.pdf
 
+
 class report_custom(report_int):
 
     """ Create Custom Report """
 
     def create(self, cr, uid, ids, datas, context=None):
-
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of IDs
@@ -62,7 +64,7 @@ class report_custom(report_int):
 
         cr.execute('select probability, planned_revenue, planned_cost, user_id,\
                  res_users.name as name from crm_case left join res_users on \
-                 (crm_case.user_id=res_users.id) where crm_case.id IN %s order by user_id',(tuple(ids),))
+                 (crm_case.user_id=res_users.id) where crm_case.id IN %s order by user_id', (tuple(ids),))
 
         res = cr.dictfetchall()
         for row in res:
@@ -77,38 +79,38 @@ class report_custom(report_int):
             if benefit < minbenef:
                 minbenef = benefit
 
-            tuple_benefit = (proba * 100,  benefit)
+            tuple_benefit = (proba * 100, benefit)
             responsible_data.setdefault(userid, [])
             responsible_data[userid].append(tuple_benefit)
 
             tuple_benefit = (proba * 100, cost, benefit)
             data.append(tuple_benefit)
 
-            responsible_names[userid] = (row['name'] or '/').replace('/','//')
+            responsible_names[userid] = (row['name'] or '/').replace('/', '//')
 
         minbenef -= maxbenef * 0.05
         maxbenef *= 1.2
 
         ratio = 0.5
-        minmaxdiff2 = (maxbenef - minbenef)/2
+        minmaxdiff2 = (maxbenef - minbenef) / 2
 
         for l in responsible_data.itervalues():
             for i in range(len(l)):
                 percent, benef = l[i]
-                proba = percent/100
+                proba = percent / 100
 
-                current_ratio = 1 + (ratio-1) * proba
+                current_ratio = 1 + (ratio - 1) * proba
 
                 newbenef = minmaxdiff2 + ((benef - minbenef - minmaxdiff2) * current_ratio)
 
                 l[i] = (percent, newbenef)
 
-#TODO:
+# TODO:
 #-group by "categorie de probabilites ds graphe du haut"
 #-echelle variable
 
         pdf_string = StringIO.StringIO()
-        can = canvas.init(fname = pdf_string, format = 'pdf')
+        can = canvas.init(fname=pdf_string, format='pdf')
 
         chart_object.set_defaults(line_plot.T, line_style=None)
 
@@ -121,7 +123,7 @@ class report_custom(report_int):
             y_range_a += 0.0001
 
         ar = area.T(
-            size = (300,200),
+            size=(300, 200),
             y_grid_interval = 10000,
             y_grid_style = None,
             x_range = (x_range_a, x_range_b),
@@ -140,19 +142,19 @@ class report_custom(report_int):
         ar.draw(can)
 
         # second graph (top right)
-        ar = area.T(legend = legend.T(),
-                    size = (200,100),
-                    loc = (100,250),
-                    x_grid_interval = lambda min, max: [40,60,80,100],
+        ar = area.T(legend=legend.T(),
+                    size=(200, 100),
+                    loc = (100, 250),
+                    x_grid_interval = lambda min, max: [40, 60, 80, 100],
                     x_grid_style = line_style.gray70_dash1,
                     x_range = (33, 100),
-                    x_axis = axis.X(label=None, minor_tic_interval = lambda min,max: [50, 70, 90],\
-                                     format=lambda x: ""),
+                    x_axis = axis.X(label=None, minor_tic_interval=lambda min, max: [50, 70, 90],
+                                    format=lambda x: ""),
                     y_axis = axis.Y(label="Planned amounts"))
 
-        bar_plot.fill_styles.reset();
+        bar_plot.fill_styles.reset()
         plot1 = bar_plot.T(label="Cost", data=data, fill_style=fill_style.red)
-        plot2 = bar_plot.T(label="Revenue", data=data, hcol=2, stack_on = plot1, fill_style=fill_style.blue)
+        plot2 = bar_plot.T(label="Revenue", data=data, hcol=2, stack_on=plot1, fill_style=fill_style.blue)
 
         ar.add_plot(plot1, plot2)
 
@@ -184,4 +186,3 @@ class report_custom(report_int):
 report_custom('report.crm.case')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -22,10 +22,10 @@
 
 
 {
-    'name' : 'Share any Document',
-    'version' : '2.0',
-    'depends' : ['base', 'mail'],
-    'author' : 'OpenERP SA',
+    'name': 'Share any Document',
+    'version': '2.0',
+    'depends': ['base', 'mail'],
+    'author': 'OpenERP SA',
     'category': 'Tools',
     'description': """
 This module adds generic sharing tools to your current OpenERP database.
@@ -53,8 +53,8 @@ synchronization with other companies.
     'installable': True,
     'auto_install': True,
     'web': True,
-    'qweb' : ['static/src/xml/*.xml'],
-    'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
+    'qweb': ['static/src/xml/*.xml'],
+    'images': ['images/share_wizard.jpeg', 'images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -39,7 +39,7 @@ class TestReports(openerp.tests.TransactionCase):
             try:
                 registry(report_model)
             except KeyError:
-            # Only test the generic reports here
+                # Only test the generic reports here
                 _logger.info("testing report %s", r.report_name)
                 report_model = registry(r.model)
                 report_model_ids = report_model.search(cr, uid, [], limit=10)

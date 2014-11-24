@@ -46,7 +46,7 @@ Vrste konta
 Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika
 Porezne grupe prema poreznoj prijavi
 Porezi PDV obrasca
-Ostali porezi 
+Ostali porezi
 Osnovne fiskalne pozicije
 
 Izvori podataka:
@@ -62,16 +62,16 @@ Izvori podataka:
     'depends': [
                 'account',
                 'account_chart',
-                ],
+    ],
     'data': [
-                'data/account.account.type.csv',
-                'data/account.tax.code.template.csv',
-                'data/account.account.template.csv',
-                'l10n_hr_chart_template.xml',
-                'l10n_hr_wizard.xml',
-                'data/account.tax.template.csv',
-                'data/fiscal_position_template.xml',
-            ],
+        'data/account.account.type.csv',
+        'data/account.tax.code.template.csv',
+        'data/account.account.template.csv',
+        'l10n_hr_chart_template.xml',
+        'l10n_hr_wizard.xml',
+        'data/account.tax.template.csv',
+        'data/fiscal_position_template.xml',
+    ],
     "demo": [],
     'test': [],
     "active": False,

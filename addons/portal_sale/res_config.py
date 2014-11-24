@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv 
+from openerp.osv import fields, osv
+
 
 class sale_portal_config_settings(osv.TransientModel):
     _inherit = 'account.config.settings'

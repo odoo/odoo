@@ -35,6 +35,7 @@ from openerp.tools.parse_version import parse_version
 
 _logger = logging.getLogger(__name__)
 
+
 class MigrationManager(object):
     """
         This class manage the migration of modules
@@ -61,6 +62,7 @@ class MigrationManager(object):
         the maintenance contract
 
     """
+
     def __init__(self, cr, graph):
         self.cr = cr
         self.graph = graph
@@ -68,7 +70,6 @@ class MigrationManager(object):
         self._get_files()
 
     def _get_files(self):
-
         """
         import addons.base.maintenance.utils as maintenance_utils
         maintenance_utils.update_migrations_files(self.cr)

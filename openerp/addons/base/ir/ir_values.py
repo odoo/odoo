@@ -30,12 +30,12 @@ EXCLUDED_FIELDS = set((
 
 #: Possible slots to bind an action to with :meth:`~.set_action`
 ACTION_SLOTS = [
-                "client_action_multi",  # sidebar wizard action
-                "client_print_multi",   # sidebar report printing button
-                "client_action_relate", # sidebar related link
-                "tree_but_open",        # double-click on item in tree view
-                "tree_but_action",      # deprecated: same as tree_but_open
-               ]
+    "client_action_multi",  # sidebar wizard action
+    "client_print_multi",   # sidebar report printing button
+    "client_action_relate",  # sidebar related link
+    "tree_but_open",        # double-click on item in tree view
+    "tree_but_action",      # deprecated: same as tree_but_open
+]
 
 
 class ir_values(osv.osv):
@@ -82,7 +82,7 @@ class ir_values(osv.osv):
        should be executed.
 
        .. rubric:: Usage: default values
-       
+
        The ``'default'`` entries are usually defined manually by the
        users, and set by their UI clients calling :meth:`~.set_default`.
        These default values are then automatically used by the
@@ -126,17 +126,19 @@ class ir_values(osv.osv):
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
 
     def onchange_object_id(self, cr, uid, ids, object_id, context=None):
-        if not object_id: return {}
+        if not object_id:
+            return {}
         act = self.pool.get('ir.model').browse(cr, uid, object_id, context=context)
         return {
-                'value': {'model': act.model}
+            'value': {'model': act.model}
         }
 
     def onchange_action_id(self, cr, uid, ids, action_id, context=None):
-        if not action_id: return {}
+        if not action_id:
+            return {}
         act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
         return {
-                'value': {'value_unpickle': act.type+','+str(act.id)}
+            'value': {'value_unpickle': act.type + ',' + str(act.id)}
         }
 
     _columns = {
@@ -151,25 +153,24 @@ class ir_values(osv.osv):
                                          "automatically set the correct model name"),
         'action_id': fields.many2one('ir.actions.actions', 'Action (change only)',
                                      help="Action bound to this entry - "
-                                         "helper field for binding an action, will "
-                                         "automatically set the correct reference"),
+                                     "helper field for binding an action, will "
+                                     "automatically set the correct reference"),
 
         'value': fields.text('Value', help="Default value (pickled) or reference to an action"),
         'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
                                           type='text',
                                           string='Default value or action reference'),
-        'key': fields.selection([('action','Action'),('default','Default')],
+        'key': fields.selection([('action', 'Action'), ('default', 'Default')],
                                 'Type', select=True, required=True,
                                 help="- Action: an action attached to one slot of the given model\n"
                                      "- Default: a default value for a model field"),
-        'key2' : fields.char('Qualifier', select=True,
-                             help="For actions, one of the possible action slots: \n"
-                                  "  - client_action_multi\n"
-                                  "  - client_print_multi\n"
-                                  "  - client_action_relate\n"
-                                  "  - tree_but_open\n"
-                                  "For defaults, an optional condition"
-                             ,),
+        'key2': fields.char('Qualifier', select=True,
+                            help="For actions, one of the possible action slots: \n"
+                            "  - client_action_multi\n"
+                            "  - client_print_multi\n"
+                            "  - client_action_relate\n"
+                            "  - tree_but_open\n"
+                            "For defaults, an optional condition",),
         'res_id': fields.integer('Record ID', select=True,
                                  help="Database identifier of the record to which this applies. "
                                       "0 = for all records"),
@@ -252,8 +253,8 @@ class ir_values(osv.osv):
             ('model', '=', model),
             ('name', '=', field_name),
             ('user_id', '=', False if for_all_users else uid),
-            ('company_id','=', company_id)
-            ]
+            ('company_id', '=', company_id)
+        ]
         self.unlink(cr, uid, self.search(cr, uid, search_criteria))
 
         return self.create(cr, uid, {
@@ -276,8 +277,8 @@ class ir_values(osv.osv):
             ('model', '=', model),
             ('name', '=', field_name),
             ('user_id', '=', False if for_all_users else uid),
-            ('company_id','=', company_id)
-            ]
+            ('company_id', '=', company_id)
+        ]
         defaults = self.browse(cr, uid, self.search(cr, uid, search_criteria))
         return pickle.loads(defaults[0].value.encode('utf-8')) if defaults else None
 
@@ -363,18 +364,18 @@ class ir_values(osv.osv):
            :return: id of the newly created ir.values entry
         """
         assert isinstance(action, basestring) and ',' in action, \
-               'Action definition must be an action reference, e.g. "ir.actions.act_window,42"'
+            'Action definition must be an action reference, e.g. "ir.actions.act_window,42"'
         assert action_slot in ACTION_SLOTS, \
-               'Action slot (%s) must be one of: %r' % (action_slot, ACTION_SLOTS)
+            'Action slot (%s) must be one of: %r' % (action_slot, ACTION_SLOTS)
 
         # remove existing action definition of same slot and value
         search_criteria = [
             ('key', '=', 'action'),
             ('key2', '=', action_slot),
             ('model', '=', model),
-            ('res_id', '=', res_id or 0), # int field -> NULL == 0
+            ('res_id', '=', res_id or 0),  # int field -> NULL == 0
             ('value', '=', action),
-            ]
+        ]
         self.unlink(cr, uid, self.search(cr, uid, search_criteria))
 
         return self.create(cr, uid, {
@@ -474,12 +475,12 @@ class ir_values(osv.osv):
         """
         assert key in ['default', 'action'], "ir.values entry keys must be in ['default','action']"
         if key == 'default':
-            def do_set(model,res_id):
+            def do_set(model, res_id):
                 return self.set_default(cr, uid, model, field_name=name, value=value,
                                         for_all_users=(not preserve_user), company_id=company,
                                         condition=key2)
         elif key == 'action':
-            def do_set(model,res_id):
+            def do_set(model, res_id):
                 return self.set_action(cr, uid, name, action_slot=key2, model=model, action=value, res_id=res_id)
         return self._map_legacy_model_list(models, do_set)
 
@@ -493,10 +494,10 @@ class ir_values(osv.osv):
         """
         assert key in ['default', 'action'], "ir.values entry keys must be in ['default','action']"
         if key == 'default':
-            def do_get(model,res_id):
+            def do_get(model, res_id):
                 return self.get_defaults(cr, uid, model, condition=key2)
         elif key == 'action':
-            def do_get(model,res_id):
+            def do_get(model, res_id):
                 return self.get_actions(cr, uid, action_slot=key2, model=model, res_id=res_id, context=context)
         return self._map_legacy_model_list(models, do_get, merge_results=True)
 

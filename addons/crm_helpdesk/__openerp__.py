@@ -22,7 +22,7 @@
 
 {
     'name': 'Helpdesk',
-    'category': 'Customer Relationship Management', 
+    'category': 'Customer Relationship Management',
     'version': '1.0',
     'description': """
 Helpdesk Management.
@@ -47,7 +47,7 @@ and categorize your interventions with a channel and a priority level.
     'test': ['test/process/help-desk.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
+    'images': ['images/helpdesk_analysis.jpeg', 'images/helpdesk_categories.jpeg', 'images/helpdesk_requests.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

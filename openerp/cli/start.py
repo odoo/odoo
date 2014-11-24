@@ -18,7 +18,6 @@ class Start(Command):
         mods = glob.glob(os.path.join(path, '*/%s' % MANIFEST))
         return [mod.split(os.path.sep)[-2] for mod in mods]
 
-
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
             prog="%s start" % sys.argv[0].split(os.path.sep)[-1],
@@ -28,7 +27,6 @@ class Start(Command):
             help="Directory where your project's modules are stored (will autodetect from current dir)")
         parser.add_argument("-d", "--database", dest="db_name", default=None,
                          help="Specify the database name (default to project's directory name")
-
 
         args, unknown = parser.parse_known_args(args=cmdargs)
 
@@ -62,6 +60,7 @@ class Start(Command):
             cmdargs.append('--db-filter=^%s$' % args.db_name)
 
         main(cmdargs)
+
 
 def die(message, code=1):
     print >>sys.stderr, message

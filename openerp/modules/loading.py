@@ -72,9 +72,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.commit()
             else:
                 cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache 
+                # avoid keeping stale xml_id, etc. in cache
                 openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
-
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
@@ -176,7 +175,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            if package.state=='to upgrade':
+            if package.state == 'to upgrade':
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             _load_data(cr, module_name, idref, mode, kind='data')
@@ -237,6 +236,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     return loaded_modules, processed_modules
 
+
 def _check_module_names(cr, module_names):
     mod_names = set(module_names)
     if 'base' in mod_names:
@@ -251,20 +251,23 @@ def _check_module_names(cr, module_names):
             incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
+
 def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_modules, perform_checks):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
     processed_modules = []
     while True:
-        cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
+        cr.execute("SELECT name from ir_module_module WHERE state IN %s", (tuple(states),))
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
         graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules, perform_checks=perform_checks)
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
-        if not processed: break
+        if not processed:
+            break
     return processed_modules
+
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     initialize_sys_path()
@@ -278,7 +281,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             _logger.info("init db")
             openerp.modules.db.initialize(cr)
-            update_module = True # process auto-installed modules
+            update_module = True  # process auto-installed modules
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
@@ -291,7 +294,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
-        # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
+        # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
         graph = openerp.modules.graph.Graph()
         graph.add_module(cr, 'base', force)
         if not graph:
@@ -330,7 +333,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
             modobj.invalidate_cache(cr, SUPERUSER_ID, ['state'])
-
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -393,7 +395,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
 
-        # STEP 5: Cleanup menus 
+        # STEP 5: Cleanup menus
         # Remove menu items that are not referenced by any of other
         # (child) menu item, ir_values, or ir_model_data.
         # TODO: This code could be a method of ir_ui_menu. Remove menu without actions of children

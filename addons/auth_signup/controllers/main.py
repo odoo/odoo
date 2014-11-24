@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
     @http.route()
@@ -81,7 +82,6 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 _logger.exception('error when resetting password')
             except Exception, e:
                 qcontext['error'] = _(e.message)
-
 
         return request.render('auth_signup.reset_password', qcontext)
 

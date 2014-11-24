@@ -3,6 +3,7 @@ import importlib
 import os.path
 from urlparse import urlunsplit
 
+
 def setup(app):
     app.add_config_value('github_user', None, 'env')
     app.add_config_value('github_project', None, 'env')
@@ -31,8 +32,10 @@ def setup(app):
             return None
 
         # get original from decorated methods
-        try: obj = getattr(obj, '_orig')
-        except AttributeError: pass
+        try:
+            obj = getattr(obj, '_orig')
+        except AttributeError:
+            pass
 
         try:
             obj_source_path = inspect.getsourcefile(obj)
@@ -48,6 +51,7 @@ def setup(app):
             os.path.relpath(obj_source_path, project_root),
             line)
     app.config.linkcode_resolve = linkcode_resolve
+
 
 def make_github_link(app, path, line=None, mode="blob"):
     config = app.config
@@ -66,6 +70,7 @@ def make_github_link(app, path, line=None, mode="blob"):
         '',
         '' if line is None else 'L%d' % line
     ))
+
 
 def add_doc_link(app, pagename, templatename, context, doctree):
     """ Add github_link function linking to the current page on github """

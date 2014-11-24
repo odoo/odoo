@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
@@ -56,6 +57,7 @@ class res_company(osv.osv):
     _defaults = {
         'propagation_minimum_delta': 1,
     }
+
 
 class stock_config_settings(osv.osv_memory):
     _name = 'stock.config.settings'

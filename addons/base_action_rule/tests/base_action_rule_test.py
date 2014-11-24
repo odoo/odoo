@@ -2,6 +2,7 @@ from openerp import SUPERUSER_ID
 from openerp.tests import common
 from .. import test_models
 
+
 class base_action_rule_test(common.TransactionCase):
 
     def setUp(self):
@@ -28,8 +29,8 @@ class base_action_rule_test(common.TransactionCase):
             'name': "Lead is in draft state",
             'is_default': False,
             'model_id': "base.action.rule.lead.test",
-            'domain' : "[('state','=','draft')]",
-            }, context=context)
+            'domain': "[('state','=','draft')]",
+        }, context=context)
 
     def create_lead_test_1(self, cr, uid, context=None):
         """
@@ -38,20 +39,20 @@ class base_action_rule_test(common.TransactionCase):
         return self.model.create(cr, uid, {
             'name': "Lead Test 1",
             'user_id': self.admin,
-            }, context=context)
+        }, context=context)
 
     def create_rule(self, cr, uid, kind, filter_id=False, filter_pre_id=False, context=None):
         """
             The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to user "demo"
         """
-        return self.base_action_rule.create(cr,uid,{
+        return self.base_action_rule.create(cr, uid, {
             'name': "Rule 1",
-            'model_id': self.registry('ir.model').search(cr, uid, [('model','=','base.action.rule.lead.test')], context=context)[0],
+            'model_id': self.registry('ir.model').search(cr, uid, [('model', '=', 'base.action.rule.lead.test')], context=context)[0],
             'kind': kind,
             'filter_pre_id': filter_pre_id,
             'filter_id': filter_id,
             'act_user_id': self.demo,
-            }, context=context)
+        }, context=context)
 
     def delete_rules(self, cr, uid, context=None):
         """ delete all the rules on model 'base.action.rule.lead.test' """

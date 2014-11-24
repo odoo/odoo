@@ -14,11 +14,13 @@ from ..models import (
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
 
+
 class browse_record(object):
     """ Pseudo-class for testing record instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and len(inst) <= 1
+
 
 class browse_null(object):
     """ Pseudo-class for testing null instances """
@@ -33,7 +35,7 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in (field.get("states",{})).items():
+    for state, modifs in (field.get("states", {})).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
@@ -83,6 +85,7 @@ def transfer_modifiers_to_node(modifiers, node):
         simplify_modifiers(modifiers)
         node.set('modifiers', simplejson.dumps(modifiers))
 
+
 def setup_modifiers(node, field=None, context=None, in_tree_view=False):
     """ Processes node attributes and field descriptors to generate
     the ``modifiers`` node attribute and set it on the provided node.
@@ -110,6 +113,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
         node, modifiers, context=context, in_tree_view=in_tree_view)
     transfer_modifiers_to_node(modifiers, node)
 
+
 def test_modifiers(what, expected):
     modifiers = {}
     if isinstance(what, basestring):
@@ -136,7 +140,7 @@ def modifiers_tests():
     test_modifiers('<field name="a" invisible="0"/>', '{}')
     test_modifiers('<field name="a" readonly="0"/>', '{}')
     test_modifiers('<field name="a" required="0"/>', '{}')
-    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}') # TODO order is not guaranteed
+    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}')  # TODO order is not guaranteed
     test_modifiers('<field name="a" invisible="1" required="0"/>', '{"invisible": true}')
     test_modifiers('<field name="a" invisible="0" required="1"/>', '{"required": true}')
     test_modifiers("""<field name="a" attrs="{'invisible': [('b', '=', 'c')]}"/>""", '{"invisible": [["b", "=", "c"]]}')

@@ -24,10 +24,10 @@
     'name': 'Marketing Campaigns',
     'version': '1.1',
     'depends': ['marketing',
-                 'document',
-                 'email_template',
-                 'decimal_precision'
-    ],
+                'document',
+                'email_template',
+                'decimal_precision'
+                ],
     'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """
@@ -67,6 +67,6 @@ input segments, workflow.
     'test': ['test/marketing_campaign.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
+    'images': ['images/campaign.png', 'images/campaigns.jpeg', 'images/email_account.jpeg', 'images/email_templates.jpeg', 'images/segments.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

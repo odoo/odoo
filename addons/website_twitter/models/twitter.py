@@ -15,6 +15,7 @@ URLOPEN_TIMEOUT = 10
 
 _logger = logging.getLogger(__name__)
 
+
 class TwitterClient(osv.osv):
     _inherit = "website"
 
@@ -56,31 +57,31 @@ class TwitterClient(osv.osv):
             if not all((website.twitter_api_key, website.twitter_api_secret,
                        website.twitter_screen_name)):
                 _logger.debug("Skip fetching favorite tweets for unconfigured website %s",
-                              website) 
+                              website)
                 continue
             params = {'screen_name': website.twitter_screen_name}
             last_tweet = website_tweets.search_read(
-                    cr, uid, [('website_id', '=', website.id),
+                cr, uid, [('website_id', '=', website.id),
                               ('screen_name', '=', website.twitter_screen_name)],
-                    ['tweet_id'],
-                    limit=1, order='tweet_id desc', context=context)
+                ['tweet_id'],
+                limit=1, order='tweet_id desc', context=context)
             if last_tweet:
                 params['since_id'] = int(last_tweet[0]['tweet_id'])
             _logger.debug("Fetching favorite tweets using params %r", params)
             response = self._request(website, REQUEST_FAVORITE_LIST_URL, params=params)
             for tweet_dict in response:
-                tweet_id = tweet_dict['id'] # unsigned 64-bit snowflake ID
+                tweet_id = tweet_dict['id']  # unsigned 64-bit snowflake ID
                 tweet_ids = website_tweets.search(cr, uid, [('tweet_id', '=', tweet_id)])
                 if not tweet_ids:
                     new_tweet = website_tweets.create(
-                            cr, uid,
-                            {
-                              'website_id': website.id,
-                              'tweet': json.dumps(tweet_dict),
-                              'tweet_id': tweet_id, # stored in NUMERIC PG field 
-                              'screen_name': website.twitter_screen_name,
-                            },
-                            context=context)
+                        cr, uid,
+                        {
+                            'website_id': website.id,
+                            'tweet': json.dumps(tweet_dict),
+                            'tweet_id': tweet_id,  # stored in NUMERIC PG field
+                            'screen_name': website.twitter_screen_name,
+                        },
+                        context=context)
                     _logger.debug("Found new favorite: %r, %r", tweet_id, tweet_dict)
                     tweet_ids.append(new_tweet)
         return tweet_ids
@@ -99,6 +100,7 @@ class TwitterClient(osv.osv):
         access_token = data['access_token']
         return access_token
 
+
 class WebsiteTwitterTweet(osv.osv):
     _name = "website.twitter.tweet"
     _description = "Twitter Tweets"
@@ -110,6 +112,6 @@ class WebsiteTwitterTweet(osv.osv):
         # Twitter IDs are 64-bit unsigned ints, so we need to store them in
         # unlimited precision NUMERIC columns, which can be done with a
         # float field. Used digits=(0,0) to indicate unlimited.
-        # Using VARCHAR would work too but would have sorting problems.  
-        'tweet_id': fields.float("Tweet ID", digits=(0,0)), # Twitter
+        # Using VARCHAR would work too but would have sorting problems.
+        'tweet_id': fields.float("Tweet ID", digits=(0, 0)),  # Twitter
     }

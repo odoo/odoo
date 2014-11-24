@@ -24,8 +24,8 @@
     'name': 'Marketing Campaign - Demo',
     'version': '1.0',
     'depends': ['marketing_campaign',
-                 'crm',
-    ],
+                'crm',
+                ],
     'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """
@@ -39,6 +39,6 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
     'demo': ['marketing_campaign_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/campaigns.jpeg','images/email_templates.jpeg'],
+    'images': ['images/campaigns.jpeg', 'images/email_templates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) conexus
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,11 +28,11 @@
     'depends': ['account_chart', 'base_vat'],
     'description': """
 This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at.
-============================================================================================================= 
+=============================================================================================================
 Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.
 """,
     'demo': [],
-    'data': ['account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_at_wizard.xml'],
+    'data': ['account_tax_code.xml', 'account_chart.xml', 'account_tax.xml', 'l10n_chart_at_wizard.xml'],
     'auto_install': False,
     'installable': True
 }

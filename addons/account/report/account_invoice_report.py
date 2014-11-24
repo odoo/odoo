@@ -21,7 +21,8 @@
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class account_invoice_report(osv.osv):
     _name = "account.invoice.report"
@@ -33,7 +34,7 @@ class account_invoice_report(osv.osv):
         """Compute the amounts in the currency of the user
         """
         if context is None:
-            context={}
+            context = {}
         currency_obj = self.pool.get('res.currency')
         currency_rate_obj = self.pool.get('res.currency.rate')
         user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
@@ -56,13 +57,13 @@ class account_invoice_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_qty':fields.float('Product Quantity', readonly=True),
+        'product_qty': fields.float('Product Quantity', readonly=True),
         'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state', '<>', 'done')], readonly=True),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
+        'categ_id': fields.many2one('product.category', 'Category of Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
@@ -75,23 +76,23 @@ class account_invoice_report(osv.osv):
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr': fields.integer('# of Invoices', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'type': fields.selection([
-            ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Invoice'),
-            ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True),
+            ('out_invoice', 'Customer Invoice'),
+            ('in_invoice', 'Supplier Invoice'),
+            ('out_refund', 'Customer Refund'),
+            ('in_refund', 'Supplier Refund'),
+        ], 'Type', readonly=True),
         'state': fields.selection([
-            ('draft','Draft'),
-            ('proforma','Pro-forma'),
-            ('proforma2','Pro-forma'),
-            ('open','Open'),
-            ('paid','Done'),
-            ('cancel','Cancelled')
-            ], 'Invoice Status', readonly=True),
+            ('draft', 'Draft'),
+            ('proforma', 'Pro-forma'),
+            ('proforma2', 'Pro-forma'),
+            ('open', 'Open'),
+            ('paid', 'Done'),
+            ('cancel', 'Cancelled')
+        ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account',readonly=True),
-        'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
-        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True),
+        'account_line_id': fields.many2one('account.account', 'Account Line', readonly=True),
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account', readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
@@ -226,8 +227,8 @@ class account_invoice_report(osv.osv):
                                     OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
-                    self._table,
-                    self._select(), self._sub_select(), self._from(), self._group_by()))
+            self._table,
+            self._select(), self._sub_select(), self._from(), self._group_by()))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

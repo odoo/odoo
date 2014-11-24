@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class TestGBF(common.TransactionCase):
 
     def test_group_by_full(self):

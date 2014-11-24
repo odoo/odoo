@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api
 
+
 class base_module_update(models.TransientModel):
     _name = "base.module.update"
     _description = "Update Module"

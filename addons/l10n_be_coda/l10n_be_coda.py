@@ -21,6 +21,7 @@
 ##############################################################################
 from openerp.osv import osv, fields
 
+
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
     _columns = {

@@ -58,7 +58,7 @@ Some statistics by journals are provided.
         'sale_journal_data.xml'
     ],
     'demo': ['sale_journal_demo.xml'],
-    'test': [ ],
+    'test': [],
     'installable': True,
     'auto_install': False,
 }

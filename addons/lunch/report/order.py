@@ -26,43 +26,43 @@ from openerp.osv import osv
 
 class order(report_sxw.rml_parse):
 
-    def get_lines(self, user,objects):
-        lines=[]
+    def get_lines(self, user, objects):
+        lines = []
         for obj in objects:
-            if user.id==obj.user_id.id:
+            if user.id == obj.user_id.id:
                 lines.append(obj)
         return lines
 
-    def get_total(self, user,objects):
-        lines=[]
+    def get_total(self, user, objects):
+        lines = []
         for obj in objects:
-            if user.id==obj.user_id.id:
+            if user.id == obj.user_id.id:
                 lines.append(obj)
-        total=0.0
+        total = 0.0
         for line in lines:
-            total+=line.price
-        self.net_total+=total
+            total += line.price
+        self.net_total += total
         return total
 
     def get_nettotal(self):
         return self.net_total
 
     def get_users(self, objects):
-        users=[]
+        users = []
         for obj in objects:
             if obj.user_id not in users:
                 users.append(obj.user_id)
         return users
 
-    def get_note(self,objects):
-        notes=[]
+    def get_note(self, objects):
+        notes = []
         for obj in objects:
             notes.append(obj.note)
         return notes
-        
+
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context)
-        self.net_total=0.0
+        self.net_total = 0.0
         self.localcontext.update({
             'time': time,
             'get_lines': self.get_lines,

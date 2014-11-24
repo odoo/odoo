@@ -30,6 +30,7 @@ import openerp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
+
 class procurement_group(osv.osv):
     '''
     The procurement group class is used to group products together
@@ -67,6 +68,7 @@ class procurement_group(osv.osv):
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
         'move_type': lambda self, cr, uid, c: 'direct'
     }
+
 
 class procurement_rule(osv.osv):
     '''
@@ -186,7 +188,7 @@ class procurement_order(osv.osv):
         return [proc.id for proc in self.browse(cr, uid, ids, context=context) if proc.state != 'done']
 
     def cancel(self, cr, uid, ids, context=None):
-        #cancel only the procurements that aren't done already
+        # cancel only the procurements that aren't done already
         to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
         if to_cancel_ids:
             return self.write(cr, uid, to_cancel_ids, {'state': 'cancel'}, context=context)
@@ -196,9 +198,9 @@ class procurement_order(osv.osv):
 
     def run(self, cr, uid, ids, autocommit=False, context=None):
         for procurement_id in ids:
-            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
-            #and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
-            #will fetch all the ids again) 
+            # we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
+            # and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
+            # will fetch all the ids again)
             procurement = self.browse(cr, uid, procurement_id, context=context)
             if procurement.state not in ("running", "done"):
                 try:
@@ -259,7 +261,7 @@ class procurement_order(osv.osv):
             :param procurement: browse record
             :rtype: boolean
         '''
-        #if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
+        # if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
         if procurement.rule_id:
             return True
         elif procurement.product_id.type != 'service':
@@ -286,7 +288,7 @@ class procurement_order(osv.osv):
     #
     # Scheduler
     #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
         the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.

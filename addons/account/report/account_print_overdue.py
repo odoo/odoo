@@ -55,14 +55,14 @@ class Overdue(report_sxw.rml_parse):
         })
         self.context = context
 
-    def _tel_get(self,partner):
+    def _tel_get(self, partner):
         if not partner:
             return False
         res_partner = self.pool['res.partner']
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], ['invoice'])
         adr_id = addresses and addresses['invoice'] or False
         if adr_id:
-            adr=res_partner.read(self.cr, self.uid, [adr_id])[0]
+            adr = res_partner.read(self.cr, self.uid, [adr_id])[0]
             return adr['phone']
         else:
             return partner.phone or False
@@ -79,7 +79,7 @@ class Overdue(report_sxw.rml_parse):
 
     def _message(self, obj, company):
         company_pool = self.pool['res.company']
-        message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg
+        message = company_pool.browse(self.cr, self.uid, company.id, {'lang': obj.lang}).overdue_msg
         return message.split('\n')
 
 

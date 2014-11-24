@@ -44,7 +44,7 @@ This module adds several restaurant features to the Point of Sale:
         'security/ir.model.access.csv',
         'views/templates.xml',
     ],
-    'qweb':[
+    'qweb': [
         'static/src/xml/multiprint.xml',
         'static/src/xml/splitbill.xml',
         'static/src/xml/printbill.xml',

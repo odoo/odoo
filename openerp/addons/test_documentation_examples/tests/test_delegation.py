@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class TestDelegation(common.TransactionCase):
 
     def setUp(self):
@@ -18,14 +19,12 @@ class TestDelegation(common.TransactionCase):
 
         # children fields can be looked up on the parent record directly
         self.assertEqual(
-        record.field_0
-        ,
-        0
+            record.field_0,
+            0
         )
         self.assertEqual(
-        record.field_1
-        ,
-        1
+            record.field_1,
+            1
         )
 
     def test_swap_child(self):
@@ -36,9 +35,8 @@ class TestDelegation(common.TransactionCase):
             'child0_id': env['delegation.child0'].create({'field_0': 42}).id
         })
         self.assertEqual(
-        record.field_0
-        ,
-        42
+            record.field_0,
+            42
         )
 
     def test_write(self):
@@ -46,12 +44,10 @@ class TestDelegation(common.TransactionCase):
 
         record.write({'field_1': 4})
         self.assertEqual(
-        record.field_1
-        ,
-        4
+            record.field_1,
+            4
         )
         self.assertEqual(
-        record.child1_id.field_1
-        ,
-        4
+            record.child1_id.field_1,
+            4
         )

@@ -23,6 +23,7 @@ from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
 
+
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
@@ -57,12 +58,12 @@ class account_analytic_account(osv.osv):
             if account.est_expenses != 0:
                 res[account.id] = max(account.est_expenses - account.expense_invoiced, account.expense_to_invoice)
             else:
-                res[account.id]=0.0
+                res[account.id] = 0.0
         return res
 
     def _expense_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for account in self.pool.get('account.analytic.account').browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT product_id, sum(amount), user_id, to_invoice, sum(unit_amount), product_uom_id, line.name
@@ -76,7 +77,7 @@ class account_analytic_account(osv.osv):
 
             res[account.id] = 0.0
             for product_id, total_amount, user_id, factor_id, qty, uom, line_name in cr.fetchall():
-                #the amount to reinvoice is the real cost. We don't use the pricelist
+                # the amount to reinvoice is the real cost. We don't use the pricelist
                 total_amount = -total_amount
                 factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
                 res[account.id] += total_amount * (100 - factor.factor or 0.0) / 100.0
@@ -87,8 +88,8 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'purchase')], context=context)
-            #Put invoices in separate array in order not to calculate them double
+            line_ids = lines_obj.search(cr, uid, [('account_id', '=', account.id), ('invoice_id', '!=', False), ('to_invoice', '!=', False), ('journal_id.type', '=', 'purchase')], context=context)
+            # Put invoices in separate array in order not to calculate them double
             invoices = []
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 if line.invoice_id not in invoices:
@@ -104,10 +105,10 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'charge_expenses' : fields.boolean('Charge Expenses'),
-        'expense_invoiced' : fields.function(_expense_invoiced_calc, type="float"),
-        'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
-        'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
+        'charge_expenses': fields.boolean('Charge Expenses'),
+        'expense_invoiced': fields.function(_expense_invoiced_calc, type="float"),
+        'expense_to_invoice': fields.function(_expense_to_invoice_calc, type='float'),
+        'remaining_expense': fields.function(_remaining_expnse_calc, type="float"),
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
@@ -129,7 +130,7 @@ class account_analytic_account(osv.osv):
         dummy, act_window_id = mod_obj.get_object_reference(cr, uid, 'hr_expense', 'expense_all')
         result = act_obj.read(cr, uid, [act_window_id], context=context)[0]
 
-        line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account', 'in', ids)])
+        line_ids = self.pool.get('hr.expense.line').search(cr, uid, [('analytic_account', 'in', ids)])
         result['domain'] = [('line_ids', 'in', line_ids)]
         names = [account.name for account in self.browse(cr, uid, ids, context=context)]
         result['name'] = _('Expenses of %s') % ','.join(names)
@@ -138,7 +139,7 @@ class account_analytic_account(osv.osv):
         return result
 
     def hr_to_invoice_expense(self, cr, uid, ids, context=None):
-        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'purchase'), ('account_id', 'in', ids)]
+        domain = [('invoice_id', '=', False), ('to_invoice', '!=', False), ('journal_id.type', '=', 'purchase'), ('account_id', 'in', ids)]
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Expenses to Invoice of %s') % ','.join(names)
         return {
@@ -146,7 +147,7 @@ class account_analytic_account(osv.osv):
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'domain' : domain,
+            'domain': domain,
             'res_model': 'account.analytic.line',
             'nodestroy': True,
         }

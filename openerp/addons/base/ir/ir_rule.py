@@ -26,6 +26,7 @@ from openerp.osv import fields, osv, expression
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.misc import unquote as unquote
 
+
 class ir_rule(osv.osv):
     _name = 'ir.rule'
     _order = 'name'
@@ -43,7 +44,7 @@ class ir_rule(osv.osv):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
         return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
-                'time':time}
+                'time': time}
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -74,7 +75,7 @@ class ir_rule(osv.osv):
     _columns = {
         'name': fields.char('Name', select=1),
         'active': fields.boolean('Active', help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module."),
-        'model_id': fields.many2one('ir.model', 'Object',select=1, required=True, ondelete="cascade"),
+        'model_id': fields.many2one('ir.model', 'Object', select=1, required=True, ondelete="cascade"),
         'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
@@ -169,7 +170,7 @@ class ir_rule(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
-        self.clear_cache(cr,uid)
+        self.clear_cache(cr, uid)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

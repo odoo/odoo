@@ -33,7 +33,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.period_ids = []
         self.journal_ids = []
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines': self.lines,
             'periods': self.periods,
@@ -48,9 +48,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_filter': self._get_filter,
             'get_journal': self._get_journal,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
-            'display_currency':self._display_currency,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
+            'display_currency': self._display_currency,
             'get_target_move': self._get_target_move,
         })
 
@@ -73,6 +73,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     # returns a list of period objs
     def periods(self, journal_period_objs):
         dic = {}
+
         def filter_unique(o):
             key = o.period_id.id
             res = key in dic
@@ -85,7 +86,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def lines(self, period_id):
         if not self.journal_ids:
             return []
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.symbol AS currency_code,l.currency_id, '
@@ -100,8 +101,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.symbol AS code "\
-                        "FROM res_currency c, account_account AS ac "\
+        self.cr.execute("SELECT c.symbol AS code "
+                        "FROM res_currency c, account_account AS ac "
                         "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:
@@ -131,12 +132,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             journals = self.journal_ids
         if not journals:
             return 0.0
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         self.cr.execute('SELECT SUM(l.debit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
                         'AND l.state<>\'draft\'',
                         (tuple(move_state), period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
@@ -146,14 +147,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             journals = [journal_id]
         else:
             journals = self.journal_ids
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s '+ self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
                         'AND l.state<>\'draft\'',
                         (tuple(move_state), period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0

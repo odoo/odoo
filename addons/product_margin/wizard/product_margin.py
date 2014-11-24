@@ -63,7 +63,7 @@ class product_margin(osv.osv_memory):
         model, form_view_id = ref('product_margin', 'view_product_margin_form')
         model, tree_view_id = ref('product_margin', 'view_product_margin_tree')
 
-        #get the current product.margin object to obtain the values from it
+        # get the current product.margin object to obtain the values from it
         records = self.browse(cr, uid, ids, context=context)
         record = records[0]
 

@@ -101,8 +101,8 @@ class WorkflowService(object):
         for old_inst_id, workflow_id in self.cr.fetchall():
             # first active instance for new resource (new_rid), using same wkf
             self.cr.execute(
-                'SELECT id '\
-                'FROM wkf_instance '\
+                'SELECT id '
+                'FROM wkf_instance '
                 'WHERE res_id=%s AND res_type=%s AND wkf_id=%s AND state=%s',
                 (new_rid, self.record.model, workflow_id, 'active'))
             new_id = self.cr.fetchone()
@@ -112,4 +112,3 @@ class WorkflowService(object):
                 for (item_id,) in self.cr.fetchall():
                     # redirect all those workitems to the wkf instance of the new resource
                     self.cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (new_id[0], item_id))
-

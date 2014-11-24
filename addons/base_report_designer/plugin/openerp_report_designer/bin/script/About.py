@@ -24,13 +24,14 @@
 import uno
 from com.sun.star.task import XJobExecutor
 
-if __name__<>'package':
+if __name__ != 'package':
     from lib.gui import *
+
 
 class About(unohelper.Base, XJobExecutor):
     def __init__(self, ctx):
-        self.ctx     = ctx
-        self.module  = "openerp_report"
+        self.ctx = ctx
+        self.module = "openerp_report"
         self.version = "0.1"
         self.win = DBModalDialog(60, 50, 175, 115, "About Odoo Report Designer")
 
@@ -38,7 +39,7 @@ class About(unohelper.Base, XJobExecutor):
         fdBigFont.Width = 20
         fdBigFont.Height = 25
         fdBigFont.Weight = 120
-        fdBigFont.Family= 3
+        fdBigFont.Family = 3
 
         oLabelTitle1 = self.win.addFixedText("lblTitle1", 1, 1, 35, 30)
         oLabelTitle1.Model.TextColor = 16056320
@@ -78,12 +79,12 @@ class About(unohelper.Base, XJobExecutor):
         sMessage = "Odoo Report Designer v1.0 \nCopyright 2007-TODAY Tiny sprl \nThis product is free software, under the GNU Affero General Public License."
         oLabelFooter.Text = sMessage
 
-        self.win.doModalDialog("",None)
+        self.win.doModalDialog("", None)
 
-if __name__<>"package" and __name__=="__main__":
+if __name__ != "package" and __name__ == "__main__":
     About(None)
-elif __name__=="package":
-    g_ImplementationHelper.addImplementation( About, "org.openoffice.openerp.report.about", ("com.sun.star.task.Job",),)
+elif __name__ == "package":
+    g_ImplementationHelper.addImplementation(About, "org.openoffice.openerp.report.about", ("com.sun.star.task.Job",),)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

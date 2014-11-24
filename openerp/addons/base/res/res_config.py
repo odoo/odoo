@@ -53,7 +53,7 @@ class res_config_module_installation_mixin(object):
         result = None
         if to_install_ids:
             result = ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
-        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
+        # FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
         if to_install_missing_names:
             return {
                 'type': 'ir.actions.client',
@@ -62,6 +62,7 @@ class res_config_module_installation_mixin(object):
             }
 
         return result
+
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -77,8 +78,8 @@ class res_config_configurable(osv.osv_memory):
         _logger.info('getting next %s', Todos)
 
         active_todos = Todos.browse(cr, uid,
-            Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state','=','open')]),
-                                    context=context)
+            Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state', '=', 'open')]),
+            context=context)
 
         user_groups = set(map(
             lambda g: g.id,
@@ -153,7 +154,8 @@ class res_config_configurable(osv.osv_memory):
         ``next``.
         """
         next = self.execute(cr, uid, ids, context=context)
-        if next: return next
+        if next:
+            return next
         return self.next(cr, uid, ids, context=context)
 
     def action_skip(self, cr, uid, ids, context=None):
@@ -165,7 +167,8 @@ class res_config_configurable(osv.osv_memory):
         ``next``.
         """
         next = self.cancel(cr, uid, ids, context=context)
-        if next: return next
+        if next:
+            return next
         return self.next(cr, uid, ids, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -180,8 +183,10 @@ class res_config_configurable(osv.osv_memory):
         ``next``.
         """
         next = self.cancel(cr, uid, ids, context=context)
-        if next: return next
+        if next:
+            return next
         return self.next(cr, uid, ids, context=context)
+
 
 class res_config_installer(osv.osv_memory, res_config_module_installation_mixin):
     """ New-style configuration base specialized for addons selection
@@ -302,12 +307,12 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
         modules = self.pool['ir.module.module']
 
         selectable = [field for field in self._columns
-                      if type(self._columns[field]) is fields.boolean]
+                      if isinstance(self._columns[field], fields.boolean)]
         return modules.browse(
             cr, uid,
             modules.search(cr, uid,
-                           [('name','in',selectable),
-                            ('state','in',['to install', 'installed', 'to upgrade'])],
+                           [('name', 'in', selectable),
+                            ('state', 'in', ['to install', 'installed', 'to upgrade'])],
                            context=context),
             context=context)
 
@@ -333,23 +338,23 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
-                   if type(self._columns.get(module_name)) is fields.boolean
+                   if isinstance(self._columns.get(module_name), fields.boolean)
                    if to_install)
 
         hooks_results = set()
         for module in base:
-            hook = getattr(self, '_if_%s'% module, None)
+            hook = getattr(self, '_if_%s' % module, None)
             if hook:
                 hooks_results.update(hook(cr, uid, ids, context=None) or set())
 
         additionals = set(
-            module for requirements, consequences \
-                       in self._install_if.iteritems()
-                   if base.issuperset(requirements)
-                   for module in consequences)
+            module for requirements, consequences
+            in self._install_if.iteritems()
+            if base.issuperset(requirements)
+            for module in consequences)
 
         return (base | hooks_results | additionals).difference(
-                    self.already_installed(cr, uid, context))
+            self.already_installed(cr, uid, context))
 
     def default_get(self, cr, uid, fields_list, context=None):
         ''' If an addon is already installed, check it by default
@@ -375,8 +380,8 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                 continue
             fields[name].update(
                 readonly=True,
-                help= ustr(fields[name].get('help', '')) +
-                     _('\n\nThis addon is already installed on your system'))
+                help=ustr(fields[name].get('help', '')) +
+                _('\n\nThis addon is already installed on your system'))
         return fields
 
     def execute(self, cr, uid, ids, context=None):
@@ -392,6 +397,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
             modules.append((name, record))
 
         return self._install_modules(cr, uid, modules, context=context)
+
 
 class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     """ Base configuration wizard for application settings.  It provides support for setting
@@ -458,18 +464,18 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         module_pool = self.pool.get('ir.module.module')
         module_ids = module_pool.search(
             cr, uid, [('name', '=', module_name.replace("module_", '')),
-            ('state','in', ['to install', 'installed', 'to upgrade'])],
+            ('state', 'in', ['to install', 'installed', 'to upgrade'])],
             context=context)
 
         if module_ids and not field_value:
             dep_ids = module_pool.downstream_dependencies(cr, uid, module_ids, context=context)
-            dep_name = [x.shortdesc for x  in module_pool.browse(
+            dep_name = [x.shortdesc for x in module_pool.browse(
                 cr, uid, dep_ids + module_ids, context=context)]
             message = '\n'.join(dep_name)
             return {'warning': {'title': _('Warning!'),
                     'message':
                     _('Disabling this option will also uninstall the following modules \n%s' % message)
-                   }}
+            }}
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):
@@ -483,6 +489,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         """
         ir_model_data = self.pool['ir.model.data']
         ir_module = self.pool['ir.module.module']
+
         def ref(xml_id):
             mod, xml = xml_id.split('.', 1)
             return ir_model_data.get_object(cr, uid, mod, xml, context=context)
@@ -621,7 +628,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         name = self._name
         if action_ids:
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
-        return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
+        return [(record.id, name) for record in self.browse(cr, uid, ids, context=context)]
 
     def get_option_path(self, cr, uid, menu_xml_id, context=None):
         """

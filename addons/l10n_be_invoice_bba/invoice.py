@@ -20,7 +20,9 @@
 #
 ##############################################################################
 
-import re, time, random
+import re
+import time
+import random
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -33,6 +35,7 @@ account.invoice object:
     - Rename 'reference' field labels to 'Communication'
 """
 
+
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
@@ -41,7 +44,7 @@ class account_invoice(osv.osv):
         """Add BBA Structured Communication Type and change labels from 'reference' into 'communication' """
         res = super(account_invoice, self)._get_reference_type(cursor, user,
                 context=context)
-        res[[i for i,x in enumerate(res) if x[0] == 'none'][0]] = ('none', 'Free Communication')
+        res[[i for i, x in enumerate(res) if x[0] == 'none'][0]] = ('none', 'Free Communication')
         res.append(('bba', 'BBA Structured Communication'))
         #l_logger.warning('reference_type =  %s' %res )
         return res
@@ -88,7 +91,7 @@ class account_invoice(osv.osv):
         return result
 
     def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
-        partner_obj =  self.pool.get('res.partner')
+        partner_obj = self.pool.get('res.partner')
         reference = reference or ''
         algorithm = False
         if partner_id:
@@ -110,7 +113,7 @@ class account_invoice(osv.osv):
                                 seq = '%03d' % (prev_seq + 1)
                             else:
                                 raise osv.except_osv(_('Warning!'),
-                                    _('The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!' \
+                                    _('The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!'
                                       '\nPlease create manually a unique BBA Structured Communication.'))
                         bbacomm = doy + year + seq
                         base = int(bbacomm)
@@ -122,7 +125,7 @@ class account_invoice(osv.osv):
                         partner_ref_nr = re.sub('\D', '', partner_ref or '')
                         if (len(partner_ref_nr) < 3) or (len(partner_ref_nr) > 7):
                             raise osv.except_osv(_('Warning!'),
-                                _('The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!' \
+                                _('The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!'
                                   '\nPlease correct the Partner record.'))
                         else:
                             partner_ref_nr = partner_ref_nr.ljust(7, '0')
@@ -136,7 +139,7 @@ class account_invoice(osv.osv):
                                     seq = '%03d' % (prev_seq + 1)
                                 else:
                                     raise osv.except_osv(_('Warning!'),
-                                        _('The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!' \
+                                        _('The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!'
                                           '\nPlease create manually a unique BBA Structured Communication.'))
                         bbacomm = partner_ref_nr + seq
                         base = int(bbacomm)
@@ -152,7 +155,7 @@ class account_invoice(osv.osv):
                         reference = '+++%s/%s/%s%s+++' % (bbacomm[:3], bbacomm[3:7], bbacomm[7:], mod)
                 else:
                     raise osv.except_osv(_('Error!'),
-                        _("Unsupported Structured Communication Type Algorithm '%s' !" \
+                        _("Unsupported Structured Communication Type Algorithm '%s' !"
                           "\nPlease contact your Odoo support channel.") % algorithm)
         return {'value': {'reference': reference}}
 
@@ -172,7 +175,7 @@ class account_invoice(osv.osv):
         if reference_type == 'bba':
             if not reference:
                 raise osv.except_osv(_('Warning!'),
-                    _('Empty BBA Structured Communication!' \
+                    _('Empty BBA Structured Communication!'
                       '\nPlease fill in a unique BBA Structured Communication.'))
             if self.check_bbacomm(reference):
                 reference = re.sub('\D', '', reference)
@@ -182,7 +185,7 @@ class account_invoice(osv.osv):
                      ('reference', '=', vals['reference'])])
                 if same_ids:
                     raise osv.except_osv(_('Warning!'),
-                        _('The BBA Structured Communication has already been used!' \
+                        _('The BBA Structured Communication has already been used!'
                           '\nPlease create manually a unique BBA Structured Communication.'))
         return super(account_invoice, self).create(cr, uid, vals, context=context)
 
@@ -190,12 +193,12 @@ class account_invoice(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for inv in self.browse(cr, uid, ids, context):
-            if vals.has_key('reference_type'):
+            if 'reference_type' in vals:
                 reference_type = vals['reference_type']
             else:
                 reference_type = inv.reference_type or ''
             if reference_type == 'bba':
-                if vals.has_key('reference'):
+                if 'reference' in vals:
                     bbacomm = vals['reference']
                 else:
                     bbacomm = inv.reference or ''
@@ -207,7 +210,7 @@ class account_invoice(osv.osv):
                          ('reference_type', '=', 'bba'), ('reference', '=', vals['reference'])])
                     if same_ids:
                         raise osv.except_osv(_('Warning!'),
-                            _('The BBA Structured Communication has already been used!' \
+                            _('The BBA Structured Communication has already been used!'
                               '\nPlease create manually a unique BBA Structured Communication.'))
         return super(account_invoice, self).write(cr, uid, ids, vals, context)
 
@@ -231,7 +234,7 @@ class account_invoice(osv.osv):
     }
     _constraints = [
         (_check_communication, 'Invalid BBA Structured Communication !', ['Communication']),
-        ]
+    ]
 
 account_invoice()
 

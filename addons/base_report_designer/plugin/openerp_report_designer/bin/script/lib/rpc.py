@@ -25,6 +25,7 @@ import xmlrpclib
 #import tiny_socket
 import re
 
+
 class RPCGateway(object):
     def __init__(self, host, port, protocol):
 
@@ -33,10 +34,9 @@ class RPCGateway(object):
         self.port = port
 
     def get_url(self):
-
         """Get the url
         """
-        return "%s://%s:%s/"%(self.protocol, self.host, self.port)
+        return "%s://%s:%s/" % (self.protocol, self.host, self.port)
 
     def listdb(self):
         """Get the list of databases.
@@ -48,7 +48,6 @@ class RPCGateway(object):
 
     def execute(self, obj, method, *args):
         pass
-
 
 
 class RPCSession(object):
@@ -86,14 +85,14 @@ class RPCSession(object):
         self.open = True
         return uid
 
-
     def execute(self, obj, method, *args):
         try:
             result = self.gateway.execute(obj, method, *args)
             return self.__convert(result)
-        except Exception,e:
-          import traceback,sys
-          info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+        except Exception, e:
+            import traceback
+            import sys
+            info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
 
     def __convert(self, result):
 
@@ -120,14 +119,16 @@ class RPCSession(object):
         else:
             return result
 
+
 class XMLRPCGateway(RPCGateway):
     """XML-RPC implementation.
     """
+
     def __init__(self, host, port, protocol='http'):
 
         super(XMLRPCGateway, self).__init__(host, port, protocol)
         global rpc_url
-        rpc_url =  self.get_url() + 'xmlrpc/'
+        rpc_url = self.get_url() + 'xmlrpc/'
 
     def listdb(self):
         global rpc_url
@@ -146,8 +147,9 @@ class XMLRPCGateway(RPCGateway):
         try:
             res = sock.login(db, user, password)
         except Exception, e:
-            import traceback,sys
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+            import traceback
+            import sys
+            info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             return -1
 
         return res
@@ -157,8 +159,7 @@ class XMLRPCGateway(RPCGateway):
 
         sock = xmlrpclib.ServerProxy(rpc_url + 'object')
 
-        return sock.execute(sDatabase,UID,sPassword, obj ,method,*args)
-
+        return sock.execute(sDatabase, UID, sPassword, obj, method, *args)
 
 
 class NETRPCGateway(RPCGateway):
@@ -178,7 +179,7 @@ class NETRPCGateway(RPCGateway):
             return -1
 
     def login(self, db, user, password):
-        sock =  mysocket()
+        sock = mysocket()
         try:
             sock.connect(self.host, self.port)
             sock.mysend(('common', 'login', db, user, password))
@@ -187,20 +188,21 @@ class NETRPCGateway(RPCGateway):
         except Exception, e:
             return -1
         return res
-    def execute(self,obj, method, *args):
+
+    def execute(self, obj, method, *args):
         sock = mysocket()
         try:
             sock.connect(self.host, self.port)
-            data=(('object', 'execute',obj,method,)+args)
+            data = (('object', 'execute', obj, method,) + args)
             sock.mysend(data)
-            res=sock.myreceive()
+            res = sock.myreceive()
             sock.disconnect()
             return res
 
-        except Exception,e:
-            import traceback,sys
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-
+        except Exception, e:
+            import traceback
+            import sys
+            info = reduce(lambda x, y: x + y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

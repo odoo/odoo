@@ -20,25 +20,26 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class hr_timesheet_report(osv.osv):
     _inherit = "hr.timesheet.report"
     _columns = {
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
-        'nbr': fields.integer('# Nbr Timesheet',readonly=True),
-        'total_diff': fields.float('# Total Diff',readonly=True),
-        'total_timesheet': fields.float('# Total Timesheet',readonly=True),
-        'total_attendance': fields.float('# Total Attendance',readonly=True),
-        'department_id':fields.many2one('hr.department','Department',readonly=True),
-        'date_from': fields.date('Date from',readonly=True,),
-        'date_to': fields.date('Date to',readonly=True),
-        'state' : fields.selection([
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', readonly=True),
+        'nbr': fields.integer('# Nbr Timesheet', readonly=True),
+        'total_diff': fields.float('# Total Diff', readonly=True),
+        'total_timesheet': fields.float('# Total Timesheet', readonly=True),
+        'total_attendance': fields.float('# Total Attendance', readonly=True),
+        'department_id': fields.many2one('hr.department', 'Department', readonly=True),
+        'date_from': fields.date('Date from', readonly=True,),
+        'date_to': fields.date('Date to', readonly=True),
+        'state': fields.selection([
             ('new', 'New'),
-            ('draft','Draft'),
-            ('confirm','Confirmed'),
-            ('done','Done')], 'Status', readonly=True),
-        }
+            ('draft', 'Draft'),
+            ('confirm', 'Confirmed'),
+            ('done', 'Done')], 'Status', readonly=True),
+    }
 
     def _select(self):
         return super(hr_timesheet_report, self)._select() + """,

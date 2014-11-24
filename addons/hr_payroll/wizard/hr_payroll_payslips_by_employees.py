@@ -26,14 +26,15 @@ from dateutil import relativedelta
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_payslip_employees(osv.osv_memory):
 
-    _name ='hr.payslip.employees'
+    _name = 'hr.payslip.employees'
     _description = 'Generate payslips for all selected employees'
     _columns = {
         'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
     }
-    
+
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
@@ -45,7 +46,7 @@ class hr_payslip_employees(osv.osv_memory):
         run_data = {}
         if context and context.get('active_id', False):
             run_data = run_pool.read(cr, uid, [context['active_id']], ['date_start', 'date_end', 'credit_note'])[0]
-        from_date =  run_data.get('date_start', False)
+        from_date = run_data.get('date_start', False)
         to_date = run_data.get('date_end', False)
         credit_note = run_data.get('credit_note', False)
         if not data['employee_ids']:

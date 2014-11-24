@@ -21,8 +21,9 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
+
 
 class report_timesheet_task_user(osv.osv):
     _name = "report.timesheet.task.user"
@@ -34,8 +35,8 @@ class report_timesheet_task_user(osv.osv):
         for record in self.browse(cr, uid, ids, context):
             last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
             obj = self.pool.get('hr_timesheet_sheet.sheet.day')
-            sheet_ids = obj.search(cr, uid, [('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
-            data_days = obj.read(cr, uid, sheet_ids, ['name','sheet_id.user_id','total_attendance'])
+            sheet_ids = obj.search(cr, uid, [('sheet_id.user_id', '=', record.user_id.id), ('name', '>=', record.name), ('name', '<=', last_date.strftime('%Y-%m-%d'))])
+            data_days = obj.read(cr, uid, sheet_ids, ['name', 'sheet_id.user_id', 'total_attendance'])
             total = 0.0
             for day_attendance in data_days:
                 total += day_attendance['total_attendance']
@@ -45,11 +46,11 @@ class report_timesheet_task_user(osv.osv):
     _columns = {
         'name': fields.char('Date'),
         'year': fields.char('Year', size=4, required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, string="Timesheet Hours"),
-        'task_hrs' : fields.float('Task Hours'),
+        'task_hrs': fields.float('Task Hours'),
     }
 
     def init(self, cr):

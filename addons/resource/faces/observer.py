@@ -8,7 +8,7 @@
 #   mreithinger@web.de
 #
 #   This file is part of faces.
-#                                                                         
+#
 #   faces is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
@@ -37,6 +37,8 @@ This module contains the base class for all observer objects
 _is_source_ = True
 #@+others
 #@+node:class Observer
+
+
 class Observer(object):
     """
     Base Class for all charts and reports.
@@ -54,9 +56,8 @@ class Observer(object):
     visible = True
     link_view = True
 
-    __attrib_completions__ = { "visible" : 'visible = False',
-                               "link_view" : "link_view = False" }
-
+    __attrib_completions__ = {"visible": 'visible = False',
+                              "link_view": "link_view = False"}
 
     #@-node:<< declarations >>
     #@nl
@@ -73,7 +74,7 @@ class Observer(object):
 
 #@-node:class Observer
 #@-others
-factories = { }
+factories = {}
 clear_cache_funcs = {}
 #@-node:@file observer.py
 #@-leo

@@ -27,7 +27,7 @@ import openerp.addons.decimal_precision as dp
 class stock_return_picking(osv.osv_memory):
     _inherit = 'stock.return.picking'
     _columns = {
-        'invoice_state': fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], 'Invoicing',required=True),
+        'invoice_state': fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], 'Invoicing', required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -37,13 +37,11 @@ class stock_return_picking(osv.osv_memory):
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         if pick:
             if 'invoice_state' in fields:
-                if pick.invoice_state=='invoiced':
+                if pick.invoice_state == 'invoiced':
                     res.update({'invoice_state': '2binvoiced'})
                 else:
                     res.update({'invoice_state': 'none'})
         return res
-
-        
 
     def _create_returns(self, cr, uid, ids, context=None):
         if context is None:

@@ -3,7 +3,7 @@
 #   mreithinger@web.de
 #
 #   This file is part of faces.
-#                                                                         
+#
 #   faces is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
@@ -27,6 +27,7 @@ import os.path
 
 _call_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
 
+
 def get_installation_path():
     try:
         if sys.frozen:
@@ -36,7 +37,7 @@ def get_installation_path():
     except AttributeError:
         path = os.path.abspath(observer.__file__)
         path = os.path.split(path)[0]
-        
+
     path = os.path.normcase(path)
     return path
 
@@ -66,7 +67,7 @@ def get_template_path():
     except AttributeError:
         path = get_installation_path()
         path = os.path.join(path, "templates")
-        
+
     path = os.path.normcase(path)
     return path
 
@@ -85,20 +86,19 @@ def get_howtos_path():
     return path
 
 
-
 def flatten(items):
     if isinstance(items, tuple):
         items = list(items)
 
     if not isinstance(items, list):
         yield items
-    
+
     stack = [iter(items)]
     while stack:
         for item in stack[-1]:
             if isinstance(item, tuple):
                 item = list(item)
-            
+
             if isinstance(item, list):
                 stack.append(iter(item))
                 break
@@ -114,13 +114,13 @@ def do_yield():
 def progress_start(title, maximum, message=""):
     pass
 
+
 def progress_update(value, message=""):
     pass
 
+
 def progress_end():
     pass
-
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

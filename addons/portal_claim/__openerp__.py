@@ -30,7 +30,7 @@ This module adds claim menu and features to your portal if claim and portal are 
 ==========================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm_claim','portal'],
+    'depends': ['crm_claim', 'portal'],
     'data': [
         'portal_claim_view.xml',
         'security/ir.model.access.csv',

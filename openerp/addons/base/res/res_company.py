@@ -27,7 +27,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-  
+
+
 class multi_company_default(osv.osv):
     """
     Manage multi company default value
@@ -70,11 +71,12 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
+
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
-    
+
     def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
         """ Read the 'address' functional fields. """
         result = {}
@@ -108,7 +110,7 @@ class res_company(osv.osv):
             size = (180, None)
             result[record.id] = image_resize_image(record.partner_id.image, size)
         return result
-        
+
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
 
@@ -134,13 +136,13 @@ class res_company(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
-        'account_no':fields.char('Account No.'),
+        'account_no': fields.char('Account No.'),
         'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'),
         'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'),
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
         'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
-        'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
+        'bank_ids': fields.one2many('res.partner.bank', 'company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.related('partner_id', 'email', size=64, type='char', string="Email", store=True),
         'phone': fields.related('partner_id', 'phone', size=64, type='char', string="Phone", store=True),
@@ -160,11 +162,11 @@ class res_company(osv.osv):
 
         # first line (notice that missing elements are filtered out before the join)
         res = ' | '.join(filter(bool, [
-            phone            and '%s: %s' % (_('Phone'), phone),
-            fax              and '%s: %s' % (_('Fax'), fax),
-            email            and '%s: %s' % (_('Email'), email),
-            website          and '%s: %s' % (_('Website'), website),
-            vat              and '%s: %s' % (_('TIN'), vat),
+            phone and '%s: %s' % (_('Phone'), phone),
+            fax and '%s: %s' % (_('Fax'), fax),
+            email and '%s: %s' % (_('Email'), email),
+            website and '%s: %s' % (_('Website'), website),
+            vat and '%s: %s' % (_('TIN'), vat),
             company_registry and '%s: %s' % (_('Reg'), company_registry),
         ]))
         # second line: bank accounts
@@ -179,33 +181,33 @@ class res_company(osv.osv):
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
-            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
+            return {'value': {'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id}}
         return {}
-        
+
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
         """ To change default header style of all <para> and drawstring. """
 
-        def _change_header(header,font):
+        def _change_header(header, font):
             """ Replace default fontname use in header and setfont tag """
-            
-            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font, header)
-            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font, default_para)
-        
+
+            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"' % font, header)
+            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>' % font, default_para)
+
         if not font:
             return True
         fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name
-        return {'value':{
-                        'rml_header': _change_header(rml_header, fontname),
-                        'rml_header2':_change_header(rml_header2, fontname),
-                        'rml_header3':_change_header(rml_header3, fontname)
-                        }}
+        return {'value': {
+            'rml_header': _change_header(rml_header, fontname),
+            'rml_header2': _change_header(rml_header2, fontname),
+            'rml_header3': _change_header(rml_header3, fontname)
+        }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-            res['domain'] = {'state_id': [('country_id','=',country_id)]}
+            res['domain'] = {'state_id': [('country_id', '=', country_id)]}
         res['value'] = {'currency_id': currency_id}
         return res
 
@@ -245,7 +247,7 @@ class res_company(osv.osv):
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
-        ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
+        ids = self.search(cr, uid, [('parent_id', 'child_of', [company])])
         return ids
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context=None):
@@ -275,7 +277,7 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True, 'image': vals.get('logo', False)}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company': True, 'image': vals.get('logo', False)}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
@@ -292,12 +294,12 @@ class res_company(osv.osv):
         return rate_id and rate_obj.browse(cr, uid, rate_id[0], context=context).currency_id.id or False
 
     def _get_logo(self, cr, uid, ids):
-        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
+        return open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
     def _get_font(self, cr, uid, ids):
         font_obj = self.pool.get('res.font')
         res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
-        return res and res[0] or False       
+        return res and res[0] or False
 
     _header = """
 <header>
@@ -317,7 +319,7 @@ class res_company(osv.osv):
         <stroke color="#000000"/>
         <lines>%s</lines>
         <!-- Set here the default font to use for all <drawString> tags -->
-        <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
+        <!-- don't forget to change the 2 other occurence of <setFont> above if needed -->
         <setFont name="DejaVuSans" size="8"/>
     </pageGraphics>
 </pageTemplate>
@@ -327,8 +329,8 @@ class res_company(osv.osv):
 
     _header3 = _header % (786, 525, 25, 555, 440, 555, "25 550 818 550")
 
-    def _get_header(self,cr,uid,ids):
-        try :
+    def _get_header(self, cr, uid, ids):
+        try:
             header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
             try:
                 return header_file.read()
@@ -399,11 +401,11 @@ class res_company(osv.osv):
     _defaults = {
         'currency_id': _get_euro,
         'rml_paper_format': 'a4',
-        'rml_header':_get_header,
+        'rml_header': _get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,
-        'logo':_get_logo,
-        'font':_get_font,
+        'logo': _get_logo,
+        'font': _get_font,
     }
 
     _constraints = [

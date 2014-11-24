@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 
+
 class bid_line_qty(osv.osv_memory):
     _name = "bid.line.qty"
     _description = "Change Bid line quantity"

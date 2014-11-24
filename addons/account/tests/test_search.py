@@ -1,5 +1,6 @@
 from openerp.tests.common import TransactionCase
 
+
 class TestSearch(TransactionCase):
     """Tests for search on name_search (account.account)
 

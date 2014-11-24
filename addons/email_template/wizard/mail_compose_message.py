@@ -159,7 +159,7 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
         returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 

@@ -38,7 +38,7 @@ You have been given access to %(company)s's %(portal)s.
 Your login account data is:
   Username: %(login)s
   Portal: %(portal_url)s
-  Database: %(db)s 
+  Database: %(db)s
 
 You can set or change your password via the following url:
    %(signup_url)s
@@ -55,7 +55,6 @@ def extract_email(email):
     """ extract the email address from a user-friendly email address """
     addresses = email_split(email)
     return addresses[0] if addresses else ''
-
 
 
 class wizard(osv.osv_memory):
@@ -107,6 +106,7 @@ class wizard(osv.osv_memory):
         portal_user_ids = [user.id for user in wizard.user_ids]
         self.pool.get('portal.wizard.user').action_apply(cr, uid, portal_user_ids, context)
         return {'type': 'ir.actions.act_window_close'}
+
 
 class wizard_user(osv.osv_memory):
     """

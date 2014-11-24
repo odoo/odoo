@@ -6,7 +6,7 @@ This widget allows to display sparklines using jquery.sparkline library.
 """,
     'version': '1.0',
     'depends': ['web_kanban'],
-    'data' : [
+    'data': [
         'views/web_kanban_sparkline.xml',
     ],
     'qweb': [

@@ -32,35 +32,36 @@ class report_print_check(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'get_lines': self.get_lines,
-            'fill_stars' : self.fill_stars,
+            'fill_stars': self.fill_stars,
         })
 
     def fill_stars(self, amount):
         if len(amount) < 100:
             stars = 100 - len(amount)
-            return ' '.join([amount,'*'*stars])
+            return ' '.join([amount, '*' * stars])
 
-        else: return amount
+        else:
+            return amount
 
     def get_lines(self, voucher_lines):
         result = []
         self.number_lines = len(voucher_lines)
-        for i in range(0, min(10,self.number_lines)):
+        for i in range(0, min(10, self.number_lines)):
             if i < self.number_lines:
                 res = {
-                    'date_due' : voucher_lines[i].date_due,
-                    'name' : voucher_lines[i].name,
-                    'amount_original' : voucher_lines[i].amount_original and voucher_lines[i].amount_original or False,
-                    'amount_unreconciled' : voucher_lines[i].amount_unreconciled and voucher_lines[i].amount_unreconciled or False,
-                    'amount' : voucher_lines[i].amount and voucher_lines[i].amount or False,
+                    'date_due': voucher_lines[i].date_due,
+                    'name': voucher_lines[i].name,
+                    'amount_original': voucher_lines[i].amount_original and voucher_lines[i].amount_original or False,
+                    'amount_unreconciled': voucher_lines[i].amount_unreconciled and voucher_lines[i].amount_unreconciled or False,
+                    'amount': voucher_lines[i].amount and voucher_lines[i].amount or False,
                 }
-            else :
+            else:
                 res = {
-                    'date_due' : False,
-                    'name' : False,
-                    'amount_original' : False,
-                    'amount_due' : False,
-                    'amount' : False,
+                    'date_due': False,
+                    'name': False,
+                    'amount_original': False,
+                    'amount_due': False,
+                    'amount': False,
                 }
             result.append(res)
         return result

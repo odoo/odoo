@@ -25,6 +25,7 @@ from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
+
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
     Change wizard that a new account chart for a company.
@@ -56,16 +57,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             context = {}
         src = {}
         xlat_obj = self.pool.get('ir.translation')
-        #find the source from Account Template
+        # find the source from Account Template
         for x in in_obj.browse(cr, uid, in_ids):
             src.update({x.id: x.name})
         for lang in langs:
-            #find the value from Translation
+            # find the value from Translation
             value = xlat_obj._get_ids(cr, uid, in_obj._name + ',' + in_field, 'model', lang, in_ids)
             for j in range(len(in_ids)):
                 in_id = in_ids[j]
                 if value[in_id]:
-                    #copy Translation from Source to Destination object
+                    # copy Translation from Source to Destination object
                     xlat_obj.create(cr, uid, {
                         'name': out_obj._name + ',' + in_field,
                         'type': 'model',
@@ -75,7 +76,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'value': value[in_id],
                     })
                 else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
+                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, src[in_id]))  # out_obj._name))
         return True
 
     def execute(self, cr, uid, ids, context=None):
@@ -98,7 +99,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 if lang not in installed_langs:
                     # the language is not installed, so we don't need to load its translations
                     continue
-                else: 
+                else:
                     # the language was already installed, so the po files have been loaded at the installation time
                     # and now we need to copy the translations of templates to the right objects
                     langs.append(lang)

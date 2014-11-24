@@ -261,7 +261,7 @@ class base_gengo_translations(osv.osv_memory):
         try:
             offset = 0
             while True:
-                #search for the n first terms to translate
+                # search for the n first terms to translate
                 term_ids = all_term_ids[offset:offset + limit]
                 if term_ids:
                     offset += limit

@@ -16,6 +16,8 @@ from openerp.tools.translate import _
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
+
+
 class ir_import(orm.TransientModel):
     _name = 'base_import.import'
     # allow imports to survive for 12h in case user is slow
@@ -98,7 +100,7 @@ class ir_import(orm.TransientModel):
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
                            for attr, value in itertools.chain.from_iterable(
-                                states.itervalues())):
+                               states.itervalues())):
                     continue
 
             f = {
@@ -117,9 +119,9 @@ class ir_import(orm.TransientModel):
                 ]
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
-                    cr, uid, field['relation'], context=context, depth=depth-1)
+                    cr, uid, field['relation'], context=context, depth=depth - 1)
                 if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
-                    f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
+                    f['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
 
             fields.append(f)
 
@@ -173,7 +175,8 @@ class ir_import(orm.TransientModel):
             # readability of paths
             match = self._match_header(section.strip(), subfields, options)
             # Any match failure, exit
-            if not match: return []
+            if not match:
+                return []
             # prep subfields for next iteration within match[0]
             field = match[0]
             subfields = field['fields']
@@ -250,7 +253,7 @@ class ir_import(orm.TransientModel):
                 # in case of UnicodeDecodeError (or csv.Error
                 # compounded with UnicodeDecodeError)
                 'preview': record.file[:ERROR_PREVIEW_BYTES]
-                                .decode( 'iso-8859-1'),
+                .decode('iso-8859-1'),
             }
 
     def _convert_import_data(self, record, fields, options, context=None):
@@ -271,8 +274,10 @@ class ir_import(orm.TransientModel):
             raise ValueError(_("You must configure at least one field to import"))
         # If only one index, itemgetter will return an atom rather
         # than a 1-tuple
-        if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
-        else: mapper = operator.itemgetter(*indices)
+        if len(indices) == 1:
+            mapper = lambda row: [row[indices[0]]]
+        else:
+            mapper = operator.itemgetter(*indices)
         # Get only list of actually imported fields
         import_fields = filter(None, fields)
 

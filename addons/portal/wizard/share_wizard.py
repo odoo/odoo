@@ -28,6 +28,7 @@ UID_ROOT = 1
 SHARED_DOCS_MENU = "Documents"
 SHARED_DOCS_CHILD_MENU = "Shared Documents"
 
+
 class share_wizard_portal(osv.TransientModel):
     """Inherited share wizard to automatically create appropriate
        menus in the selected portal upon sharing with a portal group."""
@@ -35,8 +36,8 @@ class share_wizard_portal(osv.TransientModel):
 
     def _user_type_selection(self, cr, uid, context=None):
         selection = super(share_wizard_portal, self)._user_type_selection(cr, uid, context=context)
-        selection.extend([('existing',_('Users you already shared with')),
-                          ('groups',_('Existing Groups (e.g Portal Groups)'))])
+        selection.extend([('existing', _('Users you already shared with')),
+                          ('groups', _('Existing Groups (e.g Portal Groups)'))])
         return selection
 
     _columns = {
@@ -48,18 +49,18 @@ class share_wizard_portal(osv.TransientModel):
         if wizard_data.user_type == 'existing':
             self._assert(wizard_data.user_ids,
                      _('Please select at least one user to share with'),
-                     context=context)
+                context=context)
         elif wizard_data.user_type == 'groups':
             self._assert(wizard_data.group_ids,
                      _('Please select at least one group to share with'),
-                     context=context)
+                context=context)
         return super(share_wizard_portal, self)._check_preconditions(cr, uid, wizard_data, context=context)
 
     def _create_or_get_submenu_named(self, cr, uid, parent_menu_id, menu_name, context=None):
         if not parent_menu_id:
             return
         Menus = self.pool.get('ir.ui.menu')
-        parent_menu = Menus.browse(cr, uid, parent_menu_id) # No context
+        parent_menu = Menus.browse(cr, uid, parent_menu_id)  # No context
         menu_id = None
         max_seq = 10
         for child_menu in parent_menu.child_id:
@@ -70,9 +71,9 @@ class share_wizard_portal(osv.TransientModel):
         if not menu_id:
             # not found, create it
             menu_id = Menus.create(cr, UID_ROOT,
-                                    {'name': menu_name,
-                                     'parent_id': parent_menu.id,
-                                     'sequence': max_seq + 10, # at the bottom
+                                   {'name': menu_name,
+                                    'parent_id': parent_menu.id,
+                                    'sequence': max_seq + 10,  # at the bottom
                                     })
         return menu_id
 
@@ -101,10 +102,10 @@ class share_wizard_portal(osv.TransientModel):
         action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, action_def)
         menu_data = {'name': action_def['name'],
                      'sequence': 10,
-                     'action': 'ir.actions.act_window,'+str(action_id),
+                     'action': 'ir.actions.act_window,' + str(action_id),
                      'parent_id': root_menu_id,
                      'icon': 'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.pool.get('ir.ui.menu').create(cr, UID_ROOT, menu_data)
+        menu_id = self.pool.get('ir.ui.menu').create(cr, UID_ROOT, menu_data)
         return menu_id
 
     def _create_share_users_group(self, cr, uid, wizard_data, context=None):
@@ -113,7 +114,7 @@ class share_wizard_portal(osv.TransientModel):
         # In both cases, we call super() to create the share group, but when
         # sharing with existing groups, we will later delete it, and copy its
         # access rights and rules to the selected groups.
-        super_result = super(share_wizard_portal,self)._create_share_users_group(cr, uid, wizard_data, context=context)
+        super_result = super(share_wizard_portal, self)._create_share_users_group(cr, uid, wizard_data, context=context)
 
         # For sharing with existing groups, we don't create a share group, instead we'll
         # alter the rules of the groups so they can see the shared data
@@ -131,7 +132,7 @@ class share_wizard_portal(osv.TransientModel):
                 for user in group.users:
                     new_line = {'user_id': user.id,
                                 'newly_created': False}
-                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                    wizard_data.write({'result_line_ids': [(0, 0, new_line)]})
 
         elif wizard_data.user_ids:
             # must take care of existing users, by adding them to the new group, which is super_result[0],
@@ -141,16 +142,17 @@ class share_wizard_portal(osv.TransientModel):
             self._setup_action_and_shortcut(cr, uid, wizard_data, selected_user_ids, make_home=False, context=context)
             # populate the result lines for existing users too
             for user in wizard_data.user_ids:
-                new_line = { 'user_id': user.id,
-                             'newly_created': False}
-                wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                new_line = {'user_id': user.id,
+                            'newly_created': False}
+                wizard_data.write({'result_line_ids': [(0, 0, new_line)]})
 
         return super_result
 
     def copy_share_group_access_and_delete(self, cr, wizard_data, share_group_id, context=None):
         # In the case of sharing with existing groups, the strategy is to copy
         # access rights and rules from the share group, so that we can
-        if not wizard_data.group_ids: return
+        if not wizard_data.group_ids:
+            return
         Groups = self.pool.get('res.groups')
         Rules = self.pool.get('ir.rule')
         Rights = self.pool.get('ir.model.access')
@@ -160,7 +162,7 @@ class share_wizard_portal(osv.TransientModel):
             # Link the rules to the group. This is appropriate because as of
             # v6.1, the algorithm for combining them will OR the rules, hence
             # extending the visible data.
-            Rules.write(cr, UID_ROOT, share_rule_ids, {'groups': [(4,target_group.id)]})
+            Rules.write(cr, UID_ROOT, share_rule_ids, {'groups': [(4, target_group.id)]})
             _logger.debug("Linked sharing rules from temporary sharing group to group %s", target_group)
 
             # Copy the access rights. This is appropriate too because
@@ -171,14 +173,13 @@ class share_wizard_portal(osv.TransientModel):
             _logger.debug("Copied access rights from temporary sharing group to group %s", target_group)
 
         # finally, delete it after removing its users
-        Groups.write(cr, UID_ROOT, [share_group_id], {'users': [(6,0,[])]})
+        Groups.write(cr, UID_ROOT, [share_group_id], {'users': [(6, 0, [])]})
         Groups.unlink(cr, UID_ROOT, [share_group_id])
         _logger.debug("Deleted temporary sharing group %s", share_group_id)
 
     def _finish_result_lines(self, cr, uid, wizard_data, share_group_id, context=None):
-        super(share_wizard_portal,self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)
+        super(share_wizard_portal, self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)
         self.copy_share_group_access_and_delete(cr, wizard_data, share_group_id, context=context)
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

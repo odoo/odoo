@@ -22,12 +22,14 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
+
 class product_style(osv.Model):
     _name = "product.style"
     _columns = {
-        'name' : fields.char('Style Name', required=True),
+        'name': fields.char('Style Name', required=True),
         'html_class': fields.char('HTML Classes'),
     }
+
 
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
@@ -48,12 +50,12 @@ class product_public_category(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
@@ -73,7 +75,7 @@ class product_public_category(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
+        'parent_id': fields.many2one('product.public.category', 'Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
 
@@ -88,18 +90,19 @@ class product_public_category(osv.osv):
             store={
                 'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
+            help="Medium-sized image of the category. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved. "
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized image", type="binary", multi="_get_image",
             store={
                 'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized image of the category. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
     }
+
 
 class product_template(osv.Model):
     _inherit = ["product.template", "website.seo.metadata"]
@@ -124,8 +127,8 @@ class product_template(osv.Model):
         ),
         'website_published': fields.boolean('Available in the website', copy=False),
         'website_description': fields.html('Description for the website', translate=True),
-        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
-        'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
+        'alternative_product_ids': fields.many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id', string='Alternative Products', help='Appear on the product page'),
+        'accessory_product_ids': fields.many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('product.style', string='Styles'),
@@ -154,7 +157,7 @@ class product_template(osv.Model):
     def set_sequence_bottom(self, cr, uid, ids, context=None):
         cr.execute('SELECT MIN(website_sequence) FROM product_template')
         min_sequence = cr.fetchone()[0] or 0
-        return self.write(cr, uid, ids, {'website_sequence': min_sequence -1}, context=context)
+        return self.write(cr, uid, ids, {'website_sequence': min_sequence - 1}, context=context)
 
     def set_sequence_up(self, cr, uid, ids, context=None):
         product = self.browse(cr, uid, ids[0], context=context)
@@ -178,6 +181,7 @@ class product_template(osv.Model):
         else:
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
+
 class product_product(osv.Model):
     _inherit = "product.product"
 
@@ -191,6 +195,7 @@ class product_product(osv.Model):
         'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
 
+
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
@@ -199,6 +204,7 @@ class product_attribute(osv.Model):
     _defaults = {
         'type': lambda *a: 'radio',
     }
+
 
 class product_attribute_value(osv.Model):
     _inherit = "product.attribute.value"

@@ -2,6 +2,7 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
 
+
 class ir_configparameter(osv.Model):
     _inherit = 'ir.config_parameter'
 

@@ -31,6 +31,7 @@ from openerp.tools.translate import _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
+
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
         return self._get_current_rate(cr, uid, ids, context=context)
@@ -47,7 +48,7 @@ class res_currency(osv.osv):
         for id in ids:
             cr.execute('SELECT rate FROM res_currency_rate '
                        'WHERE currency_id = %s '
-                         'AND name <= %s '
+                       'AND name <= %s '
                        'ORDER BY name desc LIMIT 1',
                        (id, date))
             if cr.rowcount:
@@ -56,7 +57,7 @@ class res_currency(osv.osv):
                 res[id] = 0
             else:
                 currency = self.browse(cr, uid, id, context=context)
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
+                raise osv.except_osv(_('Error!'), _("No currency rate associated for currency '%s' for the given period" % (currency.name)))
         return res
 
     _name = "res.currency"
@@ -65,23 +66,23 @@ class res_currency(osv.osv):
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=3, required=True, help="Currency Code (ISO 4217)"),
         'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
-        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
+        'rate': fields.function(_current_rate, string='Current Rate', digits=(12, 6),
             help='The rate of the currency to the currency of rate 1.'),
 
         # Do not use for computation ! Same as rate field with silent failing
-        'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
+        'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12, 6),
             help='The rate of the currency to the currency of rate 1 (0 if no rate defined).'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
-        'rounding': fields.float('Rounding Factor', digits=(12,6)),
+        'rounding': fields.float('Rounding Factor', digits=(12, 6)),
         'active': fields.boolean('Active'),
-        'company_id':fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company'),
         'base': fields.boolean('Base'),
-        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
+        'position': fields.selection([('after', 'After Amount'), ('before', 'Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
-        'position' : 'after',
+        'position': 'after',
         'rounding': 0.01,
         'accuracy': 4,
         'company_id': False,
@@ -96,11 +97,11 @@ class res_currency(osv.osv):
     _order = "name"
 
     def init(self, cr):
-        # CONSTRAINT/UNIQUE INDEX on (name,company_id) 
+        # CONSTRAINT/UNIQUE INDEX on (name,company_id)
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
         # only support field names in constraint definitions, and we need a function here:
         # we need to special-case company_id to treat all NULL company_id as equal, otherwise
-        # we would allow duplicate "global" currencies (all having company_id == NULL) 
+        # we would allow duplicate "global" currencies (all having company_id == NULL)
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_currency_unique_name_company_id_idx'""")
         if not cr.fetchone():
             cr.execute("""CREATE UNIQUE INDEX res_currency_unique_name_company_id_idx
@@ -117,12 +118,12 @@ class res_currency(osv.osv):
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        results = super(res_currency,self)\
+        results = super(res_currency, self)\
             .name_search(cr, user, name, args, operator=operator, context=context, limit=limit)
         if not results:
             name_match = CURRENCY_DISPLAY_PATTERN.match(name)
             if name_match:
-                results = super(res_currency,self)\
+                results = super(res_currency, self)\
                     .name_search(cr, user, name_match.group(1), args, operator=operator, context=context, limit=limit)
         return results
 
@@ -131,7 +132,7 @@ class res_currency(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name', 'symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
     @api.v8
@@ -192,7 +193,7 @@ class res_currency(osv.osv):
         """ Return true if `amount` is small enough to be treated as zero
             according to currency `self`'s rounding rules.
 
-            Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
+            Warning: ``is_zero(amount1-amount2)`` is not always equivalent to
             ``compare_amounts(amount1,amount2) == 0``, as the former will round
             after computing the difference, while the latter will round before,
             giving different results, e.g., 0.006 and 0.002 at 2 digits precision.
@@ -204,7 +205,7 @@ class res_currency(osv.osv):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to ``currency``'s rounding rules.
 
-           Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
+           Warning: ``is_zero(amount1-amount2)`` is not always equivalent to
            ``compare_amounts(amount1,amount2) == 0``, as the former will round after
            computing the difference, while the latter will round before, giving
            different results for e.g. 0.006 and 0.002 at 2 digits precision.
@@ -227,10 +228,10 @@ class res_currency(osv.osv):
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
-            raise osv.except_osv(_('Error'), _('No rate found \n' \
-                    'for the currency: %s \n' \
+            raise osv.except_osv(_('Error'), _('No rate found \n'
+                    'for the currency: %s \n'
                     'at the date: %s') % (currency_symbol, date))
-        return to_currency.rate/from_currency.rate
+        return to_currency.rate / from_currency.rate
 
     def _compute(self, cr, uid, from_currency, to_currency, from_amount, round=True, context=None):
         if (to_currency.id == from_currency.id):
@@ -253,7 +254,7 @@ class res_currency(osv.osv):
             from_currency_id = to_currency_id
         if not to_currency_id:
             to_currency_id = from_currency_id
-        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
+        xc = self.browse(cr, uid, [from_currency_id, to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
         return self._compute(cr, uid, from_currency, to_currency, from_amount, round, context)
@@ -286,6 +287,7 @@ class res_currency(osv.osv):
                 return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
             function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
         return function
+
 
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"

@@ -56,8 +56,8 @@ class product_product(osv.osv):
             else:
                 company_id = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
 
-            #Cost price is calculated afterwards as it is a property
-            sqlstr="""select
+            # Cost price is calculated afterwards as it is a property
+            sqlstr = """select
                     sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor,0)) as avg_unit_price,
                     sum(l.quantity * pu.factor / pu2.factor) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
@@ -77,7 +77,7 @@ class product_product(osv.osv):
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
             res[val.id]['turnover'] = result[2] and result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
-            res[val.id]['sales_gap'] = res[val.id]['sale_expected']-res[val.id]['turnover']
+            res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
             prod_obj = self.pool.get("product.product")
             ctx = context.copy()
             ctx['force_company'] = company_id
@@ -105,35 +105,35 @@ class product_product(osv.osv):
         'date_from': fields.function(_product_margin, type='date', string='Margin Date From', multi='product_margin'),
         'date_to': fields.function(_product_margin, type='date', string='Margin Date To', multi='product_margin'),
         'invoice_state': fields.function(_product_margin, type='selection', selection=[
-                ('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid')
-            ], string='Invoice State',multi='product_margin', readonly=True),
-        'sale_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
+            ('paid', 'Paid'), ('open_paid', 'Open and Paid'), ('draft_open_paid', 'Draft, Open and Paid')
+        ], string='Invoice State', multi='product_margin', readonly=True),
+        'sale_avg_price': fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Customer Invoices."),
-        'purchase_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
+        'purchase_avg_price': fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Supplier Invoices "),
-        'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Sale', multi='product_margin',
+        'sale_num_invoiced': fields.function(_product_margin, type='float', string='# Invoiced in Sale', multi='product_margin',
             help="Sum of Quantity in Customer Invoices"),
-        'purchase_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Purchase', multi='product_margin',
+        'purchase_num_invoiced': fields.function(_product_margin, type='float', string='# Invoiced in Purchase', multi='product_margin',
             help="Sum of Quantity in Supplier Invoices"),
-        'sales_gap' : fields.function(_product_margin, type='float', string='Sales Gap', multi='product_margin',
+        'sales_gap': fields.function(_product_margin, type='float', string='Sales Gap', multi='product_margin',
             help="Expected Sale - Turn Over"),
-        'purchase_gap' : fields.function(_product_margin, type='float', string='Purchase Gap', multi='product_margin',
+        'purchase_gap': fields.function(_product_margin, type='float', string='Purchase Gap', multi='product_margin',
             help="Normal Cost - Total Cost"),
-        'turnover' : fields.function(_product_margin, type='float', string='Turnover' ,multi='product_margin',
+        'turnover': fields.function(_product_margin, type='float', string='Turnover', multi='product_margin',
             help="Sum of Multiplication of Invoice price and quantity of Customer Invoices"),
-        'total_cost'  : fields.function(_product_margin, type='float', string='Total Cost', multi='product_margin',
+        'total_cost': fields.function(_product_margin, type='float', string='Total Cost', multi='product_margin',
             help="Sum of Multiplication of Invoice price and quantity of Supplier Invoices "),
-        'sale_expected' :  fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
+        'sale_expected': fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
             help="Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"),
-        'normal_cost'  : fields.function(_product_margin, type='float', string='Normal Cost', multi='product_margin',
+        'normal_cost': fields.function(_product_margin, type='float', string='Normal Cost', multi='product_margin',
             help="Sum of Multiplication of Cost price and quantity of Supplier Invoices"),
-        'total_margin' : fields.function(_product_margin, type='float', string='Total Margin', multi='product_margin',
+        'total_margin': fields.function(_product_margin, type='float', string='Total Margin', multi='product_margin',
             help="Turnover - Standard price"),
-        'expected_margin' : fields.function(_product_margin, type='float', string='Expected Margin', multi='product_margin',
+        'expected_margin': fields.function(_product_margin, type='float', string='Expected Margin', multi='product_margin',
             help="Expected Sale - Normal Cost"),
-        'total_margin_rate' : fields.function(_product_margin, type='float', string='Total Margin Rate(%)', multi='product_margin',
+        'total_margin_rate': fields.function(_product_margin, type='float', string='Total Margin Rate(%)', multi='product_margin',
             help="Total margin * 100 / Turnover"),
-        'expected_margin_rate' : fields.function(_product_margin, type='float', string='Expected Margin (%)', multi='product_margin',
+        'expected_margin_rate': fields.function(_product_margin, type='float', string='Expected Margin (%)', multi='product_margin',
             help="Expected margin * 100 / Expected Sale"),
     }
 

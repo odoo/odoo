@@ -25,8 +25,8 @@
     'version': '1.8',
     'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
-    'maintainer':'jeff@osbzr.com',
-    'website':'http://openerp-china.org',
+    'maintainer': 'jeff@osbzr.com',
+    'website': 'http://openerp-china.org',
     'description': """
 
     科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
@@ -34,9 +34,9 @@
     添加中文省份数据
 
     增加小企业会计科目表
-    
+
     """,
-    'depends': ['base','account'],
+    'depends': ['base', 'account'],
     'demo': [],
     'data': [
         'account_tax.xml',
@@ -49,7 +49,7 @@
     'license': 'GPL-3',
     'auto_install': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_cn.jpeg','images/l10n_cn_chart.jpeg'],
+    'images': ['images/config_chart_l10n_cn.jpeg', 'images/l10n_cn_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

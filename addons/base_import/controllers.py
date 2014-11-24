@@ -3,6 +3,7 @@ import simplejson
 
 from openerp.http import Controller, route
 
+
 class ImportController(Controller):
     @route('/base_import/set_file')
     def set_file(self, req, file, import_id, jsonp='callback'):

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class project_configuration(osv.osv_memory):
     _name = 'project.config.settings'
     _inherit = 'res.config.settings'

@@ -22,11 +22,12 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_open_closed_fiscalyear(osv.osv_memory):
     _name = "account.open.closed.fiscalyear"
     _description = "Choose Fiscal Year"
     _columns = {
-       'fyear_id': fields.many2one('account.fiscalyear', \
+       'fyear_id': fields.many2one('account.fiscalyear',
                                  'Fiscal Year', required=True, help='Select Fiscal Year which you want to remove entries for its End of year entries journal'),
     }
 
@@ -38,7 +39,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         if not period_journal:
             raise osv.except_osv(_('Error!'), _("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
 
-        ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
+        ids_move = move_obj.search(cr, uid, [('journal_id', '=', period_journal.journal_id.id), ('period_id', '=', period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
             self.invalidate_cache(cr, uid, context=context)

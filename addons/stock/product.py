@@ -24,17 +24,18 @@ from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 
+
 class product_product(osv.osv):
     _inherit = "product.product"
-        
+
     def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
-        move_pool=self.pool.get('stock.move')
+        move_pool = self.pool.get('stock.move')
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
             ('location_id.usage', '!=', 'internal'),
             ('location_dest_id.usage', '=', 'internal'),
-            ('state','in',('confirmed','assigned','pending'))
+            ('state', 'in', ('confirmed', 'assigned', 'pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
@@ -43,7 +44,7 @@ class product_product(osv.osv):
             ('product_id', 'in', ids),
             ('location_id.usage', '=', 'internal'),
             ('location_dest_id.usage', '!=', 'internal'),
-            ('state','in',('confirmed','assigned','pending'))
+            ('state', 'in', ('confirmed', 'assigned', 'pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
@@ -54,9 +55,10 @@ class product_product(osv.osv):
         if context is None:
             context = {}
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
-        if res: return res
+        if res:
+            return res
         if (context.get('active_id', False)) and (context.get('active_model') == 'stock.location'):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
+            return _('Products: ') + self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
     def _get_domain_locations(self, cr, uid, ids, context=None):
@@ -72,10 +74,10 @@ class product_product(osv.osv):
 
         location_ids = []
         if context.get('location', False):
-            if type(context['location']) == type(1):
+            if isinstance(context['location'], type(1)):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
-                domain = [('complete_name','ilike',context['location'])]
+                domain = [('complete_name', 'ilike', context['location'])]
                 if context.get('force_company', False):
                     domain += [('company_id', '=', context['force_company'])]
                 location_ids = location_obj.search(cr, uid, domain, context=context)
@@ -149,7 +151,7 @@ class product_product(osv.osv):
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
         res = []
         for field, operator, value in domain:
-            #to prevent sql injections
+            # to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
             assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
@@ -160,8 +162,8 @@ class product_product(osv.osv):
             product_ids = self.search(cr, uid, [], context=context)
             ids = []
             if product_ids:
-                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
-                #the context that can be set with a location, an owner...
+                # TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
+                # the context that can be set with a location, an owner...
                 for element in self.browse(cr, uid, product_ids, context=context):
                     if eval(str(element[field]) + operator + str(value)):
                         ids.append(element.id)
@@ -171,7 +173,7 @@ class product_product(osv.osv):
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
+            res[product.id] = str(product.qty_available) + _(" On Hand")
         return res
 
     _columns = {
@@ -235,12 +237,12 @@ class product_product(osv.osv):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(product_product, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if context is None:
             context = {}
         if ('location' in context) and context['location']:
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
-            fields=res.get('fields',{})
+            fields = res.get('fields', {})
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
@@ -277,16 +279,16 @@ class product_product(osv.osv):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
-
     def action_view_routes(self, cr, uid, ids, context=None):
         template_obj = self.pool.get("product.template")
         templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
         return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
 
+
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
-    
+
     def _product_available(self, cr, uid, ids, name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for product in self.browse(cr, uid, ids, context=context):
@@ -304,7 +306,7 @@ class product_template(osv.osv):
         prod = self.pool.get("product.product")
         res = []
         for field, operator, value in domain:
-            #to prevent sql injections
+            # to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
             assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
@@ -315,22 +317,19 @@ class product_template(osv.osv):
             product_ids = prod.search(cr, uid, [], context=context)
             ids = []
             if product_ids:
-                #TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
-                #the context that can be set with a location, an owner...
+                # TODO: use a query instead of this browse record which is probably making the too much requests, but don't forget
+                # the context that can be set with a location, an owner...
                 for element in prod.browse(cr, uid, product_ids, context=context):
                     if eval(str(element[field]) + operator + str(value)):
                         ids.append(element.id)
             res.append(('product_variant_ids', 'in', ids))
         return res
 
-
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = str(product.qty_available) +  _(" On Hand")
+            res[product.id] = str(product.qty_available) + _(" On Hand")
         return res
-
-
 
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
@@ -339,19 +338,19 @@ class product_template(osv.osv):
             type='many2one',
             relation='stock.location',
             string="Procurement Location",
-            domain=[('usage','like','procurement')],
+            domain=[('usage', 'like', 'procurement')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated by procurements."),
         'property_stock_production': fields.property(
             type='many2one',
             relation='stock.location',
             string="Production Location",
-            domain=[('usage','like','production')],
+            domain=[('usage', 'like', 'production')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders."),
         'property_stock_inventory': fields.property(
             type='many2one',
             relation='stock.location',
             string="Inventory Location",
-            domain=[('usage','like','inventory')],
+            domain=[('usage', 'like', 'inventory')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."),
         'sale_delay': fields.float('Customer Lead Time', help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'loc_rack': fields.char('Rack', size=16),
@@ -360,7 +359,7 @@ class product_template(osv.osv):
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'track_all': fields.boolean('Full Lots Traceability', help="Forces to specify a Serial Number on each and every operation related to this product"),
-        
+
         # sum of product variant qty
         # 'reception_count': fields.function(_product_available, multi='qty_available',
         #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
@@ -374,7 +373,7 @@ class product_template(osv.osv):
             fnct_search=_search_product_quantity, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
-        
+
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
     }
@@ -397,27 +396,26 @@ class product_template(osv.osv):
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
 
-
     def _get_products(self, cr, uid, ids, context=None):
         products = []
         for prodtmpl in self.browse(cr, uid, ids, context=None):
             products += [x.id for x in prodtmpl.product_variant_ids]
         return products
-    
+
     def _get_act_window_dict(self, cr, uid, name, context=None):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj.xmlid_to_res_id(cr, uid, name, raise_if_not_found=True)
         result = act_obj.read(cr, uid, [result], context=context)[0]
         return result
-    
+
     def action_open_quants(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
         result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
         result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
         return result
-    
+
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
@@ -427,7 +425,6 @@ class product_template(osv.osv):
             result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
             result['context'] = "{}"
         return result
-
 
     def action_view_stock_moves(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)

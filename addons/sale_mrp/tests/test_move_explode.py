@@ -34,26 +34,26 @@ class TestMoveExplode(common.TransactionCase):
         self.sale_order = self.registry('sale.order')
         self.mrp_bom = self.registry('mrp.bom')
 
-        #product that has a phantom bom
+        # product that has a phantom bom
         self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_3')[1]
-        #bom with that product
+        # bom with that product
         self.bom_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_9')[1]
-        #partner agrolait
+        # partner agrolait
         self.partner_id = self.ir_model_data.get_object_reference(cr, uid, 'base', 'res_partner_1')[1]
 
     def test_00_sale_move_explode(self):
-        """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the 
+        """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the
             BoM"""
         cr, uid, context = self.cr, self.uid, {}
-        #create sale order with one sale order line containing product with a phantom bom
+        # create sale order with one sale order line containing product with a phantom bom
         so_id = self.sale_order.create(cr, uid, vals={'partner_id': self.partner_id}, context=context)
         self.sale_order_line.create(cr, uid, values={'order_id': so_id, 'product_id': self.product_bom_id, 'product_uom_qty': 1}, context=context)
-        #confirm sale order
+        # confirm sale order
         self.sale_order.action_button_confirm(cr, uid, [so_id], context=context)
-        #get all move associated to that sale_order
+        # get all move associated to that sale_order
         browse_move_ids = self.sale_order.browse(cr, uid, so_id, context=context).picking_ids[0].move_lines
         move_ids = [x.id for x in browse_move_ids]
-        #we should have same amount of move as the component in the phatom bom
+        # we should have same amount of move as the component in the phatom bom
         bom = self.mrp_bom.browse(cr, uid, self.bom_id, context=context)
         bom_component_length = self.mrp_bom._bom_explode(cr, uid, bom, self.product_bom_id, 1, [])
         self.assertEqual(len(move_ids), len(bom_component_length[0]))

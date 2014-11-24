@@ -21,10 +21,10 @@
 
 
 {
-    'name' : 'Knowledge Management System',
-    'version' : '1.0',
-    'depends' : ['base','base_setup'],
-    'author' : 'OpenERP SA',
+    'name': 'Knowledge Management System',
+    'version': '1.0',
+    'depends': ['base', 'base_setup'],
+    'author': 'OpenERP SA',
     'category': 'Hidden/Dependency',
     'description': """
 Installer for knowledge-based Hidden.

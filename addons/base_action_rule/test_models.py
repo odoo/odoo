@@ -9,6 +9,7 @@ AVAILABLE_STATES = [
     ('done', 'Closed')
 ]
 
+
 class lead_test(osv.Model):
     _name = "base.action.rule.lead.test"
 
@@ -22,8 +23,8 @@ class lead_test(osv.Model):
     }
 
     _defaults = {
-        'state' : 'draft',
-        'active' : True,
+        'state': 'draft',
+        'active': True,
     }
 
     @api.cr_uid_ids_context

@@ -39,8 +39,7 @@ class TestMrpMulticompany(common.TransactionCase):
         self.multicompany_user_id = self.res_users.create(cr, uid,
             {'name': 'multicomp', 'login': 'multicomp',
              'groups_id': [(6, 0, [group_user_id, group_stock_manager_id])],
-             'company_id': company_2_id, 'company_ids': [(6,0,[company_2_id])]})
-
+             'company_id': company_2_id, 'company_ids': [(6, 0, [company_2_id])]})
 
     def test_00_multicompany_user(self):
         """check no error on getting default mrp.production values in multicompany setting"""

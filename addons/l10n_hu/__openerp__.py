@@ -33,12 +33,12 @@ This module consists :
  - Generic Hungarian chart of accounts
  - Hungarian taxes
  - Hungarian Bank information
- 
+
  """,
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',
     'license': 'AGPL-3',
-    'depends': ['account','account_chart'],
+    'depends': ['account', 'account_chart'],
     'data': [
         'data/account.account.template.csv',
         'data/account.tax.code.template.csv',

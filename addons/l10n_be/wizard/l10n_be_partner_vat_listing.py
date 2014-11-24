@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp.report import report_sxw
 
+
 class vat_listing_clients(osv.osv_memory):
     _name = 'vat.listing.clients'
     _columns = {
@@ -50,7 +51,7 @@ class partner_vat(osv.osv_memory):
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
         obj_module = self.pool.get('ir.module.module')
-        data  = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids)[0]
         year = data['year']
         date_start = year + '-01-01'
         date_stop = year + '-12-31'
@@ -58,14 +59,14 @@ class partner_vat(osv.osv_memory):
             company_id = context['company_id']
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
+        period_ids = obj_period.search(cr, uid, [('date_start', '>=', date_start), ('date_stop', '<=', date_stop), ('company_id', '=', company_id)])
         if not period_ids:
-             raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
 
         partners = []
-        partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
+        partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat', 'ilike', 'BE%')], context=context)
         if not partner_ids:
-             raise osv.except_osv(_('Error'),_('No belgium contact with a VAT number in your database.'))
+            raise osv.except_osv(_('Error'), _('No belgium contact with a VAT number in your database.'))
         cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
                 FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
                       FROM account_move_line l
@@ -82,24 +83,24 @@ class partner_vat(osv.osv_memory):
                       AND l2.partner_id IN %s
                       AND l2.period_id IN %s
                       GROUP BY l2.partner_id) AS sub2 ON sub1.partner_id = sub2.partner_id
-                    """,(tuple(partner_ids),tuple(period_ids),tuple(partner_ids),tuple(period_ids)))
+                    """, (tuple(partner_ids), tuple(period_ids), tuple(partner_ids), tuple(period_ids)))
         for record in cr.dictfetchall():
-            record['vat'] = record['vat'].replace(' ','').upper()
+            record['vat'] = record['vat'].replace(' ', '').upper()
             if record['turnover'] >= data['limit_amount']:
                 id_client = obj_vat_lclient.create(cr, uid, record, context=context)
                 partners.append(id_client)
-        
+
         if not partners:
             raise osv.except_osv(_('Insufficient Data!'), _('No data found for the selected year.'))
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
-        model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
+        model_data_ids = obj_model_data.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_vat_listing')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
             'name': _('Vat Listing'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'partner.vat.list',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'context': context,
             'type': 'ir.actions.act_window',
             'target': 'new',
@@ -110,8 +111,8 @@ class partner_vat(osv.osv_memory):
         'limit_amount': fields.integer('Limit Amount', required=True),
     }
 
-    _defaults={
-        'year': lambda *a: str(int(time.strftime('%Y'))-1),
+    _defaults = {
+        'year': lambda *a: str(int(time.strftime('%Y')) - 1),
         'limit_amount': 250,
     }
 
@@ -122,14 +123,14 @@ class partner_vat_list(osv.osv_memory):
     _columns = {
         'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', help='You can remove clients/partners which you do not want to show in xml file'),
         'name': fields.char('File Name'),
-        'file_save' : fields.binary('Save File', readonly=True),
+        'file_save': fields.binary('Save File', readonly=True),
         'comments': fields.text('Comments'),
     }
 
     def _get_partners(self, cr, uid, context=None):
         return context.get('partner_ids', [])
 
-    _defaults={
+    _defaults = {
         'partner_ids': _get_partners,
     }
 
@@ -154,15 +155,15 @@ class partner_vat_list(osv.osv_memory):
             seq += 1
             sum_tax += line['vat_amount']
             sum_turnover += line['turnover']
-            vat = line['vat'].replace(' ','').upper()
-            amount_data ={
+            vat = line['vat'].replace(' ', '').upper()
+            amount_data = {
                 'seq': str(seq),
                 'vat': vat,
                 'only_vat': vat[2:],
-                'turnover': '%.2f' %line['turnover'],
-                'vat_amount': '%.2f' %line['vat_amount'],
-                'sum_tax': '%.2f' %sum_tax,
-                'sum_turnover': '%.2f' %sum_turnover,
+                'turnover': '%.2f' % line['turnover'],
+                'vat_amount': '%.2f' % line['vat_amount'],
+                'sum_tax': '%.2f' % sum_tax,
+                'sum_turnover': '%.2f' % sum_turnover,
                 'partner_name': line['name'],
             }
             client_datas += [amount_data]
@@ -179,18 +180,18 @@ class partner_vat_list(osv.osv_memory):
         company_vat = obj_cmpny.partner_id.vat
 
         if not company_vat:
-            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No VAT number associated with the company.'))
 
-        company_vat = company_vat.replace(' ','').upper()
+        company_vat = company_vat.replace(' ', '').upper()
         SenderId = company_vat[2:]
         issued_by = company_vat[:2]
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
         street = city = country = ''
         addr = obj_partner.address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
-        if addr.get('invoice',False):
+        if addr.get('invoice', False):
             ads = obj_partner.browse(cr, uid, [addr['invoice']], context=context)[0]
-            phone = ads.phone and ads.phone.replace(' ','') or ''
+            phone = ads.phone and ads.phone.replace(' ', '') or ''
             email = ads.email or ''
             name = ads.name or ''
             city = ads.city or ''
@@ -208,9 +209,9 @@ class partner_vat_list(osv.osv_memory):
         comp_name = obj_cmpny.name
 
         if not email:
-            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No phone associated with the company.'))
         annual_listing_data = {
             'issued_by': issued_by,
             'company_vat': company_vat,
@@ -235,7 +236,7 @@ class partner_vat_list(osv.osv_memory):
         <PostCode>%(zip)s</PostCode>
         <City>%(city)s</City>"""
         if annual_listing_data['country']:
-            data_file +="\n\t\t<CountryCode>%(country)s</CountryCode>"
+            data_file += "\n\t\t<CountryCode>%(country)s</CountryCode>"
         data_file += """
         <EmailAddress>%(email)s</EmailAddress>
         <Phone>%(phone)s</Phone>
@@ -259,7 +260,7 @@ class partner_vat_list(osv.osv_memory):
         # Turnover and Farmer tags are not included
         client_datas = self._get_datas(cr, uid, ids, context=context)
         if not client_datas:
-            raise osv.except_osv(_('Data Insufficient!'),_('No data available for the client.'))
+            raise osv.except_osv(_('Data Insufficient!'), _('No data available for the client.'))
         data_client_info = ''
         for amount_data in client_datas:
             data_client_info += """
@@ -270,7 +271,7 @@ class partner_vat_list(osv.osv_memory):
         </ns2:Client>""" % amount_data
 
         amount_data_begin = client_datas[-1]
-        amount_data_begin.update({'dnum':dnum})
+        amount_data_begin.update({'dnum': dnum})
         data_begin = """
     <ns2:ClientListing SequenceNumber="1" ClientsNbr="%(seq)s" DeclarantReference="%(dnum)s"
         TurnOverSum="%(sum_turnover)s" VATAmountSum="%(sum_tax)s">
@@ -285,8 +286,8 @@ class partner_vat_list(osv.osv_memory):
 
         data_file += data_begin + data_comp + data_client_info + data_end
         file_save = base64.encodestring(data_file.encode('utf8'))
-        self.write(cr, uid, ids, {'file_save':file_save, 'name':'vat_list.xml'}, context=context)
-        model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing_result')])
+        self.write(cr, uid, ids, {'file_save': file_save, 'name': 'vat_list.xml'}, context=context)
+        model_data_ids = obj_model_data.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_vat_listing_result')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
 
         return {
@@ -295,7 +296,7 @@ class partner_vat_list(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'partner.vat.list',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'context': context,
             'type': 'ir.actions.act_window',
             'target': 'new',
@@ -320,13 +321,13 @@ class partner_vat_listing_print(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(partner_vat_listing_print, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
         client_datas = data['client_datas']
-        self.localcontext.update( {
+        self.localcontext.update({
             'year': data['year'],
             'sum_turnover': client_datas[-1]['sum_turnover'],
             'sum_tax': client_datas[-1]['sum_tax'],

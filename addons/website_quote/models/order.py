@@ -26,6 +26,7 @@ import datetime
 
 import openerp.addons.decimal_precision as dp
 
+
 class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
     _description = "Sale Quotation Template"
@@ -37,12 +38,14 @@ class sale_quote_template(osv.osv):
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quote Duration', help='Number of days for the validaty date computation of the quotation'),
     }
+
     def open_template(self, cr, uid, quote_id, context=None):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
             'url': '/quote/template/%d' % quote_id[0]
         }
+
 
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
@@ -52,15 +55,16 @@ class sale_quote_line(osv.osv):
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'website_description': fields.related('product_id', 'product_tmpl_id', 'quote_description', string='Line Description', type='html', translate=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
-        'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
+        'product_uom_qty': fields.float('Quantity', required=True, digits_compute=dp.get_precision('Product UoS')),
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
     }
     _defaults = {
         'product_uom_qty': 1,
         'discount': 0.0,
     }
+
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
@@ -140,7 +144,7 @@ class sale_order(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True,
             states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
+        'options': fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Expiry Date'),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
@@ -164,7 +168,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         context = dict(context, lang=self.pool.get('res.partner').browse(cr, uid, partner, context).lang)
-        
+
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
@@ -250,14 +254,15 @@ class sale_quote_option(osv.osv):
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'website_description': fields.html('Option Description', translate=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
-        'quantity': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
+        'quantity': fields.float('Quantity', required=True, digits_compute=dp.get_precision('Product UoS')),
     }
     _defaults = {
         'quantity': 1,
     }
+
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
@@ -269,6 +274,7 @@ class sale_quote_option(osv.osv):
         })
         return {'value': vals}
 
+
 class sale_order_option(osv.osv):
     _name = "sale.order.option"
     _description = "Sale Options"
@@ -278,16 +284,17 @@ class sale_order_option(osv.osv):
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
         'website_description': fields.html('Line Description'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
         'quantity': fields.float('Quantity', required=True,
-            digits_compute= dp.get_precision('Product UoS')),
+            digits_compute=dp.get_precision('Product UoS')),
     }
 
     _defaults = {
         'quantity': 1,
     }
+
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         if not product:
@@ -301,11 +308,11 @@ class sale_order_option(osv.osv):
         })
         return {'value': vals}
 
+
 class product_template(osv.Model):
     _inherit = "product.template"
 
     _columns = {
-        'website_description': fields.html('Description for the website'), # hack, if website_sale is not installed
+        'website_description': fields.html('Description for the website'),  # hack, if website_sale is not installed
         'quote_description': fields.html('Description for the quote'),
     }
-

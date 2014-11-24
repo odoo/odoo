@@ -47,11 +47,11 @@ This is a complete document management system.
         'report/document_report_view.xml',
         'views/document.xml',
     ],
-    'demo': [ 'document_demo.xml' ],
+    'demo': ['document_demo.xml'],
     'test': ['test/document_test2.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/1_directories.jpeg','images/2_storage_media.jpeg','images/3_directories_structure.jpeg'],
+    'images': ['images/1_directories.jpeg', 'images/2_storage_media.jpeg', 'images/3_directories_structure.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

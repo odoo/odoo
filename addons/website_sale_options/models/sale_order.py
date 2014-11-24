@@ -12,6 +12,7 @@ class sale_order_line(osv.Model):
         'option_line_ids': fields.one2many('sale.order.line', 'linked_line_id', string='Options Linked'),
     }
 
+
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
@@ -33,19 +34,19 @@ class sale_order(osv.Model):
     def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         value = super(sale_order, self)._cart_update(cr, uid, ids, product_id, line_id, add_qty, set_qty, context=context, **kwargs)
-        
+
         linked_line_id = kwargs.get('linked_line_id')
         sol = self.pool.get('sale.order.line')
         line = sol.browse(cr, SUPERUSER_ID, value.get('line_id'), context=context)
 
         for so in self.browse(cr, uid, ids, context=context):
 
-            if linked_line_id and linked_line_id in map(int,so.order_line):
+            if linked_line_id and linked_line_id in map(int, so.order_line):
                 linked = sol.browse(cr, SUPERUSER_ID, linked_line_id, context=context)
                 line.write({
-                        "name": _("%s\nOption for: %s") % (line.name, linked.product_id.name_get()[0][1]),
-                        "linked_line_id": linked_line_id
-                    })
+                    "name": _("%s\nOption for: %s") % (line.name, linked.product_id.name_get()[0][1]),
+                    "linked_line_id": linked_line_id
+                })
 
             # select linked product
             option_ids = [l.id for l in so.order_line if l.linked_line_id.id == line.id]
@@ -53,8 +54,8 @@ class sale_order(osv.Model):
             if option_ids:
                 # update line
                 sol.write(cr, SUPERUSER_ID, option_ids, {
-                        'product_uom_qty': value.get('quantity')
-                    }, context=context)
+                    'product_uom_qty': value.get('quantity')
+                }, context=context)
 
         value['option_ids'] = option_ids
         return value

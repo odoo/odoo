@@ -36,8 +36,8 @@ class account_crossovered_analytic(osv.osv_memory):
         'empty_line': fields.boolean('Dont show empty lines'),
     }
     _defaults = {
-         'date1': lambda *a: time.strftime('%Y-01-01'),
-         'date2': lambda *a: time.strftime('%Y-%m-%d'),
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -59,12 +59,12 @@ class account_crossovered_analytic(osv.osv_memory):
                 flag = False
                 break
         if flag:
-            raise osv.except_osv(_('User Error!'),_('There are no analytic lines related to account %s.' % name))
+            raise osv.except_osv(_('User Error!'), _('There are no analytic lines related to account %s.' % name))
 
         datas = {
-             'ids': [],
-             'model': 'account.analytic.account',
-             'form': data
+            'ids': [],
+            'model': 'account.analytic.account',
+            'form': data
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_analytic_plans.report_crossoveredanalyticplans', data=datas, context=context)
 

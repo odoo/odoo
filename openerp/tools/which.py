@@ -19,7 +19,7 @@
        Return a generator which yields full paths in which the *file* name exists
        in a directory that is part of the file name, or on *path*,
        and has the given *mode*.
-       By default, *mode* matches an inclusive OR of os.F_OK and os.X_OK - an 
+       By default, *mode* matches an inclusive OR of os.F_OK and os.X_OK - an
        existing executable file.
        The *path* is, by default, the ``PATH`` variable on the platform,
        or the string/iterable passed in as *path*.
@@ -50,7 +50,7 @@ windows = sys.platform.startswith('win')
 defpath = environ.get('PATH', defpath).split(pathsep)
 
 if windows:
-    defpath.insert(0, '.') # can insert without checking, when duplicates are removed
+    defpath.insert(0, '.')  # can insert without checking, when duplicates are removed
     # given the quite usual mess in PATH on Windows, let's rather remove duplicates
     seen = set()
     defpath = [dir for dir in defpath if dir.lower() not in seen and not seen.add(dir.lower())]
@@ -60,6 +60,7 @@ if windows:
         '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC').lower().split(pathsep)
 else:
     defpathext = ['']
+
 
 def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
     """ Locate a file in a path supplied as a part of the file name,
@@ -120,7 +121,7 @@ def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
         pathext = pathext.split(pathsep)
 
     if not '' in pathext:
-        pathext.insert(0, '') # always check command without extension, even for custom pathext
+        pathext.insert(0, '')  # always check command without extension, even for custom pathext
 
     for dir in path:
         basepath = join(dir, file)
@@ -128,6 +129,7 @@ def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
             fullpath = basepath + ext
             if exists(fullpath) and access(fullpath, mode):
                 yield fullpath
+
 
 def which(file, mode=F_OK | X_OK, path=None, pathext=None):
     """ Locate a file in a path supplied as a part of the file name,

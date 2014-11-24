@@ -22,6 +22,7 @@ import logging
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class ir_logging(osv.Model):
     _name = 'ir.logging'
     _order = 'id DESC'
@@ -43,4 +44,3 @@ class ir_logging(osv.Model):
         'func': fields.char('Function', required=True),
         'line': fields.char('Line', required=True),
     }
-

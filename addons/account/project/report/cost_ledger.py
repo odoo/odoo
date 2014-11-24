@@ -27,7 +27,7 @@ from openerp.report import report_sxw
 class account_analytic_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines_g': self._lines_g,
             'lines_a': self._lines_a,
@@ -84,7 +84,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _account_sum_balance(self, account, date1, date2):
         debit = self._account_sum_debit(account, date1, date2)
         credit = self._account_sum_credit(account, date1, date2)
-        return (debit-credit)
+        return (debit - credit)
 
     def _sum_debit(self, accounts, date1, date2):
         self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0",
@@ -99,7 +99,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_debit(accounts, date1, date2)
         credit = self._sum_credit(accounts, date1, date2)
-        return (debit-credit)
+        return (debit - credit)
 
 
 class report_analyticcostledger(osv.AbstractModel):

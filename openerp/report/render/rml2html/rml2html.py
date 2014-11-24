@@ -27,13 +27,14 @@ import copy
 
 from openerp.report.render.rml2pdf import utils
 
+
 class _flowable(object):
-    def __init__(self, template, doc, localcontext = None):
+    def __init__(self, template, doc, localcontext=None):
         self._tags = {
             'title': self._tag_title,
             'spacer': self._tag_spacer,
             'para': self._tag_para,
-            'section':self._section,
+            'section': self._section,
             'nextFrame': self._tag_next_frame,
             'blockTable': self._tag_table,
             'pageBreak': self._tag_page_break,
@@ -45,32 +46,33 @@ class _flowable(object):
         self._cache = {}
 
     def _tag_page_break(self, node):
-        return '<br/>'*3
+        return '<br/>' * 3
 
     def _tag_next_template(self, node):
         return ''
 
     def _tag_next_frame(self, node):
-        result=self.template.frame_stop()
-        result+='<br/>'
-        result+=self.template.frame_start()
+        result = self.template.frame_stop()
+        result += '<br/>'
+        result += self.template.frame_start()
         return result
 
     def _tag_title(self, node):
-        node.tag='h1'
+        node.tag = 'h1'
         return etree.tostring(node)
 
     def _tag_spacer(self, node):
-        length = 1+int(utils.unit_get(node.get('length')))/35
-        return "<br/>"*length
+        length = 1 + int(utils.unit_get(node.get('length'))) / 35
+        return "<br/>" * length
 
     def _tag_table(self, node):
         new_node = copy.deepcopy(node)
         for child in new_node:
             new_node.remove(child)
         new_node.tag = 'table'
-        def process(node,new_node):
-            for child in utils._child_get(node,self):
+
+        def process(node, new_node):
+            for child in utils._child_get(node, self):
                 new_child = copy.deepcopy(child)
                 new_node.append(new_child)
                 if len(child):
@@ -78,15 +80,15 @@ class _flowable(object):
                         new_child.remove(n)
                     process(child, new_child)
                 else:
-                    new_child.text  = utils._process_text(self, child.text)
+                    new_child.text = utils._process_text(self, child.text)
                     new_child.tag = 'p'
                     try:
-                        if new_child.get('style').find('terp_tblheader')!= -1:
+                        if new_child.get('style').find('terp_tblheader') != -1:
                             new_node.tag = 'th'
                     except Exception:
                         pass
-        process(node,new_node)
-        if new_node.get('colWidths',False):
+        process(node, new_node)
+        if new_node.get('colWidths', False):
             sizes = map(lambda x: utils.unit_get(x), new_node.get('colWidths').split(','))
             tr = etree.SubElement(new_node, 'tr')
             for s in sizes:
@@ -97,7 +99,7 @@ class _flowable(object):
     def _tag_para(self, node):
         new_node = copy.deepcopy(node)
         new_node.tag = 'p'
-        if new_node.attrib.get('style',False):
+        if new_node.attrib.get('style', False):
             new_node.set('class', new_node.get('style'))
         new_node.text = utils._process_text(self, node.text)
         return etree.tostring(new_node)
@@ -119,41 +121,52 @@ class _flowable(object):
                 pass
         result += self.template.frame_stop()
         result += self.template.end()
-        return result.encode('utf-8').replace('"',"\'").replace('°','&deg;')
+        return result.encode('utf-8').replace('"', "\'").replace('°', '&deg;')
+
 
 class _rml_tmpl_tag(object):
     def __init__(self, *args):
         pass
+
     def tag_start(self):
         return ''
+
     def tag_end(self):
         return False
+
     def tag_stop(self):
         return ''
+
     def tag_mergeable(self):
         return True
+
 
 class _rml_tmpl_frame(_rml_tmpl_tag):
     def __init__(self, posx, width):
         self.width = width
         self.posx = posx
+
     def tag_start(self):
-        return "<table border=\'0\' width=\'%d\'><tr><td width=\'%d\'>&nbsp;</td><td>" % (self.width+self.posx,self.posx)
+        return "<table border=\'0\' width=\'%d\'><tr><td width=\'%d\'>&nbsp;</td><td>" % (self.width + self.posx, self.posx)
+
     def tag_end(self):
         return True
+
     def tag_stop(self):
         return '</td></tr></table><br/>'
+
     def tag_mergeable(self):
         return False
 
     def merge(self, frame):
         pass
 
+
 class _rml_tmpl_draw_string(_rml_tmpl_tag):
-    def __init__(self, node, style,localcontext = {}):
+    def __init__(self, node, style, localcontext={}):
         self.localcontext = localcontext
         self.posx = utils.unit_get(node.get('x'))
-        self.posy =  utils.unit_get(node.get('y'))
+        self.posy = utils.unit_get(node.get('y'))
 
         aligns = {
             'drawString': 'left',
@@ -168,40 +181,43 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
         res = "<table border='0' cellpadding='0' cellspacing='0'><tr>"
         posx = 0
         i = 0
-        for (x,y,align,txt, style, fs) in self.pos:
-            if align=="left":
-                pos2 = len(txt)*fs
-                res+="<td width=\'%d\'></td><td style=\'%s\' width=\'%d\'>%s</td>" % (x - posx, style, pos2, txt)
-                posx = x+pos2
-            if align=="right":
-                res+="<td width=\'%d\' align=\'right\' style=\'%s\'>%s</td>" % (x - posx, style, txt)
+        for (x, y, align, txt, style, fs) in self.pos:
+            if align == "left":
+                pos2 = len(txt) * fs
+                res += "<td width=\'%d\'></td><td style=\'%s\' width=\'%d\'>%s</td>" % (x - posx, style, pos2, txt)
+                posx = x + pos2
+            if align == "right":
+                res += "<td width=\'%d\' align=\'right\' style=\'%s\'>%s</td>" % (x - posx, style, txt)
                 posx = x
-            if align=="center":
-                res+="<td width=\'%d\' align=\'center\' style=\'%s\'>%s</td>" % ((x - posx)*2, style, txt)
-                posx = 2*x-posx
-            i+=1
-        res+='</tr></table>'
+            if align == "center":
+                res += "<td width=\'%d\' align=\'center\' style=\'%s\'>%s</td>" % ((x - posx) * 2, style, txt)
+                posx = 2 * x - posx
+            i += 1
+        res += '</tr></table>'
         return res
+
     def merge(self, ds):
-        self.pos+=ds.pos
+        self.pos += ds.pos
+
 
 class _rml_tmpl_draw_lines(_rml_tmpl_tag):
-    def __init__(self, node, style, localcontext = {}):
+    def __init__(self, node, style, localcontext={}):
         self.localcontext = localcontext
         coord = [utils.unit_get(x) for x in utils._process_text(self, node.text).split(' ')]
         self.ok = False
         self.posx = coord[0]
         self.posy = coord[1]
-        self.width = coord[2]-coord[0]
-        self.ok = coord[1]==coord[3]
+        self.width = coord[2] - coord[0]
+        self.ok = coord[1] == coord[3]
         self.style = style
         self.style = style.get('hr')
 
     def tag_start(self):
         if self.ok:
-            return "<table border=\'0\' cellpadding=\'0\' cellspacing=\'0\' width=\'%d\'><tr><td width=\'%d\'></td><td><hr width=\'100%%\' style=\'margin:0px; %s\'></td></tr></table>" % (self.posx+self.width,self.posx,self.style)
+            return "<table border=\'0\' cellpadding=\'0\' cellspacing=\'0\' width=\'%d\'><tr><td width=\'%d\'></td><td><hr width=\'100%%\' style=\'margin:0px; %s\'></td></tr></table>" % (self.posx + self.width, self.posx, self.style)
         else:
             return ''
+
 
 class _rml_stylesheet(object):
     def __init__(self, localcontext, stylesheet, doc):
@@ -209,8 +225,8 @@ class _rml_stylesheet(object):
         self.localcontext = localcontext
         self.attrs = {}
         self._tags = {
-            'fontSize': lambda x: ('font-size',str(utils.unit_get(x)+5.0)+'px'),
-            'alignment': lambda x: ('text-align',str(x))
+            'fontSize': lambda x: ('font-size', str(utils.unit_get(x) + 5.0) + 'px'),
+            'alignment': lambda x: ('text-align', str(x))
         }
         result = ''
         for ps in stylesheet.findall('paraStyle'):
@@ -223,20 +239,22 @@ class _rml_stylesheet(object):
                 if a in self._tags:
                     attrs.append('%s:%s' % self._tags[a](attr[a]))
             if len(attrs):
-                result += 'p.'+attr['name']+' {'+'; '.join(attrs)+'}\n'
+                result += 'p.' + attr['name'] + ' {' + '; '.join(attrs) + '}\n'
         self.result = result
 
     def render(self):
         return self.result
 
+
 class _rml_draw_style(object):
     def __init__(self):
         self.style = {}
         self._styles = {
-            'fill': lambda x: {'td': {'color':x.get('color')}},
-            'setFont': lambda x: {'td': {'font-size':x.get('size')+'px'}},
-            'stroke': lambda x: {'hr': {'color':x.get('color')}},
+            'fill': lambda x: {'td': {'color': x.get('color')}},
+            'setFont': lambda x: {'td': {'font-size': x.get('size') + 'px'}},
+            'stroke': lambda x: {'hr': {'color': x.get('color')}},
         }
+
     def update(self, node):
         if node.tag in self._styles:
             result = self._styles[node.tag](node)
@@ -245,14 +263,16 @@ class _rml_draw_style(object):
                     self.style[key].update(result[key])
                 else:
                     self.style[key] = result[key]
-    def font_size_get(self,tag):
-        size  = utils.unit_get(self.style.get('td', {}).get('font-size','16'))
+
+    def font_size_get(self, tag):
+        size = utils.unit_get(self.style.get('td', {}).get('font-size', '16'))
         return size
 
-    def get(self,tag):
+    def get(self, tag):
         if not tag in self.style:
             return ""
-        return ';'.join(['%s:%s' % (x[0],x[1]) for x in self.style[tag].items()])
+        return ';'.join(['%s:%s' % (x[0], x[1]) for x in self.style[tag].items()])
+
 
 class _rml_template(object):
     def __init__(self, template, localcontext=None):
@@ -278,23 +298,22 @@ class _rml_template(object):
             for tmpl in pt.findall('frame'):
                 posy = int(utils.unit_get(tmpl.get('y1')))
                 posx = int(utils.unit_get(tmpl.get('x1')))
-                frames[(posy,posx,tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
+                frames[(posy, posx, tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
             for tmpl in pt.findall('pageGraphics'):
                 for n in tmpl:
                     if n.tag == 'image':
                         self.data = rc + utils._process_text(self, n.text)
                     if n.tag in self._tags:
-                        t = self._tags[n.tag](n, self.style,self.localcontext)
-                        frames[(t.posy,t.posx,n.tag)] = t
+                        t = self._tags[n.tag](n, self.style, self.localcontext)
+                        frames[(t.posy, t.posx, n.tag)] = t
                     else:
                         self.style.update(n)
-            keys = frames.keys()
-            keys.sort()
+            keys = sorted(frames.keys())
             keys.reverse()
             self.page_template[id] = []
             for key in range(len(keys)):
-                if key>0 and keys[key-1][0] == keys[key][0]:
-                    if type(self.page_template[id][-1]) == type(frames[keys[key]]):
+                if key > 0 and keys[key - 1][0] == keys[key][0]:
+                    if isinstance(self.page_template[id][-1], type(frames[keys[key]])):
                         if self.page_template[id][-1].tag_mergeable():
                             self.page_template[id][-1].merge(frames[keys[key]])
                         continue
@@ -305,7 +324,7 @@ class _rml_template(object):
         return self.style
 
     def set_next_template(self):
-        self.template = self.template_order[(self.template_order.index(name)+1) % self.template_order]
+        self.template = self.template_order[(self.template_order.index(name) + 1) % self.template_order]
         self.frame_pos = -1
 
     def set_template(self, name):
@@ -318,22 +337,22 @@ class _rml_template(object):
         ok = True
         while ok:
             self.frame_pos += 1
-            if self.frame_pos>=len(frames):
-                self.frame_pos=0
-                self.loop=1
+            if self.frame_pos >= len(frames):
+                self.frame_pos = 0
+                self.loop = 1
                 ok = False
                 continue
             f = frames[self.frame_pos]
-            result+=f.tag_start()
+            result += f.tag_start()
             ok = not f.tag_end()
             if ok:
-                result+=f.tag_stop()
+                result += f.tag_stop()
         return result
 
     def frame_stop(self):
         frames = self.page_template[self.template]
         f = frames[self.frame_pos]
-        result=f.tag_stop()
+        result = f.tag_stop()
         return result
 
     def start(self):
@@ -345,6 +364,7 @@ class _rml_template(object):
             result += self.frame_start()
             result += self.frame_stop()
         return result
+
 
 class _rml_doc(object):
     def __init__(self, data, localcontext):
@@ -365,21 +385,21 @@ class _rml_doc(object):
         style = self.dom.findall('stylesheet')[0]
         s = _rml_stylesheet(self.localcontext, style, self.dom)
         self.result += s.render()
-        self.result+='''
+        self.result += '''
     </style>
 '''
-        list_story =[]
+        list_story = []
         for story in utils._child_get(self.dom, self, 'story'):
             template = _rml_template(self.dom.findall('template')[0], self.localcontext)
-            f = _flowable(template, self.dom, localcontext = self.localcontext)
+            f = _flowable(template, self.dom, localcontext=self.localcontext)
             story_text = f.render(story)
             list_story.append(story_text)
         del f
         if template.data:
-            tag = '''<img src = '%s' width=80 height=72/>'''% template.data
+            tag = '''<img src = '%s' width=80 height=72/>''' % template.data
         else:
             tag = ''
-        self.result +='''
+        self.result += '''
             <script type="text/javascript">
 
             var indexer = 0;
@@ -411,13 +431,14 @@ class _rml_doc(object):
             <input type="button" value="next" onclick="nextData();">
             <input type="button" value="prev" onclick="prevData();">
 
-        </body></html>'''%(list_story,tag,list_story[0])
-        out.write( self.result)
+        </body></html>''' % (list_story, tag, list_story[0])
+        out.write(self.result)
 
-def parseString(data,localcontext = {}, fout=None):
+
+def parseString(data, localcontext={}, fout=None):
     r = _rml_doc(data, localcontext)
     if fout:
-        fp = file(fout,'wb')
+        fp = file(fout, 'wb')
         r.render(fp)
         fp.close()
         return fout
@@ -426,14 +447,15 @@ def parseString(data,localcontext = {}, fout=None):
         r.render(fp)
         return fp.getvalue()
 
+
 def rml2html_help():
     print 'Usage: rml2html input.rml >output.html'
     print 'Render the standard input (RML) and output an HTML file'
     sys.exit(0)
 
-if __name__=="__main__":
-    if len(sys.argv)>1:
-        if sys.argv[1]=='--help':
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--help':
             rml2html_help()
         print parseString(file(sys.argv[1], 'r').read()),
     else:

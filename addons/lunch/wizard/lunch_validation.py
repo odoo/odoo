@@ -20,10 +20,11 @@
 ##############################################################################
 from openerp.osv import fields, osv
 
+
 class lunch_validation(osv.Model):
     """ lunch validation """
     _name = 'lunch.validation'
     _description = 'lunch validation for order'
 
-    def confirm(self,cr,uid,ids,context=None):
+    def confirm(self, cr, uid, ids, context=None):
         return self.pool.get('lunch.order.line').confirm(cr, uid, ids, context=context)

@@ -24,6 +24,7 @@ import time
 from openerp.osv import osv
 from openerp.report import report_sxw
 
+
 class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
@@ -43,13 +44,13 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         self.total = 0.0
 
     def get_periods(self, form):
-#       Get start year-month-date and end year-month-date
+        #       Get start year-month-date and end year-month-date
         first_year = int(form['start_date'][0:4])
         last_year = int(form['end_date'][0:4])
 
         first_month = int(form['start_date'][5:7])
         last_month = int(form['end_date'][5:7])
-        no_months = (last_year-first_year) * 12 + last_month - first_month + 1
+        no_months = (last_year - first_year) * 12 + last_month - first_month + 1
         current_month = first_month
         current_year = first_year
 
@@ -63,7 +64,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
                 current_month = 0
                 current_year = last_year
             current_month = current_month + 1
-        for c in range(0, (12-no_months)):
+        for c in range(0, (12 - no_months)):
             mnth_name.append('')
             self.mnths.append('')
         return [mnth_name]
@@ -77,14 +78,14 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
                              left join hr_employee as emp on emp.id = p.employee_id \
                              left join resource_resource as r on r.id = emp.resource_id  \
                             where p.state = 'done' and p.employee_id = %s and pl.category_id = %s \
-                            group by r.name, p.date_to,emp.id",(emp_id, category_id,))
+                            group by r.name, p.date_to,emp.id", (emp_id, category_id,))
         sal = self.cr.fetchall()
         salary = dict(sal)
         total = 0.0
         cnt = 0
 
         for month in self.mnths:
-            if month <> '':
+            if month != '':
                 if len(month) != 7:
                     month = '0' + str(month)
                 if month in salary and salary[month]:
@@ -102,10 +103,10 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
     def get_employee(self, form):
         emp_salary = []
         salary_list = []
-        total_mnths=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        total_mnths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
-        employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
+        employees = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
 
         for emp_id in employees:
             emp_salary.append(emp_id.name)
@@ -123,10 +124,11 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
     def get_total(self):
         for item in self.mnths_total:
             for count in range(1, len(item)):
-              if item[count] == '':
-                  continue
-              self.total += item[count]
+                if item[count] == '':
+                    continue
+                self.total += item[count]
         return self.total
+
 
 class wrapped_report_employee_salary_bymonth(osv.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'

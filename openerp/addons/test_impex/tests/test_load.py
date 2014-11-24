@@ -9,10 +9,13 @@ import openerp
 from openerp.tests import common
 from openerp.tools.misc import mute_logger
 
+
 def message(msg, type='error', from_=0, to_=0, record=0, field='value', **kwargs):
     return dict(kwargs,
                 type=type, rows={'from': from_, 'to': to_}, record=record,
                 field=field, message=msg)
+
+
 def moreaction(**kwargs):
     return dict(kwargs,
         type='ir.actions.act_window',
@@ -22,8 +25,10 @@ def moreaction(**kwargs):
         views=[(False, 'tree'), (False, 'form')],
         help=u"See all possible values")
 
+
 def values(seq, field='value'):
     return [item[field] for item in seq]
+
 
 class ImporterCase(common.TransactionCase):
     model_name = False
@@ -40,11 +45,13 @@ class ImporterCase(common.TransactionCase):
     def import_(self, fields, rows, context=None):
         return self.model.load(
             self.cr, openerp.SUPERUSER_ID, fields, rows, context=context)
+
     def read(self, fields=('value',), domain=(), context=None):
         return self.model.read(
             self.cr, openerp.SUPERUSER_ID,
             self.model.search(self.cr, openerp.SUPERUSER_ID, domain, context=context),
             fields=fields, context=context)
+
     def browse(self, domain=(), context=None):
         return self.model.browse(
             self.cr, openerp.SUPERUSER_ID,
@@ -96,6 +103,7 @@ class ImporterCase(common.TransactionCase):
                 'state': 'translated',
             })
 
+
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
@@ -109,6 +117,7 @@ class test_ids_stuff(ImporterCase):
             'field': '.id',
             'message': u"Unknown database identifier '42'",
         }])
+
     def test_create_with_xid(self):
         result = self.import_(['id', 'value'], [['somexmlid', '42']])
         self.assertEqual(len(result['ids']), 1)
@@ -127,7 +136,7 @@ class test_ids_stuff(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
         self.assertEqual(
-            [42], # updated value to imported
+            [42],  # updated value to imported
             values(self.read()))
 
     def test_update_with_xid(self):
@@ -136,6 +145,7 @@ class test_ids_stuff(ImporterCase):
 
         self.import_(['id', 'value'], [['somexmlid', '1234567']])
         self.assertEqual([1234567], values(self.read()))
+
 
 class test_boolean_field(ImporterCase):
     model_name = 'export.boolean'
@@ -163,12 +173,12 @@ class test_boolean_field(ImporterCase):
                                     ('lt_LT', 'false', u'klaidingas')]:
             self.add_translations('test_import.py', 'code', lang, (source, value))
         falses = [[u'0'], [u'no'], [u'false'], [u'FALSE'], [u''],
-                  [u'non'], # no, fr
-                  [u'nein'], # no, de
-                  [u'нет'], # no, ru
-                  [u'vals'], # false, nl
-                  [u'klaidingas'], # false, lt,
-        ]
+                  [u'non'],  # no, fr
+                  [u'nein'],  # no, de
+                  [u'нет'],  # no, ru
+                  [u'vals'],  # false, nl
+                  [u'klaidingas'],  # false, lt,
+                  ]
 
         result = self.import_(['value'], falses)
         self.assertFalse(result['messages'])
@@ -177,8 +187,8 @@ class test_boolean_field(ImporterCase):
 
     def test_trues(self):
         trues = [['None'], ['nil'], ['()'], ['f'], ['#f'],
-                  # Problem: OpenOffice (and probably excel) output localized booleans
-                  ['VRAI'], ['ok'], ['true'], ['yes'], ['1'], ]
+                 # Problem: OpenOffice (and probably excel) output localized booleans
+                 ['VRAI'], ['ok'], ['true'], ['yes'], ['1'], ]
         result = self.import_(['value'], trues)
         self.assertEqual(len(result['ids']), 10)
         self.assertEqual(result['messages'], [
@@ -191,6 +201,7 @@ class test_boolean_field(ImporterCase):
         self.assertEqual(
             [True] * 10,
             values(self.read()))
+
 
 class test_integer_field(ImporterCase):
     model_name = 'export.integer'
@@ -223,33 +234,33 @@ class test_integer_field(ImporterCase):
         result = self.import_(['value'], [
             ['1'],
             ['42'],
-            [str(2**31-1)],
+            [str(2 ** 31 - 1)],
             ['12345678']
         ])
         self.assertEqual(len(result['ids']), 4)
         self.assertFalse(result['messages'])
 
         self.assertEqual([
-            1, 42, 2**31-1, 12345678
+            1, 42, 2 ** 31 - 1, 12345678
         ], values(self.read()))
 
     def test_negatives(self):
         result = self.import_(['value'], [
             ['-1'],
             ['-42'],
-            [str(-(2**31 - 1))],
-            [str(-(2**31))],
+            [str(-(2 ** 31 - 1))],
+            [str(-(2 ** 31))],
             ['-12345678']
         ])
         self.assertEqual(len(result['ids']), 5)
         self.assertFalse(result['messages'])
         self.assertEqual([
-            -1, -42, -(2**31 - 1), -(2**31), -12345678
+            -1, -42, -(2 ** 31 - 1), -(2 ** 31), -12345678
         ], values(self.read()))
 
     @mute_logger('openerp.sql_db', 'openerp.models')
     def test_out_of_range(self):
-        result = self.import_(['value'], [[str(2**31)]])
+        result = self.import_(['value'], [[str(2 ** 31)]])
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [{
             'type': 'error',
@@ -258,7 +269,7 @@ class test_integer_field(ImporterCase):
             'message': "integer out of range\n"
         }])
 
-        result = self.import_(['value'], [[str(-2**32)]])
+        result = self.import_(['value'], [[str(-2 ** 32)]])
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [{
             'type': 'error',
@@ -278,8 +289,10 @@ class test_integer_field(ImporterCase):
             'message': u"'zorglub' does not seem to be an integer for field 'unknown'",
         }])
 
+
 class test_float_field(ImporterCase):
     model_name = 'export.float'
+
     def test_none(self):
         self.assertEqual(
             self.import_(['value'], []),
@@ -308,32 +321,32 @@ class test_float_field(ImporterCase):
         result = self.import_(['value'], [
             ['1'],
             ['42'],
-            [str(2**31-1)],
+            [str(2 ** 31 - 1)],
             ['12345678'],
-            [str(2**33)],
+            [str(2 ** 33)],
             ['0.000001'],
         ])
         self.assertEqual(len(result['ids']), 6)
         self.assertFalse(result['messages'])
 
         self.assertEqual([
-            1, 42, 2**31-1, 12345678, 2.0**33, .000001
+            1, 42, 2 ** 31 - 1, 12345678, 2.0 ** 33, .000001
         ], values(self.read()))
 
     def test_negatives(self):
         result = self.import_(['value'], [
             ['-1'],
             ['-42'],
-            [str(-2**31 + 1)],
-            [str(-2**31)],
+            [str(-2 ** 31 + 1)],
+            [str(-2 ** 31)],
             ['-12345678'],
-            [str(-2**33)],
+            [str(-2 ** 33)],
             ['-0.000001'],
         ])
         self.assertEqual(len(result['ids']), 7)
         self.assertFalse(result['messages'])
         self.assertEqual([
-            -1, -42, -(2**31 - 1), -(2**31), -12345678, -2.0**33, -.000001
+            -1, -42, -(2 ** 31 - 1), -(2 ** 31), -12345678, -2.0 ** 33, -.000001
         ], values(self.read()))
 
     def test_nonsense(self):
@@ -341,6 +354,7 @@ class test_float_field(ImporterCase):
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [
             message(u"'foobar' does not seem to be a number for field 'unknown'")])
+
 
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
@@ -369,6 +383,7 @@ class test_string_field(ImporterCase):
             u"People 'get' typ",
         ], values(self.read()))
 
+
 class test_unbound_string_field(ImporterCase):
     model_name = 'export.string'
 
@@ -386,6 +401,7 @@ class test_unbound_string_field(ImporterCase):
             u"If they ask you about fun, you tell them – fun is a filthy parasite"
         ], values(self.read()))
 
+
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
@@ -402,6 +418,7 @@ class test_required_string_field(ImporterCase):
         self.assertEqual(result['messages'], [message(
             u"Missing required value for the field 'unknown' (value)")])
         self.assertIs(result['ids'], False)
+
 
 class test_text(ImporterCase):
     model_name = 'export.text'
@@ -423,6 +440,7 @@ class test_text(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
         self.assertEqual([s], values(self.read()))
+
 
 class test_selection(ImporterCase):
     model_name = 'export.selection'
@@ -474,6 +492,7 @@ class test_selection(ImporterCase):
             u"Value '42' not found in selection field 'unknown'",
             moreinfo="Foo Bar Qux 4".split())])
 
+
 class test_selection_with_default(ImporterCase):
     model_name = 'export.selection.withdefault'
 
@@ -498,6 +517,7 @@ class test_selection_with_default(ImporterCase):
         self.assertEqual(
             values(self.read()),
             [2])
+
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
@@ -542,6 +562,7 @@ class test_selection_function(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 
+
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
 
@@ -553,9 +574,9 @@ class test_m2o(ImporterCase):
             self.cr, openerp.SUPERUSER_ID, {'value': 36})
         # get its name
         name1 = dict(self.registry('export.integer').name_get(
-            self.cr, openerp.SUPERUSER_ID,[integer_id1]))[integer_id1]
+            self.cr, openerp.SUPERUSER_ID, [integer_id1]))[integer_id1]
         name2 = dict(self.registry('export.integer').name_get(
-            self.cr, openerp.SUPERUSER_ID,[integer_id2]))[integer_id2]
+            self.cr, openerp.SUPERUSER_ID, [integer_id2]))[integer_id2]
 
         result = self.import_(['value'], [
             # import by name_get
@@ -569,7 +590,7 @@ class test_m2o(ImporterCase):
         self.assertEqual([
             (integer_id1, name1),
             (integer_id1, name1),
-            (integer_id2, name2),],
+            (integer_id2, name2), ],
             values(self.read()))
 
     def test_by_xid(self):
@@ -600,9 +621,9 @@ class test_m2o(ImporterCase):
         integer_id2 = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
         name1 = dict(self.registry('export.integer').name_get(
-            self.cr, openerp.SUPERUSER_ID,[integer_id1]))[integer_id1]
+            self.cr, openerp.SUPERUSER_ID, [integer_id1]))[integer_id1]
         name2 = dict(self.registry('export.integer').name_get(
-            self.cr, openerp.SUPERUSER_ID,[integer_id2]))[integer_id2]
+            self.cr, openerp.SUPERUSER_ID, [integer_id2]))[integer_id2]
         # names should be the same
         self.assertEqual(name1, name2)
 
@@ -627,10 +648,10 @@ class test_m2o(ImporterCase):
 
         # Because name_search all the things. Fallback schmallback
         result = self.import_(['value'], [
-                # import by id, without specifying it
-                [integer_id1],
-                [integer_id2],
-                [integer_id1],
+            # import by id, without specifying it
+            [integer_id1],
+            [integer_id2],
+            [integer_id1],
         ])
         self.assertEqual(result['messages'], [
             message(u"No matching record found for name '%s' in field 'unknown'" % id,
@@ -646,7 +667,7 @@ class test_m2o(ImporterCase):
         self.assertEqual(result['messages'], [
             message(u"Invalid database id 'foo' for the field 'unknown'",
                     moreinfo=moreaction(res_model='ir.model.data',
-                                        domain=[('model','=','export.integer')]))
+                                        domain=[('model', '=', 'export.integer')]))
         ])
         self.assertIs(result['ids'], False)
 
@@ -672,14 +693,14 @@ class test_m2o(ImporterCase):
         self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidhere' "
             u"in field 'unknown'", moreinfo=moreaction(
-                res_model='ir.model.data', domain=[('model','=','export.integer')]))])
+                res_model='ir.model.data', domain=[('model', '=', 'export.integer')]))])
         self.assertIs(result['ids'], False)
 
         result = self.import_(['value/.id'], [['66']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '66' "
             u"in field 'unknown'", moreinfo=moreaction(
-                res_model='ir.model.data', domain=[('model','=','export.integer')]))])
+                res_model='ir.model.data', domain=[('model', '=', 'export.integer')]))])
         self.assertIs(result['ids'], False)
 
     def test_fail_multiple(self):
@@ -691,6 +712,7 @@ class test_m2o(ImporterCase):
             u"name, external id or database id")])
         self.assertIs(result['ids'], False)
 
+
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
 
@@ -699,15 +721,15 @@ class test_m2m(ImporterCase):
     # m2m/.id, m2m/id or m2m[/anythingelse]
     def test_ids(self):
         id1 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
         id2 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
         id3 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
         id4 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         id5 = self.registry('export.many2many.other').create(
-                self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
+            self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
 
         result = self.import_(['value/.id'], [
             ['%d,%d' % (id1, id2)],
@@ -732,7 +754,7 @@ class test_m2m(ImporterCase):
         self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '42' in field "
             u"'unknown'", moreinfo=moreaction(
-                res_model='ir.model.data', domain=[('model','=','export.many2many.other')]))])
+                res_model='ir.model.data', domain=[('model', '=', 'export.many2many.other')]))])
         self.assertIs(result['ids'], False)
 
     def test_xids(self):
@@ -754,12 +776,13 @@ class test_m2m(ImporterCase):
         b = self.browse()
         self.assertEqual(values(b[0].value), [3, 44])
         self.assertEqual(values(b[2].value), [44, 84])
+
     def test_noxids(self):
         result = self.import_(['value/id'], [['noxidforthat']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidforthat' in field"
             u" 'unknown'", moreinfo=moreaction(
-                res_model='ir.model.data', domain=[('model','=','export.many2many.other')]))])
+                res_model='ir.model.data', domain=[('model', '=', 'export.many2many.other')]))])
         self.assertIs(result['ids'], False)
 
     def test_names(self):
@@ -811,6 +834,7 @@ class test_m2m(ImporterCase):
         self.assertEqual(len(b), 1)
         # TODO: replacement of existing m2m values is correct?
         self.assertEqual(values(b[0].value), [84, 9])
+
 
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
@@ -947,6 +971,7 @@ class test_o2m(ImporterCase):
         self.assertEqual(values(b.value), [1, 2])
         self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
+
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
 
@@ -998,6 +1023,7 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
         self.assertEqual(values(b.child2), [21, 22, 23])
 
+
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json'))
@@ -1034,7 +1060,7 @@ class test_realworld(common.TransactionCase):
                 ['5', '99', 'wheee', ''],
                 ['', '98', '', '12'],
             ],
-        context=None)
+            context=None)
 
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 2)
@@ -1047,6 +1073,7 @@ class test_realworld(common.TransactionCase):
         self.assertFalse(len(b[1].child[1].child1))
         self.assertEqual([child.value for child in b[1].child[1].child2],
                          [12])
+
 
 class test_date(ImporterCase):
     model_name = 'export.date'
@@ -1068,6 +1095,7 @@ class test_date(ImporterCase):
                     u"for field 'unknown'",
                     moreinfo=u"Use the format '2012-12-31'")])
         self.assertIs(result['ids'], False)
+
 
 class test_datetime(ImporterCase):
     model_name = 'export.datetime'
@@ -1145,6 +1173,7 @@ class test_datetime(ImporterCase):
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 11:11:11'])
+
 
 class test_unique(ImporterCase):
     model_name = 'export.unique'

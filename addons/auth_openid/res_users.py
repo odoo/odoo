@@ -24,6 +24,7 @@ from openerp import tools
 
 import utils
 
+
 class res_users(osv.osv):
     _inherit = 'res.users'
 
@@ -38,7 +39,7 @@ class res_users(osv.osv):
     }
 
     def _check_openid_url_email(self, cr, uid, ids, context=None):
-        return all(self.search_count(cr, uid, [('active', '=', True), ('openid_url', '=', u.openid_url), ('openid_email', '=', u.openid_email)]) == 1 \
+        return all(self.search_count(cr, uid, [('active', '=', True), ('openid_url', '=', u.openid_url), ('openid_email', '=', u.openid_email)]) == 1
                    for u in self.browse(cr, uid, ids, context) if u.active and u.openid_url)
 
     def _check_openid_url_email_msg(self, cr, uid, ids, context):
@@ -75,12 +76,10 @@ class res_users(osv.osv):
                                WHERE id=%s
                                  AND openid_key=%s
                                  AND active=%s''',
-                            (int(uid), passwd, True))
+                           (int(uid), passwd, True))
                 if not cr.fetchone()[0]:
                     raise
                 self._uid_cache.setdefault(db, {})[uid] = passwd
-
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

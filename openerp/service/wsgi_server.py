@@ -51,11 +51,12 @@ _logger = logging.getLogger(__name__)
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
 # create directly ``xmlrpclib.Fault`` objects).
-RPC_FAULT_CODE_CLIENT_ERROR = 1 # indistinguishable from app. error.
+RPC_FAULT_CODE_CLIENT_ERROR = 1  # indistinguishable from app. error.
 RPC_FAULT_CODE_APPLICATION_ERROR = 1
 RPC_FAULT_CODE_WARNING = 2
 RPC_FAULT_CODE_ACCESS_DENIED = 3
 RPC_FAULT_CODE_ACCESS_ERROR = 4
+
 
 def xmlrpc_return(start_response, service, method, params, string_faultcode=False):
     """
@@ -79,17 +80,18 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
             response = xmlrpc_handle_exception_string(e)
         else:
             response = xmlrpc_handle_exception_int(e)
-    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+    start_response("200 OK", [('Content-Type', 'text/xml'), ('Content-Length', str(len(response)))])
     return [response]
 
+
 def xmlrpc_handle_exception_int(e):
-    if isinstance(e, openerp.osv.orm.except_orm): # legacy
+    if isinstance(e, openerp.osv.orm.except_orm):  # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning) or isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance (e, openerp.exceptions.AccessError):
+    elif isinstance(e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.AccessDenied):
@@ -103,7 +105,7 @@ def xmlrpc_handle_exception_int(e):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     else:
-        if hasattr(e, 'message') and e.message == 'AccessDenied': # legacy
+        if hasattr(e, 'message') and e.message == 'AccessDenied':  # legacy
             fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
             response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
         else:
@@ -114,6 +116,7 @@ def xmlrpc_handle_exception_int(e):
             fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
             response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
+
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, openerp.osv.orm.except_orm):
@@ -139,6 +142,7 @@ def xmlrpc_handle_exception_string(e):
         fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
+
 
 def wsgi_xmlrpc(environ, start_response):
     """ Two routes are available for XML-RPC
@@ -169,6 +173,7 @@ module_handlers = []
 # RPC endpoints registered through the register_rpc_endpoint() function below.
 rpc_handlers = {}
 
+
 def register_wsgi_handler(handler):
     """ Register a WSGI handler.
 
@@ -177,10 +182,12 @@ def register_wsgi_handler(handler):
     """
     module_handlers.append(handler)
 
+
 def register_rpc_endpoint(endpoint, handler):
     """ Register a handler for a given RPC enpoint.
     """
     rpc_handlers[endpoint] = handler
+
 
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
@@ -188,7 +195,7 @@ def application_unproxied(environ, start_response):
     # web.session.OpenERPSession.send() and at RPC dispatch in
     # openerp.service.web_services.objects_proxy.dispatch().
     # /!\ The cleanup cannot be done at the end of this `application`
-    # method because werkzeug still produces relevant logging afterwards 
+    # method because werkzeug still produces relevant logging afterwards
     if hasattr(threading.current_thread(), 'uid'):
         del threading.current_thread().uid
     if hasattr(threading.current_thread(), 'dbname'):
@@ -208,6 +215,7 @@ def application_unproxied(environ, start_response):
     response = 'No handler found.\n'
     start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
+
 
 def application(environ, start_response):
     if config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:

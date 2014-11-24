@@ -9,19 +9,24 @@ import common
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
+
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
 
+
 def cursor():
     return openerp.modules.registry.RegistryManager.get(DB).cursor()
+
 
 def get_module(module_name):
     registry = openerp.modules.registry.RegistryManager.get(DB)
     return registry.get(module_name)
 
+
 def reload_registry():
     openerp.modules.registry.RegistryManager.new(
         DB, update_module=True)
+
 
 def search_registry(model_name, domain):
     cr = cursor()
@@ -29,6 +34,7 @@ def search_registry(model_name, domain):
     record_ids = model.search(cr, SUPERUSER_ID, domain, {})
     cr.close()
     return record_ids
+
 
 def install_module(module_name):
     ir_module_module = registry('ir.module.module')
@@ -41,6 +47,7 @@ def install_module(module_name):
     cr.close()
     reload_registry()
 
+
 def uninstall_module(module_name):
     ir_module_module = registry('ir.module.module')
     cr = cursor()
@@ -51,6 +58,7 @@ def uninstall_module(module_name):
     cr.commit()
     cr.close()
     reload_registry()
+
 
 class test_uninstall(unittest2.TestCase):
     """
@@ -79,7 +87,6 @@ class test_uninstall(unittest2.TestCase):
 
         assert not search_registry('ir.model.fields',
             [('model', '=', 'test_uninstall.model')])
-
 
 
 if __name__ == '__main__':

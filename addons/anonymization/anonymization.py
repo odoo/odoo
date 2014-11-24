@@ -69,11 +69,11 @@ class ir_model_fields_anonymization(osv.osv):
         ids = self.search(cr, uid, [('state', '<>', 'not_existing')], context=context)
         fields = self.browse(cr, uid, ids, context=context)
         if not len(fields) or len(fields) == len([f for f in fields if f.state == 'clear']):
-            state = 'clear' # all fields are clear
+            state = 'clear'  # all fields are clear
         elif len(fields) == len([f for f in fields if f.state == 'anonymized']):
-            state = 'anonymized' # all fields are anonymized
+            state = 'anonymized'  # all fields are anonymized
         else:
-            state = 'unstable' # fields are mixed: this should be fixed
+            state = 'unstable'  # fields are mixed: this should be fixed
 
         return state
 
@@ -88,7 +88,7 @@ class ir_model_fields_anonymization(osv.osv):
             if global_state == 'anonymized':
                 raise osv.except_osv('Error!', "The database is currently anonymized, you cannot create, modify or delete fields.")
             elif global_state == 'unstable':
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," +
                       " while some fields are not anonymized. You should try to solve this problem before trying to create, write or delete fields.")
                 raise osv.except_osv('Error!', msg)
 
@@ -159,10 +159,10 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         res = {'value': {
-                    'field_name': False,
-                    'field_id': False,
-                    'model_name': False,
-              }}
+            'field_name': False,
+            'field_id': False,
+            'model_name': False,
+        }}
 
         if model_id:
             ir_model_obj = self.pool.get('ir.model')
@@ -175,10 +175,10 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_model_name(self, cr, uid, ids, model_name, context=None):
         res = {'value': {
-                    'field_name': False,
-                    'field_id': False,
-                    'model_id': False,
-              }}
+            'field_name': False,
+            'field_id': False,
+            'model_id': False,
+        }}
 
         if model_name:
             ir_model_obj = self.pool.get('ir.model')
@@ -190,8 +190,8 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_field_name(self, cr, uid, ids, field_name, model_name):
         res = {'value': {
-                'field_id': False,
-            }}
+            'field_id': False,
+        }}
 
         if field_name and model_name:
             ir_model_fields_obj = self.pool.get('ir.model.fields')
@@ -203,8 +203,8 @@ class ir_model_fields_anonymization(osv.osv):
 
     def onchange_field_id(self, cr, uid, ids, field_id, model_name):
         res = {'value': {
-                    'field_name': False,
-              }}
+            'field_name': False,
+        }}
 
         if field_id:
             ir_model_fields_obj = self.pool.get('ir.model.fields')
@@ -355,7 +355,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," +
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything else.")
                 raise osv.except_osv('Error!', msg)
 
@@ -388,7 +388,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         if state == 'anonymized':
             self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("The database is currently anonymized, you cannot anonymize it again."))
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," +
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
             self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
@@ -425,11 +425,11 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
                 sid = str(record['id'])
                 if field_type == 'char':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'selection':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'text':
-                    anonymized_value = 'xxx'+sid
+                    anonymized_value = 'xxx' + sid
                 elif field_type == 'boolean':
                     anonymized_value = random.choice([True, False])
                 elif field_type == 'date':
@@ -440,7 +440,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     anonymized_value = 0.0
                 elif field_type == 'integer':
                     anonymized_value = 0
-                elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
+                elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']:  # cannot anonymize these kind of fields
                     msg = _("Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference.")
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
@@ -472,7 +472,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
                "This file is also stored in the %s directory. The absolute file path is: %s.",
-              ]
+                ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
         fn = open(abs_filepath, 'r')
@@ -495,14 +495,14 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
 
         return {
-                'res_id': ids[0],
-                'view_id': [view_id],
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.model.fields.anonymize.wizard',
-                'type': 'ir.actions.act_window',
-                'context': {'step': 'just_anonymized'},
-                'target':'new',
+            'res_id': ids[0],
+            'view_id': [view_id],
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.model.fields.anonymize.wizard',
+            'type': 'ir.actions.act_window',
+            'context': {'step': 'just_anonymized'},
+            'target': 'new',
         }
 
     def reverse_anonymize_database(self, cr, uid, ids, context=None):
@@ -523,7 +523,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         if state == 'clear':
             raise osv.except_osv_('Error!', "The database is not currently anonymized, you cannot reverse the anonymization.")
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," +
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
             raise osv.except_osv('Error!', msg)
 
@@ -548,7 +548,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])
-                custom_updates =  fixes.get(key)
+                custom_updates = fixes.get(key)
                 if custom_updates:
                     custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
@@ -583,7 +583,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             # add a result message in the wizard:
             msg = '\n'.join(["Successfully reversed the anonymization.",
                              "",
-                            ])
+                             ])
 
             self.write(cr, uid, ids, {'msg': msg})
 
@@ -599,14 +599,14 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
 
             return {
-                    'res_id': ids[0],
-                    'view_id': [view_id],
-                    'view_type': 'form',
-                    "view_mode": 'form',
-                    'res_model': 'ir.model.fields.anonymize.wizard',
-                    'type': 'ir.actions.act_window',
-                    'context': {'step': 'just_desanonymized'},
-                    'target':'new',
+                'res_id': ids[0],
+                'view_id': [view_id],
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.model.fields.anonymize.wizard',
+                'type': 'ir.actions.act_window',
+                'context': {'step': 'just_desanonymized'},
+                'target': 'new',
             }
 
     def _id_get(self, cr, uid, model, id_str, mod):
@@ -634,4 +634,3 @@ class ir_model_fields_anonymization_migration_fix(osv.osv):
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

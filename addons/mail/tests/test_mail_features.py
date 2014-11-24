@@ -25,6 +25,7 @@ from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split, html2plaintext
 from openerp.tools.mail import html_sanitize
 
+
 class test_mail(TestMail):
 
     def test_000_alias_setup(self):
@@ -126,10 +127,10 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set(default_group_subtypes),
@@ -143,17 +144,17 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: 2 lines in mail.followers (no duplicate for Raoul)
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+        ])
         self.assertEqual(len(fol_ids), 2,
                         'message_subscribe: subscribing an already-existing follower should not create new entries in mail.followers')
         # Test: Raoul follows only specified subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
@@ -169,10 +170,10 @@ class test_mail(TestMail):
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id),
-                        ('partner_id', '=', user_raoul.partner_id.id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id),
+            ('partner_id', '=', user_raoul.partner_id.id)
+        ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
         self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
@@ -186,9 +187,9 @@ class test_mail(TestMail):
         self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
         # Test: 1 lines in mail.followers (no duplicate for Raoul)
         fol_ids = self.mail_followers.search(cr, uid, [
-                        ('res_model', '=', 'mail.group'),
-                        ('res_id', '=', self.group_pigs_id)
-                    ])
+            ('res_model', '=', 'mail.group'),
+            ('res_id', '=', self.group_pigs_id)
+        ])
         self.assertEqual(len(fol_ids), 1,
                         'message_subscribe: group should have only 1 entry in mail.follower for 1 follower')
 
@@ -401,7 +402,7 @@ class test_mail(TestMail):
         msg1_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id,
                             body=_body1, subject=_subject, partner_ids=[p_b_id, p_c_id],
                             attachment_ids=[attach1_id, attach2_id], attachments=_attachments,
-                            type='comment', subtype='mt_comment')
+            type='comment', subtype='mt_comment')
         msg = self.mail_message.browse(cr, uid, msg1_id)
         msg_message_id = msg.message_id
         msg_pids = [partner.id for partner in msg.notified_partner_ids]
@@ -431,10 +432,10 @@ class test_mail(TestMail):
                             'message_post: mail.message attachments were not linked to the document')
             if 'List' in attach.name:
                 self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
-                                'message_post: mail.message attachment name / data incorrect')
+                              'message_post: mail.message attachment name / data incorrect')
                 dl_attach = self.mail_message.download_attachment(cr, user_raoul.id, id_message=msg.id, attachment_id=attach.id)
                 self.assertIn((dl_attach['filename'], dl_attach['base64'].decode('base64')), _attachments,
-                                'message_post: mail.message download_attachment is incorrect')
+                              'message_post: mail.message download_attachment is incorrect')
 
         # Test: followers: same as before (author was already subscribed)
         group_pigs.refresh()
@@ -460,15 +461,15 @@ class test_mail(TestMail):
             self.assertEqual(len(sent_email['email_to']), 1,
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
-                            'message_post: notification email email_to incorrect')
+                          'message_post: notification email email_to incorrect')
             self.assertEqual(sent_email['reply_to'], u'"YourCompany \\"Pigs\\" !ù $%-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
-                            'message_post: notification email body incorrect')
+                          'message_post: notification email body incorrect')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the body')
+                          'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
             self.assertFalse(sent_email['references'],
@@ -496,7 +497,7 @@ class test_mail(TestMail):
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id,
                         body=_body2, type='email', subtype='mt_comment',
                         partner_ids=[p_d_id], parent_id=msg1_id, attachment_ids=[attach3_id],
-                        context={'mail_post_autofollow': True})
+            context={'mail_post_autofollow': True})
         msg = self.mail_message.browse(cr, uid, msg2_id)
         msg_pids = [partner.id for partner in msg.notified_partner_ids]
         msg_aids = [attach.id for attach in msg.attachment_ids]
@@ -527,19 +528,19 @@ class test_mail(TestMail):
             self.assertEqual(len(sent_email['email_to']), 1,
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
-                            'message_post: notification email email_to incorrect')
+                          'message_post: notification email email_to incorrect')
             self.assertEqual(email_split(sent_email['reply_to']), ['r@r'],  # was '"Followers of Pigs" <r@r>', but makes no sense
                             'message_post: notification email reply_to incorrect: should have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
-                            'message_post: notification email does not contain the body')
+                          'message_post: notification email does not contain the body')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the body')
+                          'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
             self.assertIn(msg_message_id, sent_email['references'],
-                            'message_post: notification email references lacks parent message message_id')
+                          'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
         for attach in msg.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group',
@@ -553,7 +554,7 @@ class test_mail(TestMail):
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id, p_d_id])
         self.assertEqual(test_pids, msg_pids, 'message_post: mail.message parent notification not created')
 
-         # Do: reply to last message
+        # Do: reply to last message
         msg3_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body='Test', parent_id=msg2_id)
         msg = self.mail_message.browse(cr, uid, msg3_id)
         # Test: check that its parent will be the first message
@@ -590,7 +591,7 @@ class test_mail(TestMail):
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
-            ]
+        ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
         # 6 - Subscribe Bert to Pigs
         group_pigs.message_subscribe([p_b_id])
@@ -613,8 +614,8 @@ class test_mail(TestMail):
         compose = mail_compose.browse(cr, uid, compose_id)
 
         # Test: mail.compose.message: composition_mode, model, res_id
-        self.assertEqual(compose.composition_mode,  'comment', 'compose wizard: mail.compose.message incorrect composition_mode')
-        self.assertEqual(compose.model,  'mail.group', 'compose wizard: mail.compose.message incorrect model')
+        self.assertEqual(compose.composition_mode, 'comment', 'compose wizard: mail.compose.message incorrect composition_mode')
+        self.assertEqual(compose.model, 'mail.group', 'compose wizard: mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'compose wizard: mail.compose.message incorrect res_id')
 
         # Do: Post the comment
@@ -664,7 +665,7 @@ class test_mail(TestMail):
         # Test: mail.compose.message: attachments
         for attach in compose.attachment_ids:
             self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test,
-                            'compose wizard: mail.message attachment name / data incorrect')
+                          'compose wizard: mail.message attachment name / data incorrect')
 
         # --------------------------------------------------
         # CASE3: mass_mail on Pigs and Bird
@@ -686,9 +687,9 @@ class test_mail(TestMail):
 
         # Do: Post the comment, get created message for each group
         mail_compose.send_mail(cr, user_raoul.id, [compose_id], context={
-                        'default_res_id': -1,
-                        'active_ids': [self.group_pigs_id, group_bird_id]
-                    })
+            'default_res_id': -1,
+            'active_ids': [self.group_pigs_id, group_bird_id]
+        })
         # check mail_mail
         mail_mail_ids = self.mail_mail.search(cr, uid, [('subject', '=', _subject)])
         for mail_mail in self.mail_mail.browse(cr, uid, mail_mail_ids):
@@ -771,7 +772,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
@@ -786,7 +787,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         self.assertEqual(len(notif_ids), na_admin_base + 3, 'Admin should have 3 new unread notifications')
         na_admin = self.mail_message._needaction_count(cr, uid, domain=[])
         na_admin_group = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
@@ -796,7 +797,7 @@ class test_mail(TestMail):
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_raoul.partner_id.id),
             ('is_read', '=', False)
-            ])
+        ])
         self.assertEqual(len(notif_ids), na_demo_base + 0, 'Demo should have 0 new unread notifications')
         na_demo = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
         na_demo_group = self.mail_message._needaction_count(cr, user_raoul.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])

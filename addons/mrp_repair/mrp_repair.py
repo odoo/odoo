@@ -24,6 +24,7 @@ from datetime import datetime
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
     _inherit = 'mail.thread'
@@ -60,14 +61,14 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        #return {}.fromkeys(ids, 0)
+        # return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for repair in self.browse(cr, uid, ids, context=context):
             val = 0.0
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
-                #manage prices with tax included use compute_all instead of compute
+                # manage prices with tax included use compute_all instead of compute
                 if line.to_invoice:
                     tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
@@ -130,7 +131,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced', 'To be Invoiced'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Repaired')
-            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
+        ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -208,10 +209,10 @@ class mrp_repair(osv.osv):
         if product_id:
             product = self.pool.get("product.product").browse(cr, uid, product_id)
         return {'value': {
-                    'guarantee_limit': False,
-                    'lot_id': False,
-                    'product_uom': product and product.uom_id.id or False,
-                }
+            'guarantee_limit': False,
+            'lot_id': False,
+            'product_uom': product and product.uom_id.id or False,
+        }
         }
 
     def onchange_product_uom(self, cr, uid, ids, product_id, product_uom, context=None):
@@ -244,19 +245,19 @@ class mrp_repair(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         if not part:
             return {'value': {
-                        'address_id': False,
-                        'partner_invoice_id': False,
-                        'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
-                    }
+                'address_id': False,
+                'partner_invoice_id': False,
+                'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
+            }
             }
         addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': addr['delivery'] or addr['default'],
-                    'partner_invoice_id': addr['invoice'],
-                    'pricelist_id': pricelist
-                }
+            'address_id': addr['delivery'] or addr['default'],
+            'partner_invoice_id': addr['invoice'],
+            'pricelist_id': pricelist
+        }
         }
 
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -583,11 +584,11 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True, copy=False),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'state': fields.selection([
-                    ('draft', 'Draft'),
-                    ('confirmed', 'Confirmed'),
-                    ('done', 'Done'),
-                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
-                    help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
+            ('draft', 'Draft'),
+            ('confirmed', 'Confirmed'),
+            ('done', 'Done'),
+            ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
+            help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
                         \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
                         \n* The \'Done\' status is set automatically when repair order is completed.\
                         \n* The \'Cancelled\' status is set automatically when user cancel repair order.'),
@@ -608,7 +609,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
-                }}
+            }}
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
         location_id = location_obj.search(cr, uid, [('usage', '=', 'production')], context=context)
@@ -628,7 +629,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
                 'location_dest_id': location_id
-                }}
+            }}
         scrap_location_ids = location_obj.search(cr, uid, [('scrap_location', '=', True)], context=context)
 
         return {'value': {

@@ -26,21 +26,22 @@ from openerp.osv import fields, osv
 
 _logger = logging.getLogger(__name__)
 
+
 class payment_mode(osv.osv):
-    _name= 'payment.mode'
-    _description= 'Payment Mode'
+    _name = 'payment.mode'
+    _description = 'Payment Mode'
     _columns = {
         'name': fields.char('Name', required=True, help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
-            required=True,help='Bank Account for the Payment Mode'),
+            required=True, help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
-            domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
-        'company_id': fields.many2one('res.company', 'Company',required=True),
-        'partner_id':fields.related('company_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True,),
+            domain=[('type', 'in', ('bank', 'cash'))], help='Bank or Cash Journal for the Payment Mode'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'partner_id': fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True,),
 
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
     def suitable_bank_types(self, cr, uid, payment_code=None, context=None):
@@ -54,13 +55,12 @@ class payment_mode(osv.osv):
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
-    def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         result = {}
         if company_id:
             partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
             result['partner_id'] = partner_id
         return {'value': result}
-
 
 
 class payment_order(osv.osv):
@@ -69,7 +69,7 @@ class payment_order(osv.osv):
     _rec_name = 'reference'
     _order = 'id desc'
 
-    #dead code
+    # dead code
     def get_wizard(self, type):
         _logger.warning("No wizard found for the payment type '%s'.", type)
         return None
@@ -86,7 +86,7 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'date_scheduled': fields.date('Scheduled Date', states={'done': [('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference', required=1, states={'done': [('readonly', True)]}, copy=False),
         'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
@@ -102,18 +102,18 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred Date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+        ], "Preferred Date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation Date', readonly=True),
         'date_done': fields.date('Execution Date', readonly=True),
         'company_id': fields.related('mode', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
+        'user_id': lambda self, cr, uid, context: uid,
         'state': 'draft',
         'date_prefered': 'due',
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-        'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
+        'reference': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
     }
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -127,7 +127,7 @@ class payment_order(osv.osv):
         for order in self.read(cr, uid, ids, ['reference']):
             if not order['reference']:
                 reference = ir_seq_obj.get(cr, uid, 'payment.order')
-                self.write(cr, uid, order['id'], {'reference':reference})
+                self.write(cr, uid, order['id'], {'reference': reference})
         return True
 
     def set_done(self, cr, uid, ids, *args):
@@ -166,8 +166,8 @@ class payment_line(osv.osv):
 
     def translate(self, orig):
         return {
-                "due_date": "date_maturity",
-                "reference": "ref"}.get(orig, orig)
+            "due_date": "date_maturity",
+            "reference": "ref"}.get(orig, orig)
 
     def _info_owner(self, cr, uid, ids, name=None, args=None, context=None):
         result = {}
@@ -176,16 +176,16 @@ class payment_line(osv.osv):
             result[line.id] = self._get_info_partner(cr, uid, owner, context=context)
         return result
 
-    def _get_info_partner(self,cr, uid, partner_record, context=None):
+    def _get_info_partner(self, cr, uid, partner_record, context=None):
         if not partner_record:
             return False
         st = partner_record.street or ''
         st1 = partner_record.street2 or ''
         zip = partner_record.zip or ''
-        city = partner_record.city or  ''
+        city = partner_record.city or ''
         zip_city = zip + ' ' + city
         cntry = partner_record.country_id and partner_record.country_id.name or ''
-        return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
+        return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" + cntry
 
     def _info_partner(self, cr, uid, ids, name=None, args=None, context=None):
         result = {}
@@ -196,30 +196,31 @@ class payment_line(osv.osv):
             result[line.id] = self._get_info_partner(cr, uid, line.partner_id, context=context)
         return result
 
-    #dead code
+    # dead code
     def select_by_name(self, cr, uid, ids, name, args, context=None):
-        if not ids: return {}
+        if not ids:
+            return {}
         partner_obj = self.pool.get('res.partner')
 
         cr.execute("""SELECT pl.id, ml.%s
             FROM account_move_line ml
                 INNER JOIN payment_line pl
                 ON (ml.id = pl.move_line_id)
-                WHERE pl.id IN %%s"""% self.translate(name),
+                WHERE pl.id IN %%s""" % self.translate(name),
                    (tuple(ids),))
         res = dict(cr.fetchall())
 
         if name == 'partner_id':
             partner_name = {}
             for p_id, p_name in partner_obj.name_get(cr, uid,
-                filter(lambda x:x and x != 0,res.values()), context=context):
+                filter(lambda x: x and x != 0, res.values()), context=context):
                 partner_name[p_id] = p_name
 
             for id in ids:
                 if id in res and partner_name:
-                    res[id] = (res[id],partner_name[res[id]])
+                    res[id] = (res[id], partner_name[res[id]])
                 else:
-                    res[id] = (False,False)
+                    res[id] = (False, False)
         else:
             for id in ids:
                 res.setdefault(id, (False, ""))
@@ -299,7 +300,7 @@ class payment_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
             required=True, help='Payment amount in the partner currency'),
-        'currency': fields.many2one('res.currency','Partner Currency', required=True),
+        'currency': fields.many2one('res.currency', 'Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
         'bank_id': fields.many2one('res.partner.bank', 'Destination Bank Account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
@@ -316,13 +317,13 @@ class payment_line(osv.osv):
         'info_partner': fields.function(_info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created', readonly=True),
-        'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),
+        'state': fields.selection([('normal', 'Free'), ('structured', 'Structured')], 'Communication Type', required=True),
         'bank_statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
-            ).get(cursor, user, 'payment.line'),
+                                                                ).get(cursor, user, 'payment.line'),
         'state': 'normal',
         'currency': _get_currency,
         'company_currency': _get_currency,
@@ -361,7 +362,7 @@ class payment_line(osv.osv):
             data['communication'] = line.ref
 
             if date_prefered == 'now':
-                #no payment date => immediate payment
+                # no payment date => immediate payment
                 data['date'] = False
             elif date_prefered == 'due':
                 data['date'] = line.date_maturity

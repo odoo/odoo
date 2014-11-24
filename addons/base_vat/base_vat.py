@@ -29,7 +29,7 @@ try:
     import vatnumber
 except ImportError:
     _logger.warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
-                                          "Install it to support more countries, for example with `easy_install vatnumber`.")
+                    "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
 from openerp.osv import fields, osv
@@ -40,7 +40,7 @@ _ref_vat = {
     'at': 'ATU12345675',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'ch': 'CHE-123.456.788 TVA or CH TVA 123456', #Swiss by Yannick Vaucher @ Camptocamp
+    'ch': 'CHE-123.456.788 TVA or CH TVA 123456',  # Swiss by Yannick Vaucher @ Camptocamp
     'cy': 'CY12345678F',
     'cz': 'CZ12345679',
     'de': 'DE123456788',
@@ -53,7 +53,7 @@ _ref_vat = {
     'gb': 'GB123456782',
     'gr': 'GR12345670',
     'hu': 'HU12345676',
-    'hr': 'HR01234567896', # Croatia, contributed by Milan Tribuson 
+    'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'it': 'IT12345670017',
     'lt': 'LT123456715',
@@ -72,6 +72,7 @@ _ref_vat = {
     'sk': 'SK0012345675',
 }
 
+
 class res_partner(osv.osv):
     _inherit = 'res.partner'
 
@@ -88,7 +89,7 @@ class res_partner(osv.osv):
             return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or \
-                        getattr(vatnumber, check_func_name, None)
+            getattr(vatnumber, check_func_name, None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
             res_country = self.pool.get('res.country')
@@ -99,7 +100,7 @@ class res_partner(osv.osv):
         try:
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
-            return vatnumber.check_vies(country_code.upper()+vat_number)
+            return vatnumber.check_vies(country_code.upper() + vat_number)
         except Exception:
             # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
             # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
@@ -154,7 +155,6 @@ class res_partner(osv.osv):
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
-
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
@@ -162,7 +162,7 @@ class res_partner(osv.osv):
         '''
         Check Switzerland VAT number.
         '''
-        # VAT number in Switzerland will change between 2011 and 2013 
+        # VAT number in Switzerland will change between 2011 and 2013
         # http://www.estv.admin.ch/mwst/themen/00154/00589/01107/index.html?lang=fr
         # Old format is "TVA 123456" we will admit the user has to enter ch before the number
         # Format will becomes such as "CHE-999.999.99C TVA"
@@ -172,20 +172,20 @@ class res_partner(osv.osv):
         #     CH IVA ######
         #     CH MWST #######
         #
-        #     CHE#########MWST
-        #     CHE#########TVA
-        #     CHE#########IVA
-        #     CHE-###.###.### MWST
-        #     CHE-###.###.### TVA
-        #     CHE-###.###.### IVA
-        #     
+        # CHE#########MWST
+        # CHE#########TVA
+        # CHE#########IVA
+        # CHE-###.###.### MWST
+        # CHE-###.###.### TVA
+        # CHE-###.###.### IVA
+        #
         if self.__check_vat_ch_re1.match(vat):
             return True
-        match = self.__check_vat_ch_re2.match(vat) 
+        match = self.__check_vat_ch_re2.match(vat)
         if match:
             # For new TVA numbers, do a mod11 check
             num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
-            factor = (5,4,3,2,7,6,5,4)
+            factor = (5, 4, 3, 2, 7, 6, 5, 4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
             check = (11 - (csum % 11)) % 11
             return check == int(num[8])
@@ -200,7 +200,7 @@ class res_partner(osv.osv):
             else:
                 # invalid
                 return -1
-        checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
+        checksum = extra + sum((8 - i) * int(x) for i, x in enumerate(vat[:7]))
         return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
 
     def check_vat_ie(self, vat):
@@ -222,11 +222,12 @@ class res_partner(osv.osv):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                    r"[ \-_]?" \
-                                    r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                    r"[ \-_]?" \
-                                    r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})"
+                                   r"[ \-_]?"
+                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])"
+                                   r"[ \-_]?"
+                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
 
@@ -236,7 +237,7 @@ class res_partner(osv.osv):
         vat = ustr(vat).encode('iso8859-1')
         m = self.__check_vat_mx_re.match(vat)
         if not m:
-            #No valid format
+            # No valid format
             return False
         try:
             ano = int(m.group('ano'))
@@ -248,9 +249,8 @@ class res_partner(osv.osv):
         except ValueError:
             return False
 
-        #Valid format and valid date
+        # Valid format and valid date
         return True
-
 
     # Norway VAT validation, contributed by Rolv Råen (adEgo) <rora@adego.no>
     def check_vat_no(self, vat):
@@ -269,7 +269,7 @@ class res_partner(osv.osv):
             (5 * int(vat[4])) + (4 * int(vat[5])) + \
             (3 * int(vat[6])) + (2 * int(vat[7]))
 
-        check = 11 -(sum % 11)
+        check = 11 - (sum % 11)
         if check == 11:
             check = 0
         if check == 10:
@@ -280,13 +280,13 @@ class res_partner(osv.osv):
     # Peruvian VAT validation, contributed by Vauxoo
     def check_vat_pe(self, vat):
 
-        vat_type,vat = vat and len(vat)>=2 and (vat[0], vat[1:]) or (False, False)
+        vat_type, vat = vat and len(vat) >= 2 and (vat[0], vat[1:]) or (False, False)
 
         if vat_type and vat_type.upper() == 'D':
-            #DNI
+            # DNI
             return True
         elif vat_type and vat_type.upper() == 'R':
-            #verify RUC
+            # verify RUC
             factor = '5432765432'
             sum = 0
             dig_check = False
@@ -295,11 +295,11 @@ class res_partner(osv.osv):
             try:
                 int(vat)
             except ValueError:
-                return False 
-                         
-            for f in range(0,10):
+                return False
+
+            for f in range(0, 10):
                 sum += int(factor[f]) * int(vat[f])
-                
+
             subtraction = 11 - (sum % 11)
             if subtraction == 10:
                 dig_check = 0
@@ -307,7 +307,7 @@ class res_partner(osv.osv):
                 dig_check = 1
             else:
                 dig_check = subtraction
-            
+
             return int(vat[10]) == dig_check
         else:
             return False

@@ -25,12 +25,14 @@ from openerp.addons.website.models.website import slug
 
 import pytz
 
+
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
     _order = 'name'
     _columns = {
         'name': fields.char('Event Track Tag', translate=True)
     }
+
 
 class event_tag(osv.osv):
     _name = "event.tag"
@@ -42,6 +44,7 @@ class event_tag(osv.osv):
 #
 # Tracks: conferences
 #
+
 
 class event_track_stage(osv.osv):
     _name = "event.track.stage"
@@ -60,6 +63,7 @@ class event_track_location(osv.osv):
     _columns = {
         'name': fields.char('Track Rooms')
     }
+
 
 class event_track(osv.osv):
     _name = "event.track"
@@ -81,17 +85,18 @@ class event_track(osv.osv):
         'stage_id': fields.many2one('event.track.stage', 'Stage'),
         'description': fields.html('Track Description', translate=True),
         'date': fields.datetime('Track Date'),
-        'duration': fields.float('Duration', digits=(16,2)),
+        'duration': fields.float('Duration', digits=(16, 2)),
         'location_id': fields.many2one('event.track.location', 'Location'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
-        'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
+        'priority': fields.selection([('3', 'Low'), ('2', 'Medium (*)'), ('1', 'High (**)'), ('0', 'Highest (***)')], 'Priority', required=True),
         'website_published': fields.boolean('Available in the website', copy=False),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'image': fields.related('speaker_ids', 'image', type='binary', readonly=True)
     }
+
     def set_priority(self, cr, uid, ids, priority, context={}):
-        return self.write(cr, uid, ids, {'priority' : priority})
+        return self.write(cr, uid, ids, {'priority': priority})
 
     def _default_stage_id(self, cr, uid, context={}):
         stage_obj = self.pool.get('event.track.stage')
@@ -118,12 +123,14 @@ class event_track(osv.osv):
 #
 # Events
 #
+
+
 class event_event(osv.osv):
     _inherit = "event.event"
 
-    def _list_tz(self,cr,uid, context=None):
+    def _list_tz(self, cr, uid, context=None):
         # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-        return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+        return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
     def _count_tracks(self, cr, uid, ids, field_name, arg, context=None):
         return {
@@ -157,24 +164,25 @@ class event_event(osv.osv):
         'show_track_proposal': False,
         'show_tracks': False,
         'show_blog': False,
-        'timezone_of_event':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
+        'timezone_of_event': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
     }
 
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.show_tracks:
-            result.append( (_('Talks'), '/event/%s/track' % slug(event)))
-            result.append( (_('Agenda'), '/event/%s/agenda' % slug(event)))
+            result.append((_('Talks'), '/event/%s/track' % slug(event)))
+            result.append((_('Agenda'), '/event/%s/agenda' % slug(event)))
         if event.blog_id:
-            result.append( (_('News'), '/blogpost'+slug(event.blog_ig)))
+            result.append((_('News'), '/blogpost' + slug(event.blog_ig)))
         if event.show_track_proposal:
-            result.append( (_('Talk Proposals'), '/event/%s/track_proposal' % slug(event)))
+            result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(event)))
         return result
 
 #
 # Sponsors
 #
+
 
 class event_sponsors_type(osv.osv):
     _name = "event.sponsor.type"
@@ -183,6 +191,7 @@ class event_sponsors_type(osv.osv):
         "name": fields.char('Sponsor Type', required=True, translate=True),
         "sequence": fields.integer('Sequence')
     }
+
 
 class event_sponsors(osv.osv):
     _name = "event.sponsor"
@@ -199,4 +208,3 @@ class event_sponsors(osv.osv):
     def has_access_to_partner(self, cr, uid, ids, context=None):
         partner_ids = [sponsor.partner_id.id for sponsor in self.browse(cr, uid, ids, context=context)]
         return len(partner_ids) == self.pool.get("res.partner").search(cr, uid, [("id", "in", partner_ids)], count=True, context=context)
-

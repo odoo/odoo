@@ -22,12 +22,13 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_move_line_reconcile_select(osv.osv_memory):
     _name = "account.move.line.reconcile.select"
     _description = "Move line reconcile select"
     _columns = {
-       'account_id': fields.many2one('account.account', 'Account', \
-                            domain = [('reconcile', '=', 1)], required=True),
+       'account_id': fields.many2one('account.account', 'Account',
+                            domain=[('reconcile', '=', 1)], required=True),
     }
 
     def action_open_window(self, cr, uid, ids, context=None):

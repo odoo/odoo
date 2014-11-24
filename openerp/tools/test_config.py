@@ -11,7 +11,7 @@ import os
 
 import config
 
-config_file_00 = os.path.join(os.path.dirname(__file__),'test-config-values-00.conf')
+config_file_00 = os.path.join(os.path.dirname(__file__), 'test-config-values-00.conf')
 
 # 1. No config file, no command-line arguments (a.k.a. default values)
 

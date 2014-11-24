@@ -25,6 +25,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 def is_initialized(cr):
     """ Check if a database has been initialized for the ORM.
 
@@ -33,6 +34,7 @@ def is_initialized(cr):
     """
     cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
     return len(cr.fetchall()) > 0
+
 
 def initialize(cr):
     """ Initialize a database with for the ORM.
@@ -87,7 +89,7 @@ def initialize(cr):
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_'+i, 'ir.module.module', 'base', id, True))
+            'module_' + i, 'ir.module.module', 'base', id, True))
         dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
@@ -101,10 +103,12 @@ def initialize(cr):
                                    WHERE d.module_id = m.id AND mdep.state != 'to install'
                       )""")
         to_auto_install = [x[0] for x in cr.fetchall()]
-        if not to_auto_install: break
+        if not to_auto_install:
+            break
         cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name in %s""", (tuple(to_auto_install),))
 
     cr.commit()
+
 
 def create_categories(cr, categories):
     """ Create the ir_module_category entries for some categories.
@@ -137,6 +141,7 @@ def create_categories(cr, categories):
         p_id = c_id
         categories = categories[1:]
     return p_id
+
 
 def has_unaccent(cr):
     """ Test if the database has an unaccent function.

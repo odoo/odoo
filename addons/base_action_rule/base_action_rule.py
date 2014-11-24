@@ -38,6 +38,7 @@ DATE_RANGE_FUNCTION = {
     False: lambda interval: timedelta(0),
 }
 
+
 def get_datetime(date_str):
     '''Return a datetime from a date string or a datetime string'''
     # complete date time if date_str contains only a date
@@ -54,7 +55,7 @@ class base_action_rule(osv.osv):
     _order = 'sequence'
 
     _columns = {
-        'name':  fields.char('Rule Name', required=True),
+        'name': fields.char('Rule Name', required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model',
             required=True, domain=[('osv_memory', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", string='Model'),
@@ -73,8 +74,8 @@ class base_action_rule(osv.osv):
             help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
-            help="Delay after the trigger date." \
-            "You can put a negative number if you need a delay before the" \
+            help="Delay after the trigger date."
+            "You can put a negative number if you need a delay before the"
             "trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
@@ -167,6 +168,7 @@ class base_action_rule(osv.osv):
 
         def make_create():
             """ instanciate a create method that processes action rules """
+
             def create(self, cr, uid, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -192,6 +194,7 @@ class base_action_rule(osv.osv):
 
         def make_write():
             """ instanciate a write method that processes action rules """
+
             def write(self, cr, uid, ids, vals, context=None, **kwargs):
                 # avoid loops or cascading actions
                 if context and context.get('action'):
@@ -314,7 +317,7 @@ class base_action_rule(osv.osv):
                     # as we are usually running this as super-user in background
                     [filter_meta] = action.filter_id.get_metadata()
                     user_id = filter_meta['write_uid'] and filter_meta['write_uid'][0] or \
-                                    filter_meta['create_uid'][0]
+                        filter_meta['create_uid'][0]
                     ctx['lang'] = self.pool['res.users'].browse(cr, uid, user_id).lang
             record_ids = model.search(cr, uid, domain, context=ctx)
 

@@ -49,40 +49,39 @@ DT_FMT = '%Y-%m-%d %H:%M:%S'
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
-    
+
     def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         try:
             for segments in self.browse(cr, uid, ids, context=context):
                 res[segments.id] = len(segments.segment_ids)
-        except: 
+        except:
             pass
         return res
 
     _columns = {
         'name': fields.char('Name', required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
-                                      help="Choose the resource on which you want \
+                                     help="Choose the resource on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record. "\
-                                                  "If the record is the partner itself leave this field empty. "\
-                                                  "This is useful for reporting purposes, via the Campaign Analysis or Campaign Follow-up views."),
+                                            help="The generated workitems will be linked to the partner related to the record. "
+                                            "If the record is the partner itself leave this field empty. "
+                                            "This is useful for reporting purposes, via the Campaign Analysis or Campaign Follow-up views."),
         'unique_field_id': fields.many2one('ir.model.fields', 'Unique Field',
-                                            domain="[('model_id', '=', object_id), ('ttype', 'in', ['char','int','many2one','text','selection'])]",
-                                            help='If set, this field will help segments that work in "no duplicates" mode to avoid '\
-                                                 'selecting similar records twice. Similar records are records that have the same value for '\
-                                                 'this unique field. For example by choosing the "email_from" field for CRM Leads you would prevent '\
-                                                 'sending the same campaign to the same email address again. If not set, the "no duplicates" segments '\
-                                                 "will only avoid selecting the same record again if it entered the campaign previously. "\
-                                                 "Only easily comparable fields like textfields, integers, selections or single relationships may be used."),
+                                           domain="[('model_id', '=', object_id), ('ttype', 'in', ['char','int','many2one','text','selection'])]",
+                                           help='If set, this field will help segments that work in "no duplicates" mode to avoid '
+                                           'selecting similar records twice. Similar records are records that have the same value for '
+                                           'this unique field. For example by choosing the "email_from" field for CRM Leads you would prevent '
+                                           'sending the same campaign to the same email address again. If not set, the "no duplicates" segments '
+                                           "will only avoid selecting the same record again if it entered the campaign previously. "
+                                           "Only easily comparable fields like textfields, integers, selections or single relationships may be used."),
         'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
-                                ('manual', 'With Manual Confirmation'),
-                                ('active', 'Normal')],
-                                 'Mode', required=True, help= \
-"""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
+            ('manual', 'With Manual Confirmation'),
+            ('active', 'Normal')],
+            'Mode', required=True, help="""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
@@ -90,7 +89,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'Status', copy=False),
+                                  'Status', copy=False),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
@@ -129,7 +128,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
-        if segment_ids :
+        if segment_ids:
             raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
@@ -144,7 +143,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         record = self.pool[model].browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
-    #dead code
+    # dead code
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('Signal cannot be False.')
@@ -196,8 +195,8 @@ Normal - the campaign runs normally and automatically sends all emails and repor
            :param campaign_rec: browse_record of campaign
         """
         Workitems = self.pool.get('marketing.campaign.workitem')
-        duplicate_workitem_domain = [('res_id','=', record.id),
-                                     ('campaign_id','=', campaign_rec.id)]
+        duplicate_workitem_domain = [('res_id', '=', record.id),
+                                     ('campaign_id', '=', campaign_rec.id)]
         unique_field = campaign_rec.unique_field_id
         if unique_field:
             unique_value = getattr(record, unique_field.name, None)
@@ -207,10 +206,9 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 similar_res_ids = self.pool[campaign_rec.object_id.model].search(cr, uid,
                                     [(unique_field.name, '=', unique_value)], context=context)
                 if similar_res_ids:
-                    duplicate_workitem_domain = [('res_id','in', similar_res_ids),
-                                                 ('campaign_id','=', campaign_rec.id)]
+                    duplicate_workitem_domain = [('res_id', 'in', similar_res_ids),
+                                                 ('campaign_id', '=', campaign_rec.id)]
         return Workitems.search(cr, uid, duplicate_workitem_domain, context=context)
-
 
 
 class marketing_campaign_segment(osv.osv):
@@ -227,26 +225,26 @@ class marketing_campaign_segment(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
-        'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
+        'object_id': fields.related('campaign_id', 'object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
-                            help="Filter to select the matching resource records that belong to this segment. "\
-                                 "New filters can be created and saved using the advanced search on the list view of the Resource. "\
-                                 "If no filter is set, all records are selected without filtering. "\
+                            help="Filter to select the matching resource records that belong to this segment. "
+                                 "New filters can be created and saved using the advanced search on the list view of the Resource. "
+                                 "If no filter is set, all records are selected without filtering. "
                                  "The synchronization mode may also add a criterion to the filter."),
         'sync_last_date': fields.datetime('Last Synchronization', help="Date on which this segment was synchronized last time (automatically or manually)"),
         'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
                                       ('write_date', 'Only records modified after last sync (no duplicates)'),
                                       ('all', 'All records (no duplicates)')],
                                       'Synchronization mode',
-                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "\
-                                           '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
-                                           'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
+                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "
+                                           '"No duplicates" prevents selecting records which have already entered the campaign previously.'
+                                           'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '
                                            'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'Status', copy=False),
+                                  'Status', copy=False),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -270,7 +268,7 @@ class marketing_campaign_segment(osv.osv):
     ]
 
     def onchange_campaign_id(self, cr, uid, ids, campaign_id):
-        res = {'domain':{'ir_filter_id':[]}}
+        res = {'domain': {'ir_filter_id': []}}
         campaign_pool = self.pool.get('marketing.campaign')
         if campaign_id:
             campaign = campaign_pool.browse(cr, uid, campaign_id)
@@ -293,15 +291,15 @@ class marketing_campaign_segment(osv.osv):
     def state_done_set(self, cr, uid, ids, *args):
         wi_ids = self.pool.get("marketing.campaign.workitem").search(cr, uid,
                                 [('state', '=', 'todo'), ('segment_id', 'in', ids)])
-        self.pool.get("marketing.campaign.workitem").write(cr, uid, wi_ids, {'state':'cancelled'})
-        self.write(cr, uid, ids, {'state': 'done','date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.pool.get("marketing.campaign.workitem").write(cr, uid, wi_ids, {'state': 'cancelled'})
+        self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def state_cancel_set(self, cr, uid, ids, *args):
         wi_ids = self.pool.get("marketing.campaign.workitem").search(cr, uid,
                                 [('state', '=', 'todo'), ('segment_id', 'in', ids)])
-        self.pool.get("marketing.campaign.workitem").write(cr, uid, wi_ids, {'state':'cancelled'})
-        self.write(cr, uid, ids, {'state': 'cancelled','date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.pool.get("marketing.campaign.workitem").write(cr, uid, wi_ids, {'state': 'cancelled'})
+        self.write(cr, uid, ids, {'state': 'cancelled', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def synchroniz(self, cr, uid, ids, *args):
@@ -336,7 +334,7 @@ class marketing_campaign_segment(osv.osv):
             # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
             for record in model_obj.browse(cr, uid, object_ids, context=context):
                 # avoid duplicate workitem for the same resource
-                if segment.sync_mode in ('write_date','all'):
+                if segment.sync_mode in ('write_date', 'all'):
                     if Campaigns._find_duplicate_workitems(cr, uid, record, segment.campaign_id, context=context):
                         continue
 
@@ -355,7 +353,7 @@ class marketing_campaign_segment(osv.osv):
                     wi_vals['activity_id'] = act_id
                     Workitems.create(cr, uid, wi_vals, context=context)
 
-            self.write(cr, uid, segment.id, {'sync_last_date':action_date}, context=context)
+            self.write(cr, uid, segment.id, {'sync_last_date': action_date}, context=context)
         Workitems.process_all(cr, uid, list(campaigns), context=context)
         return True
 
@@ -378,11 +376,11 @@ class marketing_campaign_activity(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                            required = True, ondelete='cascade', select=1),
-        'object_id': fields.related('campaign_id','object_id',
-                                      type='many2one', relation='ir.model',
-                                      string='Object', readonly=True),
-        'start': fields.boolean('Start', help= "This activity is launched when the campaign starts.", select=True),
+                                       required=True, ondelete='cascade', select=1),
+        'object_id': fields.related('campaign_id', 'object_id',
+                                    type='many2one', relation='ir.model',
+                                    string='Object', readonly=True),
+        'start': fields.boolean('Start', help="This activity is launched when the campaign starts.", select=True),
         'condition': fields.text('Condition', size=256, required=True,
                                  help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."
                                  "The expression may use the following [browsable] variables:\n"
@@ -392,26 +390,26 @@ class marketing_campaign_activity(osv.osv):
                                  "   - transitions: list of campaign transitions outgoing from this activity\n"
                                  "...- re: Python regular expression module"),
         'type': fields.selection(_action_types, 'Type', required=True,
-                                  help="""The type of action to execute when an item enters this activity, such as:
+                                 help="""The type of action to execute when an item enters this activity, such as:
    - Email: send an email using a predefined email template
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
         'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
-        'report_directory_id': fields.many2one('document.directory','Directory',
+        'report_directory_id': fields.many2one('document.directory', 'Directory',
                                 help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
-                                help= "The action to perform when this activity is activated"),
+                                help="The action to perform when this activity is activated"),
         'to_ids': fields.one2many('marketing.campaign.transition',
-                                            'activity_from_id',
-                                            'Next Activities'),
+                                  'activity_from_id',
+                                  'Next Activities'),
         'from_ids': fields.one2many('marketing.campaign.transition',
-                                            'activity_to_id',
-                                            'Previous Activities'),
+                                    'activity_to_id',
+                                    'Previous Activities'),
         'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Product Price')),
         'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Account')),
-        'signal': fields.char('Signal', 
+        'signal': fields.char('Signal',
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
         'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
@@ -423,10 +421,10 @@ class marketing_campaign_activity(osv.osv):
     }
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
-                                        context=None, count=False):
-        if context == None:
+               context=None, count=False):
+        if context is None:
             context = {}
-        if 'segment_id' in context  and context['segment_id']:
+        if 'segment_id' in context and context['segment_id']:
             segment_obj = self.pool.get('marketing.campaign.segment').browse(cr,
                                                     uid, context['segment_id'])
             act_ids = []
@@ -436,14 +434,14 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    #dead code
+    # dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
         report_data, format = render_report(cr, uid, [], activity.report_id.report_name, {}, context=context)
         attach_vals = {
-            'name': '%s_%s_%s'%(activity.report_id.report_name,
-                                activity.name,workitem.partner_id.name),
-            'datas_fname': '%s.%s'%(activity.report_id.report_name,
-                                        activity.report_id.report_type),
+            'name': '%s_%s_%s' % (activity.report_id.report_name,
+                                activity.name, workitem.partner_id.name),
+            'datas_fname': '%s.%s' % (activity.report_id.report_name,
+                                    activity.report_id.report_type),
             'parent_id': activity.report_directory_id.id,
             'datas': base64.encodestring(report_data),
             'file_type': format
@@ -456,7 +454,7 @@ class marketing_campaign_activity(osv.osv):
                                             activity.email_template_id.id,
                                             workitem.res_id, context=context)
 
-    #dead code
+    # dead code
     def _process_wi_action(self, cr, uid, activity, workitem, context=None):
         if context is None:
             context = {}
@@ -468,7 +466,7 @@ class marketing_campaign_activity(osv.osv):
                               active_model=workitem.object_id.model,
                               workitem=workitem)
         server_obj.run(cr, uid, [activity.server_action_id.id],
-                             context=action_context)
+                       context=action_context)
         return True
 
     def process(self, cr, uid, act_id, wi_id, context=None):
@@ -514,14 +512,12 @@ class marketing_campaign_transition(osv.osv):
             result[trans.id] = formatters[trans.trigger] % values
         return result
 
-
     def _delta(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
             raise ValueError('Delta is only relevant for timed transition.')
         return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
-
 
     _columns = {
         'name': fields.function(_get_name, string='Name',
@@ -539,7 +535,7 @@ class marketing_campaign_transition(osv.osv):
         'trigger': fields.selection([('auto', 'Automatic'),
                                      ('time', 'Time'),
                                      ('cosmetic', 'Cosmetic'),  # fake plastic transition
-                                    ],
+                                     ],
                                     'Trigger', required=True,
                                     help="How is the destination workitem triggered"),
     }
@@ -549,6 +545,7 @@ class marketing_campaign_transition(osv.osv):
         'interval_type': 'days',
         'trigger': 'time',
     }
+
     def _check_campaign(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
@@ -556,8 +553,8 @@ class marketing_campaign_transition(osv.osv):
         return True
 
     _constraints = [
-            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
-        ]
+        (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
+    ]
 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
@@ -590,7 +587,7 @@ class marketing_campaign_workitem(osv.osv):
         condition_name = None
         for domain_item in args:
             # we only use the first domain criterion and ignore all the rest including operators
-            if isinstance(domain_item, (list,tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_name':
+            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_name':
                 condition_name = [None, domain_item[1], domain_item[2]]
                 break
 
@@ -606,7 +603,7 @@ class marketing_campaign_workitem(osv.osv):
         workitem_map = {}
         matching_workitems = []
         for id, res_id, model in res:
-            workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
+            workitem_map.setdefault(model, {}).setdefault(res_id, set()).add(id)
         for model, id_map in workitem_map.iteritems():
             model_pool = self.pool[model]
             condition_name[0] = model_pool._rec_name
@@ -617,7 +614,7 @@ class marketing_campaign_workitem(osv.osv):
 
     _columns = {
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
-        'activity_id': fields.many2one('marketing.campaign.activity','Activity',
+        'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
              required=True, readonly=True),
         'campaign_id': fields.related('activity_id', 'campaign_id',
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True, store=True),
@@ -627,12 +624,12 @@ class marketing_campaign_workitem(osv.osv):
         'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
-        'state': fields.selection([ ('todo', 'To Do'),
-                                    ('cancelled', 'Cancelled'),
-                                    ('exception', 'Exception'),
-                                    ('done', 'Done'),
+        'state': fields.selection([('todo', 'To Do'),
+                                   ('cancelled', 'Cancelled'),
+                                   ('exception', 'Exception'),
+                                   ('done', 'Done'),
                                    ], 'Status', readonly=True, copy=False),
-        'error_msg' : fields.text('Error Message', readonly=True)
+        'error_msg': fields.text('Error Message', readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'todo',
@@ -643,14 +640,14 @@ class marketing_campaign_workitem(osv.osv):
     def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
-                self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
+                self.write(cr, uid, [wi.id], {'state': 'todo'}, context=context)
         return True
 
     @api.cr_uid_ids_context
     def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
-            if wi.state in ('todo','exception'):
-                self.write(cr, uid, [wi.id], {'state':'cancelled'}, context=context)
+            if wi.state in ('todo', 'exception'):
+                self.write(cr, uid, [wi.id], {'state': 'cancelled'}, context=context)
         return True
 
     def _process_one(self, cr, uid, workitem, context=None):
@@ -727,10 +724,10 @@ class marketing_campaign_workitem(osv.osv):
                     # auto       Y            Y             N           Y
                     #
 
-                    run = (transition.trigger == 'auto' \
-                            and campaign_mode != 'manual') \
-                          or (transition.trigger == 'time' \
-                              and campaign_mode == 'test')
+                    run = (transition.trigger == 'auto'
+                           and campaign_mode != 'manual') \
+                        or (transition.trigger == 'time'
+                        and campaign_mode == 'test')
                     if run:
                         new_wi = self.browse(cr, uid, wi_id, context)
                         self._process_one(cr, uid, new_wi, context)
@@ -748,7 +745,7 @@ class marketing_campaign_workitem(osv.osv):
     def process_all(self, cr, uid, camp_ids=None, context=None):
         camp_obj = self.pool.get('marketing.campaign')
         if camp_ids is None:
-            camp_ids = camp_obj.search(cr, uid, [('state','=','running')], context=context)
+            camp_ids = camp_obj.search(cr, uid, [('state', '=', 'running')], context=context)
         for camp in camp_obj.browse(cr, uid, camp_ids, context=context):
             if camp.mode == 'manual':
                 # manual states are not processed automatically
@@ -756,7 +753,7 @@ class marketing_campaign_workitem(osv.osv):
             while True:
                 domain = [('campaign_id', '=', camp.id), ('state', '=', 'todo'), ('date', '!=', False)]
                 if camp.mode in ('test_realtime', 'active'):
-                    domain += [('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
+                    domain += [('date', '<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
 
                 workitem_ids = self.search(cr, uid, domain, context=context)
                 if not workitem_ids:
@@ -780,9 +777,9 @@ class marketing_campaign_workitem(osv.osv):
                 'views': [(view_id and view_id[1] or 0, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'nodestroy':True,
-                'context': "{'template_id':%d,'default_res_id':%d}"%
-                                (wi_obj.activity_id.email_template_id.id,
+                'nodestroy': True,
+                'context': "{'template_id':%d,'default_res_id':%d}" %
+                (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
 
@@ -792,19 +789,19 @@ class marketing_campaign_workitem(osv.osv):
                 'model': wi_obj.object_id.model
             }
             res = {
-                'type' : 'ir.actions.report.xml',
+                'type': 'ir.actions.report.xml',
                 'report_name': wi_obj.activity_id.report_id.report_name,
-                'datas' : datas,
+                'datas': datas,
             }
         else:
-            raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
+            raise osv.except_osv(_('No preview'), _('The current step for this item has no email or report to preview.'))
         return res
 
 
 class email_template(osv.osv):
     _inherit = "email.template"
     _defaults = {
-        'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
+        'model_id': lambda obj, cr, uid, context: context.get('object_id', False),
     }
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
@@ -812,6 +809,7 @@ class email_template(osv.osv):
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
@@ -820,7 +818,6 @@ class report_xml(osv.osv):
             model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

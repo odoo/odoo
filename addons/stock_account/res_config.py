@@ -22,7 +22,6 @@
 from openerp.osv import fields, osv
 
 
-
 class stock_config_settings(osv.osv_memory):
     _inherit = 'stock.config.settings'
 
@@ -37,7 +36,6 @@ class stock_config_settings(osv.osv_memory):
         'module_stock_landed_costs': fields.boolean("Calculate landed costs on products",
             help="""Install the module that allows to affect landed costs on pickings, and split them onto the different products."""),
     }
-
 
     def onchange_landed_costs(self, cr, uid, ids, module_landed_costs, context=None):
         if module_landed_costs:

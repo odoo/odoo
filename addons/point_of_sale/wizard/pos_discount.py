@@ -26,7 +26,7 @@ class pos_discount(osv.osv_memory):
     _name = 'pos.discount'
     _description = 'Add a Global Discount'
     _columns = {
-        'discount': fields.float('Discount (%)', required=True, digits=(16,2)),
+        'discount': fields.float('Discount (%)', required=True, digits=(16, 2)),
     }
     _defaults = {
         'discount': 5,
@@ -51,7 +51,7 @@ class pos_discount(osv.osv_memory):
         if isinstance(record_id, (int, long)):
             record_id = [record_id]
         for order in order_ref.browse(cr, uid, record_id, context=context):
-            order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount':this.discount}, context=context)
+            order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount': this.discount}, context=context)
         return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

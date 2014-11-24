@@ -34,7 +34,7 @@ class res_partner_mail(osv.Model):
         'notify_email': fields.selection([
             ('none', 'Never'),
             ('always', 'All Messages'),
-            ], 'Receive Inbox Notifications by Email', required=True,
+        ], 'Receive Inbox Notifications by Email', required=True,
             oldname='notification_email_send',
             help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
                     "- Never: no emails are sent\n"

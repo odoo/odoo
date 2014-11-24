@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com) 
+# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
@@ -33,6 +33,7 @@ import openerp
 from openerp.osv import fields, orm
 
 from webkit_report import WebKitParser
+
 
 class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
@@ -71,12 +72,12 @@ class ir_actions_report_xml(orm.Model):
             if r:
                 if r['parser']:
                     parser = operator.attrgetter(r['parser'])(openerp.addons)
-                    kwargs = { 'parser': parser }
+                    kwargs = {'parser': parser}
                 else:
                     kwargs = {}
 
-                new_report = WebKitParser('report.'+r['report_name'],
-                    r['model'], opj('addons',r['report_rml'] or '/'),
+                new_report = WebKitParser('report.' + r['report_name'],
+                    r['model'], opj('addons', r['report_rml'] or '/'),
                     header=r['header'], register=False, **kwargs)
             else:
                 new_report = None

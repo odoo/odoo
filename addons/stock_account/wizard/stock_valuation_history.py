@@ -3,6 +3,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class wizard_valuation_history(osv.osv_memory):
 
     _name = 'wizard.valuation.history'

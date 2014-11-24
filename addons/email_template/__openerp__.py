@@ -21,12 +21,12 @@
 ##############################################################################
 
 {
-    'name' : 'Email Templates',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
-    'website' : 'https://www.odoo.com/page/mailing',
-    'category' : 'Marketing',
-    'depends' : ['mail'],
+    'name': 'Email Templates',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'website': 'https://www.odoo.com/page/mailing',
+    'category': 'Marketing',
+    'depends': ['mail'],
     'description': """
 Email Templating (simplified version of the original Power Email by Openlabs).
 ==============================================================================
@@ -66,7 +66,7 @@ campaigns on any OpenERP document.
     'demo': [],
     'installable': True,
     'auto_install': True,
-    'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
+    'images': ['images/1_email_account.jpeg', 'images/2_email_template.jpeg', 'images/3_emails.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

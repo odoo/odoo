@@ -21,11 +21,12 @@
 
 from openerp.osv import fields, osv
 
+
 class hr_timesheet_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'
 
     _columns = {
-        'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month')],
+        'timesheet_range': fields.selection([('day', 'Day'), ('week', 'Week'), ('month', 'Month')],
             'Validate timesheets every', help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Allow a difference of time between timesheets and attendances of (in hours)',
             help='Allowed difference in hours between the sign in/out and the timesheet '

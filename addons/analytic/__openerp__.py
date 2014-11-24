@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    'name' : 'Analytic Accounting',
+    'name': 'Analytic Accounting',
     'version': '1.1',
-    'author' : 'OpenERP SA',
-    'website' : 'https://www.odoo.com/page/accounting',
+    'author': 'OpenERP SA',
+    'website': 'https://www.odoo.com/page/accounting',
     'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
+    'depends': ['base', 'decimal_precision', 'mail'],
     'description': """
 Module for defining analytic accounting object.
 ===============================================

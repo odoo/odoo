@@ -1,5 +1,5 @@
 {
-    'name' : 'Instant Messaging',
+    'name': 'Instant Messaging',
     'version': '1.0',
     'summary': 'OpenERP Chat',
     'author': 'OpenERP SA',
@@ -20,7 +20,7 @@ chat in real time. It support several chats in parallel.
         'security/im_security.xml',
         'views/im_chat.xml',
     ],
-    'depends' : ['base', 'web', 'bus'],
+    'depends': ['base', 'web', 'bus'],
     'qweb': ['static/src/xml/*.xml'],
     'application': True,
     'installable': True,

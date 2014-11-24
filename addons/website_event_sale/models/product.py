@@ -2,6 +2,8 @@
 from openerp.osv import osv, fields
 
 # defined for access rules
+
+
 class product(osv.osv):
     _inherit = 'product.product'
     _columns = {

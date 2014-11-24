@@ -64,6 +64,7 @@ class ResPartner(osv.Model):
         'create_date': fields.datetime('Create Date', readonly=True),
     }
 
+
 class MergePartnerLine(osv.TransientModel):
     _name = 'base.partner.merge.line'
 
@@ -267,6 +268,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
 
         columns = dst_partner._columns
+
         def write_serializer(column, item):
             if isinstance(item, browse_record):
                 return item.id
@@ -323,8 +325,8 @@ class MergePartnerAutomatic(osv.TransientModel):
         call_it(self._update_values)
 
         _logger.info('(uid = %s) merged the partners %r with %s', uid, list(map(operator.attrgetter('id'), src_partners)), dst_partner.id)
-        dst_partner.message_post(body='%s %s'%(_("Merged with the following partners:"), ", ".join('%s<%s>(ID %s)' % (p.name, p.email or 'n/a', p.id) for p in src_partners)))
-        
+        dst_partner.message_post(body='%s %s' % (_("Merged with the following partners:"), ", ".join('%s<%s>(ID %s)' % (p.name, p.email or 'n/a', p.id) for p in src_partners)))
+
         for partner in src_partners:
             partner.unlink()
 
@@ -747,8 +749,8 @@ class MergePartnerAutomatic(osv.TransientModel):
         # select partner who have one least invoice
         partner_treated = ['@gmail.com']
         cr.execute("""  SELECT p.id, p.email
-                        FROM res_partner as p 
-                        LEFT JOIN account_invoice as a 
+                        FROM res_partner as p
+                        LEFT JOIN account_invoice as a
                         ON p.id = a.partner_id AND a.state in ('open','paid')
                         WHERE p.grade_id is NOT NULL
                         GROUP BY p.id

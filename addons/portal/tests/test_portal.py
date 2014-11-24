@@ -43,7 +43,7 @@ class test_portal(TestMail):
         # Create a PigsPortal group
         self.group_port_id = self.mail_group.create(cr, uid,
                         {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id},
-                        {'mail_create_nolog': True})
+            {'mail_create_nolog': True})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
@@ -157,14 +157,14 @@ class test_portal(TestMail):
         # Test: link for partner -> signup URL
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_bert)
         self.assertIn(partner_bert.signup_token, url,
-                        'notification email: mails send to a not-user partner should contain the signup token')
+                      'notification email: mails send to a not-user partner should contain the signup token')
 
         # Test: link for user -> signin
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_raoul)
         self.assertIn('action=mail.action_mail_redirect', url,
-                        'notification email: link should contain the redirect action')
+                      'notification email: link should contain the redirect action')
         self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
-                        'notification email: link should contain the user login')
+                      'notification email: link should contain the user login')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.models')
     def test_21_inbox_redirection(self):

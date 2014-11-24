@@ -2,15 +2,18 @@
 
 from openerp import models, fields
 
+
 class Child0(models.Model):
     _name = 'delegation.child0'
 
     field_0 = fields.Integer()
 
+
 class Child1(models.Model):
     _name = 'delegation.child1'
 
     field_1 = fields.Integer()
+
 
 class Delegating(models.Model):
     _name = 'delegation.parent'

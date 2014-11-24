@@ -31,12 +31,13 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
 
     _disallowed_datetime_patterns = tools.DATETIME_FORMATS_MAP.keys()
-    _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
+    _disallowed_datetime_patterns.remove('%y')  # this one is in fact allowed, just not good practice
 
     def install_lang(self, cr, uid, **args):
         """
@@ -51,7 +52,7 @@ class lang(osv.osv):
         lang = tools.config.get('lang')
         if not lang:
             return False
-        lang_ids = self.search(cr, uid, [('code','=', lang)])
+        lang_ids = self.search(cr, uid, [('code', '=', lang)])
         if not lang_ids:
             self.load_lang(cr, uid, lang)
         ir_values_obj = self.pool.get('ir.values')
@@ -79,7 +80,6 @@ class lang(osv.osv):
         if not lang_name:
             lang_name = tools.ALL_LANGUAGES.get(lang, lang)
 
-
         def fix_xa0(s):
             """Fix badly-encoded non-breaking space Unicode character from locale.localeconv(),
                coercing to utf-8, as some platform seem to output localeconv() in their system
@@ -103,10 +103,10 @@ class lang(osv.osv):
             'iso_code': iso_lang,
             'name': lang_name,
             'translatable': 1,
-            'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
-            'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
-            'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-            'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+            'date_format': fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
+            'time_format': fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
+            'decimal_point': fix_xa0(str(locale.localeconv()['decimal_point'])),
+            'thousands_sep': fix_xa0(str(locale.localeconv()['thousands_sep'])),
         }
         lang_id = False
         try:
@@ -136,18 +136,18 @@ class lang(osv.osv):
         'translatable': fields.boolean('Translatable'),
         'active': fields.boolean('Active'),
         'direction': fields.selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], 'Direction', required=True),
-        'date_format':fields.char('Date Format', required=True),
-        'time_format':fields.char('Time Format', required=True),
-        'grouping':fields.char('Separator Format', required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
-        'decimal_point':fields.char('Decimal Separator', required=True),
-        'thousands_sep':fields.char('Thousands Separator'),
+        'date_format': fields.char('Date Format', required=True),
+        'time_format': fields.char('Time Format', required=True),
+        'grouping': fields.char('Separator Format', required=True, help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
+        'decimal_point': fields.char('Decimal Separator', required=True),
+        'thousands_sep': fields.char('Thousands Separator'),
     }
     _defaults = {
         'active': 1,
         'translatable': 0,
         'direction': 'ltr',
-        'date_format':_get_default_date_format,
-        'time_format':_get_default_time_format,
+        'date_format': _get_default_date_format,
+        'time_format': _get_default_time_format,
         'grouping': '[]',
         'decimal_point': '.',
         'thousands_sep': ',',
@@ -175,24 +175,24 @@ class lang(osv.osv):
         return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
-        for lang_id in ids :
+        for lang_id in ids:
             self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        languages = self.read(cr, uid, ids, ['code','active'], context=context)
+        languages = self.read(cr, uid, ids, ['code', 'active'], context=context)
         for language in languages:
             ctx_lang = context.get('lang')
-            if language['code']=='en_US':
+            if language['code'] == 'en_US':
                 raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted!"))
-            if ctx_lang and (language['code']==ctx_lang):
+            if ctx_lang and (language['code'] == ctx_lang):
                 raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language!"))
             if language['active']:
                 raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             trans_obj = self.pool.get('ir.translation')
-            trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
+            trans_ids = trans_obj.search(cr, uid, [('lang', '=', language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
@@ -225,9 +225,10 @@ class lang(osv.osv):
 
 #    import re, operator
 #    _percent_re = re.compile(r'%(?:\((?P<key>.*?)\))?'
-#                             r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]')
+# r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]')
 
 lang()
+
 
 def split(l, counts):
     """
@@ -247,7 +248,7 @@ def split(l, counts):
 
     """
     res = []
-    saved_count = len(l) # count to use when encoutering a zero
+    saved_count = len(l)  # count to use when encoutering a zero
     for count in counts:
         if not l:
             break
@@ -267,6 +268,7 @@ def split(l, counts):
 
 intersperse_pat = re.compile('([^0-9]*)([^ ]*)(.*)')
 
+
 def intersperse(string, counts, separator=''):
     """
 
@@ -274,9 +276,11 @@ def intersperse(string, counts, separator=''):
 
     """
     left, rest, right = intersperse_pat.match(string).groups()
-    def reverse(s): return s[::-1]
+
+    def reverse(s):
+        return s[::-1]
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
-    return left + res + right, len(splits) > 0 and len(splits) -1 or 0
+    return left + res + right, len(splits) > 0 and len(splits) - 1 or 0
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

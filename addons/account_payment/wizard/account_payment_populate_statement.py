@@ -24,6 +24,7 @@ from lxml import etree
 
 from openerp.osv import fields, osv
 
+
 class account_payment_populate_statement(osv.osv_memory):
     _name = "account.payment.populate.statement"
     _description = "Account Payment Populate Statement"
@@ -38,12 +39,12 @@ class account_payment_populate_statement(osv.osv_memory):
         line_ids = line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
             ('bank_statement_line_id', '=', False),
-            ('move_line_id.state','=','valid')])
+            ('move_line_id.state', '=', 'valid')])
         line_ids.extend(line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
             ('order_id.mode', '=', False),
-            ('move_line_id.state','=','valid')]))
-        domain = '[("id", "in", '+ str(line_ids)+')]'
+            ('move_line_id.state', '=', 'valid')]))
+        domain = '[("id", "in", ' + str(line_ids) + ')]'
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='lines']")
         for node in nodes:
@@ -82,7 +83,7 @@ class account_payment_populate_statement(osv.osv_memory):
                                      statement, context=None):
         return {
             'name': payment_line.order_id.reference or '?',
-            'amount':-amount,
+            'amount': -amount,
             'partner_id': payment_line.partner_id.id,
             'statement_id': statement.id,
             'ref': payment_line.communication,

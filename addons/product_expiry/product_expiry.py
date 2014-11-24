@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,11 +23,13 @@ import datetime
 import openerp
 from openerp.osv import fields, osv
 
+
 class stock_production_lot(osv.osv):
     _inherit = 'stock.production.lot'
 
     def _get_date(dtype):
         """Return a function to compute the limit date for this type"""
+
         def calc_date(self, cr, uid, context=None):
             """Compute the limit date for a given date"""
             if context is None:
@@ -55,6 +57,7 @@ class stock_production_lot(osv.osv):
             help="This is the date on which an alert should be notified about the goods with this Serial Number."),
     }
     # Assign dates according to products data
+
     def create(self, cr, uid, vals, context=None):
         newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, newid, context=context)

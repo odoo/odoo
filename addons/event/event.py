@@ -25,6 +25,7 @@ import pytz
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
+
 class event_type(models.Model):
     """ Event Type """
     _name = 'event.type'
@@ -84,7 +85,7 @@ class event_event(models.Model):
         if self.ids:
             state_field = {
                 'draft': 'seats_unconfirmed',
-                'open':'seats_reserved',
+                'open': 'seats_reserved',
                 'done': 'seats_used',
             }
             query = """ SELECT event_id, state, sum(nb_register)
@@ -148,11 +149,11 @@ class event_event(models.Model):
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('confirm', 'Confirmed'),
-            ('done', 'Done')
-        ], string='Status', default='draft', readonly=True, required=True, copy=False,
+        ('draft', 'Unconfirmed'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'),
+        ('done', 'Done')
+    ], string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     email_registration_id = fields.Many2one(
         'email.template', string='Registration Confirmation Email',
@@ -228,7 +229,7 @@ class event_event(models.Model):
             if event_reg.state == 'done':
                 raise Warning(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
-        self.state = 'cancel'                
+        self.state = 'cancel'
 
     @api.one
     def button_done(self):
@@ -259,7 +260,7 @@ class event_event(models.Model):
             regs = regs.sudo().create({
                 'event_id': self.id,
                 'email': user.email,
-                'name':user.name,
+                'name': user.name,
                 'user_id': user.id,
                 'nb_register': num_of_seats,
             })
@@ -318,13 +319,13 @@ class event_registration(models.Model):
         readonly=True)
     user_id = fields.Many2one('res.users', string='User', states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
-        store=True, readonly=True, states={'draft':[('readonly', False)]})
+        store=True, readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('open', 'Confirmed'),
-            ('done', 'Attended'),
-        ], string='Status', default='draft', readonly=True, copy=False)
+        ('draft', 'Unconfirmed'),
+        ('cancel', 'Cancelled'),
+        ('open', 'Confirmed'),
+        ('done', 'Attended'),
+    ], string='Status', default='draft', readonly=True, copy=False)
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name', select=True)
@@ -334,7 +335,7 @@ class event_registration(models.Model):
     def _check_seats_limit(self):
         if self.event_id.seats_max and \
             self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
-                raise Warning(_('No more available seats.'))
+            raise Warning(_('No more available seats.'))
 
     @api.one
     def do_draft(self):

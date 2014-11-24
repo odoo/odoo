@@ -87,7 +87,7 @@ class AdyenForm(AdyenCommon):
     # @mute_logger('openerp.addons.payment_adyen.models.adyen', 'ValidationError')
     # def test_20_paypal_form_management(self):
     #     cr, uid, context = self.cr, self.uid, {}
-    #     # be sure not to do stupid things
+    # be sure not to do stupid things
     #     adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
     #     self.assertEqual(adyen.env, 'test', 'test without test env')
 

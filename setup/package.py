@@ -53,9 +53,11 @@ PUBLISH_DIRS = {
     'src.rpm': 'rpm',
 }
 
+
 def mkdir(d):
     if not os.path.isdir(d):
         os.makedirs(d)
+
 
 def system(l, chdir=None):
     print l
@@ -70,6 +72,7 @@ def system(l, chdir=None):
     if chdir:
         os.chdir(cwd)
     return rc
+
 
 def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     time.sleep(5)
@@ -89,6 +92,7 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     else:
         print("Package test: FAILED. Not able to install base.")
         raise Exception("Installation of package failed")
+
 
 def publish(o, releases):
     def _publish(o, release):
@@ -123,6 +127,7 @@ def publish(o, releases):
     elif isinstance(releases, list):
         for release in releases:
             _publish(o, release)
+
 
 class OdooDocker(object):
     def __init__(self):
@@ -163,6 +168,7 @@ class OdooDocker(object):
             self.log_file.close()
             os.remove(self.log_file.name)
 
+
 @contextmanager
 def docker(docker_image, build_dir, pub_dir):
     _docker = OdooDocker()
@@ -175,6 +181,7 @@ def docker(docker_image, build_dir, pub_dir):
     finally:
         _docker.end()
 
+
 class KVM(object):
     def __init__(self, o, image, ssh_key='', login='openerp'):
         self.o = o
@@ -182,18 +189,18 @@ class KVM(object):
         self.ssh_key = ssh_key
         self.login = login
 
-    def timeout(self,signum,frame):
-        print "vm timeout kill",self.pid
-        os.kill(self.pid,15)
+    def timeout(self, signum, frame):
+        print "vm timeout kill", self.pid
+        os.kill(self.pid, 15)
 
     def start(self):
-        l="kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -drive".split(" ")
-        #l.append('file=%s,if=virtio,index=0,boot=on,snapshot=on'%self.image)
-        l.append('file=%s,snapshot=on'%self.image)
-        #l.extend(['-vnc','127.0.0.1:1'])
+        l = "kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -drive".split(" ")
+        # l.append('file=%s,if=virtio,index=0,boot=on,snapshot=on'%self.image)
+        l.append('file=%s,snapshot=on' % self.image)
+        # l.extend(['-vnc','127.0.0.1:1'])
         l.append('-nographic')
         print " ".join(l)
-        self.pid=os.spawnvp(os.P_NOWAIT, l[0], l)
+        self.pid = os.spawnvp(os.P_NOWAIT, l[0], l)
         time.sleep(10)
         signal.alarm(2400)
         signal.signal(signal.SIGALRM, self.timeout)
@@ -201,19 +208,20 @@ class KVM(object):
             self.run()
         finally:
             signal.signal(signal.SIGALRM, signal.SIG_DFL)
-            os.kill(self.pid,15)
+            os.kill(self.pid, 15)
             time.sleep(10)
 
-    def ssh(self,cmd):
-        l=['ssh','-o','UserKnownHostsFile=/dev/null','-o','StrictHostKeyChecking=no','-p','10022','-i',self.ssh_key,'%s@127.0.0.1'%self.login,cmd]
+    def ssh(self, cmd):
+        l = ['ssh', '-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no', '-p', '10022', '-i', self.ssh_key, '%s@127.0.0.1' % self.login, cmd]
         system(l)
 
-    def rsync(self,args,options='--delete --exclude .bzrignore'):
-        cmd ='rsync -rt -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 -i %s" %s %s' % (self.ssh_key, options, args)
+    def rsync(self, args, options='--delete --exclude .bzrignore'):
+        cmd = 'rsync -rt -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 -i %s" %s %s' % (self.ssh_key, options, args)
         system(cmd)
 
     def run(self):
         pass
+
 
 class KVMWinBuildExe(KVM):
     def run(self):
@@ -227,6 +235,7 @@ class KVMWinBuildExe(KVM):
         self.ssh("cd build/server/setup/win32;time make allinone;")
         self.rsync('%s@127.0.0.1:build/server/setup/win32/release/ %s/' % (self.login, self.o.build_dir), '')
         print "KVMWinBuildExe.run(): done"
+
 
 class KVMWinTestExe(KVM):
     def run(self):
@@ -246,15 +255,19 @@ class KVMWinTestExe(KVM):
 #----------------------------------------------------------
 # Stage: building
 #----------------------------------------------------------
+
+
 def _prepare_build_dir(o):
     cmd = ['rsync', '-a', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
     system(cmd + ['%s/' % o.odoo_dir, o.build_dir])
     for i in glob(join(o.build_dir, 'addons/*')):
         shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
+
 def build_tgz(o):
     system(['python2', 'setup.py', '--quiet', 'sdist'], o.build_dir)
     system(['cp', glob('%s/dist/openerp-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
+
 
 def build_deb(o):
     system(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], o.build_dir)
@@ -263,10 +276,12 @@ def build_deb(o):
     system(['cp', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s/odoo_amd64.changes' % o.build_dir])
     system(['cp', glob('%s/../odoo_*.tar.gz' % o.build_dir)[0], '%s/odoo.deb.tar.gz' % o.build_dir])
 
+
 def build_rpm(o):
     system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
     system(['cp', glob('%s/dist/openerp-*.noarch.rpm' % o.build_dir)[0], '%s/odoo.noarch.rpm' % o.build_dir])
     system(['cp', glob('%s/dist/openerp-*.src.rpm' % o.build_dir)[0], '%s/odoo.src.rpm' % o.build_dir])
+
 
 def build_exe(o):
     KVMWinBuildExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
@@ -275,6 +290,8 @@ def build_exe(o):
 #----------------------------------------------------------
 # Stage: testing
 #----------------------------------------------------------
+
+
 def test_tgz(o):
     with docker('debian:stable', o.build_dir, o.pub) as wheezy:
         wheezy.release = 'odoo.tar.gz'
@@ -293,6 +310,7 @@ def test_tgz(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany -i base --stop-after-init"')
         wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
 
+
 def test_deb(o):
     with docker('debian:stable', o.build_dir, o.pub) as wheezy:
         wheezy.release = 'odoo.deb'
@@ -306,6 +324,7 @@ def test_deb(o):
         wheezy.system('/usr/bin/apt-get install -f -y')
         wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
         wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany &"')
+
 
 def test_rpm(o):
     with docker('centos:centos7', o.build_dir, o.pub) as centos7:
@@ -328,12 +347,15 @@ def test_rpm(o):
         centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
         centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
+
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
 
 #----------------------------------------------------------
 # Options and Main
 #----------------------------------------------------------
+
+
 def options():
     op = optparse.OptionParser()
     root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -363,6 +385,7 @@ def options():
     o.work = join(o.build_dir, 'openerp-%s' % o.version_full)
     o.work_addons = join(o.work, 'openerp', 'addons')
     return o
+
 
 def main():
     o = options()

@@ -34,10 +34,10 @@ This module adds the picking wave option in warehouse management.
             'stock_picking_wave_view.xml',
             'stock_picking_wave_sequence.xml',
             'wizard/picking_to_wave_view.xml',
-            ],
+             ],
     'demo': [
             'stock_picking_wave_demo.xml',
-             ],
+    ],
     'installable': True,
     'auto_install': False,
 }

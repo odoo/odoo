@@ -42,7 +42,7 @@ Belgian Payroll Rules.
     'auto_install': False,
     'demo': ['l10n_be_hr_payroll_demo.xml'],
     'website': 'https://www.odoo.com/page/accounting',
-    'data':[
+    'data': [
         'l10n_be_hr_payroll_view.xml',
         'l10n_be_hr_payroll_data.xml',
         'data/hr.salary.rule.csv',

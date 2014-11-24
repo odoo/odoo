@@ -23,6 +23,7 @@ import openerp
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
 
@@ -30,11 +31,11 @@ class base_module_upgrade(osv.osv_memory):
     _description = "Module Upgrade"
 
     _columns = {
-        'module_info': fields.text('Modules to Update',readonly=True),
+        'module_info': fields.text('Modules to Update', readonly=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(base_module_upgrade, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        res = super(base_module_upgrade, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if view_type != 'form':
             return res
 
@@ -65,8 +66,8 @@ class base_module_upgrade(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         mod_obj = self.pool.get('ir.module.module')
         ids = self.get_module_list(cr, uid, context=context)
-        res = mod_obj.read(cr, uid, ids, ['name','state'], context)
-        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
+        res = mod_obj.read(cr, uid, ids, ['name', 'state'], context)
+        return {'module_info': '\n'.join(map(lambda x: x['name'] + ' : ' + x['state'], res))}
 
     def upgrade_module_cancel(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.module.module')
@@ -99,7 +100,7 @@ class base_module_upgrade(osv.osv_memory):
                                      _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
             ir_module.download(cr, uid, ids, context=context)
-            cr.commit() # save before re-creating cursor below
+            cr.commit()  # save before re-creating cursor below
 
         openerp.api.Environment.reset()
         openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)

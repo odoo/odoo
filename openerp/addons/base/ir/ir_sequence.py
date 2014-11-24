@@ -28,6 +28,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
     _order = 'name'
@@ -40,9 +41,11 @@ class ir_sequence_type(openerp.osv.osv.osv):
         ('code_unique', 'unique(code)', '`code` must be unique.'),
     ]
 
+
 def _code_get(self, cr, uid, context=None):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
+
 
 class ir_sequence(openerp.osv.osv.osv):
     """ Sequence model.
@@ -54,13 +57,13 @@ class ir_sequence(openerp.osv.osv.osv):
     """
     _name = 'ir.sequence'
     _order = 'name'
-    
+
     def _get_number_next_actual(self, cr, user, ids, field_name, arg, context=None):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
         res = dict.fromkeys(ids)
         for element in self.browse(cr, user, ids, context=context):
-            if  element.implementation != 'standard':
+            if element.implementation != 'standard':
                 res[element.id] = element.number_next
             else:
                 # get number from postgres sequence. Cannot use
@@ -81,11 +84,10 @@ class ir_sequence(openerp.osv.osv.osv):
     def _set_number_next_actual(self, cr, uid, id, name, value, args=None, context=None):
         return self.write(cr, uid, id, {'number_next': value or 0}, context=context)
 
-
     _columns = {
         'name': openerp.osv.fields.char('Name', size=64, required=True),
         'code': openerp.osv.fields.selection(_code_get, 'Sequence Type', size=64),
-        'implementation': openerp.osv.fields.selection( # TODO update the view
+        'implementation': openerp.osv.fields.selection(  # TODO update the view
             [('standard', 'Standard'), ('no_gap', 'No gap')],
             'Implementation', required=True,
             help="Two sequence object implementations are offered: Standard "
@@ -97,22 +99,22 @@ class ir_sequence(openerp.osv.osv.osv):
         'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_next_actual': openerp.osv.fields.function(_get_number_next_actual, fnct_inv=_set_number_next_actual, type='integer', required=True, string='Next Number', help='Next number that will be used. This number can be incremented frequently so the displayed value might already be obsolete'),
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'padding': openerp.osv.fields.integer('Number Padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'implementation': 'standard',
         'active': True,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
         'number_increment': 1,
         'number_next': 1,
         'number_next_actual': 1,
-        'padding' : 0,
+        'padding': 0,
     }
 
     def init(self, cr):
-        return # Don't do the following index yet.
-        # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
+        return  # Don't do the following index yet.
+        # CONSTRAINT/UNIQUE INDEX on (code, company_id)
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
         # only support field names in constraint definitions, and we need a function here:
         # we need to special-case company_id to treat all NULL company_id as equal, otherwise
@@ -131,7 +133,7 @@ class ir_sequence(openerp.osv.osv.osv):
         There is no access rights check.
         """
         if number_increment == 0:
-             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
+            raise osv.except_osv(_('Warning!'), _("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
         cr.execute(sql, (number_increment, number_next))
@@ -157,7 +159,7 @@ class ir_sequence(openerp.osv.osv.osv):
         There is no access rights check.
         """
         if number_increment == 0:
-             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
+            raise osv.except_osv(_('Warning!'), _("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         seq_name = 'ir_sequence_%03d' % (id,)
         cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
@@ -216,10 +218,10 @@ class ir_sequence(openerp.osv.osv.osv):
     def _interpolate(self, s, d):
         if s:
             return s % d
-        return  ''
+        return ''
 
     def _interpolation_dict(self):
-        t = time.localtime() # Actually, the server is always in UTC.
+        t = time.localtime()  # Actually, the server is always in UTC.
         return {
             'year': time.strftime('%Y', t),
             'month': time.strftime('%m', t),
@@ -242,8 +244,8 @@ class ir_sequence(openerp.osv.osv.osv):
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
-        preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
+        sequences = self.read(cr, uid, ids, ['name', 'company_id', 'implementation', 'number_next', 'prefix', 'suffix', 'padding'])
+        preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company]
         seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
             cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
@@ -264,7 +266,7 @@ class ir_sequence(openerp.osv.osv.osv):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights(cr, uid, 'read')
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
-        ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
+        ids = self.search(cr, uid, ['&', ('id', '=', sequence_id), ('company_id', 'in', company_ids)])
         return self._next(cr, uid, ids, context)
 
     def next_by_code(self, cr, uid, sequence_code, context=None):
@@ -277,7 +279,7 @@ class ir_sequence(openerp.osv.osv.osv):
                 ``force_company`` key with the ID of the company to
                 use instead of the user's current company for the
                 sequence selection. A matching sequence for that
-                specific company will get higher priority. 
+                specific company will get higher priority.
         """
         self.check_access_rights(cr, uid, 'read')
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]

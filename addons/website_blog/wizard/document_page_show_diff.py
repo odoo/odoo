@@ -43,8 +43,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('post_id', '=', old.post_id.id)])
-            nids.sort()
+            nids = sorted(history.search(cr, uid, [('post_id', '=', old.post_id.id)]))
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
             raise osv.except_osv(_('Warning!'), _('You need to select minimum one or maximum two history revisions!'))

@@ -18,6 +18,7 @@ default_crypt_context = CryptContext(
     deprecated=['md5_crypt'],
 )
 
+
 class res_users(osv.osv):
     _inherit = "res.users"
 
@@ -34,7 +35,7 @@ class res_users(osv.osv):
             self._set_password(cr, uid, id, value, context=context)
             self.invalidate_cache(cr, uid, context=context)
 
-    def get_pw( self, cr, uid, ids, name, args, context ):
+    def get_pw(self, cr, uid, ids, name, args, context):
         cr.execute('select id, password from res_users where id in %s', (tuple(map(int, ids)),))
         return dict(cr.fetchall())
 
@@ -57,7 +58,7 @@ class res_users(osv.osv):
         except openerp.exceptions.AccessDenied:
             if encrypted:
                 valid_pass, replacement = self._crypt_context(cr, uid, uid)\
-                        .verify_and_update(password, encrypted)
+                    .verify_and_update(password, encrypted)
                 if replacement is not None:
                     self._set_encrypted_password(cr, uid, uid, replacement)
                 if valid_pass:

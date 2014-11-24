@@ -3,10 +3,11 @@ import unittest2
 import openerp.tests.common as common
 from openerp.osv.orm import except_orm
 
+
 class test_base(common.TransactionCase):
 
     def setUp(self):
-        super(test_base,self).setUp()
+        super(test_base, self).setUp()
         self.res_partner = self.registry('res.partner')
         self.res_users = self.registry('res.users')
         self.res_partner_title = self.registry('res.partner.title')
@@ -24,14 +25,14 @@ class test_base(common.TransactionCase):
         cr, uid = self.cr, self.uid
         parse = self.res_partner._parse_partner_name
         for text, name, mail in self.samples:
-            self.assertEqual((name,mail), parse(text), 'Partner name parsing failed')
+            self.assertEqual((name, mail), parse(text), 'Partner name parsing failed')
             partner_id, dummy = self.res_partner.name_create(cr, uid, text)
             partner = self.res_partner.browse(cr, uid, partner_id)
             self.assertEqual(name or mail, partner.name, 'Partner name incorrect')
             self.assertEqual(mail or False, partner.email, 'Partner email incorrect')
 
     def test_10_res_partner_find_or_create(self):
-        cr,uid = self.cr, self.uid
+        cr, uid = self.cr, self.uid
         email = self.samples[0][0]
         partner_id, dummy = self.res_partner.name_create(cr, uid, email)
         found_id = self.res_partner.find_or_create(cr, uid, email)
@@ -42,7 +43,7 @@ class test_base(common.TransactionCase):
         self.assertTrue(new_id2 > new_id, 'find_or_create failed - should have created new one again')
 
     def test_15_res_partner_name_search(self):
-        cr,uid = self.cr, self.uid
+        cr, uid = self.cr, self.uid
         for name, active in [
             ('"A Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr>', False),
             ('B Raoul chirurgiens-dentistes.fr', True),
@@ -82,11 +83,11 @@ class test_base(common.TransactionCase):
         p1street = 'Different street, 42'
         p1.write({'street': p1street,
                   'use_parent_address': False})
-        p1.refresh(), ghoststep.refresh() 
+        p1.refresh(), ghoststep.refresh()
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
-        # turn on sync again       
+        # turn on sync again
         p1.write({'use_parent_address': True})
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
@@ -107,7 +108,6 @@ class test_base(common.TransactionCase):
         ghoststep.refresh()
         self.assertEqual(ghoststep.street, ghoststreet, 'Touching contact should never alter parent')
 
-
     def test_30_res_partner_first_contact_sync(self):
         """ Test initial creation of company/contact pair where contact address gets copied to
         company """
@@ -116,7 +116,7 @@ class test_base(common.TransactionCase):
         self.assertFalse(ironshield.is_company, 'Partners are not companies by default')
         self.assertFalse(ironshield.use_parent_address, 'use_parent_address defaults to False')
         self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
-        ironshield.write({'type': 'default'}) # force default type to double-check sync 
+        ironshield.write({'type': 'default'})  # force default type to double-check sync
         p1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                       {'name': 'Isen Hardearth',
                                                                        'street': 'Strongarm Avenue, 12',
@@ -145,7 +145,7 @@ class test_base(common.TransactionCase):
         leaf111 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 111',
                                                                                     'parent_id': branch11.id,
                                                                                     'type': 'delivery'}))
-        branch11.write({'is_company': False}) # force is_company after creating 1rst child
+        branch11.write({'is_company': False})  # force is_company after creating 1rst child
         branch2 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Branch 2',
                                                                                      'parent_id': elmtree.id,
                                                                                      'is_company': True}))
@@ -223,8 +223,7 @@ class test_base(common.TransactionCase):
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], []),
                         {'default': branch11.id}, 'Invalid address resolution, branch11 should now be default')
 
-
-    def test_50_res_partner_commercial_sync(self):    
+    def test_50_res_partner_commercial_sync(self):
         cr, uid = self.cr, self.uid
         p0 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                       {'name': 'Sigurd Sunknife',
@@ -294,7 +293,7 @@ class test_base(common.TransactionCase):
         title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady', 'domain': 'contact'})
         test_users = [
             {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend', 'date': '2015-03-28', 'title': title_lady},
-            {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend',  'date': '2015-01-28', 'title': title_lady},
+            {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend', 'date': '2015-01-28', 'title': title_lady},
             {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend', 'date': '2015-03-02', 'title': title_sir},
             {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper', 'date': '2015-03-20', 'title': title_lady},
             {'name': 'Nab', 'login': 'nab', 'color': -3, 'function': '5$ Wrench', 'date': '2014-09-10', 'title': title_sir},
@@ -387,7 +386,7 @@ class test_base(common.TransactionCase):
 class test_partner_recursion(common.TransactionCase):
 
     def setUp(self):
-        super(test_partner_recursion,self).setUp()
+        super(test_partner_recursion, self).setUp()
         self.res_partner = self.registry('res.partner')
         cr, uid = self.cr, self.uid
         self.p1 = self.res_partner.name_create(cr, uid, 'Elmtree')[0]
@@ -418,7 +417,8 @@ class test_partner_recursion(common.TransactionCase):
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         cr, uid, p1, p2, p3 = self.cr, self.uid, self.p1, self.p2, self.p3
-        self.assertTrue(self.res_partner.write(cr, uid, [p1,p2,p3], {'phone': '123456'}))
+        self.assertTrue(self.res_partner.write(cr, uid, [p1, p2, p3], {'phone': '123456'}))
+
 
 class test_translation(common.TransactionCase):
 
@@ -429,46 +429,51 @@ class test_translation(common.TransactionCase):
         cr, uid = self.cr, self.uid
         self.registry('ir.translation').load_module_terms(cr, ['base'], ['fr_FR'])
         self.cat_id = self.res_category.create(cr, uid, {'name': 'Customers'})
-        self.ir_translation.create(cr, uid, {'name': 'res.partner.category,name', 'module':'base', 
-            'value': 'Clients', 'res_id': self.cat_id, 'lang':'fr_FR', 'state':'translated', 'type': 'model'})
+        self.ir_translation.create(cr, uid, {'name': 'res.partner.category,name', 'module': 'base',
+            'value': 'Clients', 'res_id': self.cat_id, 'lang': 'fr_FR', 'state': 'translated', 'type': 'model'})
 
     def test_101_create_translated_record(self):
         cr, uid = self.cr, self.uid
-        
+
         no_context_cat = self.res_category.browse(cr, uid, self.cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Error in basic name_get")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang':'fr_FR'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang': 'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients', "Translation not found")
 
     def test_102_duplicate_record(self):
         cr, uid = self.cr, self.uid
-        self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang':'fr_FR'})
+        self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang': 'fr_FR'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Duplication did not set untranslated value")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang':'fr_FR'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang': 'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
 
     def test_103_duplicate_record_fr(self):
         cr, uid = self.cr, self.uid
-        self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_FR'})
+        self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang': 'fr_FR'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Duplication erased original untranslated value")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang': 'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients (copie)', "Did not used default value for translated value")
 
 test_state = None
 #: Stores state information across multiple test classes
+
+
 def setUpModule():
     global test_state
     test_state = {}
+
+
 def tearDownModule():
     global test_state
     test_state = None
+
 
 class TestPhaseInstall00(unittest2.TestCase):
     """
@@ -490,6 +495,7 @@ class TestPhaseInstall00(unittest2.TestCase):
             self.state, 'init',
             "Testcase state should not have been transitioned from 00")
 
+
 class TestPhaseInstall01(unittest2.TestCase):
     at_install = False
 
@@ -499,6 +505,7 @@ class TestPhaseInstall01(unittest2.TestCase):
     @common.at_install(True)
     def test_set_run(self):
         test_state['set_at_install'] = True
+
 
 class TestPhaseInstall02(unittest2.TestCase):
     """
@@ -510,6 +517,7 @@ class TestPhaseInstall02(unittest2.TestCase):
     Warning: relies on *classes* being run in alphabetical order in test
     modules
     """
+
     def test_check_state(self):
         self.assertTrue(
             test_state.get('set_at_install'),

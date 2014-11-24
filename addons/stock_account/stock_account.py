@@ -65,6 +65,7 @@ class stock_location(osv.osv):
 # Quants
 #----------------------------------------------------------
 
+
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
@@ -86,9 +87,9 @@ class stock_quant(osv.osv):
             # this is where we post accounting entries for adjustment
             ctx['force_valuation_amount'] = newprice - quant.cost
             self._account_entry_move(cr, uid, [quant], move, context=ctx)
-            #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
-            #1) the product cost's method is 'real'
-            #2) we just fixed a negative quant caused by an outgoing shipment
+            # update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
+            # 1) the product cost's method is 'real'
+            # 2) we just fixed a negative quant caused by an outgoing shipment
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
 
@@ -111,22 +112,22 @@ class stock_quant(osv.osv):
             return False
         for q in quants:
             if q.owner_id:
-                #if the quant isn't owned by the company, we don't make any valuation entry
+                # if the quant isn't owned by the company, we don't make any valuation entry
                 return False
             if q.qty <= 0:
-                #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
-                #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
-                #to make the adjustments when we know the real cost price.
+                # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
+                # At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
+                # to make the adjustments when we know the real cost price.
                 return False
 
-        #in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        # in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         # Create Journal Entry for products arriving in the company
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_to.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_from and location_from.usage == 'customer':
-                #goods returned from customer
+                # goods returned from customer
                 self._create_account_move_line(cr, uid, quants, move, acc_dest, acc_valuation, journal_id, context=ctx)
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
@@ -137,7 +138,7 @@ class stock_quant(osv.osv):
             ctx['force_company'] = company_from.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_to and location_to.usage == 'supplier':
-                #goods returned to supplier
+                # goods returned to supplier
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_src, journal_id, context=ctx)
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
@@ -149,11 +150,10 @@ class stock_quant(osv.osv):
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
-
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
@@ -195,38 +195,38 @@ class stock_quant(osv.osv):
                 valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
             else:
                 valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
-        #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
-        #the company currency... so we need to use round() before creating the accounting entries.
+        # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        # the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id.id,
-                    'quantity': qty,
-                    'product_uom_id': move.product_id.uom_id.id,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
-                    'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount or 0,
-                    'account_id': debit_account_id,
+            'name': move.name,
+            'product_id': move.product_id.id,
+            'quantity': qty,
+            'product_uom_id': move.product_id.uom_id.id,
+            'ref': move.picking_id and move.picking_id.name or False,
+            'date': move.date,
+            'partner_id': partner_id,
+            'debit': valuation_amount > 0 and valuation_amount or 0,
+            'credit': valuation_amount < 0 and -valuation_amount or 0,
+            'account_id': debit_account_id,
         }
         credit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id.id,
-                    'quantity': qty,
-                    'product_uom_id': move.product_id.uom_id.id,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': move.date,
-                    'partner_id': partner_id,
-                    'credit': valuation_amount > 0 and valuation_amount or 0,
-                    'debit': valuation_amount < 0 and -valuation_amount or 0,
-                    'account_id': credit_account_id,
+            'name': move.name,
+            'product_id': move.product_id.id,
+            'quantity': qty,
+            'product_uom_id': move.product_id.uom_id.id,
+            'ref': move.picking_id and move.picking_id.name or False,
+            'date': move.date,
+            'partner_id': partner_id,
+            'credit': valuation_amount > 0 and valuation_amount or 0,
+            'debit': valuation_amount < 0 and -valuation_amount or 0,
+            'account_id': credit_account_id,
         }
         return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
-        #group quants by cost
+        # group quants by cost
         quant_cost_qty = {}
         for quant in quants:
             if quant_cost_qty.get(quant.cost):
@@ -243,17 +243,18 @@ class stock_quant(osv.osv):
                                       'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 
-    #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
+    # def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
     #    quant_neg_position = quant_neg.negative_dest_location_id.usage
     #    remaining_solving_quant, remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
-    #    #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
-    #    #1) there isn't any negative quant anymore
-    #    #2) the product cost's method is 'real'
-    #    #3) we just fixed a negative quant caused by an outgoing shipment
+    # update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
+    # 1) there isn't any negative quant anymore
+    # 2) the product cost's method is 'real'
+    # 3) we just fixed a negative quant caused by an outgoing shipment
     #    if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
     #        self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
     #    return remaining_solving_quant, remaining_to_solve_quant
+
 
 class stock_move(osv.osv):
     _inherit = "stock.move"
@@ -269,9 +270,9 @@ class stock_move(osv.osv):
         product_obj = self.pool.get('product.product')
         move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
-            #if there is a negative quant, the standard price shouldn't be updated
+            # if there is a negative quant, the standard price shouldn't be updated
             return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
+        # Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will svaluate it at 6€
         average_valuation_price = 0.0
         for q in move.quant_ids:
             average_valuation_price += q.qty * q.cost
@@ -284,7 +285,7 @@ class stock_move(osv.osv):
         product_obj = self.pool.get('product.product')
         tmpl_dict = {}
         for move in self.browse(cr, uid, ids, context=context):
-            #adapt standard price on incomming moves if the product cost_method is 'average'
+            # adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
                 prod_tmpl_id = move.product_id.product_tmpl_id.id
@@ -309,8 +310,8 @@ class stock_move(osv.osv):
         This method adapts the price on the product when necessary
         '''
         for move in self.browse(cr, uid, ids, context=context):
-            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
-            #or an inventory loss is made using the last value used for an outgoing valuation.
+            # adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
+            # or an inventory loss is made using the last value used for an outgoing valuation.
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
-                #store the average price of the move on the move and product form
+                # store the average price of the move on the move and product form
                 self._store_average_cost_price(cr, uid, move, context=context)

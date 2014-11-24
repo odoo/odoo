@@ -28,7 +28,7 @@ class payment_order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context=None):
         super(payment_order, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'get_invoice_name': self._get_invoice_name,
             'get_amount_total_in_currency': self._get_amount_total_in_currency,
@@ -64,7 +64,7 @@ class payment_order(report_sxw.rml_parse):
             total += line.amount
         return total
 
-    def _get_account_name(self,bank_id):
+    def _get_account_name(self, bank_id):
         if bank_id:
             value_name = self.pool['res.partner.bank'].name_get(self.cr, self.uid, [bank_id])
             if value_name:

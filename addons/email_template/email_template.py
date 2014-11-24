@@ -101,7 +101,7 @@ try:
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
         # is needed, apparently.
-        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
+        'relativedelta': lambda *a, **kw: relativedelta.relativedelta(*a, **kw),
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
@@ -243,7 +243,7 @@ class email_template(osv.osv):
         'name': fields.char('Name'),
         'model_id': fields.many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used"),
         'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                 select=True, store=True, readonly=True),
+                                select=True, store=True, readonly=True),
         'lang': fields.char('Language',
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
@@ -317,23 +317,23 @@ class email_template(osv.osv):
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             button_name = _('Send Mail (%s)') % template.name
             act_id = action_obj.create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'type': 'ir.actions.act_window',
-                 'res_model': 'mail.compose.message',
-                 'src_model': src_obj,
-                 'view_type': 'form',
-                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
-                 'view_mode':'form,tree',
-                 'view_id': res_id,
-                 'target': 'new',
-                 'auto_refresh':1
+                'name': button_name,
+                'type': 'ir.actions.act_window',
+                'res_model': 'mail.compose.message',
+                'src_model': src_obj,
+                'view_type': 'form',
+                'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
+                'view_mode': 'form,tree',
+                'view_id': res_id,
+                'target': 'new',
+                'auto_refresh': 1
             }, context)
             ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
-                 'name': button_name,
-                 'model': src_obj,
-                 'key2': 'client_action_multi',
-                 'value': "ir.actions.act_window,%s" % act_id,
-                 'object': True,
+                'name': button_name,
+                'model': src_obj,
+                'key2': 'client_action_multi',
+                'value': "ir.actions.act_window,%s" % act_id,
+                'object': True,
              }, context)
 
             template.write({
@@ -390,7 +390,7 @@ class email_template(osv.osv):
             'copyvalue': False,
             'sub_model_object_field': False,
             'null_value': False
-            }
+        }
         if model_object_field:
             fields_obj = self.pool.get('ir.model.fields')
             field_value = fields_obj.browse(cr, uid, model_object_field, context)
@@ -405,12 +405,12 @@ class email_template(osv.osv):
                         'copyvalue': self.build_expression(field_value.name, sub_field_value and sub_field_value.name or False, null_value or False),
                         'sub_model_object_field': sub_model_object_field or False,
                         'null_value': null_value or False
-                        })
+                    })
             else:
                 result.update({
-                        'copyvalue': self.build_expression(field_value.name, False, null_value or False),
-                        'null_value': null_value or False
-                        })
+                    'copyvalue': self.build_expression(field_value.name, False, null_value or False),
+                    'null_value': null_value or False
+                })
         return {'value': result}
 
     def generate_recipients_batch(self, cr, uid, results, template_id, res_ids, context=None):
@@ -515,8 +515,8 @@ class email_template(osv.osv):
                         result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
-            
-            	    # TODO in trunk, change return format to binary to match message_post expected format
+
+                    # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service

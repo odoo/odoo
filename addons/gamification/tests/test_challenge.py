@@ -59,11 +59,11 @@ class test_challenge(common.TransactionCase):
 
         self.challenge_obj._update_all(cr, uid, [self.challenge_base_id], context=context)
         challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
-        self.assertGreaterEqual(len(challenge.user_ids), len(user_ids)+1, "These are not droids you are looking for")
+        self.assertGreaterEqual(len(challenge.user_ids), len(user_ids) + 1, "These are not droids you are looking for")
 
     def test_10_reach_challenge(self):
         cr, uid, context = self.cr, self.uid, {}
-        
+
         self.challenge_obj.write(cr, uid, [self.challenge_base_id], {'state': 'inprogress'}, context=context)
         challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
         challenge_user_ids = [user.id for user in challenge.user_ids]
@@ -72,19 +72,19 @@ class test_challenge(common.TransactionCase):
 
         line_ids = self.line_obj.search(cr, uid, [('challenge_id', '=', self.challenge_base_id)], context=context)
         goal_ids = self.goal_obj.search(cr, uid, [('challenge_id', '=', self.challenge_base_id), ('state', '!=', 'draft')], context=context)
-        self.assertEqual(len(goal_ids), len(line_ids)*len(challenge_user_ids), "Incorrect number of goals generated, should be 1 goal per user, per challenge line")
+        self.assertEqual(len(goal_ids), len(line_ids) * len(challenge_user_ids), "Incorrect number of goals generated, should be 1 goal per user, per challenge line")
 
         # demo user will set a timezone
         self.user_obj.write(cr, uid, self.demo_user_id, {'tz': "Europe/Brussels"}, context=context)
         goal_ids = self.goal_obj.search(cr, uid, [('user_id', '=', self.demo_user_id), ('definition_id', '=', self.definition_timezone_id)], context=context)
-        
+
         self.goal_obj.update(cr, uid, goal_ids, context=context)
         reached_goal_ids = self.goal_obj.search(cr, uid, [('id', 'in', goal_ids), ('state', '=', 'reached')], context=context)
         self.assertEqual(set(goal_ids), set(reached_goal_ids), "Not every goal was reached after changing timezone")
 
         # reward for two firsts as admin may have timezone
         self.challenge_obj.write(cr, uid, self.challenge_base_id, {'reward_first_id': self.badge_id, 'reward_second_id': self.badge_id}, context=context)
-        self.challenge_obj.write(cr, uid, self.challenge_base_id,  {'state': 'done'}, context=context)
+        self.challenge_obj.write(cr, uid, self.challenge_base_id, {'state': 'done'}, context=context)
 
         badge_ids = self.badge_user_obj.search(cr, uid, [('badge_id', '=', self.badge_id), ('user_id', '=', self.demo_user_id)])
         self.assertGreater(len(badge_ids), 0, "Demo user has not received the badge")

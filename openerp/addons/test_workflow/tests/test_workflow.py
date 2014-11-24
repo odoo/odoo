@@ -16,7 +16,7 @@ class test_workflows(common.TransactionCase):
         instance_id = instance.search(
             self.cr, SUPERUSER_ID,
             [('res_type', '=', model_name), ('res_id', '=', i)])
-        self.assertTrue( instance_id, 'A workflow instance is expected.')
+        self.assertTrue(instance_id, 'A workflow instance is expected.')
 
         # ... get all its workitems ...
         workitem_ids = workitem.search(

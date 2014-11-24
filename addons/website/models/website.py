@@ -31,6 +31,7 @@ from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
+
 def url_for(path_or_uri, lang=None):
     if isinstance(path_or_uri, unicode):
         path_or_uri = path_or_uri.encode('utf-8')
@@ -63,6 +64,7 @@ def url_for(path_or_uri, lang=None):
 
     return location.decode('utf-8')
 
+
 def is_multilang_url(local_url, langs=None):
     if not langs:
         langs = [lg[0] for lg in request.website.get_languages()]
@@ -81,6 +83,7 @@ def is_multilang_url(local_url, langs=None):
         return func.routing.get('website', False) and func.routing.get('multilang', True)
     except Exception:
         return False
+
 
 def slugify(s, max_length=None):
     """ Transform a string to a slug that can be used in a url path.
@@ -107,6 +110,7 @@ def slugify(s, max_length=None):
 
     return slug[:max_length]
 
+
 def slug(value):
     if isinstance(value, orm.browse_record):
         # [(id, name)] = value.name_get()
@@ -123,6 +127,7 @@ def slug(value):
 # NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 
+
 def unslug(s):
     """Extract slug and id from a string.
         Always return un 2-tuple (str|None, int|None)
@@ -132,8 +137,10 @@ def unslug(s):
         return None, None
     return m.group(1), int(m.group(2))
 
+
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
+
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -144,9 +151,9 @@ class website(osv.osv):
         root_domain = [('parent_id', '=', False)]
         menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
         menu = menus and menus[0] or False
-        return dict( map(lambda x: (x, menu), ids) )
+        return dict(map(lambda x: (x, menu), ids))
 
-    _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
+    _name = "website"  # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
         'name': fields.char('Domain'),
@@ -162,15 +169,15 @@ class website(osv.osv):
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
-        'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
+        'partner_id': fields.related('user_id', 'partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
-                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
+            store={
+                'website.menu': (_get_menu_website, ['sequence', 'parent_id', 'website_id'], 10)
             })
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -296,7 +303,7 @@ class website(osv.osv):
         page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
         scope -= 1
 
-        pmin = max(page - int(math.floor(scope/2)), 1)
+        pmin = max(page - int(math.floor(scope / 2)), 1)
         pmax = min(pmin + scope, page_count)
 
         if pmax - pmin < scope:
@@ -333,7 +340,7 @@ class website(osv.osv):
             },
             "pages": [
                 {'url': get_url(page), 'num': page}
-                for page in xrange(pmin, pmax+1)
+                for page in xrange(pmin, pmax + 1)
             ]
         }
 
@@ -363,7 +370,7 @@ class website(osv.osv):
         args = spec.args[1:(-defaults_count or None)]
 
         # check that all args have a converter
-        return all( (arg in rule._converters) for arg in args)
+        return all((arg in rule._converters) for arg in args)
 
     def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
@@ -392,14 +399,14 @@ class website(osv.osv):
             values = [{}]
             convitems = converters.items()
             # converters with a domain are processed after the other ones
-            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain <> '[]')
+            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]')
             convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
-            for (i,(name, converter)) in enumerate(convitems):
+            for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
-                    query = i==(len(convitems)-1) and query_string
+                    query = i == (len(convitems) - 1) and query_string
                     for v in converter.generate(request.cr, uid, query=query, args=val, context=context):
-                        newval.append( val.copy() )
+                        newval.append(val.copy())
                         v[name] = v['loc']
                         del v['loc']
                         newval[-1].update(v)
@@ -408,7 +415,7 @@ class website(osv.osv):
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
-                for key,val in value.items():
+                for key, val in value.items():
                     if key.startswith('__'):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
@@ -468,9 +475,9 @@ class website(osv.osv):
             obj['page'] = pages.get(relation_id) or 1
             if obj['page'] > obj['page_count']:
                 obj['page'] = obj['page_count']
-            offset = (obj['page']-1) * step
-            obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
-            obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
+            offset = (obj['page'] - 1) * step
+            obj['page_start'] = max(obj['page'] - int(math.floor((scope - 1) / 2)), 1)
+            obj['page_end'] = min(obj['page_start'] + (scope - 1), obj['page_count'])
 
             # view data
             obj['domain'] = group['__domain']
@@ -496,7 +503,7 @@ class website(osv.osv):
         model_obj = self.pool[model]
         domain = safe_eval(domain)
         step = int(step)
-        offset = (int(page)-1) * step
+        offset = (int(page) - 1) * step
         object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(cr, uid, object_ids)
         for object_id in object_ids:
@@ -624,7 +631,7 @@ class website_menu(osv.osv):
     }
 
     def __defaults_sequence(self, cr, uid, context):
-        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        menu = self.search_read(cr, uid, [(1, "=", 1)], ["sequence"], limit=1, order="sequence DESC", context=context)
         return menu and menu[0]["sequence"] or 0
 
     _defaults = {
@@ -673,8 +680,10 @@ class website_menu(osv.osv):
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True
 
+
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
+
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
@@ -683,6 +692,7 @@ class ir_attachment(osv.osv):
             else:
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
+
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
         return dict(
             (attach['id'], self._compute_checksum(attach))
@@ -705,10 +715,11 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if not record.datas:
+                continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
-            except IOError: # apparently the error PIL.Image.open raises
+            except IOError:  # apparently the error PIL.Image.open raises
                 pass
 
         return result
@@ -717,7 +728,7 @@ class ir_attachment(osv.osv):
         'datas_checksum': fields.function(_datas_checksum, size=40,
               string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
-        'datas_big': fields.function (_datas_big, type='binary', store=True,
+        'datas_big': fields.function(_datas_big, type='binary', store=True,
                                       string="Resized file content"),
         'mimetype': fields.char('Mime Type', readonly=True),
     }
@@ -767,6 +778,7 @@ class ir_attachment(osv.osv):
             self.unlink(cr, uid, attachments_to_remove, context=context)
         return removal_blocked_by
 
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
@@ -778,24 +790,28 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
             'z': 10
         }
-        return urlplus('https://maps.google.com/maps' , params)
+        return urlplus('https://maps.google.com/maps', params)
+
 
 class res_company(osv.osv):
     _inherit = "res.company"
+
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
         return partner and partner.google_map_img(zoom, width, height, context=context) or None
+
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
         return partner and partner.google_map_link(zoom, context=context) or None
+
 
 class base_language_install(osv.osv_memory):
     _inherit = "base.language.install"
@@ -832,6 +848,7 @@ class base_language_install(osv.osv_memory):
                 'target': 'self'
             }
         return action
+
 
 class website_seo_metadata(osv.Model):
     _name = 'website.seo.metadata'

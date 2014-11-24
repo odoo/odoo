@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class TestFloatExport(common.TransactionCase):
     def setUp(self):
         super(TestFloatExport, self).setUp()

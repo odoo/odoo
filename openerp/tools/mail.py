@@ -469,9 +469,9 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
     """
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
+    # (c) Fry-IT, www.fry-it.com, 2007
+    # <peter@fry-it.com>
+    # download here: http://www.peterbe.com/plog/html2plaintext
 
     html = ustr(html)
     tree = etree.fromstring(html, parser=etree.HTMLParser())
@@ -523,6 +523,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
+
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
         html entities, using cgi.escape().
@@ -552,6 +553,7 @@ def plaintext2html(text, container_tag=False):
     if container_tag:
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return ustr(final)
+
 
 def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=False):
     """ Append extra content at the end of an HTML snippet, trying
@@ -596,7 +598,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE)
 
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
@@ -622,6 +624,7 @@ def generate_tracking_message_id(res_id):
         rnd = random.random()
     rndstr = ("%.15f" % rnd)[2:]
     return "<%.15f.%s-openerp-%s@%s>" % (time.time(), rndstr, res_id, socket.gethostname())
+
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
@@ -663,13 +666,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             cr.close()
     return res
 
+
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     if not text:
         return []
     return [addr[1] for addr in getaddresses([text])
-                # getaddresses() returns '' when email parsing fails, and
-                # sometimes returns emails without at least '@'. The '@'
-                # is strictly required in RFC2822's `addr-spec`.
-                if addr[1]
-                if '@' in addr[1]]
+            # getaddresses() returns '' when email parsing fails, and
+            # sometimes returns emails without at least '@'. The '@'
+            # is strictly required in RFC2822's `addr-spec`.
+            if addr[1]
+            if '@' in addr[1]]

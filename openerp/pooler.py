@@ -31,6 +31,7 @@ from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
 
+
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
     """Create and return a database connection and a newly initialized registry."""
     assert openerp.conf.deprecation.openerp_pooler
@@ -45,6 +46,7 @@ def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     assert openerp.conf.deprecation.openerp_pooler
     registry = RegistryManager.new(db_name, force_demo, status, update_module)
     return registry._db, registry
+
 
 def get_db(db_name):
     """Return a database connection. The corresponding registry is initialized."""

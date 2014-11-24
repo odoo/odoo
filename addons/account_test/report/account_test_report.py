@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -34,7 +34,7 @@ from openerp.report import report_sxw
 class report_assert_account(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(report_assert_account, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'datetime': datetime,
             'execute_code': self.execute_code,
@@ -45,7 +45,7 @@ class report_assert_account(report_sxw.rml_parse):
             """
             returns the list of invoices that are set as reconciled = True
             """
-            return self.pool.get('account.invoice').search(self.cr, self.uid, [('reconciled','=',True)])
+            return self.pool.get('account.invoice').search(self.cr, self.uid, [('reconciled', '=', True)])
 
         def order_columns(item, cols=None):
             """
@@ -64,9 +64,9 @@ class report_assert_account(report_sxw.rml_parse):
         localdict = {
             'cr': self.cr,
             'uid': self.uid,
-            'reconciled_inv': reconciled_inv, #specific function used in different tests
-            'result': None, #used to store the result of the test
-            'column_order': None, #used to choose the display order of columns (in case you are returning a list of dict)
+            'reconciled_inv': reconciled_inv,  # specific function used in different tests
+            'result': None,  # used to store the result of the test
+            'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
         }
         exec code_exec in localdict
         result = localdict['result']

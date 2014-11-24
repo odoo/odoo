@@ -7,6 +7,7 @@ from docutils.parsers.rst.directives.body import LineBlock
 import sphinx.roles
 from sphinx.domains import Domain
 
+
 def setup(app):
     app.add_domain(HtmlDomain)
     app.add_node(div, html=(
@@ -23,7 +24,10 @@ def setup(app):
         addnode(app, node, name)
 
 
-class div(nodes.General, nodes.Element): pass
+class div(nodes.General, nodes.Element):
+    pass
+
+
 class Div(Directive):
     optional_arguments = 1
     final_argument_whitespace = 1
@@ -47,36 +51,72 @@ class Div(Directive):
         self.state.nested_parse(self.content, self.content_offset, node)
         return [node]
 
-class address(nodes.General, nodes.Element): pass
+
+class address(nodes.General, nodes.Element):
+    pass
+
+
 class Address(LineBlock):
     def run(self):
         [node] = super(Address, self).run()
         ad = address(node.rawsource, *node.children)
         return [ad]
 
-class mark(nodes.Inline, nodes.TextElement): pass
-class insert(nodes.Inline, nodes.TextElement): pass
-class delete(nodes.Inline, nodes.TextElement): pass
-class strikethrough(nodes.Inline, nodes.TextElement): pass
-class underline(nodes.Inline, nodes.TextElement): pass
-class small(nodes.Inline, nodes.TextElement): pass
-class kbd(nodes.Inline, nodes.FixedTextElement): pass
-class var(nodes.Inline, nodes.FixedTextElement): pass
-class samp(nodes.Inline, nodes.FixedTextElement): pass
+
+class mark(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class insert(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class delete(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class strikethrough(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class underline(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class small(nodes.Inline, nodes.TextElement):
+    pass
+
+
+class kbd(nodes.Inline, nodes.FixedTextElement):
+    pass
+
+
+class var(nodes.Inline, nodes.FixedTextElement):
+    pass
+
+
+class samp(nodes.Inline, nodes.FixedTextElement):
+    pass
+
 
 def makerole(node):
     return lambda name, rawtext, text, lineno, inliner, options=None, content=None:\
         ([node(rawtext.strip(), text.strip())], [])
+
+
 def addnode(app, node, nodename):
     app.add_node(node, html=(
         lambda self, n: self.body.append(self.starttag(n, nodename)),
         lambda self, n: self.body.append('</%s>' % nodename)
     ))
+
+
 def initialism(*args, **kwargs):
     nodes, _ = sphinx.roles.abbr_role(*args, **kwargs)
     [abbr] = nodes
     abbr.attributes.setdefault('classes', []).append('initialism')
     return [abbr], []
+
 
 def cite_role(typ, rawtext, text, lineno, inliner, options=None, content=None):
     text = utils.unescape(text)
@@ -86,14 +126,22 @@ def cite_role(typ, rawtext, text, lineno, inliner, options=None, content=None):
     content = text[:m.start()].strip()
     source = m.group(1)
     return [cite(content, content, source=source)], []
-class cite(nodes.Inline, nodes.TextElement): pass
+
+
+class cite(nodes.Inline, nodes.TextElement):
+    pass
+
+
 def visit_cite(self, node):
     attrs = {}
     if node.hasattr('source'):
         attrs['title'] = node['source']
     self.body.append(self.starttag(node, 'cite', '', **attrs))
+
+
 def depart_cite(self, node):
     self.body.append('</abbr>')
+
 
 class HtmlDomain(Domain):
     name = 'h'

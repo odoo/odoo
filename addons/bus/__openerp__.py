@@ -1,5 +1,5 @@
 {
-    'name' : 'IM Bus',
+    'name': 'IM Bus',
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Hidden',

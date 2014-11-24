@@ -43,8 +43,8 @@ class google_map(http.Controller):
 
         # browse and format data
         partner_data = {
-        "counter": len(partners_ids),
-        "partners": []
+            "counter": len(partners_ids),
+            "partners": []
         }
         request.context.update({'show_address': True})
         for partner in partner_obj.browse(cr, SUPERUSER_ID, partners_ids, context=context):
@@ -54,7 +54,7 @@ class google_map(http.Controller):
                 'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
                 'latitude': partner.partner_latitude,
                 'longitude': partner.partner_longitude,
-                })
+            })
 
         # generate the map
         values = {

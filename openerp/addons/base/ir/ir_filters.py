@@ -23,6 +23,7 @@ from openerp import exceptions
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
+
 class ir_filters(osv.osv):
     _name = 'ir.filters'
     _description = 'Filters'
@@ -33,7 +34,7 @@ class ir_filters(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name':_('%s (copy)') % name})
+        default.update({'name': _('%s (copy)') % name})
         return super(ir_filters, self).copy(cr, uid, id, default, context)
 
     def _get_action_domain(self, cr, uid, action_id=None):
@@ -41,7 +42,7 @@ class ir_filters(osv.osv):
            same context (menu/view) as the given action."""
         if action_id:
             # filters specific to this menu + global ones
-            return [('action_id', 'in' , [action_id, False])]
+            return [('action_id', 'in', [action_id, False])]
         # only global ones
         return [('action_id', '=', False)]
 
@@ -60,7 +61,7 @@ class ir_filters(osv.osv):
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
         action_domain = self._get_action_domain(cr, uid, action_id)
         filter_ids = self.search(cr, uid, action_domain +
-            [('model_id','=',model),('user_id','in',[uid, False])])
+            [('model_id', '=', model), ('user_id', 'in', [uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
             ['name', 'is_default', 'domain', 'context', 'user_id'])
         return my_filters
@@ -87,7 +88,8 @@ class ir_filters(osv.osv):
             ('user_id', '=', False),
             ('is_default', '=', True)], context=context)
 
-        if not existing_default: return
+        if not existing_default:
+            return
         if matching_filters and \
            (matching_filters[0]['id'] == existing_default[0]):
             return
@@ -102,11 +104,11 @@ class ir_filters(osv.osv):
         action_id = vals.get('action_id')
         current_filters = self.get_filters(cr, uid, vals['model_id'], action_id)
         matching_filters = [f for f in current_filters
-                                if f['name'].lower() == lower_name
-                                # next line looks for matching user_ids (specific or global), i.e.
-                                # f.user_id is False and vals.user_id is False or missing,
-                                # or f.user_id.id == vals.user_id
-                                if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
+                            if f['name'].lower() == lower_name
+                            # next line looks for matching user_ids (specific or global), i.e.
+                            # f.user_id is False and vals.user_id is False or missing,
+                            # or f.user_id.id == vals.user_id
+                            if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
 
         if vals.get('is_default'):
             if vals.get('user_id'):
@@ -114,10 +116,10 @@ class ir_filters(osv.osv):
                 # should be turned off
                 action_domain = self._get_action_domain(cr, uid, action_id)
                 act_ids = self.search(cr, uid, action_domain + [
-                        ('model_id', '=', vals['model_id']),
-                        ('user_id', '=', vals['user_id']),
-                        ('is_default', '=', True),
-                    ], context=context)
+                    ('model_id', '=', vals['model_id']),
+                    ('user_id', '=', vals['user_id']),
+                    ('is_default', '=', True),
+                ], context=context)
                 if act_ids:
                     self.write(cr, uid, act_ids, {'is_default': False}, context=context)
             else:
@@ -135,14 +137,14 @@ class ir_filters(osv.osv):
     _sql_constraints = [
         # Partial constraint, complemented by unique index (see below)
         # Still useful to keep because it provides a proper error message when a violation
-        # occurs, as it shares the same prefix as the unique index. 
+        # occurs, as it shares the same prefix as the unique index.
         ('name_model_uid_unique', 'unique (name, model_id, user_id, action_id)', 'Filter names must be unique'),
     ]
 
     def _auto_init(self, cr, context=None):
         super(ir_filters, self)._auto_init(cr, context)
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
-        cr.execute("DROP INDEX IF EXISTS ir_filters_name_model_uid_unique_index") # drop old index w/o action
+        cr.execute("DROP INDEX IF EXISTS ir_filters_name_model_uid_unique_index")  # drop old index w/o action
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_action_index'")
         if not cr.fetchone():
             cr.execute("""CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_action_index" ON ir_filters
@@ -164,8 +166,8 @@ class ir_filters(osv.osv):
     }
     _defaults = {
         'domain': '[]',
-        'context':'{}',
-        'user_id': lambda self,cr,uid,context=None: uid,
+        'context': '{}',
+        'user_id': lambda self, cr, uid, context=None: uid,
         'is_default': False
     }
     _order = 'model_id, name, id desc'

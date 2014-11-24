@@ -17,6 +17,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
     pass
@@ -133,7 +134,7 @@ class Forum(osv.Model):
                     # check if user have Karma needed to create need tag
                     user = User.browse(cr, uid, uid, context=context)
                     if user.exists() and user.karma >= self.karma_retag:
-                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+                        post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 post_tags.append((4, int(tag)))
         return post_tags
@@ -401,10 +402,9 @@ class Post(osv.Model):
                 self.message_post(cr, uid, obj_id, body=body, subtype=subtype, context=context)
         return res
 
-
     def reopen(self, cr, uid, ids, context=None):
         if any(post.parent_id or post.state != 'close'
-                    for post in self.browse(cr, uid, ids, context=context)):
+               for post in self.browse(cr, uid, ids, context=context)):
             return False
 
         reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')

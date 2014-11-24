@@ -43,12 +43,12 @@ After installing this module, the Configuration wizard for accounting is launche
 
     """,
     'depends': ['base', 'account', 'account_chart'],
-    'demo': [ ],
+    'demo': [],
     'data': [
-             'l10n_sg_chart_tax_code.xml',
-             'l10n_sg_chart.xml',
-             'l10n_sg_chart_tax.xml',
-             'l10n_sg_wizard.xml',
+        'l10n_sg_chart_tax_code.xml',
+        'l10n_sg_chart.xml',
+        'l10n_sg_chart_tax.xml',
+        'l10n_sg_wizard.xml',
     ],
     'installable': True,
 }

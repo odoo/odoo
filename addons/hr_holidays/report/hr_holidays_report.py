@@ -20,7 +20,8 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class hr_holidays_remaining_leaves_user(osv.osv):
     _name = "hr.holidays.remaining.leaves.user"
@@ -31,7 +32,7 @@ class hr_holidays_remaining_leaves_user(osv.osv):
         'no_of_leaves': fields.integer('Remaining leaves'),
         'user_id': fields.many2one('res.users', 'User'),
         'leave_type': fields.char('Leave Type'),
-        }
+    }
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_holidays_remaining_leaves_user')

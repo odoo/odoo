@@ -29,13 +29,13 @@
     'description': """
 Track Issues/Bugs Management for Projects
 =========================================
-This application allows you to manage the issues you might face in a project like bugs in a system, client complaints or material breakdowns. 
+This application allows you to manage the issues you might face in a project like bugs in a system, client complaints or material breakdowns.
 
 It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
+    'images': ['images/issue_analysis.jpeg', 'images/project_issue.jpeg'],
     'depends': [
         'sales_team',
         'project',

@@ -25,16 +25,16 @@
     'category': 'Sales Management',
     'summary': 'Sales Team',
     'description': """
-Using this application you can manage Sales Team  with CRM and/or Sales 
+Using this application you can manage Sales Team  with CRM and/or Sales
 =======================================================================
  """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['base','mail','web_kanban_sparkline',],
+    'depends': ['base', 'mail', 'web_kanban_sparkline', ],
     'data': ['security/sales_team_security.xml',
              'security/ir.model.access.csv',
              'res_config_view.xml',
              'sales_team_data.xml',
-             'sales_team.xml',],
+             'sales_team.xml', ],
     'demo': ['sales_team_demo.xml'],
     'css': ['static/src/css/sales_team.css'],
     'installable': True,

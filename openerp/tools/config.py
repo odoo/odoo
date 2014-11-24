@@ -1,4 +1,4 @@
-#openerp.loggers.handlers. -*- coding: utf-8 -*-
+# openerp.loggers.handlers. -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -31,6 +31,7 @@ import logging
 import openerp.release as release
 import appdirs
 
+
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
 
@@ -44,6 +45,7 @@ class MyOption (optparse.Option, object):
     to create the default values of the configuration file).
 
     """
+
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
@@ -60,6 +62,7 @@ def check_ssl():
 
 DEFAULT_LOG_HANDLER = [':INFO']
 
+
 def _get_default_datadir():
     home = os.path.expanduser('~')
     if os.path.exists(home):
@@ -71,6 +74,7 @@ def _get_default_datadir():
             func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
     return func(appname=release.product_name, appauthor=release.author)
+
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -98,7 +102,7 @@ class configmanager(object):
         self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
@@ -109,13 +113,13 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", default=False,
-                          help="save configuration to ~/.openerp_serverrc")
+                         help="save configuration to ~/.openerp_serverrc")
         group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
-                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
+                         help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
-                          help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
-                          my_default=False)
+                         help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
+                         my_default=False)
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
@@ -239,7 +243,7 @@ class configmanager(object):
             "Use these options to translate Odoo to another language."
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
-            )
+                                     )
         group.add_option('--load-language', dest="load_language",
                          help="specifies the languages for the translations you want to be loaded")
         group.add_option('-l', "--language", dest="language",
@@ -265,7 +269,7 @@ class configmanager(object):
             group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
-                          help="stop the server after its initialization")
+                         help="stop the server after its initialization")
         group.add_option("-t", "--timezone", dest="timezone", my_default=False,
                          help="specify reference timezone for the server (e.g. Europe/Brussels")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
@@ -364,8 +368,8 @@ class configmanager(object):
 
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
-            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
-            "use -s/--save if you want to generate it"% opt.config)
+            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "
+            "use -s/--save if you want to generate it" % opt.config)
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
@@ -378,8 +382,8 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config \
-                or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            self.config_file or opt.config
+            or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
@@ -399,7 +403,7 @@ class configmanager(object):
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
                 'geoip_database',
-        ]
+                ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
@@ -444,14 +448,14 @@ class configmanager(object):
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
-        if not self.options['addons_path'] or self.options['addons_path']=='None':
+        if not self.options['addons_path'] or self.options['addons_path'] == 'None':
             base_addons = os.path.join(self.options['root_path'], 'addons')
             main_addons = os.path.abspath(os.path.join(self.options['root_path'], '../addons'))
             self.options['addons_path'] = '%s,%s' % (base_addons, main_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
-                      for x in self.options['addons_path'].split(','))
+                os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
+                for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
@@ -469,7 +473,7 @@ class configmanager(object):
             # be better to remove that conversion.)
             die(not isinstance(self.options['timezone'], basestring),
                 "Invalid timezone value in configuration or environment: %r.\n"
-                "Please fix this in your configuration." %(self.options['timezone']))
+                "Please fix this in your configuration." % (self.options['timezone']))
 
             # If an explicit TZ was provided in the config, make sure it is known
             try:
@@ -500,7 +504,7 @@ class configmanager(object):
         if self.options['db_password']:
             if sys.platform == 'win32' and not self.options['db_host']:
                 self.options['db_host'] = 'localhost'
-            #if self.options['db_host']:
+            # if self.options['db_host']:
             #    self._generate_pgpassfile()
 
         if opt.save:
@@ -510,7 +514,7 @@ class configmanager(object):
         if opt.server_wide_modules:
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
-            openerp.conf.server_wide_modules = ['web','web_kanban']
+            openerp.conf.server_wide_modules = ['web', 'web_kanban']
 
     def _generate_pgpassfile(self):
         """
@@ -541,9 +545,9 @@ class configmanager(object):
                 import _winreg
             except ImportError:
                 _winreg = None
-            x=_winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
-            y = _winreg.OpenKey(x, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0,_winreg.KEY_ALL_ACCESS)
-            _winreg.SetValueEx(y,"PGPASSFILE", 0, _winreg.REG_EXPAND_SZ, filename )
+            x = _winreg.ConnectRegistry(None, _winreg.HKEY_LOCAL_MACHINE)
+            y = _winreg.OpenKey(x, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0, _winreg.KEY_ALL_ACCESS)
+            _winreg.SetValueEx(y, "PGPASSFILE", 0, _winreg.REG_EXPAND_SZ, filename)
             _winreg.CloseKey(y)
             _winreg.CloseKey(x)
         else:
@@ -577,22 +581,22 @@ class configmanager(object):
         p = ConfigParser.ConfigParser()
         try:
             p.read([self.rcfile])
-            for (name,value) in p.items('options'):
-                if value=='True' or value=='true':
+            for (name, value) in p.items('options'):
+                if value == 'True' or value == 'true':
                     value = True
-                if value=='False' or value=='false':
+                if value == 'False' or value == 'false':
                     value = False
                 self.options[name] = value
-            #parse the other sections, as well
+            # parse the other sections, as well
             for sec in p.sections():
                 if sec == 'options':
                     continue
-                if not self.misc.has_key(sec):
-                    self.misc[sec]= {}
+                if sec not in self.misc:
+                    self.misc[sec] = {}
                 for (name, value) in p.items(sec):
-                    if value=='True' or value=='true':
+                    if value == 'True' or value == 'true':
                         value = True
-                    if value=='False' or value=='false':
+                    if value == 'False' or value == 'false':
                         value = False
                     self.misc[sec][name] = value
         except IOError:
@@ -617,7 +621,7 @@ class configmanager(object):
         for sec in sorted(self.misc.keys()):
             p.add_section(sec)
             for opt in sorted(self.misc[sec].keys()):
-                p.set(sec,opt,self.misc[sec][opt])
+                p.set(sec, opt, self.misc[sec][opt])
 
         # try to create the directories and write the file
         try:
@@ -639,7 +643,7 @@ class configmanager(object):
         return self.options.get(key, default)
 
     def get_misc(self, sect, key, default=None):
-        return self.misc.get(sect,{}).get(key, default)
+        return self.misc.get(sect, {}).get(key, default)
 
     def __setitem__(self, key, value):
         self.options[key] = value

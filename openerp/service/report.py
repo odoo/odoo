@@ -22,24 +22,26 @@ self_reports = {}
 self_id = 0
 self_id_protect = threading.Semaphore()
 
+
 def dispatch(method, params):
-    (db, uid, passwd ) = params[0:3]
+    (db, uid, passwd) = params[0:3]
     threading.current_thread().uid = uid
     params = params[3:]
     if method not in ['report', 'report_get', 'render_report']:
         raise KeyError("Method not supported %s" % method)
-    security.check(db,uid,passwd)
+    security.check(db, uid, passwd)
     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
     fn = globals()['exp_' + method]
     res = fn(db, uid, *params)
     openerp.modules.registry.RegistryManager.signal_caches_change(db)
     return res
 
+
 def exp_render_report(db, uid, object, ids, datas=None, context=None):
     if not datas:
-        datas={}
+        datas = {}
     if not context:
-        context={}
+        context = {}
 
     self_id_protect.acquire()
     global self_id
@@ -72,11 +74,12 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
     return _check_report(id)
 
+
 def exp_report(db, uid, object, ids, datas=None, context=None):
     if not datas:
-        datas={}
+        datas = {}
     if not context:
-        context={}
+        context = {}
 
     self_id_protect.acquire()
     global self_id
@@ -112,6 +115,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     threading.Thread(target=go, args=(id, uid, ids, datas, context)).start()
     return id
 
+
 def _check_report(report_id):
     result = self_reports[report_id]
     exc = result['exception']
@@ -124,7 +128,7 @@ def _check_report(report_id):
             res2 = zlib.compress(result['result'])
             res['code'] = 'zlib'
         else:
-            #CHECKME: why is this needed???
+            # CHECKME: why is this needed???
             if isinstance(result['result'], unicode):
                 res2 = result['result'].encode('latin1', 'replace')
             else:
@@ -134,6 +138,7 @@ def _check_report(report_id):
         res['format'] = result['format']
         del self_reports[report_id]
     return res
+
 
 def exp_report_get(db, uid, report_id):
     if report_id in self_reports:

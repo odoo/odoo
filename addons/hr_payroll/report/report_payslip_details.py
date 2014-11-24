@@ -56,7 +56,7 @@ class payslip_details_report(report_sxw.rml_parse):
                 LEFT JOIN hr_salary_rule_category AS rc on (pl.category_id = rc.id) \
                 WHERE pl.id in %s \
                 GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id \
-                ORDER BY pl.sequence, rc.parent_id''',(tuple(ids),))
+                ORDER BY pl.sequence, rc.parent_id''', (tuple(ids),))
             for x in self.cr.fetchall():
                 result.setdefault(x[1], [])
                 result[x[1]].append(x[0])

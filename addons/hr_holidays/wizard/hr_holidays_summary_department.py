@@ -24,18 +24,19 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_holidays_summary_dept(osv.osv_memory):
     _name = 'hr.holidays.summary.dept'
     _description = 'HR Leaves Summary Report By Department'
     _columns = {
         'date_from': fields.date('From', required=True),
         'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),
-        'holiday_type': fields.selection([('Approved','Approved'),('Confirmed','Confirmed'),('both','Both Approved and Confirmed')], 'Leave Type', required=True)
+        'holiday_type': fields.selection([('Approved', 'Approved'), ('Confirmed', 'Confirmed'), ('both', 'Both Approved and Confirmed')], 'Leave Type', required=True)
     }
 
     _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved'
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'holiday_type': 'Approved'
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -43,15 +44,15 @@ class hr_holidays_summary_dept(osv.osv_memory):
         if not data['depts']:
             raise osv.except_osv(_('Error!'), _('You have to select at least one Department. And try again.'))
         datas = {
-             'ids': [],
-             'model': 'ir.ui.menu',
-             'form': data
-            }
+            'ids': [],
+            'model': 'ir.ui.menu',
+            'form': data
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
             'datas': datas,
-            }
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

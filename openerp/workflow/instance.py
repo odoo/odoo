@@ -23,6 +23,7 @@ from openerp.workflow.helpers import Session
 from openerp.workflow.helpers import Record
 from openerp.workflow.workitem import WorkflowItem
 
+
 class WorkflowInstance(object):
     def __init__(self, session, record, values):
         assert isinstance(session, Session)
@@ -92,10 +93,10 @@ class WorkflowInstance(object):
         cr.execute('select wkf_id from wkf_instance where id=%s', (instance_id,))
         wkf_id = cr.fetchone()[0]
         cr.execute('select state,flow_stop from wkf_workitem w left join wkf_activity a on (a.id=w.act_id) where w.inst_id=%s', (instance_id,))
-        ok=True
+        ok = True
         for r in cr.fetchall():
-            if (r[0]<>'complete') or not r[1]:
-                ok=False
+            if (r[0] != 'complete') or not r[1]:
+                ok = False
                 break
         if ok:
             cr.execute('select distinct a.name from wkf_activity a left join wkf_workitem w on (a.id=w.act_id) where w.inst_id=%s', (instance_id,))
@@ -106,29 +107,29 @@ class WorkflowInstance(object):
             for cur_instance_id, cur_model_name, cur_record_id in cr.fetchall():
                 cur_record = Record(cur_model_name, cur_record_id)
                 for act_name in act_names:
-                    WorkflowInstance(self.session, cur_record, {'id':cur_instance_id}).validate('subflow.%s' % act_name[0])
+                    WorkflowInstance(self.session, cur_record, {'id': cur_instance_id}).validate('subflow.%s' % act_name[0])
 
         return ok
-
-
-
 
 
 def create(session, record, workflow_id):
     return WorkflowInstance(session, record).create(workflow_id)
 
+
 def delete(session, record):
     return WorkflowInstance(session, record).delete()
+
 
 def validate(session, record, instance_id, signal, force_running=False):
     return WorkflowInstance(session, record).validate(instance_id, signal, force_running)
 
+
 def update(session, record, instance_id):
     return WorkflowInstance(session, record).update(instance_id)
+
 
 def _update_end(session, record, instance_id):
     return WorkflowInstance(session, record)._update_end(instance_id)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

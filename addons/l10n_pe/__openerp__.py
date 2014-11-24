@@ -33,7 +33,7 @@ SUNAT 2011 (PCGE 2010).
     'website': 'http://cubicERP.com',
     'category': 'Localization/Account Charts',
     'depends': ['account_chart'],
-    'data':[
+    'data': [
         'account_tax_code.xml',
         'l10n_pe_chart.xml',
         'account_tax.xml',
@@ -42,6 +42,6 @@ SUNAT 2011 (PCGE 2010).
     'demo': [],
     'active': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_pe.jpeg','images/l10n_pe_chart.jpeg'],
+    'images': ['images/config_chart_l10n_pe.jpeg', 'images/l10n_pe_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

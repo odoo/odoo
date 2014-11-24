@@ -30,8 +30,8 @@ class account_print_journal(osv.osv_memory):
 
     _columns = {
         'sort_selection': fields.selection([('l.date', 'Date'),
-                                            ('am.name', 'Journal Entry Number'),],
-                                            'Entries Sorted by', required=True),
+                                            ('am.name', 'Journal Entry Number'), ],
+                                           'Entries Sorted by', required=True),
         'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
 
@@ -43,18 +43,18 @@ class account_print_journal(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         '''
-        used to set the domain on 'journal_ids' field: we exclude or only propose the journals of type 
+        used to set the domain on 'journal_ids' field: we exclude or only propose the journals of type
         sale/purchase (+refund) accordingly to the presence of the key 'sale_purchase_only' in the context.
         '''
-        if context is None: 
+        if context is None:
             context = {}
         res = super(account_print_journal, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
 
         if context.get('sale_purchase_only'):
-            domain ="[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
+            domain = "[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
         else:
-            domain ="[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
+            domain = "[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
         nodes = doc.xpath("//field[@name='journal_ids']")
         for node in nodes:
             node.set('domain', domain)

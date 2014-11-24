@@ -34,6 +34,7 @@ from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
+
 class Registry(Mapping):
     """ Model registry for a particular database.
 
@@ -62,7 +63,7 @@ class Registry(Mapping):
         # special cursor for test mode; None means "normal" mode
         self.test_cr = None
 
-        # Indicates that the registry is 
+        # Indicates that the registry is
         self.ready = False
 
         # Inter-process signaling (used only when openerp.multi_process is True):
@@ -138,7 +139,7 @@ class Registry(Mapping):
         """
         from .. import models
 
-        models_to_load = [] # need to preserve loading order
+        models_to_load = []  # need to preserve loading order
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
@@ -180,7 +181,6 @@ class Registry(Mapping):
         if ir_ui_menu is not None:
             ir_ui_menu.clear_cache()
 
-
     # Useful only in a multi-process context.
     def reset_any_cache_cleared(self):
         self._any_cache_cleared = False
@@ -205,13 +205,13 @@ class Registry(Mapping):
             cr.execute("""SELECT nextval('base_registry_signaling')""")
             cr.execute("""CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1""")
             cr.execute("""SELECT nextval('base_cache_signaling')""")
-        
+
         cr.execute("""
                     SELECT base_registry_signaling.last_value,
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
         r, c = cr.fetchone()
-        _logger.debug("Multiprocess load registry signaling: [Registry: # %s] "\
+        _logger.debug("Multiprocess load registry signaling: [Registry: # %s] "
                     "[Cache: # %s]",
                     r, c)
         return r, c
@@ -243,16 +243,22 @@ class Registry(Mapping):
             return cr
         return self._db.cursor()
 
+
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
+
     def acquire(self):
         pass
+
     def release(self):
         pass
+
     def __enter__(self):
         self.acquire()
+
     def __exit__(self, type, value, traceback):
         self.release()
+
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -411,7 +417,7 @@ class RegistryManager(object):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
                 r, c = cr.fetchone()
-                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "\
+                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "
                     "[Cache - old# %s new# %s]",
                     registry.base_registry_signaling_sequence, r,
                     registry.base_cache_signaling_sequence, c)

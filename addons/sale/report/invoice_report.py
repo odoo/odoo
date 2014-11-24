@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class account_invoice_report(osv.osv):
     _inherit = 'account.invoice.report'
@@ -30,10 +31,10 @@ class account_invoice_report(osv.osv):
     }
 
     def _select(self):
-        return  super(account_invoice_report, self)._select() + ", sub.section_id as section_id"
+        return super(account_invoice_report, self)._select() + ", sub.section_id as section_id"
 
     def _sub_select(self):
-        return  super(account_invoice_report, self)._sub_select() + ", ai.section_id as section_id"
+        return super(account_invoice_report, self)._sub_select() + ", ai.section_id as section_id"
 
     def _group_by(self):
         return super(account_invoice_report, self)._group_by() + ", ai.section_id"

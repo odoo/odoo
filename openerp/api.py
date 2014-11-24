@@ -119,12 +119,14 @@ class Meta(type):
 
 identity = lambda x: x
 
+
 def decorate(method, attr, value):
     """ Decorate `method` or its original method. """
     # decorate the original method, and re-apply the api decorator, if any
     orig = getattr(method, '_orig', method)
     setattr(orig, attr, value)
     return getattr(method, '_api', identity)(orig)
+
 
 def propagate(from_method, to_method):
     """ Propagate decorators from `from_method` to `to_method`, and return the
@@ -229,6 +231,7 @@ def returns(model, downgrade=None):
 
 def make_wrapper(method, old_api, new_api):
     """ Return a wrapper method for `method`. """
+
     def wrapper(self, *args, **kwargs):
         # avoid hasattr(self, '_ids') because __getattr__() is overridden
         if '_ids' in self.__dict__:
@@ -667,7 +670,6 @@ def expected(decorator, func):
     return decorator(func) if not hasattr(func, '_orig') else func
 
 
-
 class Environment(object):
     """ An environment wraps data for ORM records:
 
@@ -899,6 +901,7 @@ class Environment(object):
 
 class Environments(object):
     """ A common object for all environments in a request. """
+
     def __init__(self):
         self.envs = WeakSet()           # weak set of environments
         self.todo = {}                  # recomputations {field: [records]}

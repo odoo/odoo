@@ -7,6 +7,7 @@ from . import odoo_pygments
 from . import sphinx_monkeypatch
 sphinx_monkeypatch.patch()
 
+
 def setup(app):
     html_domain.setup(app)
     github.setup(app)
@@ -22,7 +23,12 @@ def setup(app):
 
 from docutils import nodes
 from docutils.parsers.rst.directives import admonitions
-class exercise(nodes.Admonition, nodes.Element): pass
+
+
+class exercise(nodes.Admonition, nodes.Element):
+    pass
+
+
 class Exercise(admonitions.BaseAdmonition):
     node_class = exercise
 

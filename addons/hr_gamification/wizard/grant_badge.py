@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_grant_badge_wizard(osv.TransientModel):
     _name = 'gamification.badge.user.wizard'
     _inherit = ['gamification.badge.user.wizard']

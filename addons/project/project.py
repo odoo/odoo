@@ -71,17 +71,17 @@ class project(osv.osv):
         # create aliases for all projects and avoid constraint errors
         alias_context = dict(context, alias_model_name='project.task')
         return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
-            'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
+            'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id': 'id'}, context=alias_context)
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.get('user_preference'):
-                cr.execute("""SELECT project.id FROM project_project project
+            cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
                            LEFT JOIN project_user_rel rel ON rel.project_id = project.id
-                           WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
-                return [(r[0]) for r in cr.fetchall()]
+                           WHERE (account.user_id = %s or rel.uid = %s)""" % (user, user))
+            return [(r[0]) for r in cr.fetchall()]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
@@ -146,7 +146,7 @@ class project(osv.osv):
             GROUP BY project_id
             """, (tuple(child_parent.keys()),))
         # aggregate results into res
-        res = dict([(id, {'planned_hours':0.0, 'total_hours':0.0, 'effective_hours':0.0}) for id in ids])
+        res = dict([(id, {'planned_hours': 0.0, 'total_hours': 0.0, 'effective_hours': 0.0}) for id in ids])
         for id, planned, total, effective in cr.fetchall():
             # add the values specific to id to all parent projects of id in the result
             while id:
@@ -186,11 +186,13 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
+
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
+        res = {}
         for tasks in self.browse(cr, uid, ids, context):
             res[tasks.id] = len(tasks.task_ids)
         return res
+
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
@@ -204,9 +206,9 @@ class project(osv.osv):
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-             '|',
-             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
-             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
+            '|',
+            '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
+            '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
@@ -233,30 +235,30 @@ class project(osv.osv):
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
-            help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+            help="Project's members are users who can have an access to the tasks related to this project.", states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
-            store = {
+            store={
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'stage_id'], 20),
             }),
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
-        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close': [('readonly', True)]}),
+        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=[('stage_id.fold', '=', False)]),
@@ -278,11 +280,11 @@ class project(osv.osv):
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
         'state': fields.selection([('template', 'Template'),
-                                   ('draft','New'),
-                                   ('open','In Progress'),
+                                   ('draft', 'New'),
+                                   ('open', 'In Progress'),
                                    ('cancelled', 'Cancelled'),
-                                   ('pending','Pending'),
-                                   ('close','Closed')],
+                                   ('pending', 'Pending'),
+                                   ('close', 'Closed')],
                                   'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
@@ -290,7 +292,7 @@ class project(osv.osv):
      }
 
     def _get_type_common(self, cr, uid, context):
-        ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
+        ids = self.pool.get('project.task.type').search(cr, uid, [('case_default', '=', 1)], context=context)
         return ids
 
     _order = "sequence, id"
@@ -345,8 +347,8 @@ class project(osv.osv):
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
                         'name': task.name}
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
-        self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
+            map_task_id[task.id] = task_obj.copy(cr, uid, task.id, defaults, context=context)
+        self.write(cr, uid, [new_project_id], {'tasks': [(6, 0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
@@ -372,19 +374,19 @@ class project(osv.osv):
             new_date_start = time.strftime('%Y-%m-%d')
             new_date_end = False
             if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
-                                    'date_start':new_date_start,
-                                    'date':new_date_end,
-                                    'parent_id':parent_id}, context=context)
+                start_date = date(*time.strptime(proj.date_start, '%Y-%m-%d')[:3])
+                end_date = date(*time.strptime(proj.date, '%Y-%m-%d')[:3])
+                new_date_end = (datetime(*time.strptime(new_date_start, '%Y-%m-%d')[:3]) + (end_date - start_date)).strftime('%Y-%m-%d')
+            context.update({'copy': True})
+            new_id = self.copy(cr, uid, proj.id, default={
+                'name': _("%s (copy)") % (proj.name),
+                'state': 'open',
+                'date_start': new_date_start,
+                'date': new_date_end,
+                'parent_id': parent_id}, context=context)
             result.append(new_id)
 
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
+            child_ids = self.search(cr, uid, [('parent_id', '=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
@@ -404,7 +406,7 @@ class project(osv.osv):
                 'res_model': 'project.project',
                 'view_id': False,
                 'res_id': res_id,
-                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
+                'views': [(form_view['res_id'], 'form'), (tree_view['res_id'], 'tree')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
                 'nodestroy': True
@@ -419,7 +421,7 @@ class project(osv.osv):
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)])
+            child_ids = self.search(cr, uid, [('parent_id', '=', proj.analytic_account_id.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
@@ -432,7 +434,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s'!") % (project.name,))
+                raise osv.except_osv(_('Warning!'), _("You must assign members on the project '%s'!") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -448,7 +450,7 @@ class project(osv.osv):
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
             for key, vals in resource_objs.items():
-                result +='''
+                result += '''
 class User_%s(Resource):
     efficiency = %s
 ''' % (key,  vals.get('efficiency', False))
@@ -474,18 +476,18 @@ def Project():
 """       % (
             project.id,
             project.date_start or time.strftime('%Y-%m-%d'), working_days,
-            '|'.join(['User_'+str(x) for x in puids]) or 'None'
+            '|'.join(['User_' + str(x) for x in puids]) or 'None'
         )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
         if vacation:
-            result+= """
+            result += """
     vacation = %s
 """ %   ( vacation, )
         return result
 
-    #TODO: DO Resource allocation and compute availability
+    # TODO: DO Resource allocation and compute availability
     def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
-        if context ==  None:
+        if context is None:
             context = {}
         allocation = {}
         return allocation
@@ -615,7 +617,7 @@ class task(osv.osv):
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -633,10 +635,10 @@ class task(osv.osv):
             if read_group_order == 'user_id desc':
                 order = '%s desc' % order
             # de-duplicate and apply search order
-            ids = res_users._search(cr, uid, [('id','in',ids)], order=order, access_rights_uid=access_rights_uid, context=context)
+            ids = res_users._search(cr, uid, [('id', 'in', ids)], order=order, access_rights_uid=access_rights_uid, context=context)
         result = res_users.name_get(cr, access_rights_uid, ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(ids.index(x[0]), ids.index(y[0])))
+        result.sort(lambda x, y: cmp(ids.index(x[0]), ids.index(y[0])))
         return result, {}
 
     _group_by_full = {
@@ -645,21 +647,21 @@ class task(osv.osv):
     }
 
     def _str_get(self, task, level=0, border='***', context=None):
-        return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
-            border[0]+' '+(task.name or '')+'\n'+ \
-            (task.description or '')+'\n\n'
+        return border + ' ' + (task.user_id and task.user_id.name.upper() or '') + (level and (': L' + str(level)) or '') + (' - %.1fh / %.1fh' % (task.effective_hours or 0.0, task.planned_hours)) + ' ' + border + '\n' + \
+            border[0] + ' ' + (task.name or '') + '\n' + \
+            (task.description or '') + '\n\n'
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id", (tuple(ids),))
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': (task.remaining_hours or 0.0) + hours.get(task.id, 0.0)}
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
+                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99), 2)
             # TDE CHECK: if task.state in ('done','cancelled'):
             if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
@@ -692,8 +694,8 @@ class task(osv.osv):
             new_child_ids = set(map(mapper, task.child_ids))
             new_parent_ids = set(map(mapper, task.parent_ids))
             if new_child_ids or new_parent_ids:
-                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
-                            'child_ids':  [(6,0,list(new_child_ids))]})
+                task.write({'parent_ids': [(6, 0, list(new_parent_ids))],
+                            'child_ids': [(6, 0, list(new_child_ids))]})
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -715,19 +717,20 @@ class task(osv.osv):
     def _get_task(self, cr, uid, ids, context=None):
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id: result[work.task_id.id] = True
+            if work.task_id:
+                result[work.task_id.id] = True
         return result.keys()
 
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
+        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -735,7 +738,7 @@ class task(osv.osv):
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          required=False, copy=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
+        'write_date': fields.datetime('Last Modification Date', readonly=True, select=True),  # not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date', select=True, copy=False),
         'date_end': fields.datetime('Ending Date', select=True, copy=False),
         'date_deadline': fields.date('Deadline', select=True, copy=False),
@@ -746,11 +749,11 @@ class task(osv.osv):
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
-            store = {
+            store={
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+        'remaining_hours': fields.float('Remaining Hours', digits=(16, 2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
         'total_hours': fields.function(_hours_get, string='Total', multi='hours', help="Computed as: Time Spent + Remaining Time.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
@@ -804,16 +807,16 @@ class task(osv.osv):
         return True
 
     def _check_cycle(self, cr, uid, id, visited_branch, visited_node, context=None):
-        if id in visited_branch: #Cycle
+        if id in visited_branch:  # Cycle
             return False
 
-        if id in visited_node: #Already tested don't work one more time for nothing
+        if id in visited_node:  # Already tested don't work one more time for nothing
             return True
 
         visited_branch.add(id)
         visited_node.add(id)
 
-        #visit child using DFS
+        # visit child using DFS
         task = self.browse(cr, uid, id, context=context)
         for child in task.child_ids:
             res = self._check_cycle(cr, uid, child.id, visited_branch, visited_node, context=context)
@@ -824,25 +827,26 @@ class task(osv.osv):
         return True
 
     def _check_dates(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         obj_task = self.browse(cr, uid, ids[0], context=context)
         start = obj_task.date_start or False
         end = obj_task.date_end or False
-        if start and end :
+        if start and end:
             if start > end:
                 return False
         return True
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
-        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
+        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start', 'date_end'])
     ]
 
     # Override view according to the company definition
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
-        if context is None: context = {}
+        if context is None:
+            context = {}
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
@@ -850,14 +854,14 @@ class task(osv.osv):
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        if tm in ['Hours', 'Hour']:
             return res
 
         eview = etree.fromstring(res['arch'])
 
         def _check_rec(eview):
-            if eview.attrib.get('widget','') == 'float_time':
-                eview.set('widget','float')
+            if eview.attrib.get('widget', '') == 'float_time':
+                eview.set('widget', 'float')
             for child in eview:
                 _check_rec(child)
             return True
@@ -868,7 +872,7 @@ class task(osv.osv):
 
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', tm)
         return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
@@ -911,7 +915,7 @@ class task(osv.osv):
         return False
 
     def _check_child_task(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
@@ -1039,7 +1043,7 @@ class task(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        if context == None:
+        if context is None:
             context = {}
         self._check_child_task(cr, uid, ids, context=context)
         res = super(task, self).unlink(cr, uid, ids, context)
@@ -1048,26 +1052,26 @@ class task(osv.osv):
     def _generate_task(self, cr, uid, tasks, ident=4, context=None):
         context = context or {}
         result = ""
-        ident = ' '*ident
+        ident = ' ' * ident
         for task in tasks:
             if task.stage_id and task.stage_id.fold:
                 continue
             result += '''
 %sdef Task_%s():
 %s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
+%s  effort = \"%.2fH\"''' % (ident, task.id, ident, task.remaining_hours, ident, task.total_hours)
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))
             if start:
                 result += '''
 %s  start = max(%s)
-''' % (ident,','.join(start))
+''' % (ident, ','.join(start))
 
             if task.user_id:
                 result += '''
 %s  resource = %s
-''' % (ident, 'User_'+str(task.user_id.id))
+''' % (ident, 'User_' + str(task.user_id.id))
 
         result += "\n"
         return result
@@ -1119,6 +1123,7 @@ class task(osv.osv):
                         pass
         return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
+
 class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
@@ -1137,13 +1142,14 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
+
     def create(self, cr, uid, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'task_id' in vals:
-            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
+            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours', 0.0), vals['task_id']))
             self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
-        return super(project_work,self).create(cr, uid, vals, context=context)
+        return super(project_work, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
@@ -1151,23 +1157,23 @@ class project_work(osv.osv):
         if 'hours' in vals:
             task_obj = self.pool.get('project.task')
             for work in self.browse(cr, uid, ids, context=context):
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
+                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours', 0.0), work.hours, work.task_id.id))
                 task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
-        return super(project_work,self).write(cr, uid, ids, vals, context)
+        return super(project_work, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
             task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
-        return super(project_work,self).unlink(cr, uid, ids, context=context)
+        return super(project_work, self).unlink(cr, uid, ids, context=context)
 
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks', help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
 
@@ -1182,7 +1188,8 @@ class account_analytic_account(osv.osv):
         '''
         This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
         '''
-        if context is None: context = {}
+        if context is None:
+            context = {}
         return vals.get('use_tasks') and not 'project_creation_in_progress' in context
 
     def project_create(self, cr, uid, analytic_account_id, vals, context=None):
@@ -1190,12 +1197,12 @@ class account_analytic_account(osv.osv):
         This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
         '''
         project_pool = self.pool.get('project.project')
-        project_id = project_pool.search(cr, uid, [('analytic_account_id','=', analytic_account_id)])
+        project_id = project_pool.search(cr, uid, [('analytic_account_id', '=', analytic_account_id)])
         if not project_id and self._trigger_project_creation(cr, uid, vals, context=context):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
-                'type': vals.get('type','contract'),
+                'type': vals.get('type', 'contract'),
             }
             return project_pool.create(cr, uid, project_values, context=context)
         return False
@@ -1223,7 +1230,7 @@ class account_analytic_account(osv.osv):
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
-        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id', 'in', ids)])
         if analytic_ids:
             raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
@@ -1232,7 +1239,7 @@ class account_analytic_account(osv.osv):
         if args is None:
             args = []
         if context is None:
-            context={}
+            context = {}
         if context.get('current_model') == 'project.project':
             project_ids = self.search(cr, uid, args + [('name', operator, name)], limit=limit, context=context)
             return self.name_get(cr, uid, project_ids, context=context)
@@ -1245,6 +1252,7 @@ class project_project(osv.osv):
     _defaults = {
         'use_tasks': True
     }
+
 
 class project_task_history(osv.osv):
     """
@@ -1305,6 +1313,7 @@ class project_task_history(osv.osv):
         'date': fields.date.context_today,
     }
 
+
 class project_task_history_cumulative(osv.osv):
     _name = 'project.task.history.cumulative'
     _table = 'project_task_history_cumulative'
@@ -1344,6 +1353,7 @@ class project_task_history_cumulative(osv.osv):
             ) AS history
         )
         """)
+
 
 class project_category(osv.osv):
     """ Category of project's task (or issue) """

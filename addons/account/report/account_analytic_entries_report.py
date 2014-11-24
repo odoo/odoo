@@ -20,7 +20,8 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
+
 
 class analytic_entries_report(osv.osv):
     _name = "analytic.entries.report"
@@ -28,7 +29,7 @@ class analytic_entries_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -43,6 +44,7 @@ class analytic_entries_report(osv.osv):
         'unit_amount': fields.integer('Unit Amount', readonly=True),
         'nbr': fields.integer('# Entries', readonly=True),  # TDE FIXME master: rename into nbr_entries
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'analytic_entries_report')
         cr.execute("""

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 from openerp.addons.crm import crm
 
@@ -30,35 +30,35 @@ class crm_lead_report_assign(osv.osv):
     _auto = False
     _description = "CRM Lead Report"
     _columns = {
-        'partner_assigned_id':fields.many2one('res.partner', 'Partner', readonly=True),
-        'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'partner_assigned_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'grade_id': fields.many2one('res.partner.grade', 'Grade', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'country_id': fields.many2one('res.country', 'Country', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'date_assign': fields.date('Assign Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
-        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'probability': fields.float('Avg Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'probability_max': fields.float('Max Probability',digits=(16,2),readonly=True, group_operator="max"),
-        'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
-        'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
-        'partner_id': fields.many2one('res.partner', 'Customer' , readonly=True),
+        'delay_open': fields.float('Delay to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case"),
+        'delay_expected': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg"),
+        'probability': fields.float('Avg Probability', digits=(16, 2), readonly=True, group_operator="avg"),
+        'probability_max': fields.float('Max Probability', digits=(16, 2), readonly=True, group_operator="max"),
+        'planned_revenue': fields.float('Planned Revenue', digits=(16, 2), readonly=True),
+        'probable_revenue': fields.float('Probable Revenue', digits=(16, 2), readonly=True),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True),
         'opening_date': fields.datetime('Opening Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type':fields.selection([
-            ('lead','Lead'),
-            ('opportunity','Opportunity')
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([
+            ('lead', 'Lead'),
+            ('opportunity', 'Opportunity')
+        ], 'Type', help="Type is used to separate Leads and Opportunities"),
     }
-    def init(self, cr):
 
+    def init(self, cr):
         """
             CRM Lead Report
             @param cr: the current row, from the database cursor

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class hr_attendance_config_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'
 

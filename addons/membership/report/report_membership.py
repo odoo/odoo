@@ -33,6 +33,7 @@ STATE = [
     ('paid', 'Paid Member'),
 ]
 
+
 class report_membership(osv.osv):
     '''Membership Analysis'''
 
@@ -46,8 +47,8 @@ class report_membership(osv.osv):
         'num_waiting': fields.integer('# Waiting', readonly=True),
         'num_invoiced': fields.integer('# Invoiced', readonly=True),
         'num_paid': fields.integer('# Paid', readonly=True),
-        'tot_pending': fields.float('Pending Amount', digits_compute= dp.get_precision('Account'), readonly=True),
-        'tot_earned': fields.float('Earned Amount', digits_compute= dp.get_precision('Account'), readonly=True),
+        'tot_pending': fields.float('Pending Amount', digits_compute=dp.get_precision('Account'), readonly=True),
+        'tot_earned': fields.float('Earned Amount', digits_compute=dp.get_precision('Account'), readonly=True),
         'partner_id': fields.many2one('res.partner', 'Member', readonly=True),
         'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
@@ -55,7 +56,7 @@ class report_membership(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'quantity': fields.integer("Quantity", readonly=True),
-        }
+    }
 
     def init(self, cr):
         '''Create the view'''

@@ -302,7 +302,7 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template ='survey.result'
+        result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
         filter_finish = False
@@ -363,7 +363,7 @@ class WebsiteSurvey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    def prepare_result_dict(self,survey, current_filters=None):
+    def prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
@@ -371,7 +371,7 @@ class WebsiteSurvey(http.Controller):
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
-                question_dict = {'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
+                question_dict = {'question': question, 'input_summary': survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
@@ -380,7 +380,7 @@ class WebsiteSurvey(http.Controller):
         """Returns data used for filtering the result"""
         filters = []
         for ids in post:
-            #if user add some random data in query URI, ignore it
+            # if user add some random data in query URI, ignore it
             try:
                 row_id, answer_id = ids.split(',')
                 filters.append({'row_id': int(row_id), 'answer_id': int(answer_id)})
@@ -413,6 +413,7 @@ class WebsiteSurvey(http.Controller):
                     values.append({'text': data['rows'].get(row), 'count': data['result'].get((row, answer))})
                 result.append({'key': data['answers'].get(answer), 'values': values})
         return json.dumps(result)
+
 
 def dict_soft_update(dictionary, key, value):
     ''' Insert the pair <key>: <value> into the <dictionary>. If <key> is

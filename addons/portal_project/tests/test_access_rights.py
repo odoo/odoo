@@ -39,7 +39,7 @@ class TestPortalProjectBase(TestProjectBase):
         group_public_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_public')
         self.group_public_id = group_public_ref and group_public_ref[1] or False
 
-        # # Test users to use through the various tests
+        # Test users to use through the various tests
         self.user_portal_id = self.res_users.create(cr, uid, {
             'name': 'Chell Portal',
             'login': 'chell',
@@ -253,7 +253,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.message_unsubscribe_users(cr, self.user_projectuser_id, [pigs_id], [self.user_projectuser_id])
         self.assertRaises(except_orm,
             self.project_task.create, cr, self.user_projectuser_id, {'name': 'Pigs task', 'project_id': pigs_id}, {'mail_create_nolog': True}
-        )
+                          )
 
         # Do: project user can create a task without project
         self.project_task.create(cr, self.user_projectuser_id, {

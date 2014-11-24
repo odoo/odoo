@@ -233,15 +233,15 @@ Of course. This seems viable.
 
 > 2012/10/27 Bert Tartopoils :
 >> blahblahblah (quote)?
->> 
+>>
 >> blahblahblah (quote)
->> 
+>>
 >> Bert TARTOPOILS
 >> bert.tartopoils@miam.miam
->> 
-> 
-> 
-> -- 
+>>
+>
+>
+> --
 > RaoulSignature
 
 Bert TARTOPOILS
@@ -252,15 +252,15 @@ TEXT_2_IN = ["Salut Raoul!", "Of course. This seems viable."]
 TEXT_2_OUT = ["I contact you about our meeting tomorrow. Here is the schedule I propose: (quote)",
     """> 2012/10/27 Bert Tartopoils :
 >> blahblahblah (quote)?
->> 
+>>
 >> blahblahblah (quote)
->> 
+>>
 >> Bert TARTOPOILS
 >> bert.tartopoils@miam.miam
->> 
-> 
-> 
-> -- 
+>>
+>
+>
+> --
 > RaoulSignature"""]
 
 HTML_1 = """<p>I contact you about our meeting for tomorrow. Here is the schedule I propose: (keep)
@@ -307,12 +307,12 @@ XXXXXX
 ----- Mail original -----</pre>
 
 
-<pre>Hi, 
+<pre>Hi,
 
 
 My CRM-related question.
 
-Regards, 
+Regards,
 
 XXXX</pre></div>"""
 
@@ -366,18 +366,18 @@ Goh Sin Yih
 
 ________________________________
  From: OpenERP Enterprise &lt;sales@openerp.com&gt;
-To: sinyih_goh@yahoo.com 
+To: sinyih_goh@yahoo.com
 Sent: Friday, February 8, 2013 12:46 AM
 Subject: Feedback From Your OpenERP Trial
- 
 
-Hello Goh Sin Yih, 
-Thank you for having tested OpenERP Online. 
-I noticed you started a trial of OpenERP Online (gsy) but you did not decide to keep using it. 
-So, I just wanted to get in touch with you to get your feedback. Can you tell me what kind of application you were you looking for and why you didn't decide to continue with OpenERP? 
-Thanks in advance for providing your feedback, 
-Do not hesitate to contact me if you have any questions, 
-Thanks, 
+
+Hello Goh Sin Yih,
+Thank you for having tested OpenERP Online.
+I noticed you started a trial of OpenERP Online (gsy) but you did not decide to keep using it.
+So, I just wanted to get in touch with you to get your feedback. Can you tell me what kind of application you were you looking for and why you didn't decide to continue with OpenERP?
+Thanks in advance for providing your feedback,
+Do not hesitate to contact me if you have any questions,
+Thanks,
 </pre>"""
 
 GMAIL_1 = """Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
@@ -413,7 +413,7 @@ THUNDERBIRD_1 = """<div>On 11/08/2012 05:29 PM,
     </blockquote>
     Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.<br><br>
     Did you receive my email about my new laptop, by the way ?<br><br>
-    Raoul.<br><pre>-- 
+    Raoul.<br><pre>--
 Raoul Grosbedonn&#233;e
 </pre>"""
 
@@ -569,7 +569,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Thank You</span></p><p></p>
@@ -580,7 +580,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <p class="MsoNormal">
@@ -611,7 +611,7 @@ MSOFFICE_2 = """
         </a>
         <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
           </span></p><p></p>
-        
+
       <p></p>
       <p class="MsoNormal">
         <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">www.poilindustries.com</span></p><p></p>
@@ -623,7 +623,7 @@ MSOFFICE_2 = """
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in 0in 0in">
@@ -670,7 +670,7 @@ MSOFFICE_3 = """<div>
     <p class="MsoNormal">
       <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <p class="MsoNormal">
       <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Yes I’d be glad to hear about your offers as we struggle every year with the planning/approving of LOA. </span></p><p></p>
@@ -703,7 +703,7 @@ MSOFFICE_3 = """<div>
         <b>
           <span lang="EN-GB" style="font-size:10.0pt;font-family:&quot;Trebuchet MS&quot;,&quot;sans-serif&quot;;color:gray">
             </span></b></p><p><b>&nbsp;</b></p><b>
-          
+
         </b>
       <p></p>
       <p class="MsoNormal">
@@ -741,13 +741,13 @@ MSOFFICE_3 = """<div>
         <span lang="EN-GB" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy"> </span>
         <span lang="EN-GB" style="font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:navy">
           </span></p><p></p>
-        
+
       <p></p>
     </div>
     <p class="MsoNormal">
       <span lang="EN-US" style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">
         </span></p><p>&nbsp;</p>
-      
+
     <p></p>
     <div>
       <div style="border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm">
@@ -794,35 +794,35 @@ MSOFFICE_3_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated t
 # bug: read more not apparent, strange message in read more span
 BUG1 = """<pre>Hi Migration Team,
 
-Paragraph 1, blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+Paragraph 1, blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
 blah blah blah blah blah blah blah blah.
 
-Paragraph 2, blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+Paragraph 2, blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
 blah blah blah blah blah blah blah blah.
 
-Paragraph 3, blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+Paragraph 3, blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah
 blah blah blah blah blah blah blah blah.
 
 Thanks.
 
 Regards,
 
--- 
+--
 Olivier Laurent
 Migration Manager
 OpenERP SA
@@ -872,7 +872,7 @@ BUG2 = """
       </table>
       <br>
       <br>
-      
+
       <br>
       <div class="moz-forward-container"><br>
         <br>
@@ -1078,13 +1078,13 @@ BUG2 = """
         <small>Access your messages and documents <a style="color:inherit" href="https://accounts.openerp.com?db=openerp#action=mail.action_mail_redirect&amp;login=che&amp;message_id=5750830">in
 
             OpenERP</a></small> <br>
-        <pre class="moz-signature" cols="72">-- 
-Christine Herrmann 
+        <pre class="moz-signature" cols="72">--
+Christine Herrmann
 
-OpenERP 
-Chaussée de Namur, 40 
-B-1367 Grand Rosières 
-Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01 
+OpenERP
+Chaussée de Namur, 40
+B-1367 Grand Rosières
+Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01
 
 Web: <a class="moz-txt-link-freetext" href="http://www.openerp.com">http://www.openerp.com</a> </pre>
         <br>
@@ -1093,7 +1093,7 @@ Web: <a class="moz-txt-link-freetext" href="http://www.openerp.com">http://www.o
       <br>
     </div>
     <br>
-  
+
 </div>"""
 
 BUG_2_IN = [

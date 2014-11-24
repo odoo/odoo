@@ -4,6 +4,7 @@ import openerp.osv.orm
 import openerp.osv.osv
 import openerp.tools.safe_eval
 
+
 class m(openerp.osv.osv.Model):
     """ This model exposes a few methods that will raise the different
         exceptions that must be handled by the server (and its RPC layer)
@@ -38,7 +39,6 @@ class m(openerp.osv.osv.Model):
     def generate_undefined(self, cr, uid, ids, context=None):
         self.surely_undefined_symbol
 
-
     def generate_except_osv_safe_eval(self, cr, uid, ids, context=None):
         self.generate_safe_eval(cr, uid, ids, self.generate_except_osv, context)
 
@@ -63,9 +63,8 @@ class m(openerp.osv.osv.Model):
     def generate_undefined_safe_eval(self, cr, uid, ids, context=None):
         self.generate_safe_eval(cr, uid, ids, self.generate_undefined, context)
 
-
     def generate_safe_eval(self, cr, uid, ids, f, context):
-        globals_dict = { 'generate': lambda *args: f(cr, uid, ids, context) }
+        globals_dict = {'generate': lambda *args: f(cr, uid, ids, context)}
         openerp.tools.safe_eval.safe_eval("generate()", mode='exec', globals_dict=globals_dict)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_sequence_installer(osv.osv_memory):
     _name = 'account.sequence.installer'
     _inherit = 'res.config.installer'
@@ -31,14 +32,14 @@ class account_sequence_installer(osv.osv_memory):
         'suffix': fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
         'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : fields.integer('Number padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'padding': fields.integer('Number padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
         'number_increment': 1,
         'number_next': 1,
-        'padding' : 0,
+        'padding': 0,
         'name': 'Internal Sequence Journal',
     }
 
@@ -61,13 +62,13 @@ class account_sequence_installer(osv.osv_memory):
             'suffix': record.suffix,
             'number_next': record.number_next,
             'number_increment': record.number_increment,
-            'padding' : record.padding,
+            'padding': record.padding,
             'company_id': company_id,
         }
 
         obj_sequence = self.pool.get('ir.sequence')
         ir_seq = obj_sequence.create(cr, uid, vals, context)
-        res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
+        res = super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
         jou_obj = self.pool.get('account.journal')
         journal_ids = jou_obj.search(cr, uid, search_criteria, context=context)
         for journal in jou_obj.browse(cr, uid, journal_ids, context=context):
@@ -76,7 +77,7 @@ class account_sequence_installer(osv.osv_memory):
         if j_ids:
             jou_obj.write(cr, uid, j_ids, {'internal_sequence_id': ir_seq})
         ir_values_obj = self.pool.get('ir.values')
-        ir_values_obj.set(cr, uid, key='default', key2=False, name='internal_sequence_id', models =[('account.journal', False)], value=ir_seq)
+        ir_values_obj.set(cr, uid, key='default', key2=False, name='internal_sequence_id', models=[('account.journal', False)], value=ir_seq)
         return res
 
 

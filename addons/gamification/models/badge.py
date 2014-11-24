@@ -29,6 +29,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
 
@@ -47,7 +48,6 @@ class gamification_badge_user(osv.Model):
         'create_date': fields.datetime('Created', readonly=True),
         'create_uid': fields.many2one('res.users', string='Creator', readonly=True),
     }
-
 
     def _send_badge(self, cr, uid, ids, context=None):
         """Send a notification to a user for receiving a badge
@@ -151,11 +151,11 @@ class gamification_badge(osv.Model):
         'description': fields.text('Description'),
         'image': fields.binary("Image", help="This field holds the image used for the badge, limited to 256x256"),
         'rule_auth': fields.selection([
-                ('everyone', 'Everyone'),
-                ('users', 'A selected list of users'),
-                ('having', 'People having some badges'),
-                ('nobody', 'No one, assigned through challenges'),
-            ],
+            ('everyone', 'Everyone'),
+            ('users', 'A selected list of users'),
+            ('having', 'People having some badges'),
+            ('nobody', 'No one, assigned through challenges'),
+        ],
             string="Allowance to Grant",
             help="Who can grant this badge",
             required=True),

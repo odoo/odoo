@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_change_currency(osv.osv_memory):
     _name = 'account.change.currency'
     _description = 'Change Currency'
@@ -29,11 +30,11 @@ class account_change_currency(osv.osv_memory):
        'currency_id': fields.many2one('res.currency', 'Change to', required=True, help="Select a currency to apply on the invoice"),
     }
 
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr, uid, fields_list, context=None):
         obj_inv = self.pool.get('account.invoice')
         if context is None:
             context = {}
-        if context.get('active_id',False):
+        if context.get('active_id', False):
             if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
                 raise osv.except_osv(_('Error!'), _('You can only change currency for Draft Invoice.'))
             pass
@@ -68,7 +69,7 @@ class account_change_currency(osv.osv_memory):
                 old_rate = invoice.currency_id.rate
                 if old_rate <= 0:
                     raise osv.except_osv(_('Error!'), _('Current currency is not configured properly.'))
-                new_price = (line.price_unit / old_rate ) * rate
+                new_price = (line.price_unit / old_rate) * rate
             obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
         obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)
         return {'type': 'ir.actions.act_window_close'}

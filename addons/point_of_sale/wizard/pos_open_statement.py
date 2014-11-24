@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+
 class pos_open_statement(osv.osv_memory):
     _name = 'pos.open.statement'
     _description = 'Open Statements'
@@ -44,7 +45,7 @@ class pos_open_statement(osv.osv_memory):
             context = {}
 
         st_ids = []
-        j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+        j_ids = journal_obj.search(cr, uid, [('journal_user', '=', 1)], context=context)
         if not j_ids:
             raise osv.except_osv(_('No Cash Register Defined!'), _('You have to define which payment method must be available in the point of sale by reusing existing bank and cash through "Accounting / Configuration / Journals / Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend / Configuration / Payment Methods".'))
 

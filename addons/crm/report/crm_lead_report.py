@@ -23,6 +23,7 @@ from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 
+
 class crm_lead_report(osv.Model):
     """ CRM Lead Analysis """
     _name = "crm.lead.report"
@@ -40,29 +41,28 @@ class crm_lead_report(osv.Model):
         'nbr_cases': fields.integer("# of Cases", readonly=True),
 
         # durations
-        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
-        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+        'delay_open': fields.float('Delay to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case"),
+        'delay_expected': fields.float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg"),
 
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'country_id':fields.many2one('res.country', 'Country', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'country_id': fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'planned_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),  # TDE FIXME master: rename into total_revenue
-        'probable_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),  # TDE FIXME master: rename into expected_revenue
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
-        'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
+        'probability': fields.float('Probability', digits=(16, 2), readonly=True, group_operator="avg"),
+        'planned_revenue': fields.float('Total Revenue', digits=(16, 2), readonly=True),  # TDE FIXME master: rename into total_revenue
+        'probable_revenue': fields.float('Expected Revenue', digits=(16, 2), readonly=True),  # TDE FIXME master: rename into expected_revenue
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type':fields.selection([
-            ('lead','Lead'),
-            ('opportunity','Opportunity'),
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([
+            ('lead', 'Lead'),
+            ('opportunity', 'Opportunity'),
+        ], 'Type', help="Type is used to separate Leads and Opportunities"),
     }
 
     def init(self, cr):
-
         """
             CRM Lead Report
             @param cr: the current row, from the database cursor

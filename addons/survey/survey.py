@@ -35,6 +35,7 @@ import uuid
 
 _logger = logging.getLogger(__name__)
 
+
 class survey_stage(osv.Model):
     """Stages for Kanban view of surveys"""
 
@@ -349,7 +350,7 @@ class survey_survey(osv.Model):
         context = context if context else {}
         result_summary = {}
 
-        #Calculate and return statistics for choice
+        # Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
             answers = {}
             comments = []
@@ -361,7 +362,7 @@ class survey_survey(osv.Model):
                     comments.append(input_line)
             result_summary = {'answers': answers.values(), 'comments': comments}
 
-        #Calculate and return statistics for matrix
+        # Calculate and return statistics for matrix
         if question.type == 'matrix':
             rows = OrderedDict()
             answers = OrderedDict()
@@ -378,14 +379,14 @@ class survey_survey(osv.Model):
                     comments.append(input_line)
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
-        #Calculate and return statistics for free_text, textbox, datetime
+        # Calculate and return statistics for free_text, textbox, datetime
         if question.type in ['free_text', 'textbox', 'datetime']:
             result_summary = []
             for input_line in question.user_input_line_ids:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     result_summary.append(input_line)
 
-        #Calculate and return statistics for numerical_box
+        # Calculate and return statistics for numerical_box
         if question.type == 'numerical_box':
             result_summary = {'input_lines': []}
             all_inputs = []
@@ -502,8 +503,6 @@ class survey_survey(osv.Model):
         }
 
 
-
-
 class survey_page(osv.Model):
     '''A page for a survey.
 
@@ -575,11 +574,11 @@ class survey_question(osv.Model):
         # Answer
         'type': fields.selection([('free_text', 'Long Text Zone'),
                 ('textbox', 'Text Input'),
-                ('numerical_box', 'Numerical Value'),
-                ('datetime', 'Date and Time'),
-                ('simple_choice', 'Multiple choice: only one answer'),
-                ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-                ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
+            ('numerical_box', 'Numerical Value'),
+            ('datetime', 'Date and Time'),
+            ('simple_choice', 'Multiple choice: only one answer'),
+            ('multiple_choice', 'Multiple choice: multiple answers allowed'),
+            ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
         'matrix_subtype': fields.selection([('simple', 'One choice per row'),
             ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',

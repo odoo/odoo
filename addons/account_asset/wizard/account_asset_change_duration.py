@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,13 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
 from lxml import etree
 
 from openerp.osv import fields, osv
+
 
 class asset_modify(osv.osv_memory):
     _name = 'asset.modify'
@@ -69,10 +70,10 @@ class asset_modify(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values 
-        @param context: A standard dictionary 
-        @return: A dictionary which of fields with values. 
-        """ 
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
         if not context:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -88,17 +89,17 @@ class asset_modify(osv.osv_memory):
         if 'method_end' in fields and asset.method_time == 'end':
             res.update({'method_end': asset.method_end})
         return res
-    
+
     def modify(self, cr, uid, ids, context=None):
         """ Modifies the duration of asset for calculating depreciation
         and maintains the history of old values.
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of Ids 
-        @param context: A standard dictionary 
-        @return: Close the wizard. 
-        """ 
+        @param ids: List of Ids
+        @param context: A standard dictionary
+        @return: Close the wizard.
+        """
         if not context:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')

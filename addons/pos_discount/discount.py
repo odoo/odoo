@@ -27,13 +27,13 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class pos_config(osv.osv):
-    _inherit = 'pos.config' 
+    _inherit = 'pos.config'
     _columns = {
         'discount_pc': fields.float('Discount Percentage', help='The discount percentage'),
-        'discount_product_id': fields.many2one('product.product','Discount Product', help='The product used to model the discount'),
+        'discount_product_id': fields.many2one('product.product', 'Discount Product', help='The product used to model the discount'),
     }
     _defaults = {
         'discount_pc': 10,
     }
-

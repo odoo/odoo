@@ -21,22 +21,24 @@
 
 from openerp.osv import fields, osv
 
+
 class account_move_line_unreconcile_select(osv.osv_memory):
     _name = "account.move.line.unreconcile.select"
     _description = "Unreconciliation"
-    _columns ={
-       'account_id': fields.many2one('account.account','Account',required=True),
+    _columns = {
+       'account_id': fields.many2one('account.account', 'Account', required=True),
     }
+
     def action_open_window(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         return {
-                'domain': "[('account_id','=',%d),('reconcile_id','<>',False),('state','<>','draft')]" % data['account_id'],
-                'name': 'Unreconciliation',
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'view_id': False,
-                'res_model': 'account.move.line',
-                'type': 'ir.actions.act_window'
+            'domain': "[('account_id','=',%d),('reconcile_id','<>',False),('state','<>','draft')]" % data['account_id'],
+            'name': 'Unreconciliation',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'view_id': False,
+            'res_model': 'account.move.line',
+            'type': 'ir.actions.act_window'
         }
 
 

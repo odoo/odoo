@@ -33,8 +33,8 @@ This is the latest Ethiopian OpenERP localization and consists of:
     - Withholding tax structure
     - Regional State listings
     """,
-    'author':'Michael Telahun Makonnen <mmakonnen@gmail.com>',
-    'website':'http://miketelahun.wordpress.com',
+    'author': 'Michael Telahun Makonnen <mmakonnen@gmail.com>',
+    'website': 'http://miketelahun.wordpress.com',
     'depends': [
         'base_vat',
         'account_chart',

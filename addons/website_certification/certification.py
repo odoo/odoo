@@ -33,7 +33,7 @@ class certification_type(osv.Model):
 
 class certification_certification(osv.Model):
     _name = 'certification.certification'
-    _order =  'certification_date DESC'
+    _order = 'certification_date DESC'
     _columns = {
         'partner_id': fields.many2one('res.partner', string="Partner", required=True),
         'type_id': fields.many2one('certification.type', string="Certification", required=True),

@@ -38,6 +38,7 @@ from openerp.osv import fields, osv
 
 _logger = logging.getLogger(__name__)
 
+
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
@@ -106,7 +107,7 @@ class account_installer(osv.osv_memory):
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
-        return list(set(company_ids)-set(configured_cmp))
+        return list(set(company_ids) - set(configured_cmp))
 
     def check_unconfigured_cmp(self, cr, uid, context=None):
         """ check if there are still unconfigured companies """
@@ -114,7 +115,8 @@ class account_installer(osv.osv_memory):
             raise osv.except_osv(_('No Unconfigured Company!'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         cmp_select = []
         # display in the widget selection only the companies that haven't been configured yet

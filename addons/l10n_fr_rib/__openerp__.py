@@ -27,15 +27,15 @@
 This module lets users enter the banking details of Partners in the RIB format (French standard for bank accounts details).
 ===========================================================================================================================
 
-RIB Bank Accounts can be entered in the "Accounting" tab of the Partner form by specifying the account type "RIB". 
+RIB Bank Accounts can be entered in the "Accounting" tab of the Partner form by specifying the account type "RIB".
 
 The four standard RIB fields will then become mandatory:
---------------------------------------------------------    
+--------------------------------------------------------
     - Bank Code
     - Office Code
     - Account number
     - RIB key
-    
+
 As a safety measure, OpenERP will check the RIB key whenever a RIB is saved, and
 will refuse to record the data if the key is incorrect. Please bear in mind that
 this can only happen when the user presses the 'save' button, for example on the
@@ -47,9 +47,9 @@ find Banks using their RIB code.
 The module base_iban can be a useful addition to this module, because French banks
 are now progressively adopting the international IBAN format instead of the RIB format.
 The RIB and IBAN codes for a single account can be entered by recording two Bank
-Accounts in OpenERP: the first with the type 'RIB', the second with the type 'IBAN'. 
+Accounts in OpenERP: the first with the type 'RIB', the second with the type 'IBAN'.
 """,
-    'author' : u'Numérigraphe SARL',
+    'author': u'Numérigraphe SARL',
     'depends': ['account', 'base_iban'],
     'data': ['bank_data.xml', 'bank_view.xml'],
     'installable': True,

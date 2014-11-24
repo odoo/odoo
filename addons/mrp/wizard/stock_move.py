@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class stock_move_consume(osv.osv_memory):
     _name = "stock.move.consume"
     _description = "Consume Products"
@@ -35,7 +36,7 @@ class stock_move_consume(osv.osv_memory):
         'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot'),
     }
 
-    #TOFIX: product_uom should not have different category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
+    # TOFIX: product_uom should not have different category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
@@ -51,8 +52,6 @@ class stock_move_consume(osv.osv_memory):
             res.update({'location_id': move.location_id.id})
         return res
 
-
-
     def do_move_consume(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -67,4 +66,3 @@ class stock_move_consume(osv.osv_memory):
                              qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
-

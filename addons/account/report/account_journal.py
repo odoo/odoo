@@ -48,14 +48,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
-            'display_currency':self._display_currency,
+            'display_currency': self._display_currency,
             'get_sortby': self._get_sortby,
             'get_target_move': self._get_target_move,
             'check_last_move_id': self.check_last_move_id,
             'set_last_move_id': self.set_last_move_id,
             'tax_codes': self.tax_codes,
             'sum_vat': self._sum_vat,
-    })
+        })
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
@@ -71,7 +71,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.sort_selection = data['form'].get('sort_selection', 'date')
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
         elif new_ids:
-            #in case of direct access from account.journal.period object, we need to set the journal_ids and periods_ids
+            # in case of direct access from account.journal.period object, we need to set the journal_ids and periods_ids
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
             res = self.cr.fetchall()
             self.period_ids, self.journal_ids = zip(*res)
@@ -89,10 +89,10 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return False
 
     def tax_codes(self, period_id, journal_id):
-        ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid, 
+        ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid,
             [('journal_id', '=', journal_id), ('period_id', '=', period_id)])
         self.cr.execute(
-            'select distinct tax_code_id from account_move_line ' \
+            'select distinct tax_code_id from account_move_line '
             'where period_id=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
             (period_id, journal_id)
         )
@@ -105,7 +105,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return tax_codes
 
     def _sum_vat(self, period_id, journal_id, tax_code_id):
-        self.cr.execute('select sum(tax_amount) from account_move_line where ' \
+        self.cr.execute('select sum(tax_amount) from account_move_line where '
                         'period_id=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
                         (period_id, journal_id, tax_code_id))
         return self.cr.fetchone()[0] or 0.0
@@ -121,7 +121,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             period_id = self.period_ids
         if not (period_id and journal_id):
             return 0.0
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
@@ -141,12 +141,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             period_id = self.period_ids
         if not (period_id and journal_id):
             return 0.0
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
         self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l, account_move am '
-                        'WHERE l.move_id=am.id AND am.state IN %s AND l.period_id IN %s AND l.journal_id IN %s '+ self.query_get_clause+'',
+                        'WHERE l.move_id=am.id AND am.state IN %s AND l.period_id IN %s AND l.journal_id IN %s ' + self.query_get_clause + '',
                         (tuple(move_state), tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -159,17 +159,17 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
         self.pool.get('account.journal.period').invalidate_cache(self.cr, self.uid, ['state'], context=self.context)
 
-        move_state = ['draft','posted']
+        move_state = ['draft', 'posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
-        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + ', l.move_id',(tuple(move_state), period_id, tuple(journal_id) ))
+        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY ' + self.sort_selection + ', l.move_id', (tuple(move_state), period_id, tuple(journal_id)))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.symbol AS code "\
-                "FROM res_currency c,account_account AS ac "\
+        self.cr.execute("SELECT c.symbol AS code "
+                "FROM res_currency c,account_account AS ac "
                 "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:

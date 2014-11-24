@@ -8,6 +8,7 @@ from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
 
+
 class view(osv.osv):
     _inherit = "ir.ui.view"
     _columns = {
@@ -21,7 +22,6 @@ class view(osv.osv):
         'page': False,
         'customize_show': False,
     }
-
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
@@ -130,7 +130,7 @@ class view(osv.osv):
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
-            engine='website.qweb'
+            engine = 'website.qweb'
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
@@ -213,4 +213,3 @@ class view(osv.osv):
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
-

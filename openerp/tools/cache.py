@@ -49,7 +49,7 @@ class ormcache(object):
     def stat(self):
         return "lookup-stats hit=%s miss=%s err=%s ratio=%.1f" % \
             (self.stat_hit, self.stat_miss, self.stat_err,
-                (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit))
+                (100 * float(self.stat_hit)) / (self.stat_miss + self.stat_hit))
 
     def lru(self, model):
         ormcache = model._ormcache
@@ -87,7 +87,7 @@ class ormcache(object):
 
 class ormcache_context(ormcache):
     def __init__(self, skiparg=2, size=8192, accepted_keys=()):
-        super(ormcache_context,self).__init__(skiparg,size)
+        super(ormcache_context, self).__init__(skiparg, size)
         self.accepted_keys = accepted_keys
 
     def __call__(self, method):
@@ -131,7 +131,7 @@ class ormcache_multi(ormcache):
 
     def lookup(self, method, *args, **kwargs):
         d = self.lru(args[0])
-        base_key = args[self.skiparg:self.multi] + args[self.multi+1:]
+        base_key = args[self.skiparg:self.multi] + args[self.multi + 1:]
         ids = args[self.multi]
         result = {}
         missed = []
@@ -162,6 +162,7 @@ class ormcache_multi(ormcache):
 
 class dummy_cache(object):
     """ Cache decorator replacement to actually do no caching. """
+
     def __init__(self, *l, **kw):
         pass
 

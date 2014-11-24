@@ -20,10 +20,11 @@
 ##############################################################################
 from openerp.osv import fields, osv
 
+
 class lunch_order_order(osv.TransientModel):
     """ lunch order meal """
     _name = 'lunch.order.order'
     _description = 'Wizard to order a meal'
 
-    def order(self,cr,uid,ids,context=None):
+    def order(self, cr, uid, ids, context=None):
         return self.pool.get('lunch.order.line').order(cr, uid, ids, context=context)

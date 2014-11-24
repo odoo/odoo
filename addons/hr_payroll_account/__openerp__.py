@@ -31,7 +31,7 @@ Generic Payroll system Integrated with Accounting.
     * Payment Encoding
     * Company Contribution Management
     """,
-    'author':'OpenERP SA',
+    'author': 'OpenERP SA',
     'images': ['images/hr_employee_payslip.jpeg'],
     'website': 'https://www.odoo.com/page/employees',
     'depends': [

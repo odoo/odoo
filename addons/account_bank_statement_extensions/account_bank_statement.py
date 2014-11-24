@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
+
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
@@ -76,13 +77,13 @@ class account_bank_statement_line_global(osv.osv):
             ('iso20022', 'ISO 20022'),
             ('coda', 'CODA'),
             ('manual', 'Manual'),
-            ], 'Type', required=True),
+        ], 'Type', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'bank_statement_line_ids': fields.one2many('account.bank.statement.line', 'globalisation_id', 'Bank Statement Lines'),
     }
     _rec_name = 'code'
     _defaults = {
-        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').get(c, u, 'account.bank.statement.line.global'),
+        'code': lambda s, c, u, ctx={}: s.pool.get('ir.sequence').get(c, u, 'account.bank.statement.line.global'),
         'name': '/',
     }
     _sql_constraints = [
@@ -98,8 +99,8 @@ class account_bank_statement_line_global(osv.osv):
             if not ids:
                 ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit)
             if not ids and len(name.split()) >= 2:
-                #Separating code and name for searching
-                operand1, operand2 = name.split(' ', 1) #name can contain spaces
+                # Separating code and name for searching
+                operand1, operand2 = name.split(' ', 1)  # name can contain spaces
                 ids = self.search(cr, user, [('code', 'like', operand1), ('name', operator, operand2)] + args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)

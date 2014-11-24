@@ -46,8 +46,11 @@ DOMAIN_ALL = [(1, '=', 1)]
 
 # A good selection of easy to read password characters (e.g. no '0' vs 'O', etc.)
 RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
+
+
 def generate_random_pass():
-    return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
+    return ''.join(random.sample(RANDOM_PASS_CHARACTERS, 10))
+
 
 class share_wizard(osv.TransientModel):
     _name = 'share.wizard'
@@ -74,14 +77,15 @@ class share_wizard(osv.TransientModel):
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
-        return [('embedded', _('Direct link or embed code')), ('emails',_('Emails')), ]
+        return [('embedded', _('Direct link or embed code')), ('emails', _('Emails')), ]
 
     """Override of create() to auto-compute the action name"""
+
     def create(self, cr, uid, values, context=None):
         if 'action_id' in values and not 'name' in values:
             action = self.pool.get('ir.actions.actions').browse(cr, uid, values['action_id'], context=context)
             values['name'] = action.name
-        return super(share_wizard,self).create(cr, uid, values, context=context)
+        return super(share_wizard, self).create(cr, uid, values, context=context)
 
     @api.cr_uid_ids_context
     def share_url_template(self, cr, uid, _ids, context=None):
@@ -91,10 +95,10 @@ class share_wizard(osv.TransientModel):
             base_url += '/login?db=%(dbname)s&login=%(login)s&key=%(password)s'
             extra = context and context.get('share_url_template_extra_arguments')
             if extra:
-                base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
+                base_url += '&' + '&'.join('%s=%%(%s)s' % (x, x) for x in extra)
             hash_ = context and context.get('share_url_template_hash_arguments')
             if hash_:
-                base_url += '#' + '&'.join('%s=%%(%s)s' % (x,x) for x in hash_)
+                base_url += '#' + '&'.join('%s=%%(%s)s' % (x, x) for x in hash_)
         return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
@@ -156,20 +160,19 @@ class share_wizard(osv.TransientModel):
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
-
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
         'view_type': fields.char('Current View Type', required=True),
         'domain': fields.char('Domain', help="Optional domain for further data filtering"),
-        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
+        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k), 'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
         'email_1': fields.char('New user email', size=64),
         'email_2': fields.char('New user email', size=64),
         'email_3': fields.char('New user email', size=64),
         'invite': fields.boolean('Invite users to OpenSocial record'),
-        'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
+        'access_mode': fields.selection([('readonly', 'Can view'), ('readwrite', 'Can edit')], 'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
         'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', readonly=True,
@@ -178,7 +181,7 @@ class share_wizard(osv.TransientModel):
         'record_name': fields.char('Record name', help="Name of the shared record, if sharing a precise record"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the email notification."),
         'embed_code': fields.function(_embed_code, type='text', string='Code',
-            help="Embed this code in your documents to provide a link to the "\
+            help="Embed this code in your documents to provide a link to the "
                   "shared document."),
         'embed_option_title': fields.boolean('Display title'),
         'embed_option_search': fields.boolean('Display search view'),
@@ -186,7 +189,7 @@ class share_wizard(osv.TransientModel):
     }
     _defaults = {
         'view_type': 'page',
-        'user_type' : 'embedded',
+        'user_type': 'embedded',
         'invite': False,
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
@@ -199,7 +202,7 @@ class share_wizard(osv.TransientModel):
         return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).email)
 
     def go_step_1(self, cr, uid, ids, context=None):
-        wizard_data = self.browse(cr,uid,ids,context)[0]
+        wizard_data = self.browse(cr, uid, ids, context)[0]
         if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
             raise osv.except_osv(_('No email address configured'),
                                  _('You must configure your email address in the user preferences before using the Share button.'))
@@ -211,7 +214,7 @@ class share_wizard(osv.TransientModel):
 
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
-        share_group_name = '%s: %s (%d-%s)' %('Shared', wizard_data.name, uid, time.time())
+        share_group_name = '%s: %s (%d-%s)' % ('Shared', wizard_data.name, uid, time.time())
         # create share group without putting admin in it
         return group_obj.create(cr, UID_ROOT, {'name': share_group_name, 'share': True}, {'noadmin': True})
 
@@ -238,7 +241,8 @@ class share_wizard(osv.TransientModel):
             for new_user in new_users:
                 # Ignore blank lines
                 new_user = new_user.strip()
-                if not new_user: continue
+                if not new_user:
+                    continue
                 # Ignore the user if it already exists.
                 if not wizard_data.invite:
                     existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
@@ -246,24 +250,24 @@ class share_wizard(osv.TransientModel):
                     existing = user_obj.search(cr, UID_ROOT, [('email', '=', new_user)])
                 existing_ids.extend(existing)
                 if existing:
-                    new_line = { 'user_id': existing[0],
-                                 'newly_created': False}
-                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                    new_line = {'user_id': existing[0],
+                                'newly_created': False}
+                    wizard_data.write({'result_line_ids': [(0, 0, new_line)]})
                     continue
                 new_pass = generate_random_pass()
                 user_id = user_obj.create(cr, UID_ROOT, {
-                        'login': new_user,
-                        'password': new_pass,
-                        'name': new_user,
-                        'email': new_user,
-                        'groups_id': [(6,0,[group_id])],
-                        'company_id': current_user.company_id.id,
-                        'company_ids': [(6, 0, [current_user.company_id.id])],
+                    'login': new_user,
+                    'password': new_pass,
+                    'name': new_user,
+                    'email': new_user,
+                    'groups_id': [(6, 0, [group_id])],
+                    'company_id': current_user.company_id.id,
+                    'company_ids': [(6, 0, [current_user.company_id.id])],
                 }, context)
-                new_line = { 'user_id': user_id,
-                             'password': new_pass,
-                             'newly_created': True}
-                wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                new_line = {'user_id': user_id,
+                            'password': new_pass,
+                            'newly_created': True}
+                wizard_data.write({'result_line_ids': [(0, 0, new_line)]})
                 created_ids.append(user_id)
 
         elif wizard_data.user_type == 'embedded':
@@ -273,14 +277,14 @@ class share_wizard(osv.TransientModel):
                 'login': new_login,
                 'password': new_pass,
                 'name': new_login,
-                'groups_id': [(6,0,[group_id])],
+                'groups_id': [(6, 0, [group_id])],
                 'company_id': current_user.company_id.id,
                 'company_ids': [(6, 0, [current_user.company_id.id])],
             }, context)
-            new_line = { 'user_id': user_id,
-                         'password': new_pass,
-                         'newly_created': True}
-            wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+            new_line = {'user_id': user_id,
+                        'password': new_pass,
+                        'newly_created': True}
+            wizard_data.write({'result_line_ids': [(0, 0, new_line)]})
             created_ids.append(user_id)
 
         return created_ids, existing_ids
@@ -332,7 +336,6 @@ class share_wizard(osv.TransientModel):
             view_mode = copied_action.view_mode
             view_id = copied_action.view_id.id
 
-
         action_def = {
             'name': wizard_data.name,
             'domain': copied_action.domain,
@@ -345,12 +348,12 @@ class share_wizard(osv.TransientModel):
             'auto_search': True,
         }
         if copied_action.view_ids:
-            action_def['view_ids'] = [(0,0,{'sequence': x.sequence,
+            action_def['view_ids'] = [(0, 0, {'sequence': x.sequence,
                                             'view_mode': x.view_mode,
-                                            'view_id': x.view_id.id })
+                                            'view_id': x.view_id.id})
                                       for x in copied_action.view_ids
                                       if (wizard_data.access_mode != 'readonly' or x.view_mode == wizard_data.view_type)
-                                     ]
+                                      ]
         return action_def
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
@@ -388,23 +391,23 @@ class share_wizard(osv.TransientModel):
             ftype = field.type
             relation_field = None
             if ftype in ttypes and field.comodel_name not in models:
-                relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',field.comodel_name)])[0]
+                relation_model_id = model_obj.search(cr, UID_ROOT, [('model', '=', field.comodel_name)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
                 relation_osv = self.pool[field.comodel_name]
-                #skip virtual one2many fields (related, ...) as there is no reverse relationship
+                # skip virtual one2many fields (related, ...) as there is no reverse relationship
                 if ftype == 'one2many' and field.inverse_name:
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
                     dest_fields = relation_osv._fields
                     reverse_rel = field.inverse_name
                     if reverse_rel in dest_fields and dest_fields[reverse_rel].type == 'many2one':
-                        relation_field = ('%s.%s'%(reverse_rel, suffix)) if suffix else reverse_rel
+                        relation_field = ('%s.%s' % (reverse_rel, suffix)) if suffix else reverse_rel
                 local_rel_fields.append((relation_field, relation_model_browse))
                 for parent in relation_osv._inherits:
                     if parent not in models:
                         parent_model = self.pool[parent]
                         parent_fields = parent_model._fields
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
-                                                               model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
+                                                               model_obj.search(cr, UID_ROOT, [('model', '=', parent)]))[0]
                         if relation_field and field.inverse_name in parent_fields:
                             # inverse relationship is available in the parent
                             local_rel_fields.append((relation_field, parent_model_browse))
@@ -432,7 +435,7 @@ class share_wizard(osv.TransientModel):
            ``model`` is the browse_record of a reachable ir.model, and ``field`` is
            the dot-notation reverse relationship path coming from that model to obj0,
            or None if there is no reverse path.
-           
+
            :return: ([obj0], [obj1], [obj2], [obj3])
            """
         # obj0 class and its parents
@@ -441,7 +444,7 @@ class share_wizard(osv.TransientModel):
         ir_model_obj = self.pool.get('ir.model')
         for parent in model_obj._inherits:
             parent_model_browse = ir_model_obj.browse(cr, UID_ROOT,
-                    ir_model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
+                    ir_model_obj.search(cr, UID_ROOT, [('model', '=', parent)]))[0]
             obj0 += [(None, parent_model_browse)]
 
         obj1 = self._get_recursive_relations(cr, uid, model, ['one2many'], relation_fields=obj0, context=context)
@@ -486,19 +489,20 @@ class share_wizard(osv.TransientModel):
         # already granted
         for dummy, model in fields_relations:
             # mail.message is transversal: it should not received directly the access rights
-            if model.model in ['mail.message']: continue
+            if model.model in ['mail.message']:
+                continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
                 'model_id': model.id,
             }
-            current_user_access_line = current_user_access_map.get(model.model,set())
-            existing_group_access_line = group_access_map.get(model.model,set())
+            current_user_access_line = current_user_access_map.get(model.model, set())
+            existing_group_access_line = group_access_map.get(model.model, set())
             need_creation = False
             for perm in perms_to_add:
                 if perm in current_user_access_line \
                    and perm not in existing_group_access_line:
-                    values.update({perm:True})
+                    values.update({perm: True})
                     group_access_map.setdefault(model.model, set()).add(perm)
                     need_creation = True
             if need_creation:
@@ -521,16 +525,16 @@ class share_wizard(osv.TransientModel):
                             # the evaluated version of the domain.
                             # And it's better to copy one time too much than too few
                             rule_obj.copy(cr, UID_ROOT, rule.id, default={
-                                'name': '%s %s' %(rule.name, _('(Copy for sharing)')),
-                                'groups': [(6,0,[group_id])],
-                                'domain_force': rule.domain, # evaluated version!
+                                'name': '%s %s' % (rule.name, _('(Copy for sharing)')),
+                                'groups': [(6, 0, [group_id])],
+                                'domain_force': rule.domain,  # evaluated version!
                             })
                             _logger.debug("Copying rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
                         else:
                             # otherwise we can simply link the rule to keep it dynamic
                             rule_obj.write(cr, SUPERUSER_ID, [rule.id], {
-                                    'groups': [(4,group_id)]
-                                })
+                                'groups': [(4, group_id)]
+                            })
                             _logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
 
     def _check_personal_rule_or_duplicate(self, cr, group_id, rule, context=None):
@@ -546,13 +550,13 @@ class share_wizard(osv.TransientModel):
         rule_obj = self.pool.get('ir.rule')
         new_id = rule_obj.copy(cr, UID_ROOT, rule.id,
                                default={
-                                       'name': '%s %s' %(rule.name, _('(Duplicated for modified sharing permissions)')),
-                                       'groups': [(6,0,[group_id])],
-                                       'domain_force': rule.domain_force, # non evaluated!
+                                   'name': '%s %s' % (rule.name, _('(Duplicated for modified sharing permissions)')),
+                                   'groups': [(6, 0, [group_id])],
+                                   'domain_force': rule.domain_force,  # non evaluated!
                                })
         _logger.debug("Duplicating rule %s (%s) (domain: %s) for modified access ", rule.name, rule.id, rule.domain_force)
         # then disconnect from group_id:
-        rule.write({'groups':[(3,group_id)]}) # disconnects, does not delete!
+        rule.write({'groups': [(3, group_id)]})  # disconnects, does not delete!
         return rule_obj.browse(cr, UID_ROOT, new_id, context=context)
 
     def _create_or_combine_sharing_rule(self, cr, current_user, wizard_data, group_id, model_id, domain, restrict=False, rule_name=None, context=None):
@@ -575,7 +579,7 @@ class share_wizard(osv.TransientModel):
            """
         if rule_name is None:
             rule_name = _('Sharing filter created by user %s (%s) for group %s') % \
-                            (current_user.name, current_user.login, group_id)
+                (current_user.name, current_user.login, group_id)
         rule_obj = self.pool.get('ir.rule')
         rule_ids = rule_obj.search(cr, UID_ROOT, [('groups', 'in', group_id), ('model_id', '=', model_id)])
         if rule_ids:
@@ -606,25 +610,27 @@ class share_wizard(osv.TransientModel):
                 'name': rule_name,
                 'model_id': model_id,
                 'domain_force': domain,
-                'groups': [(4,group_id)]
-                })
+                'groups': [(4, group_id)]
+            })
             _logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):
         rule_name = _('Indirect sharing filter created by user %s (%s) for group %s') % \
-                            (current_user.name, current_user.login, group_id)
+            (current_user.name, current_user.login, group_id)
         try:
             domain = safe_eval(wizard_data.domain)
             if domain:
                 for rel_field, model in fields_relations:
                     # mail.message is transversal: it should not received directly the access rights
-                    if model.model in ['mail.message']: continue
+                    if model.model in ['mail.message']:
+                        continue
                     related_domain = []
-                    if not rel_field: continue
+                    if not rel_field:
+                        continue
                     for element in domain:
                         if expression.is_leaf(element):
                             left, operator, right = element
-                            left = '%s.%s'%(rel_field, left)
+                            left = '%s.%s' % (rel_field, left)
                             element = left, operator, right
                         related_domain.append(element)
                     self._create_or_combine_sharing_rule(cr, current_user, wizard_data,
@@ -645,7 +651,7 @@ class share_wizard(osv.TransientModel):
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
                      _('Please indicate the emails of the persons to share with, one per line.'),
-                     context=context)
+                context=context)
 
     def _create_share_users_group(self, cr, uid, wizard_data, context=None):
         """Creates the appropriate share group and share users, and populates
@@ -661,8 +667,8 @@ class share_wizard(osv.TransientModel):
         if existing_ids:
             # existing users still need to join the new group
             self.pool.get('res.users').write(cr, UID_ROOT, existing_ids, {
-                                                'groups_id': [(4,group_id)],
-                                             })
+                'groups_id': [(4, group_id)],
+            })
             # existing user don't need their home action replaced, only a new shortcut
             self._setup_action_and_shortcut(cr, uid, wizard_data, existing_ids, make_home=False, context=context)
         if new_ids:
@@ -680,9 +686,9 @@ class share_wizard(osv.TransientModel):
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model','=', wizard_data.action_id.res_model)])[0]
+        model_id = model_obj.search(cr, uid, [('model', '=', wizard_data.action_id.res_model)])[0]
         model = model_obj.browse(cr, uid, model_id, context=context)
-        
+
         # ACCESS RIGHTS
         # We have several classes of objects that should receive different access rights:
         # Let:
@@ -732,7 +738,7 @@ class share_wizard(osv.TransientModel):
 
         # refresh wizard_data
         wizard_data = self.browse(cr, uid, ids[0], context=context)
-        
+
         # EMAILS AND NOTIFICATIONS
         #  A. Not invite: as before
         #     -> send emails to destination users
@@ -742,7 +748,7 @@ class share_wizard(osv.TransientModel):
         #     -> send a notification to all users; users allowing to receive
         #        emails in preferences will receive it
         #        new users by default receive all notifications by email
-        
+
         # A.
         if not wizard_data.invite:
             self.send_emails(cr, uid, wizard_data, context=context)
@@ -759,11 +765,11 @@ class share_wizard(osv.TransientModel):
             self.pool[model.model].message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
             # self.send_invite_email(cr, uid, wizard_data, context=context)
             # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
-        
+
         # CLOSE
         #  A. Not invite: as before
         #  B. Invite: skip summary screen, get back to the record
-        
+
         # A.
         if not wizard_data.invite:
             dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
@@ -789,7 +795,6 @@ class share_wizard(osv.TransientModel):
                 'views': [(False, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
             }
-            
 
     def send_invite_note(self, cr, uid, model_name, res_id, wizard_data, context=None):
         subject = _('Invitation')
@@ -797,13 +802,13 @@ class share_wizard(osv.TransientModel):
         tmp_idx = 0
         for result_line in wizard_data.result_line_ids:
             body += ' @%s' % (result_line.user_id.login)
-            if tmp_idx < len(wizard_data.result_line_ids)-2:
+            if tmp_idx < len(wizard_data.result_line_ids) - 2:
                 body += ','
-            elif tmp_idx == len(wizard_data.result_line_ids)-2:
+            elif tmp_idx == len(wizard_data.result_line_ids) - 2:
                 body += ' and'
         body += '.'
         return self.pool[model_name].message_post(cr, uid, [res_id], body=body, context=context)
-    
+
     def send_invite_email(self, cr, uid, wizard_data, context=None):
         # TDE Note: not updated because will disappear
         message_obj = self.pool.get('mail.message')
@@ -811,7 +816,7 @@ class share_wizard(osv.TransientModel):
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
             raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
-        
+
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.email
@@ -835,14 +840,14 @@ class share_wizard(osv.TransientModel):
                       "It is open source and can be found on http://www.openerp.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
-    
+
     def send_emails(self, cr, uid, wizard_data, context=None):
         _logger.info('Sending share notifications by email...')
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
             raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
-        
+
         # TODO: also send an HTML version of this mail
         mail_ids = []
         for result_line in wizard_data.result_line_ids:
@@ -863,15 +868,15 @@ class share_wizard(osv.TransientModel):
             else:
                 body += _("The documents have been automatically added to your current Odoo documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
-            body += "\n\n%s\n\n" % ( (user.signature or '') )
+            body += "\n\n%s\n\n" % ((user.signature or ''))
             body += "--\n"
             body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
-                    'email_from': user.email,
-                    'email_to': email_to,
-                    'subject': subject,
-                    'body_html': '<pre>%s</pre>' % body}, context=context))
+                'email_from': user.email,
+                'email_to': email_to,
+                'subject': subject,
+                'body_html': '<pre>%s</pre>' % body}, context=context))
         # force direct delivery, as users expect instant notification
         mail_mail.send(cr, uid, mail_ids, context=context)
         _logger.info('%d share notification(s) sent.', len(mail_ids))
@@ -885,7 +890,6 @@ class share_wizard(osv.TransientModel):
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'
     _rec_name = 'user_id'
-
 
     def _share_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')

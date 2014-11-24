@@ -2,6 +2,8 @@
 from openerp import models, fields, api, osv
 
 # We just create a new model
+
+
 class mother(models.Model):
     _name = 'test.inherit.mother'
 
@@ -23,6 +25,8 @@ class mother(models.Model):
 
 # We want to inherits from the parent model and we add some fields
 # in the child object
+
+
 class daughter(models.Model):
     _name = 'test.inherit.daughter'
     _inherits = {'test.inherit.mother': 'template_id'}

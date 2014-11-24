@@ -22,6 +22,7 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
+
 class website_project(http.Controller):
 
     @http.route(['/project/<model("project.project"):project>'], type='http', auth="public", website=True)

@@ -24,12 +24,13 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_automatic_reconcile(osv.osv_memory):
     _name = 'account.automatic.reconcile'
     _description = 'Automatic Reconcile'
 
     _columns = {
-        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile','=',1)],),
+        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain=[('reconcile', '=', 1)],),
         'writeoff_acc_id': fields.many2one('account.account', 'Account'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'period_id': fields.many2one('account.period', 'Period'),
@@ -56,7 +57,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'power': 2
     }
 
-    #TODO: cleanup and comment this code... For now, it is awfulllll
+    # TODO: cleanup and comment this code... For now, it is awfulllll
     # (way too complex, and really slow)...
     def do_reconcile(self, cr, uid, credits, debits, max_amount, power, writeoff_acc_id, period_id, journal_id, context=None):
         """
@@ -67,6 +68,7 @@ class account_automatic_reconcile(osv.osv_memory):
         move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
+
         def check2(value, move_list, power):
             def check(value, move_list, power):
                 for i in range(len(move_list)):
@@ -76,20 +78,19 @@ class account_automatic_reconcile(osv.osv_memory):
                             return [move[0]]
                     else:
                         del move_list[i]
-                        res = check(value - move[1], move_list, power-1)
+                        res = check(value - move[1], move_list, power - 1)
                         move_list[i:i] = [move]
                         if res:
                             res.append(move[0])
                             return res
                 return False
 
-            for p in range(1, power+1):
+            for p in range(1, power + 1):
                 res = check(value, move_list, p)
                 if res:
                     return res
             return False
 
-        
         def check4(list1, list2, power):
             """
             for a list of credit and debit and a given power, check if there
@@ -106,7 +107,7 @@ class account_automatic_reconcile(osv.osv_memory):
                             return ([move[0]], res)
                     else:
                         del list1[i]
-                        res = check3(value + move[1], list1, list2, list1power-1, power-1)
+                        res = check3(value + move[1], list1, list2, list1power - 1, power - 1)
                         list1[i:i] = [move]
                         if res:
                             x, y = res
@@ -121,7 +122,7 @@ class account_automatic_reconcile(osv.osv_memory):
             return False
 
         def check5(list1, list2, max_power):
-            for p in range(2, max_power+1):
+            for p in range(2, max_power + 1):
                 res = check4(list1, list2, p)
                 if res:
                     return res
@@ -138,7 +139,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 debits = [(id, debit) for (id, debit) in debits if id not in res[1]]
             else:
                 ok = False
-        return (reconciled, len(credits)+len(debits))
+        return (reconciled, len(credits) + len(debits))
 
     def reconcile(self, cr, uid, ids, context=None):
         move_line_obj = self.pool.get('account.move.line')
@@ -168,11 +169,11 @@ class account_automatic_reconcile(osv.osv_memory):
             partner_ids = [id for (id,) in cr.fetchall()]
             for partner_id in partner_ids:
                 cr.execute(
-                    "SELECT id " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND state <> 'draft' " \
+                    "SELECT id "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND state <> 'draft' "
                     "AND reconcile_id IS NULL",
                     (account_id.id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
@@ -185,40 +186,40 @@ class account_automatic_reconcile(osv.osv_memory):
 
             # get the list of partners who have more than one unreconciled transaction
             cr.execute(
-                "SELECT partner_id " \
-                "FROM account_move_line " \
-                "WHERE account_id=%s " \
-                "AND reconcile_id IS NULL " \
-                "AND state <> 'draft' " \
-                "AND partner_id IS NOT NULL " \
-                "GROUP BY partner_id " \
+                "SELECT partner_id "
+                "FROM account_move_line "
+                "WHERE account_id=%s "
+                "AND reconcile_id IS NULL "
+                "AND state <> 'draft' "
+                "AND partner_id IS NOT NULL "
+                "GROUP BY partner_id "
                 "HAVING count(*)>1",
                 (account_id.id,))
             partner_ids = [id for (id,) in cr.fetchall()]
-            #filter?
+            # filter?
             for partner_id in partner_ids:
                 # get the list of unreconciled 'debit transactions' for this partner
                 cr.execute(
-                    "SELECT id, debit " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND reconcile_id IS NULL " \
-                    "AND state <> 'draft' " \
-                    "AND debit > 0 " \
+                    "SELECT id, debit "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND reconcile_id IS NULL "
+                    "AND state <> 'draft' "
+                    "AND debit > 0 "
                     "ORDER BY date_maturity",
                     (account_id.id, partner_id))
                 debits = cr.fetchall()
 
                 # get the list of unreconciled 'credit transactions' for this partner
                 cr.execute(
-                    "SELECT id, credit " \
-                    "FROM account_move_line " \
-                    "WHERE account_id=%s " \
-                    "AND partner_id=%s " \
-                    "AND reconcile_id IS NULL " \
-                    "AND state <> 'draft' " \
-                    "AND credit > 0 " \
+                    "SELECT id, credit "
+                    "FROM account_move_line "
+                    "WHERE account_id=%s "
+                    "AND partner_id=%s "
+                    "AND reconcile_id IS NULL "
+                    "AND state <> 'draft' "
+                    "AND credit > 0 "
                     "ORDER BY date_maturity",
                     (account_id.id, partner_id))
                 credits = cr.fetchall()
@@ -231,22 +232,22 @@ class account_automatic_reconcile(osv.osv_memory):
             # unreconciled transactions to the unreconciled count
             partner_filter = partner_ids and 'AND partner_id not in (%s)' % ','.join(map(str, filter(None, partner_ids))) or ''
             cr.execute(
-                "SELECT count(*) " \
-                "FROM account_move_line " \
-                "WHERE account_id=%s " \
-                "AND reconcile_id IS NULL " \
+                "SELECT count(*) "
+                "FROM account_move_line "
+                "WHERE account_id=%s "
+                "AND reconcile_id IS NULL "
                 "AND state <> 'draft' " + partner_filter,
                 (account_id.id,))
             additional_unrec = cr.fetchone()[0]
             unreconciled = unreconciled + additional_unrec
         context = dict(context, reconciled=reconciled, unreconciled=unreconciled)
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_automatic_reconcile_view1')])
+        model_data_ids = obj_model.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_automatic_reconcile_view1')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.automatic.reconcile',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,

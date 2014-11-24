@@ -40,6 +40,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
     _name = 'fetchmail.server'
@@ -47,38 +48,38 @@ class fetchmail_server(osv.osv):
     _order = 'priority'
 
     _columns = {
-        'name':fields.char('Name', required=True, readonly=False),
-        'active':fields.boolean('Active', required=False),
-        'state':fields.selection([
+        'name': fields.char('Name', required=True, readonly=False),
+        'active': fields.boolean('Active', required=False),
+        'state': fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
         ], 'Status', select=True, readonly=True, copy=False),
-        'server' : fields.char('Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
-        'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
-        'type':fields.selection([
+        'server': fields.char('Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft': [('readonly', False)]}),
+        'port': fields.integer('Port', readonly=True, states={'draft': [('readonly', False)]}),
+        'type': fields.selection([
             ('pop', 'POP Server'),
             ('imap', 'IMAP Server'),
             ('local', 'Local Server'),
         ], 'Server Type', select=True, required=True, readonly=False),
-        'is_ssl':fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
-        'attach':fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
-                                                         "If not enabled, incoming emails will be stripped of any attachments before being processed"),
-        'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
-                                                        "and attached to each processed message. This will usually double the size of your message database."),
+        'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
+        'attach': fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
+                                 "If not enabled, incoming emails will be stripped of any attachments before being processed"),
+        'original': fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
+                                   "and attached to each processed message. This will usually double the size of your message database."),
         'date': fields.datetime('Last Fetch Date', readonly=True),
-        'user' : fields.char('Username', readonly=True, states={'draft':[('readonly', False)]}),
-        'password' : fields.char('Password', readonly=True, states={'draft':[('readonly', False)]}),
-        'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
-                                                                               "on the record that was created or updated by this mail"),
+        'user': fields.char('Username', readonly=True, states={'draft': [('readonly', False)]}),
+        'password': fields.char('Password', readonly=True, states={'draft': [('readonly', False)]}),
+        'action_id': fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
+                                     "on the record that was created or updated by this mail"),
         'object_id': fields.many2one('ir.model', "Create a New Record", help="Process each incoming mail as part of a conversation "
-                                                                                             "corresponding to this document type. This will create "
-                                                                                             "new documents for new conversations, or attach follow-up "
-                                                                                             "emails to the existing conversations (documents)."),
-        'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
-                                                                                                                  "lower values mean higher priority"),
+                                     "corresponding to this document type. This will create "
+                                     "new documents for new conversations, or attach follow-up "
+                                     "emails to the existing conversations (documents)."),
+        'priority': fields.integer('Server Priority', readonly=True, states={'draft': [('readonly', False)]}, help="Defines the order of processing, "
+                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
-        'configuration' : fields.text('Configuration', readonly=True),
-        'script' : fields.char('Script', readonly=True),
+        'configuration': fields.text('Configuration', readonly=True),
+        'script': fields.char('Script', readonly=True),
     }
     _defaults = {
         'state': "draft",
@@ -101,14 +102,14 @@ class fetchmail_server(osv.osv):
         values['port'] = port
 
         conf = {
-            'dbname' : cr.dbname,
-            'uid' : uid,
-            'model' : 'MODELNAME',
+            'dbname': cr.dbname,
+            'uid': uid,
+            'model': 'MODELNAME',
         }
         if object_id:
             m = self.pool.get('ir.model')
-            r = m.read(cr,uid,[object_id],['model'])
-            conf['model']=r[0]['model']
+            r = m.read(cr, uid, [object_id], ['model'])
+            conf['model'] = r[0]['model']
         values['configuration'] = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
 
 openerp_mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
@@ -123,15 +124,15 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
 """ % conf
 
-        return {'value':values}
+        return {'value': values}
 
     def set_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids , {'state':'draft'})
+        self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
     @api.cr_uid_ids_context
     def connect(self, cr, uid, server_id, context=None):
-        if isinstance(server_id, (list,tuple)):
+        if isinstance(server_id, (list, tuple)):
             server_id = server_id[0]
         server = self.browse(cr, uid, server_id, context)
         if server.type == 'imap':
@@ -145,8 +146,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                 connection = POP3_SSL(server.server, int(server.port))
             else:
                 connection = POP3(server.server, int(server.port))
-            #TODO: use this to remove only unread messages
-            #connection.user("recent:"+server.user)
+            # TODO: use this to remove only unread messages
+            # connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
         return connection
@@ -157,7 +158,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         for server in self.browse(cr, uid, ids, context=context):
             try:
                 connection = server.connect()
-                server.write({'state':'done'})
+                server.write({'state': 'done'})
             except Exception, e:
                 _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
                 raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
@@ -175,7 +176,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
     def _fetch_mails(self, cr, uid, ids=False, context=None):
         if not ids:
-            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
+            ids = self.search(cr, uid, [('state', '=', 'done'), ('type', 'in', ['pop', 'imap'])])
         return self.fetch_mail(cr, uid, ids, context=context)
 
     def fetch_mail(self, cr, uid, ids, context=None):
@@ -263,7 +264,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             return
 
         # Enabled/Disable cron based on the number of 'done' server of type pop or imap
-        cron.toggle(model=self._name, domain=[('state','=','done'), ('type','in',['pop','imap'])])
+        cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('type', 'in', ['pop', 'imap'])])
 
     def create(self, cr, uid, values, context=None):
         res = super(fetchmail_server, self).create(cr, uid, values, context=context)
@@ -279,6 +280,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         res = super(fetchmail_server, self).unlink(cr, uid, ids, context=context)
         self._update_cron(cr, uid, context=context)
         return res
+
 
 class mail_mail(osv.osv):
     _inherit = "mail.mail"

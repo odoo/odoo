@@ -35,12 +35,12 @@ class hr_employee_category(osv.Model):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
@@ -62,7 +62,7 @@ class hr_employee_category(osv.Model):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -99,14 +99,14 @@ class hr_job(osv.Model):
         'name': fields.char('Job Name', required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
-            store = {
-                'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
+            store={
+                'hr.job': (lambda self, cr, uid, ids, c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
         'no_of_employee': fields.function(_get_nbr_employees, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
-            store = {
+            store={
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
@@ -185,7 +185,7 @@ class hr_employee(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        #we need a related field in order to be able to sort the employee by name
+        # we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -215,19 +215,19 @@ class hr_employee(osv.osv):
             help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
+            help="Medium-sized photo of the employee. It is automatically "
+                 "resized as a 128x128px image, with aspect ratio preserved. "
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
+            help="Small-sized photo of the employee. It is automatically "
+                 "resized as a 64x64px image, with aspect ratio preserved. "
                  "Use this field anywhere a small image is required."),
         'passport_id': fields.char('Passport No'),
         'color': fields.integer('Color Index'),
@@ -355,8 +355,8 @@ class hr_employee(osv.osv):
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id', (tuple(ids),))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -395,8 +395,8 @@ class hr_department(osv.osv):
             context = {}
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            cr.execute('select distinct parent_id from hr_department where id IN %s', (tuple(ids),))
+            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
@@ -411,12 +411,12 @@ class hr_department(osv.osv):
             context = {}
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 

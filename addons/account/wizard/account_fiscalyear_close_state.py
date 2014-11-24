@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_fiscalyear_close_state(osv.osv_memory):
     """
     Closes  Account Fiscalyear
@@ -29,8 +30,8 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _name = "account.fiscalyear.close.state"
     _description = "Fiscalyear Close state"
     _columns = {
-       'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
+       'fy_id': fields.many2one('account.fiscalyear',
+                                'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -46,21 +47,21 @@ class account_fiscalyear_close_state(osv.osv_memory):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         account_move_obj = self.pool.get('account.move')
 
-        for data in  self.read(cr, uid, ids, context=context):
+        for data in self.read(cr, uid, ids, context=context):
             fy_id = data['fy_id'][0]
 
             account_move_ids = account_move_obj.search(cr, uid, [('period_id.fiscalyear_id', '=', fy_id), ('state', '=', "draft")], context=context)
             if account_move_ids:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to close a fiscalyear, you must first post related journal entries.'))
 
-            cr.execute('UPDATE account_journal_period ' \
-                        'SET state = %s ' \
-                        'WHERE period_id IN (SELECT id FROM account_period \
+            cr.execute('UPDATE account_journal_period '
+                       'SET state = %s '
+                       'WHERE period_id IN (SELECT id FROM account_period \
                         WHERE fiscalyear_id = %s)',
                     ('done', fy_id))
-            cr.execute('UPDATE account_period SET state = %s ' \
+            cr.execute('UPDATE account_period SET state = %s '
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
-            cr.execute('UPDATE account_fiscalyear ' \
+            cr.execute('UPDATE account_fiscalyear '
                     'SET state = %s WHERE id = %s', ('done', fy_id))
             self.invalidate_cache(cr, uid, context=context)
 

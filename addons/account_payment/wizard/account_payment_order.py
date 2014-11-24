@@ -25,6 +25,7 @@ from lxml import etree
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class payment_order_create(osv.osv_memory):
     """
     Create a payment object with lines corresponding to the account move line
@@ -43,17 +44,18 @@ class payment_order_create(osv.osv_memory):
         'entries': fields.many2many('account.move.line', 'line_pay_rel', 'pay_id', 'line_id', 'Entries')
     }
     _defaults = {
-         'duedate': lambda *a: time.strftime('%Y-%m-%d'),
+        'duedate': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if not context: context = {}
+        if not context:
+            context = {}
         res = super(payment_order_create, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context and 'line_ids' in context:
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='entries']")
             for node in nodes:
-                node.set('domain', '[("id", "in", '+ str(context['line_ids'])+')]')
+                node.set('domain', '[("id", "in", ' + str(context['line_ids']) + ')]')
             res['arch'] = etree.tostring(doc)
         return res
 
@@ -72,26 +74,26 @@ class payment_order_create(osv.osv_memory):
         t = None
         line2bank = line_obj.line2bank(cr, uid, line_ids, t, context)
 
-        ## Finally populate the current payment with new lines:
+        # Finally populate the current payment with new lines:
         for line in line_obj.browse(cr, uid, line_ids, context=context):
             if payment.date_prefered == "now":
-                #no payment date => immediate payment
+                # no payment date => immediate payment
                 date_to_pay = False
             elif payment.date_prefered == 'due':
                 date_to_pay = line.date_maturity
             elif payment.date_prefered == 'fixed':
                 date_to_pay = payment.date_scheduled
-            payment_obj.create(cr, uid,{
-                    'move_line_id': line.id,
-                    'amount_currency': line.amount_residual_currency,
-                    'bank_id': line2bank.get(line.id),
-                    'order_id': payment.id,
-                    'partner_id': line.partner_id and line.partner_id.id or False,
-                    'communication': line.ref or '/',
-                    'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
-                    'date': date_to_pay,
-                    'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
-                }, context=context)
+            payment_obj.create(cr, uid, {
+                'move_line_id': line.id,
+                'amount_currency': line.amount_residual_currency,
+                'bank_id': line2bank.get(line.id),
+                'order_id': payment.id,
+                'partner_id': line.partner_id and line.partner_id.id or False,
+                'communication': line.ref or '/',
+                'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
+                'date': date_to_pay,
+                'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
+            }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def search_entries(self, cr, uid, ids, context=None):
@@ -108,17 +110,17 @@ class payment_order_create(osv.osv_memory):
         domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context = dict(context, line_ids=line_ids)
-        model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {'name': _('Entry Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'payment.order.create',
-                'views': [(resource_id,'form')],
+                'views': [(resource_id, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-        }
+                }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

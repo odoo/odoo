@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.sql import drop_view_if_exists
 
+
 class report_stock_lines_date(osv.osv):
     _name = "report.stock.lines.date"
     _description = "Dates of Inventories and latest Moves"

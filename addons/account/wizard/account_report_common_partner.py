@@ -21,15 +21,16 @@
 
 from openerp.osv import fields, osv
 
+
 class account_common_partner_report(osv.osv_memory):
     _name = 'account.common.partner.report'
     _description = 'Account Common Partner Report'
     _inherit = "account.common.report"
     _columns = {
-        'result_selection': fields.selection([('customer','Receivable Accounts'),
-                                              ('supplier','Payable Accounts'),
-                                              ('customer_supplier','Receivable and Payable Accounts')],
-                                              "Partner's", required=True),
+        'result_selection': fields.selection([('customer', 'Receivable Accounts'),
+                                              ('supplier', 'Payable Accounts'),
+                                              ('customer_supplier', 'Receivable and Payable Accounts')],
+                                             "Partner's", required=True),
     }
 
     _defaults = {
@@ -43,5 +44,5 @@ class account_common_partner_report(osv.osv_memory):
         return data
 
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

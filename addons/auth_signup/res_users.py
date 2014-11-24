@@ -29,13 +29,16 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
 
+
 class SignupError(Exception):
     pass
+
 
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     return ''.join(random.choice(chars) for i in xrange(20))
+
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -50,14 +53,14 @@ class res_partner(osv.Model):
         res = {}
         for partner in self.browse(cr, uid, ids, context):
             res[partner.id] = bool(partner.signup_token) and \
-                                (not partner.signup_expiration or dt <= partner.signup_expiration)
+                (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
     def _get_signup_url_for_action(self, cr, uid, ids, action=None, view_type=None, menu_id=None, res_id=None, model=None, context=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
         if context is None:
-            context= {}
+            context = {}
         res = dict.fromkeys(ids, False)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for partner in self.browse(cr, uid, ids, context):
@@ -168,6 +171,7 @@ class res_partner(osv.Model):
             res['email'] = partner.email or ''
         return res
 
+
 class res_users(osv.Model):
     _inherit = 'res.users'
 
@@ -195,7 +199,7 @@ class res_users(osv.Model):
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
             partner = res_partner._signup_retrieve_partner(
-                            cr, uid, token, check_validity=True, raise_exception=True, context=None)
+                cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 

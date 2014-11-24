@@ -23,6 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
+
 class note_stage(osv.osv):
     """ Category of Note """
     _name = "note.stage"
@@ -37,15 +38,17 @@ class note_stage(osv.osv):
     _defaults = {
         'fold': 0,
         'user_id': lambda self, cr, uid, ctx: uid,
-        'sequence' : 1,
+        'sequence': 1,
     }
+
 
 class note_tag(osv.osv):
     _name = "note.tag"
     _description = "Note Tag"
     _columns = {
-        'name' : fields.char('Tag Name', required=True),
+        'name': fields.char('Tag Name', required=True),
     }
+
 
 class note_note(osv.osv):
     """ Note """
@@ -53,16 +56,16 @@ class note_note(osv.osv):
     _inherit = ['mail.thread']
     _description = "Note"
 
-    #writing method (no modification of values)
+    # writing method (no modification of values)
     def name_create(self, cr, uid, name, context=None):
         rec_id = self.create(cr, uid, {'memo': name}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
-    #read the first line (convert hml into text)
+    # read the first line (convert hml into text)
     def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
-            res[note.id] = (note.memo and html2plaintext(note.memo) or "").strip().replace('*','').split("\n")[0]
+            res[note.id] = (note.memo and html2plaintext(note.memo) or "").strip().replace('*', '').split("\n")[0]
 
         return res
 
@@ -72,15 +75,16 @@ class note_note(osv.osv):
     def onclick_note_not_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'open': True}, context=context)
 
-    #return the default stage for the uid user
-    def _get_default_stage_id(self,cr,uid,context=None):
-        ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+    # return the default stage for the uid user
+    def _get_default_stage_id(self, cr, uid, context=None):
+        ids = self.pool.get('note.stage').search(cr, uid, [('user_id', '=', uid)], context=context)
         return ids and ids[0] or False
 
     def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
         note = self.browse(cr, uid, id, context=context)
-        if not value: return False
-        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
+        if not value:
+            return False
+        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid]
         return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
 
     def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
@@ -92,49 +96,49 @@ class note_note(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_get_note_first_line, 
-            string='Note Summary', 
+        'name': fields.function(_get_note_first_line,
+            string='Note Summary',
             type='text', store=True),
         'user_id': fields.many2one('res.users', 'Owner'),
         'memo': fields.html('Note Content'),
         'sequence': fields.integer('Sequence'),
-        'stage_id': fields.function(_get_stage_per_user, 
-            fnct_inv=_set_stage_per_user, 
-            string='Stage', 
-            type='many2one', 
+        'stage_id': fields.function(_get_stage_per_user,
+            fnct_inv=_set_stage_per_user,
+            string='Stage',
+            type='many2one',
             relation='note.stage'),
-        'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
+        'stage_ids': fields.many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id', 'Stages of Users'),
         'open': fields.boolean('Active', track_visibility='onchange'),
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
-        'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
+        'tag_ids': fields.many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', 'Tags'),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
-        'open' : 1,
-        'stage_id' : _get_default_stage_id,
+        'open': 1,
+        'stage_id': _get_default_stage_id,
     }
     _order = 'sequence'
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if groupby and groupby[0]=="stage_id":
+        if groupby and groupby[0] == "stage_id":
 
-            #search all stages
-            current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+            # search all stages
+            current_stage_ids = self.pool.get('note.stage').search(cr, uid, [('user_id', '=', uid)], context=context)
 
-            if current_stage_ids: #if the user have some stages
+            if current_stage_ids:  # if the user have some stages
                 stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
 
-                result = [{ #notes by stage for stages user
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
-                        '__fold': stage.fold,
-                    } for stage in stages]
+                result = [{  # notes by stage for stages user
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                    'stage_id': (stage.id, stage.name),
+                    'stage_id_count': self.search(cr, uid, domain + [('stage_ids', '=', stage.id)], context=context, count=True),
+                    '__fold': stage.fold,
+                } for stage in stages]
 
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
+                # note without user's stage
+                nb_notes_ws = self.search(cr, uid, domain + [('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
                 if nb_notes_ws:
                     # add note to the first column if it's the first stage
                     dom_not_in = ('stage_ids', 'not in', current_stage_ids)
@@ -148,16 +152,16 @@ class note_note(osv.osv):
                             '__context': {'group_by': groupby[1:]},
                             '__domain': domain + [dom_not_in],
                             'stage_id': (stages[0].id, stages[0].name),
-                            'stage_id_count':nb_notes_ws,
+                            'stage_id_count': nb_notes_ws,
                             '__fold': stages[0].name,
                         }] + result
 
-            else: # if stage_ids is empty
+            else:  # if stage_ids is empty
 
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain, context=context, count=True)
+                # note without user's stage
+                nb_notes_ws = self.search(cr, uid, domain, context=context, count=True)
                 if nb_notes_ws:
-                    result = [{ #notes for unknown stage
+                    result = [{  # notes for unknown stage
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
                         'stage_id': False,
@@ -168,11 +172,11 @@ class note_note(osv.osv):
             return result
 
         else:
-            return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
-                offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
+            return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby,
+                offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
 
 
-#upgrade config setting page to configure pad, fancy and tags mode
+# upgrade config setting page to configure pad, fancy and tags mode
 class note_base_config_settings(osv.osv_memory):
     _inherit = 'base.config.settings'
     _columns = {
@@ -180,9 +184,11 @@ class note_base_config_settings(osv.osv_memory):
         'group_note_fancy': fields.boolean('Use fancy layouts for notes', implied_group='note.group_note_fancy'),
     }
 
+
 class res_users(osv.Model):
     _name = 'res.users'
     _inherit = ['res.users']
+
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         note_obj = self.pool['note.stage']

@@ -42,26 +42,27 @@ CustomTTFonts = []
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
 TTFSearchPath = [
-            '/usr/share/fonts/truetype', # SuSE
-            '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
-            '/usr/share/fonts/truetype/*','/usr/local/share/fonts' # Ubuntu,
-            '/usr/share/fonts/TTF/*', # Mandriva/Mageia
-            '/usr/share/fonts/TTF', # Arch Linux
-            '/usr/lib/openoffice/share/fonts/truetype/',
-            '~/.fonts',
-            '~/.local/share/fonts',
+    '/usr/share/fonts/truetype',  # SuSE
+    '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation',  # Fedora, RHEL
+    '/usr/share/fonts/truetype/*', '/usr/local/share/fonts'  # Ubuntu,
+    '/usr/share/fonts/TTF/*',  # Mandriva/Mageia
+    '/usr/share/fonts/TTF',  # Arch Linux
+    '/usr/lib/openoffice/share/fonts/truetype/',
+    '~/.fonts',
+    '~/.local/share/fonts',
 
-            # mac os X - from
-            # http://developer.apple.com/technotes/tn/tn2024.html
-            '~/Library/Fonts',
-            '/Library/Fonts',
-            '/Network/Library/Fonts',
-            '/System/Library/Fonts',
+    # mac os X - from
+    # http://developer.apple.com/technotes/tn/tn2024.html
+    '~/Library/Fonts',
+    '/Library/Fonts',
+    '/Network/Library/Fonts',
+    '/System/Library/Fonts',
 
-            # windows
-            'c:/winnt/fonts',
-            'c:/windows/fonts'
+    # windows
+    'c:/winnt/fonts',
+    'c:/windows/fonts'
 ]
+
 
 def list_all_sysfonts():
     """
@@ -76,6 +77,7 @@ def list_all_sysfonts():
         for filename in glob.glob(os.path.join(os.path.expanduser(dirname), '*.[Tt][Tt][Ff]')):
             filepath.append(filename)
     return filepath
+
 
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts

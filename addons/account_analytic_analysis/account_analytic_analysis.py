@@ -31,6 +31,7 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
+
 class account_analytic_invoice_line(osv.osv):
     _name = "account.analytic.invoice.line"
 
@@ -44,16 +45,16 @@ class account_analytic_invoice_line(osv.osv):
         return res
 
     _columns = {
-        'product_id': fields.many2one('product.product','Product',required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'name': fields.text('Description', required=True),
         'quantity': fields.float('Quantity', required=True),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'price_unit': fields.float('Unit Price', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float", digits_compute=dp.get_precision('Account')),
     }
     _defaults = {
-        'quantity' : 1,
+        'quantity': 1,
     }
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, pricelist_id=False, company_id=None, context=None):
@@ -63,7 +64,7 @@ class account_analytic_invoice_line(osv.osv):
         local_context = dict(context, company_id=company_id, force_company=company_id, pricelist=pricelist_id)
 
         if not product:
-            return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': 0.0}, 'domain': {'product_uom': []}}
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
             if part.lang:
@@ -81,11 +82,11 @@ class account_analytic_invoice_line(osv.osv):
         if not name:
             name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
             if res.description_sale:
-                name += '\n'+res.description_sale
+                name += '\n' + res.description_sale
 
-        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
+        result.update({'name': name or False, 'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
 
-        res_final = {'value':result}
+        res_final = {'value': result}
         if result['uom_id'] != res.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=local_context)
             new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
@@ -100,7 +101,7 @@ class account_analytic_account(osv.osv):
     def _analysis_all(self, cr, uid, ids, fields, arg, context=None):
         dp = 2
         res = dict([(i, {}) for i in ids])
-        parent_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        parent_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
@@ -108,7 +109,7 @@ class account_analytic_account(osv.osv):
                 cr.execute('SELECT MAX(id) FROM res_users')
                 max_user = cr.fetchone()[0]
                 if parent_ids:
-                    cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
+                    cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user '
                                'WHERE account_id IN %s AND unit_amount <> 0.0', (parent_ids,))
                     result = cr.fetchall()
                 else:
@@ -117,7 +118,7 @@ class account_analytic_account(osv.osv):
                     res[id][f] = [int((id * max_user) + x[0]) for x in result]
             elif f == 'month_ids':
                 if parent_ids:
-                    cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
+                    cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month '
                                'WHERE account_id IN %s AND unit_amount <> 0.0', (parent_ids,))
                     result = cr.fetchall()
                 else:
@@ -158,7 +159,7 @@ class account_analytic_account(osv.osv):
                         if product_id:
                             price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
                         factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
-                        res[account.id][f] += price * qty * (100-factor.factor or 0.0) / 100.0
+                        res[account.id][f] += price * qty * (100 - factor.factor or 0.0) / 100.0
 
                 # sum both result on account_id
                 for id in ids:
@@ -174,7 +175,7 @@ class account_analytic_account(osv.osv):
                                 ON account_analytic_line.invoice_id = account_invoice.id \
                             WHERE account_analytic_line.account_id IN %s \
                                 AND account_analytic_line.invoice_id IS NOT NULL \
-                            GROUP BY account_analytic_line.account_id",(parent_ids,))
+                            GROUP BY account_analytic_line.account_id", (parent_ids,))
                     for account_id, lid in cr.fetchall():
                         res[account_id][f] = lid
             elif f == 'last_worked_date':
@@ -185,7 +186,7 @@ class account_analytic_account(osv.osv):
                             FROM account_analytic_line \
                             WHERE account_id IN %s \
                                 AND invoice_id IS NULL \
-                            GROUP BY account_analytic_line.account_id",(parent_ids,))
+                            GROUP BY account_analytic_line.account_id", (parent_ids,))
                     for account_id, lwd in cr.fetchall():
                         if account_id not in res:
                             res[account_id] = {}
@@ -202,7 +203,7 @@ class account_analytic_account(osv.osv):
                                 AND account_analytic_journal.type='general' \
                                 AND invoice_id IS NULL \
                                 AND to_invoice IS NOT NULL \
-                            GROUP BY account_analytic_line.account_id;",(parent_ids,))
+                            GROUP BY account_analytic_line.account_id;", (parent_ids,))
                     for account_id, sua in cr.fetchall():
                         if account_id not in res:
                             res[account_id] = {}
@@ -219,8 +220,8 @@ class account_analytic_account(osv.osv):
                                 ON account_analytic_line.journal_id = account_analytic_journal.id \
                             WHERE account_analytic_line.account_id IN %s \
                                 AND account_analytic_journal.type='general' \
-                            GROUP BY account_analytic_line.account_id",(parent_ids,))
-                    ff =  cr.fetchall()
+                            GROUP BY account_analytic_line.account_id", (parent_ids,))
+                    ff = cr.fetchall()
                     for account_id, hq in ff:
                         if account_id not in res:
                             res[account_id] = {}
@@ -253,7 +254,7 @@ class account_analytic_account(osv.osv):
                         WHERE account_analytic_line.account_id IN %s \
                             AND a.to_invoice IS NOT NULL \
                             AND account_analytic_journal.type IN ('purchase', 'general')
-                        GROUP BY account_analytic_line.account_id""",(parent_ids,))
+                        GROUP BY account_analytic_line.account_id""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         res[account_id][f] = round(sum, dp)
         return res
@@ -261,14 +262,14 @@ class account_analytic_account(osv.osv):
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  0.0
+            res[i] = 0.0
         if not child_ids:
             return res
 
         if child_ids:
-            #Search all invoice lines not in cancelled state that refer to this analytic account
+            # Search all invoice lines not in cancelled state that refer to this analytic account
             inv_line_obj = self.pool.get("account.invoice.line")
             inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', 'not in', ['draft', 'cancel']), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in inv_line_obj.browse(cr, uid, inv_lines, context=context):
@@ -286,9 +287,9 @@ class account_analytic_account(osv.osv):
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  0.0
+            res[i] = 0.0
         if not child_ids:
             return res
         if child_ids:
@@ -298,9 +299,9 @@ class account_analytic_account(osv.osv):
                         ON account_analytic_line.journal_id = account_analytic_journal.id \
                     WHERE account_analytic_line.account_id IN %s \
                         AND amount<0 \
-                    GROUP BY account_analytic_line.account_id""",(child_ids,))
+                    GROUP BY account_analytic_line.account_id""", (child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
+                res[account_id] = round(sum, 2)
         res_final = res
         return res_final
 
@@ -312,7 +313,7 @@ class account_analytic_account(osv.osv):
             else:
                 res[account.id] = 0.0
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
@@ -328,31 +329,31 @@ class account_analytic_account(osv.osv):
             if res[account.id] < 0:
                 res[account.id] = 0.0
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.hours_qtt_invoiced == 0:
-                res[account.id]=0.0
+                res[account.id] = 0.0
             else:
                 res[account.id] = account.ca_invoiced / account.hours_qtt_invoiced
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.ca_invoiced == 0:
-                res[account.id]=0.0
+                res[account.id] = 0.0
             elif account.total_cost != 0.0:
                 res[account.id] = -(account.real_margin / account.total_cost) * 100
             else:
                 res[account.id] = 0.0
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _fix_price_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
@@ -360,7 +361,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
+            sale_ids = sale_obj.search(cr, uid, [('project_id', '=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
                 res[account.id] += sale.amount_untaxed
                 for invoice in sale.invoice_ids:
@@ -374,7 +375,7 @@ class account_analytic_account(osv.osv):
         inv_ids = []
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
+            line_ids = lines_obj.search(cr, uid, [('account_id', '=', account.id), ('invoice_id', '!=', False), ('to_invoice', '!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 if line.invoice_id not in inv_ids:
                     inv_ids.append(line.invoice_id)
@@ -395,7 +396,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_invoiced + account.total_cost
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _theorical_margin_calc(self, cr, uid, ids, name, arg, context=None):
@@ -403,7 +404,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_theorical + account.total_cost
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
     def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
@@ -424,7 +425,7 @@ class account_analytic_account(osv.osv):
     def _get_total_estimation(self, account):
         tot_est = 0.0
         if account.fix_price_invoices:
-            tot_est += account.amount_max 
+            tot_est += account.amount_max
         if account.invoice_on_timesheets:
             tot_est += account.hours_qtt_est
         return tot_est
@@ -454,19 +455,19 @@ class account_analytic_account(osv.osv):
         return total_toinvoice
 
     def _sum_of_fields(self, cr, uid, ids, name, arg, context=None):
-         res = dict([(i, {}) for i in ids])
-         for account in self.browse(cr, uid, ids, context=context):
+        res = dict([(i, {}) for i in ids])
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id]['est_total'] = self._get_total_estimation(account)
-            res[account.id]['invoiced_total'] =  self._get_total_invoiced(account)
+            res[account.id]['invoiced_total'] = self._get_total_invoiced(account)
             res[account.id]['remaining_total'] = self._get_total_remaining(account)
-            res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
-         return res
+            res[account.id]['toinvoice_total'] = self._get_total_toinvoice(account)
+        return res
 
     _columns = {
-        'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
-                                                store={
-                                                    'account.analytic.line' : (_get_analytic_account, None, 20),
-                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
+        'is_overdue_quantity': fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
+                                               store={
+                                                   'account.analytic.line': (_get_analytic_account, None, 20),
+                                                   'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
@@ -515,23 +516,23 @@ class account_analytic_account(osv.osv):
         'real_margin_rate': fields.function(_real_margin_rate_calc, type='float', string='Real Margin Rate (%)',
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
             digits_compute=dp.get_precision('Account')),
-        'fix_price_invoices' : fields.boolean('Fixed Price'),
-        'invoice_on_timesheets' : fields.boolean("On Timesheets"),
+        'fix_price_invoices': fields.boolean('Fixed Price'),
+        'invoice_on_timesheets': fields.boolean("On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
-        'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Estimation"),
-        'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
-        'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
-        'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
+        'est_total': fields.function(_sum_of_fields, type="float", multi="sum_of_all", string="Total Estimation"),
+        'invoiced_total': fields.function(_sum_of_fields, type="float", multi="sum_of_all", string="Total Invoiced"),
+        'remaining_total': fields.function(_sum_of_fields, type="float", multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
+        'toinvoice_total': fields.function(_sum_of_fields, type="float", multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
         'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines', copy=True),
-        'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
+        'recurring_invoices': fields.boolean('Generate recurring invoices automatically'),
         'recurring_rule_type': fields.selection([
             ('daily', 'Day(s)'),
             ('weekly', 'Week(s)'),
             ('monthly', 'Month(s)'),
             ('yearly', 'Year(s)'),
-            ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
+        ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
         'recurring_interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'recurring_next_date': fields.date('Date of Next Invoice'),
     }
@@ -539,13 +540,13 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'recurring_interval': 1,
         'recurring_next_date': lambda *a: time.strftime('%Y-%m-%d'),
-        'recurring_rule_type':'monthly'
+        'recurring_rule_type': 'monthly'
     }
 
-    def open_sale_order_lines(self,cr,uid,ids,context=None):
+    def open_sale_order_lines(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','in',context.get('search_default_partner_id',False))])
+        sale_ids = self.pool.get('sale.order').search(cr, uid, [('project_id', '=', context.get('search_default_project_id', False)), ('partner_id', 'in', context.get('search_default_partner_id', False))])
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Sales Order Lines to Invoice of %s') % ','.join(names)
         return {
@@ -554,7 +555,7 @@ class account_analytic_account(osv.osv):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'context': context,
-            'domain' : [('order_id','in',sale_ids)],
+            'domain': [('order_id', 'in', sale_ids)],
             'res_model': 'sale.order.line',
             'nodestroy': True,
         }
@@ -565,14 +566,14 @@ class account_analytic_account(osv.osv):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
 
         template = self.browse(cr, uid, template_id, context=context)
-        
+
         if not ids:
             res['value']['fix_price_invoices'] = template.fix_price_invoices
             res['value']['amount_max'] = template.amount_max
         if not ids:
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
-        
+
         if template.to_invoice.id:
             res['value']['to_invoice'] = template.to_invoice.id
         if template.pricelist_id.id:
@@ -617,7 +618,7 @@ class account_analytic_account(osv.osv):
             accounts = self.browse(cr, uid, accounts_ids, context=context)
             for account in accounts:
                 if write_pending:
-                    account.write({'state' : 'pending'})
+                    account.write({'state': 'pending'})
                 remind_user = remind.setdefault(account.manager_id.id, {})
                 remind_type = remind_user.setdefault(key, {})
                 remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
@@ -652,9 +653,8 @@ class account_analytic_account(osv.osv):
             pass
         return result
 
-
     def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
-        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        domain = [('invoice_id', '=', False), ('to_invoice', '!=', False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Timesheets to Invoice of %s') % ','.join(names)
         return {
@@ -662,7 +662,7 @@ class account_analytic_account(osv.osv):
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'domain' : domain,
+            'domain': domain,
             'res_model': 'account.analytic.line',
             'nodestroy': True,
         }
@@ -673,10 +673,10 @@ class account_analytic_account(osv.osv):
         journal_obj = self.pool.get('account.journal')
 
         if not contract.partner_id:
-            raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
+            raise osv.except_osv(_('No Customer Defined!'), _("You must first select a Customer for Contract %s!") % contract.name)
 
         fpos = contract.partner_id.property_account_position or False
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
+        journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', contract.company_id.id or False)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
             _('Please define a sale journal for the company "%s".') % (contract.company_id.name or '', ))
@@ -709,7 +709,7 @@ class account_analytic_account(osv.osv):
         fpos_obj = self.pool.get('account.fiscal.position')
         fiscal_position = None
         if fiscal_position_id:
-            fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+            fiscal_position = fpos_obj.browse(cr, uid, fiscal_position_id, context=context)
         invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
 
@@ -748,11 +748,11 @@ class account_analytic_account(osv.osv):
     def _recurring_create_invoice(self, cr, uid, ids, automatic=False, context=None):
         context = context or {}
         invoice_ids = []
-        current_date =  time.strftime('%Y-%m-%d')
+        current_date = time.strftime('%Y-%m-%d')
         if ids:
             contract_ids = ids
         else:
-            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
+            contract_ids = self.search(cr, uid, [('recurring_next_date', '<=', current_date), ('state', '=', 'open'), ('recurring_invoices', '=', True), ('type', '=', 'contract')])
         if contract_ids:
             cr.execute('SELECT company_id, array_agg(id) as ids FROM account_analytic_account WHERE id IN %s GROUP BY company_id', (tuple(contract_ids),))
             for company_id, ids in cr.fetchall():
@@ -763,13 +763,13 @@ class account_analytic_account(osv.osv):
                         next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
                         interval = contract.recurring_interval
                         if contract.recurring_rule_type == 'daily':
-                            new_date = next_date+relativedelta(days=+interval)
+                            new_date = next_date + relativedelta(days=+interval)
                         elif contract.recurring_rule_type == 'weekly':
-                            new_date = next_date+relativedelta(weeks=+interval)
+                            new_date = next_date + relativedelta(weeks=+interval)
                         elif contract.recurring_rule_type == 'monthly':
-                            new_date = next_date+relativedelta(months=+interval)
+                            new_date = next_date + relativedelta(months=+interval)
                         else:
-                            new_date = next_date+relativedelta(years=+interval)
+                            new_date = next_date + relativedelta(years=+interval)
                         self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
                         if automatic:
                             cr.commit()
@@ -781,10 +781,11 @@ class account_analytic_account(osv.osv):
                             raise
         return invoice_ids
 
+
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
     _description = "Hours Summary by User"
-    _order='user'
+    _order = 'user'
     _auto = False
     _rec_name = 'user'
 
@@ -793,14 +794,14 @@ class account_analytic_account_summary_user(osv.osv):
         account_obj = self.pool.get('account.analytic.account')
         cr.execute('SELECT MAX(id) FROM res_users')
         max_user = cr.fetchone()[0]
-        account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
-        user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-        parent_ids = tuple(account_ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        account_ids = [int(str(x / max_user - (x % max_user == 0 and 1 or 0))) for x in ids]
+        user_ids = [int(str(x - ((x / max_user - (x % max_user == 0 and 1 or 0)) * max_user))) for x in ids]
+        parent_ids = tuple(account_ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         if parent_ids:
-            cr.execute('SELECT id, unit_amount ' \
-                    'FROM account_analytic_analysis_summary_user ' \
-                    'WHERE account_id IN %s ' \
-                        'AND "user" IN %s',(parent_ids, tuple(user_ids),))
+            cr.execute('SELECT id, unit_amount '
+                    'FROM account_analytic_analysis_summary_user '
+                    'WHERE account_id IN %s '
+                       'AND "user" IN %s', (parent_ids, tuple(user_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for id in ids:
@@ -825,20 +826,21 @@ class account_analytic_account_summary_user(osv.osv):
             with mu as
                 (select max(id) as max_user from res_users)
             , lu AS
-                (SELECT   
-                 l.account_id AS account_id,   
-                 coalesce(l.user_id, 0) AS user_id,   
-                 SUM(l.unit_amount) AS unit_amount   
-             FROM account_analytic_line AS l,   
-                 account_analytic_journal AS j   
-             WHERE (j.type = 'general' ) and (j.id=l.journal_id)   
-             GROUP BY l.account_id, l.user_id   
+                (SELECT
+                 l.account_id AS account_id,
+                 coalesce(l.user_id, 0) AS user_id,
+                 SUM(l.unit_amount) AS unit_amount
+             FROM account_analytic_line AS l,
+                 account_analytic_journal AS j
+             WHERE (j.type = 'general' ) and (j.id=l.journal_id)
+             GROUP BY l.account_id, l.user_id
             )
             select (lu.account_id * mu.max_user) + lu.user_id as id,
                     lu.account_id as account_id,
                     lu.user_id as "user",
                     unit_amount
             from lu, mu)''')
+
 
 class account_analytic_account_summary_month(osv.osv):
     _name = "account_analytic_analysis.summary.month"
@@ -859,49 +861,49 @@ class account_analytic_account_summary_month(osv.osv):
 
     def init(self, cr):
         openerp.tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_month')
-        cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
-                'SELECT ' \
-                    '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000::bigint))::bigint AS id, ' \
-                    'd.account_id AS account_id, ' \
-                    'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
-                    'TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') AS month_id, ' \
-                    'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
-                'FROM ' \
-                    '(SELECT ' \
-                        'd2.account_id, ' \
-                        'd2.month ' \
-                    'FROM ' \
-                        '(SELECT ' \
-                            'a.id AS account_id, ' \
-                            'l.month AS month ' \
-                        'FROM ' \
-                            '(SELECT ' \
-                                'DATE_TRUNC(\'month\', l.date) AS month ' \
-                            'FROM account_analytic_line AS l, ' \
-                                'account_analytic_journal AS j ' \
-                            'WHERE j.type = \'general\' ' \
-                            'GROUP BY DATE_TRUNC(\'month\', l.date) ' \
-                            ') AS l, ' \
-                            'account_analytic_account AS a ' \
-                        'GROUP BY l.month, a.id ' \
-                        ') AS d2 ' \
-                    'GROUP BY d2.account_id, d2.month ' \
-                    ') AS d ' \
-                'LEFT JOIN ' \
-                    '(SELECT ' \
-                        'l.account_id AS account_id, ' \
-                        'DATE_TRUNC(\'month\', l.date) AS month, ' \
-                        'SUM(l.unit_amount) AS unit_amount ' \
-                    'FROM account_analytic_line AS l, ' \
-                        'account_analytic_journal AS j ' \
-                    'WHERE (j.type = \'general\') and (j.id=l.journal_id) ' \
-                    'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) ' \
-                    ') AS l '
-                    'ON (' \
-                        'd.account_id = l.account_id ' \
-                        'AND d.month = l.month' \
-                    ') ' \
-                'GROUP BY d.month, d.account_id ' \
+        cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS ('
+                'SELECT '
+                   '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000::bigint))::bigint AS id, '
+                   'd.account_id AS account_id, '
+                   'TO_CHAR(d.month, \'Mon YYYY\') AS month, '
+                   'TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') AS month_id, '
+                   'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount '
+                'FROM '
+                   '(SELECT '
+                   'd2.account_id, '
+                   'd2.month '
+                   'FROM '
+                   '(SELECT '
+                   'a.id AS account_id, '
+                   'l.month AS month '
+                   'FROM '
+                   '(SELECT '
+                   'DATE_TRUNC(\'month\', l.date) AS month '
+                   'FROM account_analytic_line AS l, '
+                   'account_analytic_journal AS j '
+                   'WHERE j.type = \'general\' '
+                   'GROUP BY DATE_TRUNC(\'month\', l.date) '
+                   ') AS l, '
+                   'account_analytic_account AS a '
+                   'GROUP BY l.month, a.id '
+                   ') AS d2 '
+                   'GROUP BY d2.account_id, d2.month '
+                   ') AS d '
+                'LEFT JOIN '
+                   '(SELECT '
+                   'l.account_id AS account_id, '
+                   'DATE_TRUNC(\'month\', l.date) AS month, '
+                   'SUM(l.unit_amount) AS unit_amount '
+                   'FROM account_analytic_line AS l, '
+                   'account_analytic_journal AS j '
+                   'WHERE (j.type = \'general\') and (j.id=l.journal_id) '
+                   'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) '
+                   ') AS l '
+                   'ON ('
+                   'd.account_id = l.account_id '
+                   'AND d.month = l.month'
+                   ') '
+                'GROUP BY d.month, d.account_id '
                 ')')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -28,28 +28,30 @@ import re
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.exceptions import AccessError
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.
 
     External attachment storage
     ---------------------------
-    
+
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
     implement other storage engines, shuch methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
-    
+
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
     """
     _order = 'id desc'
+
     def _name_get_resname(self, cr, uid, ids, object, method, context):
         data = {}
         for attachment in self.browse(cr, uid, ids, context=context):
@@ -57,12 +59,12 @@ class ir_attachment(osv.osv):
             res_id = attachment.res_id
             if model_object and res_id:
                 model_pool = self.pool[model_object]
-                res = model_pool.name_get(cr,uid,[res_id],context)
+                res = model_pool.name_get(cr, uid, [res_id], context)
                 res_name = res and res[0][1] or None
                 if res_name:
-                    field = self._columns.get('res_name',False)
+                    field = self._columns.get('res_name', False)
                     if field and len(res_name) > field.size:
-                        res_name = res_name[:30] + '...' 
+                        res_name = res_name[:30] + '...'
                 data[attachment.id] = res_name or False
             else:
                 data[attachment.id] = False
@@ -123,7 +125,7 @@ class ir_attachment(osv.osv):
             if bin_size:
                 r = os.path.getsize(full_path)
             else:
-                r = open(full_path,'rb').read().encode('base64')
+                r = open(full_path, 'rb').read().encode('base64')
         except IOError:
             _logger.exception("_read_file reading %s", full_path)
         return r
@@ -140,7 +142,7 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, fname):
-        count = self.search_count(cr, 1, [('store_fname','=',fname)])
+        count = self.search_count(cr, 1, [('store_fname', '=', fname)])
         full_path = self._full_path(cr, uid, fname)
         if not count and os.path.exists(full_path):
             try:
@@ -195,9 +197,9 @@ class ir_attachment(osv.osv):
         'res_model': fields.char('Resource Model', readonly=True, help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
+        'create_uid': fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
-        'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
+        'type': fields.selection([('url', 'URL'), ('binary', 'Binary'), ],
                 'Type', help="Binary File or URL", required=True, change_default=True),
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
@@ -210,7 +212,7 @@ class ir_attachment(osv.osv):
     _defaults = {
         'type': 'binary',
         'file_size': 0,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
     }
 
     def _auto_init(self, cr, context=None):
@@ -235,10 +237,10 @@ class ir_attachment(osv.osv):
                 if not (rmod and rid):
                     require_employee = True
                     continue
-                res_ids.setdefault(rmod,set()).add(rid)
+                res_ids.setdefault(rmod, set()).add(rid)
         if values:
             if values.get('res_model') and values.get('res_id'):
-                res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
+                res_ids.setdefault(values['res_model'], set()).add(values['res_id'])
 
         ima = self.pool.get('ir.model.access')
         for model, mids in res_ids.items():
@@ -283,7 +285,7 @@ class ir_attachment(osv.osv):
             if not target_dict['res_model']:
                 continue
             # model_attachments = { 'model': { 'res_id': [id1,id2] } }
-            model_attachments.setdefault(target_dict['res_model'],{}).setdefault(target_dict['res_id'] or 0, set()).add(target_dict['id'])
+            model_attachments.setdefault(target_dict['res_model'], {}).setdefault(target_dict['res_id'] or 0, set()).add(target_dict['id'])
 
         # To avoid multiple queries for each attachment found, checks are
         # performed in batch as much as possible.
@@ -295,7 +297,7 @@ class ir_attachment(osv.osv):
                 # remove all corresponding attachment ids
                 for attach_id in itertools.chain(*targets.values()):
                     ids.remove(attach_id)
-                continue # skip ir.rule processing, these ones are out already
+                continue  # skip ir.rule processing, these ones are out already
 
             # filter ids according to what access rules permit
             target_ids = targets.keys()
@@ -337,8 +339,8 @@ class ir_attachment(osv.osv):
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
         to_delete = [a.store_fname
-                        for a in self.browse(cr, uid, ids, context=context)
-                            if a.store_fname]
+                     for a in self.browse(cr, uid, ids, context=context)
+                     if a.store_fname]
         res = super(ir_attachment, self).unlink(cr, uid, ids, context)
         for file_path in to_delete:
             self._file_delete(cr, uid, file_path)

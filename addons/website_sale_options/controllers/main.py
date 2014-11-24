@@ -5,6 +5,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_sale.controllers.main import website_sale
 
+
 class website_sale_options(website_sale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
@@ -28,7 +29,6 @@ class website_sale_options(website_sale):
 
         order = request.website.sale_get_order(force_create=1)
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
-
 
         option_ids = [p.id for tmpl in product.optional_product_ids for p in tmpl.product_variant_ids]
         optional_product_ids = []
@@ -64,7 +64,7 @@ class website_sale_options(website_sale):
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
 
         return request.website._render("website_sale_options.modal", {
-                'product': product,
-                'compute_currency': compute_currency,
-                'get_attribute_value_ids': self.get_attribute_value_ids,
-            })
+            'product': product,
+            'compute_currency': compute_currency,
+            'get_attribute_value_ids': self.get_attribute_value_ids,
+        })

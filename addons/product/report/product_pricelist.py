@@ -27,8 +27,8 @@ from openerp.report import report_sxw
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(product_pricelist, self).__init__(cr, uid, name, context=context)
-        self.pricelist=False
-        self.quantity=[]
+        self.pricelist = False
+        self.quantity = []
         self.localcontext.update({
             'time': time,
             'get_pricelist': self._get_pricelist,
@@ -43,17 +43,17 @@ class product_pricelist(report_sxw.rml_parse):
         vals = {}
         qtys = 1
 
-        for i in range(1,6):
-            if form['qty'+str(i)]!=0:
-                vals['qty'+str(qtys)] = str(form['qty'+str(i)]) + ' units'
+        for i in range(1, 6):
+            if form['qty' + str(i)] != 0:
+                vals['qty' + str(qtys)] = str(form['qty' + str(i)]) + ' units'
             qtys += 1
         lst.append(vals)
         return lst
 
     def _set_quantity(self, form):
-        for i in range(1,6):
-            q = 'qty%d'%i
-            if form[q] >0 and form[q] not in self.quantity:
+        for i in range(1, 6):
+            q = 'qty%d' % i
+            if form[q] > 0 and form[q] not in self.quantity:
                 self.quantity.append(form[q])
             else:
                 self.quantity.append(0)
@@ -68,11 +68,11 @@ class product_pricelist(report_sxw.rml_parse):
         return pricelist['currency_id'][1]
 
     def _get_categories(self, products, form):
-        cat_ids=[]
-        res=[]
+        cat_ids = []
+        res = []
         self.pricelist = form['price_list']
         self._set_quantity(form)
-        pro_ids=[]
+        pro_ids = []
         for product in products:
             pro_ids.append(product.id)
             if product.categ_id.id not in cat_ids:
@@ -82,23 +82,23 @@ class product_pricelist(report_sxw.rml_parse):
         if not cats:
             return res
         for cat in cats:
-            product_ids=self.pool.get('product.product').search(self.cr, self.uid, [('id', 'in', pro_ids), ('categ_id', '=', cat[0])], context=self.localcontext)
+            product_ids = self.pool.get('product.product').search(self.cr, self.uid, [('id', 'in', pro_ids), ('categ_id', '=', cat[0])], context=self.localcontext)
             products = []
             for product in self.pool.get('product.product').read(self.cr, self.uid, product_ids, ['name', 'code'], context=self.localcontext):
                 val = {
-                     'id':product['id'],
-                     'name':product['name'],
-                     'code':product['code']
+                    'id': product['id'],
+                    'name': product['name'],
+                    'code': product['code']
                 }
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:
-                        val['qty'+str(i)] = 0.0
+                        val['qty' + str(i)] = 0.0
                     else:
-                        val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
+                        val['qty' + str(i)] = self._get_price(self.pricelist, product['id'], qty)
                     i += 1
                 products.append(val)
-            res.append({'name':cat[1],'products': products})
+            res.append({'name': cat[1], 'products': products})
         return res
 
     def _get_price(self, pricelist_id, product_id, qty):
@@ -109,7 +109,7 @@ class product_pricelist(report_sxw.rml_parse):
             price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         else:
             res = self.pool.get('product.product').read(self.cr, self.uid, [product_id])
-            price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
+            price = self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
 
 

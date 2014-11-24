@@ -197,10 +197,11 @@ class crm_lead(format_address, osv.osv):
                     duration = abs(int(ans.days))
                 res[lead.id][field] = duration
         return res
+
     def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         Event = self.pool['calendar.event']
         return {
-            opp_id: Event.search_count(cr,uid, [('opportunity_id', '=', opp_id)], context=context)
+            opp_id: Event.search_count(cr, uid, [('opportunity_id', '=', opp_id)], context=context)
             for opp_id in ids
         }
     _columns = {
@@ -219,14 +220,14 @@ class crm_lead(format_address, osv.osv):
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags',
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
         'contact_name': fields.char('Contact Name', size=64),
-        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
+        'partner_name': fields.char("Customer Name", size=64, help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ], 'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
@@ -273,7 +274,7 @@ class crm_lead(format_address, osv.osv):
         'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
+        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode',
                             domain="[('section_id','=',section_id)]"),
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
@@ -303,7 +304,7 @@ class crm_lead(format_address, osv.osv):
             return {'value': {}}
         vals = {'probability': stage.probability}
         if stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1):
-                vals['date_closed'] = fields.datetime.now()
+            vals['date_closed'] = fields.datetime.now()
         return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -536,7 +537,7 @@ class crm_lead(format_address, osv.osv):
         """
         Create a message gathering merged leads/opps information.
         """
-        #TOFIX: mail template should be used instead of fix body, subject text
+        # TOFIX: mail template should be used instead of fix body, subject text
         details = []
         result_type = self._merge_get_result_type(cr, uid, opportunities, context)
         if result_type == 'lead':
@@ -560,8 +561,8 @@ class crm_lead(format_address, osv.osv):
         for opportunity in opportunities:
             for history in opportunity.message_ids:
                 message.write(cr, uid, history.id, {
-                        'res_id': opportunity_id,
-                        'subject' : _("From %s : %s") % (opportunity.name, history.subject)
+                    'res_id': opportunity_id,
+                    'subject': _("From %s : %s") % (opportunity.name, history.subject)
                 }, context=context)
 
         return True
@@ -575,16 +576,16 @@ class crm_lead(format_address, osv.osv):
             return attach_obj.browse(cr, uid, attachment_ids, context=context)
 
         first_attachments = _get_attachments(opportunity_id)
-        #counter of all attachments to move. Used to make sure the name is different for all attachments
+        # counter of all attachments to move. Used to make sure the name is different for all attachments
         count = 1
         for opportunity in opportunities:
             attachments = _get_attachments(opportunity.id)
             for attachment in attachments:
-                values = {'res_id': opportunity_id,}
+                values = {'res_id': opportunity_id, }
                 for attachment_in_first in first_attachments:
                     if attachment.name == attachment_in_first.name:
                         values['name'] = "%s (%s)" % (attachment.name, count,),
-                count+=1
+                count += 1
                 attachment.write(values)
         return True
 
@@ -682,7 +683,7 @@ class crm_lead(format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities 
+        # Delete tail opportunities
         # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
         self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
@@ -706,7 +707,7 @@ class crm_lead(format_address, osv.osv):
             'email_from': customer and customer.email or lead.email_from,
             'phone': customer and customer.phone or lead.phone,
         }
-        if not lead.stage_id or lead.stage_id.type=='lead':
+        if not lead.stage_id or lead.stage_id.type == 'lead':
             val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('type', 'in', ('opportunity', 'both'))], context=context)
         return val
 
@@ -748,7 +749,7 @@ class crm_lead(format_address, osv.osv):
             'state_id': lead.state_id and lead.state_id.id or False,
             'is_company': is_company,
             'type': 'contact'
-        }
+                }
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
@@ -782,7 +783,7 @@ class crm_lead(format_address, osv.osv):
         :param int partner_id: partner to assign if any
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        #TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
+        # TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
@@ -1010,7 +1011,7 @@ class crm_lead(format_address, osv.osv):
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
+            'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
@@ -1030,14 +1031,15 @@ class crm_lead(format_address, osv.osv):
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if update_vals is None: update_vals = {}
+        if update_vals is None:
+            update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             update_vals['priority'] = msg.get('priority')
         maps = {
-            'cost':'planned_cost',
+            'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability',
+            'probability': 'probability',
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
@@ -1074,8 +1076,8 @@ class crm_lead(format_address, osv.osv):
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
-            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
+            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value': {'country_id': country_id}}
         return {}
 
     def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):

@@ -44,24 +44,25 @@ from content_index import cntIndex
 
 _logger = logging.getLogger(__name__)
 
+
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
 
     _columns = {
         # Columns from ir.attachment:
         'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'write_uid': fields.many2one('res.users', 'Last Modification User', readonly=True),
         # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, change_default=True),
         'index_content': fields.text('Indexed Content'),
-        'partner_id':fields.many2one('res.partner', 'Partner', select=1),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'file_type': fields.char('Content Type'),
     }
     _order = "id desc"
 
     _defaults = {
-        'user_id': lambda self, cr, uid, ctx:uid,
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     _sql_constraints = [
@@ -74,7 +75,7 @@ class document_file(osv.osv):
             ids = [ids]
 
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
-        
+
         if ids:
             self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
 
@@ -103,7 +104,7 @@ class document_file(osv.osv):
         visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
 
         # null parents means allowed
-        ids = parents.get(None,[])
+        ids = parents.get(None, [])
         for parent_id in visible_parent_ids:
             ids.extend(parents[parent_id])
 
@@ -136,7 +137,7 @@ class document_file(osv.osv):
         return super(document_file, self).write(cr, uid, ids, vals, context)
 
     def _index(self, cr, uid, data, datas_fname, file_type):
-        mime, icont = cntIndex.doIndex(data, datas_fname,  file_type or None, None)
+        mime, icont = cntIndex.doIndex(data, datas_fname, file_type or None, None)
         icont_u = ustr(icont)
         return mime, icont_u
 
@@ -153,6 +154,7 @@ class document_file(osv.osv):
             return bro.partner_id.id
         return False
 
+
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
@@ -160,16 +162,16 @@ class document_directory(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'write_uid': fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'create_uid': fields.many2one('res.users', 'Creator', readonly=True),
         'user_id': fields.many2one('res.users', 'Owner'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1, change_default=True),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([ ('directory','Static Directory'), ('ressource','Folders per resource'), ],
+        'type': fields.selection([('directory', 'Static Directory'), ('ressource', 'Folders per resource'), ],
             'Type', required=True, select=1, change_default=True,
             help="Each directory can either have the type Static or be linked to another resource. A static directory, as with Operating Systems, is the classic directory that can contain a set of files. The directories linked to systems resources automatically possess sub-directories for each of resource types defined in the parent directory."),
         'domain': fields.char('Domain', help="Use a domain if you want to apply an automatic filter on visible resources."),
@@ -177,11 +179,11 @@ class document_directory(osv.osv):
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'resource_find_all': fields.boolean('Find all resources',
-                help="If true, all attachments that match this resource will " \
-                    " be located. If false, only ones that have this as parent." ),
+                help="If true, all attachments that match this resource will "
+                    " be located. If false, only ones that have this as parent."),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model', change_default=True,
-            help="If you put an object here, this directory template will appear bellow all of these objects. " \
-                 "Such directories are \"attached\" to the specific model or record, just like attachments. " \
+            help="If you put an object here, this directory template will appear bellow all of these objects. "
+                 "Such directories are \"attached\" to the specific model or record, just like attachments. "
                  "Don't put a parent directory if you select a parent model."),
         'ressource_id': fields.integer('Resource ID',
             help="Along with Parent Model, this ID attaches this folder to a specific record of Parent Model."),
@@ -192,8 +194,8 @@ class document_directory(osv.osv):
     }
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
-        'user_id': lambda self,cr,uid,ctx: uid,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
+        'user_id': lambda self, cr, uid, ctx: uid,
         'domain': '[]',
         'type': 'directory',
         'ressource_id': 0,
@@ -203,9 +205,10 @@ class document_directory(osv.osv):
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
     ]
+
     def name_get(self, cr, uid, ids, context=None):
         res = []
-        if not self.search(cr,uid,[('id','in',ids)]):
+        if not self.search(cr, uid, [('id', 'in', ids)]):
             ids = []
         for d in self.browse(cr, uid, ids, context=context):
             s = ''
@@ -224,9 +227,9 @@ class document_directory(osv.osv):
             dir_id = dir_id[0]
 
         def _parent(dir_id, path):
-            parent=self.browse(cr, uid, dir_id)
+            parent = self.browse(cr, uid, dir_id)
             if parent.parent_id and not parent.ressource_parent_type_id:
-                _parent(parent.parent_id.id,path)
+                _parent(parent.parent_id.id, path)
                 path.append(parent.name)
             else:
                 path.append(parent.name)
@@ -302,32 +305,32 @@ class document_directory(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
-            default ={}
+            default = {}
         name = self.read(cr, uid, [id])[0]['name']
         default.update(name=_("%s (copy)") % (name))
-        return super(document_directory,self).copy(cr, uid, id, default, context=context)
+        return super(document_directory, self).copy(cr, uid, id, default, context=context)
 
     def _check_duplication(self, cr, uid, vals, ids=None, op='create'):
-        name=vals.get('name',False)
-        parent_id=vals.get('parent_id',False)
-        ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
-        ressource_id=vals.get('ressource_id',0)
-        if op=='write':
+        name = vals.get('name', False)
+        parent_id = vals.get('parent_id', False)
+        ressource_parent_type_id = vals.get('ressource_parent_type_id', False)
+        ressource_id = vals.get('ressource_id', 0)
+        if op == 'write':
             for directory in self.browse(cr, SUPERUSER_ID, ids):
                 if not name:
-                    name=directory.name
+                    name = directory.name
                 if not parent_id:
-                    parent_id=directory.parent_id and directory.parent_id.id or False
+                    parent_id = directory.parent_id and directory.parent_id.id or False
                 # TODO fix algo
                 if not ressource_parent_type_id:
-                    ressource_parent_type_id=directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
+                    ressource_parent_type_id = directory.ressource_parent_type_id and directory.ressource_parent_type_id.id or False
                 if not ressource_id:
-                    ressource_id=directory.ressource_id and directory.ressource_id or 0
-                res=self.search(cr,uid,[('id','<>',directory.id),('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+                    ressource_id = directory.ressource_id and directory.ressource_id or 0
+                res = self.search(cr, uid, [('id', '<>', directory.id), ('name', '=', name), ('parent_id', '=', parent_id), ('ressource_parent_type_id', '=', ressource_parent_type_id), ('ressource_id', '=', ressource_id)])
                 if len(res):
                     return False
-        if op=='create':
-            res = self.search(cr, SUPERUSER_ID, [('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+        if op == 'create':
+            res = self.search(cr, SUPERUSER_ID, [('name', '=', name), ('parent_id', '=', parent_id), ('ressource_parent_type_id', '=', ressource_parent_type_id), ('ressource_id', '=', ressource_id)])
             if len(res):
                 return False
         return True
@@ -335,17 +338,18 @@ class document_directory(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
-        return super(document_directory,self).write(cr, uid, ids, vals, context=context)
+        return super(document_directory, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
-        newname = vals.get('name',False)
+        newname = vals.get('name', False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
                     raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
-        return super(document_directory,self).create(cr, uid, vals, context)
+        return super(document_directory, self).create(cr, uid, vals, context)
+
 
 class document_directory_dctx(osv.osv):
     """ In order to evaluate dynamic folders, child items could have a limiting
@@ -361,9 +365,10 @@ class document_directory_dctx(osv.osv):
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True, ondelete="cascade"),
         'field': fields.char('Field', required=True, select=1, help="The name of the field."),
-        'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" + \
+        'expr': fields.char('Expression', required=True, help="A python expression used to evaluate the field.\n" +
                 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"),
-        }
+    }
+
 
 class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
@@ -377,6 +382,7 @@ class document_directory_content_type(osv.osv):
     _defaults = {
         'active': lambda *args: 1
     }
+
 
 class document_directory_content(osv.osv):
     _name = 'document.directory.content'
@@ -395,8 +401,8 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', 
-                help="Check this field if you want that the name of the file to contain the record name." \
+        'include_name': fields.boolean('Include Record Name',
+                help="Check this field if you want that the name of the file to contain the record name."
                     "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
@@ -405,17 +411,17 @@ class document_directory_content(osv.osv):
         'sequence': lambda *args: 1,
         'include_name': lambda *args: 1,
     }
-    
+
     def _file_get(self, cr, node, nodename, content, context=None):
         """ return the nodes of a <node> parent having a <content> content
             The return value MUST be false or a list of node_class objects.
         """
-    
+
         # TODO: respect the context!
         model = node.res_model
         if content.include_name and not model:
             return False
-        
+
         res2 = []
         tname = ''
         if content.include_name:
@@ -425,20 +431,20 @@ class document_directory_content(osv.osv):
         else:
             tname = (content.prefix or '') + (content.name or '') + (content.suffix or '') + (content.extension or '')
         if tname.find('/'):
-            tname=tname.replace('/', '_')
+            tname = tname.replace('/', '_')
         act_id = False
         if 'dctx_res_id' in node.dctx:
             act_id = node.dctx['res_id']
         elif hasattr(node, 'res_id'):
             act_id = node.res_id
         else:
-            act_id = node.context.context.get('res_id',False)
+            act_id = node.context.context.get('res_id', False)
         if not nodename:
-            n = node_content(tname, node, node.context,content, act_id=act_id)
-            res2.append( n)
+            n = node_content(tname, node, node.context, content, act_id=act_id)
+            res2.append(n)
         else:
             if nodename == tname:
-                n = node_content(tname, node, node.context,content, act_id=act_id)
+                n = node_content(tname, node, node.context, content, act_id=act_id)
                 n.fill_fields(cr)
                 res2.append(n)
         return res2
@@ -447,28 +453,29 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
-    
+
     def process_read(self, cr, uid, node, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id, context=context)
-        srv = openerp.report.interface.report_int._reports['report.'+report.report_name]
+        srv = openerp.report.interface.report_int._reports['report.' + report.report_name]
         ctx = node.context.context.copy()
         ctx.update(node.dctx)
-        pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
+        pdf, pdftype = srv.create(cr, uid, [node.act_id, ], {}, context=ctx)
         return pdf
 
+
 class ir_action_report_xml(osv.osv):
-    _name="ir.actions.report.xml"
-    _inherit ="ir.actions.report.xml"
+    _name = "ir.actions.report.xml"
+    _inherit = "ir.actions.report.xml"
 
     def _model_get(self, cr, uid, ids, name, arg, context=None):
         res = {}
         model_pool = self.pool.get('ir.model')
         for data in self.read(cr, uid, ids, ['model']):
-            model = data.get('model',False)
+            model = data.get('model', False)
             if model:
-                model_id =model_pool.search(cr, uid, [('model','=',model)])
+                model_id = model_pool.search(cr, uid, [('model', '=', model)])
                 if model_id:
                     res[data.get('id')] = model_id[0]
                 else:
@@ -479,21 +486,22 @@ class ir_action_report_xml(osv.osv):
         if not len(args):
             return []
         assert len(args) == 1 and args[0][1] == '=', 'expression is not what we expect: %r' % args
-        model_id= args[0][2]
+        model_id = args[0][2]
         if not model_id:
             # a deviation from standard behavior: when searching model_id = False
             # we return *all* reports, not just ones with empty model.
             # One reason is that 'model' is a required field so far
             return []
         model = self.pool.get('ir.model').read(cr, uid, [model_id])[0]['model']
-        report_id = self.search(cr, uid, [('model','=',model)])
+        report_id = self.search(cr, uid, [('model', '=', model)])
         if not report_id:
-            return [('id','=','0')]
-        return [('id','in',report_id)]
+            return [('id', '=', '0')]
+        return [('id', 'in', report_id)]
 
-    _columns={
-        'model_id' : fields.function(_model_get, fnct_search=_model_search, string='Model Id'),
+    _columns = {
+        'model_id': fields.function(_model_get, fnct_search=_model_search, string='Model Id'),
     }
+
 
 class document_storage(osv.osv):
     """ The primary object for data storage. Deprecated.  """
@@ -538,7 +546,7 @@ class document_storage(osv.osv):
         else:
             ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
 
-        _logger.debug( "Store data for ir.attachment #%d." % ira.id)
+        _logger.debug("Store data for ir.attachment #%d." % ira.id)
         store_fname = None
         fname = None
         filesize = len(data)
@@ -566,11 +574,12 @@ class document_storage(osv.osv):
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
-        except Exception, e :
+        except Exception, e:
             _logger.warning("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
+
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -584,7 +593,8 @@ def _str2time(cre):
         fdot = cre.find('.')
         frac = float(cre[fdot:])
         cre = cre[:fdot]
-    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
+    return time.mktime(time.strptime(cre, '%Y-%m-%d %H:%M:%S')) + frac
+
 
 def get_node_context(cr, uid, context):
     return node_context(cr, uid, context)
@@ -599,6 +609,7 @@ def get_node_context(cr, uid, context):
 #       file: objct = ir.attachement
 #   root: if we are at the first directory of a ressource
 #
+
 
 class node_context(object):
     """ This is the root node, representing access to some particular context
@@ -619,13 +630,13 @@ class node_context(object):
         context['uid'] = uid
         self._dirobj = openerp.registry(cr.dbname).get('document.directory')
         self.node_file_class = node_file
-        self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
+        self.extra_ctx = {}  # Extra keys for context, that do _not_ trigger inequality
         assert self._dirobj
         self._dirobj._prepare_context(cr, uid, self, context=context)
-        self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
+        self.rootdir = False  # self._dirobj._get_root_directory(cr,uid,context)
 
     def __eq__(self, other):
-        if not type(other) == node_context:
+        if not isinstance(other, node_context):
             return False
         if self.dbname != other.dbname:
             return False
@@ -647,7 +658,7 @@ class node_context(object):
         """ Although this fn passes back to doc.dir, it is needed since
             it is a potential caching point.
         """
-        (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
+        (ndir, duri) = self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
         while duri:
             ndir = ndir.child(cr, duri[0])
             if not ndir:
@@ -662,7 +673,7 @@ class node_context(object):
 
         fullpath = dbro.get_full_path(context=self.context)
         klass = dbro.get_node_class(dbro, context=self.context)
-        return klass(fullpath, None ,self, dbro)
+        return klass(fullpath, None, self, dbro)
 
     def get_file_node(self, cr, fbro):
         """ Create or locate a node for a static file
@@ -674,6 +685,7 @@ class node_context(object):
 
         return self.node_file_class(fbro.name, parent, self, fbro)
 
+
 class node_class(object):
     """ this is a superclass for our inodes
         It is an API for all code that wants to access the document files.
@@ -684,11 +696,11 @@ class node_class(object):
     DAV_M_NS = None
 
     def __init__(self, path, parent, context):
-        assert isinstance(context,node_context)
-        assert (not parent ) or isinstance(parent,node_class)
+        assert isinstance(context, node_context)
+        assert (not parent) or isinstance(parent, node_class)
         self.path = path
         self.context = context
-        self.type=self.our_type
+        self.type = self.our_type
         self.parent = parent
         self.uidperms = 5   # computed permissions for our uid, in unix bits
         self.mimetype = 'application/octet-stream'
@@ -719,20 +731,20 @@ class node_class(object):
             s = self.parent.full_path()
         else:
             s = []
-        if isinstance(self.path,list):
-            s+=self.path
+        if isinstance(self.path, list):
+            s += self.path
         elif self.path is None:
             s.append('')
         else:
             s.append(self.path)
-        return s #map(lambda x: '/' +x, s)
+        return s  # map(lambda x: '/' +x, s)
 
     def __repr__(self):
         return "%s@/%s" % (self.our_type, '/'.join(self.full_path()))
 
     def children(self, cr, domain=None):
         print "node_class.children()"
-        return [] #stub
+        return []  # stub
 
     def child(self, cr, name, domain=None):
         print "node_class.child()"
@@ -753,7 +765,7 @@ class node_class(object):
         return False
 
     def get_data(self, cr):
-        raise TypeError('No data for %s.'% self.type)
+        raise TypeError('No data for %s.' % self.type)
 
     def open_data(self, cr, mode):
         """ Open a node_descriptor object for this node.
@@ -777,13 +789,13 @@ class node_class(object):
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date)).replace('.','')
+        return str(_str2time(self.write_date)).replace('.', '')
 
     def _get_ttag(self, cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
-        print "node_class.get_ttag()",self
+        print "node_class.get_ttag()", self
         raise NotImplementedError("get_ttag stub()")
 
     def get_dav_props(self, cr):
@@ -803,13 +815,13 @@ class node_class(object):
         if not self.DAV_M_NS:
             return None
 
-        if self.DAV_M_NS.has_key(ns):
+        if ns in self.DAV_M_NS:
             prefix = self.DAV_M_NS[ns]
         else:
-            _logger.debug('No namespace: %s ("%s").',ns, prop)
+            _logger.debug('No namespace: %s ("%s").', ns, prop)
             return None
 
-        mname = prefix + "_" + prop.replace('-','_')
+        mname = prefix + "_" + prop.replace('-', '_')
 
         if not hasattr(self, mname):
             return None
@@ -896,7 +908,7 @@ class node_class(object):
 
         if isinstance(perms, str):
             pe2 = 0
-            chars = { 'x': 1, 'w': 2, 'r': 4, 'u': 8 }
+            chars = {'x': 1, 'w': 2, 'r': 4, 'u': 8}
             for c in perms:
                 pe2 = pe2 | chars[c]
             perms = pe2
@@ -908,15 +920,17 @@ class node_class(object):
 
         return ((self.uidperms & perms) == perms)
 
+
 class node_database(node_class):
     """ A node representing the database directory
 
     """
     our_type = 'database'
+
     def __init__(self, path=None, parent=False, context=None):
         if path is None:
             path = []
-        super(node_database,self).__init__(path, parent, context)
+        super(node_database, self).__init__(path, parent, context)
         self.unixperms = 040750
         self.uidperms = 5
 
@@ -928,7 +942,7 @@ class node_database(node_class):
         res = self._child_get(cr, name, domain=None)
         if res:
             return res[0]
-        res = self._file_get(cr,name)
+        res = self._file_get(cr, name)
         if res:
             return res[0]
         return None
@@ -938,9 +952,9 @@ class node_database(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=', False), ('ressource_parent_type_id','=',False)]
+        where = [('parent_id', '=', False), ('ressource_parent_type_id', '=', False)]
         if name:
-            where.append(('name','=',name))
+            where.append(('name', '=', name))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
@@ -954,7 +968,7 @@ class node_database(node_class):
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             klass = dirr.get_node_class(dirr, context=ctx)
-            res.append(klass(dirr.name, self, self.context,dirr))
+            res.append(klass(dirr.name, self, self.context, dirr))
 
         return res
 
@@ -965,6 +979,7 @@ class node_database(node_class):
     def _get_ttag(self, cr):
         return 'db-%s' % cr.dbname
 
+
 def mkdosname(company_name, default='noname'):
     """ convert a string to a dos-like name"""
     if not company_name:
@@ -974,6 +989,7 @@ def mkdosname(company_name, default='noname'):
     for c in company_name[:8]:
         n += (c in badchars and '_') or c
     return n
+
 
 def _uid2unixperms(perms, has_owner):
     """ Convert the uidperms and the owner flag to full unix bits
@@ -991,14 +1007,16 @@ def _uid2unixperms(perms, has_owner):
         res |= 0x05
     return res
 
+
 class node_dir(node_database):
     our_type = 'collection'
+
     def __init__(self, path, parent, context, dirr, dctx=None):
-        super(node_dir,self).__init__(path, parent,context)
+        super(node_dir, self).__init__(path, parent, context)
         self.dir_id = dirr and dirr.id or False
-        #todo: more info from dirr
+        # todo: more info from dirr
         self.mimetype = 'application/x-directory'
-            # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = dirr and dirr.create_date or False
         self.domain = dirr and dirr.domain or []
         self.res_model = dirr and dirr.ressource_type_id and dirr.ressource_type_id.model or False
@@ -1021,14 +1039,14 @@ class node_dir(node_database):
         if dirr and dirr.dctx_ids:
             for dfld in dirr.dctx_ids:
                 try:
-                    self.dctx[dfld.field] = safe_eval(dfld.expr,dc2)
-                except Exception,e:
+                    self.dctx[dfld.field] = safe_eval(dfld.expr, dc2)
+                except Exception, e:
                     print "Cannot eval %s." % dfld.expr
                     print e
                     pass
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1040,12 +1058,12 @@ class node_dir(node_database):
 
     def get_data(self, cr):
         #res = ''
-        #for child in self.children(cr):
+        # for child in self.children(cr):
         #    res += child.get_data(cr)
         return None
 
     def _file_get(self, cr, nodename=False):
-        res = super(node_dir,self)._file_get(cr, nodename)
+        res = super(node_dir, self)._file_get(cr, nodename)
 
         is_allowed = self.check_perms(nodename and 1 or 5)
         if not is_allowed:
@@ -1055,7 +1073,7 @@ class node_dir(node_database):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('directory_id','=',self.dir_id) ]
+        where = [('directory_id', '=', self.dir_id)]
         ids = cntobj.search(cr, uid, where, context=ctx)
         for content in cntobj.browse(cr, uid, ids, context=ctx):
             res3 = cntobj._file_get(cr, self, nodename, content)
@@ -1069,9 +1087,9 @@ class node_dir(node_database):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=',self.dir_id)]
+        where = [('parent_id', '=', self.dir_id)]
         if name:
-            where.append(('name','=',name))
+            where.append(('name', '=', name))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
@@ -1082,12 +1100,12 @@ class node_dir(node_database):
         if not domain:
             domain = []
 
-        where2 = where + domain + [('ressource_parent_type_id','=',False)]
+        where2 = where + domain + [('ressource_parent_type_id', '=', False)]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             klass = dirr.get_node_class(dirr, context=ctx)
-            res.append(klass(dirr.name, self, self.context,dirr))
+            res.append(klass(dirr.name, self, self.context, dirr))
 
         # Static directories should never return files with res_model/res_id
         # because static dirs are /never/ related to a record.
@@ -1113,7 +1131,7 @@ class node_dir(node_database):
         if not directory:
             raise OSError(2, 'Not such file or directory.')
         if not self.check_perms('u'):
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         if directory._name == 'document.directory':
             if self.children(cr):
@@ -1126,7 +1144,7 @@ class node_dir(node_database):
     def create_child_collection(self, cr, objname):
         object2 = False
         if not self.check_perms(2):
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -1138,10 +1156,10 @@ class node_dir(node_database):
 
         #objname = uri2[-1]
         val = {
-                'name': objname,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id' : obj and obj.id or False
+            'name': objname,
+            'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+            'ressource_id': object2 and object2.id or False,
+            'parent_id': obj and obj.id or False
         }
 
         return dirobj.create(cr, uid, val)
@@ -1151,13 +1169,13 @@ class node_dir(node_database):
             Return the node_* created
         """
         if not self.check_perms(2):
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        fil_obj=dirobj.pool.get('ir.attachment')
+        fil_obj = dirobj.pool.get('ir.attachment')
         val = {
             'name': path,
             'datas_fname': path,
@@ -1184,7 +1202,7 @@ class node_dir(node_database):
             raise NotImplementedError("Cannot move directories between contexts.")
 
         if (not self.check_perms('u')) or (not ndir_node.check_perms('w')):
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         dir_obj = self.context._dirobj
         if not fil_obj:
@@ -1219,10 +1237,11 @@ class node_dir(node_database):
             if ret:
                 ctx = self.context.context.copy()
                 ctx['__from_node'] = True
-                dir_obj.write(cr, self.context.uid, [self.dir_id,], ret, ctx)
+                dir_obj.write(cr, self.context.uid, [self.dir_id, ], ret, ctx)
             ret = True
 
         return ret
+
 
 class node_res_dir(node_class):
     """ A folder containing dynamic folders
@@ -1233,12 +1252,13 @@ class node_res_dir(node_class):
     """
     our_type = 'collection'
     res_obj_class = None
-    def __init__(self, path, parent, context, dirr, dctx=None ):
-        super(node_res_dir,self).__init__(path, parent, context)
+
+    def __init__(self, path, parent, context, dirr, dctx=None):
+        super(node_res_dir, self).__init__(path, parent, context)
         self.dir_id = dirr.id
-        #todo: more info from dirr
+        # todo: more info from dirr
         self.mimetype = 'application/x-directory'
-                        # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = dirr.create_date
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
@@ -1268,7 +1288,7 @@ class node_res_dir(node_class):
             self.dctx_dict[dfld.field] = dfld.expr
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1314,18 +1334,18 @@ class node_res_dir(node_class):
             else:
                 raise RuntimeError("Incorrect domain expr: %s." % self.domain)
         if self.resm_id:
-            where.append(('id','=',self.resm_id))
+            where.append(('id', '=', self.resm_id))
 
         if name:
             # The =like character will match underscores against any characters
             # including the special ones that couldn't exist in a FTP/DAV request
-            where.append((self.namefield,'=like',name.replace('\\','\\\\')))
+            where.append((self.namefield, '=like', name.replace('\\', '\\\\')))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
 
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         # print "Where clause for %s" % self.res_model, where
         if self.ressource_tree:
@@ -1333,7 +1353,7 @@ class node_res_dir(node_class):
             if self.resm_id:
                 object2 = dirobj.pool[self.res_model].browse(cr, uid, self.resm_id) or False
             if obj._parent_name in obj.fields_get(cr, uid):
-                where.append((obj._parent_name,'=',object2 and object2.id or False))
+                where.append((obj._parent_name, '=', object2 and object2.id or False))
 
         resids = obj.search(cr, uid, where, context=ctx)
         res = []
@@ -1346,7 +1366,7 @@ class node_res_dir(node_class):
                 # Yes! we can't do better but skip nameless records.
 
             # Escape the name for characters not supported in filenames
-            res_name = res_name.replace('/','_') # any other weird char?
+            res_name = res_name.replace('/', '_')  # any other weird char?
 
             if name and (res_name != ustr(name)):
                 # we have matched _ to any character, but we only meant to match
@@ -1361,6 +1381,7 @@ class node_res_dir(node_class):
     def _get_ttag(self, cr):
         return 'rdir-%d' % self.dir_id
 
+
 class node_res_obj(node_class):
     """ A dynamically created folder.
         A special sibling to node_dir, which does only contain dynamically
@@ -1369,13 +1390,14 @@ class node_res_obj(node_class):
         node_dirs (with limited domain).
         """
     our_type = 'collection'
+
     def __init__(self, path, dir_id, parent, context, res_model, res_bo, res_id=None):
-        super(node_res_obj,self).__init__(path, parent,context)
+        super(node_res_obj, self).__init__(path, parent, context)
         assert parent
-        #todo: more info from dirr
+        # todo: more info from dirr
         self.dir_id = dir_id
         self.mimetype = 'application/x-directory'
-                        # 'httpd/unix-directory'
+        # 'httpd/unix-directory'
         self.create_date = parent.create_date
         # TODO: the write date should be MAX(file.write)..
         self.write_date = parent.write_date
@@ -1399,10 +1421,10 @@ class node_res_obj(node_class):
             dc2['res_model'] = res_model
             dc2['res_id'] = res_bo.id
             dc2['this'] = res_bo
-            for fld,expr in self.dctx_dict.items():
+            for fld, expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
-                except Exception,e:
+                except Exception, e:
                     print "Cannot eval %s for %s." % (expr, fld)
                     print e
                     pass
@@ -1410,7 +1432,7 @@ class node_res_obj(node_class):
             self.res_id = res_id
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1442,14 +1464,14 @@ class node_res_obj(node_class):
         res = []
         is_allowed = self.check_perms((nodename and 1) or 5)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('directory_id','=',self.dir_id) ]
-        #if self.domain:
+        where = [('directory_id', '=', self.dir_id)]
+        # if self.domain:
         #    where.extend(self.domain)
         # print "res_obj file_get clause", where
         ids = cntobj.search(cr, uid, where, context=ctx)
@@ -1467,10 +1489,10 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('directory_id','=',self.dir_id) ]
+        where = [('directory_id', '=', self.dir_id)]
         ids = cntobj.search(cr, uid, where, context=ctx)
         for content in cntobj.browse(cr, uid, ids, context=ctx):
-            if content.extension == '.ics': # FIXME: call the content class!
+            if content.extension == '.ics':  # FIXME: call the content class!
                 res['http://groupdav.org/'] = ('resourcetype',)
         return res
 
@@ -1483,12 +1505,12 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('directory_id','=',self.dir_id) ]
-        ids = cntobj.search(cr,uid,where,context=ctx)
+        where = [('directory_id', '=', self.dir_id)]
+        ids = cntobj.search(cr, uid, where, context=ctx)
         for content in cntobj.browse(cr, uid, ids, context=ctx):
             # TODO: remove relic of GroupDAV
-            if content.extension == '.ics': # FIXME: call the content class!
-                return ('vevent-collection','http://groupdav.org/')
+            if content.extension == '.ics':  # FIXME: call the content class!
+                return ('vevent-collection', 'http://groupdav.org/')
         return None
 
     def _child_get(self, cr, name=None, domain=None):
@@ -1496,7 +1518,7 @@ class node_res_obj(node_class):
 
         is_allowed = self.check_perms((name and 1) or 5)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1506,13 +1528,13 @@ class node_res_obj(node_class):
         where = []
         res = []
         if name:
-            where.append(('name','=',name))
+            where.append(('name', '=', name))
 
         # Directory Structure display in tree structure
         if self.res_id and directory.ressource_tree:
             where1 = []
             if name:
-                where1.append(('name','=like',name.replace('\\','\\\\')))
+                where1.append(('name', '=like', name.replace('\\', '\\\\')))
             if obj._parent_name in obj.fields_get(cr, uid):
                 where1.append((obj._parent_name, '=', self.res_id))
             namefield = directory.resource_field.name or 'name'
@@ -1529,12 +1551,11 @@ class node_res_obj(node_class):
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)
                 rnode = klass(res_name, dir_id=self.dir_id, parent=self, context=self.context,
-                                res_model=self.res_model, res_bo=bo)
+                              res_model=self.res_model, res_bo=bo)
                 rnode.res_find_all = self.res_find_all
                 res.append(rnode)
 
-
-        where2 = where + [('parent_id','=',self.dir_id) ]
+        where2 = where + [('parent_id', '=', self.dir_id)]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         bo = obj.browse(cr, uid, self.res_id, context=ctx)
 
@@ -1543,16 +1564,16 @@ class node_res_obj(node_class):
                 continue
             if dirr.type == 'directory':
                 klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id))
+                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo=bo, res_id=self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
                 klass = dirr.get_node_class(dirr, context=ctx)
-                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id})) # bo?
+                res.append(klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))  # bo?
 
         fil_obj = dirobj.pool.get('ir.attachment')
         if self.res_find_all:
             where2 = where
-        where3 = where2 + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
+        where3 = where2 + [('res_model', '=', self.res_model), ('res_id', '=', self.res_id)]
         # print "where clause for dir_obj", where3
         ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
@@ -1560,16 +1581,15 @@ class node_res_obj(node_class):
                 klass = self.context.node_file_class
                 res.append(klass(fil.name, self, self.context, fil))
 
-
         # Get Child Ressource Directories
         if directory.ressource_type_id and directory.ressource_type_id.id:
-            where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
-            where5 = where4 + ['|', ('ressource_id','=',0), ('ressource_id','=',self.res_id)]
-            dirids = dirobj.search(cr,uid, where5)
+            where4 = where + [('ressource_parent_type_id', '=', directory.ressource_type_id.id)]
+            where5 = where4 + ['|', ('ressource_id', '=', 0), ('ressource_id', '=', self.res_id)]
+            dirids = dirobj.search(cr, uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
                     klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id)
+                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo=bo, res_id=self.res_id)
                     rnode.res_find_all = dirr.resource_find_all
                     res.append(rnode)
                 if dirr.type == 'ressource':
@@ -1583,7 +1603,7 @@ class node_res_obj(node_class):
         dirobj = self.context._dirobj
         is_allowed = self.check_perms(2)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1596,16 +1616,15 @@ class node_res_obj(node_class):
         if obj and (obj.type == 'ressource') and not object2:
             raise OSError(1, 'Operation is not permitted.')
 
-
         val = {
-                'name': objname,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id' : False,
-                'resource_find_all': False,
+            'name': objname,
+            'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+            'ressource_id': object2 and object2.id or False,
+            'parent_id': False,
+            'resource_find_all': False,
         }
         if (obj and (obj.type in ('directory'))) or not object2:
-            val['parent_id'] =  obj and obj.id or False
+            val['parent_id'] = obj and obj.id or False
 
         return dirobj.create(cr, uid, val)
 
@@ -1615,13 +1634,13 @@ class node_res_obj(node_class):
         """
         is_allowed = self.check_perms(2)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied.")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        fil_obj=dirobj.pool.get('ir.attachment')
+        fil_obj = dirobj.pool.get('ir.attachment')
         val = {
             'name': path,
             'datas_fname': path,
@@ -1644,12 +1663,14 @@ class node_res_obj(node_class):
 
 node_res_dir.res_obj_class = node_res_obj
 
+
 class node_file(node_class):
     our_type = 'file'
+
     def __init__(self, path, parent, context, fil):
-        super(node_file,self).__init__(path, parent,context)
+        super(node_file, self).__init__(path, parent, context)
         self.file_id = fil.id
-        #todo: more info from ir_attachment
+        # todo: more info from ir_attachment
         if fil.file_type and '/' in fil.file_type:
             self.mimetype = str(fil.file_type)
         self.create_date = fil.create_date
@@ -1671,7 +1692,7 @@ class node_file(node_class):
         self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
         if not self.context == other.context:
             return False
@@ -1691,7 +1712,7 @@ class node_file(node_class):
         if not self.check_perms(8):
             raise IOError(errno.EPERM, "Permission denied.")
         document_obj = self.context._dirobj.pool.get('ir.attachment')
-        if self.type in ('collection','database'):
+        if self.type in ('collection', 'database'):
             return False
         document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)
         res = False
@@ -1721,7 +1742,7 @@ class node_file(node_class):
         else:
             dirpath.append(fbro.name)
 
-        if len(dirpath)>1:
+        if len(dirpath) > 1:
             self.path = dirpath
         else:
             self.path = dirpath[0]
@@ -1735,7 +1756,7 @@ class node_file(node_class):
             raise IOError(errno.EPERM, "Permission denied.")
 
         stobj = self.context._dirobj.pool.get('document.storage')
-        return stobj.get_data(cr, self.context.uid, None, self,self.context.context, fil_obj)
+        return stobj.get_data(cr, self.context.uid, None, self, self.context.context, fil_obj)
 
     def get_data_len(self, cr, fil_obj=None):
         bin_size = self.context.context.get('bin_size', False)
@@ -1786,18 +1807,18 @@ class node_file(node_class):
                 raise NotImplementedError('Cannot move files between dynamic folders.')
 
             if not ndir_obj:
-                ndir_obj = self.context._dirobj.browse(cr, self.context.uid, \
+                ndir_obj = self.context._dirobj.browse(cr, self.context.uid,
                         ndir_node.dir_id, context=self.context.context)
 
             assert ndir_obj.id == ndir_node.dir_id
 
-            r2 = { 'parent_id': ndir_obj.id }
+            r2 = {'parent_id': ndir_obj.id}
             ret.update(r2)
 
         if new_name and (new_name != dbro.name):
             if len(ret):
-                raise NotImplementedError("Cannot rename and move.") # TODO
-            r2 = { 'name': new_name, 'datas_fname': new_name }
+                raise NotImplementedError("Cannot rename and move.")  # TODO
+            r2 = {'name': new_name, 'datas_fname': new_name}
             ret.update(r2)
 
         del dbro
@@ -1807,15 +1828,17 @@ class node_file(node_class):
             if ret:
                 ctx = self.context.context.copy()
                 ctx['__from_node'] = True
-                doc_obj.write(cr, self.context.uid, [self.file_id,], ret, ctx )
+                doc_obj.write(cr, self.context.uid, [self.file_id, ], ret, ctx)
             ret = True
 
         return ret
 
+
 class node_content(node_class):
     our_type = 'content'
+
     def __init__(self, path, parent, context, cnt, dctx=None, act_id=None):
-        super(node_content,self).__init__(path, parent,context)
+        super(node_content, self).__init__(path, parent, context)
         self.cnt_id = cnt.id
         self.create_date = False
         self.write_date = False
@@ -1828,10 +1851,10 @@ class node_content(node_class):
 
         self.extension = cnt.extension
         self.report_id = cnt.report_id and cnt.report_id.id
-        #self.mimetype = cnt.extension.
+        # self.mimetype = cnt.extension.
         self.displayname = path
         if dctx:
-           self.dctx.update(dctx)
+            self.dctx.update(dctx)
         self.act_id = act_id
 
     def fill_fields(self, cr, dctx=None):
@@ -1883,7 +1906,7 @@ class node_content(node_class):
         # not advisable to do keep it in memory, until we have a cache
         # expiration logic.
         if not self.content_length:
-            self.get_data(cr,fil_obj)
+            self.get_data(cr, fil_obj)
         return self.content_length
 
     def set_data(self, cr, data, fil_obj=None):
@@ -1896,10 +1919,11 @@ class node_content(node_class):
         return cntobj.process_write(cr, self.context.uid, self, data, ctx)
 
     def _get_ttag(self, cr):
-        return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
+        return 'cnt-%d%s' % (self.cnt_id, (self.act_id and ('-' + str(self.act_id))) or '')
 
     def get_dav_resourcetype(self, cr):
         return ''
+
 
 class node_descriptor(object):
     """A file-like interface to the data contents of a node.
@@ -1958,12 +1982,14 @@ class node_descriptor(object):
     def next(self, str):
         raise NotImplementedError
 
+
 class nodefd_content(StringIO, node_descriptor):
     """ A descriptor to content nodes
     """
+
     def __init__(self, parent, cr, mode, ctx):
         node_descriptor.__init__(self, parent)
-        self._context=ctx
+        self._context = ctx
         self._size = 0L
 
         if mode in ('r', 'r+'):
@@ -2012,12 +2038,14 @@ class nodefd_content(StringIO, node_descriptor):
             cr.close()
         StringIO.close(self)
 
+
 class nodefd_static(StringIO, node_descriptor):
     """ A descriptor to nodes with static data.
     """
+
     def __init__(self, parent, cr, mode, ctx=None):
         node_descriptor.__init__(self, parent)
-        self._context=ctx
+        self._context = ctx
         self._size = 0L
 
         if mode in ('r', 'r+'):
@@ -2064,9 +2092,11 @@ class nodefd_static(StringIO, node_descriptor):
             cr.close()
         StringIO.close(self)
 
+
 class nodefd_db(StringIO, node_descriptor):
     """ A descriptor to db data
     """
+
     def __init__(self, parent, ira_browse, mode):
         node_descriptor.__init__(self, parent)
         self._size = 0L

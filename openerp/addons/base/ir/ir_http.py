@@ -21,6 +21,7 @@ _logger = logging.getLogger(__name__)
 
 UID_PLACEHOLDER = object()
 
+
 class ModelConverter(werkzeug.routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
@@ -36,6 +37,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
     def to_url(self, value):
         return value.id
 
+
 class ModelsConverter(werkzeug.routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
@@ -49,6 +51,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
 
     def to_url(self, value):
         return ",".join(i.id for i in value)
+
 
 class ir_http(osv.AbstractModel):
     _name = 'ir.http'
@@ -119,7 +122,6 @@ class ir_http(osv.AbstractModel):
         if processing:
             return processing
 
-
         # set and execute handler
         try:
             request.set_handler(func, arguments, auth_method)
@@ -154,6 +156,7 @@ class ir_http(osv.AbstractModel):
             self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
 
         return self._routing_map
+
 
 def convert_exception_to(to_type, with_message=False):
     """ Should only be called from an exception handler. Fetches the current

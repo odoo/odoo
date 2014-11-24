@@ -40,8 +40,8 @@ Allows to automatically select analytic accounts based on criterions:
     'images': ['images/analytic_defaults.jpeg'],
     'depends': ['sale_stock'],
     'data': [
-        'security/ir.model.access.csv', 
-        'security/account_analytic_default_security.xml', 
+        'security/ir.model.access.csv',
+        'security/account_analytic_default_security.xml',
         'account_analytic_default_view.xml'
     ],
     'demo': [],

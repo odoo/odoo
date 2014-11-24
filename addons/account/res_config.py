@@ -29,6 +29,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
+
 class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
@@ -51,8 +52,8 @@ class account_config_settings(osv.osv_memory):
         'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round per line'),
-            ('round_globally', 'Round globally'),
+                ('round_per_line', 'Round per line'),
+                ('round_globally', 'Round globally'),
             ], string='Tax calculation rounding method',
             help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
@@ -64,7 +65,7 @@ class account_config_settings(osv.osv_memory):
         'has_fiscal_year': fields.boolean('Company has a fiscal year'),
         'date_start': fields.date('Start date', required=True),
         'date_stop': fields.date('End date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', required=True),
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice sequence'),
@@ -98,7 +99,7 @@ class account_config_settings(osv.osv_memory):
             help='This allows you to create and manage your payment orders, with purposes to \n'
                  '* serve as base for an easy plug-in of various automated payment mechanisms, and \n'
                  '* provide a more efficient way to manage invoice payments.\n'
-                 '-This installs the module account_payment.' ),
+                 '-This installs the module account_payment.'),
         'module_account_voucher': fields.boolean('Manage customer payments',
             help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
                  '-This installs the module account_voucher.'),
@@ -123,13 +124,13 @@ class account_config_settings(osv.osv_memory):
         'group_analytic_accounting': fields.boolean('Analytic accounting',
             implied_group='analytic.group_analytic_accounting',
             help="Allows you to use the analytic accounting."),
-        'group_check_supplier_invoice_total': fields.boolean('Check the total of supplier invoices', 
+        'group_check_supplier_invoice_total': fields.boolean('Check the total of supplier invoices',
             implied_group="account.group_supplier_inv_check_total"),
         'income_currency_exchange_account_id': fields.related(
             'company_id', 'income_currency_exchange_account_id',
             type='many2one',
             relation='account.account',
-            string="Gain Exchange Rate Account", 
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
@@ -176,7 +177,7 @@ class account_config_settings(osv.osv_memory):
                     period = '3months'
                 else:
                     period = 'month'
-                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF), period)
+                return ((latest_stop + datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year + 1).strftime(DF), period)
             else:
                 return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'), 'month')
 
@@ -262,10 +263,10 @@ class account_config_settings(osv.osv_memory):
             if chart_template.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid,
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))],
+                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('sale', 'all'))],
                     order="sequence, id desc")
                 purchase_tax_ids = tax_templ_obj.search(cr, uid,
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))],
+                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('purchase', 'all'))],
                     order="sequence, id desc")
                 res['value']['sale_tax'] = sale_tax_ids and sale_tax_ids[0] or False
                 res['value']['purchase_tax'] = purchase_tax_ids and purchase_tax_ids[0] or False
@@ -281,7 +282,7 @@ class account_config_settings(osv.osv_memory):
         if not group_multi_currency:
             res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
         return res
-    
+
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
@@ -341,8 +342,8 @@ class account_config_settings(osv.osv_memory):
             if not fiscalyear_count:
                 name = code = config.date_start[:4]
                 if int(name) != int(config.date_stop[:4]):
-                    name = config.date_start[:4] +'-'+ config.date_stop[:4]
-                    code = config.date_start[2:4] +'-'+ config.date_stop[2:4]
+                    name = config.date_start[:4] + '-' + config.date_stop[:4]
+                    code = config.date_start[2:4] + '-' + config.date_stop[2:4]
                 vals = {
                     'name': name,
                     'code': code,
@@ -357,18 +358,18 @@ class account_config_settings(osv.osv_memory):
                     fiscalyear.create_period3(cr, uid, [fiscalyear_id])
 
     def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_account')
         return {'decimal_precision': dp.digits}
 
     def set_default_dp(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_account')
         dp.write({'digits': config.decimal_precision})
 
     def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):
         if analytic_accounting:
             return {'value': {
                 'module_account_accountant': True,
-                }}
+            }}
         return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

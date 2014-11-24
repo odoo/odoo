@@ -152,10 +152,10 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_one_full_name(self, elmt, level=6):
-        if level<=0:
+        if level <= 0:
             return '...'
         if elmt.parent_id:
-            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + MENU_ITEM_SEPARATOR
+            parent_path = self._get_one_full_name(elmt.parent_id, level - 1) + MENU_ITEM_SEPARATOR
         else:
             parent_path = ''
         return parent_path + elmt.name
@@ -188,19 +188,19 @@ class ir_ui_menu(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         ir_values_obj = self.pool.get('ir.values')
         res = super(ir_ui_menu, self).copy(cr, uid, id, default=default, context=context)
-        datas=self.read(cr,uid,[res],['name'])[0]
-        rex=re.compile('\([0-9]+\)')
-        concat=rex.findall(datas['name'])
+        datas = self.read(cr, uid, [res], ['name'])[0]
+        rex = re.compile('\([0-9]+\)')
+        concat = rex.findall(datas['name'])
         if concat:
-            next_num=int(concat[0])+1
-            datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
+            next_num = int(concat[0]) + 1
+            datas['name'] = rex.sub(('(%d)' % next_num), datas['name'])
         else:
             datas['name'] += '(1)'
-        self.write(cr,uid,[res],{'name':datas['name']})
+        self.write(cr, uid, [res], {'name': datas['name']})
         ids = ir_values_obj.search(cr, uid, [
             ('model', '=', 'ir.ui.menu'),
             ('res_id', '=', id),
-            ])
+        ])
         for iv in ir_values_obj.browse(cr, uid, ids):
             ir_values_obj.copy(cr, uid, iv.id, default={'res_id': res},
                                context=context)
@@ -242,7 +242,7 @@ class ir_ui_menu(osv.osv):
                 'key': 'action',
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
-                }, context=ctx)
+            }, context=ctx)
         elif values_ids:
             # value is False, remove existing binding
             ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
@@ -250,23 +250,23 @@ class ir_ui_menu(osv.osv):
     def _get_icon_pict(self, cr, uid, ids, name, args, context):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
+            res[m.id] = ('stock', (m.icon, 'ICON_SIZE_MENU'))
         return res
 
     def onchange_icon(self, cr, uid, ids, icon):
         if not icon:
             return {}
-        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
+        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon, 'ICON_SIZE_MENU'))}}
 
     def read_image(self, path):
         if not path:
             return False
         path_info = path.split(',')
-        icon_path = openerp.modules.get_module_resource(path_info[0],path_info[1])
+        icon_path = openerp.modules.get_module_resource(path_info[0], path_info[1])
         icon_image = False
         if icon_path:
             try:
-                icon_file = tools.file_open(icon_path,'rb')
+                icon_file = tools.file_open(icon_path, 'rb')
                 icon_image = base64.encodestring(icon_file.read())
             finally:
                 icon_file.close()
@@ -368,7 +368,6 @@ class ir_ui_menu(osv.osv):
             'all_menu_ids': menu_root_ids,
         }
 
-
     @api.cr_uid_context
     @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus(self, cr, uid, context=None):
@@ -427,7 +426,7 @@ class ir_ui_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
-            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
+            'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name,
             string='Full Path', type='char', size=128),

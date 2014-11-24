@@ -9,6 +9,8 @@ from openerp.tools.convert import _eval_xml
 
 Field = E.field
 Value = E.value
+
+
 class TestEvalXML(common.TransactionCase):
     def eval_xml(self, node, obj=None, idref=None):
         return _eval_xml(obj, node, pool=None, cr=self.cr, uid=self.uid,
@@ -79,5 +81,3 @@ class TestEvalXML(common.TransactionCase):
     @unittest2.skip("not tested")
     def test_html(self):
         pass
-
-

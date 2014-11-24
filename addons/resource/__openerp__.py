@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    'name' : 'Resource',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
-    'category' : 'Hidden/Dependency',
-    'website' : 'http://www.openerp.com',
+    'name': 'Resource',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Hidden/Dependency',
+    'website': 'http://www.openerp.com',
     'description': """
 Module for resource management.
 ===============================
@@ -48,7 +48,7 @@ associated to every resource. It also manages the leaves of every resource.
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
+    'images': ['images/resource_leaves_calendar.jpeg', 'images/resource_leaves_form.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

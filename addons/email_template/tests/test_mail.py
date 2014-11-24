@@ -51,7 +51,7 @@ class test_message_compose(TestMail):
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
-            ]
+        ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
         # Create template on mail.group, with attachments
@@ -66,7 +66,7 @@ class test_message_compose(TestMail):
             'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
             'email_to': 'b@b.b, c@c.c',
             'email_cc': 'd@d.d'
-            })
+        })
 
         # ----------------------------------------
         # CASE1: comment and save as template
@@ -161,7 +161,7 @@ class test_message_compose(TestMail):
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
+        mail_compose.send_mail(cr, uid, [compose_id], {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
         group_pigs.refresh()
         group_bird.refresh()
         message_pigs = group_pigs.message_ids[0]
@@ -195,7 +195,7 @@ class test_message_compose(TestMail):
             'email_to': '${object.email}, c@c',
             'partner_to': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d',
-            })
+        })
         # patner by email + partner by id (no double)
         send_to = [p_a_id, p_b_id, p_c_id, p_d_id]
         # Generate messsage with default email and partner on template

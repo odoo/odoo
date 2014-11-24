@@ -26,7 +26,7 @@ Panamenian accounting chart and tax localization.
 
 Plan contable panameño e impuestos de acuerdo a disposiciones vigentes
 
-Con la Colaboración de 
+Con la Colaboración de
 - AHMNET CORP http://www.ahmnet.com
 
     """,
@@ -34,19 +34,19 @@ Con la Colaboración de
     "website": "http://cubicERP.com",
     "category": "Localization/Account Charts",
     "depends": [
-			"account_chart",
-			],
-	"data":[
+        "account_chart",
+    ],
+    "data": [
         "account_tax_code.xml",
         "l10n_pa_chart.xml",
         "account_tax.xml",
         "l10n_pa_wizard.xml",
-			],
+    ],
     "demo_xml": [
-			],
+    ],
     "active": False,
     "installable": True,
-    "certificate" : "",
-    'images': ['images/config_chart_l10n_cl.jpeg','images/l10n_cl_chart.jpeg'],
+    "certificate": "",
+    'images': ['images/config_chart_l10n_cl.jpeg', 'images/l10n_cl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

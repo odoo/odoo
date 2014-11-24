@@ -136,7 +136,7 @@ class survey_mail_compose_message(osv.TransientModel):
 
         def create_response_and_send_mail(wizard, token, partner_id, email):
             """ Create one mail by recipients and replace __URL__ by link with identification token """
-            #set url
+            # set url
             url = wizard.survey_id.public_url
 
             url = urlparse.urlparse(url).path[1:]  # dirty hack to avoid incorrect urls

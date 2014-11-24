@@ -26,6 +26,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 
+
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if context is None:
@@ -36,13 +37,13 @@ class one2many_mod2(fields.one2many):
         ids2 = None
         if 'journal_id' in context:
             journal = obj.pool.get('account.journal').browse(cr, user, context['journal_id'], context=context)
-            pnum = int(name[7]) -1
+            pnum = int(name[7]) - 1
             plan = journal.plan_id
             if plan and len(plan.plan_ids) > pnum:
                 acc_id = plan.plan_ids[pnum].root_analytic_id.id
-                ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids),('analytic_account_id','child_of',[acc_id])], limit=self._limit)
+                ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id, 'in', ids), ('analytic_account_id', 'child_of', [acc_id])], limit=self._limit)
         if ids2 is None:
-            ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
+            ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
 
         for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             key = r[self._fields_id]
@@ -51,8 +52,9 @@ class one2many_mod2(fields.one2many):
                 # but we want to get the id of this field.
                 key = key[0]
 
-            res[key].append( r['id'] )
+            res[key].append(r['id'])
         return res
+
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -87,7 +89,7 @@ class account_analytic_plan_line(osv.osv):
     _description = "Analytic Plan Line"
     _order = "sequence, id"
     _columns = {
-        'plan_id': fields.many2one('account.analytic.plan','Analytic Plan',required=True),
+        'plan_id': fields.many2one('account.analytic.plan', 'Analytic Plan', required=True),
         'name': fields.char('Axis Name', required=True, select=True),
         'sequence': fields.integer('Sequence'),
         'root_analytic_id': fields.many2one('account.analytic.account', 'Root Account', help="Root account of this plan.", required=False),
@@ -106,7 +108,7 @@ class account_analytic_plan_instance(osv.osv):
     _columns = {
         'name': fields.char('Analytic Distribution'),
         'code': fields.char('Distribution Code', size=16),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal' ),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'account_ids': fields.one2many('account.analytic.plan.instance.line', 'plan_id', 'Account Id', copy=True),
         'account1_ids': one2many_mod2('account.analytic.plan.instance.line', 'plan_id', 'Account1 Id'),
         'account2_ids': one2many_mod2('account.analytic.plan.instance.line', 'plan_id', 'Account2 Id'),
@@ -135,7 +137,7 @@ class account_analytic_plan_instance(osv.osv):
         if context is None:
             context = {}
         journal_obj = self.pool.get('account.journal')
-        if context.has_key('journal_id') and context['journal_id']:
+        if 'journal_id' in context and context['journal_id']:
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
             if journal.analytic_journal_id:
                 return journal.analytic_journal_id.id
@@ -145,12 +147,13 @@ class account_analytic_plan_instance(osv.osv):
         'plan_id': False,
         'journal_id': _default_journal,
     }
+
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for inst in self.browse(cr, uid, ids, context=context):
             name = inst.name or '/'
             if name and inst.code:
-                name=name+' ('+inst.code+')'
+                name = name + ' (' + inst.code + ')'
             res.append((inst.id, name))
         return res
 
@@ -167,11 +170,11 @@ class account_analytic_plan_instance(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        wiz_id = self.pool.get('ir.actions.act_window').search(cr, uid, [("name","=","analytic.plan.create.model.action")], context=context)
-        res = super(account_analytic_plan_instance,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        wiz_id = self.pool.get('ir.actions.act_window').search(cr, uid, [("name", "=", "analytic.plan.create.model.action")], context=context)
+        res = super(account_analytic_plan_instance, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         journal_obj = self.pool.get('account.journal')
         analytic_plan_obj = self.pool.get('account.analytic.plan')
-        if (res['type']=='form'):
+        if (res['type'] == 'form'):
             plan_id = False
             if context.get('journal_id', False):
                 plan_id = journal_obj.browse(cr, uid, int(context['journal_id']), context=context).plan_id
@@ -179,23 +182,23 @@ class account_analytic_plan_instance(osv.osv):
                 plan_id = analytic_plan_obj.browse(cr, uid, int(context['plan_id']), context=context)
 
             if plan_id:
-                i=1
+                i = 1
                 res['arch'] = """<form string="%s">
     <field name="name"/>
     <field name="code"/>
     <field name="journal_id"/>
     <button name="%d" string="Save This Distribution as a Model" type="action" colspan="2"/>
-    """% (tools.to_xml(plan_id.name), wiz_id[0])
+    """ % (tools.to_xml(plan_id.name), wiz_id[0])
                 for line in plan_id.plan_ids:
-                    res['arch']+="""
+                    res['arch'] += """
                     <field name="account%d_ids" string="%s" nolabel="1" colspan="4">
                     <tree string="%s" editable="bottom">
                         <field name="rate"/>
                         <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]" groups="analytic.group_analytic_accounting"/>
                     </tree>
                 </field>
-                <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)
-                    i+=1
+                <newline/>""" % (i, tools.to_xml(line.name), tools.to_xml(line.name), line.root_analytic_id and line.root_analytic_id.id or 0)
+                    i += 1
                 res['arch'] += "</form>"
                 doc = etree.fromstring(res['arch'].encode('utf8'))
                 xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
@@ -213,22 +216,22 @@ class account_analytic_plan_instance(osv.osv):
         if context and context.get('journal_id'):
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
 
-            pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
+            pids = ana_plan_instance_obj.search(cr, uid, [('name', '=', vals['name']), ('code', '=', vals['code']), ('plan_id', '<>', False)], context=context)
             if pids:
                 raise osv.except_osv(_('Error!'), _('A model with this name and code already exists.'))
 
-            res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)], context=context)
+            res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id', '=', journal.plan_id.id)], context=context)
             for i in res:
                 total_per_plan = 0
                 item = acct_anal_plan_line_obj.browse(cr, uid, i, context=context)
-                temp_list = ['account1_ids','account2_ids','account3_ids','account4_ids','account5_ids','account6_ids']
+                temp_list = ['account1_ids', 'account2_ids', 'account3_ids', 'account4_ids', 'account5_ids', 'account6_ids']
                 for l in temp_list:
-                    if vals.has_key(l):
+                    if l in vals:
                         for tempo in vals[l]:
                             if acct_anal_acct.search(cr, uid, [('parent_id', 'child_of', [item.root_analytic_id.id]), ('id', '=', tempo[2]['analytic_account_id'])], context=context):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                    raise osv.except_osv(_('Error!'),_('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
+                    raise osv.except_osv(_('Error!'), _('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
@@ -237,21 +240,21 @@ class account_analytic_plan_instance(osv.osv):
             context = {}
         this = self.browse(cr, uid, ids[0], context=context)
         invoice_line_obj = self.pool.get('account.invoice.line')
-        if this.plan_id and not vals.has_key('plan_id'):
-            #this instance is a model, so we have to create a new plan instance instead of modifying it
-            #copy the existing model
+        if this.plan_id and 'plan_id' not in vals:
+            # this instance is a model, so we have to create a new plan instance instead of modifying it
+            # copy the existing model
             temp_id = self.copy(cr, uid, this.id, None, context=context)
-            #get the list of the invoice line that were linked to the model
-            lists = invoice_line_obj.search(cr, uid, [('analytics_id','=',this.id)], context=context)
-            #make them link to the copy
-            invoice_line_obj.write(cr, uid, lists, {'analytics_id':temp_id}, context=context)
+            # get the list of the invoice line that were linked to the model
+            lists = invoice_line_obj.search(cr, uid, [('analytics_id', '=', this.id)], context=context)
+            # make them link to the copy
+            invoice_line_obj.write(cr, uid, lists, {'analytics_id': temp_id}, context=context)
 
-            #and finally modify the old model to be not a model anymore
+            # and finally modify the old model to be not a model anymore
             vals['plan_id'] = False
-            if not vals.has_key('name'):
-                vals['name'] = this.name and (str(this.name)+'*') or "*"
-            if not vals.has_key('code'):
-                vals['code'] = this.code and (str(this.code)+'*') or "*"
+            if 'name' not in vals:
+                vals['name'] = this.name and (str(this.name) + '*') or "*"
+            if 'code' not in vals:
+                vals['code'] = this.code and (str(this.code) + '*') or "*"
         return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -261,12 +264,13 @@ class account_analytic_plan_instance_line(osv.osv):
     _rec_name = "analytic_account_id"
     _columns = {
         'plan_id': fields.many2one('account.analytic.plan.instance', 'Plan Id'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type','<>','view')]),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type', '<>', 'view')]),
         'rate': fields.float('Rate (%)', required=True),
     }
     _defaults = {
         'rate': 100.0
     }
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
@@ -299,7 +303,7 @@ class account_invoice_line(osv.osv):
 
     def move_line_get_item(self, cr, uid, line, context=None):
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
-        res ['analytics_id'] = line.analytics_id and line.analytics_id.id or False
+        res['analytics_id'] = line.analytics_id and line.analytics_id.id or False
         return res
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
@@ -315,12 +319,12 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
     _name = "account.move.line"
     _columns = {
-        'analytics_id':fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
+        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 
     def _default_get_move_form_hook(self, cursor, user, data):
         data = super(account_move_line, self)._default_get_move_form_hook(cursor, user, data)
-        if data.has_key('analytics_id'):
+        if 'analytics_id' in data:
             del(data['analytics_id'])
         return data
 
@@ -330,31 +334,31 @@ class account_move_line(osv.osv):
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for line in self.browse(cr, uid, ids, context=context):
-           if line.analytics_id:
-               if not line.journal_id.analytic_journal_id:
-                   raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
+            if line.analytics_id:
+                if not line.journal_id.analytic_journal_id:
+                    raise osv.except_osv(_('No Analytic Journal!'), _("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
 
-               toremove = analytic_line_obj.search(cr, uid, [('move_id','=',line.id)], context=context)
-               if toremove:
+                toremove = analytic_line_obj.search(cr, uid, [('move_id', '=', line.id)], context=context)
+                if toremove:
                     analytic_line_obj.unlink(cr, uid, toremove, context=context)
-               for line2 in line.analytics_id.account_ids:
-                   val = (line.credit or  0.0) - (line.debit or 0.0)
-                   amt=val * (line2.rate/100)
-                   al_vals={
-                       'name': line.name,
-                       'date': line.date,
-                       'account_id': line2.analytic_account_id.id,
-                       'unit_amount': line.quantity,
-                       'product_id': line.product_id and line.product_id.id or False,
-                       'product_uom_id': line.product_uom_id and line.product_uom_id.id or False,
-                       'amount': amt,
-                       'general_account_id': line.account_id.id,
-                       'move_id': line.id,
-                       'journal_id': line.journal_id.analytic_journal_id.id,
-                       'ref': line.ref,
-                       'percentage': line2.rate
-                   }
-                   analytic_line_obj.create(cr, uid, al_vals, context=context)
+                for line2 in line.analytics_id.account_ids:
+                    val = (line.credit or 0.0) - (line.debit or 0.0)
+                    amt = val * (line2.rate / 100)
+                    al_vals = {
+                        'name': line.name,
+                        'date': line.date,
+                        'account_id': line2.analytic_account_id.id,
+                        'unit_amount': line.quantity,
+                        'product_id': line.product_id and line.product_id.id or False,
+                        'product_uom_id': line.product_uom_id and line.product_uom_id.id or False,
+                        'amount': amt,
+                        'general_account_id': line.account_id.id,
+                        'move_id': line.id,
+                        'journal_id': line.journal_id.analytic_journal_id.id,
+                        'ref': line.ref,
+                        'percentage': line2.rate
+                    }
+                    analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -369,7 +373,7 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
-        res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
+        res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context=context)
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
@@ -400,8 +404,8 @@ class account_invoice(osv.osv):
                 qty = il['quantity']
                 il['analytic_lines'] = []
                 for line2 in obj_move_line.account_ids:
-                    amt = amount_calc * (line2.rate/100)
-                    qtty = qty* (line2.rate/100)
+                    amt = amount_calc * (line2.rate / 100)
+                    qtty = qty * (line2.rate / 100)
                     al_vals = {
                         'name': il['name'],
                         'date': inv['date_invoice'],
@@ -424,6 +428,7 @@ class account_analytic_plan(osv.osv):
         'default_instance_id': fields.many2one('account.analytic.plan.instance', 'Default Entries'),
     }
 
+
 class analytic_default(osv.osv):
     _inherit = "account.analytic.default"
     _columns = {
@@ -436,7 +441,7 @@ class sale_order_line(osv.osv):
 
     # Method overridden to set the analytic account by default on criterion match
     def invoice_line_create(self, cr, uid, ids, context=None):
-        create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context=context)
+        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, context=context)
         inv_line_obj = self.pool.get('account.invoice.line')
         acct_anal_def_obj = self.pool.get('account.analytic.default')
         if ids:
@@ -449,28 +454,26 @@ class sale_order_line(osv.osv):
         return create_ids
 
 
-
 class account_bank_statement(osv.osv):
     _inherit = "account.bank.statement"
     _name = "account.bank.statement"
 
     def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
-        result = super(account_bank_statement,self)._prepare_bank_move_line(cr, uid, st_line, 
+        result = super(account_bank_statement, self)._prepare_bank_move_line(cr, uid, st_line,
             move_id, amount, company_currency_id, context=context)
         result['analytics_id'] = st_line.analytics_id.id
         return result
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
-        super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
+        super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal!'), _("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
         return True
-
 
 
 class account_bank_statement_line(osv.osv):

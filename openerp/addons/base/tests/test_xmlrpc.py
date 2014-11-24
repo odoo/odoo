@@ -3,6 +3,7 @@ import openerp.tests.common
 
 DB = openerp.tests.common.DB
 
+
 class test_xmlrpc(openerp.tests.common.HttpCase):
     at_install = False
     post_install = True

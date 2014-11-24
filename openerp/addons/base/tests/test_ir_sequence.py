@@ -17,8 +17,10 @@ from openerp.tests import common
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
+
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
+
 
 def cursor():
     return openerp.modules.registry.RegistryManager.get(DB).cursor()
@@ -32,6 +34,7 @@ def drop_sequence(code):
         s.unlink(cr, ADMIN_USER_ID, ids)
     cr.commit()
     cr.close()
+
 
 class test_ir_sequence_standard(unittest2.TestCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
@@ -81,6 +84,7 @@ class test_ir_sequence_standard(unittest2.TestCase):
     def tearDownClass(cls):
         drop_sequence('test_sequence_type')
 
+
 class test_ir_sequence_no_gap(unittest2.TestCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
@@ -111,7 +115,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
         """
         cr0 = cursor()
         cr1 = cursor()
-        cr1._default_log_exceptions = False # Prevent logging a traceback
+        cr1._default_log_exceptions = False  # Prevent logging a traceback
         with self.assertRaises(psycopg2.OperationalError) as e:
             n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
             assert n0
@@ -123,6 +127,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_2')
+
 
 class test_ir_sequence_change_implementation(unittest2.TestCase):
     """ Create sequence objects and change their ``implementation`` field. """
@@ -170,6 +175,7 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
         drop_sequence('test_sequence_type_3')
         drop_sequence('test_sequence_type_4')
 
+
 class test_ir_sequence_generate(unittest2.TestCase):
     """ Create sequence objects and generate some values. """
 
@@ -187,7 +193,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
-        assert all(str(x) == f() for x in xrange(1,10))
+        assert all(str(x) == f() for x in xrange(1, 10))
         cr.commit()
         cr.close()
 
@@ -205,7 +211,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
-        assert all(str(x) == f() for x in xrange(1,10))
+        assert all(str(x) == f() for x in xrange(1, 10))
         cr.commit()
         cr.close()
 

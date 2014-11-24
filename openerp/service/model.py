@@ -19,8 +19,9 @@ _logger = logging.getLogger(__name__)
 PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
+
 def dispatch(method, params):
-    (db, uid, passwd ) = params[0:3]
+    (db, uid, passwd) = params[0:3]
 
     # set uid tracker - cleaned up at the WSGI
     # dispatching phase in openerp.service.wsgi_server.application
@@ -31,12 +32,13 @@ def dispatch(method, params):
         raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
     if method not in ['execute', 'execute_kw', 'exec_workflow']:
         raise NameError("Method not available %s" % method)
-    security.check(db,uid,passwd)
+    security.check(db, uid, passwd)
     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
     fn = globals()[method]
     res = fn(db, uid, *params)
     openerp.modules.registry.RegistryManager.signal_caches_change(db)
     return res
+
 
 def check(f):
     @wraps(f)
@@ -86,10 +88,11 @@ def check(f):
                 except Exception:
                     pass
                 finally:
-                    if cr: cr.close()
+                    if cr:
+                        cr.close()
 
-                return False # so that the original SQL error will
-                             # be returned, it is the best we have.
+                return False  # so that the original SQL error will
+                # be returned, it is the best we have.
 
             try:
                 cr = openerp.sql_db.db_connect(dbname).cursor()
@@ -100,7 +103,8 @@ def check(f):
                 else:
                     return src
             finally:
-                if cr: cr.close()
+                if cr:
+                    cr.close()
 
         def _(src):
             return tr(src, 'code')
@@ -131,15 +135,15 @@ def check(f):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)
                     try:
-                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
+                        errortxt = inst.pgerror.replace('«', '"').replace('»', '"')
                         if '"public".' in errortxt:
                             context = errortxt.split('"public".')[1]
                             model_name = table = context.split('"')[1]
                         else:
                             last_quote_end = errortxt.rfind('"')
                             last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                        model = table.replace("_",".")
+                            model_name = table = errortxt[last_quote_begin + 1:last_quote_end].strip()
+                        model = table.replace("_", ".")
                         if model in registry:
                             model_obj = registry[model]
                             model_name = model_obj._description or model_obj._name
@@ -152,14 +156,17 @@ def check(f):
 
     return wrapper
 
+
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.registry(cr.dbname).get(obj)
     if object is None:
         raise except_orm('Object Error', "Object %s doesn't exist" % obj)
     return getattr(object, method)(cr, uid, *args, **kw)
 
+
 def execute_kw(db, uid, obj, method, args, kw=None):
     return execute(db, uid, obj, method, *args, **kw or {})
+
 
 @check
 def execute(db, uid, obj, method, *args, **kw):
@@ -171,6 +178,7 @@ def execute(db, uid, obj, method, *args, **kw):
         if res is None:
             _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
         return res
+
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):
     res_id = args[0]

@@ -43,7 +43,7 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
-            'ids': context.get('active_ids',[]),
+            'ids': context.get('active_ids', []),
             'model': 'crossovered.budget',
             'form': data
         }

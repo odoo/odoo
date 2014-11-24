@@ -24,7 +24,6 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 
-
 class stock_move_scrap(osv.osv_memory):
     _name = "stock.move.scrap"
     _description = "Scrap Products"
@@ -56,7 +55,7 @@ class stock_move_scrap(osv.osv_memory):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
 
         location_obj = self.pool.get('stock.location')
-        scrap_location_id = location_obj.search(cr, uid, [('scrap_location','=',True)])
+        scrap_location_id = location_obj.search(cr, uid, [('scrap_location', '=', True)])
 
         if 'product_id' in fields:
             res.update({'product_id': move.product_id.id})
@@ -87,7 +86,6 @@ class stock_move_scrap(osv.osv_memory):
                              data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

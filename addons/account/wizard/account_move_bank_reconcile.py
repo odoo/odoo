@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_move_bank_reconcile(osv.osv_memory):
     """
         Bank Reconciliation
@@ -46,7 +47,7 @@ class account_move_bank_reconcile(osv.osv_memory):
                         from account_journal where id=%s', (data['journal_id'],))
         account_id = cr.fetchone()[0]
         if not account_id:
-             raise osv.except_osv(_('Error!'), _('You have to define \
+            raise osv.except_osv(_('Error!'), _('You have to define \
 the bank account\nin the journal definition for reconciliation.'))
         return {
             'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),
@@ -57,7 +58,7 @@ the bank account\nin the journal definition for reconciliation.'))
             'view_id': False,
             'context': "{'journal_id': %d}" % (data['journal_id'],),
             'type': 'ir.actions.act_window'
-             }
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

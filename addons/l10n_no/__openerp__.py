@@ -1,6 +1,6 @@
 ﻿# -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,22 +15,21 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Norway - Chart of Accounts",
-    "version" : "1.0",
-    "author" : "Rolv Råen",
-    "category" : "Localization/Account Charts",
+    "name": "Norway - Chart of Accounts",
+    "version": "1.0",
+    "author": "Rolv Råen",
+    "category": "Localization/Account Charts",
     "description": "This is the module to manage the accounting chart for Norway in Open ERP.",
-    "depends" : ["account", "base_iban", "base_vat", "account_chart"],
-    "demo_xml" : [],
-    "data" : ['account_tax_code.xml',"account_chart.xml",
-                    'account_tax.xml','l10n_chart_no_wizard.xml'],
+    "depends": ["account", "base_iban", "base_vat", "account_chart"],
+    "demo_xml": [],
+    "data": ['account_tax_code.xml', "account_chart.xml",
+              'account_tax.xml', 'l10n_chart_no_wizard.xml'],
     "active": False,
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -23,10 +23,10 @@ class PosController(http.Controller):
             return login_redirect()
 
         PosSession = request.registry['pos.session']
-        pos_session_ids = PosSession.search(cr, uid, [('state','=','opened'),('user_id','=',session.uid)], context=context)
-        PosSession.login(cr,uid,pos_session_ids,context=context)
-        
-        modules =  simplejson.dumps(module_boot(request.db))
+        pos_session_ids = PosSession.search(cr, uid, [('state', '=', 'opened'), ('user_id', '=', session.uid)], context=context)
+        PosSession.login(cr, uid, pos_session_ids, context=context)
+
+        modules = simplejson.dumps(module_boot(request.db))
         init =  """
                  var wc = new s.web.WebClient();
                  wc.show_application = function(){
@@ -36,7 +36,7 @@ class PosController(http.Controller):
                  wc.start();
                  """
 
-        html = request.registry.get('ir.ui.view').render(cr, session.uid,'point_of_sale.index',{
+        html = request.registry.get('ir.ui.view').render(cr, session.uid, 'point_of_sale.index', {
             'modules': modules,
             'init': init,
         })

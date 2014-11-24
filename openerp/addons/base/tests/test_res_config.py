@@ -3,6 +3,7 @@ import unittest2
 import openerp
 import openerp.tests.common as common
 
+
 class test_res_config(common.TransactionCase):
 
     def setUp(self):

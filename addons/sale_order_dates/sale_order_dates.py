@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
@@ -36,7 +37,7 @@ class sale_order_dates(osv.osv):
             date_planned -= timedelta(days=order.company_id.security_lead)
             return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(sale_order_dates, self)._get_date_planned(
-                cr, uid, order, line, start_date, context=context)
+            cr, uid, order, line, start_date, context=context)
 
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
@@ -77,7 +78,7 @@ class sale_order_dates(osv.osv):
                 'message': _("The date requested by the customer is "
                              "sooner than the commitment date. You may be "
                              "unable to honor the customer's request.")
-                }
+            }
             }
         return {}
 

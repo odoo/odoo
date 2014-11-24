@@ -1,4 +1,4 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -44,14 +44,14 @@ class bom_structure(report_sxw.rml_parse):
                 res['code'] = l.bom_id.code
                 result.append(res)
                 if l.child_line_ids:
-                    if level<6:
+                    if level < 6:
                         level += 1
-                    _get_rec(l.child_line_ids,level)
-                    if level>0 and level<6:
+                    _get_rec(l.child_line_ids, level)
+                    if level > 0 and level < 6:
                         level -= 1
             return result
 
-        children = _get_rec(object,level)
+        children = _get_rec(object, level)
 
         return children
 

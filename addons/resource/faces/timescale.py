@@ -3,7 +3,7 @@
 #   mreithinger@web.de
 #
 #   This file is part of faces.
-#                                                                         
+#
 #   faces is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
@@ -31,58 +31,52 @@ class TimeScale(object):
         self.data_calendar = calendar
         self._create_chart_calendar()
         self.now = self.to_num(self.data_calendar.now)
-                
 
     def to_datetime(self, xval):
         return xval.to_datetime()
 
-
     def to_num(self, date):
         return self.chart_calendar.WorkingDate(date)
-
 
     def is_free_slot(self, value):
         dt1 = self.chart_calendar.to_starttime(value)
         dt2 = self.data_calendar.to_starttime\
-              (self.data_calendar.from_datetime(dt1))
+            (self.data_calendar.from_datetime(dt1))
         return dt1 != dt2
-
 
     def is_free_day(self, value):
         dt1 = self.chart_calendar.to_starttime(value)
         dt2 = self.data_calendar.to_starttime\
-              (self.data_calendar.from_datetime(dt1))
+            (self.data_calendar.from_datetime(dt1))
         return dt1.date() != dt2.date()
-
 
     def _create_chart_calendar(self):
         dcal = self.data_calendar
         ccal = self.chart_calendar = pcal.Calendar()
         ccal.minimum_time_unit = 1
 
-        #pad worktime slots of calendar (all days should be equally long)
+        # pad worktime slots of calendar (all days should be equally long)
         slot_sum = lambda slots: sum(map(lambda slot: slot[1] - slot[0], slots))
         day_sum = lambda day: slot_sum(dcal.get_working_times(day))
-        
+
         max_work_time = max(map(day_sum, range(7)))
 
-        #working_time should have 2/3
+        # working_time should have 2/3
         sum_time = 3 * max_work_time / 2
 
-        #now create timeslots for ccal
+        # now create timeslots for ccal
         def create_time_slots(day):
             src_slots = dcal.get_working_times(day)
-            slots = [0, src_slots, 24*60]
+            slots = [0, src_slots, 24 * 60]
             slots = tuple(cbook.flatten(slots))
             slots = zip(slots[:-1], slots[1:])
 
-            #balance non working slots
+            # balance non working slots
             work_time = slot_sum(src_slots)
             non_work_time = sum_time - work_time
 
             non_slots = filter(lambda s: s not in src_slots, slots)
-            non_slots = map(lambda s: (s[1] - s[0], s), non_slots)
-            non_slots.sort()
+            non_slots = sorted(map(lambda s: (s[1] - s[0], s), non_slots))
 
             slots = []
             i = 0
