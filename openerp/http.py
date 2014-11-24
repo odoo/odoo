@@ -507,7 +507,8 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, openerp.exceptions.Warning):
+                _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
                     'message': "OpenERP Server Error",
