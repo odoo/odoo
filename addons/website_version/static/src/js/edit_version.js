@@ -10,10 +10,10 @@
     website.EditorBar.include({
         start: function() {
             var self = this;
-            this.$el.on('click', '#save_as_new_version', function() {
-                var m_names = new Array("jan", "feb", "mar",
+            var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
+            this.$el.on('click', '#save_as_new_version', function() {
                 var d = new Date();
                 var curr_date = d.getDate();
                 var curr_month = d.getMonth();
@@ -29,16 +29,19 @@
                     openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': 0 }).then(function (result) {
                         $('html').data('version_id', result);
                         
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:_t("You are actually working on "+name+ " version.")}));
-                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                        self.wizard.on('click','.o_confirm', function(){
+                        var wizard = $(openerp.qweb.render("website_version.message",{message:_.str.sprintf("You are actually working on %s version.", name)}));
+                        wizard.appendTo($('body')).modal({"keyboard" :true});
+                        wizard.on('click','.o_confirm', function(){
                             self.save();
                             location.reload();
                         });
+                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
                     }).fail(function(){
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
-                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                        var wizard = $(openerp.qweb.render("website_version.message",{message:_t("This name already exists.")}));
+                        wizard.appendTo($('body')).modal({"keyboard" :true});
+                        wizard.on('hidden.bs.modal', function () {$(this).remove();});
                     });
+
                 });
             
             });
@@ -50,11 +53,12 @@
                 }
                 else
                 {
-                    self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:_t("Are you sure you want to publish your modifications.")}));
-                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                    self.wizard.on('click','.o_confirm', function(){
+                    var wizard = $(openerp.qweb.render("website_version.delete_message",{message:_t("Are you sure you want to publish your modifications.")}));
+                    wizard.appendTo($('body')).modal({"keyboard" :true});
+                    wizard.on('click','.o_confirm', function(){
                         self.save();
                     });
+                    wizard.on('hidden.bs.modal', function () {$(this).remove();});
                 }
 
             });
@@ -75,17 +79,6 @@
         }
     });
 
-    website.EditorBarContent.include({
-        start: function() {
-            
-            return this._super();
-        },
-
-        ab_testing: function() {
-            window.location.href = '/web#return_label=Website&action=website_version.action_experiment';
-        }
-    });
-
     website.EditorBarCustomize.include({
         start: function() {
             return this._super();
@@ -98,7 +91,7 @@
             openerp.jsonRpc('/website_version/customize_template_get', 'call', { 'key': this.view_name }).then(
                 function(result) {
                     _.each(result, function (item) {
-                        if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (!window.location.search.match(/[&?]debug(&|$)/)) return;
                         if (item.header) {
                             self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
                         } else {
