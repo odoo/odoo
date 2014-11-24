@@ -213,7 +213,7 @@
                                         <field name="payment_option" widget="radio" required="1" nolabel="1"/>
                                         <field name="writeoff_acc_id"
                                                attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-                                               domain="[('type','=','other')]"/>
+                                               domain="[('user_type,type','=','other')]"/>
                                         <field name="comment"
                                                attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                         <field name="analytic_id"
@@ -331,7 +331,7 @@
                                 <field name="payment_option" required="1" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
                                 <field name="writeoff_acc_id"
                                         attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff'), ('writeoff_amount','!=',0)]}"
-                                        domain="[('type','=','other')]"/>
+                                        domain="[('user_type.type','=','other')]"/>
                                 <field name="comment"
                                         attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)]}"/>
                                 <field name="analytic_id"
@@ -494,7 +494,7 @@
                                     <field name="payment_option" required="1" widget="radio" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff')]}"
-                                           domain="[('type','=','other')]"/>
+                                           domain="[('user_type.type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)]}"/>
                                     <field name="analytic_id"
