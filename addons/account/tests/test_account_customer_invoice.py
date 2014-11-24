@@ -20,13 +20,12 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         # Test with that user which have rights to make Invoicing and payment and who is accountant.
         # Create a customer invoice
         self.account_invice_obj = self.env['account.invoice']
-        self.account_object = self.env['account.account']
         self.payment_term = self.env.ref('account.account_payment_term_advance')
         self.journalrec = self.env.ref('account.sales_journal')
         self.partner3 = self.env.ref('base.res_partner_3')
         account_user_type = self.env.ref('account.data_account_type_cash')
 
-        self.account_rec1_id = self.account_object.sudo(self.account_user.id).create(dict(
+        self.account_rec1_id = self.account_model.sudo(self.account_user.id).create(dict(
             code="cust_acc",
             name="customer account",
             user_type=account_user_type.id,

@@ -14,6 +14,10 @@ class AccountTestUsers(TransactionCase):
         res_users_account_user = self.env.ref('account.group_account_user')
         res_users_account_manager = self.env.ref('account.group_account_manager')
         partner_manager = self.env.ref('base.group_partner_manager')
+        self.tax_model = self.env['account.tax']
+        self.account_model = self.env['account.account']
+        self.account_type_model = self.env['account.account.type']
+
         self.account_user = self.res_user_model.create(dict(
             name="Accountant",
             company_id=self.main_company.id,
