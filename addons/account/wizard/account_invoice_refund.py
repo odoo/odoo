@@ -127,7 +127,7 @@ class account_invoice_refund(models.TransientModel):
                                     'partner_insite', 'partner_contact',
                                     'partner_ref', 'payment_term', 'account_id',
                                     'currency_id', 'invoice_line', 'tax_line',
-                                    'journal_id', 'date'], context=context)
+                                    'journal_id', 'date'])
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line'])

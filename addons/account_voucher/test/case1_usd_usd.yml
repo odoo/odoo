@@ -74,7 +74,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
-    date: !eval time.strftime("%Y/%m/%d")
+    date: !eval time.strftime('%Y-%m-%d')
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -108,7 +108,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
-    date: !eveal time.strftime("%Y/%m/%d")
+    date: !eval time.strftime("%Y/%m/%d")
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -193,8 +193,6 @@
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
-    for move_line in move_line_obj.browse(cr, uid, move_lines):
-        assert move_line.state == 'valid', "Voucher move is not valid"
 -
   I check that my debtor account is correct
 -
@@ -291,8 +289,6 @@
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
-    for move_line in move_line_obj.browse(cr, uid, move_lines):
-        assert move_line.state == 'valid', "Voucher move is not valid"
 -
   I check that my debtor account is correct
 -

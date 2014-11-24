@@ -63,6 +63,7 @@
         'data/account_data.xml',
         'data/data_account_type.xml',
         'data/configurable_account_chart.xml',
+        'data/invoice_action_data.xml',
         'views/account_invoice_workflow.xml',
         'views/partner_view.xml',
         'views/product_view.xml',

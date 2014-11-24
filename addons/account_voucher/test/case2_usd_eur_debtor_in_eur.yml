@@ -192,8 +192,6 @@
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
-    for move_line in move_line_obj.browse(cr, uid, move_lines):
-        assert move_line.state == 'valid', "Voucher move is not valid"
 -
   I check the residual amount of Invoice1, should be 55.56 in residual currency and 20 in amount_residual
 -
