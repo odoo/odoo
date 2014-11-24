@@ -159,13 +159,13 @@ class ir_sequence(models.Model):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
         seq = super(ir_sequence, self).create(values)
-        if values['implementation'] == 'standard':
-            _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, values['number_increment'], values['number_next'])
+        if values.get('implementation', 'standard') == 'standard':
+            _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, values.get('number_increment', 1), values.get('number_next', 1))
         return seq
 
     @api.multi
     def unlink(self):
-        _drop_sequence(self.env.cr, ["ir_sequence_%03d" % x.id for x in self.ids])
+        _drop_sequence(self.env.cr, ["ir_sequence_%03d" % x.id for x in self])
         return super(ir_sequence, self).unlink()
 
     @api.multi
