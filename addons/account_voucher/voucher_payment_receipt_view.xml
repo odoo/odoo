@@ -79,8 +79,8 @@
                                 <tree string="Open Supplier Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
-                                    <field name="account_id" domain="[('type','=','payable')]"/>
+                                        domain="[('account_id.user_type.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
+                                    <field name="account_id" domain="[('user_type.type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -93,8 +93,8 @@
                                 <tree string="Open Customer Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
-                                    <field name="account_id" domain="[('type','=','payable')]"/>
+                                        domain="[('account_id.user_type.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
+                                    <field name="account_id" domain="[('user_type.type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -163,9 +163,9 @@
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"/>
-                                    <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" groups="base.group_no_one" domain="[('user_type.type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -179,9 +179,9 @@
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        domain="[('account_id.user_type.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"/>
-                                    <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" groups="base.group_no_one" domain="[('user_type.type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
