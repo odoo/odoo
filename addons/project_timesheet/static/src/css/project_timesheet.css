@@ -29,9 +29,13 @@ html, body {
 .o_active {
     display: block !important;
 }
+.odoo_project_timesheet .pt_activity_list_screen {
+    height: 100%;
+}
 .odoo_project_timesheet .pt_activity_header {
     background-color: #f2f2f2;
-    height: 70px;
+    //min-height: 70px;
+    min-height: 10%;
     position: relative;
     top: 0px;
 }
@@ -43,6 +47,9 @@ html, body {
     font-size: 35px;
     color: #a24689;
 }
+.odoo_project_timesheet .pt_activity_header .pt_timer_button button {
+    margin: 10px;
+}
 .odoo_project_timesheet .pt_timer_button button {
     background-color: #a24689 !important;
     border-color: #a24689 !important;
@@ -52,8 +59,14 @@ html, body {
     border-radius: 6px !important;
 }
 .odoo_project_timesheet .pt_activity_col {
-    height: 75%;
+    height: 84%;
     padding: 0px;
+    overflow-y: scroll;
+}
+.odoo_project_timesheet .pt_quick_select {
+    height: 40%;
+    overflow-y: scroll;
+    bottom: 0px;
 }
 .odoo_project_timesheet .pt_stat_body {
     height: 85%;
@@ -106,11 +119,15 @@ html, body {
 }
 .odoo_project_timesheet .pt_footer {
     background-color: #a24689;
-    height: 15px;
-    position: relative;
+    //min-height: 35px;
+    min-height: 6%;
+    //position: relative;
     bottom: 0px;
     color: #FFFFFF;
     vertical-align: bottom;
+    width: 100%;
+    //position: absolute;
+    bottom: 0px;
 }
 .odoo_project_timesheet .pt_pointer {
     cursor: pointer;

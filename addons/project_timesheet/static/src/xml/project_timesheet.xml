@@ -9,6 +9,32 @@
     </t>
 
     <t t-name="ActivityScreen">
+        <div class="pt_activity_list_screen">
+            <div class="pt_activity_header">
+                <div class="row">
+                    <div class="pt_duration col-md-8 col-xs-8">
+                        <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
+                    </div>
+                    <div class="pt_timer_button col-md-4 col-xs-4">
+                        <button class="btn btn-primary pull-right pt_timer_start">START</button>
+                        <button class="btn btn-primary pull-right pt_timer_stop o_hidden">STOP</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="project_m2o"></div>
+                    <div class="task_m2o"></div>
+                </div>
+            </div>
+            <div class="pt_activity_col">
+                <div class="pt_activity_body">
+                    
+                </div>
+            </div>
+            <div class="pt_footer">
+                <t t-call="Footer"></t>
+            </div>
+        </div>
+        <!--
         <table class="table table-responsive activity_screen" style="height: 100%;">
             <tbody>
             <tr>
@@ -42,6 +68,7 @@
             </tr>
             </tbody>
         </table>
+        -->
     </t>
 
     <t t-name="Footer">
@@ -89,39 +116,43 @@
     <t t-name="AddActivityScreen">
         <div class="content_area" style="height: 100%;">
             <div class="container-fluid" style="height: 100%;">
-              <div class="row well" style="min-height: 100%;">
-                  <h4 class="pt_add_activity_title"><strong>Add an Activity</strong></h4>
-                  <h4 class="pt_edit_activity_title o_hidden"><strong>Modify Activity</strong></h4>
-                <div>
-                    <div class="project_m2o"></div>
-                </div>
-                <div>
-                    <div class="task_m2o"></div>
-                </div>
-                <div class="pt_duration">
-                    <div>Duration</div>
-                    <div class="input-group col-md-12">
-                      <input id="hours" class="form-control pt_input_hour"/>
-                      <span class="input-group-addon">h</span>
-                      <input id="minutes" class="form-control pt_input_minute"/>
-                      <span class="input-group-addon">min</span>
+              <div class="row well" style="height: 100%;">
+                  <div class="pt_add_activity_form">
+                    <h4 class="pt_add_activity_title"><strong>Add an Activity</strong></h4>
+                    <h4 class="pt_edit_activity_title o_hidden"><strong>Modify Activity</strong></h4>
+                    <div>
+                        <div class="project_m2o"></div>
                     </div>
-                </div>
-                <div class="pt_description">
-                  <div>Notes</div>
-                  <textarea id="name" class="form-control pt_input_description"></textarea>
-                </div>
-                <div class="pt_mt_5">
-                  <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
-                  <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Save Changes</button>
-                  or
-                  <a class="pt_btn_cancel">Cancel</a>
-                  <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
-                </div>
-                <hr/>
-                <div class="pt_activity_body">
-                    <h4 class="o_hidden">Quick Select</h4>
-                </div>
+                    <div>
+                        <div class="task_m2o"></div>
+                    </div>
+                    <div class="pt_duration">
+                        <div>Duration</div>
+                        <div class="input-group col-md-12">
+                          <input id="hours" class="form-control pt_input_hour"/>
+                          <span class="input-group-addon">h</span>
+                          <input id="minutes" class="form-control pt_input_minute"/>
+                          <span class="input-group-addon">min</span>
+                        </div>
+                    </div>
+                    <div class="pt_description">
+                      <div>Notes</div>
+                      <textarea id="name" class="form-control pt_input_description"></textarea>
+                    </div>
+                    <div class="pt_mt_5">
+                      <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
+                      <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Save Changes</button>
+                      or
+                      <a class="pt_btn_cancel">Cancel</a>
+                      <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
+                    </div>
+                    <hr/>
+                  </div>
+                  <div class="pt_quick_select">
+                      <div class="pt_activity_body">
+                        <h4 class="o_hidden">Quick Select</h4>
+                      </div>
+                  </div>
               </div>
             </div>
         </div>
