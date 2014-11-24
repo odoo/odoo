@@ -66,10 +66,18 @@ class mail_compose_message(osv.TransientModel):
             Indeed, basic mail.compose.message wizard duplicates attachments in mass
             mailing mode. But in 'single post' mode, attachments of an email template
             also have to be duplicated to avoid changing their ownership. """
+        email_context = dict(context or {})
         for wizard in self.browse(cr, uid, ids, context=context):
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
             template = self.pool.get('email.template').browse(cr, uid, wizard.template_id, context=context)
+            # TODO v8, remove me
+            # template specific outgoing mail server and email from is lost in super send_mail
+            # store them in the context to avoid falling back to default values
+            if template.mail_server_id:
+                email_context['mail_server_id'] = template.mail_server_id.id
+            if template.email_from:
+                email_context['email_from'] = template.email_from
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in template.attachment_ids:
@@ -77,7 +85,7 @@ class mail_compose_message(osv.TransientModel):
                 else:
                     new_attachment_ids.append(attachment.id)
                 self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
-        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=email_context)
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values

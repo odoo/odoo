@@ -156,7 +156,10 @@ class mail_notification(osv.Model):
             body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
 
         # email_from: partner-user alias or partner email or mail.message email_from
-        if msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].alias_domain and msg.author_id.user_ids[0].alias_name:
+        if 'email_from' in context:
+            # temporary workaround for mail from send mail wizard
+            email_from = context['email_from']
+        elif msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].alias_domain and msg.author_id.user_ids[0].alias_name:
             email_from = formataddr((msg.author_id.name, '%s@%s' % (msg.author_id.user_ids[0].alias_name, msg.author_id.user_ids[0].alias_domain)))
         elif msg.author_id:
             email_from = formataddr((msg.author_id.name, msg.author_id.email))
@@ -174,6 +177,9 @@ class mail_notification(osv.Model):
             'email_from': email_from,
             'references': references,
         }
+        if 'mail_server_id' in context:
+            # temporary workaround for mail from send mail wizard
+            mail_values['mail_server_id'] = context['mail_server_id']
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
             return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
