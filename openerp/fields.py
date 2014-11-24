@@ -791,7 +791,7 @@ class Field(object):
             if env.in_onchange:
                 for invf in self.inverse_fields:
                     invf._update(value, record)
-                record._set_dirty_by(self.name)
+                record._set_dirty(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -1577,9 +1577,8 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
-            if not record.id or record._dirty:
-                dirty_fields = record.env.dirty[record]
-                values = dict((k, v) for k, v in record._cache.iteritems() if k in fnames and k in dirty_fields)
+            if not record.id or record._is_dirty():
+                values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
                 values = record._convert_to_write(values)
                 if not record.id:
                     result.append((0, 0, values))

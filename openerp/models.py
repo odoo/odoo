@@ -5313,16 +5313,21 @@ class BaseModel(object):
         return record
 
     #
-    # Dirty flag, to mark records modified (in draft mode)
+    # Dirty flags, to mark record fields modified (in draft mode)
     #
 
-    @property
-    def _dirty(self):
+    def _is_dirty(self):
         """ Return whether any record in `self` is dirty. """
         dirty = self.env.dirty
-        return any(bool(dirty.get(record)) for record in self)
+        return any(record in dirty for record in self)
 
-    def _set_dirty_by(self, field_name):
+    def _get_dirty(self):
+        """ Return the list of field names for which `self` is dirty. """
+        dirty = self.env.dirty
+        return list(dirty.get(self, ()))
+
+    def _set_dirty(self, field_name):
+        """ Mark the records in `self` as dirty for the given `field_name`. """
         dirty = self.env.dirty
         for record in self:
             dirty[record].add(field_name)
@@ -5727,7 +5732,7 @@ class BaseModel(object):
                     field = self._fields[name]
                     newval = record[name]
                     if field.type in ('one2many', 'many2many'):
-                        if newval != oldval or newval._dirty:
+                        if newval != oldval or newval._is_dirty():
                             # put new value in result
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
