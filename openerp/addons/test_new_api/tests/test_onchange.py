@@ -140,14 +140,10 @@ class TestOnChange(common.TransactionCase):
         self.assertItemsEqual(result['value']['messages'], [
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': BODY,
-                'author': USER.id,
-                'size': len(BODY),
             }),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': BODY,
-                'author': USER.id,
+                # Note: size is computed because it was not provided beforehand
                 'size': len(BODY),
             }),
         ])
