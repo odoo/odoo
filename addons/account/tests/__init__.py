@@ -11,7 +11,6 @@ from . import test_account_validate_account_move
 fast_suite = [
     account_test_users,
     test_account_customer_invoice,
-    test_edi_invoice,
     test_account_supplier_invoice,
     test_chart_of_account,
     test_account_validate_account_move,
