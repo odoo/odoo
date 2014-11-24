@@ -23,7 +23,7 @@
                 element:   'a[data-action=new_product]',
                 placement: 'left',
                 title:     _t("Create a new product"),
-                content:   _t("Select 'New Product' to create it and manage its properties to boost your sales."),
+                content:   _t("Select <em>New Product</em> to create it and manage its properties to boost your sales."),
                 popover:   { fixed: true },
             },
             {
@@ -31,14 +31,14 @@
                 sampleText: 'New Product',
                 placement: 'right',
                 title:     _t("Choose name"),
-                content:   _t("Enter a name for your new product then click 'Continue'."),
+                content:   _t("Enter a name for your new product"),
             },
             {
                 waitNot:   '.modal-dialog #editor_new_product input[type=text]:not([value!=""])',
                 element:   '.modal-dialog button.btn-primary',
                 placement: 'right',
                 title:     _t("Create Product"),
-                content:   _t("Click <em>Continue</em> to create the product."),
+                content:   _t("Click on <em>Continue</em> to create the product."),
             },
             {
                 waitFor:   'body:has(button[data-action=save]:visible):has(.js_sale)',
@@ -55,24 +55,41 @@
             },
             {
                 waitNot:   '.product_price .oe_currency_value:visible:containsExact(1.00)',
-                waitFor:   '#snippet_structure',
                 element:   '#wrap img.product_detail_img',
                 placement: 'top',
                 title:     _t("Update image"),
                 content:   _t("Click here to set an image describing your product."),
             },
             {
-                element:   'img[alt=ipad]',
+                element:   '.modal .existing-attachment-cell:nth(2) img',
                 placement: 'top',
-                title:     _t("Select an Image"),
-                content:   _t("Let's select an ipad image."),
+                title:     _t("Choose an image"),
+                content:   _t("Choose an image from the library."),
+                popover:   { fixed: true },
+                onload: function () {
+                    $('form[action="/website/attach"] .well > *').hide();
+                }
             },
             {
-                waitFor:   '.media_selected img[alt=ipad]',
-                element:   '.modal-content button.save',
+                element:   '.modal .btn.save',
+                waitFor:   '.existing-attachment-cell.media_selected',
+                title:       _t("Save"),
+                content:     _t("Click on <em>Save</em> to add the image to the product description"),
+            },
+            {
+                waitNot:   '.modal-content:visible',
+                element:   '#wrap img.product_detail_img',
                 placement: 'top',
-                title:     _t("Save this Image"),
-                content:   _t("Click on save to add the image to the product decsription."),
+                title:     _t("Update image"),
+                content:   _t("You can also upload an image of your own."),
+            },
+            {
+                waitFor:   '.modal-content:visible',
+                element:   '.modal-content .btn-default[type=submit]',
+                placement: 'top',
+                title:     _t("Product Images"),
+                content:   _t("Add an image from an URL link."),
+                popover:   { fixed: true },
             },
             {
                 waitNot:   '.modal-content:visible',
@@ -93,7 +110,7 @@
                 element:   'button[data-action=save]',
                 placement: 'right',
                 title:     _t("Save your modifications"),
-                content:   _t("Once you click on save, your product is updated."),
+                content:   _t("Once you click on <em>Save</em>, your product is updated."),
                 popover:   { fixed: true },
             },
             {
@@ -101,7 +118,7 @@
                 element:   '.js_publish_management button.js_publish_btn.btn-danger',
                 placement: 'top',
                 title:     _t("Publish your product"),
-                content:   _t("Click to publish your product so your customers can see it."),
+                content:   _t("Click on <em>Publish</em> your product so your customers can see it."),
             },
             {
                 waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
