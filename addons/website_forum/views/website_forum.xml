@@ -24,13 +24,11 @@
                 CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                 ,['Outdent','Indent','Link','Unlink','Image'],] ;
         </script>
-
     </xpath>
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.footer_default"
-    name="Footer Questions Link">
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Questions Link">
     <xpath expr="//ul[@id='products']" position="inside">
         <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;A</a></li>
         <li><a href="/forum">Forums</a></li>
@@ -445,8 +443,8 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button t-attf-class="btn btn-primary #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
-                t-att-data-karma="forum.karma_ask">Post Your Question</button>
+            <button t-attf-class="btn btn-primary social_share_call #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+                t-att-data-karma="forum.karma_ask" t-attf-data-title="test" t-attf-data-content="#{post_name}">Post Your Question</button>
         </form>
     </t>
 </template>
@@ -628,10 +626,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="social_share fa fa-share-square-o" data-social="['facebook', 'twitter', 'abc']" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{question.content}"> Share</a>
-                            </li>
-                            <li>
-                                <a href="#" class="social_share fa fa-share-square-o"> Share</a>
+                                <a href="javascript:void(0)" class="social_share fa fa-share-square-o" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{question.content}"> Share</a>
                             </li>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
@@ -745,7 +740,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="social_share fa fa-share-square-o" data-social="['facebook', 'twitter', 'linkedin']"> Share</a>
+                        <a href="javascript:void(0)" class="social_share fa fa-share-square-o" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{answer.content}"> Share</a>
+
                     </li>
                     <li t-if="question.post_type != 'question' and not answer.parent_id or answer.parent_id and not answer.parent_id.parent_id">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
@@ -1046,7 +1042,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label mb16" for="description">Biography</label>
                     <div class="col-md-8 mb16">
-                        <textarea name="description" id="description" style="min-height: 120px" required="True" 
+                        <textarea name="description" id="description" style="min-height: 120px" required="True"
                             class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                     </div>
                 </div>

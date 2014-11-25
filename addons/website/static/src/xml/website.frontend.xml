@@ -1,10 +1,29 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.social_share">
         <div class="row clearfix">
-            <div class="col-xs-12">
-                <div t-attf-id="#{id}" class="css_editable_mode_hidden">
+            <div class="col-xs-12 css_editable_mode_hidden">
+                <t t-foreach="medias" t-as="media">
+                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
+                        <span class="fa fa-square fa-stack-2x"></span>
+                        <span t-attf-class="fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.social_share_dialog">
+        <div class="modal fade">
+            <div class="modal-dialog modal-content">
+                <div class="modal-header alert alert-info'">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    <h4 class="modal-title">Share With Social Sites!</h4>
+                </div>
+                <div class="modal-body">
                     <t t-foreach="medias" t-as="media">
-                        <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share" t-attf-data-media="#{media}" >
+                        <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
                             <span class="fa fa-square fa-stack-2x"></span>
                             <span t-attf-class="fa fa-#{media} fa-stack-1x fa-inverse"></span>
                         </a>
