@@ -22,13 +22,16 @@
                     <h4 class="modal-title">Share On Social Sites!</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Want to broadcast your question? Share it on social medias!</p>
-                    <t t-foreach="medias" t-as="media">
-                        <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
-                            <span class="fa fa-square fa-stack-2x"></span>
-                            <span t-attf-class="fa fa-#{media} fa-stack-1x fa-inverse"></span>
-                        </a>
-                    </t>
+                    <p>Your questions will be answered faster if you share it on social media!</p>
+                    <p>Share Now:</p>
+                    <div style='text-align:center'>
+                        <t t-foreach="medias" t-as="media">
+                            <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
+                                <span class="fa fa-square fa-stack-2x"></span>
+                                <span t-attf-class="fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                            </a>
+                        </t>
+                    </div>
                 </div>
             </div>
         </div>

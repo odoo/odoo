@@ -561,6 +561,13 @@
     </div>
 </template>
 
+<!-- Test DBO -->
+<!-- <template id="test_dbo" inherit_id='post_description_full'>
+    <xpath expr='\\head' position="inside">
+        <meta og:title='test_xpath'/>
+    </xpath>
+</template> -->
+
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
@@ -577,10 +584,10 @@
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
             </div>
-            <div t-attf-class="col-md-10 #{not question.active and 'alert alert-danger' or ''}">
+            <div  itemscope="itemscope" itemtype="http://schema.org/Question" t-attf-class="col-md-10 #{not question.active and 'alert alert-danger' or ''}">
                 <h1 class="mt0">
                     <t t-if="question.post_type == 'link'">
-                        <a t-att-href="question.content_link" t-raw="question.name"/>
+                        <a itemprop="name" t-att-href="question.content_link" t-raw="question.name"/>
                     </t>
                     <t t-if="question.post_type in ('question', 'discussion')">
                         <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
@@ -608,7 +615,7 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="question.post_type != 'link'"><t t-raw="question.content"/></div>
+                <div t-if="question.post_type != 'link'" itemprop="text"><t t-raw="question.content"/></div>
                 <div class="mt16 clearfix">
                     <div class="pull-right">
                         <div class="text-right">
@@ -672,7 +679,7 @@
                     </div>
                     <div>
                         <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{question.create_uid.id}/avatar"/>
-                        <div>
+                        <div itempscope="itemscope" itemtype="http://schema.org/Person" itemprop="author">
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                                 t-field="question.create_uid"
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'

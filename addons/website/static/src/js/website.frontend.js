@@ -14,6 +14,7 @@
         */
         template: 'website.social_share',
         init: function(template, element, social_list, configure){
+
             //Initialization
             this._super.apply(this, arguments);
             this.element = element;
@@ -21,7 +22,6 @@
             this.target = 'social_share';
             if (template) {
                 this.template='website.'+template;
-                console.log('template detected: '+this.template);
             }
             this.renderElement();
 
@@ -86,16 +86,14 @@
         renderSocial: function(social){
             var url = this.element.data('url') || window.location.href.split(/[?#]/)[0]; // get current url without query string if not pass
             var title = document.title.split(" | ")[0];
-            var content = this.element.data('description');
-            if (content) {
-                content=content.replace(/<(?:.|\n)*?>/gm, ''); //removing html tags from description
-            } else {
-                content = 'Check this out!';
+            var content = $($(this.element).parents().find('.row').find('p')[0]).html();
+            if (!content) {
+                content = 'You should check this out!';
             }
             var hashtag = document.title.split(" | ")[1].replace(' ','').toLowerCase();
             var social_network = {
                 'facebook':'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
-                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title + ' - ' + url + ' #' + encodeURIComponent(hashtag)),
+                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title + ' - ' + url + ' #' + hashtag),
                 'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(content),
                 'google-plus': 'https://plus.google.com/share?url=' + encodeURIComponent(url)
             };
@@ -116,7 +114,6 @@
 
     //displaying banner after new question/answer
     $(document.body).on('click', '.social_share_call', function() {
-        var self = $(this);
         var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
         var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
 
@@ -125,7 +122,7 @@
         // var description =  self.data('description');
         var dataObject = {};
         dataObject_func('social_list', social_list);
-        dataObject_func('url', self.data('url'));
+        dataObject_func('url', $(this).data('url'));
         dataObject_func('title', $('input[name=post_name]').val());
         function dataObject_func(propertyName, propertyValue)
         {
@@ -138,7 +135,6 @@
         if(localStorage.getItem('social_share')){
             // Retrieve the object from storage
             var dataObject = JSON.parse(localStorage.getItem('social_share'));
-            console.log('1');
             new website.social_share(
                 'social_share_dialog',
                 $('a[data-oe-expression="question.name"]'),
@@ -146,9 +142,6 @@
                 {}
             );
             localStorage.removeItem('social_share');
-            console.log('2');
-            console.log('retrievedObject: ');
-            console.log('3');
         }
     });
 })();
