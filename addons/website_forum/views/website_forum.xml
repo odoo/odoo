@@ -625,8 +625,8 @@
                                     Comment
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0)" class="social_share fa fa-share-square-o" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{question.content}"> Share</a>
+                            <li t-if="question.post_type == 'question'">
+                                <a href="javascript:void(0)" class="social_share fa fa-share-square-o"> Share</a>
                             </li>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
@@ -739,8 +739,8 @@
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:void(0)" class="social_share fa fa-share-square-o" t-attf-data-share_content="#{question.name}" t-attf-data-description="#{answer.content}"> Share</a>
+                    <li t-if="question.post_type == 'question'">
+                        <a href="javascript:void(0)" class="social_share fa fa-share-square-o"> Share</a>
 
                     </li>
                     <li t-if="question.post_type != 'question' and not answer.parent_id or answer.parent_id and not answer.parent_id.parent_id">

@@ -1,6 +1,6 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.social_share">
-        <div class="row clearfix">
+        <div class="row clearfix" style='font-size:16px'>
             <div class="col-xs-12 css_editable_mode_hidden">
                 <t t-foreach="medias" t-as="media">
                     <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
@@ -13,15 +13,16 @@
     </t>
 
     <t t-name="website.social_share_dialog">
-        <div class="modal fade">
+        <div class="modal fade" id="social_share_modal">
             <div class="modal-dialog modal-content">
                 <div class="modal-header alert alert-info'">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">x</span>
                     </button>
-                    <h4 class="modal-title">Share With Social Sites!</h4>
+                    <h4 class="modal-title">Share On Social Sites!</h4>
                 </div>
                 <div class="modal-body">
+                    <p>Want to broadcast your question? Share it on social medias!</p>
                     <t t-foreach="medias" t-as="media">
                         <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
                             <span class="fa fa-square fa-stack-2x"></span>

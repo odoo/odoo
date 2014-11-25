@@ -3,6 +3,7 @@
 
     var _t = openerp._t;
     var website = openerp.website;
+    var qweb = openerp.qweb;
     website.add_template_file('/website/static/src/xml/website.frontend.xml');
 
     website.social_share = openerp.Widget.extend({
@@ -18,28 +19,44 @@
             this.element = element;
             this.social_list = social_list;
             this.target = 'social_share';
+            if (template) {
+                this.template='website.'+template;
+                console.log('template detected: '+this.template);
+            }
             this.renderElement();
-            //this.bind_events();
+
         },
-        // set_value: function(type, description, title, url, image){
-        //     console.log("call set_value");
-        // },
         bind_events: function() {
             $('.fa-facebook').on('click', $.proxy(this.facebook, this));
             $('.fa-twitter').on('click', $.proxy(this.twitter, this));
             $('.fa-linkedin').on('click', $.proxy(this.linkedin, this));
             $('.fa-google-plus').on('click', $.proxy(this.google_plus, this));
         },
-        renderElement: function() {
-            this.$el.append(openerp.qweb.render(this.template, {medias: this.social_list, id: this.target}));
-            this.element.popover({
-                'content': this.$el.html(),
-                'placement': 'bottom',
-                'container': this.element,
-                'html': true,
-                'trigger': 'hover',
-                'animation': false,
-            }).popover("show")
+        renderElement: function(configure) {
+            if (this.template == 'website.social_share_dialog'){
+                console.log('dialog mode detected');
+                $('body').append(qweb.render(this.template, {medias: this.social_list}));
+                $('#social_share_modal').modal('show');
+//                 this.$el.append(qweb.render('website.social_share', {medias: this.social_list, id: this.target}));
+//                 this.element.popover({
+//                     'content': this.$el.html(),
+//                     'placement': 'right',
+//                     'container': this.element,
+//                     'html': true,
+//                     'trigger': 'hover',
+//                     'animation': false,
+//                 }).popover("show");
+
+            } else {
+                this.$el.append(qweb.render(this.template, {medias: this.social_list, id: this.target}));
+                this.element.popover({
+                    'content': this.$el.html(),
+                    'placement': 'bottom',
+                    'container': this.element,
+                    'html': true,
+                    'trigger': 'hover',
+                    'animation': false,
+                }).popover("show")
                 .on("mouseleave", function () {
                     var _this = this;
                     setTimeout(function () {
@@ -48,9 +65,10 @@
                         }
                     }, 100);
                 });
-                $('.popover').on("mouseleave", function () {
-                    $(this).hide();
-                });
+            $('.popover').on("mouseleave", function () {
+                $(this).hide();
+            });
+            }
             this.bind_events();
         },
         google_plus: function(){
@@ -67,9 +85,13 @@
         },
         renderSocial: function(social){
             var url = this.element.data('url') || window.location.href.split(/[?#]/)[0]; // get current url without query string if not pass
-            var title = this.element.data('share_content');
+            var title = document.title.split(" | ")[0];
             var content = this.element.data('description');
-            content=content.replace(/<(?:.|\n)*?>/gm, ''); //removing html tags from description
+            if (content) {
+                content=content.replace(/<(?:.|\n)*?>/gm, ''); //removing html tags from description
+            } else {
+                content = 'Check this out!';
+            }
             var hashtag = document.title.split(" | ")[1].replace(' ','').toLowerCase();
             var social_network = {
                 'facebook':'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
@@ -90,5 +112,43 @@
             var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
             new website.social_share('social_share',$(this), social_list, {});
         });
+    });
+
+    //displaying banner after new question/answer
+    $(document.body).on('click', '.social_share_call', function() {
+        var self = $(this);
+        var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
+        var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
+
+        // var url = self.data('url') || window.location.href.split(/[?#]/)[0];
+        // var text_to_share = self.data('share_content');
+        // var description =  self.data('description');
+        var dataObject = {};
+        dataObject_func('social_list', social_list);
+        dataObject_func('url', self.data('url'));
+        dataObject_func('title', $('input[name=post_name]').val());
+        function dataObject_func(propertyName, propertyValue)
+        {
+            if(propertyValue) dataObject[propertyName] = propertyValue;
+        };
+        // Put the object into storage
+        localStorage.setItem('social_share', JSON.stringify(dataObject));
+    });
+    website.ready().done(function() {
+        if(localStorage.getItem('social_share')){
+            // Retrieve the object from storage
+            var dataObject = JSON.parse(localStorage.getItem('social_share'));
+            console.log('1');
+            new website.social_share(
+                'social_share_dialog',
+                $('a[data-oe-expression="question.name"]'),
+                dataObject['social_list'],
+                {}
+            );
+            localStorage.removeItem('social_share');
+            console.log('2');
+            console.log('retrievedObject: ');
+            console.log('3');
+        }
     });
 })();
