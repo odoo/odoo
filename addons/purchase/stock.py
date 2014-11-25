@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -179,7 +180,7 @@ class stock_warehouse(osv.osv):
             buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
             buy_route_id = buy_route_id and buy_route_id[0] or False
         if not buy_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Buy route.'))
+            raise Warning(_('Error!'), _('Can\'t find any generic Buy route.'))
 
         return {
             'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),

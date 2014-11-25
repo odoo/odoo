@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 class Bank(osv.osv):
     _description='Bank'
@@ -185,7 +186,7 @@ class res_partner_bank(osv.osv):
                         data['bank_name'] = _('BANK')
                     name = bank_code_format[data['state']] % data
                 except Exception:
-                    raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
+                    raise Warning(_("Formating Error"), _("Invalid Bank Account Type Name format."))
             res.append((data.get('id', False), name))
         return res
 

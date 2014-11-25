@@ -3,6 +3,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import Warning
 
 # defined for access rules
 class sale_order(osv.Model):
@@ -36,7 +37,7 @@ class sale_order(osv.Model):
         if event_ticket_id:
             ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)
             if product_id != ticket.product_id.id:
-                raise osv.except_osv(_('Error!'),_("The ticket doesn't match with this product."))
+                raise Warning(_('Error!'),_("The ticket doesn't match with this product."))
 
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id

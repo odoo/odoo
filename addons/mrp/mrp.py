@@ -27,6 +27,7 @@ from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
+from openerp.exceptions import Warning
 
 
 class mrp_property_group(osv.osv):
@@ -286,7 +287,7 @@ class mrp_bom(osv.osv):
                     continue
 
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise Warning(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
             bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
@@ -312,7 +313,7 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise Warning(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
         return result, result2
 
@@ -336,7 +337,7 @@ class mrp_bom(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         if self.pool['mrp.production'].search(cr, uid, [('bom_id', 'in', ids), ('state', 'not in', ['done', 'cancel'])], context=context):
-            raise osv.except_osv(_('Warning!'), _('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+            raise Warning(_('Warning!'), _('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
         return super(mrp_bom, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_tmpl_id(self, cr, uid, ids, product_tmpl_id, product_qty=0, context=None):
@@ -618,7 +619,7 @@ class mrp_production(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
+                raise Warning(_('Invalid Action!'), _('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context=None):
@@ -705,7 +706,7 @@ class mrp_production(osv.osv):
                     self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
     
             if not bom_id:
-                raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
+                raise Warning(_('Error!'), _("Cannot find a bill of material for this product."))
 
             # get components and workcenter_lines from BoM structure
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)

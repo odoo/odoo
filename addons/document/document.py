@@ -335,17 +335,17 @@ class document_directory(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise Warning(_('ValidateError'), _('Directory name must be unique!'))
         return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise Warning(_('ValidateError'), _('Directory name must be unique!'))
         newname = vals.get('name',False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
-                    raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+                    raise Warning(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 class document_directory_dctx(osv.osv):

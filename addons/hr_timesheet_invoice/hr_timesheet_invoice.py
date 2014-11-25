@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
@@ -141,7 +142,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise osv.except_osv(_('Error!'),
+                    raise Warning(_('Error!'),
                         _('You cannot modify an invoiced analytic line!'))
         return True
 
@@ -180,7 +181,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account Incomplete!'),
+                    raise Warning(_('Analytic Account Incomplete!'),
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False
@@ -254,7 +255,7 @@ class account_analytic_line(osv.osv):
 
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
                         if not general_account:
-                            raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                            raise Warning(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                         taxes = product.taxes_id or general_account.tax_ids
                         tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                         curr_line.update({

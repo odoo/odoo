@@ -29,6 +29,7 @@ from openerp.tools import ustr
 from openerp.tools.translate import _
 from openerp import exceptions
 from lxml import etree
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -433,7 +434,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     _name = 'res.config.settings'
 
     def copy(self, cr, uid, id, values, context=None):
-        raise osv.except_osv(_("Cannot duplicate configuration!"), "")
+        raise Warning(_("Cannot duplicate configuration!"), "")
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):

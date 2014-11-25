@@ -6,6 +6,7 @@ import os
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class account_bank_statement_import(osv.TransientModel):
     def process_ofx(self, cr, uid, data_file, journal_id=False, context=None):
         """ Import a file in the .OFX format"""
         if ofxparser is None:
-            raise osv.except_osv(_("Error"), _("OFX parser unavailable because the `ofxparse` Python library cannot be found."
+            raise Warning(_("Error"), _("OFX parser unavailable because the `ofxparse` Python library cannot be found."
                     "It can be downloaded and installed from `https://pypi.python.org/pypi/ofxparse`."))
         try:
             tempfile = open("temp.ofx", "w+")
@@ -35,7 +36,7 @@ class account_bank_statement_import(osv.TransientModel):
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
             ofx = ofxparser.parse(file(path))
         except:
-            raise osv.except_osv(_('Import Error!'), _('Please check OFX file format is proper or not.'))
+            raise Warning(_('Import Error!'), _('Please check OFX file format is proper or not.'))
         line_ids = []
         total_amt = 0.00
         try:
@@ -52,7 +53,7 @@ class account_bank_statement_import(osv.TransientModel):
                 total_amt += float(transaction.amount)
                 line_ids.append((0, 0, vals_line))
         except Exception, e:
-            raise osv.except_osv(_('Error!'), _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
+            raise Warning(_('Error!'), _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
         st_start_date = ofx.account.statement.start_date or False
         st_end_date = ofx.account.statement.end_date or False
         period_obj = self.pool.get('account.period')

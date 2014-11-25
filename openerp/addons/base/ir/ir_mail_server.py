@@ -36,6 +36,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
+from openerp.exceptions import Warning
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -205,14 +206,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise Warning(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
+        raise Warning(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -229,7 +230,7 @@ class ir_mail_server(osv.osv):
         """
         if encryption == 'ssl':
             if not 'SMTP_SSL' in smtplib.__all__:
-                raise osv.except_osv(
+                raise Warning(
                              _("SMTP-over-SSL mode unavailable"),
                              _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
                                "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
@@ -444,7 +445,7 @@ class ir_mail_server(osv.osv):
                 smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
 
         if not smtp_server:
-            raise osv.except_osv(
+            raise Warning(
                          _("Missing SMTP Server"),
                          _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 

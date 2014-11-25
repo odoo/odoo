@@ -25,6 +25,7 @@ import time
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import tools
+from openerp.exceptions import Warning
 
 import logging
 
@@ -52,7 +53,7 @@ class account_bank_statement_import(osv.TransientModel):
                 statements.append(statement)
                 statement['version'] = line[127]
                 if statement['version'] not in ['1', '2']:
-                    raise osv.except_osv(_('Error') + ' R001', _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
+                    raise Warning(_('Error') + ' R001', _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
                 statement['lines'] = []
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
@@ -66,14 +67,14 @@ class account_bank_statement_import(osv.TransientModel):
                         statement['acc_number'] = rmspaces(line[5:17])
                         statement['currency'] = rmspaces(line[18:21])
                     elif line[1] == '1':  # foreign bank account BBAN structure
-                        raise osv.except_osv(_('Error') + ' R1001', _('Foreign bank accounts with BBAN structure are not supported '))
+                        raise Warning(_('Error') + ' R1001', _('Foreign bank accounts with BBAN structure are not supported '))
                     elif line[1] == '2':    # Belgian bank account IBAN structure
                         statement['acc_number'] = rmspaces(line[5:21])
                         statement['currency'] = rmspaces(line[39:42])
                     elif line[1] == '3':    # foreign bank account IBAN structure
-                        raise osv.except_osv(_('Error') + ' R1002', _('Foreign bank accounts with IBAN structure are not supported '))
+                        raise Warning(_('Error') + ' R1002', _('Foreign bank accounts with IBAN structure are not supported '))
                     else:  # Something else, not supported
-                        raise osv.except_osv(_('Error') + ' R1003', _('Unsupported bank account structure '))
+                        raise Warning(_('Error') + ' R1003', _('Unsupported bank account structure '))
                 statement['journal_id'] = False
                 statement['bank_account'] = False
                 # Belgian Account Numbers are composed of 12 digits.
@@ -99,7 +100,7 @@ class account_bank_statement_import(osv.TransientModel):
                             statement['bank_account'] = bank_acc
                             break
                 if not statement['bank_account']:
-                    raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
+                    raise Warning(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
                 if line[42] == '1':  # 1 = Debit, the starting balance is negative
@@ -145,13 +146,13 @@ class account_bank_statement_import(osv.TransientModel):
                     statement['lines'].append(statementLine)
                 elif line[1] == '2':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
+                        raise Warning(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:63])
                     statement['lines'][-1]['payment_reference'] = rmspaces(line[63:98])
                     statement['lines'][-1]['counterparty_bic'] = rmspaces(line[98:109])
                 elif line[1] == '3':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
+                        raise Warning(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     if statement['version'] == '1':
                         statement['lines'][-1]['counterpartyNumber'] = rmspaces(line[10:22])
                         statement['lines'][-1]['counterpartyName'] = rmspaces(line[47:73])
@@ -168,7 +169,7 @@ class account_bank_statement_import(osv.TransientModel):
                         statement['lines'][-1]['communication'] += rmspaces(line[82:125])
                 else:
                     # movement data record 2.x (x != 1,2,3)
-                    raise osv.except_osv(_('Error') + 'R2006', _('\nMovement data records of type 2.%s are not supported ') % line[1])
+                    raise Warning(_('Error') + 'R2006', _('\nMovement data records of type 2.%s are not supported ') % line[1])
             elif line[0] == '3':
                 if line[1] == '1':
                     infoLine = {}
@@ -184,11 +185,11 @@ class account_bank_statement_import(osv.TransientModel):
                     statement['lines'].append(infoLine)
                 elif line[1] == '2':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
+                        raise Warning(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
                 elif line[1] == '3':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
+                        raise Warning(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
             elif line[0] == '4':
                     comm_line = {}
@@ -210,7 +211,7 @@ class account_bank_statement_import(osv.TransientModel):
                 else:
                     period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', statement['journal_id'].company_id.id), ('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
                 if not period_id and len(period_id) == 0:
-                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s for the company %s.") % (statement['balance_end_realDate'], statement['journal_id'].company_id.name))
+                    raise Warning(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s for the company %s.") % (statement['balance_end_realDate'], statement['journal_id'].company_id.name))
                 statement['period_id'] = period_id[0]
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000
@@ -231,11 +232,11 @@ class account_bank_statement_import(osv.TransientModel):
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
                     balance_start_check = statement['journal_id'].default_debit_account_id.balance
                 else:
-                    raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
+                    raise Warning(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
             if balance_start_check != statement['balance_start']:
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
             if not(statement.get('period_id')):
-                raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
+                raise Warning(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
             statement_data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],

@@ -23,6 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 from openerp.osv import osv, fields, expression
+from openerp.exceptions import Warning
 
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
@@ -83,7 +84,7 @@ class MailMessage(osv.Model):
             if group_user_id in [group.id for group in group_ids]:
                 cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (ids,))
                 if cr.fetchall():
-                    raise osv.except_osv(
+                    raise Warning(
                         _('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
         return super(MailMessage, self).check_access_rule(cr, uid, ids=ids, operation=operation, context=context)

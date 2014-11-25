@@ -175,7 +175,7 @@ class mail_message(osv.Model):
             return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
         elif this.email:
             return formataddr((this.name, this.email))
-        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
+        raise Warning(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id

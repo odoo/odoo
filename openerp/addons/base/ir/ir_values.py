@@ -23,6 +23,7 @@ import pickle
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.osv.orm import except_orm
+from openerp.exceptions import Warning
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -435,7 +436,7 @@ class ir_values(osv.osv):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise osv.except_osv('Error!',
+                                    raise Warning('Error!',
                                                          'You do not have the permission to perform this operation!!!')
                                 continue
                 # keep only the first action registered for each action name

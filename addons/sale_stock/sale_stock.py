@@ -26,6 +26,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
+from openerp.exceptions import Warning
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -156,7 +157,7 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
+                    raise Warning(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
             stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')

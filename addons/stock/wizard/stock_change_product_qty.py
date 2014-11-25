@@ -90,7 +90,7 @@ class stock_change_product_qty(osv.osv_memory):
 
         for data in self.browse(cr, uid, ids, context=context):
             if data.new_quantity < 0:
-                raise osv.except_osv(_('Warning!'), _('Quantity cannot be negative.'))
+                raise Warning(_('Warning!'), _('Quantity cannot be negative.'))
             ctx = context.copy()
             ctx['location'] = data.location_id.id
             ctx['lot_id'] = data.lot_id.id

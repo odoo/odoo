@@ -27,6 +27,7 @@ from openerp.tools import config, which
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import Warning
 
 import re
 import time
@@ -288,7 +289,7 @@ class Report(osv.Model):
         try:
             report = report_obj.browse(cr, uid, idreport[0], context=context)
         except IndexError:
-            raise osv.except_osv(
+            raise Warning(
                 _('Bad Report Reference'),
                 _('This report is not loaded into the database: %s.' % report_name)
             )
@@ -443,7 +444,7 @@ class Report(osv.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise osv.except_osv(_('Report (PDF)'),
+                    raise Warning(_('Report (PDF)'),
                                          _('Wkhtmltopdf failed (error code: %s). '
                                            'Message: %s') % (str(process.returncode), err))
 

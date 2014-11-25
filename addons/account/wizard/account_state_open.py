@@ -21,6 +21,7 @@
 from openerp.osv import osv
 
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 class account_state_open(osv.osv_memory):
     _name = 'account.state.open'
@@ -35,7 +36,7 @@ class account_state_open(osv.osv_memory):
         if isinstance(active_ids, list):
             invoice = proxy.browse(cr, uid, active_ids[0], context=context)
             if invoice.reconciled:
-                raise osv.except_osv(_('Warning!'), _('Invoice is already reconciled.'))
+                raise Warning(_('Warning!'), _('Invoice is already reconciled.'))
             invoice.signal_workflow('open_test')
         return {'type': 'ir.actions.act_window_close'}
 

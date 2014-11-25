@@ -22,6 +22,7 @@
 import openerp
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
@@ -95,7 +96,7 @@ class base_module_upgrade(osv.osv_memory):
                       (tuple(ids), ('uninstalled',)))
             unmet_packages = [x[0] for x in cr.fetchall()]
             if unmet_packages:
-                raise osv.except_osv(_('Unmet Dependency!'),
+                raise Warning(_('Unmet Dependency!'),
                                      _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
             ir_module.download(cr, uid, ids, context=context)
