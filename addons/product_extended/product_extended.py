@@ -18,8 +18,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp import SUPERUSER_ID
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class product_template(osv.osv):
@@ -138,30 +139,46 @@ class mrp_production(osv.Model):
         will first generate moves for the finished product and then the components.
         The components are valuated only once consumed so need to rectify the price.
         """
+        quant_obj = self.pool['stock.quant']
         for mo in self.browse(cr, uid, ids, context=context):
             if mo.product_id.cost_method == 'standard':
                 # cost price is specified on product form
                 continue
 
             total_cost = self._get_production_costs(cr, uid, mo, context=context)
+            produced_price_unit = total_cost/mo.product_qty
             for move in mo.move_created_ids2:
-                finished_quant_ids = [q.id for q in move.quant_ids]
-                self.pool['stock.quant'].write(cr, uid, finished_quant_ids,
-                    {'cost': total_cost/move.product_qty}, context=context)
-                self.pool['stock.move'].write(cr, uid, [move.id],
-                    {'price_unit': total_cost/move.product_qty}, context=context)
+                finished_quant_ids = [q.id for q in move.quant_ids if q.cost != produced_price_unit]
+                quant_obj.write(cr, uid, finished_quant_ids,
+                    {'cost': produced_price_unit}, context=context)
+
+                if move.product_id.valuation == 'real_time':
+                    # has generated accounting entries with wrong price
+                    price_difference = produced_price_unit - move.price_unit
+                    if price_difference:
+                        self.pool['stock.quant']._create_rectification_account_entry(cr, uid, move, price_difference, context=context)
 
             if mo.product_id.cost_method == 'average':
                 qty_available = mo.product_id.product_tmpl_id.qty_available
                 amount_unit = mo.product_id.standard_price
                 # current stock valuation at average price
                 current_stock_price = amount_unit * qty_available
-                rectified_qty = qty_available - mo.product_qty
-                new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
-                tmpl_dict[prod_tmpl_id] += move.product_qty
+
+                # remove the move with wrong price
+                qty_before_mo = qty_available - mo.product_qty
+                price_before_mo = (current_stock_price - (mo.move_created_ids2[0].price_unit * mo.product_qty)) / qty_before_mo
+
+                # recompute the new average price with correct price_unit
+                new_average_price = ((price_before_mo * qty_before_mo) + (produced_price_unit * mo.product_qty)) / qty_available
+
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
-                self.pool['stock.move'].product_price_update_before_done(cr, uid, [m.id for m in mo.move_created_ids2], context=context)
+                self.pool['product.product'].write(cr, SUPERUSER_ID, [mo.product_id.id],
+                    {'standard_price': new_average_price}, context=context)
+
+            # rectify the price_unit on the move in case of return
+            self.pool['stock.move'].write(cr, uid, [m.id for m in mo.move_created_ids2],
+                {'price_unit': produced_price_unit}, context=context)
+
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
@@ -171,3 +188,33 @@ class mrp_production(osv.Model):
         res = super(mrp_production, self).action_production_end(cr, uid, ids, context=context)
         self._update_cost_price(cr, uid, ids, context=context)
         return res
+
+class stock_quant(osv.Model):
+    _inherit = 'stock.quant'
+
+    def _create_rectification_account_entry(self, cr, uid, move, price_difference, context=None):
+        accounts = self.pool['product.template'].get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context=context)
+        debit_account_id = accounts['property_stock_valuation_account_id']
+        credit_account_id = move.product_id.property_account_expense.id or move.product_id.categ_id.property_account_expense_categ.id
+
+        self.pool['account.move'].create(cr, uid, {
+            'journal_id': accounts['stock_journal'],
+            'period_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
+            'date': move.date,
+            'ref': move.name + _(" (difference after production)"),
+            'line_id': [(0, 0, {
+                'name': move.name + _(" (difference after production)"),
+                'product_id': move.product_id.id,
+                'quantity': move.product_qty,
+                'debit': price_difference > 0 and price_difference or 0,
+                'credit': price_difference < 0 and -price_difference or 0,
+                'account_id': credit_account_id,
+            }), (0, 0, {
+                'name': move.name + _(" (difference after production)"),
+                'product_id': move.product_id.id,
+                'quantity': move.product_qty,
+                'credit': price_difference > 0 and price_difference or 0,
+                'debit': price_difference < 0 and -price_difference or 0,
+                'account_id': debit_account_id,
+            })]
+        }, context=context)
