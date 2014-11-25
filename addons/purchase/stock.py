@@ -158,6 +158,16 @@ class stock_picking(osv.osv):
                 invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
 
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+        if move.purchase_line_id and move.purchase_line_id.order_id:
+            purchase = move.purchase_line_id.order_id
+            inv_vals.update({
+                'fiscal_position': purchase.fiscal_position.id,
+                'payment_term': purchase.payment_term_id.id,
+                })
+        return inv_vals
+
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
