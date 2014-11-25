@@ -32,7 +32,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round, float_compare
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -1274,7 +1274,7 @@ class res_currency(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for currency_id in ids:
                 if currency_id == main_currency.id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 
@@ -1293,7 +1293,7 @@ class decimal_precision(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for decimal_precision in ids:
                 if decimal_precision == account_precision_id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 
