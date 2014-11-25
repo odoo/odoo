@@ -120,7 +120,9 @@ class project_work(osv.osv):
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
         if vals.get('date'):
-            vals_line['date' ] = vals['date'][:10]
+            timestamp = datetime.datetime.strptime(vals['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+            vals_line['date'] = ts.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
         # Calculate quantity based on employee's product's uom
         vals_line['unit_amount'] = vals['hours']

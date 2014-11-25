@@ -1825,10 +1825,10 @@ class res_partner(osv.osv):
             partner = partner.parent_id
         return partner
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default.update({'invoice_ids' : []})
-        return super(res_partner, self).copy(cr, uid, id, default, context)
+        return super(res_partner, self).copy_data(cr, uid, id, default=default, context=context)
 
 
 class mail_compose_message(osv.Model):
