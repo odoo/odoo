@@ -2298,7 +2298,7 @@ class stock_move(osv.osv):
         #Check for remaining qtys and unreserve/check move_dest_id in
         move_dest_ids = set()
         for move in self.browse(cr, uid, ids, context=context):
-            if move_qty[move.id] > 0:  # (=In case no pack operations in picking)
+            if float_compare(move_qty[move.id], 0.0, precision_rounding=move.product_uom.rounding) > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
                 prefered_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
