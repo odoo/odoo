@@ -583,7 +583,7 @@ class account_bank_statement_line(models.Model):
             else:
                 ctx = dict(self._context or {})
                 ctx['date'] = self.date
-                amount = self.statement_id.currency.with_context(ctx).compute(company_currency.id, self.amount)
+                amount = self.statement_id.currency.with_context(ctx).compute(self.amount, company_currency)
         else:
             amount = self.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(self, move_id.id, amount, company_currency.id)
