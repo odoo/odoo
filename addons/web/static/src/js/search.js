@@ -598,6 +598,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data;
+        this.view_id = this.view_id || data.view_id;
         if (data.type !== 'search' ||
             data.arch.tag !== 'search') {
                 throw new Error(_.str.sprintf(
