@@ -963,8 +963,8 @@ class account_voucher(osv.osv):
             credit = voucher.paid_amount_in_company_currency
         elif voucher.type in ('sale', 'receipt'):
             debit = voucher.paid_amount_in_company_currency
-        if debit < 0: credit = -debit; debit = 0.0
-        if credit < 0: debit = -credit; credit = 0.0
+        if debit < 0.0: debit = 0.0
+        if credit < 0.0: credit = 0.0
         sign = debit - credit < 0 and -1 or 1
         #set the first line of the voucher
         move_line = {

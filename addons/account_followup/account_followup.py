@@ -404,7 +404,7 @@ class res_partner(osv.osv):
                     'WHERE account_id IN '\
                         '(SELECT a.id FROM account_account a'\
                         'LEFT JOIN account_account_type act ON (a.user_type=act.id)'\
-                        'WHERE act.type=\'receivable\' AND deprecated='f') '\
+                        'WHERE act.type=\'receivable\' AND deprecated=False) '\
                     'AND l.company_id = %s '
                     'AND reconcile_id IS NULL '\
                     'AND '+query+' '\

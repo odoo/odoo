@@ -403,7 +403,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -799,6 +799,7 @@ class account_invoice(models.Model):
                         'amount_currency': diff_currency and amount_currency,
                         'currency_id': diff_currency and inv.currency_id.id,
                         'ref': ref,
+                        'invoice': inv.id
                     })
             else:
                 iml.append({
@@ -809,9 +810,9 @@ class account_invoice(models.Model):
                     'date_maturity': inv.date_due,
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
-                    'ref': ref
+                    'ref': ref,
+                    'invoice': inv.id
                 })
-
             date = date_invoice
 
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
@@ -877,6 +878,7 @@ class account_invoice(models.Model):
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
+            'invoice': line.get('invoice', False),
         }
 
     @api.multi
