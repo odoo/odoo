@@ -685,8 +685,8 @@ class ir_attachment(osv.osv):
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, False)
-        attachments = self.read(cr, uid, ids, ['type'], context=context)
-        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['type'] == 'ir.ui.view']
+        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
+        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
         for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
             result[attach['id']] = self._compute_checksum(attach)
         return result
@@ -705,7 +705,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if record.type != 'ir.ui.view' or not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises
