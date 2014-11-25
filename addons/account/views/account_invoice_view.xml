@@ -180,7 +180,7 @@
                         <group>
                             <field name="date_invoice"/>
                             <field name="date_due"/>
-                            <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
+                            <field domain="[('company_id', '=', company_id), ('user_type.type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
