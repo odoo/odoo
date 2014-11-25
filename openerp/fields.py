@@ -1577,13 +1577,14 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
-            if not record.id or record._is_dirty():
+            if not record.id:
+                values = {k: v for k, v in record._cache.iteritems() if k in fnames}
+                values = record._convert_to_write(values)
+                result.append((0, 0, values))
+            elif record._is_dirty():
                 values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
                 values = record._convert_to_write(values)
-                if not record.id:
-                    result.append((0, 0, values))
-                else:
-                    result.append((1, record.id, values))
+                result.append((1, record.id, values))
             else:
                 add_existing(record.id)
 
