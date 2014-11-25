@@ -3,9 +3,6 @@ import unittest2
 from openerp.tests import common
 from datetime import date
 
-DB = common.DB
-ADMIN_USER_ID = common.ADMIN_USER_ID
-
 
 class test_ir_sequence_date_range_standard(common.SingleTransactionCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
