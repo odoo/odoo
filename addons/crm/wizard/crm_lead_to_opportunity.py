@@ -111,6 +111,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         lead = self.pool.get('crm.lead')
         res = False
+        partner_id = False
         lead_ids = vals.get('lead_ids', [])
         team_id = vals.get('team_id', False)
         partner_id = vals.get('partner_id')
