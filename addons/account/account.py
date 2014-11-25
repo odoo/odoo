@@ -662,7 +662,7 @@ class account_move(models.Model):
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
                         raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
-            if abs(amount) < 0.0:
+            if abs(amount) < 10 ** -4:
                 raise Warning(_('You cannot validate a non-balanced entry.'))
         return True
 

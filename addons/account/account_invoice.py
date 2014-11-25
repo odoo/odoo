@@ -403,7 +403,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids and p.bank_ids[0].id or False
+            bank_id = p.bank_ids and p.bank_ids.ids[0] or False
 
         result = {'value': {
             'account_id': account_id,
