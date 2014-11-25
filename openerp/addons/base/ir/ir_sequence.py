@@ -75,8 +75,8 @@ def _select_nextval(cr, seq_name):
 
 def _update_nogap(self, number_increment):
     number_next = self.number_next
-    self.env.cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (self._name, self.id))
-    self.env.cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (self._name, self.number_increment, self.id))
+    self.env.cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (self._table, self.id))
+    self.env.cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (self._table, number_increment, self.id))
     self.invalidate_cache(['number_next'], [self.id])
     return number_next
 
@@ -250,8 +250,6 @@ class ir_sequence(models.Model):
             'date_to': date_to,
             'sequence_id': self.id,
         })
-        if self.implementation == 'standard':
-            _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (self.id, seq_date_range.id), self.number_increment, 1)
         return seq_date_range
 
     def _next(self):
