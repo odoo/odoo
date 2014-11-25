@@ -23,6 +23,7 @@ from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
+from openerp.exceptions import Warning
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
@@ -55,7 +56,7 @@ class stock_change_product_qty(osv.osv_memory):
             if len(product_ids) == 1:
                 res['product_id'] = product_ids[0]
             else:
-                raise orm.except_orm(_('Warning'), _('Please use the Product Variant view to update the product quantity.'))
+                raise Warning(_('Warning'), _('Please use the Product Variant view to update the product quantity.'))
 
         if 'location_id' in fields:
             location_id = res.get('location_id', False)

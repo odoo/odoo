@@ -30,6 +30,7 @@ from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -770,7 +771,7 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
-        raise orm.except_orm(_('Access Denied'),
+        raise Warning(_('Access Denied'),
                              _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                              (self._description, operation))
 

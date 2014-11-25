@@ -35,7 +35,7 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
-class Warning(Exception):
+class Warning(except_orm):
     pass
 
 class RedirectWarning(Exception):

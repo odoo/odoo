@@ -46,6 +46,7 @@ from openerp.osv import fields, osv, orm
 from openerp.osv.orm import BaseModel
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -649,7 +650,7 @@ class mail_thread(osv.AbstractModel):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
                     action = model_obj.get_access_action(cr, uid, res_id, context=context)
-                except (osv.except_osv, orm.except_orm):
+                except (osv.except_osv, orm.except_orm, Warning):
                     pass
             action.update({
                 'context': {
@@ -1698,7 +1699,7 @@ class mail_thread(osv.AbstractModel):
             try:
                 self.check_access_rights(cr, uid, 'read')
                 self.check_access_rule(cr, uid, ids, 'read')
-            except (osv.except_osv, orm.except_orm):
+            except (osv.except_osv, orm.except_orm, Warning):
                 return False
         else:
             self.check_access_rights(cr, uid, 'write')

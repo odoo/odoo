@@ -35,6 +35,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
+from openerp.exceptions import Warning
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -290,7 +291,7 @@ class document_directory(osv.osv):
             try:
                 self.check_access_rule(cr, uid, ids, pperms[0], context=context)
                 res |= pperms[1]
-            except except_orm:
+            except (except_orm, Warning):
                 pass
         return res
 
@@ -570,7 +571,7 @@ class document_storage(osv.osv):
             _logger.warning("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
-            raise except_orm(_('Error at doc write!'), str(e))
+            raise Warning(_('Error at doc write!'), str(e))
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)

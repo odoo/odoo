@@ -19,6 +19,7 @@ from openerp.osv import osv, orm
 from openerp.osv import fields
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 pattern = re.compile("&(\w+?);")
 
@@ -286,7 +287,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         if parent_id and parent_id != dst_partner.id:
             try:
                 dst_partner.write({'parent_id': parent_id})
-            except (osv.except_osv, orm.except_orm):
+            except (osv.except_osv, orm.except_orm, Warning):
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
     @mute_logger('openerp.osv.expression', 'openerp.models')

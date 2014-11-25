@@ -232,7 +232,7 @@ class TestMailMessage(TestMail):
         with self.assertRaises(except_orm):
             self.mail_message.read(cr, self.user_bert_id, message_id)
         # Test: Bert downloads attachment, crash because he can't read message
-        with self.assertRaises(except_orm):
+        with self.assertRaises(except_orm ):
             self.mail_message.download_attachment(cr, user_bert_id, message_id, attachment_id)
         # Do: Bert is now the author
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_bert_id})
