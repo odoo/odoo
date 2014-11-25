@@ -34,8 +34,7 @@ class account_voucher(models.Model):
         return res
 
     def _get_currency(self, cr, uid, context=None):
-        if context is None:
-            context = {}
+        if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if journal_id:
