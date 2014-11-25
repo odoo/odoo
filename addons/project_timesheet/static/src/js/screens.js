@@ -508,15 +508,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
         },
         format_duration: function(field_val) {
-            var data = field_val.toString().split(".");
-            if (data[1]) {
-                data[1] = Math.round((field_val%1)*60);
-                if (data[1] == 60) {
-                    data[1] = 0;
-                    data[0] = parseInt(data[0]) + 1;
-                }
-            }
-            return data;
+            return project_timesheet.format_duration(field_val);
         },
         get_pending_lines: function() {
             return this.project_timesheet_model.get_pending_records();
@@ -829,15 +821,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.task_m2o.model = project_model;
         },
         format_duration: function(field_val) {
-            var data = field_val.toString().split(".");
-            if (data[1]) {
-                data[1] = Math.round((field_val%1)*60);
-                if (data[1] == 60) {
-                    data[1] = 0;
-                    data[0] = parseInt(data[0]) + 1;
-                }
-            }
-            return data;
+            return project_timesheet.format_duration(field_val);
         },
         set_screen_values: function(screen_data) {
             //This method is called when its edit mode(i.e. when row is clicked from Activity Listview)
@@ -1185,8 +1169,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             chart.parse(graph_data,"json");
         },
         format_duration: function(duration) {
-            var add_activity_screen = this.project_timesheet_widget.add_activity_screen;
-            return add_activity_screen.format_duration(duration);
+            return project_timesheet.format_duration(duration);
         },
         on_navigation: function(e) {
             this.bar_chart.clearAll();

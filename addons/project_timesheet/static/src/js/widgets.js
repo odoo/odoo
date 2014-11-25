@@ -248,19 +248,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.replaceElement(QWeb.render(this.template, {widget: this, activities: this.activities}));
         },
         format_duration: function(field_val) {
-            if(!field_val) {
-                return;
-            }
-            var data = field_val.toString().split(".");
-            if (data[1]) {
-                data[1] = Math.round((field_val%1)*60);
-                if (data[1] == 60) {
-                    data[1] = 0;
-                    data[0] = parseInt(data[0]) + 1;
-                }
-            }
-            //return data.join(":");
-            return data;
+            return project_timesheet.format_duration(field_val);
         },
         get_total: function() {
             var total = 0;
