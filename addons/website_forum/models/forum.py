@@ -167,7 +167,7 @@ class Post(models.Model):
     @api.one
     @api.depends('content')
     def _get_plain_content(self):
-        self.plain_content = tools.html2plaintext(self.content)[0:500] + '...'
+        self.plain_content = 'Can you help answering this question? \n'+ tools.html2plaintext(self.content)[0:500] + '...'
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
