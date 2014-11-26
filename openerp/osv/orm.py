@@ -3822,7 +3822,7 @@ class BaseModel(object):
                     '(a dictionary was expected).' % (val[0], self._name)
                 for pos in val:
                     for record in res:
-                        if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
+                        if res2 and isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
                         multi_fields = res2.get(record['id'],{})
                         if multi_fields:
                             record[pos] = multi_fields.get(pos,[])
