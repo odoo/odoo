@@ -24,7 +24,7 @@ from operator import itemgetter
 import re
 import copy
 
-from openerp.exceptions import Warning, AccessError, MissingError
+from openerp.exceptions import Warning, AccessError, MissingError, except_orm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -530,7 +530,7 @@ class hr_analytic_timesheet(osv.Model):
                         vals_line['amount'] = amount_unit['value']['amount']
                     ctx = copy.deepcopy(context)
                     #TODO: To check, pass __last_update in context
-                    #ctx['__last_update'] = {("%s,%s"% (self._name,id)): record.get('__last_update')}
+                    ctx['__last_update'] = {("%s,%s"% (self._name,id)): record.get('__last_update')}
                     print "\n\ncontext in write ::: ", context
                     self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
                 elif record.get('command') == 2:
@@ -549,12 +549,15 @@ class hr_analytic_timesheet(osv.Model):
                 #May be add to failed record
                 pass
             except Exception, e:
-                #Here we can have except_orm, if there is ConcurrencyException, the we are raising except_orm 
                 #import traceback
                 #traceback.print_exc()
-                print "\n\neeeeeeee is >>> ", e
-                #raise e
-                fail_records.append(current_record)
+                #Here we can have except_orm, if there is ConcurrencyException, we will eiether simply pass or add those ids in concurrency_fail_ids because we need to re-read those records
+                if isinstance(e, except_orm) and e.name == "ConcurrencyException":
+                    pass
+                else:
+                    print "\n\neeeeeeee is >>> ", e
+                    #raise e
+                    fail_records.append(current_record)
                 cr.execute('ROLLBACK TO SAVEPOINT sync_record')
             finally:
                 cr.execute('RELEASE SAVEPOINT sync_record')
