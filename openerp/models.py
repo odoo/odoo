@@ -62,7 +62,7 @@ from . import api
 from . import tools
 from .api import Environment
 from .exceptions import except_orm, AccessError, MissingError, ValidationError
-from openerp.exceptions import Warning
+from .exceptions import Warning
 from .osv import fields
 from .osv.query import Query
 from .tools import lazy_property, ormcache

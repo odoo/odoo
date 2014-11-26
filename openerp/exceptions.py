@@ -30,7 +30,7 @@ If you consider introducing new exceptions, check out the test_exceptions addon.
 
 # kept for backward compatibility
 class except_orm(Exception):
-    def __init__(self, name, value):
+    def __init__(self, name, value=None):
         self.name = name
         self.value = value
         self.args = (name, value)

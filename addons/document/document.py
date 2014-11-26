@@ -291,7 +291,7 @@ class document_directory(osv.osv):
             try:
                 self.check_access_rule(cr, uid, ids, pperms[0], context=context)
                 res |= pperms[1]
-            except (except_orm):
+            except except_orm:
                 pass
         return res
 
