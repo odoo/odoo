@@ -34,7 +34,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
-            this.is_submitted_sheets = false;
+            this.is_sheets = false;
             this.mode = "week";
             // Original save function is overwritten in order to wait all running deferreds to be done before actually applying the save.
             this.view.original_save = _.bind(this.view.save, this.view);
@@ -142,9 +142,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             var account_defaults;
             //To check whether we have any submitted  timesheet, if yes then show copy/paste lines link
             if (self.get('user_id')) {
-                this.render_drop.add(new instance.web.Model("hr_timesheet_sheet.sheet").call("search", [[['user_id','=',self.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<=', self.field_manager.get_field_value("date_from")]]]).then(function(result) {
+                this.render_drop.add(new instance.web.Model("hr_timesheet_sheet.sheet").call("search", [[['user_id','=',self.get('user_id')], ['date_from', '<=', self.field_manager.get_field_value("date_from")]]]).then(function(result) {
                     if (result.length) {
-                        self.is_submitted_sheets = true;
+                        self.is_sheets = true;
                     }
                 }));
             }
@@ -300,7 +300,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                 return;
             this.new_account_m2o = this.init_account(account_ids);
             this.dfm = this.new_account_m2o.field_manager;
-            console.log("this.account_m2o is :: ", this.new_account_m2o);
             this.$(".oe_timesheet_add_row").show();
             this.new_account_m2o.prependTo(this.$(".oe_timesheet_add_row"));
             this.$(".oe_timesheet_add_row a").click(function() {
@@ -332,7 +331,6 @@ openerp.hr_timesheet_sheet = function(instance) {
             return this.$('.oe_timesheet_box[data-account="' + account + '"][data-day-count="' + day_count + '"]');
         },
         get_account_placeholder: function(account_id) {
-            console.log("account_id is ::: ", account_id);
             return this.$(".account_m2o_placeholder[data-id='"+account_id+"']");
         },
         sync: function() {
@@ -546,7 +544,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     },
     display_totals: function() {
         var self = this;
-        var day_tots = _.map(_.range(self.days.length), function() { return 0 });
+        var day_tots = _.map(_.range(self.days.length), function() { return 0;});
         var super_tot = 0;
         var acc_tot = 0;
         _.each(self.days, function(days, day_count) {
@@ -598,38 +596,90 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
         return ops;
     },
+    is_previous_data_exist: function() {
+        var data_exist = false;
+        var count = this.get('count');
+        while (count >= 0) {
+            if (!_.isEmpty(this.days[count].account_group)) {
+                data_exist = true;
+                break;
+            } else {
+                count -= 1;
+            }
+        }
+        return data_exist;
+    },
+    get_last_day_data: function(records) {
+        if (!records) {
+            return;
+        }
+        var groupby_date = _.groupBy(records, 'date');
+        var get_max_date = function(initial_date) {
+            _.each(records, function(record) {
+                if (moment(record.date).isAfter(initial_date)) {
+                    initial_date = moment(record.date);
+                }
+            });
+            return initial_date;
+        };
+        var max_date = get_max_date(moment(records[0].date));
+        return groupby_date[max_date.format("YYYY-MM-DD")] || {};
+    },
     copy_accounts: function(e) {
         var self = this;
-        (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
-           domain: [['user_id','=',self.parent.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<=', self.parent.field_manager.get_field_value("date_from")]],
-           fields: ['timesheet_ids'],
-           order: "date_from DESC",
-           limit: 1
-       })).then(function(result) {
-           if (result.length && result[0].timesheet_ids) {
-               (new instance.web.Model('hr.analytic.timesheet').call('read', {
-                   ids: result[0].timesheet_ids,
-                   fields: ['name', 'amount', 'unit_amount', 'date', 'account_id', 'date_start', 'general_account_id', 'journal_id', 'user_id', 'product_id', 'product_uom_id', 'to_invoice']
-               })).then(function(result) {
-                   if (result.length) {
-                        for (var i=0; i<result.length; i++) {
-                            _.each(result[i], function(value, key) {
-                                if (value instanceof Array) {
-                                    result[i][key] = value[0];
-                                } else {
-                                    result[i][key] = value;
-                                }
+        var data_to_copy;
+        var onchange_result = {};
+        var index = this.get('count');
+        var def = $.Deferred();
+        while (index >= 0) {
+            if(_.isEmpty(self.days[index].account_group)) {
+                index -= 1;
+            } else {
+                data_to_copy = JSON.parse(JSON.stringify(this.days[index].account_group));
+                break;
+            }
+        }
+        if (!data_to_copy) {
+            (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
+               domain: [['user_id','=',self.parent.get('user_id')], ['date_from', '<=', self.parent.field_manager.get_field_value("date_from")]],
+               fields: ['timesheet_ids'],
+               order: "date_from DESC",
+               limit: 1
+            })).then(function(result) {
+               if (result.length && result[0].timesheet_ids) {
+                   (new instance.web.Model('hr.analytic.timesheet').call('read', {
+                       ids: result[0].timesheet_ids,
+                       fields: ['name', 'amount', 'unit_amount', 'date', 'account_id', 'date_start', 'general_account_id', 'journal_id', 'user_id', 'product_id', 'product_uom_id', 'to_invoice']
+                   })).then(function(result) {
+                       if (result.length) {
+                            for (var i=0; i<result.length; i++) {
+                                _.each(result[i], function(value, key) {
+                                    if (value instanceof Array) {
+                                        result[i][key] = value[0];
+                                    } else {
+                                        result[i][key] = value;
+                                    }
+                                });
+                            }
+                            //Need to call onchange_account_id because it updated keys of default_get
+                            return (new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], result[0].account_id,
+                                new instance.web.CompoundContext({'user_id': self.parent.get('user_id')})])).then(function(onchange_account) {
+                                    var last_day_data = self.get_last_day_data(result);
+                                    data_to_copy = _.groupBy(last_day_data, "account_id");
+                                    onchange_result = onchange_account.value;
+                                    def.resolve().promise();
                             });
-                        }
-                        //Need to call onchange_account_id because it updated keys of default_get
-                        (new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], result[0].account_id,
-                            new instance.web.CompoundContext({'user_id': self.parent.get('user_id')})])).then(function(onchange_account) {
-                                self.copy_data(JSON.parse(JSON.stringify(_.groupBy(result, "account_id"))), onchange_account.value);
-                        });
-                   }
-               });
-           }
-       });
+                       }
+                   });
+               }
+           });
+        } else {
+            def.resolve().promise();
+        }
+
+        $.when(def).then(function() {
+            self.copy_data(data_to_copy, onchange_result);
+        });
     },
     copy_data: function(data, onchange_result) {
         var self = this;
@@ -638,7 +688,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         self.days[count].account_group = data;
         self.days[count].account_defaults = _.extend({}, this.parent.default_get, onchange_result);
         _.each(self.days[count].account_group, function(account) {
-            var d = self.days[count].day.toString("yyyy-MM-dd");
+            var d = moment(self.days[count].day).format("YYYY-MM-DD");
             _.each(account,function(account) {
                 account.id = undefined;
                 account.date = d;
@@ -650,19 +700,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         //TODO: Switching view doesn't reflected with copied data
         this.parent.sync();
         self.parent.initialize_content();
-    },
-    get_last_activities: function() {
-        var self = this;
-        var last_activites;
-        var groupby_id = _(self.parent.get("sheets")).chain()
-        .groupBy("id").value();
-        var groupby_date = _(self.parent.get("sheets")).chain()
-        .groupBy("date").value();
-        if (groupby_id) {
-            var latest_activity_date = groupby_id[_.last(_.keys(groupby_id))][0].date;
-            last_activites = groupby_date[latest_activity_date];
-        }
-        return last_activites;
     },
     start_interval: function(){
         var self = this;
@@ -819,6 +856,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         "click .oe_timesheet_weekly_account a": "go_to",
         "click .oe_timesheet_switch, .oe_timesheet_weekly_day": "do_switch_mode",
         "click .oe_timesheet_weekly .oe_nav_button": "navigateAll",
+        "click .oe_copy_accounts a": "copy_accounts",
         "click .oe_delete_line": "on_delete_account",
     },
     init: function (parent, options) {
@@ -904,6 +942,114 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.display_totals();
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
+    get_last_seven_day_data: function(records) {
+        var week = this.get('week');
+        if (!records) {
+            return;
+        }
+        var groupby_week = _.groupBy(this.days, "week");
+        var current_week_dates = groupby_week[week];
+        var groupby_day_name = _.groupBy(current_week_dates, function(date) { return moment(date.date).format("dddd"); });
+        var get_max_date = function(initial_date) {
+            _.each(records, function(record) {
+                if (moment(record.date).isAfter(initial_date)) {
+                    initial_date = moment(record.date);
+                }
+            });
+            return initial_date;
+        };
+        //Find 7 days range for the week and retrieve last 7 days record from records
+        var max_date = get_max_date(moment(records[0].date));
+        var start_date = _.clone(max_date);
+        start_date = moment(start_date).subtract(7, "days");
+        var last_seven_days_records = _.filter(records, function(record) {
+            return (moment(record.date).isAfter(start_date) && moment(record.date).isBefore(max_date)) || (moment(record.date).isSame(max_date) || (moment(record.date).isSame(start_date)));
+        });
+
+        //Find current week days and replace current weeks date in records by matchin 'Day Name'(ask of HMO)
+        current_week_data = _.filter(last_seven_days_records, function(record) {
+            return _.has(groupby_day_name, moment(record.date).format("dddd"));
+        });
+        _.each(current_week_data, function(record) {
+            var day = groupby_day_name[moment(record.date).format("dddd")];
+            record.date = moment(day[0].date).format("YYYY-MM-DD");
+        });
+        return current_week_data;
+    },
+    copy_accounts: function() {
+        var self = this;
+        var data_to_copy;
+        var onchange_result = {};
+        var index = this.get('week');
+        var first_week = _.first(_.map(this.days, function(day) {return day.week;}));
+        //Copy Button will be displayed only if there is no accounts in current timesheet in week mode,
+        //Because in week mode if there is an account it will be displayed in all weeks, so we only need to consider scenario of fetch last timesheet 7 days
+        (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
+           domain: [['user_id','=',self.parent.get('user_id')], ['date_from', '<=', self.parent.field_manager.get_field_value("date_from")]],
+           fields: ['timesheet_ids'],
+           order: "date_from DESC",
+           limit: 1
+        })).then(function(result) {
+           if (result.length && result[0].timesheet_ids) {
+               (new instance.web.Model('hr.analytic.timesheet').call('read', {
+                   ids: result[0].timesheet_ids,
+                   fields: ['name', 'amount', 'unit_amount', 'date', 'account_id', 'date_start', 'general_account_id', 'journal_id', 'user_id', 'product_id', 'product_uom_id', 'to_invoice']
+               })).then(function(result) {
+                   if (result.length) {
+                        for (var i=0; i<result.length; i++) {
+                            _.each(result[i], function(value, key) {
+                                if (value instanceof Array) {
+                                    result[i][key] = value[0];
+                                } else {
+                                    result[i][key] = value;
+                                }
+                            });
+                        }
+                        //Need to call onchange_account_id because it updated keys of default_get
+                        return (new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], result[0].account_id,
+                            new instance.web.CompoundContext({'user_id': self.parent.get('user_id')})])).then(function(onchange_account) {
+                                var current_week_data = self.get_last_seven_day_data(result);
+                                data_to_copy = _.groupBy(current_week_data, "account_id");
+                                onchange_result = onchange_account.value;
+                                self.copy_data(data_to_copy);
+                        });
+                   }
+               });
+           }
+       });
+    },
+    copy_data: function(accounts, onchange_result) {
+        var self = this;
+        accounts = _(accounts).chain().map(function(lines, account_id) {
+            _.extend({}, this.parent.default_get, onchange_result);
+            account_defaults = _.extend({}, this.parent.default_get, onchange_result || {});
+            // group by days
+            account_id = account_id === "false" ? false :  Number(account_id);
+            var group_by_date = _.groupBy(lines, "date");
+            var days = _.map(self.parent.dates, function(date, index) {
+                var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], day_index: index, week: moment(date).week()};
+                // add line where we will insert/remove hours
+                var to_add = _.find(day.lines, function(line) { return line.name === self.description_line;});
+                if (to_add) {
+                    day.lines = _.without(day.lines, to_add);
+                    day.lines.unshift(to_add);
+                } else {
+                    day.lines.unshift(_.extend(_.clone(account_defaults), {
+                        name: self.description_line,
+                        unit_amount: 0,
+                        date: instance.web.date_to_str(date),
+                        account_id: account_id,
+                    }));
+                }
+                return day;
+            });
+            return {account: account_id, days: days, account_defaults: account_defaults};
+        }).value();
+        _.extend(this.accounts, accounts);
+        //TODO: Test Switching view reflected with copied data ?
+        this.parent.sync();
+        self.parent.initialize_content();
+    },
     do_switch_mode: function(e) {
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
@@ -932,7 +1078,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     },
     display_totals: function() {
         var self = this;
-        var day_tots = _.map(_.range(self.dates.length), function() { return 0 });
+        var day_tots = _.map(_.range(self.dates.length), function() { return 0; });
         var week_tot = 0;
         var super_total = 0;
         _.each(self.accounts, function(account) {

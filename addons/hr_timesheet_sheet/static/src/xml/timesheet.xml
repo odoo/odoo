@@ -50,6 +50,13 @@
                             </tr>
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                         </thead>
+                        <tr t-if="!widget.get('effective_readonly') and _.isEmpty(widget.accounts) and widget.parent.is_sheets">
+                            <td t-att-colspan="widget.dates.length+2">
+                                <span class="oe_copy_accounts text-primary" colspan="5">
+                                    <a><h3 class="text-primary text-center">Copy over all rows from most recent timesheet.</h3></a>
+                                </span>
+                            </td>
+                        </tr>
                         <tr t-foreach="widget.accounts" t-as="account">
                             <td class="oe_timesheet_weekly_account">
                                 <a t-if="!widget.get('effective_readonly')" class="account_m2o_placeholder" t-att-data-id="JSON.stringify(account.account)"></a>
@@ -212,7 +219,7 @@
                                     </t>
                                     <thead t-if="!widget.get('effective_readonly')" class="oe_timesheet_background_white">
                                         <tr>
-                                            <td colspan="6" t-if="_.isEmpty(days.account_group) and widget.parent.is_submitted_sheets">
+                                            <td colspan="6" t-if="(_.isEmpty(days.account_group) and widget.parent.is_sheets) or (_.isEmpty(days.account_group) and widget.is_previous_data_exist())">
                                                 <span class="oe_copy_accounts text-primary" colspan="5">
                                                     <a><h3 class="text-primary text-center">Copy over all rows from most recent timesheet.</h3></a>
                                                 </span>
