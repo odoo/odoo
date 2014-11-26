@@ -78,7 +78,7 @@
             if (!content) {
                 content = 'You should check this out!';
             }
-            var hashtags = document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
+            var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
             if (hashtag_list!='') {
                 for (var i=0; i<hashtag_list.length; i++) {
                     hashtags = hashtags + " #" + hashtag_list[i].replace(' ','');
@@ -87,7 +87,7 @@
 
             var social_network = {
                 'facebook':'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
-                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title +  ' #' + company + hashtags + ' - ' + url),
+                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title + hashtags + ' - ' + url),
                 'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(content),
                 'google-plus': 'https://plus.google.com/share?url=' + encodeURIComponent(url)
             };
