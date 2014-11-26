@@ -1,4 +1,5 @@
 from openerp.tests.common import TransactionCase
+from openerp.tools import float_compare
 
 class TestUom(TransactionCase):
     """Tests for unit of measure conversion"""
@@ -15,10 +16,10 @@ class TestUom(TransactionCase):
         tonne_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_ton')[1]
 
         qty = self.uom._compute_qty(cr, uid, gram_id, 1020000, tonne_id)
-        self.assertEquals(qty, 1.02, "Converted quantity does not correspond.")
+        self.assertEqual(float_compare(qty, 1.02, precision_digits=2), 0, "Converted quantity does not correspond.")
 
         price = self.uom._compute_price(cr, uid, gram_id, 2, tonne_id)
-        self.assertEquals(price, 2000000.0, "Converted price does not correspond.")
+        self.assertEqual(float_compare(price, 2000000.0, precision_digits=0), 0, "Converted price does not correspond.")
 
     def test_20_rounding(self):
         cr, uid = self.cr, self.uid
@@ -34,4 +35,4 @@ class TestUom(TransactionCase):
         })
 
         qty = self.uom._compute_qty(cr, uid, unit_id, 2, score_id)
-        self.assertEquals(qty, 1, "Converted quantity should be rounded up.")
+        self.assertEqual(float_compare(qty, 1.0, precision_digits=0), 0, "Converted quantity should be rounded up.")
