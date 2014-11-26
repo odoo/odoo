@@ -37,12 +37,10 @@ class account_payment_populate_statement(osv.osv_memory):
         res = super(account_payment_populate_statement, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         line_ids = line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
-            ('bank_statement_line_id', '=', False),
-            ('move_line_id.state','=','valid')])
+            ('bank_statement_line_id', '=', False)])
         line_ids.extend(line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
-            ('order_id.mode', '=', False),
-            ('move_line_id.state','=','valid')]))
+            ('order_id.mode', '=', False)]))
         domain = '[("id", "in", '+ str(line_ids)+')]'
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='lines']")
