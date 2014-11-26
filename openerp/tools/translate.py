@@ -32,10 +32,10 @@ import tarfile
 import tempfile
 import threading
 from babel.messages import extract
-from os.path import join
-
+from collections import defaultdict
 from datetime import datetime
 from lxml import etree
+from os.path import join
 
 import config
 import misc
@@ -938,11 +938,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             reader = csv.reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
             for row in reader:
-                f = row
+                fields = row
                 break
         elif fileformat == 'po':
             reader = TinyPoFile(fileobj)
-            f = ['type', 'name', 'res_id', 'src', 'value', 'comments']
+            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments']
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
@@ -951,10 +951,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
-                    head, _ = os.path.split(fileobj.name)
-                    head2, _ = os.path.split(head)
-                    head3, tail3 = os.path.split(head2)
-                    pot_handle = misc.file_open(os.path.join(head3, tail3, 'i18n', tail3 + '.pot'))
+                    addons_module_i18n, _ = os.path.split(fileobj.name)
+                    addons_module, _ = os.path.split(addons_module_i18n)
+                    addons, module = os.path.split(addons_module)
+                    pot_handle = misc.file_open(os.path.join(addons, module, 'i18n', module + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass
@@ -963,59 +963,57 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
-        # Read the POT `reference` comments, and keep them indexed by source
-        # string.
-        pot_targets = {}
+        # Read the POT references, and keep them indexed by source string.
+        class Target(object):
+            def __init__(self):
+                self.value = None
+                self.targets = set()            # set of (type, name, res_id)
+                self.comments = None
+
+        pot_targets = defaultdict(Target)
         for type, name, res_id, src, _, comments in pot_reader:
             if type is not None:
-                pot_targets.setdefault(src, {'value': None, 'targets': []})
-                pot_targets[src]['targets'].append((type, name, res_id))
+                target = pot_targets[src]
+                target.targets.add((type, name, res_id))
+                target.comments = comments
 
         # read the rest of the file
         irt_cursor = trans_obj._get_import_cursor(cr, SUPERUSER_ID, context=context)
 
         def process_row(row):
             """Process a single PO (or POT) entry."""
-            # skip empty rows and rows where the translation field (=last fiefd) is empty
-            #if (not row) or (not row[-1]):
-            #    return
-
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
             #  'src': ..., 'value': ..., 'module':...}
-            dic = dict.fromkeys(('name', 'res_id', 'src', 'type', 'imd_model', 'imd_name', 'module', 'value', 'comments'))
+            dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
+                                 'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            for i, field in enumerate(f):
-                dic[field] = row[i]
+            dic.update(zip(fields, row))
 
-            # Get the `reference` comments from the POT.
-            src = row[3]
-            if pot_reader and src in pot_targets:
-                pot_targets[src]['targets'] = filter(lambda x: x != row[:3], pot_targets[src]['targets'])
-                pot_targets[src]['value'] = row[4]
-                if not pot_targets[src]['targets']:
-                    del pot_targets[src]
+            # discard the target from the POT targets.
+            src = dic['src']
+            if src in pot_targets:
+                target = pot_targets[src]
+                target.value = dic['value']
+                target.targets.discard((dic['type'], dic['name'], dic['res_id']))
 
             # This would skip terms that fail to specify a res_id
-            if not dic.get('res_id'):
+            res_id = dic['res_id']
+            if not res_id:
                 return
 
-            res_id = dic.pop('res_id')
-            if res_id and isinstance(res_id, (int, long)) \
-                or (isinstance(res_id, basestring) and res_id.isdigit()):
-                    dic['res_id'] = int(res_id)
-                    dic['module'] = module_name
+            if unicode(res_id).isdigit():
+                # res_id is either an integer, or a string composed of digits only
+                dic['res_id'] = int(res_id)
+                dic['module'] = module_name
             else:
-                tmodel = dic['name'].split(',')[0]
-                if '.' in res_id:
-                    tmodule, tname = res_id.split('.', 1)
-                else:
-                    tmodule = False
-                    tname = res_id
-                dic['imd_model'] = tmodel
-                dic['imd_name'] =  tname
-                dic['module'] = tmodule
+                # res_id is an xml id
                 dic['res_id'] = None
+                dic['imd_model'] = dic['name'].split(',')[0]
+                if '.' in res_id:
+                    dic['module'], dic['imd_name'] = res_id.split('.', 1)
+                else:
+                    dic['module'], dic['imd_name'] = False, res_id
 
             irt_cursor.push(dic)
 
@@ -1027,10 +1025,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src in pot_targets:
-            value = pot_targets[src]['value']
-            for type, name, res_id in pot_targets[src]['targets']:
-                pot_rows.append((type, name, res_id, src, value, comments))
+        for src, target in pot_targets.iteritems():
+            if target.value:
+                for type, name, res_id in target.targets:
+                    pot_rows.append((type, name, res_id, src, target.value, target.comments))
+        pot_targets.clear()
         for row in pot_rows:
             process_row(row)
 
@@ -1038,6 +1037,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         trans_obj.clear_caches()
         if verbose:
             _logger.info("translation file loaded succesfully")
+
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         _logger.exception("couldn't read translation file %s", filename)
