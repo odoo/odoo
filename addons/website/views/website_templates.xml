@@ -85,7 +85,6 @@
             <!-- OpenGraph tags for Facebook sharing -->
             <meta property="og:title" t-att-content="additional_title" />
             <meta property="og:site_name" t-att-content="res_company.name" />
-            <meta property="og:url" t-att-content="url_for(request.httprequest.host_url + request.httprequest.path[1:])" />
             <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
                 <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
                 <meta property="og:description" t-att-content="og_description" />

@@ -64,7 +64,10 @@
             var title = document.title.split(" | ")[0]; // get the page title without the company name
             var content = $($(this.element).parents().find('.row').find('p')[0]).html(); // fetch the first paragraph in the parent 'row' div (norally related to the content we want to share)
             if (!content) {
-                content = 'You should check this out!';
+                content = $("meta[property='og:description']").attr('content'); // if the content retrieval failed, fetch the og:description meta tag
+            }
+            if (!content) {
+                content = ''; //if all fails, default text is empty
             }
             var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
             if (hashtag_list) {
