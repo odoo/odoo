@@ -22,10 +22,11 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_invoice_onshipping(osv.osv_memory):
     _inherit = "stock.invoice.onshipping"
-    
-    def _get_def_journal_type(self, cr, uid, context=None):
+
+    def _get_invoice_type(self, cr, uid, context=None):
         if context is None:
             context = {}
         res_ids = context and context.get('active_ids', [])
@@ -36,11 +37,10 @@ class stock_invoice_onshipping(osv.osv_memory):
         dest_usage = pick.move_lines[0].location_dest_id.usage
         pick_purchase = pick.move_lines and pick.move_lines[0].purchase_line_id and pick.move_lines[0].purchase_line_id.order_id.invoice_method == 'picking'
         if pick.picking_type_id.code == 'outgoing' and src_usage == 'supplier' and dest_usage == 'customer' and pick_purchase:
-            return 'purchase'
+            return 'in_invoice'
         else:
-            return self._get_journal_type(cr, uid, [0], ['journal_type'], [], context=context)[0]['journal_type']
-        
-        
+            return super(stock_invoice_onshipping, self)._get_invoice_type(cr, uid, context=context)
+
     _defaults = {
-        'journal_type': _get_def_journal_type,
+        'invoice_type': _get_invoice_type,
         }

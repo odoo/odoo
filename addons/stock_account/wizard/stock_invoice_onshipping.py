@@ -22,14 +22,19 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
         journal_obj = self.pool.get('account.journal')
-        journal_type = self._get_journal_type(cr, uid, [0], ['journal_type'], [], context=context)[0]['journal_type']
+        invoice_type = self._get_invoice_type(cr, uid, context=context)
+        if invoice_type in ['in_refund', 'in_invoice']:
+            journal_type = 'purchase'
+        else:
+            journal_type = 'sale'
         journals = journal_obj.search(cr, uid, [('type', '=', journal_type)])
         return journals and journals[0] or False
-    
-    def _get_journal_type(self, cr, uid, ids, field_name, arg, context=None):
+
+    def _get_invoice_type(self, cr, uid, context=None):
         if context is None:
             context = {}
         res_ids = context and context.get('active_ids', [])
@@ -37,46 +42,38 @@ class stock_invoice_onshipping(osv.osv_memory):
         pickings = pick_obj.browse(cr, uid, res_ids, context=context)
         pick = pickings and pickings[0]
         if not pick or not pick.move_lines:
-            return {'journal_type': 'sale', 'invoice_type': 'out_invoice'}
+            return 'out_invoice'
         src_usage = pick.move_lines[0].location_id.usage
         dest_usage = pick.move_lines[0].location_dest_id.usage
         type = pick.picking_type_id.code
         if type == 'outgoing' and dest_usage == 'supplier':
-            journal_type = 'purchase'
             invoice_type = 'in_refund'
         elif type == 'outgoing' and dest_usage == 'customer':
-            journal_type = 'sale'
             invoice_type = 'out_invoice'
         elif type == 'incoming' and src_usage == 'supplier':
-            journal_type = 'purchase'
             invoice_type = 'in_invoice'
         elif type == 'incoming' and src_usage == 'customer':
-            journal_type = 'sale'
             invoice_type = 'out_refund'
         else:
-            journal_type = 'sale'
             invoice_type = 'out_invoice'
-        return {id: {'journal_type': journal_type, 'invoice_type': invoice_type} for id in ids}
+        return invoice_type
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
-        'journal_type': fields.function(_get_journal_type, type='selection', selection=[
-            ('purchase', 'Create Supplier Invoice'),
-            ('sale', 'Create Customer Invoice')
-        ], string='Journal Type', readonly=True, multi=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoice Date'),
-        'invoice_type': fields.function(_get_journal_type, type='selection', selection=[
-            ('out_invoice', 'Customer Invoice'),
-            ('in_invoice', 'Supplier Invoice'),
-            ('out_refund', 'Customer Refund'),
-            ('in_refund', 'Supplier Refund'),
-        ], string='Invoice type', readonly=True, multi=True),
+        'invoice_type': fields.selection(selection=[
+            ('out_invoice', 'Create Customer Invoice'),
+            ('in_invoice', 'Create Supplier Invoice'),
+            ('out_refund', 'Create Customer Refund'),
+            ('in_refund', 'Create Supplier Refund'),
+        ], string='Invoice type', readonly=True),
     }
     _defaults = {
-        'journal_id' : _get_journal,
+        'journal_id': _get_journal,
+        'invoice_type': _get_invoice_type,
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
