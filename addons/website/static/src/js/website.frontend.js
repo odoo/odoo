@@ -11,6 +11,7 @@
             template: Template for widget rendering. 'social_share' for popover, 'social_share_modal' for modal
             element: Element to bind popover (can ba any element if template is modal)
             social_list: List of social media available from ['facebook','twitter', 'linkedin', 'google-plus']
+            hashtag_list: List of hashtags that are added to the shared text on twitter
         */
         template: 'website.social_share',
         init: function(template, element, social_list, hashtag_list){
@@ -58,19 +59,6 @@
                 });
             }
         },
-        // Proxy functions, they are in the technical spec but are not necessary. Should I delete them?
-        google_plus: function(){
-            this.renderSocial('google-plus');
-        },
-        facebook: function(){
-            this.renderSocial('facebook');
-        },
-        twitter: function(){
-            this.renderSocial('twitter');
-        },
-        linkedin: function(){
-            this.renderSocial('linkedin');
-        },
         renderSocial: function(social, hashtag_list){
             var url = document.URL.split(/[?#]/)[0] // get current url without query string
             var title = document.title.split(" | ")[0]; // get the page title without the company name
@@ -79,7 +67,7 @@
                 content = 'You should check this out!';
             }
             var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
-            if (hashtag_list!='') {
+            if (hashtag_list) {
                 for (var i=0; i<hashtag_list.length; i++) {
                     hashtags = hashtags + " #" + hashtag_list[i].replace(' ','');
                 }
@@ -124,6 +112,8 @@
         // Put the object into storage
         localStorage.setItem('social_share', JSON.stringify(dataObject));
     });
+
+    // Store on localStorage when submitting a question for retrieval on next page
     website.ready().done(function() {
         if(localStorage.getItem('social_share')){
             // Retrieve the object from storage
