@@ -134,6 +134,7 @@ class Post(models.Model):
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content')
+    plain_content = fields.Text('Plain Content', compute='_get_plain_content', store = True)
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
@@ -161,6 +162,11 @@ class Post(models.Model):
     def _compute_relevancy(self):
         days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
         self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
+
+    @api.one
+    @api.depends('content')
+    def _get_plain_content(self):
+        self.plain_content = tools.html2plaintext(self.content)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
