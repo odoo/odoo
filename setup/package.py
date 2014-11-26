@@ -327,8 +327,6 @@ def test_rpm(o):
         # Dependencies
         centos7.system('yum install -d 0 -e 0 epel-release -y')
         centos7.system('yum update -d 0 -e 0 -y')
-        centos7.system('yum install -d 0 -e 0 python-pip gcc python-devel -y')
-        centos7.system('pip install pydot pyPdf vatnumber xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')
         # Manual install/start of postgres
         centos7.system('yum install -d 0 -e 0 postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
         centos7.system('mkdir -p /var/lib/postgres/data')
