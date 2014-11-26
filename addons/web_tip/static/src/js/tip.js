@@ -82,6 +82,10 @@
                 view.on('view_list_rendered', self, function() {
                     self.eval_tip(action_id, model, fields_view.type);
                 });
+            } else if (view.hasOwnProperty('editor')) {
+                view.on('view_list_rendered', self, function() {
+                    self.reposition();
+                });
             }
         },
 
@@ -276,6 +280,7 @@
             var self = this;
             if (self.tip_mutex.def.state() === 'pending') {
                 self._set_helper_position();
+                self.$element.popover('show');
             }
         },
 

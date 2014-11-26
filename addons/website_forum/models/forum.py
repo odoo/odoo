@@ -99,6 +99,7 @@ class Forum(models.Model):
     karma_comment_unlink_all = fields.Integer(string='Unlinnk all comments', default=500)
     karma_retag = fields.Integer(string='Change question tags', default=75)
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
+    karma_dofollow = fields.Integer(string='Disabled links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
 
     @api.model
     def create(self, values):

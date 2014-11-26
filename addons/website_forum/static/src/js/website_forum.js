@@ -225,9 +225,9 @@
 
         function CKEDITORLoadComplete(){
             "use strict";
-            $('.cke_button__link').attr('onclick','IsKarmaValid(33,30)');
-            $('.cke_button__unlink').attr('onclick','IsKarmaValid(37,30)');
-            $('.cke_button__image').attr('onclick','IsKarmaValid(41,30)');
+            $('.cke_button__link').on('click', function() { IsKarmaValid(33,30); });
+            $('.cke_button__unlink').on('click', function() { IsKarmaValid(37,30); });
+            $('.cke_button__image').on('click', function() { IsKarmaValid(41,30); });
         }
     });
 
