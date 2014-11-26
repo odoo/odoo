@@ -1685,7 +1685,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True, copy=False),
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
-        'picking_id': fields.many2one('stock.picking', 'Reference Stock Move', select=True, states={'done': [('readonly', True)]}),
+        'picking_id': fields.many2one('stock.picking', 'Picking Reference', select=True, states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
