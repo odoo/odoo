@@ -86,7 +86,7 @@ class hr_payslip(osv.osv):
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
-            date = slip.date
+            date = timenow
 
             default_partner_id = slip.employee_id.address_home_id.id
             name = _('Payslip of %s') % (slip.employee_id.name)
