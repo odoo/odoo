@@ -177,7 +177,6 @@ class product_product(osv.osv):
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Receipt", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
-        'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -192,6 +191,7 @@ class product_product(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.product", string="On Hand"),
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Forecast Quantity',
@@ -232,11 +232,6 @@ class product_product(osv.osv):
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
-    }
-
-    _defaults = {
-        # Dirty hack to avoid empty stat button in create view
-        'qty_available_text': lambda *x: '0.0 On Hand',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -339,7 +334,7 @@ class product_template(osv.osv):
 
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
-        'qty_available_text': fields.function(_product_available_text, type='char'),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.template", string="On Hand"),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -386,8 +381,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'sale_delay': 7,
-        # Dirty hack to avoid empty stat button in create view
-        'qty_available_text': lambda *x: '0.0 On Hand',
     }
 
     def action_view_routes(self, cr, uid, ids, context=None):
