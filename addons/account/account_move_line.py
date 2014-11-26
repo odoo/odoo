@@ -1025,11 +1025,12 @@ class account_move_line(osv.osv):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
+                'is_partially_reconciled': bool(line.reconcile_partial_id),
                 'partial_reconciliation_siblings': partial_reconciliation_siblings,
                 'currency_id': line.currency_id.id or False,
             }
 
-            # Amount residual can be negative
+            # Amount residual can technically be negative (eg: you register a payment of 150€ on an invoice of 100€)
             debit = line.debit
             credit = line.credit
             amount = line.amount_residual
@@ -1048,27 +1049,35 @@ class account_move_line(osv.osv):
             target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
+            total_amount_currency_str = ""
             if line_currency != company_currency:
-                debit = debit > 0 and amount_currency or 0.0
-                credit = credit > 0 and amount_currency or 0.0
+                total_amount = line.amount_currency
+                actual_debit = debit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and amount_currency or 0.0
             else:
-                debit = debit > 0 and amount or 0.0
-                credit = credit > 0 and amount or 0.0
+                total_amount = abs(debit - credit)
+                actual_debit = debit > 0 and amount or 0.0
+                actual_credit = credit > 0 and amount or 0.0
             if line_currency != target_currency:
-                amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
-                ret_line['credit_currency'] = credit
-                ret_line['debit_currency'] = debit
+                amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
+                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                ret_line['credit_currency'] = actual_credit
+                ret_line['debit_currency'] = actual_debit
                 ctx = context.copy()
                 if target_date:
                     ctx.update({'date': target_date})
-                debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, debit, context=ctx)
-                credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, credit, context=ctx)
-            amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
+                total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
+                actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
+                actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
+            amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
+            total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
-            ret_line['credit'] = credit
-            ret_line['debit'] = debit
+            ret_line['debit'] = actual_debit
+            ret_line['credit'] = actual_credit
             ret_line['amount_str'] = amount_str
+            ret_line['total_amount_str'] = total_amount_str
             ret_line['amount_currency_str'] = amount_currency_str
+            ret_line['total_amount_currency_str'] = total_amount_currency_str
             ret.append(ret_line)
         return ret
 
