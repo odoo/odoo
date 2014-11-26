@@ -1241,10 +1241,10 @@ Workflows are also used to track processes that evolve over time.
     In the session form, add a (read-only) field to
     visualize the state, and buttons to change it. The valid transitions are:
 
-    * Draft ➔ Confirmed
-    * Confirmed ➔ Draft
-    * Confirmed ➔ Done
-    * Done ➔ Draft
+    * Draft -> Confirmed
+    * Confirmed -> Draft
+    * Confirmed -> Done
+    * Done -> Draft
 
     .. only:: solutions
 
@@ -1384,7 +1384,7 @@ access rights are limited.
 
 Here is an example of a rule that prevents the deletion of leads that are not
 in state ``cancel``. Notice that the value of the field ``groups`` must follow
-the same convention as the method ``write`` of the ORM.
+the same convention as the method :meth:`~openerp.models.Model.write` of the ORM.
 
 .. code-block:: xml
 
@@ -1725,12 +1725,12 @@ server with the library ``xmlrpclib``::
             print "Logged in as %s (uid:%d)" % (USER,uid)
 
             call = functools.partial(
-                xmlcprlib.ServerProxy(ROOT + 'object').execute,
+                xmlrpclib.ServerProxy(ROOT + 'object').execute,
                 DB, uid, PASS)
 
             # 2. Read the sessions
             sessions = call('openacademy.session','search_read', [], ['name','seats'])
-            for session in sessions :
+            for session in sessions:
                 print "Session %s (%s seats)" % (session['name'], session['seats'])
             # 3.create a new session
             session_id = call('openacademy.session', 'create', {

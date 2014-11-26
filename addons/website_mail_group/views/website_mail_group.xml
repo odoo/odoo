@@ -212,7 +212,7 @@
                                                     t-att-title="attachment.name"/>
                                             </t>
                                             <t t-if="attachment.file_type != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
+                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type or 'disk') + '.png'"
                                                     class='oe_attachment_webimage'
                                                     t-att-title="attachment.name"/>
                                             </t>

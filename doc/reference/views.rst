@@ -85,8 +85,8 @@ There are three types of inheritance specs:
 * any other element, the first element with the same name and identical
   attributes (ignoring ``position``) is matched
 
-The inheritance spec can an optional ``position`` attribute specifhing how
-the matched node should be altered:
+The inheritance spec may have an optional ``position`` attribute specifying
+how the matched node should be altered:
 
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
@@ -98,7 +98,7 @@ the matched node should be altered:
 ``before``
     the content of the inheritance spec is added to the matched node's
     parent, before the matched node
-``attribute``
+``attributes``
     the content of the inheritance spec should be ``attribute`` elements
     with a ``name`` attribute and an optional body:
 

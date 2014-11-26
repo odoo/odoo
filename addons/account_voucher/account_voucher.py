@@ -125,6 +125,9 @@ class account_voucher(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if journal_id:
+            if isinstance(journal_id, (list, tuple)):
+                # sometimes journal_id is a pair (id, display_name)
+                journal_id = journal_id[0]
             journal = journal_pool.browse(cr, uid, journal_id, context=context)
             if journal.currency:
                 return journal.currency.id

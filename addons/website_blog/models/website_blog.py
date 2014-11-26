@@ -30,6 +30,9 @@ class BlogTag(osv.Model):
     _order = 'name'
     _columns = {
         'name': fields.char('Name', required=True),
+        'post_ids': fields.many2many(
+            'blog.post', string='Posts',
+        ),
     }
 
 

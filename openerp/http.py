@@ -261,8 +261,10 @@ class WebRequest(object):
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
-            raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                % (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
+            msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
+            params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
+            _logger.error(msg, *params)
+            raise werkzeug.exceptions.BadRequest(msg % params)
 
         kwargs.update(self.endpoint.arguments)
 
@@ -463,7 +465,13 @@ class JsonRequest(WebRequest):
             request = self.httprequest.stream.read()
 
         # Read POST content or POST Form Data named "request"
-        self.jsonrequest = simplejson.loads(request)
+        try:
+            self.jsonrequest = simplejson.loads(request)
+        except simplejson.JSONDecodeError:
+            msg = 'Invalid JSON data: %r' % (request,)
+            _logger.error('%s: %s', self.httprequest.path, msg)
+            raise werkzeug.exceptions.BadRequest(msg)
+
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
@@ -499,7 +507,8 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, openerp.exceptions.Warning):
+                _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
                     'message': "OpenERP Server Error",
