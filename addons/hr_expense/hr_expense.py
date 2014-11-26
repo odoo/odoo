@@ -174,7 +174,7 @@ class hr_expense_expense(osv.osv):
 
         return {
             'journal_id': journal_id,
-            'date': fields.Date.context_today,
+            'date': expense.date_confirm,
             'ref': ref,
             'company_id': company_id,
         }
