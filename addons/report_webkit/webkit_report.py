@@ -47,6 +47,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv.osv import except_osv
 from urllib import urlencode, quote as quote
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -143,7 +144,7 @@ class WebKitParser(report_sxw):
         if webkit_path:
             return webkit_path
 
-        raise except_osv(
+        raise Warning(
                          _('Wkhtmltopdf library path is not set'),
                          _('Please install executable on your system' \
                          ' (sudo apt-get install wkhtmltopdf) or download it from here:' \
@@ -215,7 +216,7 @@ class WebKitParser(report_sxw):
             else:
                 error_message = _('The following diagnosis message was provided:\n') + error_message
             if status :
-                raise except_osv(_('Webkit error' ),
+                raise Warning(_('Webkit error' ),
                                  _("The command 'wkhtmltopdf' failed with error code = %s. Message: %s") % (status, error_message))
             with open(out_filename, 'rb') as pdf_file:
                 pdf = pdf_file.read()
@@ -282,11 +283,11 @@ class WebKitParser(report_sxw):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise except_osv(_('Error!'), _('Webkit report template not found!'))
+            raise Warning(_('Error!'), _('Webkit report template not found!'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.use_global_header:
-            raise except_osv(
+            raise Warning(
                   _('No header defined for this Webkit report!'),
                   _('Please set a header in company settings.')
               )
@@ -322,7 +323,7 @@ class WebKitParser(report_sxw):
                 except Exception, e:
                     msg = u"%s" % e
                     _logger.error(msg)
-                    raise except_osv(_('Webkit render!'), msg)
+                    raise Warning(_('Webkit render!'), msg)
         else:
             try :
                 html = body_mako_tpl.render(dict(parser_instance.localcontext))
@@ -330,12 +331,12 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
-                raise except_osv(_('Webkit render!'), msg)
+                raise Warning(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
             head = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=False))
         except Exception, e:
-            raise except_osv(_('Webkit render!'), u"%s" % e)
+            raise Warning(_('Webkit render!'), u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
@@ -344,14 +345,14 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
-                raise except_osv(_('Webkit render!'), msg)
+                raise Warning(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
-                raise except_osv(_('Webkit render!'), msg)
+                raise Warning(_('Webkit render!'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
