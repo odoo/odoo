@@ -268,7 +268,7 @@ def _prepare_build_dir(o):
 
 def build_tgz(o):
     system(['python2', 'setup.py', '--quiet', 'sdist'], o.build_dir)
-    system(['cp', glob('%s/dist/openerp-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
+    system(['cp', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
 
 def build_deb(o):
     system(['dpkg-buildpackage', '-rfakeroot'], o.build_dir)
@@ -279,8 +279,7 @@ def build_deb(o):
 
 def build_rpm(o):
     system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
-    system(['cp', glob('%s/dist/openerp-*.noarch.rpm' % o.build_dir)[0], '%s/odoo.noarch.rpm' % o.build_dir])
-    system(['cp', glob('%s/dist/openerp-*.src.rpm' % o.build_dir)[0], '%s/odoo.src.rpm' % o.build_dir])
+    system(['cp', glob('%s/dist/odoo-*.noarch.rpm' % o.build_dir)[0], '%s/odoo.noarch.rpm' % o.build_dir])
 
 def build_exe(o):
     KVMWinBuildExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
