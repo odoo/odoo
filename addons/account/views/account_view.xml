@@ -276,8 +276,8 @@
                             <field name="type"/>
                         </group>
                         <group>
-                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('user_type.type', '!=;', 'consolidation')]"/>
-                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('user_type.type', '!=;', 'consolidation')]"/>
+                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('user_type.type', '!=', 'consolidation')]"/>
+                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('user_type.type', '!=', 'consolidation')]"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
