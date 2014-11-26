@@ -98,7 +98,7 @@ class account_move_line(models.Model):
                     raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_lines:
                     obj_line.analytic_lines.unlink()
-                vals_line = obj_line._prepare_analytic_line()
+                vals_line = self._prepare_analytic_line(obj_line)
                 self.env['account.analytic.line'].create(vals_line)
 
     @api.multi

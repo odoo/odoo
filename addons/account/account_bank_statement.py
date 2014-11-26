@@ -14,7 +14,7 @@ class account_bank_statement(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            journal_id = vals.get('journal_id', self._default_journal_id().id)
+            journal_id = vals.get('journal_id', self._default_journal_id())
             vals['name'] = self._compute_default_statement_name(journal_id)
         if 'line_ids' in vals:
             for index, line in enumerate(vals['line_ids']):
@@ -35,7 +35,7 @@ class account_bank_statement(models.Model):
         company_id = self.env['res.company']._company_default_get('account.bank.statement')
         Journal = False
         if journal_type:
-            Journal = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)], limit=1)
+            Journal = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)], limit=1).id
         return Journal
 
     @api.multi
@@ -668,7 +668,7 @@ class account_bank_statement_line(models.Model):
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Communication', required=True, default=lambda self: self.env['ir.sequence'].get('account.bank.statement.line'))
-    date = fields.Date(string='Date', required=True, default=lambda self: self._context.get('date', fields.Date.context_today))
+    date = fields.Date(string='Date', required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')

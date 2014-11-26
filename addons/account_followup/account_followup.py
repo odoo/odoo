@@ -378,7 +378,7 @@ class res_partner(osv.osv):
                     ''' + overdue_only_str + '''
                     AND reconcile_id IS NULL
                     AND company_id = %s
-                    AND ''' + query + ''') AS l
+                    ''' + query + ''') AS l
                     RIGHT JOIN res_partner p
                     ON p.id = partner_id ) AS pl
                     GROUP BY pid HAVING ''' + having_where_clause, [company_id] + having_values)
