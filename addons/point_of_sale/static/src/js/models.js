@@ -268,7 +268,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model:  'product.product',
             fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
-                     'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
+                     'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'description_sale', 'description',
                      'product_tmpl_id'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
             context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },

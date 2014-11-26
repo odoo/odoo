@@ -530,7 +530,6 @@ class product_template(osv.osv):
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -746,7 +745,6 @@ class product_template(osv.osv):
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
         'uos_coeff': 1.0,
-        'mes_type': 'fixed',
         'categ_id' : _default_category,
         'type' : 'consu',
         'active': True,
