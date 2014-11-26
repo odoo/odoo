@@ -180,16 +180,18 @@ class ir_translation(osv.osv):
             context = {}
         res = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
-            if record.type != 'model':
-                res[record.id] = record.src
-            else:
-                model_name, field = record.name.split(',')
+            res[record.id] = record.src
+            if record.type == 'model':
+                model_name, field_name = record.name.split(',')
                 model = self.pool.get(model_name)
-                if model is not None:
+                if model is None:
+                    continue
+                field = model._fields[field_name]
+                if field.translate is True:
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, [record.res_id], [field], context=context_no_lang)
-                    res[record.id] = result[0][field] if result else False
+                    result = model.read(cr, uid, [record.res_id], [field_name], context=context_no_lang)
+                    res[record.id] = result[0][field_name] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
@@ -199,15 +201,18 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         record = self.browse(cr, uid, id, context=context)
-        if  record.type == 'model':
-            model_name, field = record.name.split(',')
+        if record.type == 'model':
+            model_name, field_name = record.name.split(',')
             model = self.pool.get(model_name)
-            #We need to take the context without the language information, because we want to write on the
-            #value store in db and not on the one associate with current language.
-            #Also not removing lang from context trigger an error when lang is different
-            context_wo_lang = context.copy()
-            context_wo_lang.pop('lang', None)
-            model.write(cr, uid, [record.res_id], {field: value}, context=context_wo_lang)
+            field = model._fields[field_name]
+            if field.translate is True:
+                # Make a context without language information, because we want
+                # to write on the value stored in db and not on the one
+                # associated with the current language. Also not removing lang
+                # from context trigger an error when lang is different.
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                model.write(cr, uid, [record.res_id], {field_name: value}, context=context_wo_lang)
         return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
