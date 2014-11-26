@@ -73,7 +73,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a leave request for another employee -> should crash
-        with self.assertRaises(except_orm,Warning):
+        with self.assertRaises(except_orm):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol10',
                 'employee_id': self.employee_hruser_id,
@@ -112,7 +112,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a new leave request at the same time -> crash, avoid interlapping
-        with self.assertRaises(except_orm, Warning):
+        with self.assertRaises(except_orm):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol21',
                 'employee_id': self.employee_emp_id,
@@ -123,7 +123,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             })
 
         # Employee creates a leave request in a limited category -> crash, not enough days left
-        with self.assertRaises(except_orm, Warning):
+        with self.assertRaises(except_orm):
             self.hr_holidays.create(cr, self.user_employee_id, {
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
@@ -206,5 +206,5 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': (datetime.today() + relativedelta(days=7)),
             'number_of_days_temp': 4,
         })
-        with self.assertRaises(except_orm, Warning):
+        with self.assertRaises(except_orm):
             self.hr_holidays.signal_workflow(cr, self.user_hrmanager_id, [hol2_id], 'confirm')
