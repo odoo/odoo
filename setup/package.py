@@ -377,6 +377,27 @@ def gen_deb_package(o, published_files):
     # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
     subprocess.call(['gpg', '--yes', '-abs', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
 
+#---------------------------------------------------------
+# Generates an RPM repo
+#---------------------------------------------------------
+def gen_rpm_repo(o, file_name):
+    # Sign the RPM
+    subprocess.call(['rpm', '--resign', file_name], cwd=os.path.join(o.pub, 'rpm'))
+
+    # Removes the old repodata
+    subprocess.call(['rm', '-rf', os.path.join(o.pub, 'rpm', 'repodata')])
+
+    # Copy files to a temp directory (required because the working directory must contain only the
+    # files of the last release)
+    temp_path = tempfile.mkdtemp(suffix='rpmPackages')
+    subprocess.call(['cp', file_name, temp_path])
+
+    subprocess.call(['createrepo', temp_path])  # creates a repodata folder in temp_path
+    subprocess.call(['cp', '-r', os.path.join(temp_path, "repodata"), os.path.join(o.pub, 'rpm')])
+
+    # Remove temp directory
+    shutil.rmtree(temp_path)
+
 #----------------------------------------------------------
 # Options and Main
 #----------------------------------------------------------
@@ -444,6 +465,7 @@ def main():
                 if not o.no_testing:
                     test_rpm(o)
                 published_files = publish(o, 'redhat', ['odoo.noarch.rpm'])
+                gen_rpm_repo(o, published_files[0])
             except Exception, e:
                 print("Won't publish the rpm release.\n Exception: %s" % str(e))
         if not o.no_windows:
