@@ -8,69 +8,57 @@
 
     website.social_share = openerp.Widget.extend({
         /*
-            element:Element to bind popover
-            social_list: List of social media avialable
-            configure: To configure socail pluging (url, width, height)
+            template: Template for widget rendering. 'social_share' for popover, 'social_share_modal' for modal
+            element: Element to bind popover (can ba any element if template is modal)
+            social_list: List of social media available from ['facebook','twitter', 'linkedin', 'google-plus']
         */
         template: 'website.social_share',
-        init: function(template, element, social_list, configure){
+        init: function(template, element, social_list, hashtag_list){
 
             //Initialization
             this._super.apply(this, arguments);
             this.element = element;
             this.social_list = social_list;
             this.target = 'social_share';
-            if (template) {
-                this.template='website.'+template;
-            }
+            this.template='website.'+template;
+            this.hashtag_list = hashtag_list;
             this.renderElement();
+            this.bind_events();
 
         },
         bind_events: function() {
-            $('.fa-facebook').on('click', $.proxy(this.facebook, this));
-            $('.fa-twitter').on('click', $.proxy(this.twitter, this));
-            $('.fa-linkedin').on('click', $.proxy(this.linkedin, this));
-            $('.fa-google-plus').on('click', $.proxy(this.google_plus, this));
+            $('.fa-facebook').on('click', $.proxy(this.renderSocial, this, 'facebook', this.hashtag_list));
+            $('.fa-twitter').on('click', $.proxy(this.renderSocial, this, 'twitter', this.hashtag_list));
+            $('.fa-linkedin').on('click', $.proxy(this.renderSocial, this, 'linkedin', this.hashtag_list));
+            $('.fa-google-plus').on('click', $.proxy(this.renderSocial, this, 'google-plus', this.hashtag_list));
         },
-        renderElement: function(configure) {
-            if (this.template == 'website.social_share_dialog'){
-                console.log('dialog mode detected');
+        renderElement: function() {
+            if (this.template == 'website.social_share_modal'){
                 $('body').append(qweb.render(this.template, {medias: this.social_list}));
                 $('#social_share_modal').modal('show');
-//                 this.$el.append(qweb.render('website.social_share', {medias: this.social_list, id: this.target}));
-//                 this.element.popover({
-//                     'content': this.$el.html(),
-//                     'placement': 'right',
-//                     'container': this.element,
-//                     'html': true,
-//                     'trigger': 'hover',
-//                     'animation': false,
-//                 }).popover("show");
-
             } else {
                 this.$el.append(qweb.render(this.template, {medias: this.social_list, id: this.target}));
+                //we need to re-render the element on each hover; popover has the nasty habit of not hiding but completely removing its code from the page
+                //so the binding is lost if we simply trigger on hover.
                 this.element.popover({
                     'content': this.$el.html(),
                     'placement': 'bottom',
                     'container': this.element,
                     'html': true,
-                    'trigger': 'hover',
+                    'trigger': 'manual',
                     'animation': false,
                 }).popover("show")
                 .on("mouseleave", function () {
-                    var _this = this;
+                    var self = this;
                     setTimeout(function () {
                         if (!$(".popover:hover").length) {
-                            $(_this).popover("destroy")
+                            $(self).popover("destroy")
                         }
-                    }, 100);
+                    }, 200);
                 });
-            $('.popover').on("mouseleave", function () {
-                $(this).hide();
-            });
             }
-            this.bind_events();
         },
+        // Proxy functions, they are in the technical spec but are not necessary. Should I delete them?
         google_plus: function(){
             this.renderSocial('google-plus');
         },
@@ -83,17 +71,23 @@
         linkedin: function(){
             this.renderSocial('linkedin');
         },
-        renderSocial: function(social){
-            var url = this.element.data('url') || window.location.href.split(/[?#]/)[0]; // get current url without query string if not pass
-            var title = document.title.split(" | ")[0];
-            var content = $($(this.element).parents().find('.row').find('p')[0]).html();
+        renderSocial: function(social, hashtag_list){
+            var url = document.URL.split(/[?#]/)[0] // get current url without query string
+            var title = document.title.split(" | ")[0]; // get the page title without the company name
+            var content = $($(this.element).parents().find('.row').find('p')[0]).html(); // fetch the first paragraph in the parent 'row' div (norally related to the content we want to share)
             if (!content) {
                 content = 'You should check this out!';
             }
-            var hashtag = document.title.split(" | ")[1].replace(' ','').toLowerCase();
+            var hashtags = document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
+            if (hashtag_list!='') {
+                for (var i=0; i<hashtag_list.length; i++) {
+                    hashtags = hashtags + " #" + hashtag_list[i].replace(' ','');
+                }
+            }
+
             var social_network = {
                 'facebook':'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
-                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title + ' - ' + url + ' #' + hashtag),
+                'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title +  ' #' + company + hashtags + ' - ' + url),
                 'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(content),
                 'google-plus': 'https://plus.google.com/share?url=' + encodeURIComponent(url)
             };
@@ -104,26 +98,25 @@
         },
     });
 
+    // Initialize all social_share links when ready
     website.ready().done(function() {
         $('.social_share').on('hover', function() {
             var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
+            var hashtag_list = eval($(this).data('hashtag_list'));
             var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
-            new website.social_share('social_share',$(this), social_list, {});
+            new website.social_share('social_share',$(this), social_list, hashtag_list);
         });
     });
 
-    //displaying banner after new question/answer
+    // Display modal after new question/answer
     $(document.body).on('click', '.social_share_call', function() {
         var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
+        var hashtag_list = eval($(this).data('hashtag_list'));
         var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
 
-        // var url = self.data('url') || window.location.href.split(/[?#]/)[0];
-        // var text_to_share = self.data('share_content');
-        // var description =  self.data('description');
         var dataObject = {};
         dataObject_func('social_list', social_list);
-        dataObject_func('url', $(this).data('url'));
-        dataObject_func('title', $('input[name=post_name]').val());
+        dataObject_func('hashtag_list', hashtag_list);
         function dataObject_func(propertyName, propertyValue)
         {
             if(propertyValue) dataObject[propertyName] = propertyValue;
@@ -136,10 +129,10 @@
             // Retrieve the object from storage
             var dataObject = JSON.parse(localStorage.getItem('social_share'));
             new website.social_share(
-                'social_share_dialog',
-                $('a[data-oe-expression="question.name"]'),
+                'social_share_modal',
+                $(this),
                 dataObject['social_list'],
-                {}
+                dataObject['hashtag_list']
             );
             localStorage.removeItem('social_share');
         }

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
     <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
     <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-    
+
     <script type="text/javascript" src="/website/static/src/js/website.frontend.js"></script>
 </template>
 
@@ -81,6 +81,16 @@
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
+
+            <!-- OpenGraph tags for Facebook sharing -->
+            <meta property="og:title" t-att-content="additional_title" />
+            <meta property="og:site_name" t-att-content="res_company.name" />
+            <meta property="og:image" t-att-content="url_for(request.httprequest.host_url + 'logo.png')" />
+            <meta property="og:url" t-att-content="url_for(request.httprequest.host_url + request.httprequest.path[1:])" />
+            <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
+                <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
+                <meta property="og:description" t-att-content="og_description" />
+            </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
@@ -192,7 +202,7 @@
     <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
     <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
     <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-    
+
     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
