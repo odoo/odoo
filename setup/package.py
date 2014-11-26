@@ -324,21 +324,23 @@ def test_deb(o):
 def test_rpm(o):
     with docker('centos:centos7', o.build_dir, o.pub) as centos7:
         centos7.release = 'odoo.noarch.rpm'
-        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
-        centos7.system('yum update -y && yum upgrade -y')
-        centos7.system('yum install python-pip gcc python-devel -y')
+        # Dependencies
+        centos7.system('yum install -d 0 -e 0 epel-release -y')
+        centos7.system('yum update -d 0 -e 0 -y')
+        centos7.system('yum install -d 0 -e 0 python-pip gcc python-devel -y')
         centos7.system('pip install pydot pyPdf vatnumber xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')
-        centos7.system('yum install postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
+        # Manual install/start of postgres
+        centos7.system('yum install -d 0 -e 0 postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
         centos7.system('mkdir -p /var/lib/postgres/data')
         centos7.system('chown -R postgres:postgres /var/lib/postgres/data')
         centos7.system('chmod 0700 /var/lib/postgres/data')
         centos7.system('su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"')
         centos7.system('cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf')
         centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
+        centos7.system('sleep 5')
         centos7.system('su postgres -c "createdb mycompany"')
-        centos7.system('export PYTHONPATH=${PYTHONPATH}:/usr/local/lib/python2.7/dist-packages')
-        centos7.system('su postgres -c "createdb mycompany"')
-        centos7.system('yum install /opt/release/%s -y' % centos7.release)
+        # Odoo install
+        centos7.system('yum install -d 0 -e 0 /opt/release/%s -y' % centos7.release)
         centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
         centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
