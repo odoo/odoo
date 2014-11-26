@@ -606,15 +606,21 @@ class account_bank_statement_line(osv.osv):
         if additional_domain is None:
             additional_domain = []
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False),
-                                      ('state', '=', 'valid'),
-                                      ('account_id.reconcile', '=', True)]
+        domain = additional_domain + [
+            ('reconcile_id', '=', False),
+            ('state', '=', 'valid'),
+            ('account_id.reconcile', '=', True)
+        ]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id)]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         if str:
-            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+            domain += [
+                '|', ('move_id.name', 'ilike', str),
+                '|', ('move_id.ref', 'ilike', str),
+                ('date_maturity', 'like', str),
+            ]
             if not st_line.partner_id.id:
                 domain.insert(-1, '|', )
                 domain.append(('partner_id.name', 'ilike', str))
