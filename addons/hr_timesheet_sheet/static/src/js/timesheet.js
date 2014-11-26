@@ -626,6 +626,10 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         return groupby_date[max_date.format("YYYY-MM-DD")] || {};
     },
     copy_accounts: function(e) {
+        /*
+         * This method first try to search for previous records in existing timesheet, if there is no previous records
+         * then it will fetch last saved timesheet, from that it fetches last day and copy all data of last day here
+         */
         var self = this;
         var data_to_copy;
         var onchange_result = {};
@@ -942,7 +946,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.display_totals();
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
-    get_last_seven_day_data: function(records) {
+    get_current_week_data: function(records) {
         var week = this.get('week');
         if (!records) {
             return;
@@ -977,6 +981,11 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         return current_week_data;
     },
     copy_accounts: function() {
+        /*
+         * The method will fetch the last timesheet and from the last timesheet it slice the records for current week,
+         * this will call get_current_week_data method which do mapping of data, data of last timesheet's Monday will be 
+         * placed in current week's Monday and so on...
+         * */
         var self = this;
         var data_to_copy;
         var onchange_result = {};
@@ -1008,7 +1017,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                         //Need to call onchange_account_id because it updated keys of default_get
                         return (new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], result[0].account_id,
                             new instance.web.CompoundContext({'user_id': self.parent.get('user_id')})])).then(function(onchange_account) {
-                                var current_week_data = self.get_last_seven_day_data(result);
+                                var current_week_data = self.get_current_week_data(result);
                                 data_to_copy = _.groupBy(current_week_data, "account_id");
                                 onchange_result = onchange_account.value;
                                 self.copy_data(data_to_copy);
