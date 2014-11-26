@@ -34,7 +34,8 @@ class account_voucher(models.Model):
         return res
 
     def _get_currency(self, cr, uid, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if journal_id:
@@ -157,64 +158,6 @@ class account_voucher(models.Model):
 
             self.write(cr, uid, [voucher.id], {'amount':total, 'tax_amount':total_tax})
         return True
-
-    #def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context=None):
-    #    context = context or {}
-    #    tax_pool = self.pool.get('account.tax')
-    #    partner_pool = self.pool.get('res.partner')
-    #    position_pool = self.pool.get('account.fiscal.position')
-    #    line_pool = self.pool.get('account.voucher.line')
-    #    if not line_ids:
-    #        line_ids = []
-    #    res = {
-    #        'tax_amount': False,
-    #        'amount': False,
-    #    }
-    #    voucher_total = 0.0
-
-    #    line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
-
-    #    total_tax = 0.0
-    #    for line in line_ids:
-    #        line_amount = 0.0
-    #        line_amount = line.get('amount',0.0)
-
-    #        if tax_id:
-    #            tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
-    #            if partner_id:
-    #                partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-    #                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-    #                tax = tax_pool.browse(cr, uid, taxes, context=context)
-
-    #            if not tax[0].price_include:
-    #                for tax_line in tax_pool.compute_all(cr, uid, tax, line_amount, 1).get('taxes', []):
-    #                    total_tax += tax_line.get('amount')
-
-    #        voucher_total += line_amount
-    #    total = voucher_total + total_tax
-
-    #    res.update({
-    #        'amount': total or voucher_total,
-    #        'tax_amount': total_tax
-    #    })
-    #    return {
-    #        'value': res
-    #    }
-
-    #def onchange_term_id(self, cr, uid, ids, term_id, amount):
-    #    term_pool = self.pool.get('account.payment.term')
-    #    terms = False
-    #    due_date = False
-    #    default = {'date_due':False}
-    #    if term_id and amount:
-    #        terms = term_pool.compute(cr, uid, term_id, amount)
-    #    if terms:
-    #        due_date = terms[-1][0]
-    #        default.update({
-    #            'date_due':due_date
-    #        })
-    #    return {'value':default}
-
 
     def basic_onchange_partner(self, cr, uid, ids, partner_id, journal_id, ttype, context=None):
         partner_pool = self.pool.get('res.partner')
@@ -425,9 +368,6 @@ class account_voucher(models.Model):
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher.id, context=ctx)
-            # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
-            # currency rate difference
-            currency_rate_difference = 0.0
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'name': line.name or '/',
@@ -463,8 +403,7 @@ class account_voucher(models.Model):
             amount_currency = False
 
             move_line['amount_currency'] = amount_currency
-            voucher_line = move_line_obj.create(cr, uid, move_line)
-            rec_ids = [voucher_line, line.move_line_id.id]
+            move_line_obj.create(cr, uid, move_line)
 
         return (tot_line, rec_lst_ids)
 
