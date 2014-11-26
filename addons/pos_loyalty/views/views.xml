@@ -20,7 +20,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Point of Sale']/group" position="after">
+                <xpath expr="//group[@string='Point of Sale']" position="after">
                     <group name="loyalty" string="Loyalty Programs">
                         <field name="loyalty_points" />
                     </group>
