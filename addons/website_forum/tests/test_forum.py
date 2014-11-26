@@ -2,7 +2,7 @@
 
 from openerp.addons.website_forum.tests.common import KARMA, TestForumCommon
 from openerp.addons.website_forum.models.forum import KarmaError
-from openerp.exceptions import Warning, AccessError
+from openerp.exceptions import UserError, AccessError
 from openerp.tools import mute_logger
 
 

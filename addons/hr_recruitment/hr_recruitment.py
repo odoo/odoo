@@ -25,7 +25,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 AVAILABLE_PRIORITIES = [
@@ -510,7 +510,7 @@ class hr_applicant(osv.Model):
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired", context=context)
             else:
-                raise Warning(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
+                raise UserError(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, [action_id], [])[0]

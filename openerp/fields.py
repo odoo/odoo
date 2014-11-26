@@ -454,7 +454,7 @@ class Field(object):
 
         # check type consistency
         if self.type != field.type:
-            raise Warning("Type of related field %s is inconsistent with %s" % (self, field))
+            raise UserError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
         self.depends = ('.'.join(self.related),)

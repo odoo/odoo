@@ -22,7 +22,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class purchase_order_group(osv.osv_memory):
     _name = "purchase.order.group"
@@ -42,7 +42,7 @@ class purchase_order_group(osv.osv_memory):
             context={}
         res = super(purchase_order_group, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if context.get('active_model','') == 'purchase.order' and len(context['active_ids']) < 2:
-            raise Warning(_('Warning!'),
+            raise UserError(_('Warning!'),
             _('Please select multiple order to merge in the list view.'))
         return res
     def merge_orders(self, cr, uid, ids, context=None):

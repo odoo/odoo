@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 import time
 
@@ -305,7 +305,7 @@ class account_bank_statement(osv.osv):
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context=context)
         if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001)):
-            raise Warning(_('Error!'),
+            raise UserError(_('Error!'),
                     _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
 
@@ -327,10 +327,10 @@ class account_bank_statement(osv.osv):
             self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
-                raise Warning(_('Configuration Error!'), _('Please verify that an account is defined in the journal.'))
+                raise UserError(_('Configuration Error!'), _('Please verify that an account is defined in the journal.'))
             for line in st.move_line_ids:
                 if line.state != 'valid':
-                    raise Warning(_('Error!'), _('The account entries lines are not in valid state.'))
+                    raise UserError(_('Error!'), _('The account entries lines are not in valid state.'))
             move_ids = []
             for st_line in st.line_ids:
                 if not st_line.amount:
@@ -345,7 +345,7 @@ class account_bank_statement(osv.osv):
                     }
                     self.pool.get('account.bank.statement.line').process_reconciliation(cr, uid, st_line.id, [vals], context=context)
                 elif not st_line.journal_entry_id.id:
-                    raise Warning(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
+                    raise UserError(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
                 move_ids.append(st_line.journal_entry_id.id)
             if move_ids:
                 self.pool.get('account.move').post(cr, uid, move_ids, context=context)
@@ -387,7 +387,7 @@ class account_bank_statement(osv.osv):
         statement_line_obj = self.pool['account.bank.statement.line']
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
-                raise Warning(
+                raise UserError(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
@@ -425,13 +425,13 @@ class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('amount_currency', 0) and not vals.get('amount', 0):
-            raise Warning(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
+            raise UserError(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
         return super(account_bank_statement_line, self).create(cr, uid, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for item in self.browse(cr, uid, ids, context=context):
             if item.journal_entry_id:
-                raise Warning(
+                raise UserError(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
                 )
@@ -660,11 +660,11 @@ class account_bank_statement_line(osv.osv):
         if currency_diff < 0:
             account_id = st_line.company_id.expense_currency_exchange_account_id.id
             if not account_id:
-                raise Warning(_('Insufficient Configuration!'), _("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise UserError(_('Insufficient Configuration!'), _("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
             account_id = st_line.company_id.income_currency_exchange_account_id.id
             if not account_id:
-                raise Warning(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise UserError(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         return {
             'move_id': move_id,
             'name': _('change') + ': ' + (st_line.name or '/'),
@@ -702,7 +702,7 @@ class account_bank_statement_line(osv.osv):
 
         # Checks
         if st_line.journal_entry_id.id:
-            raise Warning(_('Error!'), _('The bank statement line was already reconciled.'))
+            raise UserError(_('Error!'), _('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
             for field in ['debit', 'credit', 'amount_currency']:
                 if field not in mv_line_dict:
@@ -710,7 +710,7 @@ class account_bank_statement_line(osv.osv):
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context)
                 if mv_line.reconcile_id:
-                    raise Warning(_('Error!'), _('A selected move line was already reconciled.'))
+                    raise UserError(_('Error!'), _('A selected move line was already reconciled.'))
 
         # Create the move
         move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)

@@ -22,7 +22,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class hr_timesheet_invoice_create(osv.osv_memory):
 
@@ -54,7 +54,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                raise Warning(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
+                raise UserError(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]

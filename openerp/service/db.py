@@ -13,7 +13,7 @@ import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 import openerp.release
 import openerp.sql_db
 import openerp.tools

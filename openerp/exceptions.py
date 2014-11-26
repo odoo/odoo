@@ -38,6 +38,9 @@ class except_orm(Exception):
 class Warning(except_orm):
     pass
 
+class UserError(Warning):
+    pass
+
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
     diplaying the warning message.

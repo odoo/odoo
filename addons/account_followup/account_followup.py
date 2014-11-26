@@ -23,7 +23,7 @@ from openerp import api
 from openerp.osv import fields, osv
 from lxml import etree
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -311,13 +311,13 @@ class res_partner(osv.osv):
                                                                    ('state', '!=', 'draft'),
                                                                    ('company_id', '=', company_id),
                                                                   ], context=context):
-            raise Warning(_('Error!'),_("The partner does not have any accounting entries to print in the overdue report for the current company."))
+            raise UserError(_('Error!'),_("The partner does not have any accounting entries to print in the overdue report for the current company."))
         self.message_post(cr, uid, [ids[0]], body=_('Printed overdue payments report'), context=context)
         #build the id of this partner in the psql view. Could be replaced by a search with [('company_id', '=', company_id),('partner_id', '=', ids[0])]
         wizard_partner_ids = [ids[0] * 10000 + company_id]
         followup_ids = self.pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not followup_ids:
-            raise Warning(_('Error!'),_("There is no followup plan defined for the current company."))
+            raise UserError(_('Error!'),_("There is no followup plan defined for the current company."))
         data = {
             'date': fields.date.today(),
             'followup_id': followup_ids[0],

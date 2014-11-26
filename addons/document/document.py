@@ -35,7 +35,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -335,17 +335,17 @@ class document_directory(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
-            raise Warning(_('ValidateError'), _('Directory name must be unique!'))
+            raise UserError(_('ValidateError'), _('Directory name must be unique!'))
         return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
-            raise Warning(_('ValidateError'), _('Directory name must be unique!'))
+            raise UserError(_('ValidateError'), _('Directory name must be unique!'))
         newname = vals.get('name',False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
-                    raise Warning(_('ValidateError'), _('Directory name contains special characters!'))
+                    raise UserError(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 class document_directory_dctx(osv.osv):
@@ -571,7 +571,7 @@ class document_storage(osv.osv):
             _logger.warning("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
-            raise Warning(_('Error at doc write!'), str(e))
+            raise UserError(_('Error at doc write!'), str(e))
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)

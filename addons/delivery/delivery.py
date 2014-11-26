@@ -24,7 +24,7 @@ import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -235,7 +235,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise Warning(_("Unable to fetch delivery method!"), _("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
+            raise UserError(_("Unable to fetch delivery method!"), _("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
 
         return price
 

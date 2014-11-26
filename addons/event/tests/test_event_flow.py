@@ -4,7 +4,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.event.tests.common import TestEventCommon
-from openerp.exceptions import AccessError, ValidationError, Warning
+from openerp.exceptions import AccessError, ValidationError, Warning, UserError
 from openerp.tools import mute_logger
 
 

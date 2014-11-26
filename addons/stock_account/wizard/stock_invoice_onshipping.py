@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
@@ -80,7 +80,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             if pick.invoice_state != '2binvoiced':
                 count += 1
         if len(active_ids) == count:
-            raise Warning(_('Warning!'), _('None of these picking lists require invoicing.'))
+            raise UserError(_('Warning!'), _('None of these picking lists require invoicing.'))
         return res
 
     def open_invoice(self, cr, uid, ids, context=None):
@@ -89,7 +89,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         
         invoice_ids = self.create_invoice(cr, uid, ids, context=context)
         if not invoice_ids:
-            raise Warning(_('Error!'), _('No invoice created!'))
+            raise UserError(_('Error!'), _('No invoice created!'))
 
         data = self.browse(cr, uid, ids[0], context=context)
 

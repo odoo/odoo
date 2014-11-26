@@ -46,7 +46,7 @@ from openerp.osv import fields, osv, orm
 from openerp.osv.orm import BaseModel
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 

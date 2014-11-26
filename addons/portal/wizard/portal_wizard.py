@@ -25,7 +25,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_split
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -161,7 +161,7 @@ class wizard_user(osv.osv_memory):
     def action_apply(self, cr, uid, ids, context=None):
         error_msg = self.get_error_messages(cr, uid, ids, context=context)
         if error_msg:
-            raise Warning(_('Contacts Error'), "\n\n".join(error_msg))
+            raise UserError(_('Contacts Error'), "\n\n".join(error_msg))
 
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
@@ -223,7 +223,7 @@ class wizard_user(osv.osv_memory):
         this_context = context
         this_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context)
         if not this_user.email:
-            raise Warning(_('Email Required'),
+            raise UserError(_('Email Required'),
                 _('You must have an email address in your User Preferences to send emails.'))
 
         # determine subject and body in the portal user's language

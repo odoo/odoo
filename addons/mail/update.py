@@ -12,7 +12,7 @@ from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.tools.config import config
 from openerp.tools import misc
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ class publisher_warranty_contract(AbstractModel):
                 if cron_mode:   # we don't want to see any stack trace in cron
                     return False
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)
-                raise Warning(_("Error"), _("Error during communication with the publisher warranty server."))
+                raise UserError(_("Error"), _("Error during communication with the publisher warranty server."))
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)

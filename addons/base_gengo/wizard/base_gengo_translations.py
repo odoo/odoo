@@ -27,7 +27,7 @@ import time
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -100,17 +100,17 @@ class base_gengo_translations(osv.osv_memory):
 
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
         if not flag:
-            raise Warning(_('Gengo Authentication Error'), gengo)
+            raise UserError(_('Gengo Authentication Error'), gengo)
         for wizard in self.browse(cr, uid, ids, context=context):
             supported_langs = self.pool.get('ir.translation')._get_all_supported_languages(cr, uid, context=context)
             language = self.pool.get('ir.translation')._get_gengo_corresponding_language(wizard.lang_id.code)
             if language not in supported_langs:
-                raise Warning(_("Warning"), _('This language is not supported by the Gengo translation services.'))
+                raise UserError(_("Warning"), _('This language is not supported by the Gengo translation services.'))
 
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_limit > 200 or wizard.sync_limit < 1:
-                raise Warning(_("Warning"), _('Sync limit should between 1 to 200 for Gengo translation services.'))
+                raise UserError(_("Warning"), _('Sync limit should between 1 to 200 for Gengo translation services.'))
             if wizard.sync_type in ['send', 'both']:
                 self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
             if wizard.sync_type in ['receive', 'both']:

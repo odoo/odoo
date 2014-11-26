@@ -35,7 +35,7 @@ except ImportError:
 from openerp.osv import fields, osv
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _ref_vat = {
     'at': 'ATU12345675',
@@ -112,7 +112,7 @@ class res_partner(osv.osv):
     def button_check_vat(self, cr, uid, ids, context=None):
         if not self.check_vat(cr, uid, ids, context=context):
             msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise Warning(_('Error!'), msg)
+            raise UserError(_('Error!'), msg)
         return True
 
     def check_vat(self, cr, uid, ids, context=None):

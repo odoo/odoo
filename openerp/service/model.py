@@ -11,7 +11,7 @@ import openerp
 from openerp.tools.translate import translate
 from openerp.osv.orm import except_orm
 from contextlib import contextmanager
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 import security
 
@@ -127,7 +127,7 @@ def check(f):
                 registry = openerp.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
-                        raise Warning(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
+                        raise UserError(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)
@@ -147,16 +147,16 @@ def check(f):
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
-                    raise Warning(_('Integrity Error'), msg)
+                    raise UserError(_('Integrity Error'), msg)
                 else:
-                    raise Warning(_('Integrity Error'), inst[0])
+                    raise UserError(_('Integrity Error'), inst[0])
 
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.registry(cr.dbname).get(obj)
     if object is None:
-        raise Warning('Object Error', "Object %s doesn't exist" % obj)
+        raise UserError('Object Error', "Object %s doesn't exist" % obj)
     return getattr(object, method)(cr, uid, *args, **kw)
 
 def execute_kw(db, uid, obj, method, args, kw=None):
@@ -167,7 +167,7 @@ def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
     with openerp.registry(db).cursor() as cr:
         if method.startswith('_'):
-            raise Warning('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
+            raise UserError('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
             _logger.warning('The method %s of the object %s can not return `None` !', method, obj)

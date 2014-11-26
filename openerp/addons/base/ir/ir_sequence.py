@@ -24,7 +24,7 @@ import time
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import datetime, timedelta
 from openerp import _, api, fields, models
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -126,7 +126,7 @@ class ir_sequence(models.Model):
         There is no access rights check.
         """
         if number_increment == 0:
-            raise Warning(_('Increment number must not be zero.'))
+            raise UserError(_('Increment number must not be zero.'))
         if seq_date_id:
             sql = "CREATE SEQUENCE ir_sequence_%03d_%03d INCREMENT BY %%s START WITH %%s" % (self.id, seq_date_id.id)
         else:
@@ -155,7 +155,7 @@ class ir_sequence(models.Model):
         There is no access rights check.
         """
         if number_increment == 0:
-            raise Warning(_("Increment number must not be zero."))
+            raise UserError(_("Increment number must not be zero."))
         if seq_date_id:
             seq_name = 'ir_sequence_%03d_%03d' % (self.id, seq_date_id.id)
         else:
@@ -262,7 +262,7 @@ class ir_sequence(models.Model):
             interpolated_prefix = self._interpolate(self.prefix, d)
             interpolated_suffix = self._interpolate(self.suffix, d)
         except ValueError:
-            raise Warning(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
+            raise UserError(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):

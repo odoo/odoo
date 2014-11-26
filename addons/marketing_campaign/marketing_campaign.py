@@ -35,7 +35,7 @@ from openerp import api
 from openerp.osv import fields, osv
 from openerp.report import render_report
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -109,7 +109,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise Warning(_("Error"), _("The campaign cannot be started. There are no activities in it."))
+            raise UserError(_("Error"), _("The campaign cannot be started. There are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -121,7 +121,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise Warning(_("Error"), _("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
+            raise UserError(_("Error"), _("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -131,7 +131,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
         if segment_ids :
-            raise Warning(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
+            raise UserError(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -187,7 +187,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise Warning(_("Operation not supported"), _("You cannot duplicate a campaign, Not supported yet."))
+        raise UserError(_("Operation not supported"), _("You cannot duplicate a campaign, Not supported yet."))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
@@ -798,7 +798,7 @@ class marketing_campaign_workitem(osv.osv):
                 'datas' : datas,
             }
         else:
-            raise Warning(_('No preview'),_('The current step for this item has no email or report to preview.'))
+            raise UserError(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
 

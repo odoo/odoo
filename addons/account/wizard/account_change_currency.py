@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class account_change_currency(osv.osv_memory):
     _name = 'account.change.currency'
@@ -36,7 +36,7 @@ class account_change_currency(osv.osv_memory):
             context = {}
         if context.get('active_id',False):
             if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
-                raise Warning(_('Error!'), _('You can only change currency for Draft Invoice.'))
+                raise UserError(_('Error!'), _('You can only change currency for Draft Invoice.'))
             pass
 
     def change_currency(self, cr, uid, ids, context=None):
@@ -57,18 +57,18 @@ class account_change_currency(osv.osv_memory):
             if invoice.company_id.currency_id.id == invoice.currency_id.id:
                 new_price = line.price_unit * rate
                 if new_price <= 0:
-                    raise Warning(_('Error!'), _('New currency is not configured properly.'))
+                    raise UserError(_('Error!'), _('New currency is not configured properly.'))
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id == new_currency:
                 old_rate = invoice.currency_id.rate
                 if old_rate <= 0:
-                    raise Warning(_('Error!'), _('Current currency is not configured properly.'))
+                    raise UserError(_('Error!'), _('Current currency is not configured properly.'))
                 new_price = line.price_unit / old_rate
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
                 old_rate = invoice.currency_id.rate
                 if old_rate <= 0:
-                    raise Warning(_('Error!'), _('Current currency is not configured properly.'))
+                    raise UserError(_('Error!'), _('Current currency is not configured properly.'))
                 new_price = (line.price_unit / old_rate ) * rate
             obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
         obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)

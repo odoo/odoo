@@ -894,7 +894,7 @@ class Environment(object):
                     pass
 
         if invalids:
-            raise Warning('Invalid cache for fields\n' + pformat(invalids))
+            raise UserError('Invalid cache for fields\n' + pformat(invalids))
 
 
 class Environments(object):
@@ -915,5 +915,5 @@ class Environments(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning, AccessError, MissingError
+from openerp.exceptions import UserError, AccessError, MissingError
 from openerp.modules.registry import RegistryManager

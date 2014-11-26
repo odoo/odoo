@@ -24,7 +24,7 @@ import time
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 STATE = [
     ('none', 'Non Member'),
@@ -400,10 +400,10 @@ class Partner(osv.osv):
             fpos_id = partner.property_account_position and partner.property_account_position.id or False
             addr = self.address_get(cr, uid, [partner.id], ['invoice'])
             if partner.free_member:
-                raise Warning(_('Error!'),
+                raise UserError(_('Error!'),
                         _("Partner is a free Member."))
             if not addr.get('invoice', False):
-                raise Warning(_('Error!'),
+                raise UserError(_('Error!'),
                         _("Partner doesn't have an address to make the invoice."))
             quantity = 1
             line_value =  {

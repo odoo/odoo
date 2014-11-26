@@ -21,7 +21,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
@@ -55,7 +55,7 @@ class account_move_line(osv.osv):
                 if not line2bank.get(line.id) and line.partner_id.bank_ids:
                     line2bank[line.id] = line.partner_id.bank_ids[0].id
             else:
-                raise Warning(_('Error!'), _('There is no partner defined on the entry line.'))
+                raise UserError(_('Error!'), _('There is no partner defined on the entry line.'))
         return line2bank
 
 

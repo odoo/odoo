@@ -6,7 +6,7 @@ import json
 import random
 
 from openerp import tools
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.tools import ustr
@@ -617,7 +617,7 @@ class MassMailing(osv.Model):
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
             if not res_ids:
-                raise Warning('Please select recipients.')
+                raise UserError('Please select recipients.')
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,

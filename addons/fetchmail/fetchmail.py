@@ -37,7 +37,7 @@ from openerp import addons
 from openerp.osv import fields, osv
 from openerp import tools, api
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -161,7 +161,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                 server.write({'state':'done'})
             except Exception, e:
                 _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
-                raise Warning(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
+                raise UserError(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
             finally:
                 try:
                     if connection:

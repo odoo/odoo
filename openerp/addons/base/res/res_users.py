@@ -34,7 +34,7 @@ import openerp.exceptions
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.http import request
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -124,7 +124,7 @@ class res_groups(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise Warning(_('Error'),
+                raise UserError(_('Error'),
                         _('The name of the group can not start with "-"'))
         res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
@@ -156,7 +156,7 @@ class res_users(osv.osv):
             # To change their own password users must use the client-specific change password wizard,
             # so that the new password is immediately used for further RPC requests, otherwise the user
             # will face unexpected 'Access Denied' exceptions.
-            raise Warning(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+            raise UserError(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
@@ -345,7 +345,7 @@ class res_users(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
-            raise Warning(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+            raise UserError(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
         if db in self._uid_cache:
             for id in ids:
@@ -510,7 +510,7 @@ class res_users(osv.osv):
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
-        raise Warning(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+        raise UserError(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
     def preference_save(self, cr, uid, ids, context=None):
         return {
@@ -844,7 +844,7 @@ class users_view(osv.osv):
             for group_xml_id in context["default_groups_ref"]:
                 group_split = group_xml_id.split('.')
                 if len(group_split) != 2:
-                    raise Warning(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
+                    raise UserError(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
                 try:
                     temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
                 except ValueError:

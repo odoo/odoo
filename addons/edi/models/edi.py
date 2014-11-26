@@ -33,7 +33,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 _logger = logging.getLogger(__name__)
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?db=%s&token=%s'
@@ -127,7 +127,7 @@ class edi(osv.AbstractModel):
             module = edi_document.get('__import_module') or edi_document.get('__module')
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise Warning(_('Missing Application.'),
+                raise UserError(_('Missing Application.'),
                             _("The document you are trying to import requires the Odoo `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')

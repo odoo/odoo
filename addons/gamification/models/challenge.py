@@ -28,7 +28,7 @@ from openerp.tools.translate import _
 from datetime import date, datetime, timedelta
 import calendar
 import logging
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
@@ -249,7 +249,7 @@ class gamification_challenge(osv.Model):
         elif vals.get('state') == 'draft':
             # resetting progress
             if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
-                raise Warning("Error", "You can not reset a challenge with unfinished goals.")
+                raise UserError("Error", "You can not reset a challenge with unfinished goals.")
 
         return write_res
 
@@ -554,7 +554,7 @@ class gamification_challenge(osv.Model):
 
             if challenge.visibility_mode == 'personal':
                 if not user_id:
-                    raise Warning(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                    raise UserError(_('Error!'),_("Retrieving progress for personal challenge without user information"))
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1

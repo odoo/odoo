@@ -31,7 +31,7 @@ from openerp import tools
 from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class project_task_type(osv.osv):
@@ -186,7 +186,7 @@ class project(osv.osv):
         analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
-                raise Warning(_('Invalid Action!'),
+                raise UserError(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
@@ -505,7 +505,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise Warning(_('Warning!'),_("You must assign members on the project '%s'!") % (project.name,))
+                raise UserError(_('Warning!'),_("You must assign members on the project '%s'!") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -995,7 +995,7 @@ class task(osv.osv):
             if task.child_ids:
                 for child in task.child_ids:
                     if child.stage_id and not child.stage_id.fold:
-                        raise Warning(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
+                        raise UserError(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
         return True
 
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
@@ -1304,7 +1304,7 @@ class account_analytic_account(osv.osv):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_tasks = self.pool['project.task'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_tasks:
-            raise Warning(_('Warning!'), _('Please remove existing tasks in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Warning!'), _('Please remove existing tasks in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):

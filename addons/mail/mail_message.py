@@ -30,7 +30,7 @@ from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -175,7 +175,7 @@ class mail_message(osv.Model):
             return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
         elif this.email:
             return formataddr((this.name, this.email))
-        raise Warning(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
+        raise UserError(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
@@ -771,7 +771,7 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
-        raise Warning(_('Access Denied'),
+        raise UserError(_('Access Denied'),
                              _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                              (self._description, operation))
 

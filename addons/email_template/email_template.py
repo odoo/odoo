@@ -33,7 +33,7 @@ from openerp.osv import osv, fields
 from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -353,7 +353,7 @@ class email_template(osv.osv):
                     ir_values_obj = self.pool.get('ir.values')
                     ir_values_obj.unlink(cr, SUPERUSER_ID, template.ref_ir_value.id, context)
             except Exception:
-                raise Warning(_("Warning"), _("Deletion of the action record failed."))
+                raise UserError(_("Warning"), _("Deletion of the action record failed."))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -550,7 +550,7 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         if not values.get('email_from'):
-            raise Warning(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+            raise UserError(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])

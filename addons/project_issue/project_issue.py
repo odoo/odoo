@@ -31,7 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class project_issue_version(osv.Model):
@@ -407,7 +407,7 @@ class project_issue(osv.Model):
             data = {}
             esc_proj = issue.project_id.project_escalation_id
             if not esc_proj:
-                raise Warning(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise UserError(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
 
             data['project_id'] = esc_proj.id
             if esc_proj.user_id:
@@ -543,7 +543,7 @@ class account_analytic_account(osv.Model):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_issues:
-            raise Warning(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 

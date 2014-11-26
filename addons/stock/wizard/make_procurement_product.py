@@ -21,7 +21,7 @@
 
 
 from openerp.osv import fields, osv, orm
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 
 class make_procurement(osv.osv_memory):
@@ -115,7 +115,7 @@ class make_procurement(osv.osv_memory):
             if len(product_ids) == 1:
                 record_id = product_ids[0]
             else:
-                raise Warning(_('Warning'), _('Please use the Product Variant vue to request a procurement.'))
+                raise UserError(_('Warning'), _('Please use the Product Variant vue to request a procurement.'))
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
 

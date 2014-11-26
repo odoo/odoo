@@ -23,7 +23,7 @@ import itertools
 from lxml import etree
 
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm, UserError, RedirectWarning, Warning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
@@ -90,7 +90,7 @@ class account_invoice(models.Model):
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
-            raise Warning(_('No Analytic Journal!'),
+            raise UserError(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
         return journal[0]
 
@@ -417,9 +417,9 @@ class account_invoice(models.Model):
     def unlink(self):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
-                raise Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
+                raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
             elif invoice.internal_number:
-                raise Warning(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
+                raise UserError(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(account_invoice, self).unlink()
 
     @api.multi
@@ -508,7 +508,7 @@ class account_invoice(models.Model):
         if pterm_list:
             return {'value': {'date_due': max(line[0] for line in pterm_list)}}
         else:
-            raise Warning(_('Insufficient Data!'),
+            raise UserError(_('Insufficient Data!'),
                 _('The payment term of supplier does not have a payment term line.'))
 
     @api.multi
@@ -570,7 +570,7 @@ class account_invoice(models.Model):
                     if len(line_cmd) >= 3 and isinstance(line_cmd[2], dict):
                         line = self.env['account.account'].browse(line_cmd[2]['account_id'])
                         if line.company_id.id != company_id:
-                            raise Warning(
+                            raise UserError(
                                 _('Configuration Error!'),
                                 _("Invoice line account's company and invoice's company does not match.")
                             )
@@ -669,7 +669,7 @@ class account_invoice(models.Model):
                 else:
                     ref = self.number
                 if not self.journal_id.analytic_journal_id:
-                    raise Warning(_('No Analytic Journal!'),
+                    raise UserError(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
                 currency = self.currency_id.with_context(date=self.date_invoice)
                 il['analytic_lines'] = [(0,0, {
@@ -722,13 +722,13 @@ class account_invoice(models.Model):
                 key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
                 tax_key.append(key)
                 if key not in compute_taxes:
-                    raise Warning(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
+                    raise UserError(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
                 if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
-                    raise Warning(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
+                    raise UserError(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
-                    raise Warning(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
+                    raise UserError(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
 
     @api.multi
     def compute_invoice_totals(self, company_currency, ref, invoice_move_lines):
@@ -793,9 +793,9 @@ class account_invoice(models.Model):
 
         for inv in self:
             if not inv.journal_id.sequence_id:
-                raise Warning(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
+                raise UserError(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
             if not inv.invoice_line:
-                raise Warning(_('No Invoice Lines!'), _('Please create some invoice lines.'))
+                raise UserError(_('No Invoice Lines!'), _('Please create some invoice lines.'))
             if inv.move_id:
                 continue
 
@@ -815,7 +815,7 @@ class account_invoice(models.Model):
             # I disabled the check_total feature
             if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                    raise Warning(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
+                    raise UserError(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
             if inv.payment_term:
                 total_fixed = total_percent = 0
@@ -826,7 +826,7 @@ class account_invoice(models.Model):
                         total_percent += (line.value_amount/100.0)
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise Warning(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
+                    raise UserError(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
@@ -889,7 +889,7 @@ class account_invoice(models.Model):
 
             journal = inv.journal_id.with_context(ctx)
             if journal.centralisation:
-                raise Warning(_('User Error!'),
+                raise UserError(_('User Error!'),
                         _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
 
             line = inv.finalize_invoice_move_lines(line)
@@ -992,7 +992,7 @@ class account_invoice(models.Model):
             if inv.payment_ids:
                 for move_line in inv.payment_ids:
                     if move_line.reconcile_partial_id.line_partial_ids:
-                        raise Warning(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+                        raise UserError(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
@@ -1307,7 +1307,7 @@ class account_invoice_line(models.Model):
         self = self.with_context(company_id=company_id, force_company=company_id)
 
         if not partner_id:
-            raise Warning(_('No Partner Defined!'), _("You must first select a partner!"))
+            raise UserError(_('No Partner Defined!'), _("You must first select a partner!"))
         if not product:
             if type in ('in_invoice', 'in_refund'):
                 return {'value': {}, 'domain': {'product_uom': []}}

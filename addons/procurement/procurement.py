@@ -27,7 +27,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -153,7 +153,7 @@ class procurement_order(osv.osv):
             if s['state'] == 'cancel':
                 unlink_ids.append(s['id'])
             else:
-                raise Warning(_('Invalid Action!'),
+                raise UserError(_('Invalid Action!'),
                         _('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 

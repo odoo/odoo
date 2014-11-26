@@ -26,7 +26,7 @@ from openerp.tools.translate import _
 
 from datetime import date
 import logging
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -236,13 +236,13 @@ class gamification_badge(osv.Model):
         if status_code == self.CAN_GRANT:
             return True
         elif status_code == self.NOBODY_CAN_GRANT:
-            raise Warning(_('Warning!'), _('This badge can not be sent by users.'))
+            raise UserError(_('Warning!'), _('This badge can not be sent by users.'))
         elif status_code == self.USER_NOT_VIP:
-            raise Warning(_('Warning!'), _('You are not in the user allowed list.'))
+            raise UserError(_('Warning!'), _('You are not in the user allowed list.'))
         elif status_code == self.BADGE_REQUIRED:
-            raise Warning(_('Warning!'), _('You do not have the required badges.'))
+            raise UserError(_('Warning!'), _('You do not have the required badges.'))
         elif status_code == self.TOO_MANY:
-            raise Warning(_('Warning!'), _('You have already sent this badge too many time this month.'))
+            raise UserError(_('Warning!'), _('You have already sent this badge too many time this month.'))
         else:
             _logger.exception("Unknown badge status code: %d" % int(status_code))
         return False

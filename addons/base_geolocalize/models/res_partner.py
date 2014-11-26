@@ -28,7 +28,7 @@ import urllib
 from openerp.osv import osv, fields
 from openerp import tools
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 def geo_find(addr):
@@ -38,7 +38,7 @@ def geo_find(addr):
     try:
         result = json.load(urllib.urlopen(url))
     except Exception, e:
-        raise Warning(_('Network error'),
+        raise UserError(_('Network error'),
                              _('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
     if result['status'] != 'OK':
         return None

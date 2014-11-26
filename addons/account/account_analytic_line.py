@@ -22,7 +22,7 @@
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -94,7 +94,7 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
-                raise Warning(_('Error!'),
+                raise UserError(_('Error!'),
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
@@ -103,7 +103,7 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
-                raise Warning(_('Error!'),
+                raise UserError(_('Error!'),
                         _('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))

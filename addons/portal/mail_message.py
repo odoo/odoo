@@ -21,7 +21,7 @@
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
 
 
@@ -57,7 +57,7 @@ class mail_message(osv.Model):
         if group_user_id not in [group.id for group in group_ids]:
             cr.execute('SELECT DISTINCT id FROM "%s" WHERE type = %%s AND subtype_id IS NULL AND id = ANY (%%s)' % (self._table), ('comment', ids,))
             if cr.fetchall():
-                raise Warning(_('Access Denied'),
+                raise UserError(_('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                         (self._description, operation))
 

@@ -22,7 +22,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class hr_timesheet_current_open(osv.osv_memory):
     _name = 'hr.timesheet.current.open'
@@ -36,7 +36,7 @@ class hr_timesheet_current_open(osv.osv_memory):
 
         user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         if not len(user_ids):
-            raise Warning(_('Error!'), _('Please create an employee and associate it with this user.'))
+            raise UserError(_('Error!'), _('Please create an employee and associate it with this user.'))
         ids = ts.search(cr, uid, [('user_id','=',uid),('state','in',('draft','new')),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))], context=context)
 
         if len(ids) > 1:

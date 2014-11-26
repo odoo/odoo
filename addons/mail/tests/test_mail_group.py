@@ -23,7 +23,7 @@ from openerp.addons.mail.tests.common import TestMail
 from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class TestMailGroup(TestMail):

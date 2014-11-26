@@ -21,7 +21,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class PosInvoiceReport(osv.AbstractModel):
@@ -44,7 +44,7 @@ class PosInvoiceReport(osv.AbstractModel):
         if not_invoiced_orders_ids:
             not_invoiced_posorders = posorder_obj.browse(cr, uid, not_invoiced_orders_ids, context=context)
             not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
-            raise Warning(_('Error!'), _('No link to an invoice for %s.' % ', '.join(not_invoiced_orders_names)))
+            raise UserError(_('Error!'), _('No link to an invoice for %s.' % ', '.join(not_invoiced_orders_names)))
 
         docargs = {
             'doc_ids': ids_to_print,

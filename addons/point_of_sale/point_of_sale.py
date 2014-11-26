@@ -25,7 +25,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
@@ -382,7 +382,7 @@ class pos_session(osv.osv):
         context = dict(context or {})
         config_id = values.get('config_id', False) or context.get('default_config_id', False)
         if not config_id:
-            raise Warning( _('Error!'),
+            raise UserError( _('Error!'),
                 _("You should assign a Point of Sale to your session."))
 
         # journal_id is not required on the pos_config because it does not
@@ -397,7 +397,7 @@ class pos_session(osv.osv):
             if jid:
                 jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
             else:
-                raise Warning( _('error!'),
+                raise UserError( _('error!'),
                     _("Unable to open the session. You have to assign a sale journal to your point of sale."))
 
         # define some cash journal if no payment method exists
@@ -495,10 +495,10 @@ class pos_session(osv.osv):
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
-                        raise Warning( _('Error!'),
+                        raise UserError( _('Error!'),
                             _("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
-                    raise Warning(_('Error!'), 
+                    raise UserError(_('Error!'), 
                         _("The type of the journal for your payment method should be bank or cash "))
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
@@ -527,7 +527,7 @@ class pos_session(osv.osv):
                 if order.state == 'done':
                     continue
                 if order.state not in ('paid', 'invoiced'):
-                    raise Warning(
+                    raise UserError(
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
@@ -542,7 +542,7 @@ class pos_session(osv.osv):
             return {}
         for session in self.browse(cr, uid, ids, context=context):
             if session.user_id.id != uid:
-                raise Warning(
+                raise UserError(
                         _('Error!'),
                         _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
@@ -602,7 +602,7 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
-                    raise Warning(_('No cash statement found with cash control enabled for this session. Unable to record returned cash.'))
+                    raise UserError(_('No cash statement found with cash control enabled for this session. Unable to record returned cash.'))
                 self.add_payment(cr, uid, order_id, {
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -631,7 +631,7 @@ class pos_order(osv.osv):
         if 'partner_id' in vals:
             for posorder in self.browse(cr, uid, ids, context=context):
                 if posorder.invoice_id:
-                    raise Warning( _('Error!'), _("You cannot change the partner of a POS order for which an invoice has already been issued."))
+                    raise UserError( _('Error!'), _("You cannot change the partner of a POS order for which an invoice has already been issued."))
                 if vals['partner_id']:
                     p_id = partner_obj.browse(cr, uid, vals['partner_id'], context=context)
                     part_id = partner_obj._find_accounting_partner(p_id).id
@@ -644,7 +644,7 @@ class pos_order(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ('draft','cancel'):
-                raise Warning(_('Unable to Delete!'), _('In order to delete a sale, it must be new or cancelled.'))
+                raise UserError(_('Unable to Delete!'), _('In order to delete a sale, it must be new or cancelled.'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
@@ -790,7 +790,7 @@ class pos_order(osv.osv):
                 destination_id = order.partner_id.property_stock_customer.id
             elif picking_type:
                 if not picking_type.default_location_dest_id:
-                    raise Warning(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
+                    raise UserError(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
                 destination_id = picking_type.default_location_dest_id.id
             else:
                 destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
@@ -832,7 +832,7 @@ class pos_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.action_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
-                raise Warning(_('Error!'), _('Unable to cancel the picking.'))
+                raise UserError(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
@@ -857,7 +857,7 @@ class pos_order(osv.osv):
                 msg = _('There is no receivable account defined to make payment.')
             else:
                 msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
-            raise Warning(_('Configuration Error!'), msg)
+            raise UserError(_('Configuration Error!'), msg)
 
         context.pop('pos_session_id', False)
 
@@ -874,7 +874,7 @@ class pos_order(osv.osv):
                 break
 
         if not statement_id:
-            raise Warning(_('Error!'), _('You have to open at least one cashbox.'))
+            raise UserError(_('Error!'), _('You have to open at least one cashbox.'))
 
         args.update({
             'statement_id': statement_id,
@@ -897,7 +897,7 @@ class pos_order(osv.osv):
                 ('state', '!=', 'closed'),
                 ('user_id', '=', uid)], context=context)
             if not current_session_ids:
-                raise Warning(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+                raise UserError(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
 
             clone_id = self.copy(cr, uid, order.id, {
                 'name': order.name + ' REFUND', # not used, name forced by create
@@ -941,7 +941,7 @@ class pos_order(osv.osv):
                 continue
 
             if not order.partner_id:
-                raise Warning(_('Error!'), _('Please provide a partner for the sale.'))
+                raise UserError(_('Error!'), _('Please provide a partner for the sale.'))
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
@@ -1020,7 +1020,7 @@ class pos_order(osv.osv):
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
-            raise Warning(_('Error!'), _('Selected orders do not have the same session!'))
+            raise UserError(_('Error!'), _('Selected orders do not have the same session!'))
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
@@ -1135,7 +1135,7 @@ class pos_order(osv.osv):
                 elif line.product_id.categ_id.property_account_income_categ.id:
                     income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
-                    raise Warning(_('Error!'), _('Please define income '\
+                    raise UserError(_('Error!'), _('Please define income '\
                         'account for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id, ))
 
@@ -1280,7 +1280,7 @@ class pos_order_line(osv.osv):
        if not product_id:
             return {}
        if not pricelist:
-           raise Warning(_('No Pricelist!'),
+           raise UserError(_('No Pricelist!'),
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 

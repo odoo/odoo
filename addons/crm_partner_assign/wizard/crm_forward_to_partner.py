@@ -22,7 +22,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class crm_lead_forward_to_partner(osv.TransientModel):
@@ -85,12 +85,12 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
-            raise Warning(_('Email Template Error'),
+            raise UserError(_('Email Template Error'),
                                  _('The Forward Email Template is not in the database'))
         try:
             portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_portal')[1]
         except ValueError:
-            raise Warning(_('Portal Group Error'),
+            raise UserError(_('Portal Group Error'),
                                  _('The Portal group cannot be found'))
 
         local_context = context.copy()
@@ -100,10 +100,10 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
-                raise Warning(_('Email Error'),
+                raise UserError(_('Email Error'),
                                     ('Set an email address for the partner(s): %s' % ", ".join(no_email)))
         if record.forward_type == 'single' and not record.partner_id.email:
-            raise Warning(_('Email Error'),
+            raise UserError(_('Email Error'),
                                 ('Set an email address for the partner %s' % record.partner_id.name))
 
         partners_leads = {}

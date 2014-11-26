@@ -25,7 +25,7 @@ import time
 from openerp import models, api
 from openerp.osv import osv, orm, fields
 from openerp.tools.misc import attrgetter
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 # -------------------------------------------------------------------------
 # Properties
@@ -97,7 +97,7 @@ class ir_property(osv.osv):
 
         field = TYPE2FIELD.get(type_)
         if not field:
-            raise Warning('Error', 'Invalid type')
+            raise UserError('Error', 'Invalid type')
 
         if field == 'value_reference':
             if isinstance(value, orm.BaseModel):

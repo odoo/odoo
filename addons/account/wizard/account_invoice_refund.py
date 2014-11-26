@@ -23,7 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -114,9 +114,9 @@ class account_invoice_refund(osv.osv_memory):
             journal_id = form.journal_id.id
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
-                    raise Warning(_('Error!'), _('Cannot %s draft/proforma/cancel invoice.') % (mode))
+                    raise UserError(_('Error!'), _('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise Warning(_('Error!'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
+                    raise UserError(_('Error!'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
                 if form.period.id:
                     period = form.period.id
                 else:
@@ -151,7 +151,7 @@ class account_invoice_refund(osv.osv_memory):
                     description = inv.name
 
                 if not period:
-                    raise Warning(_('Insufficient Data!'), \
+                    raise UserError(_('Insufficient Data!'), \
                                             _('No period found on the invoice.'))
 
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id, context=context)

@@ -35,7 +35,7 @@ import urlparse
 import zipfile
 import zipimport
 import lxml.html
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 try:
     from cStringIO import StringIO
@@ -337,7 +337,7 @@ class module(osv.osv):
         mod_names = []
         for mod in self.read(cr, uid, ids, ['state', 'name'], context):
             if mod['state'] in ('installed', 'to upgrade', 'to remove', 'to install'):
-                raise Warning(_('Error'), _('You try to remove a module that is installed or will be installed'))
+                raise UserError(_('Error'), _('You try to remove a module that is installed or will be installed'))
             mod_names.append(mod['name'])
         #Removing the entry from ir_model_data
         #ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
@@ -379,12 +379,12 @@ class module(osv.osv):
                 msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s')
             else:
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
-            raise Warning(_('Error'), msg % (module_name, e.args[0]))
+            raise UserError(_('Error'), msg % (module_name, e.args[0]))
 
     @api.multi
     def state_update(self, newstate, states_to_update, level=100):
         if level < 1:
-            raise Warning(_('Error'), _('Recursion error in modules dependencies !'))
+            raise UserError(_('Error'), _('Recursion error in modules dependencies !'))
 
         # whether some modules are installed with demo data
         demo = False
@@ -394,7 +394,7 @@ class module(osv.osv):
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise Warning(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
+                    raise UserError(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
                 if dep.depend_id.state == newstate:
                     ready_mods += dep.depend_id
                 else:
@@ -521,7 +521,7 @@ class module(osv.osv):
 
     def button_uninstall(self, cr, uid, ids, context=None):
         if any(m.name == 'base' for m in self.browse(cr, uid, ids, context=context)):
-            raise Warning(_('Error'), _("The `base` module cannot be uninstalled"))
+            raise UserError(_('Error'), _("The `base` module cannot be uninstalled"))
         dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
         self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
@@ -547,7 +547,7 @@ class module(osv.osv):
             mod = todo[i]
             i += 1
             if mod.state not in ('installed', 'to upgrade'):
-                raise Warning(_('Error'), _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
+                raise UserError(_('Error'), _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
             self.check_external_dependencies(mod.name, 'to upgrade')
             iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
             for dep in depobj.browse(cr, uid, iids, context=context):
@@ -561,7 +561,7 @@ class module(osv.osv):
         for mod in todo:
             for dep in mod.dependencies_id:
                 if dep.state == 'unknown':
-                    raise Warning(_('Error'), _('You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                    raise UserError(_('Error'), _('You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
                 if dep.state == 'uninstalled':
                     ids2 = self.search(cr, uid, [('name', '=', dep.name)])
                     to_install.extend(ids2)
@@ -683,7 +683,7 @@ class module(osv.osv):
                     content = urllib2.urlopen(url).read()
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
-                    raise Warning(_('Module not found'),
+                    raise UserError(_('Module not found'),
                                          _('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
                 else:
                     zipfile.ZipFile(StringIO(content)).extractall(tmp)

@@ -33,7 +33,7 @@ import psycopg2
 
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -177,7 +177,7 @@ class product_uom(osv.osv):
             context = {}
         if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
-                raise Warning(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
+                raise UserError(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
         # First round to the precision of the original unit, so that
@@ -212,7 +212,7 @@ class product_uom(osv.osv):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
-                    raise Warning(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
+                    raise UserError(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -395,7 +395,7 @@ class product_attribute_value(osv.osv):
         ctx = dict(context or {}, active_test=False)
         product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
         if product_ids:
-            raise Warning(_('Integrity Error!'), _('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
+            raise UserError(_('Integrity Error!'), _('The operation cannot be completed:\nYou trying to delete an attribute value with a reference on a product variant.'))
         return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
 
 class product_attribute_price(osv.osv):

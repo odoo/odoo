@@ -28,7 +28,7 @@ from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 class SignupError(Exception):
     pass
@@ -292,7 +292,7 @@ class res_users(osv.Model):
 
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
-                raise Warning(_("Cannot send email: user has no email address."), user.name)
+                raise UserError(_("Cannot send email: user has no email address."), user.name)
             self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
 
     def create(self, cr, uid, values, context=None):
