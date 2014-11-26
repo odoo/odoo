@@ -211,6 +211,7 @@ class WebsiteForum(http.Controller):
     def question_create(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
         question_tag_ids = []
         tag_version = post.get('tag_type', 'texttext')
         if tag_version == "texttext":  # TODO Remove in master
@@ -223,14 +224,14 @@ class WebsiteForum(http.Controller):
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
         elif tag_version == "select2":
-            question_tag_ids = forum._tag_to_write_vals(post.get('question_tags', ''))
+            question_tag_ids = Forum._tag_to_write_vals(cr, uid, [forum.id], post.get('question_tags', ''), context)
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
                 'name': post.get('question_name'),
                 'content': post.get('content'),
-                'tag_ids': question_tag_ids,
+                'tag_ids': question_tag_ids[forum.id],
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
@@ -400,6 +401,7 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         question_tags = []
         Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
         tag_version = kwargs.get('tag_type', 'texttext')
         if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
             if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
@@ -413,10 +415,10 @@ class WebsiteForum(http.Controller):
                         question_tags.append(new_tag)
             tags_val = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            tags_val = forum._tag_to_write_vals(kwargs.get('question_tag', ''))
+            tags_val = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)
 
         vals = {
-            'tag_ids': tags_val,
+            'tag_ids': tags_val[forum.id],
             'name': kwargs.get('question_name'),
             'content': kwargs.get('content'),
         }
