@@ -88,6 +88,25 @@ class ir_translation_import_cursor(object):
             elif params['res_id'] is None:
                 params['res_id'] = 0
 
+        # backward compatibility: convert 'field', 'help', 'view' into 'model'
+        if params['type'] == 'field':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,field_description'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'help':
+            model, field = params['name'].split(',')
+            params['type'] = 'model'
+            params['name'] = 'ir.model.fields,help'
+            params['imd_model'] = 'ir.model.fields'
+            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+
+        elif params['type'] == 'view':
+            params['type'] = 'model'
+            params['name'] = 'ir.ui.view,arch'
+
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
                                     %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
