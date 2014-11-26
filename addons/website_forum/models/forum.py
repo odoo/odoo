@@ -123,13 +123,12 @@ class Forum(osv.Model):
         User = self.pool['res.users']
         Tag = self.pool['forum.tag']
         result = {}
-        for _id in ids:
-            forum = self.browse(cr, uid, _id, context=context)
+        for forum in self.browse(cr, uid, ids, context=context):
             post_tags = []
             existing_keep = []
             for tag in filter(None, tags.split(',')):
                 if tag.startswith('_'):  # it's a new tag
-                    # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                    # check that not already created meanwhile or maybe excluded by the limit on the search
                     tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
                     if tag_ids:
                         existing_keep.append(int(tag_ids[0]))
@@ -137,11 +136,11 @@ class Forum(osv.Model):
                         # check if user have Karma needed to create need tag
                         user = User.browse(cr, uid, uid, context=context)
                         if user.exists() and user.karma >= forum.karma_retag:
-                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': _id}))
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
                 else:
                     existing_keep.append(int(tag))
             post_tags.insert(0, [6, 0, existing_keep])
-            result[_id] = post_tags
+            result[forum.id] = post_tags
 
         return result
 
