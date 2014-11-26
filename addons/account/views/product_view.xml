@@ -15,11 +15,11 @@
                         </group>
                         <group name="properties">
                             <group>
-                                <field name="property_account_income" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="property_account_income" domain="[('user_type.type','=','other')]" groups="account.group_account_user"/>
                                 <field name="taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="property_account_expense" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="property_account_expense" domain="[('user_type.type','=','other')]" groups="account.group_account_user"/>
                                 <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                         </group>
@@ -51,8 +51,8 @@
                 <data>
                     <xpath expr="//group[@name='parent']" position="inside">
                         <group name="account_property" string="Account Properties" colspan="2">
-                            <field name="property_account_income_categ" domain="[('type', '!=', 'consolidation')]"/>
-                            <field name="property_account_expense_categ" domain="[('type', '!=', 'consolidation')]"/>
+                            <field name="property_account_income_categ" domain="[('user_type.type', '!=', 'consolidation')]"/>
+                            <field name="property_account_expense_categ" domain="[('user_type.type', '!=', 'consolidation')]"/>
                         </group>
                     </xpath>
                 </data>
