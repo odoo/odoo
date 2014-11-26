@@ -816,7 +816,8 @@ class account_move_line(models.Model):
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
             move = MoveObj.browse(vals['move_id'])
-            move.with_context(context)._post_validate()
+            # TODO: FIX ME
+            # move.with_context(context)._post_validate()
             if journal.entry_posted:
                 move.with_context(context).button_validate()
         return result
