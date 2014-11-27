@@ -568,7 +568,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            _logger.warning("Cannot save data.", exc_info=True)
+            _logger.info("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise UserError(_('Error at doc write!'), str(e))

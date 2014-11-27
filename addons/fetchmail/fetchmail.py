@@ -160,7 +160,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                 connection = server.connect()
                 server.write({'state':'done'})
             except Exception, e:
-                _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
+                _logger.info("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
                 raise UserError(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
             finally:
                 try:

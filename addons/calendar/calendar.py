@@ -854,7 +854,7 @@ class calendar_event(osv.Model):
                     allday = self.read(cr, uid, [id], ['allday'], context=context)[0].get('allday')
                 else:
                     allday = False
-                    _logger.warning("Calendar - All day is not specified, arbitrarily set to False")
+                    _logger.info("Calendar - All day is not specified, arbitrarily set to False")
                     #raise UserError(_('Error!'), ("Need to know if it's an allday or not..."))
 
             key = "date" if allday else "datetime"

@@ -322,7 +322,7 @@ class WebKitParser(report_sxw):
                     htmls.append(html)
                 except Exception, e:
                     msg = u"%s" % e
-                    _logger.error(msg)
+                    _logger.info(msg, exc_info=True)
                     raise UserError(_('Webkit render!'), msg)
         else:
             try :
@@ -330,7 +330,7 @@ class WebKitParser(report_sxw):
                 htmls.append(html)
             except Exception, e:
                 msg = u"%s" % e
-                _logger.error(msg)
+                _logger.info(msg, exc_info=True)
                 raise UserError(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
@@ -344,14 +344,14 @@ class WebKitParser(report_sxw):
                 foot = foot_mako_tpl.render(dict(parser_instance.localcontext))
             except Exception, e:
                 msg = u"%s" % e
-                _logger.error(msg)
+                _logger.info(msg, exc_info=True)
                 raise UserError(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
-                _logger.error(msg)
+                _logger.info(msg, exc_info=True)
                 raise UserError(_('Webkit render!'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid)

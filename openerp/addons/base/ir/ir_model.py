@@ -289,7 +289,7 @@ class ir_model_fields(osv.osv):
         try:
             selection_list = eval(selection)
         except Exception:
-            _logger.warning('Invalid selection list definition for fields.selection', exc_info=True)
+            _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
             raise UserError(_('Error'),
                     _("The Selection Options expression is not a valid Pythonic expression."
                       "Please provide an expression in the [('key','Label'), ...] format."))

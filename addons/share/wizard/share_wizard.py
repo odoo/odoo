@@ -632,7 +632,7 @@ class share_wizard(osv.TransientModel):
                          group_id, model_id=model.id, domain=str(related_domain),
                          rule_name=rule_name, restrict=True, context=context)
         except Exception:
-            _logger.exception('Failed to create share access')
+            _logger.info('Failed to create share access', exc_info=True)
             raise UserError(_('Sharing access cannot be created.'),
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 

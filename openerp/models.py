@@ -105,7 +105,7 @@ def check_object_name(name):
 def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
-        _logger.error(msg)
+        _logger.info(msg, exc_info=True)
         raise UserError('ValueError', msg)
 
 POSTGRES_CONFDELTYPES = {
@@ -3404,7 +3404,7 @@ class BaseModel(object):
                 # the missing ids are (at least partially) hidden by access rules
                 if uid == SUPERUSER_ID:
                     return
-                _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
+                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise UserError(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))
@@ -3415,7 +3415,7 @@ class BaseModel(object):
                     # And no error when reading a record that was deleted, to prevent spurious
                     # errors for non-transactional search/read sequences coming from clients
                     return
-                _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
                 raise UserError(_('Missing document(s)'),
                                  _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
 
