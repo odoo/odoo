@@ -89,6 +89,8 @@
                 <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
                 <meta property="og:description" t-att-content="og_description" />
             </t>
+            <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
+            <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
