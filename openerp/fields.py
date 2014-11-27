@@ -1475,19 +1475,19 @@ class Many2one(_Relational):
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
-            return value.id
+            return value.id if value else False
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return value.id
+        return value.id if value else False
 
     def convert_to_onchange(self, value):
-        return value.id
+        return value.id if value else False
 
     def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
     def convert_to_display_name(self, value):
-        return ustr(value.display_name)
+        return ustr(value.display_name) if value else False
 
 
 class UnionUpdate(SpecialValue):
