@@ -19,8 +19,8 @@ easily available over XML-RPC_ and accessible from a variety of languages.
      into every call. Session would allow db to be stored as well
    These issues are especially visible in Java, somewhat less so in PHP
 
-Connection and authentication
-=============================
+Connection
+==========
 
 .. kinda gross because it duplicates existing bits
 
