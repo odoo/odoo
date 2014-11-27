@@ -1,4 +1,4 @@
-.. _guides/translations:
+.. _reference/translations:
 
 ===================
 Translating Modules
@@ -26,16 +26,15 @@ the backend interface and opening :menuselection:`Settings --> Translations
     :align: center
     :width: 75%
 
-This gives you a file called :file:`{yourmodule}.po` which should be renamed
-to :file:`{yourmodule}.pot` and moved to the :file:`{yourmodule}/i18n/`
-directory. The file is a *PO Template* which simply lists translatable strings
-and from which actual translations (PO files) can be created. PO files can
-be created using msginit_, with a dedicated translation tool like POEdit_ or
-by simply copying the template to a new file called :file:`{language}.po`.
-Translation files should be put in :file:`{yourmodule}/i18n/`, next to
-:file:`{yourmodule}.pot`, and will be automatically loaded by Odoo when the
-corresponding language is installed (via :menuselection:`Settings -->
-Translations --> Load a Translation`)
+This gives you a file called :file:`{yourmodule}.pot` which should be moved to
+the :file:`{yourmodule}/i18n/` directory. The file is a *PO Template* which
+simply lists translatable strings and from which actual translations (PO files)
+can be created. PO files can be created using msginit_, with a dedicated
+translation tool like POEdit_ or by simply copying the template to a new file
+called :file:`{language}.po`. Translation files should be put in
+:file:`{yourmodule}/i18n/`, next to :file:`{yourmodule}.pot`, and will be
+automatically loaded by Odoo when the corresponding language is installed (via
+:menuselection:`Settings --> Translations --> Load a Translation`)
 
 .. note:: translations for all loaded languages are also installed or updated
           when installing or updating a module
@@ -70,7 +69,7 @@ code, Odoo is not able to automatically export translatable terms and they
 must be marked explicitly for export. This is done by wrapping a literal
 string in a function call.
 
-In Python, the wrapping function is :func:`openerp.tools.translate._`::
+In Python, the wrapping function is :func:`openerp._`::
 
     title = _("Bank Accounts")
 
@@ -82,9 +81,9 @@ In JavaScript, the wrapping function is generally :js:func:`openerp.web._t`:
 
 .. warning::
 
-    only literal strings can be marked for exports, not expressions and not
+    Only literal strings can be marked for exports, not expressions and not
     variables. For situations where strings are formatted, this means the
-    format string must be marked not the formatted string::
+    format string must be marked, not the formatted string::
 
         # bad, the extract may work but it will not correctly translate the text
         _("Scheduled meeting with %s" % invitee.name)
