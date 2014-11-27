@@ -230,6 +230,14 @@ class stock_picking_out(osv.osv):
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
         }
+        
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        default = default and default.copy() or {}
+        default.update(number_of_packages=0, carrier_tracking_ref=False, volume=0.0)
+        return super(stock_picking_out, self).copy(cr, uid, id, default=default, context=context)
+        
 stock_picking_out()
 
 class stock_picking_in(osv.osv):
