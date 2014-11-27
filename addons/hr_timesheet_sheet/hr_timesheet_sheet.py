@@ -232,13 +232,25 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def name_get(self, cr, uid, ids, context=None):
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        tm_range = user.company_id.timesheet_range or 'month'
+        if tm_range == 'week':
+            tformat = _('Week %U')
+        elif tm_range == 'month':
+            tformat = _('Month %m')
+        elif tm_range == 'day':
+            tformat = user.lang.date_format if user.lang.date_format else '%Y-%m-%d'
+        else:
+            raise ValueError(_('Unsupported timesheet range: %s') % tm_range)
         if not ids:
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        return [(r['id'], _('Week ')+datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U')) \
+        return [(r['id'],
+                 datetime.strptime(r['date_from'],
+                                   '%Y-%m-%d').strftime(tformat))
                 for r in self.read(cr, uid, ids, ['date_from'],
-                    context=context, load='_classic_write')]
+                                   context=context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
         sheets = self.read(cr, uid, ids, ['state','total_attendance'], context=context)
