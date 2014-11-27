@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -197,7 +195,7 @@ class Partner(osv.osv):
         res = {}
         for id in ids:
             res[id] = 'none'
-        today = time.strftime('%Y-%m-%d')
+        today = fields.date.today()
         for id in ids:
             partner_data = self.browse(cr, uid, id, context=context)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
@@ -449,7 +447,7 @@ class Invoice(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
         member_line_obj = self.pool.get('membership.membership_line')
-        today = time.strftime('%Y-%m-%d')
+        today = fields.date.today()
         for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
@@ -479,7 +477,7 @@ class account_invoice_line(osv.osv):
                                     'partner': line.invoice_id.partner_id.id,
                                     'membership_id': line.product_id.id,
                                     'member_price': line.price_unit,
-                                    'date': time.strftime('%Y-%m-%d'),
+                                    'date': fields.date.today(),
                                     'date_from': date_from,
                                     'date_to': date_to,
                                     'account_invoice_line': line.id,
@@ -516,7 +514,7 @@ class account_invoice_line(osv.osv):
                             'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
                             'membership_id': line.product_id.id,
                             'member_price': line.price_unit,
-                            'date': time.strftime('%Y-%m-%d'),
+                            'date': fields.date.today(),
                             'date_from': date_from,
                             'date_to': date_to,
                             'account_invoice_line': line.id,
