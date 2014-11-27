@@ -1238,6 +1238,7 @@ openerp.account = function (instance) {
                     self.$(".change_statement_name_container").hide();
                 }).always(function() {
                     self.$(".change_statement_name_button").removeAttr("disabled");
+                })
         },
 
         updateProgressbar: function() {
