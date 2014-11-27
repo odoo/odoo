@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
+from openerp.tools import float_compare, float_round
 
 import time
 
@@ -548,7 +549,9 @@ class account_bank_statement_line(osv.osv):
                 return [mv_line]
 
         # How to compare statement line amount and move lines amount
+        precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         currency_id = st_line.currency_id.id or st_line.journal_id.currency.id
+        # NB : amount can't be == 0 ; so float precision is not an issue for amount > 0 or amount < 0
         amount = st_line.amount_currency or st_line.amount
         domain = [('reconcile_partial_id', '=', False)]
         if currency_id:
@@ -562,8 +565,8 @@ class account_bank_statement_line(osv.osv):
         else:
             amount_field = 'amount_currency'
 
-        # Look for an matching amount
-        domain_exact_amount = domain + [(amount_field, '=', (sign * amount))]
+        # Look for a matching amount
+        domain_exact_amount = domain + [(amount_field, '=', float_round(sign * amount, precision_digits=precision_digits))]
         match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=domain_exact_amount)
         if match_id:
             return match_id
@@ -584,10 +587,10 @@ class account_bank_statement_line(osv.osv):
         ret = []
         total = 0
         for line in mv_lines:
-            if total + abs(line['debit'] - line['credit']) <= abs(amount):
+            total += abs(line['debit'] - line['credit'])
+            if float_compare(total, abs(amount), precision_digits=precision_digits) != 1:
                 ret.append(line)
-                total += abs(line['debit'] - line['credit'])
-            if total >= abs(amount):
+            else:
                 break
         return ret
 
