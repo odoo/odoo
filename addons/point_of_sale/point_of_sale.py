@@ -25,6 +25,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import float_round
 
 import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
@@ -802,15 +803,23 @@ class pos_order(osv.osv):
                 if line.product_id and line.product_id.type == 'service':
                     continue
 
+                product = line.product_id
+
+                if product.uos_id:
+                    coeff = 1.0 / product.uos_coeff if product.uos_coeff else 1.0
+                    uom_qty = float_round(line.qty * coeff, precision_rounding=product.uos_id.rounding)
+                else:
+                    uom_qty = line.qty
+
                 move_list.append(move_obj.create(cr, uid, {
                     'name': line.name,
-                    'product_uom': line.product_id.uom_id.id,
-                    'product_uos': line.product_id.uom_id.id,
+                    'product_uom': product.uom_id.id,
+                    'product_uos': product.uos_id.id if product.uos_id else product.uom_id.id,
                     'picking_id': picking_id,
                     'picking_type_id': picking_type.id, 
-                    'product_id': line.product_id.id,
+                    'product_id': product.id,
                     'product_uos_qty': abs(line.qty),
-                    'product_uom_qty': abs(line.qty),
+                    'product_uom_qty': abs(uom_qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
                     'location_dest_id': destination_id if line.qty >= 0 else location_id,
@@ -973,7 +982,7 @@ class pos_order(osv.osv):
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
-                                                               line.product_id.uom_id.id,
+                                                               line.product_id.uos_id.id if line.product_id.uos_id else line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
@@ -1309,7 +1318,7 @@ class pos_order_line(osv.osv):
         'name': fields.char('Line No', required=True, copy=False),
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
-        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
+        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Product Price')),
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoS')),
         'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal w/o Tax', store=True),
         'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits_compute=dp.get_precision('Account'), string='Subtotal', store=True),

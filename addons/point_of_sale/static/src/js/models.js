@@ -703,9 +703,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }else{
                 var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
+                var uom  = this.get_uom();
+                var fac  = 1.0 / ( this.product.uos_coeff || 1.0 );
                 if(unit){
                     if (unit.rounding) {
                         this.quantity    = round_pr(quant, unit.rounding);
+                        // If the unit of sale is not the same as the unit of measure, we need to make sure
+                        // that the quantity we sell is a valid measure quantity. 
+                        if (unit !== uom) {
+                            this.quantity = round_pr(round_pr(this.quantity * fac, uom.rounding) / fac, unit.rounding);
+                        }
                         this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
                     } else {
                         this.quantity    = round_pr(quant, 1);
@@ -735,7 +742,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // return the unit of measure of the product
         get_unit: function(){
-            var unit_id = this.product.uom_id;
+            var unit_id = this.product.uos_id || this.product.uom_id;
             if(!unit_id){
                 return undefined;
             }
@@ -744,6 +751,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return undefined;
             }
             return this.pos.units_by_id[unit_id];
+        },
+        get_uom: function(){
+            return this.pos.units_by_id[this.product.uom_id[0]];
         },
         // return the product of this orderline
         get_product: function(){
@@ -808,9 +818,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return this.price;
+            var uos_fac  = this.product.uos_id ? 1.0 / this.product.uos_coeff : 1.0;
+            return round_di(this.price * uos_fac, this.pos.dp['Product Price']);
         },
-        get_base_price:    function(){
+        get_base_price: function(){
             var rounding = this.pos.currency.rounding;
             return  round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
         },
