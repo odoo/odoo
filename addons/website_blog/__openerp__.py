@@ -38,6 +38,7 @@ OpenERP Blog
         'views/website_blog_templates.xml',
         'security/ir.model.access.csv',
         'security/website_blog.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'data/website_blog_demo.xml'

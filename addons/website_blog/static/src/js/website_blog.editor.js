@@ -31,6 +31,7 @@ $(document).ready(function() {
             },
             save : function() {
                 var res = this._super();
+                console.log($('#blog_post_name'));
                 if ($('.cover').length) {
                     openerp.jsonRpc("/blogpost/change_background", 'call', {
                         'post_id' : $('#blog_post_name').attr('data-oe-id'),

@@ -6,6 +6,7 @@
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/snippets.js"/>
     </xpath>
 </template>
 
@@ -25,6 +26,7 @@
         <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d">News</a></li>
     </xpath>
 </template>
+
 
 <!-- Overview of all blog posts -->
 <template id="latest_blogs" name="Latest Blogs">
@@ -140,7 +142,7 @@
                       <h4
                         t-field="blog_post.subtitle"
                         class="mb4 mt4"/>
-                    <div name='blog_post_data' class='mb0'>
+                    <div name='blog_post_data' class='mb0 o_contact_editor'>
                          <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
                                 "widget": "contact",
                                 "fields": ["name"]
