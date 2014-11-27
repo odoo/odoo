@@ -2372,7 +2372,7 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
                 write_values[self.name] = value;
                 return this.view.dataset._model.call(
                     'write', [
-                        [self.record_id],
+                        [self.view.datarecord.id],
                         write_values,
                         self.view.dataset.get_context()
                     ]).done(self.reload_record.bind(self));
