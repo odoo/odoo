@@ -767,7 +767,7 @@ td.field-body {
     width: auto !important;
     float: none !important;
 
-    position: fixed;
+    position: absolute;
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: flex-end;
@@ -778,6 +778,10 @@ td.field-body {
     padding: 0;
     margin: 0;
     z-index: 5;
+    &.affix {
+      position: fixed;
+      top: 0;
+    }
 
     li {
       background-color: #0f131a;
@@ -787,10 +791,10 @@ td.field-body {
       cursor: pointer;
       &:first-child {
         border-left-width: 1px;
-        border-radius: 5px 0 0 5px;
+        border-radius: 0 0 0 5px;
       }
       &:last-child {
-        border-radius: 0 5px 5px 0;
+        border-radius: 0 0 5px 0;
       }
       &:hover {
         background-color: #222;

@@ -7248,7 +7248,7 @@ td.field-body > ul {
   color: white;
   width: auto !important;
   float: none !important;
-  position: fixed;
+  position: absolute;
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: flex-end;
@@ -7259,6 +7259,10 @@ td.field-body > ul {
   margin: 0;
   z-index: 5;
 }
+.stripe .switcher.affix {
+  position: fixed;
+  top: 0;
+}
 .stripe .switcher li {
   background-color: #0f131a;
   padding: 0.4em 1em;
@@ -7268,10 +7272,10 @@ td.field-body > ul {
 }
 .stripe .switcher li:first-child {
   border-left-width: 1px;
-  border-radius: 5px 0 0 5px;
+  border-radius: 0 0 0 5px;
 }
 .stripe .switcher li:last-child {
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 0 5px 0;
 }
 .stripe .switcher li:hover {
   background-color: #222;
