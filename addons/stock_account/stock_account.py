@@ -99,6 +99,15 @@ class stock_quant(osv.osv):
         quants: browse record list of Quants to create accounting valuation entries for. Unempty and all quants are supposed to have the same location id (thay already moved in)
         move: Move to use. browse record
         """
+        accounts = self._get_accounting_data_for_entry_move(cr, uid, quants, move, context=context)
+        if not accounts:
+            return False
+
+        credit_account_id, debit_account_id, journal_id, company_id = accounts
+        ctx = dict(context or {}, force_company=company_id)
+        self._create_account_move_line(cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=ctx)
+
+    def _get_accounting_data_for_entry_move(self, cr, uid, quants, move, context=None):
         if context is None:
             context = {}
         location_obj = self.pool.get('stock.location')
@@ -127,9 +136,9 @@ class stock_quant(osv.osv):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_from and location_from.usage == 'customer':
                 #goods returned from customer
-                self._create_account_move_line(cr, uid, quants, move, acc_dest, acc_valuation, journal_id, context=ctx)
+                return (acc_dest, acc_valuation, journal_id, company_to.id)
             else:
-                self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
+                return (acc_src, acc_valuation, journal_id, company_to.id)
 
         # Create Journal Entry for products leaving the company
         if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
@@ -138,9 +147,9 @@ class stock_quant(osv.osv):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_to and location_to.usage == 'supplier':
                 #goods returned to supplier
-                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_src, journal_id, context=ctx)
+                return (acc_valuation, acc_src, journal_id, company_from.id)
             else:
-                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
+                return (acc_valuation, acc_dest, journal_id, company_from.id)
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)

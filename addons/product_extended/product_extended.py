@@ -193,12 +193,15 @@ class stock_quant(osv.Model):
     _inherit = 'stock.quant'
 
     def _create_rectification_account_entry(self, cr, uid, move, price_difference, context=None):
-        accounts = self.pool['product.template'].get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context=context)
-        debit_account_id = accounts['property_stock_valuation_account_id']
-        credit_account_id = move.product_id.property_account_expense.id or move.product_id.categ_id.property_account_expense_categ.id
+        accounts = self._get_accounting_data_for_entry_move(cr, uid, move.quant_ids, move, context=context)
+        if not accounts:
+            return False
+
+        credit_account_id, debit_account_id, journal_id, company_id = accounts
+        ctx = dict(context or {}, force_company=company_id)
 
         self.pool['account.move'].create(cr, uid, {
-            'journal_id': accounts['stock_journal'],
+            'journal_id': journal_id,
             'period_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
             'date': move.date,
             'ref': move.name + _(" (difference after production)"),
@@ -208,13 +211,13 @@ class stock_quant(osv.Model):
                 'quantity': move.product_qty,
                 'debit': price_difference > 0 and price_difference or 0,
                 'credit': price_difference < 0 and -price_difference or 0,
-                'account_id': credit_account_id,
+                'account_id': debit_account_id,
             }), (0, 0, {
                 'name': move.name + _(" (difference after production)"),
                 'product_id': move.product_id.id,
                 'quantity': move.product_qty,
                 'credit': price_difference > 0 and price_difference or 0,
                 'debit': price_difference < 0 and -price_difference or 0,
-                'account_id': debit_account_id,
+                'account_id': credit_account_id,
             })]
-        }, context=context)
+        }, context=ctx)
