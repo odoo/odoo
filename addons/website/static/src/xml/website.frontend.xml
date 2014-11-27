@@ -24,13 +24,14 @@
                 <div class="modal-body">
                     <p>On average, question shared on social networks get answered faster.</p>
                     <p>Share on:</p>
-                    <div style='text-align:center'>
+                    <div class="share-icons">
                         <t t-foreach="medias" t-as="media">
                             <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
                                 <span class="fa fa-square fa-stack-2x"></span>
                                 <span t-attf-class="fa fa-#{media} fa-stack-1x fa-inverse"></span>
                             </a>
                         </t>
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
