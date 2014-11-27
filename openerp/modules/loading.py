@@ -36,7 +36,6 @@ import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
 import openerp.modules.registry
-import openerp.osv as osv
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
@@ -44,6 +43,7 @@ from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models, adapt_version
 from module import runs_post_install
+from openerp.exceptions import except_orm
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
@@ -296,7 +296,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
-            raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
+            raise except_orm(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading

@@ -29,14 +29,13 @@ import print_xml
 import render
 from interface import report_int
 import common
-from openerp.osv.osv import except_osv
 from openerp.osv.orm import BaseModel
 from pychart import *
 import misc
 import cStringIO
 from lxml import etree
 from openerp.tools.translate import _
-from openerp.exceptions import except_orm, Warning, UserError
+from openerp.exceptions import UserError
 
 class external_pdf(render.render):
     def __init__(self, pdf):

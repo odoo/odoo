@@ -45,7 +45,6 @@ from openerp.modules.module import get_module_resource
 from openerp.report.report_sxw import *
 from openerp import tools
 from openerp.tools.translate import _
-from openerp.osv.osv import except_osv
 from urllib import urlencode, quote as quote
 from openerp.exceptions import UserError
 

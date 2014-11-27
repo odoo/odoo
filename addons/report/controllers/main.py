@@ -21,7 +21,7 @@
 
 from openerp.addons.web.http import Controller, route, request
 from openerp.addons.web.controllers.main import _serialize_exception
-from openerp.osv import osv
+from openerp.exceptions import except_orm
 
 import simplejson
 from werkzeug import exceptions, url_decode
@@ -130,7 +130,7 @@ class ReportController(Controller):
                 return response
             else:
                 return
-        except osv.except_osv, e:
+        except except_orm, e:
             se = _serialize_exception(e)
             error = {
                 'code': 200,

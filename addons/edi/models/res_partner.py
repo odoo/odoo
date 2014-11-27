@@ -24,6 +24,7 @@ from openerp.osv import osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
 _logger = logging.getLogger(__name__)
+from openerp.exceptions import except_orm
 
 RES_PARTNER_EDI_STRUCT = {
     'name': True,
@@ -82,7 +83,7 @@ class res_partner(osv.osv, EDIMixin):
                 try:
                     self.edi_import_relation(cr, uid, 'res.partner.bank',
                                              bank_name, ext_bank_id, context=import_ctx)
-                except osv.except_osv:
+                except except_orm:
                     # failed to import it, try again with unrestricted default type
                     _logger.warning('Failed to import bank account using'
                                                                  'bank type: %s, ignoring', import_ctx['default_state'],

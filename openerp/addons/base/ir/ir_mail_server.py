@@ -37,6 +37,7 @@ from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
 from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -46,7 +47,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-class MailDeliveryException(osv.except_osv):
+class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)

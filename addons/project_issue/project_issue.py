@@ -437,7 +437,7 @@ class project_issue(osv.Model):
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
-        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except (orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 

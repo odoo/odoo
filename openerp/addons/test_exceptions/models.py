@@ -4,6 +4,7 @@ import openerp.osv.orm
 import openerp.osv.osv
 import openerp.tools.safe_eval
 from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 class m(openerp.osv.osv.Model):
     """ This model exposes a few methods that will raise the different
@@ -14,7 +15,7 @@ class m(openerp.osv.osv.Model):
 
     def generate_except_osv(self, cr, uid, ids, context=None):
         # title is ignored in the new (6.1) exceptions
-        raise openerp.osv.osv.except_osv('title', 'description')
+        raise except_orm('title', 'description')
 
     def generate_except_orm(self, cr, uid, ids, context=None):
         # title is ignored in the new (6.1) exceptions

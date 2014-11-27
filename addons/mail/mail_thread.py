@@ -650,7 +650,7 @@ class mail_thread(osv.AbstractModel):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
                     action = model_obj.get_access_action(cr, uid, res_id, context=context)
-                except (osv.except_osv, orm.except_orm):
+                except (orm.except_orm):
                     pass
             action.update({
                 'context': {
@@ -1699,7 +1699,7 @@ class mail_thread(osv.AbstractModel):
             try:
                 self.check_access_rights(cr, uid, 'read')
                 self.check_access_rule(cr, uid, ids, 'read')
-            except (osv.except_osv, orm.except_orm):
+            except (orm.except_orm):
                 return False
         else:
             self.check_access_rights(cr, uid, 'write')

@@ -34,6 +34,7 @@ import psycopg2
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
 from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -689,7 +690,7 @@ class product_template(osv.osv):
                 try:
                     with cr.savepoint():
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
-                except (psycopg2.Error, osv.except_osv):
+                except (psycopg2.Error, except_orm):
                     product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
                     pass
         return True

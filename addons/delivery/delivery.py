@@ -25,6 +25,7 @@ from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class delivery_carrier(osv.osv):
                   try:
                     price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
                     available = True
-                  except osv.except_osv, e:
+                  except except_orm, e:
                     # no suitable delivery method found, probably configuration error
                     _logger.error("Carrier %s: %s\n%s" % (carrier.name, e.name, e.value))
                     price = 0.0
