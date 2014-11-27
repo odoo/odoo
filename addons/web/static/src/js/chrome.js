@@ -260,8 +260,9 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
-        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
+        if (error.data.exception_type === "user_error" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
             this.show_warning(error);
+        //InternalError
         } else {
             this.show_error(error);
         }
@@ -270,7 +271,7 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        if (error.data.exception_type === "except_osv") {
+        if (error.data.exception_type === "user_error") {
             error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
         }
         new instance.web.Dialog(this, {

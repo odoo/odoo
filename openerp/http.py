@@ -526,9 +526,9 @@ def serialize_exception(e):
         "message": ustr(e),
         "arguments": to_jsonable(e.args),
     }
-    if isinstance(e, openerp.osv.osv.except_osv):
-        tmp["exception_type"] = "except_osv"
-    elif isinstance(e, openerp.exceptions.Warning):
+    if isinstance(e, openerp.exceptions.UserError):
+        tmp["exception_type"] = "user_error"
+    elif isinstance(e, openerp.exceptions.RedirectWarning):
         tmp["exception_type"] = "warning"
     elif isinstance(e, openerp.exceptions.AccessError):
         tmp["exception_type"] = "access_error"
