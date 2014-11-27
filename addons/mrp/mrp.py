@@ -332,7 +332,7 @@ class mrp_bom(osv.osv):
         if bom.type == 'phantom' and not bom.bom_lines:
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
 
-            if newbom:
+            if newbom and newbom != bom.id:
                 res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
