@@ -700,9 +700,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="tax_id" domain="[('company_id', '=', company_id)]"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -711,7 +711,8 @@
                                     <field name="amount" class="oe_inline" />
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
                                 </div>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
