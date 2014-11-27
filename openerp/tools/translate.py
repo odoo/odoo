@@ -667,8 +667,7 @@ def trans_generate(lang, modules, cr):
             return
 
         tnx = (module, source, name, id, type, tuple(comments or ()))
-        if tnx not in _to_translate:
-            _to_translate.add(tnx)
+        _to_translate.add(tnx)
 
     def encode(s):
         if isinstance(s, unicode):
@@ -1002,8 +1001,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if not res_id:
                 return
 
-            if unicode(res_id).isdigit():
-                # res_id is either an integer, or a string composed of digits only
+            if isinstance(res_id, (int, long)) or \
+                    (isinstance(res_id, basestring) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 dic['module'] = module_name
             else:
