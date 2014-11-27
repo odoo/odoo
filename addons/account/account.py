@@ -598,7 +598,6 @@ class account_move(models.Model):
     # TODO: improve and use a refund sequence according to context
     @api.multi
     def post(self):
-        SequenceObj = self.env['ir.sequence']
         invoice = self._context.get('invoice', False)
         self._post_validate()
 
@@ -612,7 +611,7 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        new_name = SequenceObj.next_by_id(journal.sequence_id.id)
+                        new_name = journal.sequence_id.next_by_id()
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
 
@@ -666,6 +665,19 @@ class account_move(models.Model):
             if abs(amount) > 10 ** -4:
                 raise Warning(_('You cannot validate a non-balanced entry.'))
         return True
+
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
+
 
 class account_move_reconcile(models.Model):
     _name = "account.move.reconcile"
