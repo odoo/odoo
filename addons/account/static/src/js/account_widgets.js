@@ -120,6 +120,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
+                        domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
                     },
                 },
             };
