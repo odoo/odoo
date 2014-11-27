@@ -32,6 +32,7 @@ import xmlrpclib
 from contextlib import contextmanager
 from glob import glob
 from os.path import abspath, dirname, join
+from sys import stdout
 from tempfile import NamedTemporaryFile
 
 
@@ -40,7 +41,8 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
 version = version.split('-')[0]
-
+GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
+GPGID = os.getenv('GPGID')
 timestamp = time.strftime("%Y%m%d", time.gmtime())
 PUBLISH_DIRS = {
     'debian': 'deb',
@@ -271,7 +273,13 @@ def build_tgz(o):
     system(['cp', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
 
 def build_deb(o):
-    system(['dpkg-buildpackage', '-rfakeroot'], o.build_dir)
+    deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
+    deb.logfile = stdout
+    deb.expect_exact('Enter passphrase: ', timeout=1200)
+    deb.send(GPGPASSPHRASE + '\r\n')
+    deb.expect_exact('Enter passphrase: ')
+    deb.send(GPGPASSPHRASE + '\r\n')
+    deb.expect(pexpect.EOF)
     system(['mv', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s' % o.build_dir])
@@ -374,14 +382,17 @@ def gen_deb_package(o, published_files):
 
     # Generate Release.gpg (= signed Release)
     # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
-    subprocess.call(['gpg', '--yes', '-abs', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
+    subprocess.call(['gpg', '--default-key', GPGID, '--passphrase', GPGPASSPHRASE, '--yes', '-abs', '--no-tty', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
 
 #---------------------------------------------------------
 # Generates an RPM repo
 #---------------------------------------------------------
 def gen_rpm_repo(o, file_name):
     # Sign the RPM
-    subprocess.call(['rpm', '--resign', file_name], cwd=os.path.join(o.pub, 'rpm'))
+    rpmsign = pexpect.spawn('/bin/bash', ['-c', 'rpm --resign %s' % file_name], cwd=os.path.join(o.pub, 'rpm'))
+    rpmsign.expect_exact('Enter pass phrase: ')
+    rpmsign.send(GPGPASSPHRASE + '\r\n')
+    rpmsign.expect(pexpect.EOF)
 
     # Removes the old repodata
     subprocess.call(['rm', '-rf', os.path.join(o.pub, 'rpm', 'repodata')])
