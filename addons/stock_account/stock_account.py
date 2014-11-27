@@ -29,7 +29,7 @@ _logger = logging.getLogger(__name__)
 class stock_inventory(osv.osv):
     _inherit = "stock.inventory"
     _columns = {
-        'date': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
+        'date_account': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
     }
     def post_inventory(self, cr, uid, inv, context=None):
         if context is None:

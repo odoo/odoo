@@ -29,11 +29,12 @@ class validate_account_move_lines(models.TransientModel):
         data_line = self.env['account.move.line'].browse(context['active_ids'])
         for line in data_line:
             if line.move_id.state=='draft':
-                move_ids.append(line.move_id.id)
+                move_ids.append(line.move_id)
         move_ids = list(set(move_ids))
         if not move_ids:
             raise Warning(_('Selected Entry Lines does not have any account move entries in draft state.'))
-        self.env['account.move'].button_validate(move_ids)
+        for moves in move_ids:
+            moves.button_validate()
         return {'type': 'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

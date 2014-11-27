@@ -20,7 +20,7 @@ class account_move_line_reconcile(models.TransientModel):
     def default_get(self, fields):
         context = dict(self._context or {})
         res = super(account_move_line_reconcile, self).default_get(fields)
-        data = self.trans_rec_get(context.get('active_ids', []))
+        data = self.trans_rec_get()
         if 'trans_nbr' in fields:
             res.update({'trans_nbr':data['trans_nbr']})
         if 'credit' in fields:
