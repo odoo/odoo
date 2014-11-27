@@ -182,6 +182,9 @@ function odoo_project_timesheet_models(project_timesheet) {
             //this method will create new object of model if data having virtual_id and add it into collection, then it will call add task for that collection model
             //It also finds project model from collection and add task in that model if project_id passed in data is already available
             //We can find model by id, coolection.get(id of model(e.g. id of project model)), id is magic attribute of model
+            if (!data.project_id) {
+                return;
+            }
             var projects_collection = this.get("projects");
             if(projects_collection.get(data.project_id[0])) {
                 var project_model = projects_collection.get(data.project_id[0]);
@@ -208,7 +211,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 search_result.push([project_models[i].id, project_models[i].name]);
             }
             if (term) {
-                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().indexOf(term.toLowerCase()) !== -1) {return x;}}));
             }
             return search_result;
         },

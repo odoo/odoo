@@ -560,7 +560,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
         },
         initialize_timer: function() {
-            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", placeholder: "Select a project", id_for_input: "project_id"});
+            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project", placeholder: "Select a project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
                 var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({project_id: project});
@@ -644,10 +644,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 });
             }, 1000);
         },
+        //To Remove: As we do not have any field mandatory
         is_valid_data: function() {
-            if (!this.project_m2o.get('value')) {
-                return false;
-            }
+            //if (!this.project_m2o.get('value')) {
+            //    return false;
+            //}
             return true;
         },
         reset_timer: function() {
@@ -689,7 +690,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             var project_activity_data = {};
             project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val() || 0) + ((((parseInt(this.$("#minutes").val() || 0) * 100) / 60))/100)) || 0;
-            project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
+            project_activity_data['project_id'] = self.project_m2o.get("value") ? [self.project_m2o.get("value"), self.project_m2o.get("display_string")]: false;
             project_activity_data['task_id'] = self.task_m2o.get("value") ? ([self.task_m2o.get("value"), self.task_m2o.get("display_string")]) : false;
             project_activity_data['name'] = this.$("#name").val();
             return project_activity_data;
@@ -718,7 +719,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             if (!(this.project_timesheet_db.virtual_id_regex.test(project_activity_data['id']))) {
                 project_activity_data['command'] = 1;
+            } else {
+                project_activity_data['command'] = 0;
             }
+            console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -763,7 +767,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
             this._super();
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
-            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
+            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project", label: "Project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
                 this.set_project_model();
             });
@@ -838,12 +842,16 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":
-                        self.project_m2o.set({display_string: field_val[1], value: field_val[0]});
-                        self.project_m2o.display_string(field_val);
+                        if (field_val) {
+                            self.project_m2o.set({display_string: field_val[1], value: field_val[0]});
+                            self.project_m2o.display_string(field_val);
+                        }
                         break;
                     case "task_id":
-                        self.task_m2o.set({display_string: field_val[1], value: field_val[0]});
-                        self.task_m2o.display_string(field_val);
+                        if (field_val) {
+                            self.task_m2o.set({display_string: field_val[1], value: field_val[0]});
+                            self.task_m2o.display_string(field_val);
+                        }
                         break;
                     case "unit_amount":
                         var formatted = self.format_duration(field_val);
@@ -1092,14 +1100,19 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.map(date_groups, function(groups, key) {
                 _.each(groups, function(group) {
                     if (date_activities[key]) {
-                        if (date_activities[key]['task_id']) {
+                        if (group.task_id) {
                             date_activities[key]['unit_amount'] += parseFloat((group.unit_amount).toFixed(2));
                         } else {
                             date_activities[key]['unallocated'] += parseFloat((group.unit_amount).toFixed(2));
                         }
                     } else {
-                        group['unallocated'] = 0;
-                        group['unit_amount'] = parseFloat((group.unit_amount).toFixed(2));
+                        if (group.task_id) {
+                            group['unit_amount'] = parseFloat((group.unit_amount).toFixed(2));
+                            group['unallocated'] = 0.0;
+                        } else {
+                            group['unallocated'] = parseFloat((group.unit_amount).toFixed(2));
+                            group['unit_amount'] = 0.0;
+                        }
                         group['day'] = moment(group.date).format("ddd DD");
                         date_activities[key] = group;
                     }
@@ -1145,12 +1158,20 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 });
                 graph_data = _.sortBy(graph_data, function(record) {return record.date;});
             }
-            console.log("Inside draw_chart after adding missing dates ::: ", graph_data);
 
-            _.each(graph_data, function(record) {week_total += record.unit_amount;});
+            //Prepare Table data group by Project and render table
+            var activities = _.clone(this.project_timesheet_db.load("activities"));
+            var week_groups = _.groupBy(activities, function(activity) {
+                return moment(activity.date).week();
+            });
+            var week_wise_activities = _.map(week_groups, function(group, key) {
+                return group;
+            });
+            var current_week_data = week_wise_activities[this.week_index];
+            _.each(current_week_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
             this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], (formatted_value[1] || 0)));
-            var project_groups = _.groupBy(graph_data, function(record) {
+            var project_groups = _.groupBy(current_week_data, function(record) {
                 return record.project_id[0];
             });
             _.each(project_groups, function(groups, key) {
@@ -1159,7 +1180,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         table_data[key]['unit_amount'] += group.unit_amount;
                     } else {
                         table_data[key] = {
-                            project_name: group.project_id[1],
+                            project_name: group.project_id[1] || 'Undefined',
                             unit_amount: group.unit_amount
                         };
                     }

@@ -96,7 +96,7 @@
                         <td>
                             <div>
                                 <div>
-                                    <strong><t t-esc="activity.project_id[1]"></t></strong>
+                                    <strong><t t-if="activity.project_id and activity.project_id.length" t-esc="activity.project_id and activity.project_id[1]"></t></strong>
                                     <t t-set="duration" t-value="widget.format_duration(activity.unit_amount)" />
                                     <t t-if="duration != undefined">
                                         <!-- <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration.split(':')[0] + 'h ' + (duration.split(':')[1] and duration.split(':')[1] + 'min' or '')"></t></span> --> <!-- call format_hour method of this screen -->

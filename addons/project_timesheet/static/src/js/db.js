@@ -125,7 +125,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             var self = this;
             var activities = this.load("activities");
             var virtual_activity_id_list = _.filter(_.pluck(activities, 'id'), function(id) { return id.toString().match(self.virtual_id_regex);});
-            var virtual_project_id_list = _.map(_.filter(_.pluck(activities, "project_id"), function(id) {return id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
+            var virtual_project_id_list = _.map(_.filter(_.pluck(activities, "project_id"), function(id) {return id && id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
             var virtual_task_id_list = _.map(_.filter(_.pluck(activities, "task_id"), function(id) {return id && id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
             var virtual_ids = _.flatten([virtual_activity_id_list, virtual_project_id_list, virtual_task_id_list]);
             if (virtual_ids.length) {
