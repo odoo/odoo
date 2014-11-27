@@ -594,6 +594,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
+                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing.body_html,
                 'subject': mailing.name,
                 'model': mailing.mailing_model,

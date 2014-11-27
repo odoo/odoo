@@ -24,21 +24,25 @@
             </h2>
 
             <div class="row mt32 mb32">
-                <div class="col-xs-3" t-if="o.name">
+                <div class="col-xs-2" t-if="o.name">
                     <strong>Description:</strong>
                     <p t-field="o.name"/>
                 </div>
-                <div class="col-xs-3" t-if="o.date_invoice">
+                <div class="col-xs-2" t-if="o.date_invoice">
                     <strong>Invoice Date:</strong>
                     <p t-field="o.date_invoice"/>
                 </div>
-                <div class="col-xs-3" t-if="o.origin">
+                <div class="col-xs-2" t-if="o.origin">
                     <strong>Source:</strong>
                     <p t-field="o.origin"/>
                 </div>
-                <div class="col-xs-3" t-if="o.partner_id.ref">
+                <div class="col-xs-2" t-if="o.partner_id.ref">
                     <strong>Customer Code:</strong>
                     <p t-field="o.partner_id.ref"/>
+                </div>
+                <div class="col-xs-2" t-if="o.reference">
+                    <strong>Reference:</strong>
+                    <p t-field="o.reference"/>
                 </div>
             </div>
 
@@ -131,9 +135,9 @@
                 <strong>Comment:</strong>
                 <span t-field="o.comment"/>
             </p>
-            <p t-if="o.payment_term">
+            <p t-if="o.payment_term.note">
                 <strong>Payment Term:</strong>
-                <span t-field="o.payment_term"/>
+                <span t-field="o.payment_term.note"/>
             </p>
             <p t-if="o.fiscal_position">
                 <strong>Fiscal Position:</strong>

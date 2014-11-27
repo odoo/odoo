@@ -32,7 +32,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round, float_compare
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -650,14 +650,25 @@ class product_template(osv.osv):
         for tmpl_id in tmpl_ids:
 
             # list of values combination
+            variant_alone = []
             all_variants = [[]]
             for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) > 1:
-                    temp_variants = []
+                if len(variant_id.value_ids) == 1:
+                    variant_alone.append(variant_id.value_ids[0])
+                temp_variants = []
+                for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        for variant in all_variants:
-                            temp_variants.append(variant + [int(value_id)])
-                    all_variants = temp_variants
+                        temp_variants.append(variant + [int(value_id)])
+                all_variants = temp_variants
+
+            # adding an attribute with only one value should not recreate product
+            # write this attribute on every product to make sure we don't lose them
+            for variant_id in variant_alone:
+                product_ids = []
+                for product_id in tmpl_id.product_variant_ids:
+                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                        product_ids.append(product_id.id)
+                product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
             # check product
             variant_ids_to_active = []
@@ -854,7 +865,7 @@ class product_product(osv.osv):
                     context['uom'], value, uom.id)
         value =  value - product.price_extra
         
-        return product.write({'list_price': value}, context=context)
+        return product.write({'list_price': value})
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -905,8 +916,8 @@ class product_product(osv.osv):
         res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
         product = self.browse(cr, uid, id, context=context)
         if not product.product_tmpl_id.image:
-            product.write({'image_variant': None}, context=context)
-            product.product_tmpl_id.write({'image': image}, context=context)
+            product.write({'image_variant': None})
+            product.product_tmpl_id.write({'image': image})
         return res
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
@@ -1067,7 +1078,7 @@ class product_product(osv.osv):
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
+                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
                 ids = list(ids)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
@@ -1274,7 +1285,7 @@ class res_currency(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for currency_id in ids:
                 if currency_id == main_currency.id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 
@@ -1293,7 +1304,7 @@ class decimal_precision(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for decimal_precision in ids:
                 if decimal_precision == account_precision_id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 

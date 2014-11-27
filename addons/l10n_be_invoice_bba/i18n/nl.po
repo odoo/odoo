@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2014-08-27 10:22+0000\n"
+"PO-Revision-Date: 2014-10-24 06:46+0000\n"
 "Last-Translator: Yenthe - Bapps.be <yenthespam@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:35+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-10-25 07:02+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: l10n_be_invoice_bba
 #: sql_constraint:account.invoice:0
@@ -46,7 +46,7 @@ msgstr "Willekeurig"
 #. module: l10n_be_invoice_bba
 #: help:res.partner,out_inv_comm_type:0
 msgid "Select Default Communication Type for Outgoing Invoices."
-msgstr ""
+msgstr "Selecteer standaard type communicatie voor uitgaande facturen"
 
 #. module: l10n_be_invoice_bba
 #: help:res.partner,out_inv_comm_algorithm:0
@@ -54,6 +54,8 @@ msgid ""
 "Select Algorithm to generate the Structured Communication on Outgoing "
 "Invoices."
 msgstr ""
+"Selecteer algoritme om gestructureerde mededeling te genereren voor "
+"uitgaande facturen."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:109
@@ -64,6 +66,9 @@ msgid ""
 "Structured Communications has been exceeded!\n"
 "Please create manually a unique BBA Structured Communication."
 msgstr ""
+"Het dagelijkse maximum van uitgaande facturen met een automatisch "
+"gegenereerde BBA gestructureerde communicatie  is overschreden!\n"
+"Creëer handmatig een unieke BBA gestructureerde communicatie aub."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:150
@@ -79,6 +84,9 @@ msgid ""
 "BBA Structured Communications!\n"
 "Please correct the Partner record."
 msgstr ""
+"De partner moet een 3-7 cijfers lange referentienummer hebben voor het "
+"genereren van BBA gestructureerde communicatie(s)!\n"
+"Corrigeer aub de partner zijn fiche."
 
 #. module: l10n_be_invoice_bba
 #: constraint:res.partner:0
@@ -114,6 +122,8 @@ msgid ""
 "The BBA Structured Communication has already been used!\n"
 "Please create manually a unique BBA Structured Communication."
 msgstr ""
+"De BBA gestructureerde communicatie is al gebruikt!\n"
+"Maak aub een unieke manuele BBA gestructureerde communicatie aan."
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
@@ -132,11 +142,13 @@ msgid ""
 "Unsupported Structured Communication Type Algorithm '%s' !\n"
 "Please contact your OpenERP support channel."
 msgstr ""
+"Niet ondersteunde algoritme voor gestructureerde communicatie type '%s' !\n"
+"Contacteer aub uw Odoo ondersteuningskanaal."
 
 #. module: l10n_be_invoice_bba
 #: field:res.partner,out_inv_comm_algorithm:0
 msgid "Communication Algorithm"
-msgstr ""
+msgstr "Communicatie algoritme"
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:163
@@ -145,3 +157,5 @@ msgid ""
 "Empty BBA Structured Communication!\n"
 "Please fill in a unique BBA Structured Communication."
 msgstr ""
+"Lege BBA gestructureerde communicatie!\n"
+"Vul aub een unieke BBA gestructureerde communicatie in."

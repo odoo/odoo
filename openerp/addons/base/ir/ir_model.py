@@ -228,12 +228,7 @@ class ir_model(osv.osv):
             _module = False
             _custom = True
 
-        obj = CustomModel._build_model(self.pool, cr)
-        obj._rec_name = CustomModel._rec_name = (
-            'x_name' if 'x_name' in obj._columns else
-            list(obj._columns)[0] if obj._columns else
-            'id'
-        )
+        CustomModel._build_model(self.pool, cr)
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -501,6 +496,7 @@ class ir_model_fields(osv.osv):
             # we want to change the key of field in obj._fields and obj._columns
             field = obj._pop_field(rename[1])
             obj._add_field(rename[2], field)
+            self.pool.setup_models(cr, partial=(not self.pool.ready))
 
         if patches:
             # We have to update _columns of the model(s) and then call their
@@ -521,11 +517,11 @@ class ir_model_fields(osv.osv):
                     obj._add_field(field_name, field.new(**attrs))
 
                 # update database schema
+                self.pool.setup_models(cr, partial=(not self.pool.ready))
                 obj._auto_init(cr, ctx)
                 obj._auto_end(cr, ctx) # actually create FKs!
 
         if column_rename or patches:
-            self.pool.setup_models(cr, partial=(not self.pool.ready))
             RegistryManager.signal_registry_change(cr.dbname)
 
         return res

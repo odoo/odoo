@@ -178,7 +178,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date_invoice"/>
+                            <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
                             <field name="date_due"/>
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
@@ -327,7 +327,7 @@
                             <field name="fiscal_position" options="{'no_create': True}" />
                         </group>
                         <group>
-                            <field name="date_invoice"/>
+                            <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"

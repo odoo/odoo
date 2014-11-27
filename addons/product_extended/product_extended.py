@@ -22,21 +22,30 @@ from openerp.osv import fields
 from openerp.osv import osv
 
 
-class product_product(osv.osv):
-    _name = 'product.product'
-    _inherit = 'product.product'
+class product_template(osv.osv):
+    _name = 'product.template'
+    _inherit = 'product.template'
 
 
-    def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting = False, context=None):
+    def compute_price(self, cr, uid, product_ids, template_ids=False, recursive=False, test=False, real_time_accounting = False, context=None):
         '''
         Will return test dict when the test = False
         Multiple ids at once?
         testdict is used to inform the user about the changes to be made
         '''
         testdict = {}
+        if product_ids:
+            ids = product_ids
+            model = 'product.product'
+        else:
+            ids = template_ids
+            model = 'product.template'
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
-            bom_id = bom_obj._bom_find(cr, uid, product_id = prod_id, context=context)
+            if model == 'product.product':
+                bom_id = bom_obj._bom_find(cr, uid, product_id=prod_id, context=context)
+            else:
+                bom_id = bom_obj._bom_find(cr, uid, product_tmpl_id=prod_id, context=context)
             if bom_id:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:
@@ -66,7 +75,9 @@ class product_product(osv.osv):
         tmpl_obj = self.pool.get('product.template')
         for sbom in bom.bom_line_ids:
             my_qty = sbom.product_qty
-            price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
+            if not sbom.attribute_value_ids:
+                # No attribute_value_ids means the bom line is not variant specific
+                price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
             for wline in bom.routing_id.workcenter_lines:
@@ -93,7 +104,6 @@ class product_product(osv.osv):
                 wizard_obj.change_price(cr, uid, [wiz_id], context=ctx)
         return price
 
-product_product()
 
 class product_bom(osv.osv):
     _inherit = 'mrp.bom'
