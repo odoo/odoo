@@ -17,12 +17,19 @@
 // indent level for various items list e.g. dl, fields lists, ...
 @item-indent: 30px;
 
+* {
+  box-sizing: border-box;
+}
 body {
+  overflow: auto;
   position: relative;
 }
 
-.document-super {
+.document-super:not(.stripe) {
   .container();
+}
+.document-super.stripe {
+  .container-fluid();
 }
 
 .document {
@@ -85,20 +92,22 @@ body {
       opacity: 0;
       .transition(all 0.3s ease-out);
     }
-    > a:after {
-      content: " ";
-      display: inline-block;
-      width: 0;
-      height: 0;
-      margin-left: 5px;
-      vertical-align: middle;
-      border-top: 4px solid @gray-light;
-      border-right: 4px solid transparent;
-      border-left: 4px solid transparent;
-    }
-    .dropdown-menu > li.current > a.current {
-      background-color: @brand-primary;
-      color: white;
+    &.dropdown {
+      > a:after {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 5px;
+        vertical-align: middle;
+        border-top: 4px solid @gray-light;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+      }
+      .dropdown-menu > li.current > a.current {
+        background-color: @brand-primary;
+        color: white;
+      }
     }
   }
   /* version switcher */
@@ -461,36 +470,30 @@ div.section > h2 {
  *
  * Generated via Pygments
  */
-
-.highlight {
-  padding: 9px 14px;
-  margin-bottom: 14px;
-  background-color: #f7f7f9 !important;
-  border: 1px solid #e1e1e8;
-  border-radius: 4px;
-}
 .highlight pre {
-  color: #333;
-  padding: 0 45px 0 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border: 0;
+  padding: 4px;
+
+  font-size: 75%;
+  // don't break lines within words
+  word-break: normal;
+  word-wrap: normal;
+}
+.switchable .highlight.with-btn-clipboard pre {
+  // avoid copy button overlapping with even long lines
+  padding-right: 50px;
 }
 
 /*
  * ZeroClipboard styles
  */
-
-.zero-clipboard {
+.highlight {
   position: relative;
-  display: none;
 }
 .btn-clipboard {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 3;
   display: block;
   padding: 5px 8px;
   font-size: 12px;
@@ -499,16 +502,14 @@ div.section > h2 {
   background-color: #fff;
   border: 1px solid #e1e1e8;
   border-radius: 0 4px 0 4px;
-}
-.btn-clipboard-hover {
-  color: #fff;
-  background-color: @brand-primary;
-  border-color: @brand-primary;
-}
 
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
+  &:focus {
+    outline: none;
+  }
+
+  &.active {
+    background-color: #ffffad;
+    .transition(background-color .5s linear);
   }
 }
 
@@ -546,8 +547,150 @@ td.field-body {
     padding: 0;
 }
 
-// code block lines should not wrap
-pre {
-  word-break: normal;
-  word-wrap: normal;
+// lighten js namespace/class name
+.descclassname {
+  opacity: 0.5;
+}
+
+
+.index-tree {
+  ul, li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  > ul > li {
+    margin-bottom: 0.5em;
+    > a {
+      .h3();
+      text-align: center;
+    }
+    > ul {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+      > li {
+        width: 50%;
+        a {
+          .h4();
+          padding-left: 10%;
+          padding-right: 10%;
+        }
+      }
+    }
+    a {
+      display: block;
+      color: @link-color !important;
+      padding: 0.3em 0;
+      margin: 3px !important;
+      &:hover {
+        background-color: @gray-lighter;
+      }
+    }
+  }
+}
+// STRIPE-STYLE PAGES
+.stripe {
+  .section {
+    margin-bottom: 2em;
+  }
+
+  // === columning only on medium+ ===
+  @media (min-width: @screen-md-min) {
+    // column 1
+    .section > *,
+    .section > .force-left {
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    // column 2
+    .section > .force-right,
+    .section > [class*=highlight] {
+      float: none;
+      clear: none;
+      margin-left: 51%;
+    }
+    // fullwidth elements
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6 {
+      background-color: fadeout(@body-bg, 30%);
+    }
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6, .section > .section {
+      position: relative;
+      width: auto;
+      float: none;
+      clear: both;
+    }
+
+    .bodywrapper {
+      position: relative;
+      // middle separator
+      &:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        width: 0;
+        border-left: 1px solid @gray-light;
+      }
+    }
+
+    .highlight pre {
+      // but allow additional line-breaks between "words" to avoid overflow
+      white-space: pre-wrap;
+    }
+  }
+
+  .switcher {
+    color: white;
+    width: auto !important;
+    float: none !important;
+
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+
+    right: 0.5em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 5;
+
+    li {
+      background-color: #0f131a;
+      padding: 0.4em 1em;
+      border: 1px solid #333;
+      border-left-width: 0;
+      cursor: pointer;
+      &:first-child {
+        border-left-width: 1px;
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+      &:hover {
+        background-color: #222;
+      }
+      &.active {
+        background-color: #333;
+      }
+    }
+  }
+
+  // === show/hide code snippets ===
+  [class*=only-],
+  .switchable > .highlight {
+    display: none;
+  }
+  // must be final rule of page
+  .only-python, .highlight-python > .highlight {
+    display: block;
+  }
 }

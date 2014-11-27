@@ -160,7 +160,7 @@ def init_logger():
             elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
-                handler = logging.handlers.FileHandler(logf)
+                handler = logging.FileHandler(logf)
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)

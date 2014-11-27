@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-17 11:54+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-24 10:34+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-18 07:25+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-25 07:00+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:261
+#: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "(n/a)"
 msgstr "(n.b.)"
@@ -75,8 +75,8 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:272
-#: code:addons/sale_stock/sale_stock.py:345
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
 #, python-format
 msgid "Configuration Error!"
 msgstr "Configuratiefout!"
@@ -192,7 +192,7 @@ msgstr ""
 "datum om zo onverwachte vertragingen te kunnen opvangen."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:340
+#: code:addons/sale_stock/sale_stock.py:346
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Niet genoeg voorraad! "
@@ -222,12 +222,7 @@ msgstr ""
 "deelleveringen toestaat."
 
 #. module: sale_stock
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
-msgid "Picked"
-msgstr "Verzameld"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
+#: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Orderverzamel informatie!: "
@@ -246,6 +241,16 @@ msgstr "Uitgaande leveringen behorende bij deze verkooporder"
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
 msgstr "Voorbereiden van facturen gebaseerd op taak activiteiten."
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr "Productsjabloon"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -361,7 +366,6 @@ msgstr "Bekijk uitgaande levering"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
 #: field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Magazijn"
@@ -384,7 +388,7 @@ msgstr ""
 "annuleren."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:336
+#: code:addons/sale_stock/sale_stock.py:342
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -394,7 +398,7 @@ msgstr ""
 "De werkelijke voorraad is %.2f %s. (zonder reserveringen)"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
+#: code:addons/sale_stock/sale_stock.py:270
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -420,3 +424,6 @@ msgid ""
 msgstr ""
 "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
 "ue\"}"
+
+#~ msgid "Picked"
+#~ msgstr "Verzameld"

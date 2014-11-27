@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-22 08:58+0000\n"
+"Last-Translator: Opencloud - PT <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:05+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:25+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -39,6 +39,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class = \"oe_view_nocontent_create\"> \n"
+"                 Clique para criar uma lista de preços de entrega para uma "
+"região específica. \n"
+"               </ p> <p> \n"
+"                 A lista de preços de entrega permite-lhe calcular o custo e "
+"\n"
+"                 o preço de venda de entrega de acordo com o peso do \n"
+"                 produtos e outros critérios. Você pode definir várias "
+"tabelas de preços \n"
+"                 para cada método de entrega: por país ou uma região em um "
+"determinado \n"
+"                 país definido por um intervalo de código postal. \n"
+"               </ p>\n"
+"            "
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -60,6 +74,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class = \"oe_view_nocontent_create\"> \n"
+"                 Clique para definir um novo método de entrega. \n"
+"               </ p> <p> \n"
+"                 Cada operadora (por exemplo, UPS) pode ter vários métodos "
+"de entrega (por exemplo, \n"
+"                 UPS Express, UPS padrão) com um conjunto de regras de "
+"preços em anexo \n"
+"                 para cada método. \n"
+"               </ p> <p> \n"
+"                 Estes métodos permitem calcular automaticamente o preço de "
+"entrega \n"
+"                 de acordo com as suas configurações; na ordem de venda (com "
+"base no \n"
+"                 citação) ou a nota fiscal (com base nas ordens de entrega). "
+"\n"
+"               </ p>\n"
+"            "
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -104,7 +135,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,available:0
 msgid "Available"
-msgstr ""
+msgstr "Disponível"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -119,7 +150,7 @@ msgstr "Transportadora"
 #. module: delivery
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "Informação da Transportadora"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -163,14 +194,14 @@ msgstr "Países"
 #: field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: delivery
 #: field:delivery.carrier,create_date:0
 #: field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -248,7 +279,7 @@ msgstr "Fixo"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Grátis se o valor total da ordem é maior do que"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:151
@@ -259,12 +290,12 @@ msgstr "Grátis se for mais que %.2f"
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
-msgstr ""
+msgstr "Informação Geral"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "Dá a ordem de sequência quando calcula a grelha de entrega"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -338,16 +369,18 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Se você não \"Adicionar à Cotação', o preço exato será calculado quando "
+"faturado com base na entrega."
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr ""
+msgstr "É uma Entrega"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "É o método possível de entrega para a transportadora corrente."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
@@ -360,14 +393,14 @@ msgstr "Mantenha vazio se o preço depende do preço avançado por destino"
 #: field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última Actualização por"
 
 #. module: delivery
 #: field:delivery.carrier,write_date:0
 #: field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última Actualização em"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -393,13 +426,13 @@ msgstr "Peso líquido"
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "Nenhuma grelha disponível!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "Nenhuma grelha disponível para esta transportadora!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -420,7 +453,7 @@ msgstr "Operador"
 #: code:addons/delivery/sale.py:78
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "A ordem não está em estado de rascunho!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -473,7 +506,7 @@ msgstr "Ordem de Vendas"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linha da Ordem de Venda"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
@@ -482,6 +515,8 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
 msgstr ""
+"Produto selecionado no método de entrega não cumpre qualquer dos critérios "
+"da grelha definida."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -542,7 +577,7 @@ msgstr "Empresa Transportadora"
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "Não foi possível encontrar o método de entrega!"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
@@ -605,7 +640,7 @@ msgstr "Peso * volume"
 #. module: delivery
 #: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr ""
+msgstr "Vai ser faturado a:"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -615,4 +650,4 @@ msgstr "Código postal"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "em função de"

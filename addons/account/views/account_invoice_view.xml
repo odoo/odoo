@@ -48,7 +48,8 @@
                 <form string="Invoice Line">
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
+                            <field name="product_id"
+                                on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
@@ -178,7 +179,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date_invoice"/>
+                            <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
                             <field name="date_due"/>
                             <field domain="[('company_id', '=', company_id), ('user_type.type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
@@ -194,7 +195,7 @@
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
-                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
+                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
@@ -309,11 +310,11 @@
                 </header>
                 <sheet string="Invoice">
                     <h1>
-                        <label string="Draft Invoice " attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
-                        <label string="Draft Refund " attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
-                        <label string="Pro Forma Invoice " attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
-                        <label string="Invoice " attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_invoice')]}"/>
-                        <label string="Refund " attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}"/>
+                        <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
+                        <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
+                        <label string="Pro Forma Invoice" attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
+                        <label string="Invoice" attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_invoice')]}"/>
+                        <label string="Refund" attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}"/>
                         <field name="number" readonly="1" class="oe_inline"/>
                     </h1>
                     <field name="type" invisible="1"/>
@@ -327,7 +328,7 @@
                             <field name="fiscal_position" options="{'no_create': True}" />
                         </group>
                         <group>
-                            <field name="date_invoice"/>
+                            <field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', company_id),('user_type.type','=', 'receivable')]"
@@ -468,7 +469,6 @@
                     <group expand="0" string="Group By">
                     	<filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
-                        <filter string="Category of Product" name="category_product" context="{'group_by':'categ_id','residual_invisible':True}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <separator/>
                         <filter string="Period" context="{'group_by':'date'}"/>

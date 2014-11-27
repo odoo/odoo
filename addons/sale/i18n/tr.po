@@ -7,26 +7,126 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-02 17:18+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:48+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-03 06:27+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+"Language: tr\n"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        You can view your quotation online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: sale
 #: field:product.product,sales_count:0
 #: field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Satış"
 
 #. module: sale
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr "Satır Sayısı"
+msgstr "# nın Satırları"
 
 #. module: sale
 #: field:sale.report,product_uom_qty:0
@@ -53,6 +153,8 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Teklif' or 'Sipariş'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -84,104 +186,6 @@ msgstr ""
 "ayarlanır."
 
 #. module: sale
-#: model:email.template,body_html:sale.email_template_edi_sale
-msgid ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENCES</strong><br>\n"
-"         Order number: <strong>${object.name}</strong><br>\n"
-"         Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br>\n"
-"         Order date: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         Order reference: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"         Your reference: ${object.client_order_ref}<br>\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"         Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order ${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" "
-"href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in "
-"('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\">\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web : <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -196,6 +200,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Bir teklif oluşturmak için tıklayın ve satışa "
+"siparişine\n"
+"                    dönüştürün.\n"
+"                </p><p>\n"
+"                    Odoo verimli ve komple satış akışı yapmanıza yardımcı "
+"olacaktır:\n"
+"                    teklifi, satış sipariş, teslimat, faturalama ve ödeme.\n"
+"                </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -217,6 +231,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bu Müşteri için bir teklifi veya satış siparişi oluşturmak "
+"için tıklayın.\n"
+"              </p><p>\n"
+"                Odoo verimli komple satış işlem için yardımcı olacaktır "
+"akış:\n"
+"                teklifi, satış sipariş, teslimat, faturalama ve\n"
+"                ödeme.\n"
+"              </p><p>\n"
+"                Sosyal özellik, her satış da tartışmalar düzenlemenize "
+"yardımcı  olacak\n"
+"                sipariş ve müşteri satış siparişinin evrelerini\n"
+"                izlemenize olanak verir.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -232,6 +261,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Satış siparişine dönüştürülebilecek bir teklif oluşturmak "
+"için\n"
+"                tıklayın.\n"
+"              </p><p>\n"
+"                Odoo, tam bir satış akışı işlemlerini etkili olarak "
+"yapmanıza yardım eder:\n"
+"                teklif, satış siparişi, teslimat, faturalama ve ödeme.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -287,34 +326,34 @@ msgstr "Belirli bir ürün tahsis edilmesi gereken bir iş ortağı."
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Satış Siparişinde  Adresler"
+msgstr "Satış Siparişinde Adresler"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr "Peşin"
+msgstr "Avans"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "Peşinat Tutarı"
+msgstr "Avans Tutarı"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:203
 #, python-format
 msgid "Advance Invoice"
-msgstr "Peşin Fatura"
+msgstr "Fatura Avansı"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr "Gelişmiş Ürün"
+msgstr "Ürün Avansı"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:107
 #, python-format
 msgid "Advance of %s %%"
-msgstr "%s %% Avans"
+msgstr "%s %% Avansı"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:114
@@ -353,7 +392,7 @@ msgstr "Tahsisli İş Ortağı"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Teslimat ve faturalama için farklı bir adres İzin "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -368,7 +407,7 @@ msgstr "Müşteri veya ürünlere göre uyarıları yapılandırma"
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "Online alıntılar ve izin şablonları"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -387,7 +426,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "Farklı ölçü birimlerini kullanma izni"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -416,11 +455,14 @@ msgid ""
 "Manage Related Stock.\n"
 "-This installs the module sale_stock."
 msgstr ""
+"Farklı Satış politikları ve İlişkili Stok Yönetimi kullanarak Teklif, Satış "
+"Siparişi yapmanızı sağlar.\n"
+"-sale_stock modülünü kurar."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr "Her satış siparişi kalemi için indirim yapmanıza olanak verir."
+msgstr "Her satış siparişi satır için indirim yapmaya olanak verir."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -458,9 +500,9 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"satış siprişlerin de farklı teslimat ve fatura adresi belirlemenizi sağlar."
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
@@ -481,7 +523,7 @@ msgid "Before Delivery"
 msgstr "Teslimattan Önce"
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -493,17 +535,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Ürüne Göre"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Satış Temsilcisine Göre"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Satış Takımına Göre"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -535,19 +577,19 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: sale
-#: code:addons/sale/sale.py:581
+#: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Bu satış siparişi iptal edilemiyor!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "'%s' durumundaki bir satış sipariş kalemini silemezsiniz."
 
 #. module: sale
-#: code:addons/sale/sale.py:1134
+#: code:addons/sale/sale.py:1133
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -570,22 +612,22 @@ msgstr "Aynı müşteriye ait faturaları gruplandırmak için işaretleyin"
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Bu satış ekibi tekliflerini yönetmek için bu kutuyu işaretleyin."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Satış Analiz erişimi için tıklayın."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "Faturaların ayrıntılı bir analizini görmek için tıklayınız."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "Ayrıntılı bir analiz görmek için tıklayın."
 
 #. module: sale
 #: field:sale.report,delay:0
@@ -606,7 +648,7 @@ msgid "Company"
 msgstr "Şirket"
 
 #. module: sale
-#: code:addons/sale/sale.py:1142
+#: code:addons/sale/sale.py:1141
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
@@ -686,7 +728,7 @@ msgstr "Fatura oluştur"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -694,7 +736,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturuldu"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -710,11 +752,12 @@ msgstr "Para Birimi"
 #: view:sale.order:sale.view_sales_order_filter
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
+#: view:sale.report:sale.view_order_product_search
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: sale
-#: code:addons/sale/sale.py:457
+#: code:addons/sale/sale.py:464
 #, python-format
 msgid "Customer Invoices"
 msgstr "Müşteri Faturaları"
@@ -737,12 +780,12 @@ msgstr "Sipariş Tarihi"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Sipariş Tarihi:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Son mesajın tarih kaydı yayınlanmıştır."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -762,17 +805,17 @@ msgstr "Varsayılan Seçenekler"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Varsayılan Şartlar ve Koşullar"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Varsayılan şartlar & koşullar ..."
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "Teklifler için Varsayılan Şartlar ve koşullar."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -869,12 +912,12 @@ msgid "Enable Invoicing Sales order lines"
 msgstr "SatışSiparişi Satırında Faturalamayı Etkinleştirme"
 
 #. module: sale
-#: code:addons/sale/sale.py:148
-#: code:addons/sale/sale.py:383
-#: code:addons/sale/sale.py:515
-#: code:addons/sale/sale.py:612
-#: code:addons/sale/sale.py:930
-#: code:addons/sale/sale.py:947
+#: code:addons/sale/sale.py:154
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522
+#: code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:927
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -887,7 +930,7 @@ msgstr "İstisna"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Genişletilmiş Filtreler"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -895,7 +938,7 @@ msgid "False"
 msgstr "Yanlış"
 
 #. module: sale
-#: code:addons/sale/sale.py:582
+#: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Öncelikle bu satış siparişine bağlı tüm faturaları iptal et."
@@ -927,7 +970,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Tahmin"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -938,6 +981,10 @@ msgid ""
 "\n"
 " of the current and forecast revenue on the kanban view."
 msgstr ""
+"Geçerli ay için fatura geliri tahminidir. Satış takımının bu ay içinde "
+"kesmesi \n"
+"Gereken faturaların tutarıdır. Kanban görünümünde mevcut ve  \n"
+"Tahmini gelirin hesaplanmasında kullanılır."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -946,6 +993,10 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Bu rapordan, müşterilerinize kestiğiniz faturaların tutarlarını gözden "
+"geçirebilirsiniz. Arama aracı ile Fatura raporlarını da ihtiyaçlarınıza göre "
+"kişiselleştirebilirsiniz, ve böylece gereksinimize göre analiz "
+"seçebilirsiniz."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -980,7 +1031,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupla İle"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1010,7 +1061,7 @@ msgstr "Saat"
 #: field:sale.order.line.make.invoice,id:0
 #: field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -1018,7 +1069,7 @@ msgid "If checked new messages require your attention."
 msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 
 #. module: sale
-#: code:addons/sale/sale.py:298
+#: code:addons/sale/sale.py:305
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1038,11 +1089,11 @@ msgid "In Progress"
 msgstr "Devam Eden"
 
 #. module: sale
-#: code:addons/sale/sale.py:267
+#: code:addons/sale/sale.py:274
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
-msgstr ""
+msgstr "Bir teyit satış siparişi silmek için, önce iptal edilmelidir!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
@@ -1051,9 +1102,9 @@ msgid "Incorrect Data"
 msgstr "Hatalı Veri"
 
 #. module: sale
-#: code:addons/sale/sale.py:267
-#: code:addons/sale/sale.py:986
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:274
+#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz İşlem!"
@@ -1085,7 +1136,7 @@ msgstr "Fatura İstisnası"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Fatura Tahmin"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -1105,7 +1156,7 @@ msgstr "Satış Siparişi Faturala"
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Fatura Hedefi"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1115,12 +1166,12 @@ msgstr "Geçerli sipariş için fatura adresi."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Fatura adresi:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Fatura ve teslimat adresi:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -1141,13 +1192,13 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:97
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Fatura oluşturuldu"
 
 #. module: sale
-#: code:addons/sale/sale.py:1224
+#: code:addons/sale/sale.py:1217
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Fatura ödeme"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1176,12 +1227,12 @@ msgstr "Faturalar"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Faturalar Analizi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Faturalar İstatistik"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -1206,7 +1257,7 @@ msgstr "Satış siparişine ait en az bir faturanın bulunduğunu belirtir."
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Son Mesaj Tarihi"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1215,7 +1266,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1224,7 +1275,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1265,32 +1316,32 @@ msgstr "Teklifin Yeni Kopyası"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Yeni Posta"
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Tanımlı Müşteri Yok!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1126
+#: code:addons/sale/sale.py:1125
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Fiyat Listesi yok ! : "
 
 #. module: sale
-#: code:addons/sale/sale.py:1137
+#: code:addons/sale/sale.py:1136
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr "Geçerli fiyat listesi kalemi bulunamadı!:"
+msgstr "Geçerli fiyat listesi satırı bulunamadı !:"
 
 #. module: sale
 #: help:sale.order.line,delay:0
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Sipariş onayı ve ürünlerin müşteriye sevkiyatı arasındaki gün sayısı"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1341,11 +1392,6 @@ msgid "Order"
 msgstr "Sipariş"
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Order Date"
-msgstr "Sipariş Tarihi"
-
-#. module: sale
 #: view:sale.order:sale.view_order_form
 #: field:sale.order,order_line:0
 msgid "Order Lines"
@@ -1358,8 +1404,9 @@ msgstr "Faturalanacak Sipariş Kalemleri"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
-msgstr ""
+msgstr "Sipariş Ay"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
@@ -1409,7 +1456,6 @@ msgstr "Ödendi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "İş Ortağı"
@@ -1422,7 +1468,7 @@ msgstr "Ödeme Koşulu"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Ödeme Dönemi:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1435,13 +1481,13 @@ msgid "Percentage"
 msgstr "Yüzde"
 
 #. module: sale
-#: code:addons/sale/sale.py:931
+#: code:addons/sale/sale.py:928
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Lütfen bu ürün için gelir hesabı belirtin: \"%s\" (id:%d)."
 
 #. module: sale
-#: code:addons/sale/sale.py:384
+#: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "Bu şirket için lütfen satış yevmiyesi oluşturun: \"%s\" (id:%d)."
@@ -1463,7 +1509,7 @@ msgid "Pricelist"
 msgstr "Fiyat Listesi"
 
 #. module: sale
-#: code:addons/sale/sale.py:297
+#: code:addons/sale/sale.py:304
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "FiyatListesi Uyarısı!"
@@ -1486,19 +1532,19 @@ msgstr "Satınalma"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Tedarik grubu"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "Tedarik"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
+#: field:sale.order,product_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: field:sale.order.line,product_id:0
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,product_id:0
 msgid "Product"
 msgstr "Ürün"
@@ -1511,7 +1557,7 @@ msgstr "Ürün Özellikleri"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Ürün Şablon"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1526,7 +1572,7 @@ msgstr "Proje"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr "Kalem Özellikleri"
+msgstr "Satır Özellikleri"
 
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
@@ -1560,7 +1606,7 @@ msgstr "Teklif / Sipariş"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Teklif Tarihi:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
@@ -1575,7 +1621,7 @@ msgstr "Teklif N°"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Teklif Gönder"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1588,10 +1634,10 @@ msgid "Quotation confirmed"
 msgstr "Teklif onaylandı"
 
 #. module: sale
-#: code:addons/sale/sale.py:355
+#: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Teklif oluşturuldu"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -1612,7 +1658,7 @@ msgstr "Teklifler"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Teklif Analizileri"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1622,27 +1668,22 @@ msgstr "Teklifler ve Satışlar"
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr ""
+msgstr "Teklif oluşturmada süre ortalaması"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "Bir sürede gönderilen faturaların oranı"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "Her dönem için satış siparişlerinin doğrulanma oranı"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Recreate Invoice"
 msgstr "Faturayı Yeniden Oluştur"
-
-#. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Reference Unit of Measure"
-msgstr "Referans Ölçü Birimi"
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -1652,22 +1693,27 @@ msgstr "Bu satış siparişi isteğini oluşturan belgenin referans numarası"
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Referans / Açıklama"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "Aylık onaylı satış siparişleri geliri."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr ""
+msgstr "Aylık oluşturulan teklilerin geliri."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "Aylık gönderilen faturaların geliri."
+
+#. module: sale
+#: field:procurement.order,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Satış Sipariş Kalemi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1705,13 +1751,17 @@ msgid "Sales Analysis"
 msgstr "Satış Analizi"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_make_invoice
-msgid "Sales Make Invoice"
-msgstr "Satışlara Fatura Oluşturur"
+#: model:ir.filters,name:sale.filter_sale_report_sales_funnel
+msgid "Sales Funnel"
+msgstr "Satış Hunisi"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:598
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr "Satışları Faturala"
+
+#. module: sale
+#: code:addons/sale/sale.py:284
 #: model:ir.model,name:sale.model_sale_order
 #: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
@@ -1731,7 +1781,7 @@ msgstr "Satış Siparişi Onaylandı"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Satış Siparişi Kalemi"
+msgstr "Satış Siparişi Satırı"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -1739,7 +1789,7 @@ msgstr "Satış Siparişi Kalemi"
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Satış Siparişi Satırları"
+msgstr "Satış Sipariş Satırları"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1811,12 +1861,12 @@ msgstr "Satış Siparişi İstatistikleri"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Satış Ekibi"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Satış Ekibleri"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1824,14 +1874,9 @@ msgid "Sales in Exception"
 msgstr "İstisnai Satışlar"
 
 #. module: sale
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr ""
-
-#. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales order lines done"
-msgstr "Yapılan satış siparişi kalemleri"
+msgstr "Biten satış siparişi kalemleri"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1846,7 +1891,7 @@ msgstr "Satış Temsilcisi"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Satış Temsilcisi:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1884,7 +1929,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr "Epostayla Gönder"
+msgstr "Mail Gönder"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -2003,7 +2048,7 @@ msgid "The value of Advance Amount must be positive."
 msgstr "Avans Tutarı artı değer olmak zorundadır."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:945
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2013,10 +2058,10 @@ msgstr ""
 "tanımlanmış Gelir kategorisi hesabı yoktur."
 
 #. module: sale
-#: code:addons/sale/sale.py:148
+#: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "Geçerli kullanıcı için varsayılan şirket yok!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -2033,7 +2078,7 @@ msgstr "Bu ürün için tanımlanmış gelir hesabı bulunmuyor: \"%s\" (id:%d).
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "Bu yıl"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2043,11 +2088,15 @@ msgid ""
 "Price and Cost Price.\n"
 "-This installs the module sale_margin."
 msgstr ""
+"Satış siparişine 'Oran' ekler?\n"
+"Birim Fiyat ve Maliyet Fiyatı arasındaki farkı hesaplayarak karlılığı "
+"verir.\n"
+"-sale_margin Modülünü kurar."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "Çevrimiçi teklif ekler"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -2141,7 +2190,7 @@ msgstr "Vergili Toplam"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Vergisiz Toplam"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -2230,7 +2279,7 @@ msgstr "Her müşteriye farklı fiyat ayarlaması için fiyat listeleri kullanma
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "KDV:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -2259,12 +2308,12 @@ msgstr "Uyarı!"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Web Sitesi Mesajları"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2277,14 +2326,14 @@ msgid "What do you want to invoice?"
 msgstr "Neyi faturalamak istiyorsunuz?"
 
 #. module: sale
-#: code:addons/sale/sale.py:986
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
 "Hali hazırda fatura edilmiş bir satış siparişi kalemini iptal edemezsiniz."
 
 #. module: sale
-#: code:addons/sale/sale.py:612
+#: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Hiçbir kalem içermeyen satış siparişini onaylayamazsınız."
@@ -2296,7 +2345,7 @@ msgid "You cannot create invoice when sales order is not confirmed."
 msgstr "Satış siparişi onaylanmadan fatura oluşturamazsınız."
 
 #. module: sale
-#: code:addons/sale/sale.py:516
+#: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -2304,7 +2353,7 @@ msgstr ""
 "Aynı iş ortağı için farklı para birimlerindeki satışları gruplandıramazsınız."
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:1123
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -2322,9 +2371,15 @@ msgstr "Aşağıdaki %s satış siparişini elle faturalandırmamalısınız"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Sizin Referans:"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
+
+#~ msgid "Order Date"
+#~ msgstr "Sipariş Tarihi"
+
+#~ msgid "Reference Unit of Measure"
+#~ msgstr "Referans Ölçü Birimi"

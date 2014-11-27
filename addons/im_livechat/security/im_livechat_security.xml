@@ -32,5 +32,16 @@
             <field name="perm_create" eval="0"/>
         </record>
 
+        <record id="session_rule_1" model="ir.rule">
+            <field name="name">Live Support Managers can see all session from live support</field>
+            <field name="model_id" ref="im_chat.model_im_chat_session"/>
+            <field name="groups" eval="[(6,0,[ref('im_livechat.group_im_livechat_manager')])]"/>
+            <field name="domain_force">[('to_id.channel_id', '!=', None)]</field>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
     </data>
 </openerp>

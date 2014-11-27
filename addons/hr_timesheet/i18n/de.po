@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-26 15:22+0000\n"
+"Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:16+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: hr_timesheet
-#: field:hr.timesheet.report,cost:0
-msgid "#Cost"
-msgstr ""
+"X-Launchpad-Export-Date: 2014-09-27 06:38+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -86,20 +81,39 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Bis jetzt gibt es noch keine Aktivitäten bezüglich dieses "
+"Vertrages.\n"
+"              </p><p>\n"
+"                In Odoo werden Verträge und Projekte über Kostenstellen\n"
+"                abgebildet. Dadurch können Sie einfach Ihre Kosten\n"
+"                und Erträge überwachen.\n"
+"              </p><p>\n"
+"                Kosten werden automatisch zugewiesen, wenn Sie Lieferanten\n"
+"                Rechnungen, Ausgaben oder Zeiterfassungen zuordnen.\n"
+"              </p><p>\n"
+"                Erträge werden automatisch zugewiesen, wenn Sie "
+"Ausgangsrechnungen\n"
+"                zuweisen. Ausgangsrechnungen können auf Basis von Aufträgen\n"
+"                (Pauschalangebote), Zeiterfassungen (basierend auf der "
+"geleisteten Arbeit) oder\n"
+"                Ausgaben (z.B. Weiterberechnung von Reisespesen) erzeugt "
+"werden.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Abwesend"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 msgid "Accounting"
-msgstr "Finanzbuchhaltung"
+msgstr "Finanzen"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,account_id:0
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
@@ -108,7 +122,7 @@ msgstr "Kostenstelle"
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Kostenstellen Journal"
+msgstr "Kostenstellenjourn."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -135,7 +149,9 @@ msgstr "Ändere Projekt /Aufgabe"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr "Werden für das Projekt Zeiten erfasst?"
+msgstr ""
+"Aktivieren Sie dieses Feld, wenn für dieses Projekt eine Zeiterfassung "
+"erfolgen soll."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -146,12 +162,17 @@ msgstr "Enddatum"
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Unternehmen"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,cost:0
+msgid "Cost"
+msgstr "Kosten"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Kosten/Erlöse"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -163,14 +184,14 @@ msgstr "Kosten & Erlöse"
 #: field:hr.sign.in.project,create_uid:0
 #: field:hr.sign.out.project,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt von"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_date:0
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -185,7 +206,6 @@ msgid "Current Status"
 msgstr "Aktueller Status"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,date:0
 msgid "Date"
 msgstr "Datum"
@@ -198,7 +218,7 @@ msgstr "Definieren Sie die Struktur derKostenstellen"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr ""
+msgstr "Buchungstext"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -224,12 +244,14 @@ msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
 msgstr ""
+"Für diesen Benutzer wurde kein Mitarbeiter angelegt.  Bitte definieren Sie "
+"einen Mitarbeiter mit Hilfe des entsprechenden Menüs."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Mitarbeiter Name"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
@@ -262,13 +284,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Erweiterte Filter"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Sachkonto"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -279,18 +300,18 @@ msgstr "Allgemeine Informationen"
 #: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Gehen Sie zu den Einstellungen"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppierung"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Nach Monat gruppieren"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0
@@ -298,7 +319,7 @@ msgstr ""
 #: field:hr.sign.out.project,id:0
 #: field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -306,6 +327,10 @@ msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
 msgstr ""
+"Wenn Sie die Arbeitszeiten Ihrer Mitarbeiter an den Kunden weiter berechnen "
+"wollen, müssen Sie dem Mitarbeiter ein Dienstleistungsprodukt zuordnen. So "
+"sind Sie außerdem in der Lage die Herstellungskosten der Tätigkeit zu "
+"bewerten."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -315,26 +340,31 @@ msgstr "Information"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
 #: field:hr.sign.in.project,write_uid:0
 #: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
 msgstr "Mindestwert für  Kosten"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Month"
+msgstr "Monat"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:189
@@ -389,13 +419,12 @@ msgstr "Bitte ordnen Sie diesem User einen Mitarbeiter zu."
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Present"
-msgstr ""
+msgstr "Anwesend"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: field:hr.employee,product_id:0
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "Produkt"
@@ -438,7 +467,7 @@ msgstr "Anmelden / Abmelden"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "An- und Abmelden nach Projekt"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -459,12 +488,12 @@ msgstr "Arbeitsende"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Dieser Monat"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Zeit"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -473,13 +502,13 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
 msgid "Timesheet"
-msgstr "Zeiterfassung"
+msgstr "Stundenzettel"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Zeitkonto"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -493,22 +522,22 @@ msgstr "Zeiterfassungsaktivitäten"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Statistik Zeiterfassung"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "Zeiterfassung Positionen"
+msgstr "Zeiterfassungsposition"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "monatliche Zeiterfassung"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Zeiterfassung nach Monat"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -574,8 +603,11 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Um Erlöse und Kosten zu analysieren, sollten Sie einen strukturierten "
+"analytischen Kontenplan erstellen. In Odoo können damit auch Kundenverträge "
+"verfolgt werden."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
-msgstr ""
+msgstr "Monat"

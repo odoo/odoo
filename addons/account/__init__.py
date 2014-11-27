@@ -30,7 +30,6 @@ import account_move_line
 import account_analytic_line
 import account_financial_report
 import product
-import ir_sequence
 import company
 import res_config
 

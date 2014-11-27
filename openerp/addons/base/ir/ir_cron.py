@@ -85,7 +85,6 @@ class ir_cron(osv.osv):
         'interval_type' : 'months',
         'numbercall' : 1,
         'active' : 1,
-        'doall' : 1
     }
 
     def _check_args(self, cr, uid, ids, context=None):

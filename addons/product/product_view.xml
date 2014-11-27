@@ -10,7 +10,7 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <field name="name" string="Product"/>
+                    <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
@@ -50,6 +50,7 @@
             <field name="arch" type="xml">
                 <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
+                    <field name='product_variant_count' invisible='1'/>
                     <sheet>
                         <field name="id" invisible="True"/>
                         <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
@@ -59,11 +60,11 @@
                             <div class="oe_title" style="width: 390px;">
                                 <label class="oe_edit_only" for="name" string="Product Name"/>
                                 <h1><field name="name" class="oe_inline"/></h1>
-                            </div>
-                            <div class="oe_left" name="options" groups="base.group_user">
-                                <div>
-                                    <field name="sale_ok"/>
-                                    <label for="sale_ok"/>
+                                <div name="options" groups="base.group_user">
+                                    <div>
+                                        <field name="sale_ok"/>
+                                        <label for="sale_ok"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -77,8 +78,6 @@
                                     </group>
                                     <group>
                                         <field name="active"/>
-                                        <field name="ean13"/>
-                                        <field name="default_code"/>
                                     </group>
                                 </group>
                                 <group colspan="4">
@@ -112,6 +111,9 @@
                                         <field digits="(14, 3)" name="weight_net"/>
                                     </group>
                                 </group>
+                                <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">
+                                    <field name="packaging_ids" string="Configurations" context="{'tree_view_ref':'product.product_packaging_tree_view_product', 'form_view_ref': 'product.product_packaging_form_view_without_product'}"/>
+                                </group>
                             </page>
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                                 <group name="sale">
@@ -124,7 +126,6 @@
                                     <group groups="product.group_uos" string="Unit of Measure">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
-                                        <field name="mes_type"/>
                                     </group>
                                 </group>
                                 <group name="website_and_pos" col="2">
@@ -148,9 +149,6 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                   <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
-                </field>
                 <field name="product_variant_ids" position="replace">
                     <field name="attribute_value_ids"/>
                 </field>
@@ -200,8 +198,13 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -217,8 +220,13 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -235,6 +243,10 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="name">Product Template</attribute>
                 </xpath>
+                <field name="active" position="after">
+                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                </field>
                 <xpath expr="//page[@string='Sales']" position="after">
                     <page name="variants" string="Variants">
                         <div class="oe_right">
@@ -243,7 +255,7 @@
                                 <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
-                        <field name="attribute_line_ids" widget="one2many_list">
+                        <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
                                 <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
@@ -297,6 +309,15 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_kanban_view"/>
             <field name="context">{"search_default_filter_to_sell":1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p><p>
+                    You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to  customers.               
+                </p><p>
+                    The product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.
+                </p>
+            </field>
         </record>
 
         <menuitem action="product_template_action"
@@ -337,6 +358,10 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
+                <field name="active" position="after">
+                    <field name="ean13"/>
+                    <field name="default_code"/>
+                </field>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>
@@ -580,8 +605,14 @@
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <label for="factor"/>
                             <div>
-                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <field name="factor"
+                                    digits="[42,5]"
+                                    attrs="{'invisible':[('uom_type','!=','smaller')],
+                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv"
+                                    digits="[42,5]"
+                                    attrs="{'invisible':[('uom_type','!=','bigger')],
+                                            'readonly':[('uom_type','!=','bigger')]}"/>
                                 <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
                                     e.g: 1 * (reference unit) = ratio * (this unit)
                                 </p>
@@ -701,9 +732,24 @@
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
+                    <field name="product_tmpl_id"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
+                    <field name="ul_container"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_packaging_tree_view_product" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view.product</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <tree string="Packaging">
+                    <field name="qty"/>
+                    <field name="ul"/>
+                    <field name="ul_qty"/>
+                    <field name="rows"/>
                     <field name="ul_container"/>
                 </tree>
             </field>
@@ -717,6 +763,29 @@
                     <group col="4">
                         <field name="product_tmpl_id"/>
                         <newline/>
+                        <field name="ean"/>
+                        <field name="sequence" invisible="1"/>
+                        <newline/>
+                        <field name="qty"/>
+                        <field name="ul"/>
+                        <separator colspan="4" string="Palletization"/>
+                        <field name="ul_qty"/>
+                        <field name="rows"/>
+                        <field name="ul_container"/>
+                        <field name="weight"/>
+                        <separator colspan="4" string="Other Info"/>
+                        <field colspan="4" name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_packaging_form_view_without_product" model="ir.ui.view">
+            <field name="name">product.packaging.form.view.without.product</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <form string="Packaging">
+                    <group col="4">
                         <field name="ean"/>
                         <field name="sequence" invisible="1"/>
                         <newline/>

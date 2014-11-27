@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools.float_utils import float_compare
 
 class purchase_order(osv.osv):
 
@@ -149,7 +150,20 @@ class purchase_order(osv.osv):
 
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
+        type_obj = self.pool.get('stock.picking.type')
+        user_obj = self.pool.get('res.users')
+        company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
+        pick_type = obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in')[1] or False
+        if pick_type:
+            type = type_obj.browse(cr, uid, pick_type, context=context)
+            if type and type.warehouse_id and type.warehouse_id.company_id.id == company_id:
+                return pick_type
+        types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)], context=context)
+        if not types:
+            types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
+            if not types:
+                raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+        return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
@@ -312,7 +326,7 @@ class purchase_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'purchase.order') or '/'
         context = dict(context or {}, mail_create_nolog=True)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
@@ -679,12 +693,12 @@ class purchase_order(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Unable to cancel the purchase order %s.') % (purchase.name),
-                        _('First cancel all receipts related to this purchase order.'))
-            self.pool.get('stock.picking') \
-                .signal_workflow(cr, uid, map(attrgetter('id'), purchase.picking_ids), 'button_cancel')
+                for move in pick.move_lines:
+                    if pick.state == 'done':
+                        raise osv.except_osv(
+                            _('Unable to cancel the purchase order %s.') % (purchase.name),
+                            _('You have already received some goods for it.  '))
+            self.pool.get('stock.picking').action_cancel(cr, uid, [x.id for x in purchase.picking_ids if x.state != 'cancel'], context=context)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise osv.except_osv(
@@ -692,10 +706,6 @@ class purchase_order(osv.osv):
                         _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_workflow(cr, uid, map(attrgetter('id'), purchase.invoice_ids), 'invoice_cancel')
-            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
-                    {'state': 'cancel'})
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         self.signal_workflow(cr, uid, ids, 'purchase_cancel')
         return True
 
@@ -704,7 +714,7 @@ class purchase_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
-            price_unit *= order_line.product_uom.factor
+            price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
@@ -1116,13 +1126,14 @@ class purchase_order_line(osv.osv):
 
 
         supplierinfo = False
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
         for supplier in product.seller_ids:
             if partner_id and (supplier.name.id == partner_id):
                 supplierinfo = supplier
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-                if (qty or 0.0) < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
+                if float_compare(min_qty , qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
                     if qty:
                         res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
@@ -1133,7 +1144,7 @@ class purchase_order_line(osv.osv):
             res['value'].update({'product_qty': qty})
 
         price = price_unit
-        if state not in ('sent','bid'):
+        if price_unit is False or price_unit is None:
             # - determine price_unit and taxes_id
             if pricelist_id:
                 date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -1155,6 +1166,7 @@ class purchase_order_line(osv.osv):
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
+
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
@@ -1287,7 +1299,7 @@ class procurement_order(osv.osv):
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
         taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-        name = product.partner_ref
+        name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
 
@@ -1346,7 +1358,7 @@ class procurement_order(osv.osv):
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
-                    name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+                    name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
                         'origin': procurement.origin,
@@ -1354,6 +1366,7 @@ class procurement_order(osv.osv):
                         'location_id': procurement.location_id.id,
                         'picking_type_id': procurement.rule_id.picking_type_id.id,
                         'pricelist_id': partner.property_product_pricelist_purchase.id,
+                        'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,

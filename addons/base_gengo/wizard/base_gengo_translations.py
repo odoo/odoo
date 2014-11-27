@@ -40,12 +40,13 @@ GENGO_DEFAULT_LIMIT = 20
 
 class base_gengo_translations(osv.osv_memory):
     GENGO_KEY = "Gengo.UUID"
+    GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
     _columns = {
         'sync_type': fields.selection([('send', 'Send New Terms'),
                                        ('receive', 'Receive Translation'),
-                                       ('both', 'Both')], "Sync Type"),
+                                       ('both', 'Both')], "Sync Type", required=True),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
         'sync_limit': fields.integer("No. of terms to sync"),
     }
@@ -57,7 +58,7 @@ class base_gengo_translations(osv.osv_memory):
     def init(self, cr):
         icp = self.pool['ir.config_parameter']
         if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
-            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
+            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=self.GROUPS)
 
     def get_gengo_key(self, cr):
         icp = self.pool['ir.config_parameter']

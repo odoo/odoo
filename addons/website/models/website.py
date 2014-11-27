@@ -4,13 +4,13 @@ import contextlib
 import datetime
 import hashlib
 import inspect
-import itertools
 import logging
 import math
 import mimetypes
 import unicodedata
 import os
 import re
+import time
 import urlparse
 
 from PIL import Image
@@ -25,8 +25,7 @@ except ImportError:
 
 import openerp
 from openerp.osv import orm, osv, fields
-from openerp.tools import html_escape as escape
-from openerp.tools import ustr as ustr
+from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
 from werkzeug.exceptions import NotFound
@@ -125,6 +124,12 @@ def slug(value):
 # NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 
+DEFAULT_CDN_FILTERS = [
+    "^/[^/]+/static/",
+    "^/web/(css|js)/",
+    "^/website/image/",
+]
+
 def unslug(s):
     """Extract slug and id from a string.
         Always return un 2-tuple (str|None, int|None)
@@ -164,6 +169,9 @@ class website(osv.osv):
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
         'compress_html': fields.boolean('Compress HTML'),
+        'cdn_activated': fields.boolean('Activate CDN for assets'),
+        'cdn_url': fields.char('CDN Base URL'),
+        'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
@@ -171,6 +179,9 @@ class website(osv.osv):
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
         'compress_html': False,
+        'cdn_activated': False,
+        'cdn_url': '//localhost:8069/',
+        'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -225,6 +236,16 @@ class website(osv.osv):
     def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
+
+    def get_cdn_url(self, cr, uid, uri, context=None):
+        # Currently only usable in a website_enable request context
+        if request and request.website and not request.debug:
+            cdn_url = request.website.cdn_url
+            cdn_filters = (request.website.cdn_filters or '').splitlines()
+            for flt in cdn_filters:
+                if flt and re.match(flt, uri):
+                    return urlparse.urljoin(cdn_url, uri)
+        return uri
 
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0], context=context)
@@ -516,7 +537,7 @@ class website(osv.osv):
             response.data = f.read()
             return response.make_conditional(request.httprequest)
 
-    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, context=None):
+    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -539,7 +560,7 @@ class website(osv.osv):
 
         ids = Model.search(cr, uid,
                            [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._all_columns:
+        if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
         if not ids:
@@ -568,18 +589,24 @@ class website(osv.osv):
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
 
+        if cache:
+            response.cache_control.max_age = cache
+            response.expires = int(time.time() + cache)
+
         # conditional request match
         if response.status_code == 304:
             return response
 
         data = record[field].decode('base64')
+        image = Image.open(cStringIO.StringIO(data))
+        response.mimetype = Image.MIME[image.format]
+
+        filename = '%s_%s.%s' % (model.replace('.', '_'), id, str(image.format).lower())
+        response.headers['Content-Disposition'] = 'inline; filename="%s"' % filename
 
         if (not max_width) and (not max_height):
             response.data = data
             return response
-
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
         max_w = int(max_width) if max_width else maxint
@@ -588,13 +615,21 @@ class website(osv.osv):
         if w < max_w and h < max_h:
             response.data = data
         else:
-            image.thumbnail((max_w, max_h), Image.ANTIALIAS)
-            image.save(response.stream, image.format)
+            size = (max_w, max_h)
+            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
+            image_save_for_web(img, response.stream, format=image.format)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
 
         return response
+
+    def image_url(self, cr, uid, record, field, size=None, context=None):
+        """Returns a local url that points to the image field of a given browse record."""
+        model = record._name
+        id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
+        size = '' if size is None else '/%s' % size
+        return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
 
 class website_menu(osv.osv):
@@ -671,11 +706,7 @@ class ir_attachment(osv.osv):
             if attach.url:
                 result[attach.id] = attach.url
             else:
-                result[attach.id] = urlplus('/website/image', {
-                    'model': 'ir.attachment',
-                    'field': 'datas',
-                    'id': attach.id
-                })
+                result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
         return dict(
@@ -772,7 +803,7 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)

@@ -39,13 +39,15 @@ class account_analytic_profit(report_sxw.rml_parse):
         return user_obj.browse(self.cr, self.uid, ids)
 
     def _journal_ids(self, form, user_id):
+        if isinstance(user_id, (int, long)):
+            user_id = [user_id]
         line_obj = self.pool['account.analytic.line']
         journal_obj = self.pool['account.analytic.journal']
         line_ids=line_obj.search(self.cr, self.uid, [
             ('date', '>=', form['date_from']),
             ('date', '<=', form['date_to']),
             ('journal_id', 'in', form['journal_ids'][0][2]),
-            ('user_id', '=', user_id),
+            ('user_id', 'in', user_id),
             ])
         ids=list(set([b.journal_id.id for b in line_obj.browse(self.cr, self.uid, line_ids)]))
         return journal_obj.browse(self.cr, self.uid, ids)

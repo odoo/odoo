@@ -183,7 +183,7 @@ class CompanyLDAP(osv.osv):
         """
         
         user_id = False
-        login = tools.ustr(login.lower())
+        login = tools.ustr(login.lower().strip())
         cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = cr.fetchone()
         if res:
@@ -249,6 +249,10 @@ class users(osv.osv):
             return user_id
         registry = RegistryManager.get(db)
         with registry.cursor() as cr:
+            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
+            res = cr.fetchone()
+            if res:
+                return False
             ldap_obj = registry.get('res.company.ldap')
             for conf in ldap_obj.get_ldap_dicts(cr):
                 entry = ldap_obj.authenticate(conf, login, password)

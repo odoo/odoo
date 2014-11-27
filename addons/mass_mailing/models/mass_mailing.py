@@ -119,6 +119,7 @@ class MassMailingList(osv.Model):
 
     _columns = {
         'name': fields.char('Mailing List', required=True),
+        'create_date': fields.datetime('Creation Date'),
         'contact_nbr': fields.function(
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
@@ -301,8 +302,8 @@ class MassMailing(osv.Model):
                            'tooltip': ustr((date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y')),
                            } for i in range(0, self._period_number)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        field_col_info = obj._all_columns.get(groupby_field.split(':')[0])
-        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field_col_info.column._type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
+        field = obj._fields.get(groupby_field.split(':')[0])
+        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field.type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], pattern).date()
             timedelta = relativedelta.relativedelta(group_begin_date, date_begin)
@@ -382,6 +383,7 @@ class MassMailing(osv.Model):
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
         ),
+        'keep_archives': fields.boolean('Keep Archives'),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',

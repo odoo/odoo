@@ -17,15 +17,14 @@ class TestExport(common.TransactionCase):
     def setUp(self):
         super(TestExport, self).setUp()
         self.Model = self.registry(self._model)
-        self.columns = self.Model._all_columns
 
-    def get_column(self, name):
-        return self.Model._all_columns[name].column
+    def get_field(self, name):
+        return self.Model._fields[name]
 
     def get_converter(self, name, type=None):
-        column = self.get_column(name)
+        field = self.get_field(name)
 
-        for postfix in type, column._type, '':
+        for postfix in type, field.type, '':
             fs = ['ir', 'qweb', 'field']
             if postfix is None: continue
             if postfix: fs.append(postfix)
@@ -36,7 +35,7 @@ class TestExport(common.TransactionCase):
             except KeyError: pass
 
         return lambda value, options=None, context=None: e(model.value_to_html(
-            self.cr, self.uid, value, column, options=options, context=context))
+            self.cr, self.uid, value, field, options=options, context=context))
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
@@ -222,11 +221,8 @@ class TestMany2OneExport(TestBasicExport):
         })
 
         def converter(record):
-            column = self.get_column('many2one')
             model = self.registry('ir.qweb.field.many2one')
-
-            return e(model.record_to_html(
-                self.cr, self.uid, 'many2one', record, column))
+            return e(model.record_to_html(self.cr, self.uid, 'many2one', record))
 
         value = converter(self.Model.browse(self.cr, self.uid, id0))
         self.assertEqual(value, "Foo")
@@ -236,7 +232,7 @@ class TestMany2OneExport(TestBasicExport):
 
 class TestBinaryExport(TestBasicExport):
     def test_image(self):
-        column = self.get_column('binary')
+        field = self.get_field('binary')
         converter = self.registry('ir.qweb.field.image')
 
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
@@ -244,7 +240,7 @@ class TestBinaryExport(TestBasicExport):
 
         encoded_content = content.encode('base64')
         value = e(converter.value_to_html(
-            self.cr, self.uid, encoded_content, column))
+            self.cr, self.uid, encoded_content, field))
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
                 encoded_content
@@ -255,14 +251,14 @@ class TestBinaryExport(TestBasicExport):
 
         with self.assertRaises(ValueError):
             e(converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), column))
+                self.cr, self.uid, 'binary', content.encode('base64'), field))
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
             e(converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), column))
+                self.cr, self.uid, 'binary', content.encode('base64'), field))
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
@@ -271,18 +267,14 @@ class TestSelectionExport(TestBasicExport):
             'selection_str': 'C',
         })])
 
-        column_name = 'selection'
-        column = self.get_column(column_name)
         converter = self.registry('ir.qweb.field.selection')
 
-        value = converter.record_to_html(
-            self.cr, self.uid, column_name, record, column)
+        field_name = 'selection'
+        value = converter.record_to_html(self.cr, self.uid, field_name, record)
         self.assertEqual(value, "réponse B")
 
-        column_name = 'selection_str'
-        column = self.get_column(column_name)
-        value = converter.record_to_html(
-            self.cr, self.uid, column_name, record, column)
+        field_name = 'selection_str'
+        value = converter.record_to_html(self.cr, self.uid, field_name, record)
         self.assertEqual(value, "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
 class TestHTMLExport(TestBasicExport):

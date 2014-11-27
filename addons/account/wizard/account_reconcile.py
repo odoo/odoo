@@ -74,7 +74,6 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
     comment = fields.Char(string='Comment', required=True, default='Write-off')
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('parent_id', '!=', False)])
 
-
     @api.multi
     def trans_rec_addendum(self):
         model_data_id = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('name', '=', 'account_move_line_reconcile_writeoff')], limit=1)

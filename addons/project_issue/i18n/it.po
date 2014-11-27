@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-15 15:02+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:41+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:29+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
@@ -25,7 +25,7 @@ msgstr "# Email"
 #. module: project_issue
 #: field:res.partner,issue_count:0
 msgid "# Issues"
-msgstr ""
+msgstr "# Problematiche"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
@@ -126,6 +126,7 @@ msgid "Assigned"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,user_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,user_id:0
@@ -193,14 +194,15 @@ msgstr "Indice colore"
 #. module: project_issue
 #: help:project.issue.report,channel:0
 msgid "Communication Channel."
-msgstr ""
+msgstr "Canale di Comunicazione"
 
 #. module: project_issue
 #: help:project.issue,channel:0
 msgid "Communication channel."
-msgstr ""
+msgstr "Canale di comunicazione"
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,company_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,company_id:0
@@ -218,17 +220,22 @@ msgid "Configure"
 msgstr "Configura"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,partner_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Contatto"
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
+msgstr "Data di Creazione"
+
+#. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue.report:project_issue.view_project_issue_report_filter
+msgid "Create Day"
 msgstr ""
 
 #. module: project_issue
@@ -240,7 +247,7 @@ msgstr "Crea problematiche da un account di posta in arrivo "
 #: field:project.issue,create_uid:0
 #: field:project.issue.version,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: project_issue
 #: field:project.issue.version,create_date:0
@@ -251,11 +258,6 @@ msgstr ""
 #: field:project.issue,create_date:0
 msgid "Creation Date"
 msgstr "Data creazione"
-
-#. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Creation Month"
-msgstr "Mese di Creazione"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:424
@@ -318,6 +320,11 @@ msgstr "Scadenza"
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
 msgstr "Bug fatale"
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_delay
+msgid "Delay"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -384,7 +391,7 @@ msgstr "Followers"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -398,6 +405,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Gestisce il sommario (numero di messaggi, ...) del Chatter. Questo sommario "
+"è direttamente in html così da poter essere inserito nelle viste kanban."
 
 #. module: project_issue
 #: field:project.issue,id:0
@@ -436,7 +445,7 @@ msgstr "Problematica"
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
 msgid "Issue Assigned"
-msgstr ""
+msgstr "Problematica Assegnata"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -480,7 +489,7 @@ msgstr "Versione problematica"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
 msgid "Issue assigned"
-msgstr ""
+msgstr "Problematica assegnata"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
@@ -516,7 +525,7 @@ msgstr "Analisi problematiche"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Stato Kanban"
 
 #. module: project_issue
 #: field:project.issue,date_action_last:0
@@ -526,16 +535,15 @@ msgstr "Ultima azione"
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr ""
+msgstr "Ultimo Messaggio"
 
 #. module: project_issue
 #: field:project.issue,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Ultimo Messaggio"
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
@@ -574,13 +582,9 @@ msgstr "Storico dei messaggi e comunicazioni"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "My Issues"
 msgstr "Le mie problematiche"
-
-#. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-msgid "My Task"
-msgstr ""
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -634,6 +638,7 @@ msgstr "Partner"
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 #: view:project.issue:project_issue.project_issue_tree_view
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,priority:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,priority:0
@@ -671,6 +676,11 @@ msgid "Project Issue"
 msgstr "Problematica di progetto"
 
 #. module: project_issue
+#: view:project.issue:project_issue.project_issue_graph_view
+msgid "Project Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Project:"
 msgstr "Progetto:"
@@ -681,12 +691,11 @@ msgid "Ready for next stage"
 msgstr "Pronto per il prossimo stadio"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Responsible"
-msgstr "Responsabile"
+#: field:project.issue.report,reviewer_id:0
+msgid "Reviewer"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Team commerciale"
@@ -742,7 +751,7 @@ msgstr "Stato"
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sommario"
 
 #. module: project_issue
 #: field:project.issue,categ_ids:0
@@ -750,6 +759,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,task_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,task_id:0
@@ -785,7 +795,7 @@ msgstr ""
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr ""
+msgstr "Non assegnato"
 
 #. module: project_issue
 #: field:project.issue,message_unread:0
@@ -804,7 +814,6 @@ msgstr "Email Utente"
 
 #. module: project_issue
 #: field:project.issue,version_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Versione"
@@ -853,24 +862,31 @@ msgstr "Non puoi scalare questa problematica"
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "problematiche"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "sconosciuto"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
 msgid "{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
 msgstr ""
+"{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "⇒ Escalate"
 msgstr "⇒ Intensifica"
+
+#~ msgid "Responsible"
+#~ msgstr "Responsabile"
+
+#~ msgid "Creation Month"
+#~ msgstr "Mese di Creazione"

@@ -36,11 +36,17 @@ openerp_announcement = function(instance) {
                             $('.openerp_webclient_container').css('height', 'calc(100% - 34px)');                            
                         }, 400);
                     };
-                    var height = $('#announcement_bar_table').outerHeight() 
-                                + $('#oe_main_menu_navbar').outerHeight();
-                    $('.openerp_webclient_container').css('height', 'calc(100% - ' + height + 'px)');
-                    $bar.find('.close').on('click', close);
-                    self.trigger('ab_loaded', $bar);
+                    /*
+                        We need a timeout of at least 350ms because the announcement bar appears
+                        with an animation of 350ms and the computed height might be wrong if we don't wait
+                    */
+                    setTimeout(function(){
+                        var height = $('#announcement_bar_table').outerHeight() 
+                                    + $('#oe_main_menu_navbar').outerHeight();
+                        $('.openerp_webclient_container').css('height', 'calc(100% - ' + height + 'px)');
+                        $bar.find('.close').on('click', close);
+                        self.trigger('ab_loaded', $bar);
+                    }, 400)
                 });
 
                 $('head').append($css);

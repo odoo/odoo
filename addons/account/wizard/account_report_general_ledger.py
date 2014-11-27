@@ -30,6 +30,8 @@ class account_report_general_ledger(models.TransientModel):
 
         if data['form']['landscape'] is False:
             data['form'].pop('landscape')
+        else:
+            context['landscape'] = data['form']['landscape']
 
         return self.env['report'].get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
 

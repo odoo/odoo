@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-03 08:37+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:385
+#: code:addons/mail/mail_thread.py:384
 #, python-format
 msgid "%s created"
 msgstr "%s oluşturuldu"
@@ -49,6 +49,8 @@ msgstr "(e-mail adresi yok)"
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
 msgstr ""
+"<div><p>Merhaba,</p><p>%s sizi %s belgesini izlemeniz için davet etti: "
+"%s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -56,9 +58,11 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
+"<div><p>Merhaba,</p><p>%s sizi bir yeni belgeyi izlemeniz için davet "
+"etti.</p></div>"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:135
+#: code:addons/mail/mail_thread.py:134
 #, python-format
 msgid ""
 "<p class='oe_view_nocontent_create'>\n"
@@ -67,9 +71,15 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>\n"
+"                            Yeni %(document)s eklemek veya bu adrese bir "
+"eposta göndermek için buraya tıklayın: <a "
+"href='mailto:%(email)s'>%(email)s</a>\n"
+"                        </p>\n"
+"                        %(static_help)s"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:146
+#: code:addons/mail/mail_thread.py:145
 #, python-format
 msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
@@ -176,14 +186,6 @@ msgstr ""
 "            "
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:159
-#, python-format
-msgid ""
-"<span class='oe_mail_footer_access'><small>about <a style='color:inherit' "
-"href=\"%s\">%s %s</a></small></span>"
-msgstr ""
-
-#. module: mail
 #: help:mail.alias,alias_defaults:0
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
@@ -193,7 +195,7 @@ msgstr ""
 "değerleri sağlamak için değerlendirilir."
 
 #. module: mail
-#: code:addons/mail/mail_message.py:755
+#: code:addons/mail/mail_message.py:763
 #, python-format
 msgid "Access Denied"
 msgstr "Erişim Rededildi"
@@ -211,12 +213,12 @@ msgstr "Abone olurken varsayılan olarak etkinleştirilir."
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "Etkin alan adı"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
@@ -300,7 +302,7 @@ msgstr "Rumuzlar"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Tüm İletiler"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -330,7 +332,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/mail_followers.js:101
 #, python-format
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
@@ -348,7 +350,7 @@ msgstr "Bir Dosya Ekle"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Bir dosya ekle"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -403,7 +405,7 @@ msgstr "Otomatik Abonelik"
 #. module: mail
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Otomatik abonelik"
 
 #. module: mail
 #: help:mail.compose.message,body:0
@@ -496,7 +498,7 @@ msgstr "İçerek"
 #. module: mail
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
-msgstr ""
+msgstr "İçerik Türü"
 
 #. module: mail
 #: field:mail.compose.message,body:0
@@ -512,9 +514,8 @@ msgstr "İçerekler"
 #: field:mail.message,create_uid:0
 #: field:mail.message.subtype,create_uid:0
 #: field:mail.wizard.invite,create_uid:0
-#: field:publisher_warranty.contract,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: mail
 #: field:mail.alias,create_date:0
@@ -524,9 +525,8 @@ msgstr ""
 #: field:mail.message,create_date:0
 #: field:mail.message.subtype,create_date:0
 #: field:mail.wizard.invite,create_date:0
-#: field:publisher_warranty.contract,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -549,7 +549,7 @@ msgstr "Geçerli kullanıcı bu mesajı bağlantılı okunmadı bildirim var"
 #: code:addons/mail/res_partner.py:31
 #, python-format
 msgid "Customers"
-msgstr ""
+msgstr "Müşteriler"
 
 #. module: mail
 #: field:mail.compose.message,date:0
@@ -562,7 +562,7 @@ msgstr "Tarih"
 #: help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Kayıta işlenmiş son mesajın tarihi."
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -621,7 +621,7 @@ msgstr "Tartışmalar"
 #. module: mail
 #: field:res.users,display_groups_suggestions:0
 msgid "Display Groups Suggestions"
-msgstr ""
+msgstr "Grup Önerilerini Göster"
 
 #. module: mail
 #. openerp-web
@@ -647,14 +647,14 @@ msgstr "Biten"
 #: code:addons/mail/static/src/js/mail_followers.js:99
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "Buna ait Aboneliği düzenle "
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:40
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "Abonelik düzenle"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -666,7 +666,7 @@ msgstr "Eposta"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
-msgstr ""
+msgstr "Eposta Rumuzu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -705,7 +705,7 @@ msgstr ""
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "Yanıtlara yeniden iletilecek eposta adresi..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -715,7 +715,7 @@ msgstr "Eposta yazma sihirbazı"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email mass mailing"
-msgstr ""
+msgstr "Toplu eposta gönderimi"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -731,13 +731,13 @@ msgid "Emails"
 msgstr "Epostalar"
 
 #. module: mail
-#: code:addons/mail/update.py:93
+#: code:addons/mail/update.py:91
 #, python-format
 msgid "Error"
 msgstr "Hata"
 
 #. module: mail
-#: code:addons/mail/update.py:93
+#: code:addons/mail/update.py:91
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr "Yayıncı garanti sunucuyla iletişim sırasında hata oluştu."
@@ -745,12 +745,12 @@ msgstr "Yayıncı garanti sunucuyla iletişim sırasında hata oluştu."
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "Hata, bir iş ortağı aynı nesneyi iki defa izleyemez."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Everyone"
-msgstr ""
+msgstr "Herkes"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -776,7 +776,7 @@ msgstr ""
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
 msgid "File Type Icon"
-msgstr ""
+msgstr "Dosya Türü İkonu"
 
 #. module: mail
 #. openerp-web
@@ -813,19 +813,19 @@ msgstr "Bunu izleyiciler"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Followers of the document and"
-msgstr ""
+msgstr "Belgenin izleyicileri ve"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:131
 #, python-format
 msgid "Followers of this document"
-msgstr ""
+msgstr "Bu belgenin izleyicileri"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr ""
+msgstr "Yalnızca izleyiciler"
 
 #. module: mail
 #. openerp-web
@@ -844,7 +844,7 @@ msgstr "Kimden"
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Yapılandırma paneline git"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
@@ -856,7 +856,7 @@ msgstr "Grup"
 #: view:mail.mail:mail.view_mail_search
 #: view:mail.message:mail.view_message_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruplandır"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -888,12 +888,12 @@ msgstr "Ekleri var"
 #: view:mail.mail:mail.view_mail_form
 #: field:mail.mail,headers:0
 msgid "Headers"
-msgstr ""
+msgstr "Başlıklar"
 
 #. module: mail
 #: field:mail.message.subtype,hidden:0
 msgid "Hidden"
-msgstr ""
+msgstr "Gizli"
 
 #. module: mail
 #: help:mail.message.subtype,hidden:0
@@ -924,7 +924,7 @@ msgstr ""
 #: field:mail.wizard.invite,id:0
 #: field:publisher_warranty.contract,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_thread_id:0
@@ -1001,7 +1001,7 @@ msgstr ""
 "'value'}\""
 
 #. module: mail
-#: code:addons/mail/wizard/invite.py:96
+#: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
 msgstr ""
@@ -1042,7 +1042,7 @@ msgstr "Bir Gruba Katılın"
 #: field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Son Mesaj Tarihi"
 
 #. module: mail
 #: field:mail.alias,write_uid:0
@@ -1052,9 +1052,8 @@ msgstr ""
 #: field:mail.message,write_uid:0
 #: field:mail.message.subtype,write_uid:0
 #: field:mail.wizard.invite,write_uid:0
-#: field:publisher_warranty.contract,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: mail
 #: field:mail.alias,write_date:0
@@ -1064,9 +1063,8 @@ msgstr ""
 #: field:mail.message,write_date:0
 #: field:mail.message.subtype,write_date:0
 #: field:mail.wizard.invite,write_date:0
-#: field:publisher_warranty.contract,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: mail
 #: help:mail.wizard.invite,partner_ids:0
@@ -1095,10 +1093,10 @@ msgid "Log an internal note"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:323
+#: code:addons/mail/mail_mail.py:330
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "Posta Gönderiminde Hata"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1108,7 +1106,7 @@ msgstr "Mail Grubu"
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr ""
+msgstr "Posta Yönlendirmesi (Belge / Gelen kutusu)"
 
 #. module: mail
 #: help:mail.mail,notification:0
@@ -1170,7 +1168,7 @@ msgstr "Mesaj Tipi"
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Posta alıcıları (eposta)"
 
 #. module: mail
 #: help:mail.mail,references:0
@@ -1298,7 +1296,7 @@ msgstr "Gelen Kutusuna Taşı"
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr ""
+msgstr "İzleyicilerim"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1322,7 +1320,7 @@ msgid "Never"
 msgstr "Asla"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:173
+#: code:addons/mail/mail_thread.py:172
 #, python-format
 msgid "New"
 msgstr "Yeni"
@@ -1371,7 +1369,7 @@ msgstr "Onaylanmış partnerler"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "İzleyicileri bilgilendir"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
@@ -1391,21 +1389,23 @@ msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
 msgstr ""
+"Bu gruptaki görüşmeleri yalnızca\n"
+"                                davetli izleyiciler okuyabilr."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr ""
+msgstr "Belge Aç"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
 msgid "Open Messaging Menu"
-msgstr ""
+msgstr "Mesajlaşma Menüsünü Aç"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr ""
+msgstr "Ana Belgeyi Aç"
 
 #. module: mail
 #. openerp-web
@@ -1465,7 +1465,7 @@ msgstr "Üst Mesaj"
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Ana Model"
 
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
@@ -1712,7 +1712,7 @@ msgstr "Gönder"
 #. module: mail
 #: field:mail.wizard.invite,send_mail:0
 msgid "Send Email"
-msgstr ""
+msgstr "Eposta Gönder"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -1732,7 +1732,7 @@ msgstr "Bir mesaj gönder"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "Belgenin tüm izleyicilerine bir mesaj gönder"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1748,13 +1748,13 @@ msgstr "Gönderilmiş"
 #. module: mail
 #: code:addons/mail/mail_followers.py:155
 #, python-format
-msgid "Sent by %(company)s using %(odoo)s."
+msgid "Sent by %(company)s using %(odoo)s"
 msgstr ""
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sıralama"
 
 #. module: mail
 #. openerp-web
@@ -1839,7 +1839,7 @@ msgstr "Alt-Türler"
 #: code:addons/mail/static/src/xml/suggestions.xml:16
 #, python-format
 msgid "Suggested Groups"
-msgstr ""
+msgstr "Önerilen Gruplar"
 
 #. module: mail
 #: field:mail.group,message_summary:0
@@ -1907,7 +1907,7 @@ msgstr ""
 "Administratörü kullanacaktır."
 
 #. module: mail
-#: code:addons/mail/mail_message.py:756
+#: code:addons/mail/mail_message.py:764
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -2085,7 +2085,7 @@ msgstr "Oylamalar"
 #: code:addons/mail/mail_group.py:174
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uyarı!"
 
 #. module: mail
 #. openerp-web
@@ -2140,16 +2140,28 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:171
 #, python-format
 msgid "You have %d unread messages"
 msgstr "Okunmamış %d mesajınız var"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:171
 #, python-format
 msgid "You have one unread message"
 msgstr "Bir okunmamış mesajınız var"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:160
+#, python-format
+msgid "about"
+msgstr "hakkında"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:160
+#, python-format
+msgid "access"
+msgstr "erişim"
 
 #. module: mail
 #. openerp-web
@@ -2160,10 +2172,10 @@ msgid "and"
 msgstr "ve"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:116
+#: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
-msgstr ""
+msgstr "belge"
 
 #. module: mail
 #. openerp-web
@@ -2269,7 +2281,7 @@ msgstr ""
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "the selected records"
-msgstr ""
+msgstr "seçili kayıtlar"
 
 #. module: mail
 #. openerp-web
@@ -2299,3 +2311,9 @@ msgstr "belge güncellendi"
 #, python-format
 msgid "uploading"
 msgstr "yükleniyor"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:162
+#, python-format
+msgid "your messages"
+msgstr "mesajlarınız"

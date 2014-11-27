@@ -501,7 +501,8 @@ class account_journal(models.Model):
             'implementation':'no_gap',
             'prefix': prefix + "/%(year)s/",
             'padding': 4,
-            'number_increment': 1
+            'number_increment': 1,
+            'use_date_range': True,
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
@@ -980,8 +981,8 @@ class account_tax(models.Model):
                 data['amount'] = tax.amount
                 data['tax_amount'] = quantity
                # data['amount'] = quantity
-            elif tax.type == 'code':
-                localdict = {'price_unit': cur_price_unit, 'product': product, 'partner': partner}
+            elif tax.type=='code':
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
@@ -2021,9 +2022,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         # write values of default taxes for product as super user
         if self.sale_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.product', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
         if self.purchase_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.product', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company_id, acc_template_ref)

@@ -251,10 +251,11 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'type': 'normal',
         'company_id': _default_company,
-        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account'),
+        'code' : lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'account.analytic.account'),
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
+        'manager_id': lambda self, cr, uid, ctx: ctx.get('manager_id', False),
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'currency_id': _get_default_currency,
     }

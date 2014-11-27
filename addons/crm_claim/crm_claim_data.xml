@@ -6,22 +6,19 @@
         Claims Categories
         -->
         
-        <record model="crm.case.categ" id="categ_claim1">
+        <record model="crm.claim.category" id="categ_claim1">
             <field name="name">Factual Claims</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
-        </record>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            </record>
         
-        <record model="crm.case.categ" id="categ_claim2">
+        <record model="crm.claim.category" id="categ_claim2">
             <field name="name">Value Claims</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
-        </record>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+             </record>
         
-        <record model="crm.case.categ" id="categ_claim3">
+        <record model="crm.claim.category" id="categ_claim3">
             <field name="name">Policy Claims</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
     
         <!--
@@ -30,12 +27,12 @@
         
         <record model="crm.tracking.campaign" id="claim_source1">
             <field name="name">Corrective</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
         
         <record model="crm.tracking.campaign" id="claim_source2">
             <field name="name">Preventive</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
     
         <!--

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-23 07:48+0000\n"
+"PO-Revision-Date: 2014-09-21 19:04+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-24 07:49+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-09-22 08:01+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr
 #: code:addons/hr/hr.py:158
@@ -36,6 +36,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              单击创建新的员工档案信息。\n"
+"              </p><p>\n"
+"              只需眼睛一扫系统的员工界面你就可以轻松地查找每个人的信息，比如联系方式、工作岗位等等。\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -49,6 +55,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               单击创建部门信息。\n"
+"              </p><p>\n"
+"                系统的部门结构数据用于管理所有与员工部门有关的单据：报销单、时间表、准假申请、招聘等。\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -95,12 +107,13 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                单击定义个一个新的工作岗位.\n"
+"                单击定义个一个新的职位\n"
 "              </p><p>\n"
-"               工作岗位用来定义工作和他们的要求。\n"
-"                你能跟踪跟踪每个工作岗位员工数，并且根据你未来的计划跟进变化。\n"
-"              </p><p>\n"
-"                你能附加一个调查表到工作岗位. 用在招聘流程中评估这个岗位的申请人.\n"
+"               职位用来定义工作和它们的需求。\n"
+"                你能跟踪跟踪每个职位的员工数，并且根据你未来的计划跟进变化。\n"
+"              </p>\n"
+"              <p>\n"
+"                你能附加一个调查表到职位信息中用于在招聘流程中评估此岗位的申请人。\n"
 "              </p>\n"
 "            "
 
@@ -259,7 +272,7 @@ msgstr "出生日期"
 #: help:hr.employee,message_last_post:0
 #: help:hr.job,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布到记录上的最后信息的日期"
 
 #. module: hr
 #: view:hr.department:hr.view_department_filter
@@ -373,7 +386,7 @@ msgstr "预期的新员工"
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "新的招聘后这个工作岗位上期望的员工人数"
+msgstr "新招聘后此职位上期望的员工人数"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -524,7 +537,7 @@ msgstr "职位"
 #. module: hr
 #: field:hr.employee,job_id:0
 msgid "Job Title"
-msgstr "职称"
+msgstr "职位"
 
 #. module: hr
 #: field:hr.department,jobs_ids:0
@@ -677,7 +690,7 @@ msgstr "备注"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr "这个工作岗位上现有的员工人数"
+msgstr "此职位现有的员工人数"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -968,7 +981,7 @@ msgstr "预计员工数合计"
 #. module: hr
 #: view:hr.employee:hr.hr_kanban_view_employees
 msgid "Unfollow"
-msgstr ""
+msgstr "取消关注"
 
 #. module: hr
 #: field:hr.employee,message_unread:0
@@ -979,7 +992,7 @@ msgstr "未读信息"
 #. module: hr
 #: field:hr.job,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "更新日期"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users

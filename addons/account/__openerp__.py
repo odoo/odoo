@@ -60,6 +60,7 @@
         'data/account_data.xml',
         'data/data_account_type.xml',
         'data/configurable_account_chart.xml',
+<<<<<<< HEAD
         'data/invoice_action_data.xml',
         'views/account_invoice_workflow.xml',
         'views/partner_view.xml',
@@ -72,6 +73,19 @@
         'views/res_config_view.xml',
         'views/account_tip_data.xml',
         'test/account_pre_install.yml',
+=======
+        'account_invoice_workflow.xml',
+        'partner_view.xml',
+        'product_view.xml',
+        'account_assert_test.xml',
+        'account_analytic_view.xml',
+        'company_view.xml',
+        'edi/invoice_action_data.xml',
+        'account_bank_view.xml',
+        'res_config_view.xml',
+        'account_tip_data.xml',
+        'account_pre_install.yml',
+>>>>>>> master
         'views/report_vat.xml',
         'views/report_invoice.xml',
         'views/report_trialbalance.xml',

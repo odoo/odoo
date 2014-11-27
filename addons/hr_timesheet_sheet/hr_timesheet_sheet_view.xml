@@ -75,7 +75,7 @@
                             name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
                             class="oe_stat_button"
                             icon="fa-clock-o">
-                            <field name="timesheet_activity_count" widget="statinfo" string="Timesheet" help="Timesheet Activities"/>
+                            <div><strong><field name="total_timesheet" widget="float_time"/></strong><br/>Timesheet</div>
                         </button>
                         <button type="action" groups="base.group_hr_attendance"
                             class="oe_stat_button" icon="fa-users"
@@ -98,7 +98,6 @@
                         </group>
                         <group groups="base.group_hr_attendance">
                             <field name="total_attendance" widget="float_time"/>
-                            <field name="total_timesheet" widget="float_time"/>
                             <field name="total_difference" widget="float_time"/>
                         </group>
                     </group>

@@ -41,7 +41,8 @@ class account_cash_statement(models.Model):
             if (statement.journal_id.type not in ('cash',)):
                 continue
             if not statement.journal_id.cash_control:
-                if statement.balance_end_real != statement.balance_end:
+                prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+                if float_compare(statement.balance_end_real, statement.balance_end, precision_digits=prec):
                     statement.write({'balance_end_real' : statement.balance_end})
                 continue
             start = end = 0

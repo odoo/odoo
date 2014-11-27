@@ -14,7 +14,7 @@ Online Events
     'data': [
         'data/event_data.xml',
         'views/website_event.xml',
-        'views/website_event_sale_backend.xml',
+        'views/website_event_backend.xml',
         'security/ir.model.access.csv',
         'security/website_event.xml',
     ],

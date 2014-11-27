@@ -170,8 +170,8 @@
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
                              <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
-                          <button t-if="installed" disabled="disabled">Installed</button>
+                          <a class="btn btn-default btn-sm" type="object" name="button_immediate_install" states="uninstalled">Install</a>
+                          <a t-if="installed" class="btn btn-default btn-sm disabled" disabled="disabled">Installed</a>
                         </div>
                       </div>
                     </t>
@@ -180,18 +180,18 @@
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Installed Modules</field>
+            <field name="name">Local Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_installed':1}</field>
+            <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
               <p><b>No module found!</b></p>
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="menu_management" name="Installed Modules" sequence="30" action="open_module_tree" />
+        <menuitem id="menu_module_tree" parent="menu_management" name="Local Modules" sequence="5" action="open_module_tree" />
 
 
         <!-- Apps modules -->

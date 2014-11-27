@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-        <!-- Leads by user and section Graph View -->
+        <!-- Leads by user and team Graph View -->
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
                 <graph string="Leads Analysis" type="pivot" stacked="True">
-                    <field name="section_id" type="row"/>
+                    <field name="team_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
                     <field name="nbr_cases" type="measure"/>
                     <field name="probable_revenue" type="measure"/>
@@ -32,7 +32,7 @@
             <field name="name">Long Term Revenue</field>
             <field name="model_id">crm.lead.report</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['country_id', 'section_id'], 'col_group_by': ['date_deadline'], 'measures': ['planned_revenue']}</field>
+            <field name="context">{'group_by': ['country_id', 'team_id'], 'col_group_by': ['date_deadline'], 'measures': ['planned_revenue']}</field>
         </record>
         <record id="filter_leads_revenue_per_lead" model="ir.filters">
             <field name="name">Revenue Per Lead</field>
@@ -44,7 +44,7 @@
             <field name="name">Overpassed Deadline</field>
             <field name="model_id">crm.lead.report</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['partner_id'], 'measures': ['delay_expected']}</field>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['partner_id'], 'measures': ['delay_expected']}</field>
         </record>
         <record id="filter_leads_salesperson" model="ir.filters">
             <field name="name">By Salespersons</field>
@@ -59,7 +59,7 @@
             <field name="context">{'group_by': ['create_date:month', 'country_id']}</field>
         </record>
 
-        <!-- Leads by user and section Search View -->
+        <!-- Leads by user and team Search View -->
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
@@ -74,18 +74,18 @@
                             domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <filter string="Lost" name="lost"
                             domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
-                    <field name="section_id" context="{'invisible_section': False}"
+                    <field name="team_id" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="stage_id" domain="[('team_ids', '=', 'team_id')]" />
                         <field name="campaign_id"/>
                         <field name="medium_id"/>
                         <field name="source_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]" />
                         <field name="campaign_id" widget="selection"/>
                         <field name="medium_id" widget="selection"/>
                         <field name="source_id" widget="selection"/>
@@ -98,7 +98,7 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
@@ -109,7 +109,7 @@
             </field>
         </record>
 
-        <!-- Leads by user and section Action -->
+        <!-- Leads by user and team Action -->
        <record id="action_report_crm_lead" model="ir.actions.act_window">
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.lead.report</field>

@@ -294,9 +294,9 @@ class account_config_settings(models.TransientModel):
         if self._uid != SUPERUSER_ID and not self.env['res.users'].has_group('base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.env['ir.values']
-        ir_values.sudo().set_default('product.product', 'taxes_id',
+        ir_values.sudo().set_default('product.template', 'taxes_id',
             self.default_sale_tax and [self.default_sale_tax.id] or False, company_id=self.company_id.id)
-        ir_values.sudo().set_default('product.product', 'supplier_taxes_id',
+        ir_values.sudo().set_default('product.template', 'supplier_taxes_id',
             self.default_purchase_tax and [self.default_purchase_tax.id] or False, company_id=self.company_id.id)
 
     @api.multi

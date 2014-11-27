@@ -9,8 +9,6 @@ Building a website
     * This guide assumes `basic knowledge of Python
       <http://docs.python.org/2/tutorial/>`_
     * This guide assumes an installed Odoo
-    * For production deployment, see the :ref:`dedicated deployment guides
-      <guides/deployment>`
 
 Creating a basic module
 =======================
@@ -280,11 +278,12 @@ then change the list of model to link to our new controller:
 
 .. patch::
 
-You can now visit each teacher's page. Try adding blocks to a teacher's page
-to write his biography, then go to an other teacher's page… your biography
-is shared between all teachers, because blocks are added to the *template*,
-and the *biography* template is shared between all teachers, when one page
-is edited they're all edited at the same time.
+Restart Odoo and upgrade the module, then you can visit each teacher's page.
+As an exercise, try adding blocks to a teacher's page to write a biography,
+then go to another teacher's page and so forth. You will discover, that your
+biography is shared between all teachers, because blocks are added to the
+*template*, and the *biography* template is shared between all teachers, when
+one page is edited they're all edited at the same time.
 
 Field edition
 =============
@@ -306,10 +305,10 @@ interfaces. Change the *person* template to use ``t-field``:
 
 .. patch::
 
-Restart Odoo, there is now a placeholder under the teacher's name and a new
-zone for blocks in :guilabel:`Edit` mode. Content dropped there is stored in
-the correspoding teacher's ``biography`` field, and thus specific to that
-teacher.
+Restart Odoo and upgrade the module, there is now a placeholder under the
+teacher's name and a new zone for blocks in :guilabel:`Edit` mode. Content
+dropped there is stored in the correspoding teacher's ``biography`` field, and
+thus specific to that teacher.
 
 The teacher's name is also editable, and when saved the change is visible on
 the index page.
@@ -361,10 +360,10 @@ Let's create a menu for our model:
 .. patch::
 
 then accessing http://localhost:8069/web/ in the top left should be a menu
-:guilabel:`Academy` (which is selected by default, as it is the first menu),
-selected by default and having opened a listing of teachers. From the listing
-it is possible to :guilabel:`Create` new teacher records, and to switch to
-the "form" by-record view.
+:guilabel:`Academy`, which is selected by default, as it is the first menu,
+and having opened a listing of teachers. From the listing it is possible to
+:guilabel:`Create` new teacher records, and to switch to the "form" by-record
+view.
 
 If there is no definition of how to present records (a
 :ref:`view <reference/views>`) Odoo will automatically create a basic one
@@ -500,18 +499,17 @@ Altering view architectures is done in 3 steps:
 
 The second thing we will change is making the product categories sidebar
 visible by default: :menuselection:`Customize --> Product Categories` lets
-you toggle a tree of product categories (used to filter the main dispay) on
+you toggle a tree of product categories (used to filter the main display) on
 and off.
 
-This is done via the *optional application* of extension templates: an
-extension template (such as the one we've just created) can be
-"always applied", "optional and enabled" or "optional and disabled". The
-latter two will display the view in the :guilabel:`Customize` menu with a
-check box, allowing administrators to enable or disable them (and easily
-customize their website pages).
+This is done via the ``customize_show`` and ``active`` fields of extension
+templates: an extension template (such as the one we've just created) can be
+*customize_show=True*. This choice will display the view in the :guilabel:`Customize`
+menu with a check box, allowing administrators to activate or disable them
+(and easily customize their website pages).
 
 We simply need to modify the *Product Categories* record and set its default
-to ``enabled``:
+to *active="True"*:
 
 .. patch::
 

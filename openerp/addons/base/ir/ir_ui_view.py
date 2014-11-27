@@ -129,7 +129,8 @@ def get_view_arch_from_file(filename, xmlid):
                 node.tag = 'data'
             node.attrib.pop('id', None)
             return etree.tostring(node)
-    raise ValueError("Could not find view arch definition in file '%s' for xmlid '%s'" % (filename, xmlid))
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'" % (filename, xmlid))
+    return None
 
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
@@ -185,6 +186,7 @@ class view(osv.osv):
             ('tree','Tree'),
             ('form','Form'),
             ('graph', 'Graph'),
+            ('pivot', 'Pivot'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
@@ -223,7 +225,7 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
-        'active': fields.boolean("Active", required=True,
+        'active': fields.boolean("Active",
             help="""If this view is inherited,
 * if True, the view always extends its parent
 * if False, the view currently does not extend its parent but can be enabled
@@ -304,7 +306,7 @@ class view(osv.osv):
         return values
 
     def create(self, cr, uid, values, context=None):
-        if 'type' not in values:
+        if not values.get('type'):
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
@@ -313,7 +315,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
-        self._read_template.clear_cache(self)
+        self.clear_cache()
         return super(view, self).create(
             cr, uid,
             self._compute_defaults(cr, uid, values, context=context),
@@ -336,7 +338,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        self._read_template.clear_cache(self)
+        self.clear_cache()
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),
@@ -746,27 +748,30 @@ class view(osv.osv):
         if 'lang' in context:
             Translations = self.pool['ir.translation']
             if node.text and node.text.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.text.strip())
+                term = node.text.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.text = node.text.replace(node.text.strip(), trans)
+                    node.text = node.text.replace(term, trans)
             if node.tail and node.tail.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.tail.strip())
+                term = node.tail.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+                    node.tail =  node.tail.replace(term, trans)
 
-            if node.get('string') and not result:
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.get('string'))
-                if trans == node.get('string') and ('base_model_name' in context):
+            if node.get('string') and node.get('string').strip() and not result:
+                term = node.get('string').strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                if trans == term and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
                     # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
+                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
                 if trans:
                     node.set('string', trans)
 
             for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
-                if attr_value:
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value)
+                if attr_value and attr_value.strip():
+                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
                     if trans:
                         node.set(attr_name, trans)
 
@@ -869,11 +874,11 @@ class view(osv.osv):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
         if node.tag in ('kanban'):
-            group_by_field = node.get('default_group_by')
-            if group_by_field and Model._all_columns.get(group_by_field):
-                group_by_column = Model._all_columns[group_by_field].column
-                if group_by_column._type == 'many2one':
-                    group_by_model = Model.pool.get(group_by_column._obj)
+            group_by_name = node.get('default_group_by')
+            if group_by_name in Model._fields:
+                group_by_field = Model._fields[group_by_name]
+                if group_by_field.type == 'many2one':
+                    group_by_model = Model.pool[group_by_field.comodel_name]
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
                         if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
                             node.set(action, 'false')
@@ -961,7 +966,7 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+        if {'t-esc', 't-raw'}.intersection(e.attrib):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)

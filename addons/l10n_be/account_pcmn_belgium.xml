@@ -230,15 +230,22 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
         </record>
         <record id="a16" model="account.account.template">
-            <field name="name">PROVISIONS POUR RISQUES ET CHARGES</field>
+            <field name="name">PROVISIONS ET IMPOTS DIFFERES</field>
             <field name="code">16</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
-        <record id="a160" model="account.account.template">
+        <record id="a1600" model="account.account.template">
             <field name="name">Provisions pour pensions et obligations similaires</field>
-            <field name="code">160</field>
+            <field name="code">1600</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
+        </record>
+        <record id="a1601" model="account.account.template">
+            <field name="name">Provisions pour prépensions</field>
+            <field name="code">1601</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a161" model="account.account.template">
             <field name="name">Provisions pour charges fiscales</field>
@@ -249,6 +256,7 @@
             <field name="name">Provisions pour grosses réparations et gros entretiens</field>
             <field name="code">162</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a163" model="account.account.template">
             <field name="name">Provisions pour autres risques et charges</field>
@@ -276,10 +284,35 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
         </record>
         <record id="a168" model="account.account.template">
-            <field name="name">Provisions pour garanties techniques attachées aux ventes et prestations déjà effectuées par l'entreprise</field>
+            <field name="name">Impôts différés</field>
             <field name="code">168</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptsdiffrs2'))]"/>
         </record>
+        <record id="a1680" model="account.account.template">
+            <field name="name">Impôts différés afférents à des subsides en capital</field>
+            <field name="code">1680</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+        </record>
+        <record id="a1681" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur immobilisations incorporelles</field>
+            <field name="code">1681</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+        </record>
+        <record id="a1682" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur immobilisations corporelles</field>
+            <field name="code">1682</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+        </record>
+        <record id="a1687" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur titres émis par le secteur public belge</field>
+            <field name="code">1687</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+        </record>
+        <record id="a1688" model="account.account.template">
+            <field name="name">Impôts différés étrangers</field>
+            <field name="code">1688</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
         <record id="a169" model="account.account.template">
             <field name="name">Provisions pour autres risques et charges</field>
             <field name="code">169</field>
@@ -3216,6 +3249,13 @@
             <field name="user_type" ref="account.data_account_type_cash"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_valeursdisponibles1'))]"/>
         </record>
+        <record id="a580" model="account.account.template">
+            <field name="name">Transferts</field>
+            <field name="code">580</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_cash"/>
+            <field ref="a58" name="parent_id"/>
+        </record>        
         <record id="a6" model="account.account.template">
             <field name="name">CLASSE 6. - CHARGES</field>
             <field name="code">6</field>
@@ -3226,7 +3266,7 @@
             <field name="name">APPROVISIONNEMENTS ET MARCHANDISES</field>
             <field name="code">60</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a_expense" model="account.account.template">
             <field name="name">Achats de matières premières</field>
@@ -3292,7 +3332,7 @@
             <field name="name">SERVICES ET BIENS DIVERS</field>
             <field name="code">61</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a610" model="account.account.template">
             <field name="name">Loyers et charges locatives</field>
@@ -3563,7 +3603,7 @@
             <field name="name">REMUNERATIONS, CHARGES SOCIALES ET PENSIONS</field>
             <field name="code">62</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rmunrationschargessocialesetpensions2')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rmunrationschargessocialesetpensions2')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a620" model="account.account.template">
             <field name="name">Rémunérations et avantages sociaux directs</field>
@@ -3714,7 +3754,7 @@
             <field name="name">AMORTISSEMENTS, REDUCTIONS DE VALEUR ET PROVISIONS POUR RISQUES ET CHARGES</field>
             <field name="code">63</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a630" model="account.account.template">
             <field name="name">Dotations aux amortissements et aux réductions de valeur sur immobilisations</field>
@@ -3863,7 +3903,7 @@
             <field name="name">AUTRES CHARGES D'EXPLOITATION</field>
             <field name="code">64</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a640" model="account.account.template">
             <field name="name">Charges fiscales d'exploitation</field>
@@ -3949,7 +3989,7 @@
             <field name="name">CHARGES FINANCIERES</field>
             <field name="code">65</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesfinancires1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesfinancires1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a650" model="account.account.template">
             <field name="name">Charges des dettes</field>
@@ -4030,7 +4070,7 @@
             <field name="name">CHARGES EXCEPTIONNELLES</field>
             <field name="code">66</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesexceptionnelles1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesexceptionnelles1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a660" model="account.account.template">
             <field name="name">Amortissements et réductions de valeur exceptionnels</field>
@@ -4116,7 +4156,7 @@
             <field name="name">IMPOTS SUR LE RESULTAT</field>
             <field name="code">67</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a670" model="account.account.template">
             <field name="name">Impôts belges sur le résultat de l'exercice</field>
@@ -4169,9 +4209,22 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
         </record>
         <record id="a68" model="account.account.template">
-            <field name="name">TRANSFERTS AUX RESERVES IMMUNISEES</field>
+            <field name="name">TRANSFERT AUX RESERVES IMMUNISEES ET IMPOTS DIFFERES</field>
             <field name="code">68</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
+        </record>
+        <record id="a680" model="account.account.template">
+            <field name="name">Transfert aux impôts différés</field>
+            <field name="code">680</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_transfertauximptsdiffrs1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+        </record>
+        <record id="a689" model="account.account.template">
+            <field name="name">Transfert aux réserves immunisées</field>
+            <field name="code">689</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_transfertauxrservesimmunises1'))]"/>
         </record>
         <record id="a69" model="account.account.template">
             <field name="name">AFFECTATION DES RESULTATS</field>
@@ -4223,7 +4276,7 @@
             <field name="name">CHIFFRE D'AFFAIRES</field>
             <field name="code">70</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chiffredaffaires3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chiffredaffaires3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a700" model="account.account.template">
             <field name="name">Ventes de marchandises</field>
@@ -4354,7 +4407,8 @@
             <field name="name">VARIATION DES STOCKS ET DES COMMANDES EN COURS D'EXECUTION</field>
             <field name="code">71</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
+            <field ref="a7" name="parent_id"/>
         </record>
         <record id="a712" model="account.account.template">
             <field name="name">Des en cours de fabrication</field>
@@ -4435,7 +4489,7 @@
             <field name="name">AUTRES PRODUITS D'EXPLOITATION</field>
             <field name="code">74</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a740" model="account.account.template">
             <field name="name">Subsides d'exploitation et montants compensatoires</field>
@@ -4501,7 +4555,7 @@
             <field name="name">PRODUITS FINANCIERS</field>
             <field name="code">75</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsfinanciers1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsfinanciers1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a750" model="account.account.template">
             <field name="name">Produits des immobilisations financières</field>
@@ -4562,7 +4616,7 @@
             <field name="name">PRODUITS EXCEPTIONNELS</field>
             <field name="code">76</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsexceptionnels1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsexceptionnels1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a760" model="account.account.template">
             <field name="name">Reprises d'amortissements et de réductions de valeur</field>
@@ -4618,7 +4672,7 @@
             <field name="name">REGULARISATIONS D'IMPOTS ET REPRISES DE PROVISIONS FISCALES</field>
             <field name="code">77</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a771" model="account.account.template">
             <field name="name">Impôts belges sur le résultat</field>
@@ -4644,6 +4698,30 @@
             <field name="name">Impôts étrangers sur le résultat</field>
             <field name="code">773</field>
             <field name="user_type" ref="account.data_account_type_income"/>
+        </record>
+        <record id="a78" model="account.account.template">
+            <field name="name">PRELEVEMENTS SUR RESERVES IMMUNISEES ET IMPOTS DIFFERES</field>
+            <field name="code">78</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_view"/>
+            <field ref="a7" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
+        </record>
+        <record id="a780" model="account.account.template">
+            <field name="name">Prélèvements sur les impôts différés</field>
+            <field name="code">780</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field ref="a78" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_prlvementssurlesimptsdiffrs1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+        </record>
+        <record id="a789" model="account.account.template">
+            <field name="name">Prélèvements sur les réserves immunisées</field>
+            <field name="code">789</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field ref="a78" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_prlvementssurlesrservesimmunises1'))]"/>
         </record>
         <record id="a79" model="account.account.template">
             <field name="name">AFFECTATION AUX RESULTATS</field>

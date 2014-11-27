@@ -7,6 +7,14 @@
         <span class="oe_im_chatview_header_name"></span>
         <span class="oe_im_chatview_nbr_messages"/>
         <span class="oe_im_chatview_right">
+            <div class="btn-group oe_im_chatview_option_group">
+              <span class="oe_im_chatview_options dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-cogs"></i>
+              </span>
+              <ul class="dropdown-menu oe_im_chatview_option_list" role="menu">
+                <!-- options -->
+              </ul>
+            </div>
             <div class="oe_im_chatview_close">×</div>
         </span>
     </div>
@@ -21,7 +29,7 @@
 <t t-name="im_chat.Conversation_content">
     <t t-foreach="_.keys(list)" t-as="date">
         <div class="oe_im_chatview_date_separator">
-            <t t-esc="Date.parse(date).toString(Date.CultureInfo.formatPatterns.longDate)"/>
+            <t t-esc="window.moment(date).format('LL')"/>
         </div>
         <t t-foreach="list[date]" t-as="bubble">
             <t t-if="bubble[0].type === 'message'">
@@ -48,7 +56,7 @@
                 <div class="oe_im_chatview_bubble_item"><t t-raw="m.message"/></div>
             </t>
         </div>
-        <div class="oe_im_chatview_time"><t t-esc="Date.parse((_.last(messages).create_date)).toString('HH:mm')"/></div>
+        <div class="oe_im_chatview_time"><t t-esc="window.moment((_.last(messages).create_date)).format('LT')"/></div>
     </div>
 </t>
 <t t-name="im_chat.Conversation_technical_bubble">
@@ -59,7 +67,7 @@
                 <div><t t-raw="m.message"/></div>
             </t>
         </div>
-        <div class="oe_im_chatview_time"><t t-esc="Date.parse((_.last(messages).create_date)).toString('HH:mm')"/></div>
+        <div class="oe_im_chatview_time"><t t-esc="window.moment((_.last(messages).create_date)).format('LT')"/></div>
     </div>
 </t>
 
@@ -69,7 +77,7 @@
             <img t-att-src="widget.get('image_url')" class="oe_im_user_avatar"/>
         </span>
         <span class="oe_im_user_name"><t t-esc="widget.get('name')"/></span>
-        <img t-att-src="_s +'/im_chat/static/src/img/green.png'" t-att-data-im-user-id="widget.get('id')" class="oe_im_user_online"/>
+        <img t-att-src="'/im_chat/static/src/img/green.png'" t-att-data-im-user-id="widget.get('id')" class="oe_im_user_online"/>
     </div>
 </t>
 <t t-name="im_chat.InstantMessaging">

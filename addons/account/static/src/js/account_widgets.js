@@ -1229,13 +1229,15 @@ openerp.account = function (instance) {
             if (! self.single_statement) return;
             var name = self.$(".change_statement_name_field").val();
             if (name === "") return;
+            self.$(".change_statement_name_button").attr("disabled", "disabled");
             return self.model_bank_statement
                 .call("write", [[self.statement_ids[0]], {'name': name}])
-                .then(function () {
+                .done(function () {
                     self.title = name;
                     self.$(".statement_name span").text(name).show();
                     self.$(".change_statement_name_container").hide();
-                });
+                }).always(function() {
+                    self.$(".change_statement_name_button").removeAttr("disabled");
         },
 
         updateProgressbar: function() {

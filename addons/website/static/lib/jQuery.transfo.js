@@ -131,12 +131,13 @@ OTHER DEALINGS IN THE SOFTWARE.
             // generate all the controls markup
             var css = "box-sizing: border-box; position: absolute; background-color: #fff; border: 1px solid #ccc; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px;";
             transfo.$markup = $(''
-                + '<div class="transfo-controls">'
+                + '<div class="transfo-container">'
+                +  '<div class="transfo-controls">'
                 +   '<div style="cursor: crosshair; position: absolute; margin: -30px; top: 0; right: 0; padding: 1px 0 0 1px;" class="transfo-rotator">'
-                +     '<span class="fa-stack fa-lg">'
-                +     '<i class="fa fa-circle fa-stack-2x"></i>'
-                +     '<i class="fa fa-repeat fa-stack-1x fa-inverse"></i>'
-                +     '</span>'
+                +    '<span class="fa-stack fa-lg">'
+                +    '<i class="fa fa-circle fa-stack-2x"></i>'
+                +    '<i class="fa fa-repeat fa-stack-1x fa-inverse"></i>'
+                +    '</span>'
                 +   '</div>'
                 +   '<div style="' + css + 'top: 0%; left: 0%; cursor: nw-resize;" class="transfo-scaler-tl"></div>'
                 +   '<div style="' + css + 'top: 0%; left: 100%; cursor: ne-resize;" class="transfo-scaler-tr"></div>'
@@ -147,6 +148,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                 +   '<div style="' + css + 'top: 50%; left: 0%; cursor: w-resize;" class="transfo-scaler-ml"></div>'
                 +   '<div style="' + css + 'top: 50%; left: 100%; cursor: e-resize;" class="transfo-scaler-mr"></div>'
                 +   '<div style="' + css + 'border: 0; width: 0px; height: 0px; top: 50%; left: 50%;" class="transfo-scaler-mc"></div>'
+                +  '</div>'
                 + '</div>');
             transfo.$center = transfo.$markup.find(".transfo-scaler-mc");
 
@@ -165,10 +167,18 @@ OTHER DEALINGS IN THE SOFTWARE.
             _bind($this, transfo);
             
             _targetCss($this, transfo);
+            _stop_animation($this[0]);
         }
 
         function _overwriteOptions ($this, transfo, settings) {
             transfo.settings = $.extend(transfo.settings, settings || {});
+        }
+
+        function _stop_animation (target) {
+            target.style.webkitAnimationPlayState = "paused";
+            target.style.animationPlayState = "paused";
+            target.style.webkitTransition = "none";
+            target.style.transition = "none";
         }
 
         function _setOptions ($this, transfo) {
@@ -182,7 +192,10 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.scaley=     transform.indexOf('scaleY') != -1 ? parseFloat(transform.match(/scaleY\(([^)]+)\)/)[1]) : 1;
 
             transfo.settings.style = style.replace(/[^;]*transform[^;]+/g, '').replace(/;+/g, ';');
+
             $this.attr("style", transfo.settings.style);
+            _stop_animation($this[0]);
+            transfo.settings.pos = $this.offset();
 
             transfo.settings.height = $this.innerHeight();
             transfo.settings.width = $this.innerWidth();
@@ -205,7 +218,6 @@ OTHER DEALINGS IN THE SOFTWARE.
             }
 
             transfo.settings.css = window.getComputedStyle($this[0], null);
-            transfo.settings.pos = $this.offset();
 
             transfo.settings.rotationStep = 5;
             transfo.settings.hide = false;
@@ -226,7 +238,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             }
 
             transfo.$markup.off().on("mousedown", mousedown);
-            transfo.$markup.find(">:not(.transfo-scaler-mc)").off().on("mousedown", mousedown);
+            transfo.$markup.find(".transfo-controls >:not(.transfo-scaler-mc)").off().on("mousedown", mousedown);
         }
 
         function _mouseDown($this, div, transfo, event) {
@@ -339,6 +351,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             settings.scaley = Math.round(settings.scaley*100)/100;
 
             _targetCss($this, transfo);
+            _stop_animation($this[0]);
             return false;
         }
 
@@ -394,15 +407,22 @@ OTHER DEALINGS IN THE SOFTWARE.
 
             _setCss($this, settings.style, settings);
 
-            _setCss(transfo.$markup,
-                "position: absolute;" +
-                "top:" + settings.pos.top + "px;" +
-                "left:" + settings.pos.left + "px;" +
+            transfo.$markup.css({
+                "position": "absolute",
+                "width": width + "px",
+                "height": height + "px",
+                "top": settings.pos.top + "px",
+                "left": settings.pos.left + "px"
+            });
+
+            var $controls = transfo.$markup.find('.transfo-controls');
+            _setCss($controls,
                 "width:" + width + "px;" +
                 "height:" + height + "px;" +
                 "cursor: move;",
                 settings);
-            transfo.$markup.find(">").css("transform", "scaleX("+(1/settings.scalex)+") scaleY("+(1/settings.scaley)+")");
+
+            $controls.children().css("transform", "scaleX("+(1/settings.scalex)+") scaleY("+(1/settings.scaley)+")");
 
             _showHide($this, transfo);
 
@@ -412,10 +432,10 @@ OTHER DEALINGS IN THE SOFTWARE.
         function _showHide ($this, transfo) {
             transfo.$markup.css("z-index", transfo.settings.hide ? -1 : 1000);
             if (transfo.settings.hide) {
-                transfo.$markup.find(">").hide();
+                transfo.$markup.find(".transfo-controls > *").hide();
                 transfo.$markup.find(".transfo-scaler-mc").show();
             } else {
-                transfo.$markup.find(">").show();
+                transfo.$markup.find(".transfo-controls > *").show();
             }
         }
 

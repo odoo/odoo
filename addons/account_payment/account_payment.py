@@ -113,7 +113,7 @@ class payment_order(osv.osv):
         'state': 'draft',
         'date_prefered': 'due',
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-        'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
+        'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'payment.order'),
     }
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -126,7 +126,7 @@ class payment_order(osv.osv):
 
         for order in self.read(cr, uid, ids, ['reference']):
             if not order['reference']:
-                reference = ir_seq_obj.get(cr, uid, 'payment.order')
+                reference = ir_seq_obj.next_by_code(cr, uid, 'payment.order')
                 self.write(cr, uid, order['id'], {'reference':reference})
         return True
 
@@ -322,7 +322,7 @@ class payment_line(osv.osv):
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
-            ).get(cursor, user, 'payment.line'),
+            ).next_by_code(cursor, user, 'payment.line'),
         'state': 'normal',
         'currency': _get_currency,
         'company_currency': _get_currency,

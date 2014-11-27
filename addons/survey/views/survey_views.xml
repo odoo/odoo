@@ -185,7 +185,7 @@
                                 <span class="oe_e">í</span> <!-- icon for dropdown menu -->
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit">Survey Options</a></li>
-                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
+                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
@@ -344,7 +344,7 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>
                                     <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 </group>
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">

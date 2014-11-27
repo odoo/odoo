@@ -3,7 +3,7 @@
     <data>
 
 <template id="header" inherit_id="website.layout" name="LiveChat Import (internal) Scripts">
-    <xpath expr="//head" position="inside">
+    <xpath expr="//body" position="inside">
         <t t-if="website and website.channel_id">
             <t t-raw="website.channel_id.script_internal"/>
         </t>

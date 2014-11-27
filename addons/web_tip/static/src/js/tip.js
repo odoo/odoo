@@ -82,6 +82,10 @@
                 view.on('view_list_rendered', self, function() {
                     self.eval_tip(action_id, model, fields_view.type);
                 });
+            } else if (view.hasOwnProperty('editor')) {
+                view.on('view_list_rendered', self, function() {
+                    self.reposition();
+                });
             }
         },
 
@@ -90,7 +94,16 @@
             var model = formView.model;
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
-            self.eval_tip(null, model, mode, type);
+            formView.on('view_content_has_changed', self, _.once(function() {
+                self.eval_tip(null, model, mode, type);
+            }));
+            if ($('.oe_chatter').length > 0) {
+                instance.web.bus.on('chatter_messages_fetched', this, _.once(function () {
+                    self.eval_tip(null, model, mode, type);
+                }));
+            } else {
+                self.eval_tip(null, model, mode, type);
+            }
         },
 
         // stub
@@ -136,7 +149,9 @@
         add_tip: function(tip) {
             var self = this;
             self.tip_mutex.exec(function() {
-                return $.when(self.do_tip(tip));
+                if (!tip.is_consumed) {
+                    return $.when(self.do_tip(tip));
+                }
             });
         },
 
@@ -175,20 +190,12 @@
                     return (overflow === 'auto' || overflow === 'scroll');
                 });
                 if (scroll) {
-                    var offset = self.$element.offset().top;
-                    $(scroll).scrollTop(offset);
+                    $(scroll).scrollTo(self.$element);
                 }
-
-                var _top = self.$element.offset().top -5;
-                var _left = self.$element.offset().left -5;
-                var _width = self.$element.outerWidth() + 10;
-                var _height = self.$element.outerHeight() + 10;
 
                 self.$helper = $("<div>", { class: 'oe_tip_helper' });
                 self.$element.after(self.$helper);
-                self.$helper.offset({top: _top , left: _left});
-                self.$helper.width(_width);
-                self.$helper.height(_height);
+                self._set_helper_position();
 
                 self.$overlay = $("<div>", { class: 'oe_tip_overlay' });
                 $('body').append(self.$overlay);
@@ -243,6 +250,11 @@
                         def.resolve();
                     }
                 });
+
+                // resize
+                instance.web.bus.on('resize', this, function() {
+                    self.reposition();
+                });
             } else {
                def.reject();
             }
@@ -252,7 +264,7 @@
         end_tip: function(tip) {
             var self = this;
             var Tips = new instance.web.Model('web.tip');
-            self.$element.popover('destroy');
+            $('#' + self.$element.attr('aria-describedby')).remove();
             self.$overlay.remove();
             self.$helper.remove();
             self.$element.removeClass('oe_tip_show_element');
@@ -262,6 +274,25 @@
             $(document).off('keyup.web_tip');
             Tips.call('consume', [tip.id], {});
             tip.is_consumed = true;
+        },
+
+        reposition: function() {
+            var self = this;
+            if (self.tip_mutex.def.state() === 'pending') {
+                self._set_helper_position();
+                self.$element.popover('show');
+            }
+        },
+
+        _set_helper_position : function() {
+            var offset = this.$element.offset();
+            var _top = offset.top - 5;
+            var _left = offset.left - 5;
+            var _width = this.$element.outerWidth() + 10;
+            var _height = this.$element.outerHeight() + 10;
+            this.$helper.offset({top: _top , left: _left});
+            this.$helper.width(_width);
+            this.$helper.height(_height);
         }
     });
 
@@ -269,6 +300,13 @@
         show_application: function() {
             this._super();
             this.tip_handler = new instance.web.Tip();
+        }
+    });
+
+    instance.web.form.FieldStatus = instance.web.form.FieldStatus.extend({
+        render_value: function() {
+            this._super();
+            instance.webclient.tip_handler.reposition();
         }
     });
 })();

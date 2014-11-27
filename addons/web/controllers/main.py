@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp import http
@@ -123,7 +124,7 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
-    if not db and http.db_filter([request.session.db]):
+    if not db and request.session.db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
@@ -466,7 +467,6 @@ class Home(http.Controller):
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
-
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
@@ -477,6 +477,11 @@ class Home(http.Controller):
             return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
+
+    @http.route('/web/dbredirect', type='http', auth="none")
+    def web_db_redirect(self, redirect='/', **kw):
+        ensure_db()
+        return werkzeug.utils.redirect(redirect, 303)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -553,14 +558,6 @@ class WebClient(http.Controller):
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
         addons_path = http.addons_manifest['web']['addons_path']
-        #load datejs locale
-        datejs_locale = ""
-        try:
-            with open(os.path.join(addons_path, 'web', 'static', 'lib', 'datejs', 'globalization', lang.replace('_', '-') + '.js'), 'r') as f:
-                datejs_locale = f.read()
-        except IOError:
-            pass
-
         #load momentjs locale
         momentjs_locale_file = False
         momentjs_locale = ""
@@ -575,7 +572,7 @@ class WebClient(http.Controller):
 
         #return the content of the locale
         headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
-        return request.make_response(datejs_locale + "\n"+ momentjs_locale, headers)
+        return request.make_response(momentjs_locale, headers)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -747,14 +744,17 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, **kwargs):
         try:
+            format = kwargs.get('format')
+            ext = "zip" if format == 'zip' else "dump"
             db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
+                request.session.proxy("db").dump(backup_pwd, backup_db, format))
+            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
                 'db': backup_db,
                 'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
+                    "%Y-%m-%d_%H-%M-%SZ"),
+                'ext': ext
             }
             return request.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
@@ -1016,19 +1016,6 @@ class View(http.Controller):
         }, request.context)
         return {'result': True}
 
-    @http.route('/web/view/undo_custom', type='json', auth="user")
-    def undo_custom(self, view_id, reset=False):
-        CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id' ,'=', view_id)],
-                                    0, False, False, request.context)
-        if vcustom:
-            if reset:
-                CustomView.unlink(vcustom, request.context)
-            else:
-                CustomView.unlink([vcustom[0]], request.context)
-            return {'result': True}
-        return {'result': False}
-
 class TreeView(View):
 
     @http.route('/web/treeview/action', type='json', auth="user")
@@ -1042,7 +1029,8 @@ class Binary(http.Controller):
     @http.route('/web/binary/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
-        Model = request.session.model(model)
+        Model = request.registry[model]
+        cr, uid, context = request.cr, request.uid, request.context
         headers = [('Content-Type', 'image/png')]
         etag = request.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(request.session_id).hexdigest()
@@ -1055,15 +1043,15 @@ class Binary(http.Controller):
                 if not id and hashed_session == etag:
                     return werkzeug.wrappers.Response(status=304)
                 else:
-                    date = Model.read([id], [last_update], request.context)[0].get(last_update)
+                    date = Model.read(cr, uid, [id], [last_update], context)[0].get(last_update)
                     if hashlib.md5(date).hexdigest() == etag:
                         return werkzeug.wrappers.Response(status=304)
 
             if not id:
-                res = Model.default_get([field], request.context).get(field)
+                res = Model.default_get(cr, uid, [field], context).get(field)
                 image_base64 = res
             else:
-                res = Model.read([id], [last_update, field], request.context)[0]
+                res = Model.read(cr, uid, [id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_base64 = res.get(field)
 
@@ -1109,14 +1097,15 @@ class Binary(http.Controller):
         :param str filename_field: field holding the file's name, if any
         :returns: :class:`werkzeug.wrappers.Response`
         """
-        Model = request.session.model(model)
+        Model = request.registry[model]
+        cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
         if filename_field:
             fields.append(filename_field)
         if id:
-            res = Model.read([int(id)], fields, request.context)[0]
+            res = Model.read(cr, uid, [int(id)], fields, context)[0]
         else:
-            res = Model.default_get(fields, request.context)
+            res = Model.default_get(cr, uid, fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return request.not_found()
@@ -1206,9 +1195,10 @@ class Binary(http.Controller):
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
-    ], type='http', auth="none")
+    ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
-        # TODO add etag, refactor to use /image code for etag
+        imgname = 'logo.png'
+        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1220,13 +1210,13 @@ class Binary(http.Controller):
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
-            image_data = self.placeholder('logo.png')
+            response = http.send_file(placeholder(imgname))
         else:
             try:
                 # create an empty registry
                 registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web
+                    cr.execute("""SELECT c.logo_web, c.write_date
                                     FROM res_users u
                                LEFT JOIN res_company c
                                       ON c.id = u.company_id
@@ -1234,17 +1224,14 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = str(row[0]).decode('base64')
+                        image_data = StringIO(str(row[0]).decode('base64'))
+                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
                     else:
-                        image_data = self.placeholder('nologo.png')
+                        response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                image_data = self.placeholder('logo.png')
+                response = http.send_file(placeholder(imgname))
 
-        headers = [
-            ('Content-Type', 'image/png'),
-            ('Content-Length', len(image_data)),
-        ]
-        return request.make_response(image_data, headers)
+        return response
 
 class Action(http.Controller):
 

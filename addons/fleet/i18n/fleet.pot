@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-23 16:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
 msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new contract. \n"
+"                Click to create a new contract.\n"
 "              </p><p>\n"
 "                Manage all your contracts (leasing, insurances, etc.) with\n"
 "                their related services, costs. Odoo will automatically warn\n"
@@ -65,7 +65,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
 msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new fuel log. \n"
+"                Click to create a new fuel log.\n"
 "              </p><p>\n"
 "                Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
@@ -87,7 +87,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new odometer log. \n"
+"                Click to create a new odometer log.\n"
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
@@ -100,7 +100,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
 msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new service entry. \n"
+"                Click to create a new service entry.\n"
 "              </p><p>\n"
 "                Odoo helps you keeping track of all the services done\n"
 "                on your vehicle. Services can be of many type: occasional\n"
@@ -122,7 +122,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new vehicle. \n"
+"                Click to create a new vehicle.\n"
 "              </p><p>\n"
 "                You will be able to manage your fleet by keeping track of the\n"
 "                contracts, services, fixed and recurring costs, odometers and\n"
@@ -1128,6 +1128,11 @@ msgid "Models"
 msgstr ""
 
 #. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Month"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Monthly"
 msgstr ""
@@ -1734,11 +1739,6 @@ msgstr ""
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
-msgid "Vehicle Costs Month"
-msgstr ""
-
-#. module: fleet
-#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs by Month"
 msgstr ""
 
@@ -1802,8 +1802,9 @@ msgid "Vehicles Services Logs"
 msgstr ""
 
 #. module: fleet
-#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_report
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_effective_costs_report
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_indicative_costs_report
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
 msgid "Vehicles costs"
 msgstr ""

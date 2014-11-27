@@ -30,8 +30,8 @@
             <field name="model">crm.lead</field>
             <field name="type">opportunity</field>
             <field name="mode">form</field>
-            <field name="trigger_selector">.oe_form_buttons_view:visible,.oe_breadcrumb_title > a.oe_breadcrumb_item</field>
-            <field name="highlight_selector">.oe_breadcrumb_title > a.oe_breadcrumb_item:last</field>
+            <field name="trigger_selector">.oe_form_buttons_view:visible,ol.breadcrumb a</field>
+            <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
             <field name="placement">bottom</field>
         </record>
 

@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -81,13 +81,11 @@
 
 /* Extra Styles */
 img.shadow {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
 }
@@ -104,7 +102,7 @@ header a.navbar-brand img {
 }
 
 #wrapwrap p:empty:after {
-  content: "\2060";
+  content: "⁠";
 }
 
 /* ----- Snippets Styles ----- */
@@ -123,10 +121,8 @@ header a.navbar-brand img {
 #oe_main_menu_navbar {
   min-height: 34px;
   z-index: 1001;
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
+  -webkit-border-radius: 0px;
   border-radius: 0px;
   margin-bottom: 0px;
 }
@@ -140,7 +136,7 @@ header a.navbar-brand img {
 }
 
 .css_non_editable_mode_hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ----- BOOTSTRAP FIX ----- */
@@ -162,8 +158,8 @@ header a.navbar-brand img {
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 html, body, #wrapwrap {
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
 }
@@ -183,7 +179,7 @@ footer {
   background: rgba(200, 200, 200, 0.1);
 }
 
-#footer_container {
+#footer_container, #footer {
   padding-top: 24px;
   padding-bottom: 12px;
 }
@@ -356,6 +352,63 @@ ul.nav-stacked > li > a {
   padding: 4px 0;
 }
 
+.o_image_floating {
+  width: 40%;
+  margin: 4px;
+}
+.o_image_floating div.o_container {
+  position: relative;
+}
+.o_image_floating div.o_container mark {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(86, 61, 124, 0.25);
+}
+.o_image_floating div.o_container mark a {
+  color: white;
+}
+.o_image_floating.o_hide_link div.o_container mark {
+  display: none;
+}
+.o_image_floating.o_margin_s {
+  margin-bottom: 4px;
+}
+.o_image_floating.o_margin_s.pull-right {
+  margin-left: 8px;
+}
+.o_image_floating.o_margin_s.pull-left {
+  margin-right: 8px;
+}
+.o_image_floating.o_margin_m {
+  margin-bottom: 8px;
+}
+.o_image_floating.o_margin_m.pull-right {
+  margin-left: 12px;
+}
+.o_image_floating.o_margin_m.pull-left {
+  margin-right: 12px;
+}
+.o_image_floating.o_margin_l {
+  margin-bottom: 12px;
+}
+.o_image_floating.o_margin_l.pull-right {
+  margin-left: 16px;
+}
+.o_image_floating.o_margin_l.pull-left {
+  margin-right: 16px;
+}
+.o_image_floating.o_margin_xl {
+  margin-bottom: 24px;
+}
+.o_image_floating.o_margin_xl.pull-right {
+  margin-left: 32px;
+}
+.o_image_floating.o_margin_xl.pull-left {
+  margin-right: 32px;
+}
+
 /* gallery */
 .o_gallery.o_grid.o_spc-none div.row, .o_gallery.o_masonry.o_spc-none div.row {
   margin: 0;
@@ -412,7 +465,7 @@ ul.nav-stacked > li > a {
   padding: 15px;
 }
 .o_gallery.o_slideshow .carousel ul.carousel-indicators li {
-  border: 1px solid #aaaaaa;
+  border: 1px solid #aaa;
 }
 .o_gallery .carousel-inner .item img {
   max-width: none;
@@ -450,11 +503,11 @@ ul.nav-stacked > li > a {
   height: 35px;
   margin: 0 0px 5px 5px;
   padding: 0;
-  border: 1px solid #aaaaaa;
+  border: 1px solid #aaa;
   text-indent: initial;
   background-size: cover;
   opacity: 0.5;
-  background-color: black;
+  background-color: #000;
 }
 .o_gallery.o_slideshow .carousel ul.carousel-indicators li.active, .modal-body.o_slideshow .carousel ul.carousel-indicators li.active {
   opacity: 1;
@@ -495,6 +548,62 @@ div.carousel div.carousel-content {
   display: table-cell;
   vertical-align: middle;
   padding: 32px 0;
+}
+
+/* Background (kept for 8.0 compatibility) */
+.oe_dark {
+  background: #eff8f8;
+  background: rgba(200, 200, 200, 0.14);
+}
+
+.oe_black {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+}
+
+.oe_green {
+  background-color: #169C78;
+  color: white;
+}
+.oe_green .text-muted {
+  color: #ddd;
+}
+
+.oe_blue_light {
+  background-color: #41b6ab;
+  color: white;
+}
+.oe_blue_light .text-muted {
+  color: #ddd;
+}
+
+.oe_blue {
+  background-color: #34495e;
+  color: white;
+}
+
+.oe_orange {
+  background-color: #f05442;
+  color: white;
+}
+.oe_orange .text-muted {
+  color: #ddd;
+}
+
+.oe_purple {
+  background-color: #b163a3;
+  color: white;
+}
+.oe_purple .text-muted {
+  color: #ddd;
+}
+
+.oe_red {
+  background-color: #9C1b31;
+  color: white;
+}
+.oe_red .text-muted {
+  color: #ddd;
 }
 
 /* Misc */
@@ -547,16 +656,21 @@ span[data-oe-type="monetary"] {
 }
 
 .oe_template_fallback {
-  -webkit-column-count: 3;
   -moz-column-count: 3;
-  -ms-column-count: 3;
-  -o-column-count: 3;
+  -webkit-column-count: 3;
   column-count: 3;
 }
 
 .oe_website_login_container {
   width: 400px;
   margin: 40px auto;
+}
+
+.oe_website_spinner {
+  width: 121px;
+}
+.oe_website_spinner input {
+  text-align: center;
 }
 
 div.media_iframe_video {
@@ -590,4 +704,64 @@ div.media_iframe_video .css_editable_mode_display {
     -o-transform: none !important;
     transform: none !important;
   }
+}
+/* Fix: backward compatibility saas-3 */
+div.carousel .container > .carousel-caption {
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 20px;
+}
+div.carousel .container > .carousel-caption > div {
+  position: absolute;
+  text-align: left;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  bottom: 20px;
+}
+div.carousel .container > .carousel-image {
+  top: 5%;
+  bottom: 5%;
+  position: absolute;
+  max-height: 90%;
+  margin: 0 auto;
+}
+div.carousel .item.text_image .container > .carousel-caption {
+  left: 10%;
+}
+div.carousel .item.text_image .container > .carousel-caption > div {
+  right: 50%;
+  margin-right: -20%;
+  max-width: 550px;
+}
+div.carousel .item.text_image .container > .carousel-image {
+  right: 10%;
+  left: 50%;
+}
+div.carousel .item.image_text .container > .carousel-caption {
+  right: 10%;
+}
+div.carousel .item.image_text .container > .carousel-caption > div {
+  left: 50%;
+  margin-left: -20%;
+  max-width: 550px;
+}
+div.carousel .item.image_text .container > .carousel-image {
+  right: 50%;
+  left: 10%;
+}
+div.carousel .item.text_only .container > .carousel-caption {
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: auto;
+}
+div.carousel .item.text_only .container > .carousel-caption > div {
+  text-align: center;
+  background: transparent;
+  bottom: auto;
+  width: 100%;
+}
+div.carousel .item.text_only .container > .carousel-image {
+  display: none !important;
 }

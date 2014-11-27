@@ -29,7 +29,7 @@
         </record>
 
         <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
-        <record model="ir.actions.act_window" id="crm.crm_case_category_act_oppor11">
+        <record model="ir.actions.act_window" id="crm.crm_lead_opportunities">
             <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid, 'needaction_menu_ref': 'sale.menu_sale_quotations'}</field>
         </record>
 
@@ -39,7 +39,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="categ_ids" widget="many2many_tags"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                 </field>
                 <field name="client_order_ref" position="after">
                     <field name="campaign_id" />

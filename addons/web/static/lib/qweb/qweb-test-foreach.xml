@@ -1,17 +1,46 @@
 <templates xml:space="preserve">
-    <t t-name="repetition-text-content" t-foreach="seq">*</t>
-    <t t-name="repetition-dom-content" t-foreach="seq"><b/></t>
-    <b t-name="repetition-self" t-foreach="seq"/>
+    <t t-name="iter-items">
+        <t t-foreach="[3, 2, 1]" t-as="item">
+[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+    </t>
+    <result id="iter-items">
+[0: 3 3]
+[1: 2 2]
+[2: 1 1]
+    </result>
 
-    <t t-name="scope-self" t-foreach="seq" t-esc="seq"/>
-    <t t-name="scope-value" t-foreach="seq" t-esc="seq_value"/>
-    <t t-name="scope-index" t-foreach="seq" t-esc="seq_index"/>
-    <t t-name="scope-first" t-foreach="seq"><t t-esc="seq_first"/> </t>
-    <t t-name="scope-last" t-foreach="seq"><t t-esc="seq_last"/> </t>
-    <t t-name="scope-parity" t-foreach="seq"><t t-esc="seq_parity"/> </t>
-    <t t-name="scope-size" t-foreach="seq"><t t-esc="seq_size"/> </t>
+    <t t-name="iter-position">
+        <t t-foreach="5" t-as="item">
+-<t t-if="item_first"> first</t><t t-if="item_last"> last</t> (<t t-esc="item_parity"/>)</t>
+    </t>
+    <result id="iter-position">
+- first (even)
+- (odd)
+- (even)
+- (odd)
+- last (even)
+    </result>
 
-    <t t-name="aliasing" t-foreach="seq" t-as="item" t-esc="item"/>
-    <t t-name="loopvars-aliasing"
-       t-foreach="seq" t-as="item"><t t-esc="item_parity"/> </t>
+    <!-- test integer param -->
+    <t t-name="iter-int">
+        <t t-foreach="3" t-as="item">
+[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/>]</t>
+    </t>
+    <result id="iter-int">
+[0: 0 0]
+[1: 1 1]
+[2: 2 2]
+    </result>
+
+    <!-- test dict param -->
+    <t t-name="iter-dict">
+        <t t-foreach="value" t-as="item">
+[<t t-esc="item_index"/>: <t t-esc="item"/> <t t-esc="item_value"/> - <t t-esc="item_parity"/>]</t>
+    </t>
+    <params id="iter-dict">{"value": {"a": 1, "b": 2, "c": 3}}</params>
+    <result id="iter-dict">
+[0: a 1 - even]
+[1: b 2 - odd]
+[2: c 3 - even]
+    </result>
 </templates>

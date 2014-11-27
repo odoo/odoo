@@ -708,7 +708,7 @@ class mail_message(osv.Model):
         partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
         # Read mail_message.ids to have their values
-        message_values = dict.fromkeys(ids, {})
+        message_values = dict((res_id, {}) for res_id in ids)
         cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, author_id, parent_id in cr.fetchall():
             message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
