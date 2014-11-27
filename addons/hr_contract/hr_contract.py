@@ -55,7 +55,7 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle'),
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id': fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id': fields.function(_get_latest_contract, string='Current Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
         'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
@@ -63,8 +63,14 @@ class hr_employee(osv.osv):
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
     _description = 'Contract Type'
+    _order = 'sequence, id'
+
     _columns = {
         'name': fields.char('Contract Type', required=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence when displaying a list of Contract."),
+    }
+    defaults = {
+        'sequence': 10
     }
 
 
@@ -97,7 +103,7 @@ class hr_contract(osv.osv):
     }
 
     def _get_type(self, cr, uid, context=None):
-        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [('name', '=', 'Employee')])
+        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [], limit=1)
         return type_ids and type_ids[0] or False
 
     _defaults = {
