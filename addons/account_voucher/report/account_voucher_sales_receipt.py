@@ -70,7 +70,7 @@ class sale_receipt_report(osv.osv):
                     rp.user_id as user_id,
                     av.company_id as company_id,
                     count(avl.*) as nbr,
-                    av.type as type,
+                    av.voucher_type as type,
                     av.state,
                     av.pay_now,
                     av.date_due as date_due,
@@ -95,7 +95,7 @@ class sale_receipt_report(osv.osv):
                 left join account_voucher as av on (av.id=avl.voucher_id)
                 left join res_partner as rp ON (rp.id=av.partner_id)
                 left join account_journal as aj ON (aj.id=av.journal_id)
-                where av.type='sale' and aj.type in ('sale','sale_refund')
+                where av.voucher_type='sale' and aj.type in ('sale','sale_refund')
                 group by
                     av.date,
                     av.id,
@@ -104,7 +104,7 @@ class sale_receipt_report(osv.osv):
                     av.journal_id,
                     rp.user_id,
                     av.company_id,
-                    av.type,
+                    av.voucher_type,
                     av.state,
                     av.date_due,
                     av.account_id,

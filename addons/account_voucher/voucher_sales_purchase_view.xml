@@ -43,16 +43,6 @@
             </field>
         </record>
 
-        <record id="act_pay_voucher" model="ir.actions.act_window">
-            <field name="name">Customer Payments</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'default_type':'receipt', 'type':'receipt', 'partner_id': partner_id, 'default_reference':reference}</field>
-            <field name="view_id" ref="view_vendor_receipt_form"/>
-            <field name="target">current</field>
-        </record>
-
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
@@ -60,7 +50,6 @@
                 <form string="Sales Receipt">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Validate Payment" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -70,7 +59,7 @@
                     <h1><label for="number" string="Sales Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
                     <group>
                         <group>
-                            <field name="type" invisible="True"/>
+                            <field name="voucher_type" invisible="True"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="account_id"
@@ -81,32 +70,18 @@
                                  attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
+                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" groups="account.group_account_user"/>
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
-                            <field name="paid_amount_in_company_currency" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Sales Information">
-                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
-                                <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income')]" widget="selection"/>
-                                    <field name="name"/>
-                                    <field name="amount" sum="Total"/>
-                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                                </tree>
-                            </field>
+                            <field name="line_ids"/>
 			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="tax_id" 
-                                        on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
-                                        widget="selection" nolabel="1"
-					placeholder="Tax"
-                                        domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
                                         <label for="amount"/>
@@ -119,29 +94,9 @@
 			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
-                            <field name="move_ids" readonly="1">
-                               <tree string="Journal Items">
-                                   <field name="move_id"/>
-                                   <field name="ref"/>
-                                   <field name="date"/>
-                                   <field name="statement_id"/>
-                                   <field name="partner_id"/>
-                                   <field name="account_id"/>
-                                   <field name="name"/>
-                                   <field name="debit"/>
-                                   <field name="credit"/>
-                                   <field name="reconcile_id"/>
-                               </tree>
-                            </field>
+                            <field name="move_id" readonly="1"/>
                         </page>
                     </notebook>
-                    <group col="4" invisible="1">
-                                    <field name="is_multi_currency" invisible="1"/>
-                                    <field name="currency_help_label" invisible="1"/>
-                                    <field name="payment_rate" invisible="1"/>
-                                    <field name="payment_rate_currency_id"  invisible="1"/>
-                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
-                    </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -156,8 +111,8 @@
             <field name="name">Sales Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
-            <field name="context">{'default_type': 'sale', 'type': 'sale'}</field>
+            <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('voucher_type','=','sale')]</field>
+            <field name="context">{'default_voucher_type': 'sale', 'voucher_type': 'sale'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
@@ -188,15 +143,6 @@
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
-        <record id="act_pay_bills" model="ir.actions.act_window">
-            <field name="name">Bill Payment</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'default_type':'payment', 'type':'payment', 'default_partner_id': partner_id, 'partner_id': partner_id, 'default_reference':reference}</field>
-            <field name="view_id" ref="view_vendor_payment_form"/>
-            <field name="target">current</field>
-        </record>
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
@@ -204,7 +150,6 @@
                 <form string="Purchase Voucher">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -214,7 +159,7 @@
                     <h1><label for="number" string="Purchase Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
 
                     <field name="pay_now" invisible="1"/>
-                    <field name="type" invisible="True"/>
+                    <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
@@ -231,32 +176,15 @@
                             <field name="journal_id"
                                 domain="[('type','in',['purchase','purchase_refund'])]"
                                 widget="selection"
-                                on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
                                 groups="account.group_account_user"/>
-                            <field name="paid_amount_in_company_currency" invisible="1"/>
-                            <field name="currency_help_label" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Bill Information">
-                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
-                                <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','expense')]"/>
-                                    <field name="name"/>
-                                    <field name="amount"/>
-                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                                </tree>
-                            </field>
+                            <field name="line_ids"/>
                             <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="tax_id" 
-                                        on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
-                                        widget="selection" nolabel="1"
-					placeholder="Tax"
-
-                                        domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
-                                        />
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
                                         <label for="amount"/>
@@ -272,20 +200,7 @@
                             <group col="4">
                                 <field name="date"/>
                             </group>
-                            <field name="move_ids" readonly="1">
-                               <tree string="Journal Items">
-                                   <field name="move_id"/>
-                                   <field name="ref"/>
-                                   <field name="date"/>
-                                   <field name="statement_id"/>
-                                   <field name="partner_id"/>
-                                   <field name="account_id"/>
-                                   <field name="name"/>
-                                   <field name="debit"/>
-                                   <field name="credit"/>
-                                   <field name="reconcile_id"/>
-                               </tree>
-                            </field>
+                            <field name="move_id" readonly="1"/>
                         </page>
                     </notebook>
                     </sheet>
