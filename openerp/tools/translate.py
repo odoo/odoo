@@ -195,26 +195,31 @@ class GettextAlias(object):
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
         # self.env.lang, self.localcontext.get('lang')
-        if 'context' in frame.f_locals:
-            return frame.f_locals['context'].get('lang')
-        kwargs = frame.f_locals.get('kwargs', {})
-        if 'context' in kwargs:
-            return kwargs['context'].get('lang')
-        s = frame.f_locals.get('self')
-        if hasattr(s, 'env'):
-            return s.env.lang
-        if hasattr(s, 'localcontext'):
-            return s.localcontext.get('lang')
-        # Last resort: attempt to guess the language of the user
-        # Pitfall: some operations are performed in sudo mode, and we
-        #          don't know the originial uid, so the language may
-        #          be wrong when the admin language differs.
-        pool = getattr(s, 'pool', None)
-        (cr, dummy) = self._get_cr(frame, allow_create=False)
-        uid = self._get_uid(frame)
-        if pool and cr and uid:
-            return pool['res.users'].context_get(cr, uid)['lang']
-        return None
+        lang = None
+        if frame.f_locals.get('context'):
+            lang = frame.f_locals['context'].get('lang')
+        if not lang:
+            kwargs = frame.f_locals.get('kwargs', {})
+            if kwargs.get('context'):
+                lang = kwargs['context'].get('lang')
+        if not lang:
+            s = frame.f_locals.get('self')
+            if hasattr(s, 'env'):
+                lang = s.env.lang
+            if not lang:
+                if hasattr(s, 'localcontext'):
+                    lang = s.localcontext.get('lang')
+            if not lang:
+                # Last resort: attempt to guess the language of the user
+                # Pitfall: some operations are performed in sudo mode, and we
+                #          don't know the originial uid, so the language may
+                #          be wrong when the admin language differs.
+                pool = getattr(s, 'pool', None)
+                (cr, dummy) = self._get_cr(frame, allow_create=False)
+                uid = self._get_uid(frame)
+                if pool and cr and uid:
+                    lang = pool['res.users'].context_get(cr, uid)['lang']
+        return lang
 
     def __call__(self, source):
         res = source
