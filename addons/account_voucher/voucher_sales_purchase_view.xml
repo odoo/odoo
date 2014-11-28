@@ -83,15 +83,15 @@
 			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="tax_amount" nolabel="1"/>
-                                    <div class="oe_subtotal_footer_separator">
-                                        <label for="amount"/>
+                                    <div>
+                                        <label for="tax_amount"/>
                                         <button type="object" class="oe_link oe_edit_only"
-                                            name="compute_tax" string="(update)"
-                                            attrs="{'invisible': [('state','!=','draft')]}"/>
-			                        </div>
-                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
-                                </group>                                    
+                                                name="compute_tax" string="(update)"
+                                                attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </div>
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <field name="amount" widget="monetary"/>
+                                </group>              
 			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
@@ -186,14 +186,14 @@
                             <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="tax_amount" nolabel="1"/>
-                                    <div class="oe_subtotal_footer_separator">
-                                        <label for="amount"/>
+                                    <div>
+                                        <label for="tax_amount"/>
                                         <button type="object" class="oe_link oe_edit_only"
-                                            name="compute_tax" string="(update)"
-                                            attrs="{'invisible': [('state','!=','draft')]}"/>
-			            </div>
-                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
+                                                name="compute_tax" string="(update)"
+                                                attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </div>
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <field name="amount" widget="monetary"/>
                                 </group>
                             </group>
                         </page>

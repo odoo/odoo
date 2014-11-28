@@ -420,12 +420,8 @@ class account_voucher_line(models.Model):
     @api.one
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')
     def _compute_subtotal(self):
-        #TODO deal with taxes
-        #taxes = self.invoice_line_tax_id.compute_all(self.price_unit, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-        #self.price_subtotal = taxes['total']
-        self.price_subtotal = self.price_unit * self.quantity
-        if self.voucher_id:
-            self.price_subtotal = self.voucher_id.currency_id.round(self.price_subtotal)
+        taxes = self.tax_ids.compute_all(self.price_unit, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
+        self.price_subtotal = taxes['total']
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10,
