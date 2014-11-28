@@ -17,6 +17,7 @@
                         <group>
                             <field name="field_parent"/>
                             <field name="inherit_id"/>
+                            <field name="mode" attrs="{'invisible':[('inherit_id', '=', False)]}"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
                             <field name="active"/>
