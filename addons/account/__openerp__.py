@@ -83,7 +83,6 @@
         'views/account.xml',
     ],
     'qweb' : [
-        "static/src/xml/account_move_line_quickadd.xml",
         "static/src/xml/account_reconciliation.xml",
     ],
     'demo': [
