@@ -98,10 +98,8 @@ class account_payment_term_line(models.Model):
 class account_account_type(models.Model):
     _name = "account.account.type"
     _description = "Account Type"
-    _order = "code"
 
     name = fields.Char(string='Account Type', required=True, translate=True)
-    code = fields.Char(string='Code', size=32, required=True, index=True)
     close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
         string='Deferral Method', required=True, default='none')
     report_type = fields.Selection([
@@ -427,8 +425,7 @@ class account_journal(models.Model):
         " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
         " Select 'General' for miscellaneous operations journals."\
         " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
-    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Type Controls',
-        domain=[('code', '!=', 'view'), ('code', '!=', 'closed')])
+    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Type Controls')
     account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Account',
         domain=[('deprecated', '=', False)])
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',

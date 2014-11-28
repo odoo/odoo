@@ -665,7 +665,7 @@
             <field name="model">account.account.type</field>
             <field name="arch" type="xml">
                 <search string="Account Type">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Type"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Account Type"/>
                 </search>
             </field>
         </record>
@@ -675,7 +675,7 @@
             <field name="arch" type="xml">
                 <tree string="Account Type">
                     <field name="name"/>
-                    <field name="code"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -687,7 +687,6 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="code"/>
                             <field name="type"/>
                         </group>
                         <group>
