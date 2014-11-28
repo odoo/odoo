@@ -195,7 +195,6 @@ class account_voucher(models.Model):
         res = {}
         if not partner_id:
             return res
-        journal_pool = self.pool.get()
         if pay_now == 'pay_later':
             partner = self.env['res.partner'].browse(partner_id)
             journal = self.env['account.journal'].browse(journal_id)
@@ -446,4 +445,4 @@ class account_voucher_line(models.Model):
     account_id = fields.Many2one('account.account','Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
-    tax_ids = fields.Many2many('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}, domain=[('price_include','=', False)], help="Only for tax excluded from price")
+    tax_ids = fields.Many2many('account.tax', string='Tax', domain=[('price_include','=', False)], help="Only for tax excluded from price")

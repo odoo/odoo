@@ -100,7 +100,7 @@ class TestSale(TestMail):
             'journal_id': journal_id,
             'partner_id': partner_id,
             'date': date,
-            'type': 'receipt',
+            'voucher_type': 'sale',
         })
         assert voucher_id,"Voucher will not created."
         voucher = voucher_obj.browse(cr, uid, voucher_id)

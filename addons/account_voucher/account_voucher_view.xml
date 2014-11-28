@@ -26,11 +26,12 @@
                         <field name="product_id"/>
                         <field name="name"/>
                         <field name="account_id"/>
-                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', voucher_id.company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
                         <field name="quantity"/>
                         <field name="price_unit"/>
                         <field name="tax_ids"/>
                         <field name="price_subtotal"/>
+                        <field name="company_id" invisible="1"/>
                     </group>
                 </form>
             </field>
