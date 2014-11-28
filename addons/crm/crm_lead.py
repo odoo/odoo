@@ -201,6 +201,12 @@ class crm_lead(format_address, osv.osv):
             opp_id: Event.search_count(cr,uid, [('opportunity_id', '=', opp_id)], context=context)
             for opp_id in ids
         }
+    def _calls_count(self, cr, uid, ids, field_name, arg, context=None):
+        phonecall_obj = self.pool.get('crm.phonecall')
+        return {
+            opp_id: phonecall_obj.search_count(cr, uid, [('opportunity_id', '=', opp_id)], context=context)
+            for opp_id in ids
+        }
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
@@ -272,7 +278,8 @@ class crm_lead(format_address, osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
-        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange')
+        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange'),
+        'calls_count': fields.function(_calls_count, string='# Calls', type='integer'),
     }
 
     _defaults = {
