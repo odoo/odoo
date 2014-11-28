@@ -23,7 +23,6 @@ from openerp.osv import fields, osv
 import time
 import datetime
 from openerp import tools
-from openerp.osv.orm import except_orm
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta

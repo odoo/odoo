@@ -89,6 +89,9 @@ def xmlrpc_handle_exception_int(e):
     elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.MissingError):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
@@ -120,8 +123,10 @@ def xmlrpc_handle_exception_string(e):
     if isinstance(e, openerp.exceptions.UserError):
         fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    if isinstance(e, openerp.exceptions.RedirectWarning):
+    elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+    elif isinstance(e, openerp.exceptions.MissingError):
+        fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')

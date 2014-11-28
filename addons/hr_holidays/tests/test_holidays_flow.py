@@ -24,8 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
-from openerp.exceptions import UserError, ValidationError
+from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger
 
 class TestHolidaysFlow(TestHrHolidaysBase):

@@ -532,6 +532,8 @@ def serialize_exception(e):
         tmp["exception_type"] = "warning"
     elif isinstance(e, openerp.exceptions.AccessError):
         tmp["exception_type"] = "access_error"
+    elif isinstance(e, openerp.exceptions.MissingError):
+        tmp["exception_type"] = "missing_error"
     elif isinstance(e, openerp.exceptions.AccessDenied):
         tmp["exception_type"] = "access_denied"
     return tmp
