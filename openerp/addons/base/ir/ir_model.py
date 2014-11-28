@@ -30,7 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import models, tools, api
 from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
-from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS, except_orm
+from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS
 from openerp.exceptions import UserError
 from openerp.tools import config
 from openerp.tools.safe_eval import safe_eval as eval

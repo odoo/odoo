@@ -321,6 +321,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except openerp.exceptions.AccessError:
         raise
+    except openerp.exceptions.MissingError:
+        raise
     except Exception, e:
         import sys
         exc_info = sys.exc_info()

@@ -5161,7 +5161,7 @@ class BaseModel(object):
         """
         if len(self) == 1:
             return self
-        raise UserError("ValueError", "Expected singleton: %s" % self)
+        raise ValueError("Expected singleton: %s" % self)
 
     def with_env(self, env):
         """ Returns a new version of this recordset attached to the provided

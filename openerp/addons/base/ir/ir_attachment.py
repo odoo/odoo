@@ -30,7 +30,6 @@ from openerp.tools.translate import _
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import except_orm
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
 
