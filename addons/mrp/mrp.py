@@ -21,13 +21,12 @@
 
 import time
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields, osv, orm
+from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 
 class mrp_property_group(osv.osv):
@@ -479,7 +478,7 @@ class mrp_production(osv.osv):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
             self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
+        except (AccessError, ValueError):
             location_id = False
         return location_id
 
@@ -487,7 +486,7 @@ class mrp_production(osv.osv):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
             self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
+        except (AccessError, ValueError):
             location_id = False
         return location_id
 

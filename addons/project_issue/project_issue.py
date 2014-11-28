@@ -31,7 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 
 class project_issue_version(osv.Model):
@@ -437,7 +437,7 @@ class project_issue(osv.Model):
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
-        except (orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except (AccessError):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 

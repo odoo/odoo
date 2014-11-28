@@ -690,6 +690,7 @@ class product_template(osv.osv):
                 try:
                     with cr.savepoint():
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
+                #We catch all kind of exception to be sure that the operation doesn't fail.
                 except (psycopg2.Error, except_orm):
                     product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
                     pass

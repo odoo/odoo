@@ -21,7 +21,6 @@
 
 from openerp.addons.project.tests.test_project_base import TestProjectBase
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
@@ -160,7 +159,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: portal user should see the followed tasks of a portal project')
 
         # Do: Donovan reads project -> ko (public ko portal)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of a portal project')
@@ -186,13 +185,13 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
 
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: no project task visible + assigned
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: portal user should not see tasks of an employees project, even if assigned')
 
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of an employees project')
@@ -204,7 +203,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.invalidate_cache(cr, uid)
 
         # Do: Alfred reads project -> ko (employee ko followers)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_projectuser_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_4_id])
@@ -215,7 +214,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, [pigs_id], ['state'])
 
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
         test_task_ids = set([self.task_5_id])
@@ -223,7 +222,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: portal user should not see tasks of a not-followed followers project, only assigned')
 
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: public user should not see tasks of a followers project')
@@ -249,4 +248,4 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: employee user should not see followed + assigned tasks of a follower project')
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_public_id, [pigs_id], ['state'])
