@@ -148,7 +148,7 @@ def pg_varchar(size=0):
     """
     if size:
         if not isinstance(size, int):
-            raise TypeError("VARCHAR parameter should be an int, got %s"
+            raise ValueError("VARCHAR parameter should be an int, got %s"
                             % type(size))
         if size > 0:
             return 'VARCHAR(%d)' % size
@@ -5370,18 +5370,18 @@ class BaseModel(object):
         elif isinstance(item, basestring):
             return item in self._fields
         else:
-            raise UserError("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
+            raise TypeError("Mixing apples and oranges: %s in %s" % (item, self))
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets. """
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s + %s" % (self, other))
         return self.browse(self._ids + other._ids)
 
     def __sub__(self, other):
         """ Return the recordset of all the records in `self` that are not in `other`. """
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s - %s" % (self, other))
         other_ids = set(other._ids)
         return self.browse([id for id in self._ids if id not in other_ids])
 
@@ -5390,7 +5390,7 @@ class BaseModel(object):
             Note that recordset order is not preserved.
         """
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s & %s" % (self, other))
         return self.browse(set(self._ids) & set(other._ids))
 
     def __or__(self, other):
@@ -5398,7 +5398,7 @@ class BaseModel(object):
             Note that recordset order is not preserved.
         """
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s | %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s | %s" % (self, other))
         return self.browse(set(self._ids) | set(other._ids))
 
     def __eq__(self, other):
@@ -5414,22 +5414,22 @@ class BaseModel(object):
 
     def __lt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s < %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s < %s" % (self, other))
         return set(self._ids) < set(other._ids)
 
     def __le__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s <= %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s <= %s" % (self, other))
         return set(self._ids) <= set(other._ids)
 
     def __gt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s > %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s > %s" % (self, other))
         return set(self._ids) > set(other._ids)
 
     def __ge__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
-            raise UserError("ValueError", "Mixing apples and oranges: %s >= %s" % (self, other))
+            raise TypeError("Mixing apples and oranges: %s >= %s" % (self, other))
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):

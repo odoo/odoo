@@ -9,8 +9,6 @@ import time
 
 import openerp
 from openerp.tools.translate import translate
-from openerp.osv.orm import except_orm
-from contextlib import contextmanager
 from openerp.exceptions import UserError
 
 import security

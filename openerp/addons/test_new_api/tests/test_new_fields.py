@@ -2,10 +2,8 @@
 # test cases for new-style fields
 #
 from datetime import date, datetime
-from collections import defaultdict
 
 from openerp.tests import common
-from openerp.exceptions import except_orm
 
 
 class TestNewFields(common.TransactionCase):
