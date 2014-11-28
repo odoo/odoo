@@ -31,7 +31,7 @@ from openerp import models, tools, api
 from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 from openerp.tools import config
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -968,7 +968,7 @@ class ir_model_data(osv.osv):
         if check_right:
             return model, res_id
         if raise_on_access_error:
-            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+            raise AccessError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
         return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):

@@ -23,7 +23,7 @@ from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
@@ -63,12 +63,12 @@ class stock_change_product_qty(osv.osv_memory):
             if not location_id:
                 try:
                     model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-                except (orm.except_orm, ValueError):
+                except (AccessError):
                     pass
             if location_id:
                 try:
                     self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-                except (orm.except_orm, ValueError):
+                except (AccessError):
                    pass
             res['location_id'] = location_id
         return res
