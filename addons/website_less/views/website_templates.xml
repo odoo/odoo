@@ -1,0 +1,27 @@
+<openerp>
+    <data>
+
+<template id="website_less.assets_editor" inherit_id="website.assets_editor" name="Editor assets for Less">
+    <xpath expr='//link[@href="/website/static/src/css/editor.css"]' position="replace">
+        <link rel='stylesheet' href='/website_less/static/src/css/editor.css'/>
+    </xpath>
+
+    <xpath expr='//link[@href="/website/static/src/css/snippets.css"]' position="replace">
+        <link rel='stylesheet' href='/website_less/static/src/css/snippets.css'/>
+    </xpath>
+
+    <xpath expr='//script[@src="/website/static/src/js/website.editor.js"]' position="after">
+        <script type="text/javascript" src="/website_less/static/src/js/website.editor.js"></script>
+    </xpath>
+
+    <xpath expr='//script[@src="/website/static/src/js/website.snippets.editor.js"]' position="replace">
+        <script type="text/javascript" src="/website_less/static/src/js/website.snippets.editor.js"></script>
+    </xpath>
+
+    <xpath expr='//link[last()]' position="after">
+        <script type="text/javascript" src="/website_less/static/src/js/website.theme.js"></script>
+    </xpath>
+</template>
+
+    </data>
+</openerp>
