@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_register_payment" model="ir.ui.view">
+            <field name="name">account.register.payment.form</field>
+            <field name="model">account.register.payment</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment" version="7">
+                    <group>
+                         <group>
+                                <field name="invoice_id" invisible="1"/>
+                                <field name="partner_id" invisible="1"/>
+                                <field name="payment_amount"/>
+                                <field name="journal_id" widget='selection'/>
+                         </group>
+
+                         <group>
+                                <field name="date_paid"/>
+                                <field name="reference"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                         </group>
+                    </group>
+                    <footer>
+                        <button string='Pay' name="pay" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_register_payment" model="ir.actions.act_window">
+            <field name="name">Register Payment</field>
+            <field name="res_model">account.register.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_register_payment"/>
+           <field name="target">new</field>
+        </record>
+
+
+    </data>
+</openerp>

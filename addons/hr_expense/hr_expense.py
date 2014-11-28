@@ -462,8 +462,8 @@ class hr_expense_line(osv.osv):
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_journal_id=False, context=None):
-        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_journal_id=writeoff_journal_id, context=context)
+    def reconcile(self, cr, uid, ids, writeoff_acc_id=False, writeoff_journal_id=False, context=None):
+        res = super(account_move_line, self).reconcile(cr, uid, ids, writeoff_acc_id=writeoff_acc_id, writeoff_journal_id=writeoff_journal_id, context=context)
         #when making a full reconciliation of account move lines 'ids', we may need to recompute the state of some hr.expense
         account_move_ids = [aml.move_id.id for aml in self.browse(cr, uid, ids, context=context)]
         expense_obj = self.pool.get('hr.expense.expense')

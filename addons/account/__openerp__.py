@@ -54,6 +54,7 @@
         'wizard/account_report_aged_partner_balance_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_financial_report_view.xml',
+        'wizard/account_register_payment_view.xml',
         'wizard/pos_box.xml',
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',
