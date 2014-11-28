@@ -61,7 +61,7 @@ from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .api import Environment
-from .exceptions import except_orm, AccessError, MissingError, ValidationError, UserError
+from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
 from .tools import lazy_property, ormcache
