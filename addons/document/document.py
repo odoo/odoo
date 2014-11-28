@@ -34,8 +34,7 @@ import openerp
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.osv.orm import except_orm
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -291,7 +290,7 @@ class document_directory(osv.osv):
             try:
                 self.check_access_rule(cr, uid, ids, pperms[0], context=context)
                 res |= pperms[1]
-            except except_orm:
+            except AccessError:
                 pass
         return res
 

@@ -3447,8 +3447,7 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise UserError(_('Access Denied'),
-                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
+                raise AccessError(_('Access Denied: For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
