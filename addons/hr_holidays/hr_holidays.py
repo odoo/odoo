@@ -29,7 +29,7 @@ import math
 import time
 from operator import attrgetter
 
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -335,12 +335,12 @@ class hr_holidays(osv.osv):
             context = {}
         context = dict(context, mail_create_nolog=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
-            raise UserError(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+            raise AccessError(_('Access Denied: You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         return super(hr_holidays, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
-            raise UserError(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
+            raise AccessError(_('Access Denied: You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
     def holidays_reset(self, cr, uid, ids, context=None):
