@@ -67,6 +67,14 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+# don't trigger debugger for those exceptions, they carry user-facing warnings
+# and indications, they're not necessarily indicative of anything being
+# *broken*
+NO_POSTMORTEM = (openerp.osv.orm.except_orm,
+                 openerp.exceptions.AccessError,
+                 openerp.exceptions.AccessDenied,
+                 openerp.exceptions.Warning,
+                 openerp.exceptions.RedirectWarning)
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -110,9 +118,7 @@ def dispatch_rpc(service_name, method, params):
                 openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
-            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
-            openerp.exceptions.RedirectWarning):
+    except NO_POSTMORTEM:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(openerp.tools.exception_to_unicode(e))
@@ -256,6 +262,9 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
+        if not isinstance(exception, NO_POSTMORTEM):
+            openerp.tools.debugger.post_mortem(
+                openerp.tools.config, sys.exc_info())
         raise
 
     def _call_function(self, *args, **kwargs):
