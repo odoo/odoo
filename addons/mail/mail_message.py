@@ -26,11 +26,11 @@ from openerp import tools
 from email.header import decode_header
 from email.utils import formataddr
 from openerp import SUPERUSER_ID, api
-from openerp.osv import osv, orm, fields
+from openerp.osv import osv, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -771,9 +771,9 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
-        raise UserError(_('Access Denied'),
-                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
+        raise AccessError(_('Access Denied: The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                              (self._description, operation))
+
 
     def _get_record_name(self, cr, uid, values, context=None):
         """ Return the related document name, using name_get. It is done using

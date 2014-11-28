@@ -30,7 +30,7 @@ from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
@@ -995,7 +995,7 @@ class crm_lead(format_address, osv.osv):
                     self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
                 elif lead.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
-        except (orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except (AccessError):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 
