@@ -454,7 +454,7 @@ class account_move_line(models.Model):
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
         if currency.is_zero(total):
-            res = unmerge.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
+            res = unmerge.reconcile(type='auto', writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.

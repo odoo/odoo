@@ -909,7 +909,7 @@
                             </group>
                             <group string="Invoices">
                                   <field name="account_collected_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('user_type.type', '!=','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_collected_id" domain="[('type', '!=','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -919,7 +919,7 @@
                             </group>
                             <group string="Refunds">
                                   <field name="account_paid_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('user_type.type', '!=', 'view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_paid_id" domain="[('type', '!=', 'view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
