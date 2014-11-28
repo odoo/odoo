@@ -550,11 +550,11 @@
         <!-- because of the needaction badge, groups needs to be specified -->
         <menuitem id="menu_bank_reconcile_bank_statements" name="Reconcile" parent="account.periodical_processing_bank_statements" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
 
-        <record id="view_account_statement_operation_template_form" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.form</field>
+        <record id="view_account_operation_template_form" model="ir.ui.view">
+            <field name="name">account.operation.template.form</field>
             <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
-                <form string="Statement Operation Templates">
+                <form string="Operation Templates">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -562,39 +562,63 @@
                                 <field name="name"/>
                             </h1>
                         </div>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('user_type.type', 'not in', ['view', 'consolidation'])]"/>
+                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="tax_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
                             </group>
                             <group>
                                 <field name="label"/>
                                 <label for="amount"/>
                                 <div>
                                     <field name="amount" class="oe_inline" />
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="journal_id" domain="[('company_id', '=', company_id)]"/>
+                            </group>
+                        </group>
+                        <div class="oe_edit_only">
+                            <label for="has_second_line" string="Second line"/>
+                            <field name="has_second_line" />
+                        </div>
+                        <group attrs="{'invisible':[('has_second_line','!=',True)]}">
+                            <group>
+                                <field name="second_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_amount_type"/>
+                                <field name="second_tax_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                            </group>
+                            <group>
+                                <field name="second_label"/>
+                                <label for="second_amount"/>
+                                <div>
+                                    <field name="second_amount" class="oe_inline" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
+                                </div>
+                                <field name="second_journal_id" domain="[('company_id', '=', company_id)]"/>
                             </group>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_tree" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.tree</field>
+        <record id="view_account_operation_template_tree" model="ir.ui.view">
+            <field name="name">account.operation.template.tree</field>
             <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <tree string="Bank Reconciliation Move Presets">
+                    <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="amount_type"/>
                 </tree>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_search" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.search</field>
+        <record id="view_account_operation_template_search" model="ir.ui.view">
+            <field name="name">account.operation.template.search</field>
             <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
@@ -603,21 +627,22 @@
                 </search>
             </field>
         </record>
-        <record id="action_account_statement_operation_template" model="ir.actions.act_window">
-            <field name="name">Statement Operations</field>
+        <record id="action_account_operation_template" model="ir.actions.act_window">
+            <field name="name">Operation Templates</field>
             <field name="res_model">account.operation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_statement_operation_template_search"/>
+            <field name="search_view_id" ref="view_account_operation_template_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a statement operation template.
+                Click to create an operation template.
               </p><p>
                 Those can be used to quickly create a move line when reconciling
-                your bank statements.
+                a bank statement or an account.
               </p>
             </field>
         </record>
+
 
         <menuitem
             id="account_template_folder"
@@ -631,7 +656,8 @@
             parent="account_account_menu"
             groups="account.group_account_manager"
             sequence="4"/>
-        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="account_template_folder" name="Statement Operation Templates" sequence="22"/>
+
+        <menuitem action="action_account_operation_template" id="menu_action_account_operation_template" parent="account_template_folder" name="Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">

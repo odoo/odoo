@@ -82,7 +82,7 @@ openerp.account = function (instance) {
                         relation: "account.account",
                         string: _t("Account"),
                         type: "many2one",
-                        domain: [['type','not in',['view', 'closed', 'consolidation']]],
+                        domain: [['deprecated', '=', false], ['type','!=','consolidation']],
                     },
                 },
                 label: {
@@ -110,7 +110,7 @@ openerp.account = function (instance) {
                         relation: "account.tax",
                         string: _t("Tax"),
                         type: "many2one",
-                        domain: [['type_tax_use','in',['purchase', 'all']], ['parent_id', '=', false]],
+                        domain: [['type_tax_use','!=','as_child']],
                     },
                 },
                 amount: {
@@ -139,6 +139,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
+                        domain: [['state','not in',['close','cancelled']]],
                     },
                 },
             };
@@ -2108,7 +2109,6 @@ openerp.account = function (instance) {
                         relation: "account.journal",
                         string: _t("Journal"),
                         type: "many2one",
-                        domain: [['type','not in',['view', 'closed', 'consolidation']]],
                     },
                 }
             }, this.create_form_fields);
