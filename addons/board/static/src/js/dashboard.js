@@ -12,7 +12,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         'click .oe_dashboard_link_change_layout': 'on_change_layout',
         'click h2.oe_header span.oe_header_txt': function (ev) {
             if(ev.target === ev.currentTarget)
-                self.on_header_string($(ev.target).parent());
+                this.on_header_string($(ev.target).parent());
         },
         'click .oe_dashboard_column .oe_fold': 'on_fold_action',
         'click .oe_dashboard_column .oe_close': 'on_close_action',
