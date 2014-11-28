@@ -534,6 +534,7 @@ class hr_analytic_timesheet(osv.Model):
                         vals_line['amount'] = amount_unit['value']['amount']
                     ctx = copy.deepcopy(context)
                     #TODO: To check, pass __last_update in context, currently it alsywas fails, that's why commented
+                    #It always fails because currently our server returns __last_update value in standard datetime format without Z part
                     #ctx['__last_update'] = {("%s,%s"% (self._name,id)): record.get('__last_update')}
                     print "\n\ncontext in write ::: ", context
                     self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
