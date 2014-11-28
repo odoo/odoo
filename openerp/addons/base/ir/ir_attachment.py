@@ -32,20 +32,56 @@ from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
 from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
+from openerp.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
+
+
+# optional python-magic import (https://github.com/ahupp/python-magic)
+try:
+    import magic
+except ImportError:
+    magic = None
+
+def guess_mimetype(bin_data):
+    if magic:
+        # if binary not identified or error, will return 'application/octet-stream'
+        return magic.from_buffer(bin_data, mime=True)
+    else:
+        # else, guess the type using the magic number of file hex signature (like magic, but more limited)
+        # see http://www.filesignatures.net/ for file signatures
+        mapping = {
+            # pdf
+            'application/pdf' : ['%PDF'],
+             # jpg, jpeg, png, gif
+            'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
+            'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
+            'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
+            # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
+            'application/zip' : ['PK'],
+            # doc, xls
+            'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
+            'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
+        }
+        for mimetype in mapping.keys():
+            for signature in mapping[mimetype]:
+                if bin_data.startswith(signature):
+                    return mimetype
+    return 'application/octet-stream'
+
+
 
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.
 
     External attachment storage
     ---------------------------
-    
+
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
     implement other storage engines, shuch methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
-    
+
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
     """
@@ -62,7 +98,7 @@ class ir_attachment(osv.osv):
                 if res_name:
                     field = self._columns.get('res_name',False)
                     if field and len(res_name) > field.size:
-                        res_name = res_name[:30] + '...' 
+                        res_name = res_name[:30] + '...'
                 data[attachment.id] = res_name or False
             else:
                 data[attachment.id] = False
@@ -98,9 +134,7 @@ class ir_attachment(osv.osv):
         path = path.strip('/\\')
         return os.path.join(self._filestore(cr, uid), path)
 
-    def _get_path(self, cr, uid, bin_data):
-        sha = hashlib.sha1(bin_data).hexdigest()
-
+    def _get_path(self, cr, uid, bin_data, sha):
         # retro compatibility
         fname = sha[:3] + '/' + sha
         full_path = self._full_path(cr, uid, fname)
@@ -128,9 +162,9 @@ class ir_attachment(osv.osv):
             _logger.exception("_read_file reading %s", full_path)
         return r
 
-    def _file_write(self, cr, uid, value):
+    def _file_write(self, cr, uid, value, checksum):
         bin_value = value.decode('base64')
-        fname, full_path = self._get_path(cr, uid, bin_value)
+        fname, full_path = self._get_path(cr, uid, bin_value, checksum)
         if not os.path.exists(full_path):
             try:
                 with open(full_path, 'wb') as fp:
@@ -166,25 +200,75 @@ class ir_attachment(osv.osv):
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
         # We dont handle setting data to null
         if not value:
+            # reset computed fields
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'file_size' : 0, 'checksum' : None, 'mimetype' : None, 'index_content' : None}, context=context)
             return True
         if context is None:
             context = {}
-        location = self._storage(cr, uid, context)
-        file_size = len(value.decode('base64'))
+        # browse the attachment and get the file to delete
         attach = self.browse(cr, uid, id, context=context)
         fname_to_delete = attach.store_fname
+        location = self._storage(cr, uid, context)
+        # compute the field depending of datas
+        bin_data = value.decode('base64')
+        mimetype = self._compute_mimetype(bin_data)
+        checksum = self._compute_checksum(bin_data)
+        vals = {
+            'file_size': len(bin_data),
+            'checksum' : checksum,
+            'mimetype' : mimetype,
+            'index_content' : self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, mimetype),
+        }
         if location != 'db':
-            fname = self._file_write(cr, uid, value)
-            # SUPERUSER_ID as probably don't have write access, trigger during create
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'store_fname': fname, 'file_size': file_size, 'db_datas': False}, context=context)
+            # create the file
+            fname = self._file_write(cr, uid, value, checksum)
+            vals.update({
+                'store_fname': fname,
+                'db_datas': False
+            })
         else:
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'db_datas': value, 'file_size': file_size, 'store_fname': False}, context=context)
+            vals.update({
+                'store_fname': False,
+                'db_datas': value
+            })
+        # SUPERUSER_ID as probably don't have write access, trigger during create
+        super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], vals, context=context)
 
         # After de-referencing the file in the database, check whether we need
         # to garbage-collect it on the filesystem
         if fname_to_delete:
             self._file_delete(cr, uid, fname_to_delete)
         return True
+
+    def _compute_checksum(self, bin_data):
+        """ compute the checksum for the given datas
+            :param bin_data : datas in its binary form
+        """
+        if bin_data:
+            return hashlib.sha1(bin_data).hexdigest()
+        return False
+
+    def _compute_mimetype(self, bin_data):
+        """ compute the mimetype of the given datas
+            :param bin_data : binary data
+            :return mime : string indicating the mimetype, or application/octet-stream by default
+        """
+        return guess_mimetype(bin_data)
+
+    def _index(self, cr, uid, bin_data, datas_fname, file_type):
+        """ compute the index content of the given filename, or binary data.
+            This is a python implementation of the unix command 'strings'.
+            :param bin_data : datas in binary form
+            :return index_content : string containing all the printable character of the binary data
+        """
+        index_content = False
+        if file_type:
+            index_content = file_type.split('/')[0]
+            if index_content == 'text': # compute index_content only for text type
+                words = re.findall("[^\x00-\x1F\x7F-\xFF]{4,}", bin_data)
+                index_content = ustr("\n".join(words))
+        return index_content
+
 
     _name = 'ir.attachment'
     _columns = {
@@ -204,12 +288,17 @@ class ir_attachment(osv.osv):
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
         'store_fname': fields.char('Stored Filename'),
         'db_datas': fields.binary('Database Data'),
-        'file_size': fields.integer('File Size'),
+        # computed fields depending on datas
+        'file_size': fields.integer('File Size', readonly=True),
+        'checksum': fields.char("Checksum/SHA1", size=40, select=True, readonly=True),
+        'mimetype': fields.char('Mime Type', readonly=True),
+        'index_content': fields.text('Indexed Content', readonly=True),
     }
 
     _defaults = {
         'type': 'binary',
         'file_size': 0,
+        'mimetype' : False,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
     }
 
@@ -319,8 +408,9 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'write', context=context, values=vals)
-        if 'file_size' in vals:
-            del vals['file_size']
+        # remove computed field depending of datas
+        for field in ['file_size', 'checksum', 'mimetype']:
+            vals.pop(field, False)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -346,9 +436,10 @@ class ir_attachment(osv.osv):
         return res
 
     def create(self, cr, uid, values, context=None):
+        # remove computed field depending of datas
+        for field in ['file_size', 'checksum', 'mimetype']:
+            values.pop(field, False)
         self.check(cr, uid, [], mode='write', context=context, values=values)
-        if 'file_size' in values:
-            del values['file_size']
         return super(ir_attachment, self).create(cr, uid, values, context)
 
     def action_get(self, cr, uid, context=None):
