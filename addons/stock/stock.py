@@ -1289,7 +1289,7 @@ class stock_picking(osv.osv):
                             new_std_price = ((amount_unit * product_avail[product.id])\
                                 + (new_price * qty))/(product_avail[product.id] + qty)
                         # Write the field according to price type field
-                        product_obj.write(cr, SUPERUSER_ID, [product.id],{'standard_price': new_std_price}) # Record the values that were chosen in the wizard, so they can be
+                        product_obj.write(cr, SUPERUSER_ID, [product.id],{'standard_price': new_std_price})
 
                         # Record the values that were chosen in the wizard, so they can be
                         # used for inventory valuation if real-time valuation is enabled.
