@@ -72,7 +72,7 @@
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-if="not title">
-                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-set="title_suffix" t-value="website.name"/><t t-if="website.name=='localhost'"><t t-set="title_suffix" t-value="res_company.name"/></t><t t-esc="title_suffix"/></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-set="title_suffix" t-value="website.name"/><t t-if="(website or res_company).name=='localhost'"><t t-set="title_suffix" t-value="res_company.name"/></t><t t-esc="title_suffix"/></t>
             </t>
 
             <meta name="viewport" content="initial-scale=1"/>
