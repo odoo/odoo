@@ -1,8 +1,8 @@
 .. queue:: backend/series
 
-=======
-Backend
-=======
+=================
+Building a Module
+=================
 
 Start/Stop the Odoo server
 ==========================

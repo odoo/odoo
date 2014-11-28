@@ -1,7 +1,7 @@
 .. highlight:: xml
 
 ===============
-Creating themes
+Building Themes
 ===============
 
 Basic set up

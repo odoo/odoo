@@ -1,7 +1,7 @@
 .. queue:: website/series
 
 ==================
-Building a website
+Building a Website
 ==================
 
 .. warning::
