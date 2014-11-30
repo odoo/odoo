@@ -22,8 +22,7 @@ import pickle
 
 from openerp import tools
 from openerp.osv import osv, fields
-from openerp.osv.orm import except_orm
-from openerp.exceptions import UserError
+from openerp.exceptions import AccessError
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -436,12 +435,11 @@ class ir_values(osv.osv):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise UserError('Error!',
-                                                         'You do not have the permission to perform this operation!!!')
+                                    raise AccessError('Acess Denied: You do not have the permission to perform this operation!!!')
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm:
+            except AccessError:
                 continue
         return sorted(results.values())
 

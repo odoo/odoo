@@ -311,7 +311,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return eval(c, globals_dict, locals_dict)
-    except openerp.osv.orm.except_orm:
+    except openerp.exceptions.except_orm:
         raise
     except openerp.exceptions.Warning:
         raise
