@@ -34,7 +34,7 @@ import openerp
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.exceptions import UserError, AccessError
+from openerp.exceptions import UserError, AccessError, ValidationError
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -334,17 +334,17 @@ class document_directory(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
-            raise UserError(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
-            raise UserError(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         newname = vals.get('name',False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
-                    raise UserError(_('ValidateError'), _('Directory name contains special characters!'))
+                    raise ValidationError(_('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 class document_directory_dctx(osv.osv):

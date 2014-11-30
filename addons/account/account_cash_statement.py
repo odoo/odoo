@@ -26,7 +26,7 @@ from openerp.osv import fields, osv
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, AccessError
 
 class account_cashbox_line(osv.osv):
 
@@ -269,7 +269,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise UserError(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
+                raise AccessError((_('Access denied: You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
                 c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
