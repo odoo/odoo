@@ -223,6 +223,7 @@ class WebsiteForum(http.Controller):
                         question_tag_ids.append((4, tag_ids[0]))
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+                question_tag_ids = {forum.id: question_tag_ids}
         elif tag_version == "select2":
             question_tag_ids = Forum._tag_to_write_vals(cr, uid, [forum.id], post.get('question_tags', ''), context)
 
@@ -403,6 +404,11 @@ class WebsiteForum(http.Controller):
         Tag = request.registry['forum.tag']
         Forum = request.registry['forum.forum']
         tag_version = kwargs.get('tag_type', 'texttext')
+        
+        vals = {
+            'name': kwargs.get('question_name'),
+            'content': kwargs.get('content'),
+        }
         if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
             if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
                 tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
@@ -413,15 +419,10 @@ class WebsiteForum(http.Controller):
                     else:
                         new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
                         question_tags.append(new_tag)
-            tags_val = [(6, 0, question_tags)]
+                vals['tag_ids'] = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            tags_val = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)
+            vals['tag_ids'] = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)[forum.id]
 
-        vals = {
-            'tag_ids': tags_val[forum.id],
-            'name': kwargs.get('question_name'),
-            'content': kwargs.get('content'),
-        }
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
