@@ -254,7 +254,7 @@ class ir_attachment(osv.osv):
             self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
         if require_employee:
             if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
-                raise UserError(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
+                raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,

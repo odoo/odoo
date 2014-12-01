@@ -559,7 +559,7 @@ class ir_model_constraint(Model):
         """ 
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise UserError(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         context = dict(context or {})
 
@@ -620,7 +620,7 @@ class ir_model_relation(Model):
         """ 
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise UserError(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         ids_set = set(ids)
         to_drop_table = []
@@ -1127,7 +1127,7 @@ class ir_model_data(osv.osv):
         ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
 
         if uid != 1 and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise UserError(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         context = dict(context or {})
         context[MODULE_UNINSTALL_FLAG] = True # enable model/field deletion

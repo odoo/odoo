@@ -9,7 +9,7 @@ import time
 
 import openerp
 from openerp.tools.translate import translate
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 import security
 
@@ -125,7 +125,7 @@ def check(f):
                 registry = openerp.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
-                        raise UserError(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
+                        raise ValidationError(_(tr(registry._sql_error[key], 'sql_constraint') or inst[0]))
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)
@@ -145,9 +145,9 @@ def check(f):
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
-                    raise UserError(_('Integrity Error'), msg)
+                    raise ValidationError(msg)
                 else:
-                    raise UserError(_('Integrity Error'), inst[0])
+                    raise ValidationError(inst[0])
 
     return wrapper
 
