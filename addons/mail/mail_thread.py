@@ -475,61 +475,34 @@ class mail_thread(osv.AbstractModel):
 
     def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
 
-        def convert_for_display(value, col_info):
-            if not value and col_info['type'] == 'boolean':
-                return 'False'
-            if not value:
-                return ''
-            if col_info['type'] == 'many2one':
-                return value.name_get()[0][1]
-            if col_info['type'] == 'selection':
-                return dict(col_info['selection'])[value]
-            return value
-
-        def format_message(message_description, tracked_values):
-            message = ''
-            if message_description:
-                message = '<span>%s</span>' % message_description
-            for name, change in tracked_values.items():
-                message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % change.get('col_info')
-                if change.get('old_value'):
-                    message += '%s &rarr; ' % change.get('old_value')
-                message += '%s</div>' % change.get('new_value')
-            return message
-
         if not tracked_fields:
             return True
 
+        tracking_values = []
         track_obj = self.pool.get('mail.tracking.value')
 
         for browse_record in self.browse(cr, uid, ids, context=context):
             initial = initial_values[browse_record.id]
             changes = set()
-            tracked_values = {}
 
-            # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                field = self._fields[col_name]
                 initial_value = initial[col_name]
-                record_value = getattr(browse_record, col_name)
+                new_value = getattr(browse_record, col_name)
 
-                if record_value == initial_value and getattr(field, 'track_visibility', None) == 'always':
-                    tracked_values[col_name] = dict(
-                        col_info=col_info['string'],
-                        new_value=convert_for_display(record_value, col_info),
-                    )
-                elif record_value != initial_value and (record_value or initial_value):  # because browse null != False
-                    if getattr(field, 'track_visibility', None) in ['always', 'onchange']:
-                        tracked_values[col_name] = dict(
-                            col_info=col_info['string'],
-                            old_value=convert_for_display(initial_value, col_info),
-                            new_value=convert_for_display(record_value, col_info),
-                        )
+                if new_value != initial_value and (new_value or initial_value):  # because browse null != False
+                    tracking_values += track_obj.create_tracking_values(cr, uid,  
+                                                                        initial_value,
+                                                                        new_value, 
+                                                                        col_name,
+                                                                        col_info,  
+                                                                        context=context)          
+
                     if col_name in tracked_fields:
                         changes.add(col_name)
 
             if not changes:
                 continue
+
 
             # find subtypes and post messages or log if no subtype found
             subtypes = []
@@ -542,31 +515,19 @@ class mail_thread(osv.AbstractModel):
                     for subtype, method in track_info.items():
                         if method(self, cr, uid, browse_record, context):
                             subtypes.append(subtype)
-
-            # create tracking values
-            tracking_values = track_obj.create_tracking_values(cr, uid, 
-                                                               browse_record, 
-                                                               initial_values, 
-                                                               tracked_fields,  
-                                                               context=context)
-
-            
+          
             msg_ids = []
             if subtypes:
                 subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtypes[0], context=context)
                 if not (subtype_rec and subtype_rec.exists()):
                     _logger.debug('subtype %s not found' % subtypes[0])
                     continue
-                message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
-                msg_ids.append(self.message_post(cr, uid, browse_record.id, 
-                                                 body=message, 
+                msg_ids.append(self.message_post(cr, uid, browse_record.id,
                                                  subtype=subtypes[0], 
                                                  tracking_values=tracking_values,
                                                  context=context))
             else:
-                message = format_message('', tracked_values)
-                msg_ids.append(self.message_post(cr, uid, browse_record.id, 
-                                                 body=message, 
+                msg_ids.append(self.message_post(cr, uid, browse_record.id,
                                                  tracking_values=tracking_values,
                                                  context=context))
 
