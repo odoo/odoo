@@ -670,13 +670,15 @@ class Field(object):
 
     def _description_string(self, env):
         if self.string and env.lang:
-            field_string = env['ir.translation'].get_field_string(self.base_field.model_name)
+            model_name = self.base_field.model_name
+            field_string = env['ir.translation'].get_field_string(model_name, env.lang)
             return field_string.get(self.name) or self.string
         return self.string
 
     def _description_help(self, env):
         if self.help and env.lang:
-            field_help = env['ir.translation'].get_field_help(self.base_field.model_name)
+            model_name = self.base_field.model_name
+            field_help = env['ir.translation'].get_field_help(model_name, env.lang)
             return field_help.get(self.name) or self.help
         return self.help
 

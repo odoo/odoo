@@ -397,26 +397,30 @@ class ir_translation(osv.osv):
 
     @api.model
     @tools.ormcache(skiparg=1)
-    def get_field_string(self, model_name):
-        """ Return the translation of fields strings in the context's language.
+    def get_field_string(self, model_name, lang):
+        """ Return the translation of fields strings in the given language.
         Note that the result contains the available translations only.
 
         :param model_name: the name of a model
+        :param lang: a language code
         :return: the model's fields' strings as a dictionary `{field_name: field_string}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        ir_model_fields = self.env['ir.model.fields'].with_context(lang=lang)
+        fields = ir_model_fields.search([('model', '=', model_name)])
         return {field.name: field.field_description for field in fields}
 
     @api.model
     @tools.ormcache(skiparg=1)
-    def get_field_help(self, model_name):
-        """ Return the translation of fields help in the context's language.
+    def get_field_help(self, model_name, lang):
+        """ Return the translation of fields help in the given language.
         Note that the result contains the available translations only.
 
         :param model_name: the name of a model
+        :param lang: a language code
         :return: the model's fields' help as a dictionary `{field_name: field_help}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        ir_model_fields = self.env['ir.model.fields'].with_context(lang=lang)
+        fields = ir_model_fields.search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
     def create(self, cr, uid, vals, context=None):
