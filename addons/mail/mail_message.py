@@ -65,8 +65,9 @@ class mail_message(osv.Model):
     _rec_name = 'record_name'
 
     _message_read_limit = 30
-    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
-        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
+    _message_read_fields = ['id', 'parent_id', 'model', 'model_desc' 'res_id', 'body',
+        'subject', 'date', 'to_read', 'email_from', 'type', 'vote_user_ids', 'author_id',
+        'attachment_ids', 'partner_ids', 'record_name', 'tracking_value_ids']
     _message_record_name_length = 18
     _message_read_more_limit = 1024
 
@@ -142,6 +143,7 @@ class mail_message(osv.Model):
             ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
+        'model_desc' : fields.char('Related Document Model Description'),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.char('Message Record Name', help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
@@ -163,6 +165,7 @@ class mail_message(osv.Model):
             'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
+        'tracking_value_ids': fields.many2many('mail.tracking.value', string='Tracking values'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -302,13 +305,51 @@ class mail_message(osv.Model):
             :param list messages: list of message, as get_dict result
             :param dict message_tree: {[msg.id]: msg browse record}
         """
+
+        def _get_old_value(tracking_value):
+            if tracking_value['old_value_boolean'] or tracking_value['new_value_boolean']:
+                return tracking_value['old_value_boolean']
+            if tracking_value['old_value_integer'] or tracking_value['new_value_integer']:
+                return tracking_value['old_value_integer']
+            if tracking_value['old_value_float'] or tracking_value['new_value_float']:
+                return tracking_value['old_value_float']
+            if tracking_value['old_value_char'] or tracking_value['new_value_char']:
+                return tracking_value['old_value_char']
+            if tracking_value['old_value_text'] or tracking_value['new_value_text']:
+                return tracking_value['old_value_text']
+            if tracking_value['old_value_datetime'] or tracking_value['new_value_datetime']:
+                return tracking_value['old_value_datetime']
+            if tracking_value['old_value_date'] or tracking_value['new_value_date']:
+                return tracking_value['old_value_datetime']
+            return False;
+            
+
+        def _get_new_value(tracking_value):
+            if tracking_value['old_value_boolean'] or tracking_value['new_value_boolean']:
+                return tracking_value['new_value_boolean']
+            if tracking_value['old_value_integer'] or tracking_value['new_value_integer']:
+                return tracking_value['new_value_integer']
+            if tracking_value['old_value_float'] or tracking_value['new_value_float']:
+                return tracking_value['new_value_float']
+            if tracking_value['old_value_char'] or tracking_value['new_value_char']:
+                return tracking_value['new_value_char']
+            if tracking_value['old_value_text'] or tracking_value['new_value_text']:
+                return tracking_value['new_value_text']
+            if tracking_value['old_value_datetime'] or tracking_value['new_value_datetime']:
+                return tracking_value['new_value_datetime']
+            if tracking_value['old_value_date'] or tracking_value['new_value_date']:
+                return tracking_value['new_value_datetime']
+            return False;
+
         res_partner_obj = self.pool.get('res.partner')
         ir_attachment_obj = self.pool.get('ir.attachment')
+        mail_track_obj = self.pool.get('mail.tracking.value')
         pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
-        # 1. Aggregate partners (author_id and partner_ids) and attachments
+        # 0. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partner_ids = set()
         attachment_ids = set()
+        tracking_ids = set()
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
@@ -318,7 +359,10 @@ class mail_message(osv.Model):
                 partner_ids |= set([partner.id for partner in message.partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
-        # Read partners as SUPERUSER -> display the names like classic m2o even if no access
+            if message.tracking_value_ids:
+                tracking_ids |= set([tracking.id for tracking in message.tracking_value_ids])
+
+        # 1. Read partners as SUPERUSER -> display the names like classic m2o even if no access
         partners = res_partner_obj.name_get(cr, SUPERUSER_ID, list(partner_ids), context=context)
         partner_tree = dict((partner[0], partner) for partner in partners)
 
@@ -331,14 +375,32 @@ class mail_message(osv.Model):
             'file_type_icon': attachment['file_type_icon'],
         }) for attachment in attachments)
 
-        # 3. Update message dictionaries
+        # 3. Tracking values
+        tracking_values = mail_track_obj.read(cr, uid, list(tracking_ids), [
+                                              'id', 'field', 'field_desc',
+                                              'old_value_boolean', 'old_value_integer', 'old_value_float', 
+                                              'old_value_char', 'old_value_text', 'old_value_datetime', 'old_value_date',
+                                              'new_value_boolean', 'new_value_integer', 'new_value_float', 
+                                              'new_value_char', 'new_value_text', 'new_value_datetime', 'new_value_date'],
+                                              context=context)
+
+        tracking_tree = dict((tracking_value['id'], { 
+            'id': tracking_value['id'],
+            'changed_field': tracking_value['field_desc'],
+            'old_value': _get_old_value(tracking_value),
+            'new_value': _get_new_value(tracking_value),
+        }) for tracking_value in tracking_values)
+
+        # 4. Update message dictionaries
         for message_dict in messages:
             message_id = message_dict.get('id')
             message = message_tree[message_id]
+
             if message.author_id:
                 author = partner_tree[message.author_id.id]
             else:
                 author = (0, message.email_from)
+
             partner_ids = []
             if message.subtype_id:
                 partner_ids = [partner_tree[partner.id] for partner in message.notified_partner_ids
@@ -346,17 +408,26 @@ class mail_message(osv.Model):
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
+
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
                     attachment_ids.append(attachments_tree[attachment.id])
+
+            tracking_value_ids = []
+            for tracking_value in message.tracking_value_ids:
+                if tracking_value.id in tracking_tree:
+                    tracking_value_ids.append(tracking_tree[tracking_value.id])
+
             message_dict.update({
                 'is_author': pid == author[0],
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
+                'tracking_value_ids': tracking_value_ids,
                 'user_pid': pid
                 })
+
         return True
 
     def _message_read_dict(self, cr, uid, message, parent_id=False, context=None):
@@ -391,6 +462,7 @@ class mail_message(osv.Model):
                 'body': message.body,
                 'body_short': body_short,
                 'model': message.model,
+                'model_desc': message.model_desc,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
                 'subject': message.subject,
@@ -406,6 +478,7 @@ class mail_message(osv.Model):
                 'has_voted': has_voted,
                 'is_favorite': message.starred,
                 'attachment_ids': [],
+                'tracking_value_ids': [],
             }
 
     def _message_read_add_expandables(self, cr, uid, messages, message_tree, parent_tree,
