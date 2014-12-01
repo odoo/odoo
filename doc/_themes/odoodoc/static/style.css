@@ -7243,6 +7243,19 @@ td.field-body > ul {
   .stripe .highlight pre {
     white-space: pre-wrap;
   }
+  .stripe .btn-clipboard {
+    background-color: transparent;
+    color: #eeeeee;
+    border-color: #777777;
+    border-top: none;
+    border-top-right-radius: 0;
+  }
+  .stripe .btn-clipboard.active {
+    background-color: #555555;
+    -webkit-transition: background-color 0.5s linear;
+    -o-transition: background-color 0.5s linear;
+    transition: background-color 0.5s linear;
+  }
 }
 .stripe .switcher {
   color: white;
