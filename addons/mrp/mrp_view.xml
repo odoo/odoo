@@ -375,7 +375,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name" groups="mrp.group_route_line_type"/>
+                            <field name="name"/>
                             <field name="code" string="Reference"/>
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
@@ -391,7 +391,7 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type" groups="mrp.group_route_line_type"/>
+                                    <field name="type"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
