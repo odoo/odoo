@@ -663,14 +663,15 @@ class account_move(models.Model):
                 raise Warning(_('You cannot validate a non-balanced entry.'))
         return True
 
-    def account_assert_balanced(self, cr, uid, context=None):
-        cr.execute("""\
+    @api.model
+    def account_assert_balanced(self):
+        self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
             GROUP BY    move_id
             HAVING      abs(sum(debit) - sum(credit)) > 0.00001
             """)
-        assert len(cr.fetchall()) == 0, \
+        assert len(self._cr.fetchall()) == 0, \
             "For all Journal Items, the state is valid implies that the sum " \
             "of credits equals the sum of debits"
         return True
@@ -1499,10 +1500,6 @@ class account_tax_template(models.Model):
             name = record.description and record.description or record.name
             res.append((record.id, name))
         return res
-
-    @api.model
-    def _default_company(self):
-        return self.env.user.comapny_id.id
 
     @api.multi
     def _generate_tax(self, tax_code_template_ref, company_id):
