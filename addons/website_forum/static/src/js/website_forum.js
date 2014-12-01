@@ -171,7 +171,7 @@
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
-                _.each(JSON.parse(element.val()), function(x) {
+                _.each(element.data('init-value'), function(x) {
                     data.push({ id: x.id, text: x.name, isNew: false });
                 });
                 element.val('');
@@ -179,7 +179,6 @@
             },
         });
 
-        //TODO Remove in master
         if($('input.load_tags').length){
             var tags = $("input.load_tags").val();
             $("input.load_tags").val("");
