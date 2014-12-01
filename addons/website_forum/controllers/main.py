@@ -506,18 +506,27 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or user.karma < 1:
+        current_user = User.browse(cr, SUPERUSER_ID, uid, context=context)
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user.exists() or
+               (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search(cr, uid, [
                 ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_questions = len(user_question_ids)
+
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
         # displaying only the 20 most recent questions
         user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
 
