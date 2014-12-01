@@ -175,9 +175,9 @@ class account_cash_statement(models.Model):
                 raise Warning(_('You do not have rights to open this %s journal!') % (statement.journal_id.name, ))
 
             if statement.name and statement.name == '/':
-                context = {'fiscalyear_id': self.env['account.fiscalyear'].search(cr, uid, [('date_start', '<=', statement.date)], context=context)[0]}
+                context = {'fiscalyear_id': self.env['account.fiscalyear'].search([('date_start', '<=', statement.date), ('date_stop', '>=', statement.date)], limit=1).id}
                 if statement.journal_id.sequence_id:
-                    st_number = SequenceObj.with_context(context).next_by_id(statement.journal_id.sequence_id.id)
+                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
                 else:
                     st_number = SequenceObj.with_context(context).next_by_code('account.cash.statement')
                 statement.name = st_number
