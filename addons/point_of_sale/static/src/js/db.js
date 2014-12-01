@@ -130,14 +130,20 @@ function openerp_pos_db(instance, module){
         },
         _product_search_string: function(product){
             var str = '' + product.id + ':' + product.display_name;
-            if(product.ean13){
+            if (product.ean13) {
                 str += '|' + product.ean13;
             }
-            if(product.default_code){
-                str += '|' + product.default_code;
+            if (product.default_code) {
+                str += '|' + product.default_code.replace(':','');
+            }
+            if (product.description) {
+                str += '|' + product.description.replace(':','');
+            }
+            if (product.description_sale) {
+                str += '|' + product.description_sale.replace(':','');
             }
             var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
-            for(var i = 0; i < packagings.length; i++){
+            for (var i = 0; i < packagings.length; i++) {
                 str += '|' + packagings[i].ean;
             }
             return str + '\n';
@@ -330,7 +336,7 @@ function openerp_pos_db(instance, module){
             }
             var pack = this.packagings_by_ean13[ean13];
             if(pack){
-                return this.product_by_id[pack.product_id[0]];
+                return this.product_by_id[pack.product_tmpl_id[0]];
             }
             return undefined;
         },

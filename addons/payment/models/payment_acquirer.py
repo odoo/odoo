@@ -79,7 +79,7 @@ class PaymentAcquirer(osv.Model):
             [('none', 'No automatic confirmation'),
              ('at_pay_confirm', 'At payment confirmation'),
              ('at_pay_now', 'At payment')],
-            string='Auto Confirmation', required=True),
+            string='Order Confirmation', required=True),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
@@ -100,7 +100,7 @@ class PaymentAcquirer(osv.Model):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         for acquirer in self.browse(cr, uid, ids, context=context):
-            if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.provider and not acquirer[c]):
+            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
                 return False
         return True
 

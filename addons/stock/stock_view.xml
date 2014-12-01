@@ -356,8 +356,7 @@
                             <field name="putaway_strategy_id"/>
                         </group>
                     </group>
-                    <separator string="Additional Information"/>
-                    <field name="comment"/>
+                    <field name="comment" placeholder="External note..."/>
                 </form>
             </field>
         </record>
@@ -1043,9 +1042,10 @@
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <field name="reserved_quant_ids"/>
+                            <field name="reserved_quant_ids" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -1092,10 +1092,11 @@
                         <field name="create_date" invisible="1"/>
                         <field name="date"/>
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
+                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group string="Locations" groups="stock.group_locations">
                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                     </group>
                     <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
                         <field name="reserved_quant_ids"/>
@@ -1360,7 +1361,7 @@
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><ul class="oe_kanban_colorpicker" data-field="color"/></li></t>
                                     </ul>
                                 </div>
-                                <div class="oe_kanban_content">
+                                <div class="oe_stock_kanban_content">
                                     <h4 class="text-center"><strong><field name="complete_name"/></strong></h4>
                                     <div class="oe_right">
                                         <a name="open_barcode_interface" type="object">
@@ -1369,41 +1370,32 @@
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
                                         </a>
                                     </div>
-                                    <div class="oe_items_list oe_kanban_ellipsis">
-                                        <div>
-                                            <a name="%(action_picking_tree_ready)d" type="action">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <a name="%(action_picking_tree_ready)d" type="action" class="col-md-9">
                                                 <field name="count_picking_ready"/> Ready
                                             </a>
-                                            <a name="%(action_picking_tree_done)d" type="action" class="oe_sparkline_bar_link">
+                                            <a name="%(action_picking_tree_done)d" type="action" class="col-md-3">
                                                 <field name="last_done_picking" widget="sparkline_bar" options="{'type': 'tristate', 'colorMap': {'0': 'orange', '-1': 'red', '1': 'green'}}">Last 10 Done Operations</field>
                                             </a>
-                                        </div>
-                                        <div t-if="record.count_picking_waiting.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_waiting)d" type="action">
-                                                <field name="count_picking_waiting"/> Waiting Availability
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <a name="%(action_picking_tree)d" type="action">All Operations</a>
+                                            <t t-if="record.count_picking_waiting.raw_value &gt; 0">
+                                                 <a name="%(action_picking_tree_waiting)d" type="action" class="col-md-12">
+                                                     <field name="count_picking_waiting"/> Waiting Availability
+                                                 </a>
+                                             </t>
+                                             <a class="col-md-9" name="%(action_picking_tree)d" type="action">All Operations</a>
                                         </div>
                                     </div>
-                                    <div class="oe_picking_type_gauge">
-                                        <field name="rate_picking_late" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
-                                        <field name="rate_picking_backorders" widget="gauge" style="width:150px; height: 110px;">Backorders (%%)</field>
-                                        <div class="oe_gauge_labels">
-                                            <div class="oe_gauge_label_column">
-                                                <a name="%(action_picking_tree_late)d" type="action">
-                                                    <field name="count_picking_late"/> Late
-                                                </a>
-                                            </div>
-                                            <div class="oe_gauge_label_column">
-                                                <a name="%(action_picking_tree_backorder)d" type="action">
-                                                    <field name="count_picking_backorders"/> Backorders
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <div class="row">
+                                         <field name="rate_picking_late" widget="gauge" style="margin-left:15px; width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
+                                         <field name="rate_picking_backorders" widget="gauge" style="margin-left:15px; width:150px; height: 110px;">Backorders (%%)</field>
+                                         <a name="%(action_picking_tree_late)d" type="action" class="text-center col-md-6">
+                                             <field name="count_picking_late"/> Late
+                                         </a>
+                                         <a name="%(action_picking_tree_backorder)d" type="action" class="text-center col-md-6">
+                                             <field name="count_picking_backorders"/> Backorders
+                                         </a>
                                     </div>
-
                                 </div>
                             </div>
                         </t>
@@ -1559,7 +1551,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="do_view_pickings" string="Group's Pickings" type="object"/>
+                    <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
@@ -1665,7 +1657,7 @@
             <field name="model">stock.quant</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Quants">
+                <form string="Quants" create="false" edit="false">
                     <div class="oe_right oe_button_box">
                         <button name="action_view_quant_history" type="object" string="Quant History"/>                            
                     </div>

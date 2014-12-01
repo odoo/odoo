@@ -383,12 +383,17 @@ class account_bank_statement(osv.osv):
         return {'value': res}
 
     def unlink(self, cr, uid, ids, context=None):
+        statement_line_obj = self.pool['account.bank.statement.line']
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
+            # Explicitly unlink bank statement lines
+            # so it will check that the related journal entries have
+            # been deleted first
+            statement_line_obj.unlink(cr, uid, [line.id for line in item.line_ids], context=context)
         return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
@@ -809,7 +814,7 @@ class account_bank_statement_line(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
         'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
-        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
+        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='restrict'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
         'ref': fields.char('Reference'),
@@ -829,17 +834,18 @@ class account_statement_operation_template(osv.osv):
     _description = "Preset for the lines that can be created in a bank statement reconciliation"
     _columns = {
         'name': fields.char('Button Label', required=True),
-        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
-        'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
-        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
+        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','not in',('view','closed','consolidation'))]),
+        'label': fields.char('Journal Item Label'),
+        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')], 'Amount type', required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), required=True, help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance')."),
+        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='restrict', domain=[('type_tax_use','in',('purchase','all')), ('parent_id','=',False)]),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='set null', domain=[('type','!=','view'), ('state','not in',('close','cancelled'))]),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'amount_type': 'percentage_of_balance',
-        'amount': 100.0
+        'amount': 100.0,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

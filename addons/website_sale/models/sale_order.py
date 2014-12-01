@@ -136,7 +136,7 @@ class website(orm.Model):
                     'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
-                    'section_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
+                    'team_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']

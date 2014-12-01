@@ -53,6 +53,9 @@ class hr_recruitment_stage(osv.osv):
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
         'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
+        'legend_priority': fields.text(
+            'Priority Management Explanation', translate=True,
+            help='Explanation text to help users using the star and priority mechanism on applicants that are in this stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -422,13 +425,6 @@ class hr_applicant(osv.Model):
                 cr, uid, [applicant.job_id.id],
                 body=_('New application from %s') % name,
                 subtype="hr_recruitment.mt_job_applicant_new", context=context)
-            self.message_post(
-                cr, uid, [applicant.id],
-                body = _("%s's Application \n From: %s \n\n %s \n") % (name, vals.get('email_from') or "", vals.get('description',"") or ""),
-                attachments = context.get('attachments'),
-                content_subtype = 'plaintext',
-                subtype = "hr_recruitment.mt_applicant_hired",
-                context = context)
         return obj_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -497,7 +493,7 @@ class hr_applicant(osv.Model):
                 address_id = self.pool.get('res.partner').address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
-                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1}, context=context)
+                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 create_ctx = dict(context, mail_broadcast=True)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,

@@ -32,7 +32,6 @@ import account_financial_report
 import wizard
 import report
 import product
-import ir_sequence
 import company
 import res_currency
 import edi

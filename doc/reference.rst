@@ -19,3 +19,5 @@ Reference
     reference/javascript
 
     reference/reports
+    reference/workflows
+    reference/cdn

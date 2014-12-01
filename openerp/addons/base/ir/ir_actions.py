@@ -51,6 +51,7 @@ class actions(osv.osv):
         'name': fields.char('Name', required=True),
         'type': fields.char('Action Type', required=True),
         'usage': fields.char('Action Usage'),
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
@@ -616,16 +617,16 @@ class ir_actions_server(osv.osv):
         # analyze path
         while path:
             step = path.pop(0)
-            column_info = self.pool[current_model_name]._all_columns.get(step)
-            if not column_info:
+            field = self.pool[current_model_name]._fields.get(step)
+            if not field:
                 return (False, None, 'Part of the expression (%s) is not recognized as a column in the model %s.' % (step, current_model_name))
-            column_type = column_info.column._type
-            if column_type not in ['many2one', 'int']:
-                return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one or an int)' % (step, column_type))
-            if column_type == 'int' and path:
+            ftype = field.type
+            if ftype not in ['many2one', 'int']:
+                return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one or an int)' % (step, ftype))
+            if ftype == 'int' and path:
                 return (False, None, 'Part of the expression (%s) is an integer field that is only allowed at the end of an expression' % (step))
-            if column_type == 'many2one':
-                current_model_name = column_info.column._obj
+            if ftype == 'many2one':
+                current_model_name = field.comodel_name
         return (True, current_model_name, None)
 
     def _check_write_expression(self, cr, uid, ids, context=None):
@@ -1183,6 +1184,8 @@ class ir_actions_act_client(osv.osv):
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
         result = {}
+        # Need to remove bin_size from context, to obtains the binary and not the length.
+        context = dict(context, bin_size_params_store=False)
         for record in self.browse(cr, uid, ids, context=context):
             result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
         return result

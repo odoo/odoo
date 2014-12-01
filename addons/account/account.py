@@ -812,7 +812,8 @@ class account_journal(osv.osv):
             'implementation':'no_gap',
             'prefix': prefix + "/%(year)s/",
             'padding': 4,
-            'number_increment': 1
+            'number_increment': 1,
+            'use_date_range': True,
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
@@ -1153,6 +1154,19 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            WHERE       state = 'valid'
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
 
     def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
         '''
@@ -1618,7 +1632,7 @@ class account_move_reconcile(osv.osv):
         'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
+        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').next_by_code(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
     
     # You cannot unlink a reconciliation if it is a opening_reconciliation one,
@@ -2023,7 +2037,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount

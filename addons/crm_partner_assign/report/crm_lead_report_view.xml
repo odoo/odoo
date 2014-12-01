@@ -8,14 +8,14 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" context="{'invisible_team': False}" groups="base.group_multi_salesteams"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
                     <field name="partner_assigned_id"/>
                     <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
                       <separator/>
-                      <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
+                      <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]"/>
                       <separator />
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                       <field name="opening_date"/>
@@ -24,7 +24,7 @@
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'section_id'}"
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"
                                 groups="base.group_multi_salesteams"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
@@ -51,7 +51,7 @@
             </field>
         </record>
 
-       <!-- Leads by user and section Action -->
+       <!-- Leads by user and Team Action -->
 
        <record id="action_report_crm_opportunity_assign" model="ir.actions.act_window">
             <field name="name">Opp. Assignment Analysis</field>

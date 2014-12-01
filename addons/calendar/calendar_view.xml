@@ -127,7 +127,7 @@
                                     </group>
                                 </group>
                                 <group>
-                                    <field name="class" widget="radio"/>
+                                    <field name="class"/>
                                     <field name="show_as"/>
                                     <field name="rrule" invisible="1" readonly="0" />                                    
                                     <field name="recurrent_id" invisible="1" />
@@ -240,7 +240,7 @@
         <field name="name">CRM - Meetings Gantt</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <gantt date_delay="duration" date_start="date" string="Meetings"/>
+            <gantt date_delay="duration" date_start="start" string="Meetings"/>
         </field>
     </record>
 

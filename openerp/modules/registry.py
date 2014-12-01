@@ -23,13 +23,14 @@
 
 """
 from collections import Mapping
-from contextlib import contextmanager
 import logging
+import os
 import threading
 
 import openerp
 from .. import SUPERUSER_ID
-from openerp.tools import assertion_report, lazy_property
+from openerp.tools import assertion_report, lazy_property, classproperty, config
+from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -163,8 +164,9 @@ class Registry(Mapping):
 
         # do the actual setup from a clean state
         self._m2m = {}
+        context = {'_setup_fields_partial': partial}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
+            model._setup_fields(cr, SUPERUSER_ID, context=context)
 
     def clear_caches(self):
         """ Clear the caches
@@ -259,11 +261,26 @@ class RegistryManager(object):
         registries (essentially database connection/model registry pairs).
 
     """
-    # Mapping between db name and model registry.
-    # Accessed through the methods below.
-    registries = {}
+    _registries = None
     _lock = threading.RLock()
     _saved_lock = None
+
+    @classproperty
+    def registries(cls):
+        if cls._registries is None:
+            size = config.get('registry_lru_size', None)
+            if not size:
+                # Size the LRU depending of the memory limits
+                if os.name != 'posix':
+                    # cannot specify the memory limit soft on windows...
+                    size = 42
+                else:
+                    # On average, a clean registry take 25MB of memory + cache
+                    avgsz = 30 * 1024 * 1024
+                    size = int(config['limit_memory_soft'] / avgsz)
+
+            cls._registries = LRU(size)
+        return cls._registries
 
     @classmethod
     def lock(cls):

@@ -342,7 +342,7 @@
                 if(!m.from_id){
                     m.from_id = [false, get_anonymous_name()];
                 }
-                m.create_date = Date.parse(m.create_date).setTimezone("UTC").toString("yyyy-MM-dd HH:mm:ss");
+                m.create_date = moment.utc(m.create_date).format('YYYY-MM-DD HH:mm:ss');
                 return m;
             });
            	this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
@@ -373,6 +373,9 @@
                 }
             });
             // render and set the content of the chatview
+            // TODO jem : when refactoring this, don't forget to pre-process date in this function before render quweb template
+            // since, moment will not be define in qweb on the website pages, because the helper (see csn) is in core.js and cannot be
+            // imported in the frontend.
             this.$('.oe_im_chatview_content_bubbles').html($(openerp.qweb.render("im_chat.Conversation_content", {"list": res})));
             this._go_bottom();
         },

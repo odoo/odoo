@@ -477,8 +477,6 @@ class ConnectionPool(object):
 
     @locked
     def borrow(self, dsn):
-        self._debug('Borrow connection to %r', dsn)
-
         # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
             if cnx.closed:
@@ -503,7 +501,7 @@ class ConnectionPool(object):
                     continue
                 self._connections.pop(i)
                 self._connections.append((cnx, True))
-                self._debug('Existing connection found at index %d', i)
+                self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
 
                 return cnx
 
@@ -546,11 +544,15 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn=None):
-        _logger.info('%r: Close all connections to %r', self, dsn)
+        count = 0
+        last = None
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn is None or cnx._original_dsn == dsn:
                 cnx.close()
-                self._connections.pop(i)
+                last = self._connections.pop(i)[0]
+                count += 1
+        _logger.info('%r: Closed %d connections %s', self, count,
+                    (dsn and last and 'to %r' % last.dsn) or '')
 
 
 class Connection(object):

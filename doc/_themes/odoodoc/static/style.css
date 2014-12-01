@@ -5902,8 +5902,10 @@ button.close {
 .panel-body:after,
 .modal-footer:before,
 .modal-footer:after,
-.document-super:before,
-.document-super:after,
+.document-super:not(.stripe):before,
+.document-super:not(.stripe):after,
+.document-super.stripe:before,
+.document-super.stripe:after,
 .document:before,
 .document:after {
   content: " ";
@@ -5924,7 +5926,8 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after,
-.document-super:after,
+.document-super:not(.stripe):after,
+.document-super.stripe:after,
 .document:after {
   clear: both;
 }
@@ -6174,38 +6177,60 @@ button.close {
     display: none !important;
   }
 }
+* {
+  box-sizing: border-box;
+}
 body {
+  overflow: auto;
   position: relative;
 }
-.document-super {
+.document-super:not(.stripe) {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
 @media (min-width: 768px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 750px;
   }
 }
 @media (min-width: 992px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 970px;
   }
 }
 @media (min-width: 1200px) {
-  .document-super {
+  .document-super:not(.stripe) {
     width: 1170px;
   }
 }
-.document-super > .navbar-header,
-.document-super > .navbar-collapse {
+.document-super:not(.stripe) > .navbar-header,
+.document-super:not(.stripe) > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
-  .document-super > .navbar-header,
-  .document-super > .navbar-collapse {
+  .document-super:not(.stripe) > .navbar-header,
+  .document-super:not(.stripe) > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+.document-super.stripe {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.document-super.stripe > .navbar-header,
+.document-super.stripe > .navbar-collapse {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+@media (min-width: 768px) {
+  .document-super.stripe > .navbar-header,
+  .document-super.stripe > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
@@ -6292,7 +6317,7 @@ body {
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
 }
-.docs-nav .navbar-nav > li > a:after {
+.docs-nav .navbar-nav > li.dropdown > a:after {
   content: " ";
   display: inline-block;
   width: 0;
@@ -6303,7 +6328,7 @@ body {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-.docs-nav .navbar-nav > li .dropdown-menu > li.current > a.current {
+.docs-nav .navbar-nav > li.dropdown .dropdown-menu > li.current > a.current {
   background-color: #a24689;
   color: white;
 }
@@ -6643,33 +6668,26 @@ div.section > h2 {
  *
  * Generated via Pygments
  */
-.highlight {
-  padding: 9px 14px;
-  margin-bottom: 14px;
-  background-color: #f7f7f9 !important;
-  border: 1px solid #e1e1e8;
-  border-radius: 4px;
-}
 .highlight pre {
-  color: #333;
-  padding: 0 45px 0 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border: 0;
+  padding: 4px;
+  font-size: 75%;
+  word-break: normal;
+  word-wrap: normal;
+}
+.switchable .highlight.with-btn-clipboard pre {
+  padding-right: 50px;
 }
 /*
  * ZeroClipboard styles
  */
-.zero-clipboard {
+.highlight {
   position: relative;
-  display: none;
 }
 .btn-clipboard {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 3;
   display: block;
   padding: 5px 8px;
   font-size: 12px;
@@ -6679,15 +6697,14 @@ div.section > h2 {
   border: 1px solid #e1e1e8;
   border-radius: 0 4px 0 4px;
 }
-.btn-clipboard-hover {
-  color: #fff;
-  background-color: #a24689;
-  border-color: #a24689;
+.btn-clipboard:focus {
+  outline: none;
 }
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
-  }
+.btn-clipboard.active {
+  background-color: #ffffad;
+  -webkit-transition: background-color 0.5s linear;
+  -o-transition: background-color 0.5s linear;
+  transition: background-color 0.5s linear;
 }
 img.align-center {
   display: block;
@@ -6710,10 +6727,169 @@ td.field-body > ul {
   margin: 0;
   padding: 0;
 }
-pre {
-  word-break: normal;
-  word-wrap: normal;
-}
 .descclassname {
   opacity: 0.5;
+}
+.index-tree ul,
+.index-tree li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.index-tree > ul > li {
+  margin-bottom: 0.5em;
+}
+.index-tree > ul > li > a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > a small,
+.index-tree > ul > li > a .small {
+  font-size: 65%;
+}
+.index-tree > ul > li > ul {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.index-tree > ul > li > ul > li {
+  width: 50%;
+}
+.index-tree > ul > li > ul > li a {
+  font-family: Lato, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.index-tree > ul > li > ul > li a small,
+.index-tree > ul > li > ul > li a .small {
+  font-size: 75%;
+}
+.index-tree > ul > li a {
+  display: block;
+  color: #a24689 !important;
+  padding: 0.3em 0;
+  margin: 3px !important;
+}
+.index-tree > ul > li a:hover {
+  background-color: #eeeeee;
+}
+.stripe .section {
+  margin-bottom: 2em;
+}
+@media (min-width: 992px) {
+  .stripe .section > *,
+  .stripe .section > .force-left {
+    width: 49%;
+    float: left;
+    clear: left;
+  }
+  .stripe .section > .force-right,
+  .stripe .section > [class*=highlight] {
+    float: none;
+    clear: none;
+    margin-left: 51%;
+  }
+  .stripe .section > h1,
+  .stripe .section > h2,
+  .stripe .section > h3,
+  .stripe .section > h4,
+  .stripe .section > h5,
+  .stripe .section > h6 {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  .stripe .section > h1,
+  .stripe .section > h2,
+  .stripe .section > h3,
+  .stripe .section > h4,
+  .stripe .section > h5,
+  .stripe .section > h6,
+  .stripe .section > .section {
+    position: relative;
+    width: auto;
+    float: none;
+    clear: both;
+  }
+  .stripe .bodywrapper {
+    position: relative;
+  }
+  .stripe .bodywrapper:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    content: "";
+    width: 0;
+    border-left: 1px solid #777777;
+  }
+  .stripe .highlight pre {
+    white-space: pre-wrap;
+  }
+}
+.stripe .switcher {
+  color: white;
+  width: auto !important;
+  float: none !important;
+  position: fixed;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  right: 0.5em;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 5;
+}
+.stripe .switcher li {
+  background-color: #0f131a;
+  padding: 0.4em 1em;
+  border: 1px solid #333;
+  border-left-width: 0;
+  cursor: pointer;
+}
+.stripe .switcher li:first-child {
+  border-left-width: 1px;
+  border-radius: 5px 0 0 5px;
+}
+.stripe .switcher li:last-child {
+  border-radius: 0 5px 5px 0;
+}
+.stripe .switcher li:hover {
+  background-color: #222;
+}
+.stripe .switcher li.active {
+  background-color: #333;
+}
+.stripe [class*=only-],
+.stripe .switchable > .highlight {
+  display: none;
+}
+.stripe .only-python,
+.stripe .highlight-python > .highlight {
+  display: block;
 }

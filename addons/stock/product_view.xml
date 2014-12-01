@@ -222,7 +222,7 @@
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                    <div><field name="qty_available_text"/></div>
+                        <field name="qty_available2" widget="statinfo"/>
                     </button>
                    <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
@@ -242,7 +242,7 @@
                            name="action_open_quants"
                            icon="fa-building-o"
                            type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                   <div><field name="qty_available_text"/></div>
+                        <field name="qty_available2" widget="statinfo"/>
                    </button>
                    <button class="oe_inline oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="action_view_orderpoints" type="object" 

@@ -16,9 +16,9 @@
             <field name="city">Paris</field>
             <field name="zip">93190</field>
             <field name="phone">+33 1 25 54 45 69</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
             <field name="priority">1</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hello,
@@ -52,9 +52,9 @@ Could you please send me the details ?</field>
             <field name="function">Purchase Manager</field>
             <field name="country_id" ref="base.fr"/>
             <field name="city">Bordeaux</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">1</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_christmas_special"/>
@@ -82,9 +82,9 @@ Could you please send me the details ?</field>
             <field name="partner_id" ref=""/>
             <field name="country_id" ref="base.us"/>
             <field name="city">New-York</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -104,9 +104,9 @@ Could you please send me the details ?</field>
             <field name="partner_id" ref=""/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Drury</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead6"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -130,9 +130,9 @@ Could you please send me the details ?</field>
             <field name="city">Franklinville</field>
             <field name="zip">NJ 08322</field>
             <field name="phone">+1 813 494 5005</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hi,
@@ -158,9 +158,9 @@ Contact: +1 813 494 5005</field>
             <field name="function">Consultant</field>
             <field name="country_id" ref="base.it"/>
             <field name="city">Roma</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -177,9 +177,10 @@ Contact: +1 813 494 5005</field>
             <field name="function">Journalist</field>
             <field name="country_id" ref="base.ua"/>
             <field name="city">Kiev</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
+
             <field name="priority">0</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -197,9 +198,9 @@ Contact: +1 813 494 5005</field>
             <field name="function">Sales</field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Cambridge</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor6,categ_oppor8])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor6,categ_oppor8])]"/>
             <field name="priority">1</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -217,9 +218,9 @@ Contact: +1 813 494 5005</field>
             <field name="function">Sales</field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Oxford</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -236,9 +237,9 @@ Contact: +1 813 494 5005</field>
             <field name="function">Medical illustrator</field>
             <field name="country_id" ref="base.es"/>
             <field name="city">Sevilla</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hi,
@@ -260,9 +261,9 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="function">Functional Consultant</field>
             <field name="country_id" ref=""/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -279,9 +280,9 @@ Andrew</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="country_id" ref="base.cn"/>
             <field name="city">Shenzhen</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -315,12 +316,12 @@ Andrew</field>
             <field name="street">1 rue Rockfeller</field>
             <field name="country_id" ref="base.at"/>
             <field name="city">Melbourne</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-25')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-12')" name="date_action"/>
             <field name="title_action">Meeting for pricing information.</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -341,12 +342,12 @@ Andrew</field>
             <field name="country_id" ref="base.be"/>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -364,12 +365,12 @@ Andrew</field>
             <field name="city">Wavre</field>
             <field name="email_from">virginie@agrolait.com</field>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-12')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Call to ask system requirement</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
@@ -392,12 +393,12 @@ Andrew</field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Liverpool</field>
             <field name="zip">L25 4RL</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-1')" name="date_action"/>
             <field name="title_action">Convert to quote</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -417,12 +418,12 @@ Andrew</field>
             <field name="street">Rue des Palais 51, bte 33</field>
             <field name="country_id" ref="base.be"/>
             <field name="city">Brussels</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-8')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-3')" name="date_action"/>
             <field name="title_action">Send price list regarding our interventions</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -446,12 +447,12 @@ Andrew</field>
             <field name="street">3661 Station Street</field>
             <field name="country_id" ref="base.uk"/>
             <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-13')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-4')" name="date_action"/>
             <field name="title_action">Call to define real needs about training</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
@@ -474,12 +475,12 @@ Andrew</field>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Liverpool</field>
             <field name="zip">L25 4RL</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
             <field eval="time.strftime('%Y-%m-10')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-5')" name="date_action"/>
             <field name="title_action">Ask for the good receprion of the proposition</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
@@ -495,9 +496,9 @@ Andrew</field>
             <field name="partner_name">Epic Technologies</field>
             <field name="email_from">john.b@tech.info</field>
             <field name="partner_id" ref="base.res_partner_5"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
@@ -509,9 +510,9 @@ Andrew</field>
             <field name="name">“Resource Planning” project develpment</field>
             <field eval="350" name="planned_revenue"/>
             <field name="partner_id" ref="base.res_partner_7"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -528,9 +529,9 @@ Andrew</field>
             <field name="contact_name">Benjamin Flores</field>
             <field name="partner_name">Nebula Business</field>
             <field name="partner_id" ref="base.res_partner_17"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">1</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
@@ -544,9 +545,9 @@ Andrew</field>
             <field eval="2000" name="planned_revenue"/>
             <field eval="80.0" name="probability"/>
             <field name="partner_id" ref="base.res_partner_18"/>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">0</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -563,10 +564,10 @@ Andrew</field>
             <field name="email_from">info@mycompany.net</field>
             <field name="country_id" ref="base.pe"/>
             <field name="city">Lima</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">0</field>
             <field eval="time.strftime('%Y-%m-6')" name="date_deadline"/>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -588,10 +589,10 @@ Andrew</field>
             <field name="country_id" ref="base.ar"/>
             <field name="city">Buenos Aires</field>
             <field name="zip">B7313</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
             <field name="priority">2</field>
             <field name="title_action">Conf call with technical service</field>
-            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
@@ -610,12 +611,12 @@ Andrew</field>
             <field name="country_id" ref="base.be"/>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
@@ -636,12 +637,12 @@ Andrew</field>
             <field name="country_id" ref="base.be"/>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
-            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">2</field>
             <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
-            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
         </record>

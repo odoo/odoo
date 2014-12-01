@@ -65,7 +65,7 @@
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("crm_case_13"), ref("crm_case_2")], 'active_id': ref("crm_case_13")})
-    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('base.user_root')])], 'section_id': ref('sales_team.section_sales_department')}, context=context)
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('base.user_root')])], 'team_id': ref('sales_team.team_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   Now I check first lead converted on opportunity.

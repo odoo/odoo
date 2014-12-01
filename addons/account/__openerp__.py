@@ -107,7 +107,6 @@ for a particular financial year and for preparation of vouchers there is a modul
         'product_view.xml',
         'account_assert_test.xml',
         'account_analytic_view.xml',
-        'ir_sequence_view.xml',
         'company_view.xml',
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',

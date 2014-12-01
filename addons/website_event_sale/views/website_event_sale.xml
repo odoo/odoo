@@ -19,12 +19,6 @@
     </xpath>
 </template>
 
-<template id="cart" inherit_id="website_sale.cart" name="My Cart Event's Price">
-    <xpath expr="//td[@name='price']/t" position="attributes">
-        <attribute name="t-if">abs(line.product_id.lst_price - line.price_unit) &gt; 0.2 and not line.product_id.event_ok</attribute>
-    </xpath>
-</template>
-
 <template id="registration_template" inherit_id="website_event.registration_template" customize_show="True" name="Event's Ticket form">
     <xpath expr="//tbody" position="replace">
         <tbody>
@@ -43,7 +37,15 @@
                         </t>
                     </td>
                     <td>
-                        <t t-if="ticket.price or editable"><span t-field="ticket.price" t-field-options='{
+                            <t t-if="ticket.price or editable">
+                              <t t-if="(ticket.price-ticket.price_reduce) &gt; 1">
+                                <del class="text-danger" style="white-space: nowrap;" t-field="ticket.price" t-field-options='{
+                                  "widget": "monetary",
+                                  "from_currency": "website.currency_id",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                }'/>&amp;nbsp;
+                              </t>
+                              <span t-field="ticket.price_reduce" t-field-options='{
                                "widget": "monetary",
                                "display_currency": "website.pricelist_id.currency_id"
                           }'/>

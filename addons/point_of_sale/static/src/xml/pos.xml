@@ -948,12 +948,12 @@
                 <img t-att-src='image_url' /> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price)"/>
+                        <t t-esc="widget.format_currency(product.price,'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price)+'/Kg'"/>
+                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/Kg'"/>
                     </span>
                 </t>
             </div>
@@ -979,7 +979,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_price())" />
+                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>
@@ -1075,7 +1075,7 @@
             <div class='paymentline-name'>
                 <t t-esc="line.name"/>
             </div>
-            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount_str()" />
             <span  class='paymentline-delete'>
                 <img src="/point_of_sale/static/src/img/search_reset.gif" />
             </span>
@@ -1088,7 +1088,7 @@
                 <t t-esc="line.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+                <input type="number" step="0.01" t-att-value="line.get_amount_str()" />
                 <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
             </td>
         </tr>
@@ -1103,7 +1103,7 @@
                 <t t-if="widget.order.get_client()">
                     <i class='fa fa-user'/>
                 </t>
-                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + widget.order.get('creationDate').toString('t')"/>
+                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + moment(widget.order.get('creationDate')).format('LT')"/>
             </t>
             <t t-if='!widget.selected'>
                 <span class='order-sequence'>
@@ -1122,8 +1122,7 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.get('name')"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />

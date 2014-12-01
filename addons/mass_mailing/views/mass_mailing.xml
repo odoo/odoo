@@ -191,9 +191,14 @@
             <field name="name">mail.mass_mailing.list.search</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-               <search string="Mailing Lists">
-                   <field name="name"/>
-               </search>
+                <search string="Mailing Lists">
+                    <field name="name"/>
+                    <field name="create_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Creation Month" name="group_create_date"
+                            context="{'group_by': 'create_date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -204,6 +209,7 @@
             <field name="arch" type="xml">
                 <tree string="Mailing Lists">
                     <field name="name"/>
+                    <field name="create_date"/>
                     <field name="contact_nbr"/>
                 </tree>
             </field>
@@ -651,12 +657,12 @@
                                  <div class="oe_kanban_content">
                                     <div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
-                                            t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar oe_kanban_header_right"/>
-                                        <h3 style="margin-bottom: 8px;"><field name="name"/></h3>
+                                            t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                         <h3 class="oe_margin_bottom_8"><field name="name"/></h3>
                                         <field name="category_ids"/>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                                             class="oe_mailings">
-                                            <h4 style="margin-top: 8px;"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
+                                            <h4 class="oe_margin_top_8"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
                                         </a>
                                     </div>
                                     <div class="oe_clear"></div>

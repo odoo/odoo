@@ -62,7 +62,7 @@ class contactus(http.Controller):
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 post_file.append(field_value)
-            elif field_name in request.registry['crm.lead']._all_columns and field_name not in _BLACKLIST:
+            elif field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
                 values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
@@ -79,7 +79,7 @@ class contactus(http.Controller):
 
         try:
             values['medium_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_tracking_medium_website')[1]
-            values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
+            values['team_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
         except ValueError:
             pass
 
