@@ -440,7 +440,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         def.reject();
                     }
-                }, function(){ def.reject(); });    
+                }, function(err,event){ event.preventDefault(); def.reject(); });    
             return def;
         },
 

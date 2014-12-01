@@ -87,7 +87,8 @@ class account_invoice(models.Model):
     @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
-        journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
+        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        journal_type = type2journal.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
@@ -1619,7 +1620,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices',
-        readonly=True)
+        readonly=True, copy=False)
 
     def _find_accounting_partner(self, partner):
         '''

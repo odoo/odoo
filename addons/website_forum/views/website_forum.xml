@@ -376,7 +376,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="tag_type" value="select2"/>
-                <input type="hidden" name="question_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-value="#{tags}"/>
+                <input type="hidden" name="question_tag" class="form-control col-md-9 js_select2" placeholder="Tags" value="see data init value" t-attf-data-init-value="#{tags}"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>

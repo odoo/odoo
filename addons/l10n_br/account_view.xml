@@ -34,14 +34,14 @@
 			<field name="inherit_id" ref="account.view_account_tax_template_form"/>
 			<field name="arch" type="xml">
 				<field position="after" name="price_include">
-					<field groups="base.group_extended" name="tax_discount"/>
+					<field name="tax_discount"/>
 			    </field>
 	    		<field name="tax_code_id" position="replace" >
 					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
 			    </field>
-   				<field position="after" name="amount">
-					<field groups="base.group_extended" name="base_reduction"/>
-					<field groups="base.group_extended" name="amount_mva"/>
+				<field position="after" name="tax_discount">
+					<field name="base_reduction"/>
+					<field name="amount_mva"/>
 			    </field>
 			</field>
 		</record>
@@ -52,14 +52,14 @@
 			<field name="inherit_id" ref="account.view_tax_form"/>
 			<field name="arch" type="xml">
 				<field position="after" name="price_include">
-					<field groups="base.group_extended" name="tax_discount"/>
+					<field name="tax_discount"/>
 			    </field>
    				<field name="tax_code_id" position="replace" >
 					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
 			    </field>
-			    <field position="after" name="amount">
-					<field groups="base.group_extended" name="base_reduction"/>
-					<field groups="base.group_extended" name="amount_mva"/>
+			    <field position="after" name="tax_discount">
+					<field name="base_reduction"/>
+					<field name="amount_mva"/>
 			    </field>
 			</field>
 		</record>
