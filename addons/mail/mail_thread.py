@@ -1353,7 +1353,7 @@ class mail_thread(osv.AbstractModel):
                 else:
                     stored_date = parsed_date.astimezone(tz=pytz.utc)
             except Exception:
-                _logger.warning('Failed to parse Date header %r in incoming mail '
+                _logger.info('Failed to parse Date header %r in incoming mail '
                                 'with message-id %r, assuming current date/time.',
                                 message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()

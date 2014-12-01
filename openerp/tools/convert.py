@@ -34,6 +34,7 @@ import openerp
 import openerp.release
 import openerp.workflow
 from yaml_import import convert_yaml_import
+from openerp.exceptions import UserError
 
 import assertion_report
 
@@ -908,7 +909,8 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
-            _logger.warning("Can't load unknown file type %s.", filename)
+            _logger.info("Can't load unknown file type %s.", filename)
+            raise UserError(_t("Can't load unknown file type %s.")%filename)
     finally:
         fp.close()
 

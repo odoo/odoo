@@ -862,13 +862,13 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        _logger.warning("Attempted to create a file under %r, not possible.", self)
+        _logger.info("Attempted to create a file under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create file(s) here.")
 
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        _logger.warning("Attempted to create a collection under %r, not possible.", self)
+        _logger.info("Attempted to create a collection under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create folder(s) here.")
 
     def rm(self, cr):
@@ -1477,7 +1477,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.warning("Who asks for %s:%s?" % (ns, prop))
+            _logger.info("Who asks for %s:%s?" % (ns, prop))
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid

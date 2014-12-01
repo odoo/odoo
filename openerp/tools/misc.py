@@ -796,9 +796,9 @@ def detect_server_timezone():
                 _logger.info("Using timezone %s obtained from %s.", tz.zone, source)
                 return value
             except pytz.UnknownTimeZoneError:
-                _logger.warning("The timezone specified in %s (%s) is invalid, ignoring it.", source, value)
+                _logger.info("The timezone specified in %s (%s) is invalid, ignoring it.", source, value)
 
-    _logger.warning("No valid timezone could be detected, using default UTC "
+    _logger.info("No valid timezone could be detected, using default UTC "
         "timezone. You can specify it explicitly with option 'timezone' in "
         "the server configuration.")
     return 'UTC'
