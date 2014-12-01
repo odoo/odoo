@@ -1620,7 +1620,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices',
-        readonly=True)
+        readonly=True, copy=False)
 
     def _find_accounting_partner(self, partner):
         '''
