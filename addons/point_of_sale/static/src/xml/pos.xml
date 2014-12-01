@@ -766,6 +766,10 @@
                         <right><value><t t-esc='tax.amount' /></value></right>
                     </line>
                 </t>
+                <line>
+                    <left>Total Taxes</left>
+                    <right><value><t t-esc='receipt.total_tax'/></value></right>
+                </line>
             </t>
 
             <div class='before-footer' />
