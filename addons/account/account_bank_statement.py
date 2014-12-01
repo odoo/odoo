@@ -48,9 +48,8 @@ class account_bank_statement(models.Model):
 
     @api.model
     def _compute_default_statement_name(self, journal_id):
-        context = dict(self._context or {})
         journal = self.env['account.journal'].browse(journal_id)
-        return self.env['ir.sequence'].with_context(context).next_by_id(journal.sequence_id.id)
+        return journal.sequence_id.next_by_id()
 
     @api.multi
     @api.depends('journal_id')
