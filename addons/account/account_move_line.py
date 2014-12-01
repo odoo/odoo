@@ -451,21 +451,31 @@ class account_move_line(models.Model):
         total = main_reconcile_line.amount_residual
         if main_reconcile_line.account_id.currency_id:
             total = main_reconcile_line.amount_residual_currency
+        start_amount = total
         company_ids = set([l.company_id.id for l in self+main_reconcile_line])
         if len(company_ids) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries.'))
+        lines_debit = lines_credit = False
         for line in self:
             if line.reconcile_id:
                 raise Warning(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 raise Warning(_("Journal Item '%s' (id: %s), is already partially reconciled with \
                     Journal Item '%s' (id: %s)!") % (line.name, line.id, line.reconcile_partial_id.name, line.reconcile_partial_id.id))
+            if line.debit > 0:
+                lines_debit = True
+            else:
+                lines_credit = True
             if line.account_id.currency_id:
                 currency = line.account_id.currency_id
                 total += line.amount_residual_currency
             else:
                 currency = line.company_id.currency_id
                 total += line.amount_residual
+        if (lines_debit and lines_credit) or (main_reconcile_line.debit > 0 and lines_debit) or (main_reconcile_line.credit > 0 and lines_credit):
+            raise Warning(_("You are trying to reconcile a line with wrong lines (payment with another payment, or invoice with anoter invoice)"))
+        if (start_amount <= 0 and total > 0) or (start_amount >= 0 and total < 0):
+            raise Warning(_("You are trying to reconcile an entry with too much lines or with a line having a larger quantity"))
         res = self.write({'reconcile_partial_id': main_reconcile_line.id})
         if currency.is_zero(total):
             #add line already partially reconciled in this computation
@@ -481,12 +491,10 @@ class account_move_line(models.Model):
         account_id = False
         partner_id = False
         context = self._context
-        company_list = []
         ids = self.ids
-        for line in self:
-            if company_list and not line.company_id.id in company_list:
-                raise Warning(_('To reconcile the entries company should be the same for all entries.'))
-            company_list.append(line.company_id.id)
+        company_ids = set([l.company_id.id for l in self])
+        if len(company_ids) > 1:
+            raise Warning(_('To reconcile the entries company should be the same for all entries.'))
         for line in unrec_lines:
             credit += line['credit']
             debit += line['debit']

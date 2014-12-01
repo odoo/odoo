@@ -12,14 +12,14 @@ class account_register_payment(models.TransientModel):
     _name = "account.register.payment"
     _description = "Register payment"
     
-    invoice_id = fields.Many2one('account.invoice', String="Related invoice")
+    invoice_id = fields.Many2one('account.invoice', String="Related invoice", required=True)
     payment_amount = fields.Float(String='Amount paid', required=True, digits=dp.get_precision('Account'))
-    date_paid = fields.Date(String='Date paid', default=fields.Date.context_today, required=True, copy=False)
-    reference = fields.Char('Ref #', help="Transaction reference number.", copy=False)
+    date_paid = fields.Date(String='Date paid', default=fields.Date.context_today, required=True)
+    reference = fields.Char('Ref #', help="Transaction reference number.")
     journal_id = fields.Many2one('account.journal', String='Paid to', required=True, domain=[('type', 'in', ('bank', 'cash'))])
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True,
         default=lambda self: self.env.user.company_id)
-    partner_id = fields.Many2one('res.partner', String='Partner', required=True)
+    partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', String='Partner', store=True)
 
     @api.model
     def default_get(self, fields):
@@ -27,9 +27,7 @@ class account_register_payment(models.TransientModel):
         res = super(account_register_payment, self).default_get(fields)
         if context.get('active_id', False):
             invoice = self.env['account.invoice'].browse(context.get('active_id'))
-            res.update({'invoice_id': invoice.id, 
-                'partner_id': invoice.partner_id.id,
-                })
+            res.update({'invoice_id': invoice.id})
         return res
 
     @api.multi
@@ -51,7 +49,7 @@ class account_register_payment(models.TransientModel):
             'journal_id': self.journal_id.id,
             })
         ac_move_line = self.env['account.move.line']
-        debit = credit = 0.0
+        debit = credit = over_value = 0.0
         #convert to company currency
         currency_payment_amount = self.journal_id.currency and self.journal_id.currency.compute(self.payment_amount, self.company_id.currency_id) or self.payment_amount
         if self.invoice_id.type == 'out_invoice':
@@ -59,6 +57,31 @@ class account_register_payment(models.TransientModel):
         else:
             debit = max(currency_payment_amount, debit)
         sign = debit - credit < 0 and -1 or 1
+
+        #get line with which we will try to reconcile
+        reconcile_line = False
+        if self.invoice_id and self.invoice_id.move_id:
+            for aml in self.invoice_id.move_id.line_id:
+                if aml.reconcile_id or aml.reconcile_partial_id:
+                    continue
+                elif (aml.debit > 0 and debit > 0) or (aml.credit > 0 and credit > 0):
+                    #can't reconcile if both account move line are debit or credit
+                    continue
+                else:
+                    reconcile_line = aml
+                    break
+
+        if reconcile_line:
+            #check if we have to split payment in two
+            over_value = 0.0
+            if self.journal_id.currency and self.journal_id.currency != self.company_id.currency_id:
+                if self.payment_amount > reconcile_line.amount_residual_currency:
+                    over_value = payment_amount - abs(reconcile_line.amount_residual_currency)
+            elif (abs(debit-credit) > abs(reconcile_line.amount_residual)):
+                over_value = abs(debit-credit) - abs(reconcile_line.amount_residual)
+            if over_value != 0.0:
+                debit = reconcile_line.amount_residual if debit else 0.0
+                credit = reconcile_line.amount_residual if credit else 0.0
 
         acl_dict_value = {
             'name': 'Payment from '+self.partner_id.name,
@@ -73,7 +96,6 @@ class account_register_payment(models.TransientModel):
             'date': self.date_paid,
             'invoice': self.invoice_id.id,
             }
-
         payment_line = ac_move_line.create(acl_dict_value)
         
         #create balanced line
@@ -84,15 +106,9 @@ class account_register_payment(models.TransientModel):
             })
         balanced_line = ac_move_line.create(acl_dict_value)
 
-        #try to reconcile with the first non reconcile line we find
-        if self.invoice_id and self.invoice_id.move_id:
-            for aml in self.invoice_id.move_id.line_id:
-                if aml.reconcile_id or aml.reconcile_partial_id:
-                    continue
-                elif (aml.debit > 0 and payment_line.debit > 0) or (aml.credit > 0 and payment_line.credit > 0):
-                    #can't reconcile if both account move line are debit or credit
-                    continue
-                else:
-                    payment_line.reconcile_partial(aml)
-                    break
+        #reconcile
+        if reconcile_line:
+            payment_line.reconcile_partial(reconcile_line)
+        if over_value > 0.0:
+            return self.copy({'payment_amount': over_value}).pay()
         return True
