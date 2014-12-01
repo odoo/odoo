@@ -500,6 +500,8 @@ class mail_thread(osv.AbstractModel):
         if not tracked_fields:
             return True
 
+        track_obj = self.pool.get('mail.tracking.value')
+
         for browse_record in self.browse(cr, uid, ids, context=context):
             initial = initial_values[browse_record.id]
             changes = set()
@@ -525,12 +527,14 @@ class mail_thread(osv.AbstractModel):
                         )
                     if col_name in tracked_fields:
                         changes.add(col_name)
+
             if not changes:
                 continue
 
             # find subtypes and post messages or log if no subtype found
             subtypes = []
-            # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
+            # By passing this key, that allows to let the subtype empty and so don't sent 
+            # email because partners_to_notify from mail_message._notify will be empty
             if not context.get('mail_track_log_only'):
                 for field, track_info in self._track.items():
                     if field not in changes:
@@ -539,18 +543,36 @@ class mail_thread(osv.AbstractModel):
                         if method(self, cr, uid, browse_record, context):
                             subtypes.append(subtype)
 
-            posted = False
-            for subtype in subtypes:
-                subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtype, context=context)
+            # create tracking values
+            tracking_values = track_obj.create_tracking_values(cr, uid, 
+                                                               browse_record, 
+                                                               initial_values, 
+                                                               tracked_fields,  
+                                                               context=context)
+
+            
+            msg_ids = []
+            if subtypes:
+                subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtypes[0], context=context)
                 if not (subtype_rec and subtype_rec.exists()):
-                    _logger.debug('subtype %s not found' % subtype)
+                    _logger.debug('subtype %s not found' % subtypes[0])
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
-                self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)
-                posted = True
-            if not posted:
+                msg_ids.append(self.message_post(cr, uid, browse_record.id, 
+                                                 body=message, 
+                                                 subtype=subtypes[0], 
+                                                 tracking_values=tracking_values,
+                                                 context=context))
+            else:
                 message = format_message('', tracked_values)
-                self.message_post(cr, uid, browse_record.id, body=message, context=context)
+                msg_ids.append(self.message_post(cr, uid, browse_record.id, 
+                                                 body=message, 
+                                                 tracking_values=tracking_values,
+                                                 context=context))
+
+            tracks_to_update = track_obj.browse(cr, uid, tracking_values, context=context)
+            tracks_to_update.update_message_ids(msg_ids)  
+
         return True
 
     #------------------------------------------------------
@@ -1522,8 +1544,8 @@ class mail_thread(osv.AbstractModel):
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
-                     subtype=None, parent_id=False, attachments=None, context=None,
-                     content_subtype='html', **kwargs):
+                     subtype=None, tracking_values=None, parent_id=False, attachments=None, 
+                     context=None, content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
 
@@ -1558,14 +1580,22 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
 
-        # if we're processing a message directly coming from the gateway, the destination model was
-        # set in the context.
+        # if we're processing a message directly coming from the gateway, 
+        # the destination model was set in the context.
         model = False
+        model_desc = False
+
         if thread_id:
             model = context.get('thread_model', False) if self._name == 'mail.thread' else self._name
             if model and model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
-                return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+                return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, 
+                                                     subtype=subtype, tracking_values=tracking_values, 
+                                                     parent_id=parent_id, attachments=attachments, 
+                                                     context=context, content_subtype=content_subtype, **kwargs)
+        
+        if model:
+            model_desc = self._description
 
         #0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
@@ -1608,6 +1638,10 @@ class mail_thread(osv.AbstractModel):
                 subtype = 'mail.%s' % subtype
             subtype_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, subtype)
 
+        # 5: mail.tracking.values
+        if not tracking_values:
+            tracking_values = []
+
         # automatically subscribe recipients if asked to
         if context.get('mail_post_autofollow') and thread_id and partner_ids:
             partner_to_subscribe = partner_ids
@@ -1637,6 +1671,7 @@ class mail_thread(osv.AbstractModel):
         values.update({
             'author_id': author_id,
             'model': model,
+            'model_desc': model_desc,
             'res_id': model and thread_id or False,
             'body': body,
             'subject': subject or False,
@@ -1645,6 +1680,7 @@ class mail_thread(osv.AbstractModel):
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
+            'tracking_value_ids': [(4, tvid) for tvid in tracking_values],
         })
 
         # Avoid warnings about non-existing fields
