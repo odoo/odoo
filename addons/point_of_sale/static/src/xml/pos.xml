@@ -1248,7 +1248,7 @@
                             <t t-if="order.get_client()">
                                 <i class='fa fa-user'/>
                             </t>
-                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + order.creation_date.toString('t')"/>
+                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>
