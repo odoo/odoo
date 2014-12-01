@@ -242,7 +242,7 @@ class crm_lead(format_address, osv.osv):
         # Messaging and marketing
         'message_bounce': fields.integer('Bounce'),
         # Only used for type opportunity
-        'probability': fields.float('Success Rate (%)', group_operator="avg"),
+        'probability': fields.float('Probability', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
         'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
         'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
