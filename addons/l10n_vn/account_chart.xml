@@ -6,82 +6,70 @@
 
     <record id="account_type_current_asset" model="account.account.type">
         <field name="name">1. TÀI SẢN NGẮN HẠN</field>
-        <field name="code">current_asset</field>
         <field name="close_method">balance</field>
         <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_current_asset_rec" model="account.account.type">
         <field name="name">1. TÀI SẢN NGẮN HẠN - REC</field>
-        <field name="code">current_asset</field>
         <field name="close_method">balance</field>
         <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_long_term_asset" model="account.account.type">
         <field name="name">2. TÀI SẢN DÀI HẠN</field>
-        <field name="code">long_term_asset</field>
         <field name="close_method">balance</field>
         <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_liability" model="account.account.type">
         <field name="name">3. NỢ PHẢI TRẢ</field>
-        <field name="code">liability</field>
         <field name="close_method">balance</field>
         <field name="report_type">liability</field>
     </record>
 
     <record id="account_type_cash_equity" model="account.account.type">
         <field name="name">4. VỐN CHỦ SỞ HỮU</field>
-        <field name="code">equity</field>
         <field name="close_method">balance</field>
         <field name="report_type">asset</field>
     </record>
 
     <record id="account_type_income" model="account.account.type">
         <field name="name">5. DOANH THU</field>
-        <field name="code">income</field>
         <field name="close_method">none</field>
         <field name="report_type">income</field>
     </record>
 
     <record id="account_type_expense" model="account.account.type">
         <field name="name">6. CHI PHÍ SẢN XUẤT, KINH DOANH</field>
-        <field name="code">expense</field>
         <field name="close_method">none</field>
         <field name="report_type">expense</field>
     </record>
 
     <record id="account_type_other_income" model="account.account.type">
         <field name="name">7. THU NHẬP KHÁC</field>
-        <field name="code">other_income</field>
         <field name="close_method">none</field>
         <field name="report_type">income</field>
     </record>
 
     <record id="account_type_other_expense" model="account.account.type">
         <field name="name">8. CHI PHÍ KHÁC</field>
-        <field name="code">other_expense</field>
         <field name="close_method">none</field>
         <field name="report_type">expense</field>
     </record>
 
     <record id="account_type_evaluation" model="account.account.type">
         <field name="name">9. XÁC ĐỊNH KẾT QUẢ KINH DOANH</field>
-        <field name="code">evaluation</field>
         <field name="close_method">none</field>
     </record>
 
     <record id="account_type_other" model="account.account.type">
         <field name="name">X. TÀI KHOẢN NGOÀI BẢNG</field>
-        <field name="code">other</field>
         <field name="close_method">none</field>
     </record>
 
     <record id="account_type_root" model="account.account.type">
         <field name="name">CHỈ XEM</field>
-        <field name="code">view</field>
         <field name="close_method">none</field>
     </record>
 </data>
