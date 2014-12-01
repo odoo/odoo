@@ -1037,7 +1037,6 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
      */
     session_reload: function () {
         var self = this;
-        console.log("Inside session_reload :::: ");
         return self.rpc("/web/session/get_session_info", {}).then(function(result) {
             delete result.session_id;
             _.extend(self, result);

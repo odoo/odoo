@@ -336,7 +336,7 @@ class hr_analytic_timesheet(osv.Model):
     _inherit = 'hr.analytic.timesheet'
     _description = 'hr analytic timesheet'
 
-    #TO REMOVE: Once task 'Remove worklogs 8846' is merged
+    #TO REMOVE task_id: Once task 'Remove worklogs 8846' is merged
     _columns = {
         'task_id' : fields.many2one('project.task', 'Task'),
         'reference_id': fields.char('Anlytic Timesheet Reference'), #Use session_id to generate referenece_id
@@ -373,10 +373,6 @@ class hr_analytic_timesheet(osv.Model):
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
-    """
-    TO Improve: We will fetch last 30 days data, and we will return last 30 day's line even if it has task_id avaialble or not, we will add project_id based on analytic account
-    We will add only those lines which matches analytic account of some project
-    """
     def load_data(self, cr, uid, domain=None, fields=None, context=None):
         activities = []
         analytic_lines = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
@@ -389,17 +385,18 @@ class hr_analytic_timesheet(osv.Model):
                 if analytic_line.get('account_id')[0] == project.get('analytic_account_id')[0]:
                     analytic_line['project_id'] = (project['id'], project['name'])
         analytic_lines = filter(lambda x: x.get('project_id'), analytic_lines) #Filter records which doesn't have project_id
-        #for analytic_line in analytic_lines:
-        #    if not analytic_line.get('reference_id'):
-        #        analytic_line['reference_id'] = str(analytic_line.get('user_id')[0]) + str(analytic_line.get('project_id')[0]) + analytic_line.get('create_date')
 
-        #print "\n\nanalytic_lines before return are ::: ", analytic_lines
         return analytic_lines
 
     def sync_data(self, cr, uid, datas, load_data_domain=None, context=None):
         """
         This method synchronized the data given by Project Timesheet UI,
-        the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
+        the method will create Save Point and then try to create project if record having new project and same way it tries to create task if task is new,
+        else if will assign existing project_id and task_id in value gooing to prepare, after preparing values it will call create/write of hr.analytic.timesheet based on command and reference_id,
+        data will have unique reference_id, this reference_id is checked before record is sync with database,
+        here we will check if reference_id is already there then even though record having command=0(i.e. create) do not create record,
+        if record having reference_id then write the record, if record having command=0 and there is no reference_id match then and only then create record,
+        Once record has been sync then reload the data and provide new data to client so that client updates localstorage with new 30 day's data.
         """
         print "\n\ndatas are inside hr_analytic_timesheet ::: ", context, datas
         result = {}
@@ -443,13 +440,13 @@ class hr_analytic_timesheet(osv.Model):
                 is_submitted_id = self.search(cr, uid, [('reference_id', '=', record.get('reference_id'))], context=context)
                 if is_submitted_id:
                     submitted_line = self.browse(cr, uid, is_submitted_id[0], context=context)
-                print "\n\nrecord['command'] is LLL ", record['command'], type(record['command']), is_submitted_id, record['reference_id']
+                print "\n\nrecord command is ::: ", record['command'], is_submitted_id, record['reference_id']
                 if pattern.match(str(record['project_id'][0])) and (not is_submitted_id or record['command'] == 1):
                     project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
                     new_project_id = True
                     print "Trying to create project ::: ", project_id
                 elif pattern.match(str(record['project_id'][0])) and is_submitted_id:
-                    #Fetch project_id based on is_submitted_id -> account_id
+                    #If record is already submitted in previous sync then Fetch project_id based on is_submitted_id -> account_id
                     analytic_account_id = submitted_line.account_id and submitted_line.account_id.id
                     if not analytic_account_id:
                         continue
@@ -561,15 +558,12 @@ class hr_analytic_timesheet(osv.Model):
                 if isinstance(e, except_orm) and e.name == "ConcurrencyException":
                     pass
                 else:
-                    print "\n\neeeeeeee is >>> ", e
-                    #raise e
                     fail_records.append(current_record)
                 cr.execute('ROLLBACK TO SAVEPOINT sync_record')
             finally:
                 cr.execute('RELEASE SAVEPOINT sync_record')
         print "\n\nfail_records is ::: ", fail_records
         failed_ids = filter(lambda x: not pattern.match(str(x)), map(itemgetter('id'), fail_records))
-        print "\n\nfailed_ids and load_data_domain ::: ", failed_ids, load_data_domain
         if failed_ids:
             load_data_domain.append(['id', 'not in', failed_ids])
         res = self.load_data(cr, uid, load_data_domain, context=context)

@@ -112,7 +112,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.project_timesheet_db = new project_timesheet.project_timesheet_db();
             this.screen_data = {};  //see ScreenSelector
             //Try to check localstorage having session, we do not reload session like web module(core.js), instead stored in localstorage to keep persistent origin
-            console.log("project_timesheet is ::: ", project_timesheet, openerp);
             if(!project_timesheet.session && !_.isEmpty(this.project_timesheet_db.load("session", {}))) {
                 var stored_session = this.project_timesheet_db.load("session", {});
                 //project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {session_id: stored_session['session_id']});
@@ -220,7 +219,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             //project model will call add_task, also check if project model is also available then will not create new model else create new model and push it into projects collection
             var self = this;
             var stored_activities = this.project_timesheet_db.load("activities");
-            console.log("Inside load_stored_data ::: ", stored_activities);
             _.each(stored_activities, function(record) {
                 self.add_activity(record);
                 self.add_project(record);
@@ -293,9 +291,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             }
         },
         save_to_server: function() {
-            //TODO: Load model data in JSON format, check whether project is to create, task is to create, and activity is to create, write or delete
-            //Once we done with data collection from model, save each record by calling project's create method, remove record from localstorage and then in last reload last 30 days data, that is call load_server_data
-            //If record is failed in record creation then do not remove it from localstorage and keep it's state = pending'
             var self = this;
             this.defs = [];
             var defer = $.Deferred();
@@ -303,11 +298,8 @@ function odoo_project_timesheet_models(project_timesheet) {
             project_timesheet.blockUI();
             var generate_reference_id = function() { //May be move this function in db
                 var project_timesheet_session = self.project_timesheet_db.get_project_timesheet_session();
-                console.log("project_timesheet_session is ::: ", project_timesheet_session);
-                console.log("Sequence ::: ", self.project_timesheet_db.sequence);
                 return project_timesheet_session.session_id.toString() + "-" + project_timesheet_session.login_number.toString() + "-" + (self.project_timesheet_db.sequence+1);
             };
-            console.log("stored project timesheet session is ::: ", this.project_timesheet_db.get_project_timesheet_session());
             $.when(self.check_session()).done(function(){
                 var activity_collection = self.get('activities');
                 var activity_models = activity_collection.models;
@@ -331,13 +323,11 @@ function odoo_project_timesheet_models(project_timesheet) {
                 var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
                 var load_data_domain = [["date", ">=", start_date], ["date", "<=", end_date]];
                 self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records, load_data_domain]).then(function(result) {
-                    console.log("11111111111111111", result);
                     self.sync_complete(result);
                 }).always(function() {
                     project_timesheet.unblockUI();
                 }));
                 return $.when.apply($, self.defs).then(function() {
-                    console.log("222222222222222222");
                     self.load_stored_data();
                     defer.resolve();
                 });
@@ -345,10 +335,12 @@ function odoo_project_timesheet_models(project_timesheet) {
             return defer;
         },
         sync_complete: function(sync_result) {
-            //This method will flush localstorage data once it has been sync
+            //This method will flush localstorage activities once it has been sync
             //TODO: Remove project_timesheet_session and reload with new fetched session, if session is new then we should also start sequence from 0
+            //Set fail records with error and show error icon besides that record in activity listview
+            //TODO: Remove all models, project models, task models and activity models because after sync_complete we are going to reload localstorage data and going to create new models
             this.project_timesheet_db.flush_activities();
-            //this.project_timesheet_db.flush_project_timesheet_session();
+            //this.project_timesheet_db.clear('session');
             //this.project_timesheet_db.initialize_reference_sequence();
             this.project_timesheet_db.add_activities(sync_result.activities);
         },

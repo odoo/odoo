@@ -74,15 +74,11 @@ function odoo_project_timesheet_db(project_timesheet) {
             var activities = this.load("activities", []);
             var indexes = [];
             for(var i = 0, len = activities.length; i < len; i++) {
-                console.log("Inside remove_project_activities project_id are ::: ", activities[i].project_id[0], project_id, typeof activities[i].project_id[0], typeof project_id);
                 if(activities[i].project_id[0] === project_id){
                     indexes.push(i);
                 }
             }
-            //_.each(indexes, function(index) {activities.splice(index, 1);});
-            console.log("filtered_activities.length is before ::: ", activities.length);
             var filtered_activities = _.reject(activities, function(activity, index) { return _.contains(indexes, index); });
-            console.log("filtered_activities.length is after ::: ", filtered_activities.length);
             this.save('activities', filtered_activities);
         },
         get_pending_records: function() {
@@ -113,10 +109,6 @@ function odoo_project_timesheet_db(project_timesheet) {
         get_project_timesheet_session: function() {
             return this.load("project_timesheet_session", {});
         },
-        //TO REMOVE, We will use clear method
-        flush_project_timesheet_session: function() {
-            this.save('project_timesheet_session',{});
-        },
         flush_activities: function() {
             this.save('activities',[]);
         },
@@ -144,7 +136,6 @@ function odoo_project_timesheet_db(project_timesheet) {
                                     var splitted_values = reference_id.split("-");
                                     return parseInt(splitted_values[splitted_values.length-1]) || 0;
                                 });
-            console.log("virtual_activity_id_list is ::: ", activity_id_list);
             if (!_.isEmpty(activity_id_list)) {
                 this.sequence = _.max(activity_id_list);
             }

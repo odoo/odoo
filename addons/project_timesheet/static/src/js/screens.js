@@ -303,7 +303,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
         },
         get_current_screen: function(){
-            //return this.pos.get('selectedOrder').get_screen_data('screen') || this.default_screen;
             return this.project_timesheet_model.get_screen_data('screen') || this.default_screen;
         },
         back: function(){
@@ -393,7 +392,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             var buttons = {};
             buttons[_t("Ok")] = function() {
-                console.log("$(body).find('.modal') is ::: ",$("body").find('.modal'));
                 $("body").find('.modal').modal('hide');
             };
             new project_timesheet.Dialog(this, {
@@ -470,7 +468,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity_id = $(event.currentTarget).data("activity_id");
             if(activity_id) {
                 var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
-                //TODO: Better to develop modify screen, instead of putting static logic and putting static logic
                 this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
             }
         },
@@ -484,14 +481,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var hours = this.format_duration(activity.unit_amount);
             var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
-            console.log("current_date is ::: ", current_date);
             var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
             this.project_timesheet_db.set_current_timer_activity(data_to_set);
-            //this.$el.find(".pt_duration span.hours").text((hours[0] || 0));
             this.$el.find(".pt_duration span.hours").text(_.str.sprintf("%02d", parseInt((hours[0] || 0))));
-            //this.$el.find(".pt_duration span.minutes").text((hours[1] || 0));
             this.$el.find(".pt_duration span.minutes").text(_.str.sprintf("%02d", parseInt((hours[1] || 0))));
-            //this.$el.find(".pt_duration span.seconds").text(0);
             this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(0)));
             this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
             this.start_interval();
@@ -531,19 +524,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
         is_available_timer_activity: function() {
             var time_activity = this.project_timesheet_db.get_current_timer_activity();
             if (time_activity && time_activity['date']) {
-                //this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
                 this.$el.find(".pt_timer_start").addClass("o_hidden");
                 this.$el.find(".pt_timer_stop").removeClass("o_hidden");
                 var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['timer_date'])));
                 var hours = durationObj.asHours().toString().split('.')[0],
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
                     seconds = (durationObj.asSeconds() % 60).toString().split(".")[0];
-                console.log("Hours, Minute and Seconds are ::: ", hours, minutes, seconds);
-                //this.$el.find(".pt_duration span.hours").text(hours);
                 this.$el.find(".pt_duration span.hours").text(_.str.sprintf("%02d", parseInt(hours)));
-                //this.$el.find(".pt_duration span.minutes").text(minutes);
                 this.$el.find(".pt_duration span.minutes").text(_.str.sprintf("%02d", parseInt(minutes)));
-                //this.$el.find(".pt_duration span.seconds").text(seconds);
                 this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(seconds)));
                 this.start_interval();
                 this.initialize_timer();
@@ -592,10 +580,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.initialize_timer();
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
             } else {
-                if (!this.is_valid_data()) {
-                    alert("Please fill up the required fields ");
-                    return;
-                }
                 if (this.intervalTimer) { clearInterval(this.intervalTimer);}
                 var activity = this.project_timesheet_db.load("timer_activity");
                 var hours = this.get_date_diff(this.get_current_UTCDate(), activity.timer_date) || 0.01;
@@ -604,7 +588,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     activity['id'] = this.project_timesheet_db.get_unique_id();
                     activity['command'] = 0; //By default command = 0, activity which is to_create
                 } else if(this.project_timesheet_db.virtual_id_regex.test(activity.id)) {
-                    console.log("Inside, there is activity ID but it is virtual id, so set command = 0");
+                    //There is activity ID but it is virtual id, so set command = 0
                     activity['command'] = 0;
                 } else {
                     activity['command'] = 1;
@@ -643,13 +627,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     el_second.text(_.str.sprintf("%02d", seconds));
                 });
             }, 1000);
-        },
-        //To Remove: As we do not have any field mandatory
-        is_valid_data: function() {
-            //if (!this.project_m2o.get('value')) {
-            //    return false;
-            //}
-            return true;
         },
         reset_timer: function() {
             this.$el.find(".pt_duration .hours,.pt_duration .minutes,.pt_duration .seconds").text("00");
@@ -703,10 +680,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var momObj = new moment();
             var date = project_timesheet.datetime_to_str(momObj._d);
             project_activity_data['date'] = date; //Current date in accepted format
-            //project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             project_activity_data['id'] = this.project_timesheet_db.get_unique_id();
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
-            console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -722,7 +697,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             } else {
                 project_activity_data['command'] = 0;
             }
-            console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -797,6 +771,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity_clone = _.clone(activity);
             //activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             activity_clone.id = this.project_timesheet_db.get_unique_id();
+            activity_clone['command'] = 0;
+            delete activity_clone.reference_id;
             this.project_timesheet_model.add_project(activity_clone);
             this.project_timesheet_model.add_activity(activity_clone);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -972,8 +948,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_sync: function() {
             var self = this;
             this.project_timesheet_model.save_to_server().done(function() { //May be use always
-                console.log("333333333333333333333333333333333333 ");
-                //TODO: Show dialog sync related detail
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
         },
@@ -1003,11 +977,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.week_index = 0;
-        },
-        start: function() {
-            var self = this;
-            this._super.apply(this, arguments);
-            console.log("Inside start ::: ", this);
         },
         show: function() {
             var self = this;
@@ -1133,7 +1102,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var week_dates = [];
             var week_total = 0;
             var table_data = {};
-            console.log("Inside draw_chart ::: ", graph_data);
             //To add missing dates, we will add dummy records for missing dates, so that graph shows all days on X-axis
             if (graph_data.length) {
                 var week_day = moment(graph_data[0].date).weekday();

@@ -157,7 +157,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var self = this;
             var def = $.Deferred();
             var data;
-            console.log("this.model is ::: ", this.model);
             if(this.model) {
                 data = this.model.name_search(term);
             }
@@ -202,7 +201,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             return def.resolve(values);
         },
         _quick_create: function(e, term) {
-            //var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
             var virtual_id = this.project_timesheet_db.get_unique_id();
             this.$input.data("id", virtual_id); //TO Remove: we use this.get('value') to check
             this.set({display_string: term, value: virtual_id});
