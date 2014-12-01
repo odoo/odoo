@@ -7,7 +7,6 @@ import time
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import tools
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -15,7 +14,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning, RedirectWarning
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -55,18 +54,18 @@ class account_payment_term(models.Model):
             if amt:
                 next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
-                    next_first_date = next_date + relativedelta(day=1, months=1) #Getting 1st of next month
+                    next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
                     next_date = next_first_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
-                result.append( (next_date.strftime('%Y-%m-%d'), amt) )
+                result.append((next_date.strftime('%Y-%m-%d'), amt))
                 amount -= amt
 
-        amount = reduce(lambda x,y: x+y[1], result, 0.0)
-        dist = round(value-amount, prec)
+        amount = reduce(lambda x,y: x + y[1], result, 0.0)
+        dist = round(value - amount, prec)
         if dist:
             last_date = result and result[-1][0] or time.strftime('%Y-%m-%d')
-            result.append( (last_date, dist) )
+            result.append((last_date, dist))
         return result
 
 
@@ -140,161 +139,25 @@ class account_account(models.Model):
             if jour.account_control_ids:
                 args.append(('id', 'in', map(lambda x: x.id, jour.account_control_ids)))
             if jour.type_control_ids:
-                args.append(('user_type', 'in',  map(lambda x: x.id, jour.type_control_ids)))
+                args.append(('user_type', 'in', map(lambda x: x.id, jour.type_control_ids)))
         return super(account_account, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     def _get_children_and_consol(self):
         #this function search for all the consolidated children (recursively) of the given account ids
-        ids3 = []
+        children_ids = set(self.ids)
         for rec in self:
-            ids3 = [child.id for child in rec.child_consol_ids]
-        if ids3:
-            ids3 = ids3._get_children_and_consol()
-        return ids3
-
-    @api.multi
-    def _compute(self, query='', query_params=()):
-        """ compute the balance, debit and/or credit for the provided
-        Arguments:
-        `query`: additional query filter (as a string)
-        `query_params`: parameters for the provided query string
-                        (__compute will handle their escaping) as a
-                        tuple
-        """
-        field_names = ['balance', 'credit', 'debit', 'foreign_balance', 'adjusted_balance', 'unrealized_gain_loss']
-        mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit",
-            # by convention, foreign_balance is 0 when the account has no secondary currency, because the amounts may be in different currencies
-            'foreign_balance': "(SELECT CASE WHEN currency_id IS NULL THEN 0 ELSE COALESCE(SUM(l.amount_currency), 0) END FROM account_account WHERE id IN (l.account_id)) as foreign_balance",
-        }
-        #get all the necessary accounts
-        children_and_consolidated = self._get_children_and_consol()
-        #compute for each account the balance/debit/credit from the move lines
-        accounts = {}
-        res = {}
-        for account in self:
-            account.balance = 0.0
-            account.credit = 0.0
-            account.debit = 0.0
-            account.foreign_balance = 0.0
-            account.adjusted_balance = 0.0
-            account.unrealized_gain_loss = 0.0
-        if children_and_consolidated:
-            aml_query = self.env['account.move.line']._query_get()
- 
-            wheres = [""]
-            if query.strip():
-                wheres.append(query.strip())
-            if aml_query.strip():
-                wheres.append(aml_query.strip())
-            filters = " AND ".join(wheres)
-            # IN might not work ideally in case there are too many
-            # children_and_consolidated, in that case join on a
-            # values() e.g.:
-            # SELECT l.account_id as id FROM account_move_line l
-            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
-            # ON l.account_id = tmp.id
-            # or make _get_children_and_consol return a query and join on that
-            request = ("SELECT l.account_id as id, " +\
-                       ', '.join(mapping.values()) +
-                       " FROM account_move_line l" \
-                       " WHERE l.account_id IN %s " \
-                            + filters +
-                       " GROUP BY l.account_id")
-            params = (tuple(children_and_consolidated),) + query_params
-            cr.execute(request, params)
- 
-            for row in cr.dictfetchall():
-                accounts[row['id']] = row
- 
-            # consolidate accounts with direct children
-            children_and_consolidated.reverse()
-            brs = list(self.browse(children_and_consolidated))
-            sums = {}
-            while brs:
-                current = brs.pop(0)
-#                can_compute = True
-#                for child in current.child_id:
-#                    if child.id not in sums:
-#                        can_compute = False
-#                        try:
-#                            brs.insert(0, brs.pop(brs.index(child)))
-#                        except ValueError:
-#                            brs.insert(0, child)
-#                if can_compute:
-                for fn in field_names:
-                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                    for child in current.child_id:
-                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                            sums[current.id][fn] += sums[child.id][fn]
-                        else:
-                            sums[current.id][fn] += child.company_id.currency_id.compute(current.company_id.currency_id.id, sums[child.id][fn])
- 
-                # as we have to relay on values computed before this is calculated separately than previous fields
-                if current.currency_id and current.exchange_rate and \
-                            ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
-                    # Computing Adjusted Balance and Unrealized Gains and losses
-                    # Adjusted Balance = Foreign Balance / Exchange Rate
-                    # Unrealized Gains and losses = Adjusted Balance - Balance
-                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
-                    sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
- 
-            for account in self:
-                if sums.get(account.id):
-                    account.balance = sums[account.id][balance]
-                    account.credit = sums[account.id][credit]
-                    account.debit = sums[account.id][debit]
-                    account.foreign_balance = sums[account.id][foreign_balance]
-                    account.adjusted_balance = sums[account.id][adjusted_balance]
-                    account.unrealized_gain_loss = sums[account.id][unrealized_gain_loss]
-
-    @api.one
-    def _set_credit_debit(self, name, value):
-        if self._context.get('config_invisible', True):
-            return True
-
-        journal = self.env['account.journal'].search([('type', '=', 'situation'), ('company_id', '=', self.company_id.id)], limit=1)
-        if not journal:
-            raise Warning(_("You need an Opening journal to set the initial balance."))
-
-        move_obj = self.env['account.move.line']
-        move = move_obj.search([
-            ('journal_id', '=', journal.id),
-            ('date', '=', time.strftime('%Y-%m-%d')),
-            ('account_id', '=', self.id),
-            (name,'>', 0.0),
-            ('name','=', _('Opening Balance'))
-        ])
-        if move:
-            move.write({name: value})
-        else:
-            if value < 0.0:
-                raise Warning(_("Unable to adapt the initial balance (negative value)."))
-            nameinv = (name == 'credit' and 'debit') or 'credit'
-            move_id = move_obj.create({
-                'name': _('Opening Balance'),
-                'account_id': self.id,
-                'journal_id': journal.id,
-                name: value,
-                nameinv: 0.0
-            })
-        return True
-
-    @api.one
-    def _set_credit(self):
-        self._set_credit_debit('credit', self.credit)
-
-    @api.one
-    def _set_debit(self):
-        self._set_credit_debit('debit', self.debit)
+            this_rec_children = []
+            if rec.child_consol_ids:
+                this_rec_children = rec.child_consol_ids._get_children_and_consol()
+            children_ids |= set(this_rec_children)
+        return list(children_ids)
 
     @api.multi
     def _get_company_currency(self):
         for account in self:
             account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
+
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
@@ -305,17 +168,6 @@ class account_account(models.Model):
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
-    balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'))
-    credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'))
-    debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'))
-    foreign_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Foreign Balance',
-        help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
-
-    adjusted_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Adjusted Balance',
-        help="Total amount (in Company currency) for transactions held in secondary currency for this account.")
-    unrealized_gain_loss = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Unrealized Gain or Loss',
-        help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions.")
-    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
     last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
         help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.'),

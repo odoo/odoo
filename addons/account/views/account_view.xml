@@ -91,11 +91,6 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="debit"/>
-                            <field name="credit"/>
-                            <field name="balance"/>
-                        </group>
-                        <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
                             <field name="child_consol_ids"
@@ -118,9 +113,6 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type" invisible="1"/>
-                    <field name="debit"/>
-                    <field name="credit"/>
-                    <field name="balance"/>
                     <field name="company_currency_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -145,7 +137,7 @@
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="html">
@@ -171,65 +163,12 @@
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
             src_model="account.account"/>
 
- 
-        <record id="view_account_gain_loss_tree" model="ir.ui.view">
-           <field name="name">Unrealized Gain or Loss</field>
-            <field name="model">account.account</field>
-            <field name="arch" type="xml">
-                <tree string="Unrealized Gains and losses" create="false">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="user_type" invisible="1"/>
-                    <field name="currency_id"/>
-                    <field name="exchange_rate"/>
-                    <field name="foreign_balance"/>
-                    <field name="adjusted_balance"/>
-                    <field name="balance"/>
-                    <field name="unrealized_gain_loss"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_account_gain_loss" model="ir.actions.act_window">
-            <field name="name">Unrealized Gain or Loss</field>
-            <field name="res_model">account.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_account_gain_loss_tree"/>
-            <field name="domain">[('currency_id','!=',False)]</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add an account.
-              </p><p>
-                When doing multi-currency transactions, you may loose or gain
-                some amount due to changes of exchange rate. This menu gives
-                you a forecast of the Gain or Loss you'd realized if those
-                transactions were ended today. Only for accounts having a
-                secondary currency set.
-              </p>
-            </field>
-        </record>
-        <menuitem
-            name="Unrealized Gain or Loss"
-            action="action_account_gain_loss"
-            groups="account.group_account_user"
-            id="menu_unrealized_gains_losses"
-            parent="account.menu_multi_currency"/>
-
         <act_window
             id="action_move_line_select"
             name="Journal Items"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
             src_model="account.account"/>
-
-        <!-- Enable drill-down from Chart Of Accounts tree view -->
-        <act_window
-            id="action_account_items"
-            name="Journal Items"
-            context="{'search_default_account_id': [active_id], 'fiscalyear': context.get('fiscalyear')}"
-            res_model="account.move.line"
-            src_model="account.account"
-            key2="tree_but_open"/>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
@@ -1822,17 +1761,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
-        <record id="account_account_graph" model="ir.ui.view">
-            <field name="name">account.account.graph</field>
-            <field name="model">account.account</field>
-            <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
-                    <field name="name"/>
-                    <field name="balance" operator="+"/>
-                </graph>
-            </field>
-         </record>
 
          <!-- Fiscal Position Templates -->
 
