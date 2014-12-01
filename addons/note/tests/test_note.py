@@ -23,21 +23,83 @@ from openerp.tests import common
 
 class TestNote(common.TransactionCase):
 
-    def test_bug_lp_1156215(self):
-        """ensure any users can create new users"""
-        cr, uid = self.cr, self.uid
-        IMD = self.registry('ir.model.data')
-        Users = self.registry('res.users')
+    def setUp(self):
+        super(TestNote, self).setUp()
 
-        _, demo_user = IMD.get_object_reference(cr, uid, 'base', 'user_demo')
-        _, group_id = IMD.get_object_reference(cr, uid, 'base', 'group_erp_manager')
+        Note = self.env['note.note']
+        Stage = self.env['note.stage']
+        User = self.env['res.users']
+        group_employee_id = self.ref('base.group_user')
 
-        Users.write(cr, uid, [demo_user], {
-            'groups_id': [(4, group_id)],
+        # Test users
+        self.user1 = User.create({
+            'name': 'Arielle Dombasle',
+            'login': 'Arielle',
+            'alias_name': 'arielle',
+            'email': 'arielle.dombasle@example.com',
+            'groups_id': [(6, 0, [group_employee_id])]
+        })
+        self.user2 = User.create({
+            'name': 'Philippe Katerine',
+            'login': 'Philippe',
+            'alias_name': 'philippe',
+            'email': 'philippe.katerine@example.com',
+            'groups_id': [(6, 0, [group_employee_id])]
         })
 
-        # must not fail
-        Users.create(cr, demo_user, {
-            'name': 'test bug lp:1156215',
-            'login': 'lp_1156215',
-        })
+        # Test stages
+        self.stage11 = Stage.create({
+                'name': 'arielle_1',
+                'user_id': self.user1.id
+                })
+        self.stage12 = Stage.create({
+                'name': 'arielle_2',
+                'user_id': self.user1.id
+                })
+        self.stage21 = Stage.create({
+                'name': 'phil_1',
+                'user_id': self.user2.id
+                })
+        self.stage22 = Stage.create({
+                'name': 'phil_2',
+                'user_id': self.user2.id
+                })
+
+        # Test notes
+        self.note1 = Note.create({
+                'user_id': self.user1.id,
+                'memo': '<p>Ceci est une note</p>',
+                'sequence': 1,
+                'message_follower_ids': [self.user1.partner_id.id, self.user2.partner_id.id],
+                'stage_ids': [(6,0,[self.stage11.id, self.stage21.id])]
+                })
+        self.note2 = Note.create({
+                'user_id': self.user2.id,
+                'memo': '<p>Ceci est peut-etre une note</p><br/><p>Ou pas!</p>',
+                'sequence': 3,
+                'message_follower_ids': [self.user1.partner_id.id, self.user2.partner_id.id],
+                'stage_ids': [(6,0,[self.stage12.id, self.stage22.id])]
+                })
+
+    # TESTS
+    # note.note: title from first line of content
+    #            done/not done
+    #            note stage per user
+
+    def test_note_title(self):
+        """ Test: Note title is equals to first line withtout html tags """
+        self.assertEqual(self.note1.name,'Ceci est une note')
+        self.assertEqual(self.note2.name,'Ceci est peut-etre une note')
+
+    def test_note_done(self):
+        """ Test: Done/Not Done switch """
+        self.note1.onclick_note_is_done()
+        self.assertTrue(self.note1.open==False and self.note1.date_done!=None)
+        self.note1.onclick_note_not_done()
+        self.assertTrue(self.note1.open)
+
+    def test_user_stage(self):
+        """ Test: Note stage is user dependent """
+        stage1 = self.env['note.note'].sudo(self.user1).browse(self.note1.id).stage_id
+        stage2 = self.env['note.note'].sudo(self.user2).browse(self.note1.id).stage_id
+        self.assertTrue(stage1 != stage2)
