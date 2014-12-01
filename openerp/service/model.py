@@ -115,7 +115,7 @@ def check(f):
                 if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                     raise
                 if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
-                    _logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
+                    _logger.info("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
                     raise
                 wait_time = random.uniform(0.0, 2 ** tries)
                 tries += 1

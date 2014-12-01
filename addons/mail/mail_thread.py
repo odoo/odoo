@@ -804,7 +804,7 @@ class mail_thread(osv.AbstractModel):
             mail_mail.send(cr, uid, [mail_id], context=context)
 
         def _warn(message):
-            _logger.warning('Routing mail with Message-Id %s: route %s: %s',
+            _logger.info('Routing mail with Message-Id %s: route %s: %s',
                                 message_id, route, message)
 
         # Wrong model

@@ -237,7 +237,7 @@ class PaymentTxOgone(osv.Model):
 
     def _ogone_form_validate(self, cr, uid, tx, data, context=None):
         if tx.state == 'done':
-            _logger.warning('Ogone: trying to validate an already validated tx (ref %s)' % tx.reference)
+            _logger.info('Ogone: trying to validate an already validated tx (ref %s)' % tx.reference)
             return True
 
         status = int(data.get('STATUS', '0'))

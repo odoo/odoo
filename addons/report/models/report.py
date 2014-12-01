@@ -461,7 +461,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.warning("Cannot save PDF report %r as attachment",
+                            _logger.info("Cannot save PDF report %r as attachment",
                                             attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',

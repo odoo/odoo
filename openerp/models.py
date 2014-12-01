@@ -348,7 +348,7 @@ class BaseModel(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
+        return _logger.info("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
 
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
@@ -3076,7 +3076,7 @@ class BaseModel(object):
         else:
             invalid_fields = set(filter(lambda name: not valid(name), fields))
             if invalid_fields:
-                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
+                _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                     operation, user, self._name, ', '.join(invalid_fields))
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. '

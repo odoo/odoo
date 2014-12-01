@@ -597,7 +597,7 @@ class google_calendar(osv.AbstractModel):
                     cr.commit()
                 else:
                     _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                    _logger.warning("Response : %s" % response)
+                    _logger.debug("Response : %s" % response)
         return new_ids
 
     def get_context_no_virtual(self, context):

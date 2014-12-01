@@ -214,13 +214,13 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            _logger.warning(msg)
+            _logger.info(msg)
             self._close(True)
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            _logger.warning(query)
+            _logger.debug(query)
             _logger.warning("SQL queries cannot contain %d or %f anymore. Use only %s")
         if params and not isinstance(params, (tuple, list, dict)):
             _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)

@@ -2136,7 +2136,7 @@ class account_tax(osv.osv):
             product=product, partner=partner, force_excluded=force_excluded)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
-        _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
+        _logger.info("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
