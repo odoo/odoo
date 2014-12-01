@@ -302,7 +302,7 @@ class account_bank_statement(models.Model):
             # Explicitly unlink bank statement lines
             # so it will check that the related journal entries have
             # been deleted first
-            self.env['account.bank.statement.line'].unlink(statement.line_ids)
+            statement.line_ids.unlink()
         return super(account_bank_statement, self).unlink()
 
     @api.multi
