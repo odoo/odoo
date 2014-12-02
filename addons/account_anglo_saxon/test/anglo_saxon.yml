@@ -97,13 +97,13 @@
 -
   I configure the product category with stock valuation account.
 -
-  !record {model: product.category, id: product.product_category_4}:
+  !record {model: product.category, id: product.product_category_5}:
     property_stock_valuation_account_id: account_anglo_stock_valuation
 -
   I configure the product with required accounts, and cost method = standard
 -
   !python {model: product.product}: |
-     self.write(cr, uid, [ref('product.product_product_10')], {'list_price': 20.00,'standard_price': 9,'categ_id': ref('product.product_category_4'),'valuation': 'real_time',
+     self.write(cr, uid, [ref('product.product_product_10')], {'list_price': 20.00,'standard_price': 9,'categ_id': ref('product.product_category_5'),'valuation': 'real_time',
       'property_account_income': ref('account_anglo_income'),'property_account_expense': ref('account_anglo_cogs'),
       'property_account_creditor_price_difference': ref('account_anglo_price_difference'),'property_stock_account_input': ref('account_anglo_stock_input'),
       'property_stock_account_output': ref('account_anglo_stock_output'), 'cost_method': 'standard'})
