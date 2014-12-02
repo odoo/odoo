@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
         <!-- Account Types -->
@@ -236,12 +236,13 @@
         </record>
         <record id="ch_coa_100" model="account.account.template">
             <field name="code">100</field>
-            <field name="name">Tr&#233;sorerie</field>
+            <field name="name">Trésorerie</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_13])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1000" model="account.account.template">
             <field name="code">1000</field>
@@ -273,12 +274,13 @@
         </record>
         <record id="ch_coa_106" model="account.account.template">
             <field name="code">106</field>
-            <field name="name">Actifs &#224; court terme cot&#233;s en bourse</field>
+            <field name="name">Actifs à court terme cotés en bourse</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_47])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1060" model="account.account.template">
             <field name="code">1060</field>
@@ -300,16 +302,17 @@
         </record>
         <record id="ch_coa_110" model="account.account.template">
             <field name="code">110</field>
-            <field name="name">Cr&#233;ances r&#233;sultant de livraisons et prestations</field>
+            <field name="name">Créances résultant de livraisons et prestations</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_14])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1100" model="account.account.template">
             <field name="code">1100</field>
-            <field name="name">D&#233;biteurs</field>
+            <field name="name">Débiteurs</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="type">receivable</field>
             <field name="parent_id" ref="ch_coa_110"/>
@@ -327,16 +330,17 @@
         </record>
         <record id="ch_coa_114" model="account.account.template">
             <field name="code">114</field>
-            <field name="name">Autres cr&#233;ances &#224; court terme</field>
+            <field name="name">Autres créances à court terme</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_15])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1140" model="account.account.template">
             <field name="code">1140</field>
-            <field name="name">Avances et pr&#234;ts</field>
+            <field name="name">Avances et prêts</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -345,7 +349,7 @@
         </record>
         <record id="ch_coa_1149" model="account.account.template">
             <field name="code">1149</field>
-            <field name="name">Ajustement de la valeur des avances et des pr&#234;ts</field>
+            <field name="name">Ajustement de la valeur des avances et des prêts</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -354,7 +358,7 @@
         </record>
         <record id="ch_coa_1170" model="account.account.template">
             <field name="code">1170</field>
-            <field name="name">Imp&#244;t pr&#233;alable: TVA s/mat&#233;riel, marchandises, prestations et &#233;nergie</field>
+            <field name="name">Impôt préalable: TVA s/matériel, marchandises, prestations et énergie</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -363,7 +367,7 @@
         </record>
         <record id="ch_coa_1171" model="account.account.template">
             <field name="code">1171</field>
-            <field name="name">Imp&#244;t pr&#233;alable: TVA s/investissements et autres charges d&#8217;exploitation</field>
+            <field name="name">Impôt préalable: TVA s/investissements et autres charges d’exploitation</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -372,7 +376,7 @@
         </record>
         <record id="ch_coa_1176" model="account.account.template">
             <field name="code">1176</field>
-            <field name="name">Imp&#244;t anticip&#233;</field>
+            <field name="name">Impôt anticipé</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -381,7 +385,7 @@
         </record>
         <record id="ch_coa_1180" model="account.account.template">
             <field name="code">1180</field>
-            <field name="name">Cr&#233;ances envers les assurances sociales et institutions de pr&#233;voyance</field>
+            <field name="name">Créances envers les assurances sociales et institutions de prévoyance</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -390,7 +394,7 @@
         </record>
         <record id="ch_coa_1189" model="account.account.template">
             <field name="code">1189</field>
-            <field name="name">Imp&#244;t &#224; la source</field>
+            <field name="name">Impôt à la source</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -399,7 +403,7 @@
         </record>
         <record id="ch_coa_1190" model="account.account.template">
             <field name="code">1190</field>
-            <field name="name">Autres cr&#233;ances &#224; court terme</field>
+            <field name="name">Autres créances à court terme</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -408,7 +412,7 @@
         </record>
         <record id="ch_coa_1199" model="account.account.template">
             <field name="code">1199</field>
-            <field name="name">Ajustement de la valeur des cr&#233;ances &#224; court terme</field>
+            <field name="name">Ajustement de la valeur des créances à court terme</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
@@ -417,12 +421,13 @@
         </record>
         <record id="ch_coa_120" model="account.account.template">
             <field name="code">120</field>
-            <field name="name">Stocks et prestations non factur&#233;es</field>
+            <field name="name">Stocks et prestations non facturées</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_16])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1200" model="account.account.template">
             <field name="code">1200</field>
@@ -435,7 +440,7 @@
         </record>
         <record id="ch_coa_1210" model="account.account.template">
             <field name="code">1210</field>
-            <field name="name">Mati&#232;res premi&#232;res</field>
+            <field name="name">Matières premières</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
@@ -444,7 +449,7 @@
         </record>
         <record id="ch_coa_1220" model="account.account.template">
             <field name="code">1220</field>
-            <field name="name">Mati&#232;res auxiliaires</field>
+            <field name="name">Matières auxiliaires</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
@@ -453,7 +458,7 @@
         </record>
         <record id="ch_coa_1230" model="account.account.template">
             <field name="code">1230</field>
-            <field name="name">Mati&#232;res consommables</field>
+            <field name="name">Matières consommables</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
@@ -489,7 +494,7 @@
         </record>
         <record id="ch_coa_1280" model="account.account.template">
             <field name="code">1280</field>
-            <field name="name">Prestations de services non factur&#233;es</field>
+            <field name="name">Prestations de services non facturées</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
@@ -498,16 +503,17 @@
         </record>
         <record id="ch_coa_130" model="account.account.template">
             <field name="code">130</field>
-            <field name="name">Actifs de r&#233;gularisation (transitoires)</field>
+            <field name="name">Actifs de régularisation (transitoires)</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_17])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1300" model="account.account.template">
             <field name="code">1300</field>
-            <field name="name">Charges pay&#233;es d&#8216;avance</field>
+            <field name="name">Charges payées d‘avance</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_130"/>
@@ -516,7 +522,7 @@
         </record>
         <record id="ch_coa_1301" model="account.account.template">
             <field name="code">1301</field>
-            <field name="name">Produits &#224; recevoir</field>
+            <field name="name">Produits à recevoir</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_130"/>
@@ -534,16 +540,17 @@
         </record>
         <record id="ch_coa_140" model="account.account.template">
             <field name="code">140</field>
-            <field name="name">Immobilisations financi&#232;res</field>
+            <field name="name">Immobilisations financières</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_19])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1400" model="account.account.template">
             <field name="code">1400</field>
-            <field name="name">Titres &#224; long terme</field>
+            <field name="name">Titres à long terme</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
@@ -561,7 +568,7 @@
         </record>
         <record id="ch_coa_1440" model="account.account.template">
             <field name="code">1440</field>
-            <field name="name">Pr&#234;ts</field>
+            <field name="name">Prêts</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
@@ -570,7 +577,7 @@
         </record>
         <record id="ch_coa_1441" model="account.account.template">
             <field name="code">1441</field>
-            <field name="name">Hypoth&#232;ques</field>
+            <field name="name">Hypothèques</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
@@ -579,7 +586,7 @@
         </record>
         <record id="ch_coa_1449" model="account.account.template">
             <field name="code">1449</field>
-            <field name="name">Ajustement de la valeur des cr&#233;ances &#224; long terme</field>
+            <field name="name">Ajustement de la valeur des créances à long terme</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
@@ -594,6 +601,7 @@
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_20])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1480" model="account.account.template">
             <field name="code">1480</field>
@@ -621,6 +629,7 @@
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_21])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1500" model="account.account.template">
             <field name="code">1500</field>
@@ -660,7 +669,7 @@
         </record>
         <record id="ch_coa_1520" model="account.account.template">
             <field name="code">1520</field>
-            <field name="name">Machines de bureau, informatique, syst&#232;mes de communication</field>
+            <field name="name">Machines de bureau, informatique, systèmes de communication</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
@@ -678,7 +687,7 @@
         </record>
         <record id="ch_coa_1530" model="account.account.template">
             <field name="code">1530</field>
-            <field name="name">V&#233;hicules</field>
+            <field name="name">Véhicules</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
@@ -687,7 +696,7 @@
         </record>
         <record id="ch_coa_1539" model="account.account.template">
             <field name="code">1539</field>
-            <field name="name">Ajustement de la valeur des v&#233;hicules</field>
+            <field name="name">Ajustement de la valeur des véhicules</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
@@ -720,10 +729,11 @@
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_69])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1600" model="account.account.template">
             <field name="code">1600</field>
-            <field name="name">Immeubles d&#8217;exploitation</field>
+            <field name="name">Immeubles d’exploitation</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_160"/>
@@ -732,7 +742,7 @@
         </record>
         <record id="ch_coa_1609" model="account.account.template">
             <field name="code">1609</field>
-            <field name="name">Ajustement de la valeur des immeubles d&#8217;exploitation</field>
+            <field name="name">Ajustement de la valeur des immeubles d’exploitation</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_160"/>
@@ -747,10 +757,11 @@
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_22])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1700" model="account.account.template">
             <field name="code">1700</field>
-            <field name="name">Brevets, know-how, licences, droits, d&#233;veloppement</field>
+            <field name="name">Brevets, know-how, licences, droits, développement</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
@@ -759,7 +770,7 @@
         </record>
         <record id="ch_coa_1709" model="account.account.template">
             <field name="code">1709</field>
-            <field name="name">Ajustement de la valeur des brevets, know-how, licences, droits, d&#233;v.</field>
+            <field name="name">Ajustement de la valeur des brevets, know-how, licences, droits, dév.</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
@@ -786,16 +797,17 @@
         </record>
         <record id="ch_coa_180" model="account.account.template">
             <field name="code">180</field>
-            <field name="name">Capital non vers&#233; : capital social, capital de fondation</field>
+            <field name="name">Capital non versé : capital social, capital de fondation</field>
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_23])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1850" model="account.account.template">
             <field name="code">1850</field>
-            <field name="name">Capital actions, capital social, droits de participations ou capital de fondation non vers&#233;s</field>
+            <field name="name">Capital actions, capital social, droits de participations ou capital de fondation non versés</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_180"/>
@@ -822,16 +834,17 @@
         </record>
         <record id="ch_coa_200" model="account.account.template">
             <field name="code">200</field>
-            <field name="name">Dettes &#224; court terme r&#233;sultant d&#8217;achats et de prestations de services</field>
+            <field name="name">Dettes à court terme résultant d’achats et de prestations de services</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_25])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2000" model="account.account.template">
             <field name="code">2000</field>
-            <field name="name">Cr&#233;anciers</field>
+            <field name="name">Créanciers</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field name="type">payable</field>
             <field name="parent_id" ref="ch_coa_200"/>
@@ -849,12 +862,13 @@
         </record>
         <record id="ch_coa_210" model="account.account.template">
             <field name="code">210</field>
-            <field name="name">Dettes &#224; court terme r&#233;mun&#233;r&#233;s</field>
+            <field name="name">Dettes à court terme rémunérés</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_26])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2100" model="account.account.template">
             <field name="code">2100</field>
@@ -876,7 +890,7 @@
         </record>
         <record id="ch_coa_2140" model="account.account.template">
             <field name="code">2140</field>
-            <field name="name">Autres dettes &#224; court terme r&#233;mun&#233;r&#233;es</field>
+            <field name="name">Autres dettes à court terme rémunérées</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_210"/>
@@ -885,12 +899,13 @@
         </record>
         <record id="ch_coa_220" model="account.account.template">
             <field name="code">220</field>
-            <field name="name">Autres dettes &#224; court terme</field>
+            <field name="name">Autres dettes à court terme</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_27])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2200" model="account.account.template">
             <field name="code">2200</field>
@@ -903,7 +918,7 @@
         </record>
         <record id="ch_coa_2201" model="account.account.template">
             <field name="code">2201</field>
-            <field name="name">D&#233;compte TVA</field>
+            <field name="name">Décompte TVA</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -912,7 +927,7 @@
         </record>
         <record id="ch_coa_2206" model="account.account.template">
             <field name="code">2206</field>
-            <field name="name">Imp&#244;t anticip&#233; d&#251;</field>
+            <field name="name">Impôt anticipé dû</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -921,7 +936,7 @@
         </record>
         <record id="ch_coa_2208" model="account.account.template">
             <field name="code">2208</field>
-            <field name="name">Imp&#244;ts directs</field>
+            <field name="name">Impôts directs</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -930,7 +945,7 @@
         </record>
         <record id="ch_coa_2210" model="account.account.template">
             <field name="code">2210</field>
-            <field name="name">Autres dettes &#224; court terme</field>
+            <field name="name">Autres dettes à court terme</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -948,7 +963,7 @@
         </record>
         <record id="ch_coa_2270" model="account.account.template">
             <field name="code">2270</field>
-            <field name="name">Assurances sociales et institutions de pr&#233;voyance</field>
+            <field name="name">Assurances sociales et institutions de prévoyance</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -957,7 +972,7 @@
         </record>
         <record id="ch_coa_2279" model="account.account.template">
             <field name="code">2279</field>
-            <field name="name">Imp&#244;t &#224; la source</field>
+            <field name="name">Impôt à la source</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
@@ -966,16 +981,17 @@
         </record>
         <record id="ch_coa_230" model="account.account.template">
             <field name="code">230</field>
-            <field name="name">Passifs de r&#233;gularisation (transitoires) et provisions &#224; court terme</field>
+            <field name="name">Passifs de régularisation (transitoires) et provisions à court terme</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_29])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2300" model="account.account.template">
             <field name="code">2300</field>
-            <field name="name">Charges &#224; payer</field>
+            <field name="name">Charges à payer</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
@@ -984,7 +1000,7 @@
         </record>
         <record id="ch_coa_2301" model="account.account.template">
             <field name="code">2301</field>
-            <field name="name">Produits encaiss&#233;s d&#8217;avance</field>
+            <field name="name">Produits encaissés d’avance</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
@@ -993,7 +1009,7 @@
         </record>
         <record id="ch_coa_2330" model="account.account.template">
             <field name="code">2330</field>
-            <field name="name">Provisions &#224; court terme</field>
+            <field name="name">Provisions à court terme</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
@@ -1011,12 +1027,13 @@
         </record>
         <record id="ch_coa_240" model="account.account.template">
             <field name="code">240</field>
-            <field name="name">Dettes &#224; long terme r&#233;mun&#233;r&#233;es</field>
+            <field name="name">Dettes à long terme rémunérées</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_31])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2400" model="account.account.template">
             <field name="code">2400</field>
@@ -1056,7 +1073,7 @@
         </record>
         <record id="ch_coa_2451" model="account.account.template">
             <field name="code">2451</field>
-            <field name="name">Hypoth&#232;ques</field>
+            <field name="name">Hypothèques</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
@@ -1065,16 +1082,17 @@
         </record>
         <record id="ch_coa_250" model="account.account.template">
             <field name="code">250</field>
-            <field name="name">Autres dettes &#224; long terme</field>
+            <field name="name">Autres dettes à long terme</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_37])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2500" model="account.account.template">
             <field name="code">2500</field>
-            <field name="name">Autres dettes &#224; long terme</field>
+            <field name="name">Autres dettes à long terme</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_250"/>
@@ -1083,12 +1101,13 @@
         </record>
         <record id="ch_coa_260" model="account.account.template">
             <field name="code">260</field>
-            <field name="name">Provisions &#224; long termes et provisions l&#233;gales</field>
+            <field name="name">Provisions à long termes et provisions légales</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_33])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2600" model="account.account.template">
             <field name="code">2600</field>
@@ -1116,6 +1135,7 @@
             <field name="parent_id" ref="ch_coa_28"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_38])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2800" model="account.account.template">
             <field name="code">2800</field>
@@ -1128,16 +1148,17 @@
         </record>
         <record id="ch_coa_290" model="account.account.template">
             <field name="code">290</field>
-            <field name="name">R&#233;serves / b&#233;n&#233;fices et pertes</field>
+            <field name="name">Réserves / bénéfices et pertes</field>
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_28"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_39])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_2900" model="account.account.template">
             <field name="code">2900</field>
-            <field name="name">R&#233;serves l&#233;gales issues du capital</field>
+            <field name="name">Réserves légales issues du capital</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1146,7 +1167,7 @@
         </record>
         <record id="ch_coa_2940" model="account.account.template">
             <field name="code">2940</field>
-            <field name="name">R&#233;serves d&#8216;&#233;valuation</field>
+            <field name="name">Réserves d‘évaluation</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1155,7 +1176,7 @@
         </record>
         <record id="ch_coa_2950" model="account.account.template">
             <field name="code">2950</field>
-            <field name="name">R&#233;serves l&#233;gales issues du b&#233;n&#233;fice</field>
+            <field name="name">Réserves légales issues du bénéfice</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1164,7 +1185,7 @@
         </record>
         <record id="ch_coa_2960" model="account.account.template">
             <field name="code">2960</field>
-            <field name="name">R&#233;serves libres</field>
+            <field name="name">Réserves libres</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1173,7 +1194,7 @@
         </record>
         <record id="ch_coa_2970" model="account.account.template">
             <field name="code">2970</field>
-            <field name="name">B&#233;n&#233;fice / perte report&#233;</field>
+            <field name="name">Bénéfice / perte reporté</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1182,7 +1203,7 @@
         </record>
         <record id="ch_coa_2979" model="account.account.template">
             <field name="code">2979</field>
-            <field name="name">B&#233;n&#233;fice / perte de l&#8217;exercice</field>
+            <field name="name">Bénéfice / perte de l’exercice</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1191,7 +1212,7 @@
         </record>
         <record id="ch_coa_2980" model="account.account.template">
             <field name="code">2980</field>
-            <field name="name">Propres actions, parts sociales, droits de participations (poste n&#233;gatif)</field>
+            <field name="name">Propres actions, parts sociales, droits de participations (poste négatif)</field>
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
@@ -1206,15 +1227,17 @@
             <field name="parent_id" ref="ch_coa_0"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_68,financial_report_46])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_3" model="account.account.template">
             <field name="code">3</field>
-            <field name="name">CHIFFRE D&#8217;AFFAIRES RESULTANT DES VENTES ET DES PRESTATIONS DE SERVICES</field>
+            <field name="name">CHIFFRE D’AFFAIRES RESULTANT DES VENTES ET DES PRESTATIONS DE SERVICES</field>
             <field name="user_type" ref="account.account_type_income_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_60,financial_report_61,financial_report_62,financial_report_65,financial_report_67,financial_report_59,financial_report_58])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_30" model="account.account.template">
             <field name="code">30</field>
@@ -1224,10 +1247,11 @@
             <field name="parent_id" ref="ch_coa_3"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_45])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_3000" model="account.account.template">
             <field name="code">3000</field>
-            <field name="name">Ventes de produits fabriqu&#233;s</field>
+            <field name="name">Ventes de produits fabriqués</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
@@ -1281,7 +1305,7 @@
         </record>
         <record id="ch_coa_3800" model="account.account.template">
             <field name="code">3800</field>
-            <field name="name">D&#233;ductions sur ventes</field>
+            <field name="name">Déductions sur ventes</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
@@ -1305,6 +1329,7 @@
             <field name="parent_id" ref="ch_coa_3"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_57])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_3900" model="account.account.template">
             <field name="code">3900</field>
@@ -1326,7 +1351,7 @@
         </record>
         <record id="ch_coa_3940" model="account.account.template">
             <field name="code">3940</field>
-            <field name="name">Variation de la valeur des prestations non factur&#233;es</field>
+            <field name="name">Variation de la valeur des prestations non facturées</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_39"/>
@@ -1341,10 +1366,11 @@
             <field name="parent_id" ref="ch_coa_R"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_62,financial_report_60,financial_report_61,financial_report_48,financial_report_65,financial_report_67,financial_report_59])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_4000" model="account.account.template">
             <field name="code">4000</field>
-            <field name="name">Charges de mat&#233;riel de l&#8216;atelier</field>
+            <field name="name">Charges de matériel de l‘atelier</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
@@ -1353,7 +1379,7 @@
         </record>
         <record id="ch_coa_4200" model="account.account.template">
             <field name="code">4200</field>
-            <field name="name">Achats de marchandises destin&#233;es &#224; la revente</field>
+            <field name="name">Achats de marchandises destinées à la revente</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
@@ -1371,7 +1397,7 @@
         </record>
         <record id="ch_coa_4500" model="account.account.template">
             <field name="code">4500</field>
-            <field name="name">Charges d&#8216;&#233;nergie pour l&#8216;exploitation</field>
+            <field name="name">Charges d‘énergie pour l‘exploitation</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
@@ -1380,7 +1406,7 @@
         </record>
         <record id="ch_coa_4900" model="account.account.template">
             <field name="code">4900</field>
-            <field name="name">D&#233;ductions sur les charges</field>
+            <field name="name">Déductions sur les charges</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
@@ -1395,6 +1421,7 @@
             <field name="parent_id" ref="ch_coa_R"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_60,financial_report_61,financial_report_62,financial_report_49,financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_5000" model="account.account.template">
             <field name="code">5000</field>
@@ -1434,7 +1461,7 @@
         </record>
         <record id="ch_coa_6" model="account.account.template">
             <field name="code">6</field>
-            <field name="name">AUTRES CHARGES D&#8216;EXPLOITATION, AMORTISSEMENTS ET AJUSTEMENT DE VALEUR, R&#201;SULTAT FINANCIER</field>
+            <field name="name">AUTRES CHARGES D‘EXPLOITATION, AMORTISSEMENTS ET AJUSTEMENT DE VALEUR, RÉSULTAT FINANCIER</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
@@ -1443,12 +1470,13 @@
         </record>
         <record id="ch_coa_60" model="account.account.template">
             <field name="code">60</field>
-            <field name="name">Autres charges d&#8216;exploitation</field>
+            <field name="name">Autres charges d‘exploitation</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_6"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_61,financial_report_62,financial_report_67,financial_report_50,financial_report_65])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_6000" model="account.account.template">
             <field name="code">6000</field>
@@ -1461,7 +1489,7 @@
         </record>
         <record id="ch_coa_6100" model="account.account.template">
             <field name="code">6100</field>
-            <field name="name">Entretien, r&#233;parations et remplacement des inst. servant &#224; l&#8217;exploitation</field>
+            <field name="name">Entretien, réparations et remplacement des inst. servant à l’exploitation</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1479,7 +1507,7 @@
         </record>
         <record id="ch_coa_6200" model="account.account.template">
             <field name="code">6200</field>
-            <field name="name">Charges de v&#233;hicules et de transport</field>
+            <field name="name">Charges de véhicules et de transport</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1488,7 +1516,7 @@
         </record>
         <record id="ch_coa_6260" model="account.account.template">
             <field name="code">6260</field>
-            <field name="name">Leasing et location de v&#233;hicules</field>
+            <field name="name">Leasing et location de véhicules</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1506,7 +1534,7 @@
         </record>
         <record id="ch_coa_6400" model="account.account.template">
             <field name="code">6400</field>
-            <field name="name">Charges d&#8217;&#233;nergie et &#233;vacuation des d&#233;chets</field>
+            <field name="name">Charges d’énergie et évacuation des déchets</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1515,7 +1543,7 @@
         </record>
         <record id="ch_coa_6500" model="account.account.template">
             <field name="code">6500</field>
-            <field name="name">Charges d&#8216;administration</field>
+            <field name="name">Charges d‘administration</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1524,7 +1552,7 @@
         </record>
         <record id="ch_coa_6570" model="account.account.template">
             <field name="code">6570</field>
-            <field name="name">Charges et leasing d&#8217;informatique</field>
+            <field name="name">Charges et leasing d’informatique</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1533,7 +1561,7 @@
         </record>
         <record id="ch_coa_6600" model="account.account.template">
             <field name="code">6600</field>
-            <field name="name">Publicit&#233;</field>
+            <field name="name">Publicité</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1542,7 +1570,7 @@
         </record>
         <record id="ch_coa_6700" model="account.account.template">
             <field name="code">6700</field>
-            <field name="name">Autres charges d&#8216;exploitation</field>
+            <field name="name">Autres charges d‘exploitation</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
@@ -1557,6 +1585,7 @@
             <field name="parent_id" ref="ch_coa_6"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_62,financial_report_51,financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_6800" model="account.account.template">
             <field name="code">6800</field>
@@ -1569,21 +1598,23 @@
         </record>
         <record id="ch_coa_69" model="account.account.template">
             <field name="code">69</field>
-            <field name="name">R&#233;sultat financier</field>
+            <field name="name">Résultat financier</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_6"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_6900" model="account.account.template">
             <field name="code">6900</field>
-            <field name="name">Charges financi&#232;res</field>
+            <field name="name">Charges financières</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_69"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_63])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_6950" model="account.account.template">
             <field name="code">6950</field>
@@ -1593,15 +1624,17 @@
             <field name="parent_id" ref="ch_coa_69"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_52])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_7" model="account.account.template">
             <field name="code">7</field>
-            <field name="name">RESULTAT DES ACTIVITES ANNEXES D&#8216;EXPLOITATION</field>
+            <field name="name">RESULTAT DES ACTIVITES ANNEXES D‘EXPLOITATION</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_66,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_7000" model="account.account.template">
             <field name="code">7000</field>
@@ -1623,7 +1656,7 @@
         </record>
         <record id="ch_coa_7500" model="account.account.template">
             <field name="code">7500</field>
-            <field name="name">Produits des immeubles d&#8216;exploitation</field>
+            <field name="name">Produits des immeubles d‘exploitation</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
@@ -1632,7 +1665,7 @@
         </record>
         <record id="ch_coa_7510" model="account.account.template">
             <field name="code">7510</field>
-            <field name="name">Charges des immeubles d&#8216;exploitation</field>
+            <field name="name">Charges des immeubles d‘exploitation</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
@@ -1650,12 +1683,13 @@
         </record>
         <record id="ch_coa_80" model="account.account.template">
             <field name="code">80</field>
-            <field name="name">R&#233;sultat hors exploitation</field>
+            <field name="name">Résultat hors exploitation</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_53,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_8000" model="account.account.template">
             <field name="code">8000</field>
@@ -1677,16 +1711,17 @@
         </record>
         <record id="ch_coa_85" model="account.account.template">
             <field name="code">85</field>
-            <field name="name">R&#233;sultat extraordinaires</field>
+            <field name="name">Résultat extraordinaires</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_54,financial_report_67])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_8500" model="account.account.template">
             <field name="code">8500</field>
-            <field name="name">Charges extraordinaires, exceptionnelles ou hors p&#233;riode</field>
+            <field name="name">Charges extraordinaires, exceptionnelles ou hors période</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_85"/>
@@ -1695,7 +1730,7 @@
         </record>
         <record id="ch_coa_8510" model="account.account.template">
             <field name="code">8510</field>
-            <field name="name">Produits extraordinaires, exceptionnels ou hors p&#233;riode</field>
+            <field name="name">Produits extraordinaires, exceptionnels ou hors période</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_85"/>
@@ -1704,16 +1739,17 @@
         </record>
         <record id="ch_coa_89" model="account.account.template">
             <field name="code">89</field>
-            <field name="name">Imp&#244;ts directs</field>
+            <field name="name">Impôts directs</field>
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
+            <field eval="[(6, 0, [financial_report_55])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_8900" model="account.account.template">
             <field name="code">8900</field>
-            <field name="name">Imp&#244;ts directs</field>
+            <field name="name">Impôts directs</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_89"/>
