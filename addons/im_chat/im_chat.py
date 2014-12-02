@@ -10,6 +10,7 @@ import simplejson
 import openerp
 import cgi
 
+from openerp import tools
 from openerp.http import request
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
@@ -347,7 +348,8 @@ class im_chat_presence(osv.Model):
             # write only if the last_poll is passed TIMEOUT, or if the status has changed
             delta = datetime.datetime.now() - datetime.datetime.strptime(presences[0].last_poll, DEFAULT_SERVER_DATETIME_FORMAT)
             if (delta > datetime.timedelta(seconds=TIMEOUT) or send_notification):
-                self.write(cr, uid, presence_ids, vals, context=context)
+                with tools.mute_logger('openerp.sql_db'):
+                    self.write(cr, uid, presence_ids, vals, context=context)
         # avoid TransactionRollbackError
         cr.commit()
         # notify if the status has changed
