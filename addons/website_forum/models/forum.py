@@ -65,8 +65,8 @@ class Forum(models.Model):
         ('link', 'Link')],
         string='Default Post', required=True, default='question')
     allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
-    allow_discussion = fields.Boolean('Discussions', default=False)
-    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=False)
+    allow_discussion = fields.Boolean('Discussions', default=True)
+    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
     # karma generation
     karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
     karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
