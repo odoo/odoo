@@ -521,7 +521,7 @@ class account_bank_statement_line(models.Model):
             :param tuples list additional_domain: additional domain restrictions
         """
         domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
-        
+
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
         reconcile_partial_ids = []
@@ -735,8 +735,11 @@ class account_statement_operation_template(models.Model):
     name = fields.Char(string='Button Label', required=True)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade')
     label = fields.Char(string='Label')
-    amount_type = fields.Selection([('fixed', 'Fixed'), ('percentage_of_total', 'Percentage of total amount'), ('percentage_of_balance', 'Percentage of open balance')],
-        string='Amount type', required=True, default='percentage_of_balance')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage_of_total', 'Percentage of total amount'),
+        ('percentage_of_balance', 'Percentage of open balance')
+        ], string='Amount type', required=True, default='percentage_of_balance')
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').",
         required=True, default=100)
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')

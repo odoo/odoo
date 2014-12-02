@@ -154,6 +154,7 @@ class account_account(models.Model):
         return list(children_ids)
 
     @api.multi
+    @api.depends('company_id')
     def _get_company_currency(self):
         for account in self:
             account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
@@ -2036,8 +2037,10 @@ class account_operation_template(models.Model):
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type', '!=', 'consolidation')])
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     label = fields.Char(string='Journal Item Label')
-    amount_type = fields.Selection(selection=[('fixed', 'Fixed'), ('percentage', 'Percentage of amount')], string='Amount type',
-        required=True, default='percentage')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of amount')
+        ], string='Amount type', required=True, default='percentage')
     amount = fields.Float(digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '!=', 'as_child')])
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
@@ -2045,7 +2048,10 @@ class account_operation_template(models.Model):
     second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type', '!=', 'consolidation')])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     second_label = fields.Char(string='Journal Item Label')
-    second_amount_type = fields.Selection(selection=[('fixed', 'Fixed'), ('percentage', 'Percentage of amount')], string='Amount type', required=True, default='percentage')
+    second_amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of amount')
+        ], string='Amount type', required=True, default='percentage')
     second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '!=', 'as_child')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])

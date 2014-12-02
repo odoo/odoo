@@ -38,12 +38,13 @@ class account_cash_statement(models.Model):
         """
             Set starting and ending balances according to pieces count
         """
+        DecimalPrecisionObj = self.env['decimal.precision']
         res = {}
         for statement in self:
             if (statement.journal_id.type not in ('cash',)):
                 continue
             if not statement.journal_id.cash_control:
-                prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
+                prec = DecimalPrecisionObj.precision_get('Account')
                 if float_compare(statement.balance_end_real, statement.balance_end, precision_digits=prec):
                     statement.write({'balance_end_real' : statement.balance_end})
                 continue
