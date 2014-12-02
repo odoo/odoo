@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 
 

@@ -14,7 +14,7 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 from openerp.exceptions import Warning
 _logger = logging.getLogger(__name__)
 

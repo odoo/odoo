@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 from openerp.exceptions import Warning
+
 
 class product_category(models.Model):
     _inherit = "product.category"
@@ -19,6 +20,7 @@ class product_category(models.Model):
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
+
 
 class product_template(models.Model):
     _inherit = "product.template"

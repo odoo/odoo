@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
+
 
 class bank(models.Model):
     _inherit = "res.partner.bank"

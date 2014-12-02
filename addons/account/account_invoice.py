@@ -3,8 +3,8 @@
 import itertools
 from lxml import etree
 
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp import api, fields, models, _
+from openerp.exceptions import except_orm, RedirectWarning, Warning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
@@ -1156,6 +1156,7 @@ class account_invoice(models.Model):
         return recs.pay_and_reconcile(pay_amount, pay_account_id, date, pay_journal_id,
                     writeoff_acc_id, writeoff_journal_id, name=name)
 
+
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
@@ -1576,6 +1577,7 @@ class res_partner(models.Model):
         Find the partner for which the accounting entries will be created
         '''
         return partner.commercial_partner_id
+
 
 class mail_compose_message(models.Model):
     _inherit = 'mail.compose.message'

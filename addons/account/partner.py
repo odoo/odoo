@@ -3,8 +3,9 @@
 from operator import itemgetter
 import time
 
-from openerp import models, fields, api
+from openerp import api, fields, models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class account_fiscal_position(models.Model):
     _name = 'account.fiscal.position'
@@ -26,15 +27,11 @@ class account_fiscal_position(models.Model):
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")
 
-    def _check_country(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context=context)
-        if obj.country_id and obj.country_group_id:
-            return False
-        return True
-
-    _constraints = [
-        (_check_country, 'You can not select a country and a group of countries', ['country_id', 'country_group_id']),
-    ]
+    @api.one
+    @api.constrains('country_id', 'country_group_id')
+    def _check_country(self):
+        if self.country_id and self.country_group_id:
+            raise Warning(_('You can not select a country and a group of countries.'))
 
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
@@ -266,7 +263,6 @@ class res_partner(models.Model):
     @api.multi
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-
 
     vat_subjected = fields.Boolean('VAT Legal Statement', 
         help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")

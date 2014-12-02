@@ -2,9 +2,10 @@
 
 import time
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
+
 
 class account_cashbox_line(models.Model):
     """ Cash Box Details """
@@ -27,6 +28,7 @@ class account_cashbox_line(models.Model):
     subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=dp.get_precision('Account'))
     subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=dp.get_precision('Account'))
     bank_statement_id = fields.Many2one('account.bank.statement', string='Bank Statement', ondelete='cascade')
+
 
 class account_cash_statement(models.Model):
     _inherit = 'account.bank.statement'

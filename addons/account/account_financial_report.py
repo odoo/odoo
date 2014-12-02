@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 
 # ---------------------------------------------------------
 # Account Financial Report
 # ---------------------------------------------------------
+
 
 class account_financial_report(models.Model):
     _name = "account.financial.report"
