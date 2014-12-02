@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-06 14:22+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:13+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-07 07:33+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -80,12 +80,33 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Сеуште нема активност за овој договор.\n"
+"              </p><p>\n"
+"                Во Odoo, договорите и проектите се имплементирани преку\n"
+"                аналитичко конто. За да може да ги следите трошоците и "
+"приходите за да\n"
+"                можете лесно да ги анализирате вашите маргини.\n"
+"              </p><p>\n"
+"                Трошоците ќе бидат автоматски креирани кога ќе регистрирате "
+"фактури\n"
+"                од добавувачи, трошоци или распореди.\n"
+"              </p><p>\n"
+"                Приходите ќе бидат автоматски креирани кога ќе креирате "
+"фактури\n"
+"                за клиенти. Фактиурите за клиенти може да се креираат "
+"базирани на налог за\n"
+"                продажба (фактури со фиксни цени), на распореди (врз база на "
+"завршената работа) или\n"
+"                на трошоци (пр. патни трошоци).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Отсутен"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -140,17 +161,17 @@ msgstr "Датум на затварање"
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компанија"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Цена"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Цена/Приход"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -162,14 +183,14 @@ msgstr "Трошоци & Приходи"
 #: field:hr.sign.in.project,create_uid:0
 #: field:hr.sign.out.project,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_date:0
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -196,7 +217,7 @@ msgstr "Дефинирајте ја вашата Аналитичка струк
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -222,12 +243,14 @@ msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
 msgstr ""
+"Вработен не е креиран за овој корисник. Ве молиме креирајте го преку "
+"конфигурацискиот панел."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Име на Вработен"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
@@ -258,12 +281,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Проширени филтри..."
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Општа сметка"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -274,18 +297,18 @@ msgstr "Општи информации"
 #: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Влези во конфигурациски панел"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Групирање по месец од датум"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0
@@ -293,7 +316,7 @@ msgstr ""
 #: field:hr.sign.out.project,id:0
 #: field:hr.timesheet.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -301,6 +324,8 @@ msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
 msgstr ""
+"Ако сакате да фактурирате работно време на вработени, поврзете го овој "
+"вработен со услуга за да ја одредите цената на чинење на работата."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -310,21 +335,21 @@ msgstr "Информации"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Картица"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
 #: field:hr.sign.in.project,write_uid:0
 #: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -388,7 +413,7 @@ msgstr "Дефинирајте вработен за корисникот"
 #: selection:hr.sign.in.project,state:0
 #: selection:hr.sign.out.project,state:0
 msgid "Present"
-msgstr ""
+msgstr "Присутен"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -436,7 +461,7 @@ msgstr "Најава / Одјава"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "Најави се / Одјави се по проект"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -457,12 +482,12 @@ msgstr "Престани со работење"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Овој месец"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Време"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -477,7 +502,7 @@ msgstr "Временска таблица"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Сметки од распореди"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -491,7 +516,7 @@ msgstr "Активности на временска таблица"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Анализи на распоред"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
@@ -501,12 +526,12 @@ msgstr "Ставка на временска таблица"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Распоред месец"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Распоред по месец"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -533,7 +558,7 @@ msgstr "Единица мерка"
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Корисник"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -572,8 +597,11 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Треба да креирате структура на аналитичко конто зависно од вашите потреби за "
+"да ги анализирате трошоците и приходите. Во Odoo, аналитичките конта исто "
+"така се користат за да се следат договорите со клиенти."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
-msgstr ""
+msgstr "месец"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-28 09:32+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:05+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:47+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: document
 #: field:report.document.file,nbr:0
@@ -89,6 +89,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"Заедно со главниот модел, ова ID ја прикачува оваа папка на одреден запис на "
+"главниот модел."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -176,7 +178,7 @@ msgstr "Полиња за контекст"
 #: field:document.directory.dctx,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: document
 #: field:document.configuration,create_date:0
@@ -185,7 +187,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -327,12 +329,17 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
+"Секој директориум може да биде или од статичен тип или пак да биде поврзан "
+"со друг ресурс. Статичен директориум, како кај оперативните системи, е "
+"класичен директориум кој може да содржи сет на датотеки. Директориумите "
+"поврзани со системски ресурси автоматски поседуваат под-директориум за секој "
+"тип на ресурс дефиниран во главниот директориум."
 
 #. module: document
 #: code:addons/document/document.py:573
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "Грешка при запишување на документ!"
 
 #. module: document
 #: constraint:document.directory:0
@@ -365,6 +372,8 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
+"Не може да се искористи како име на директориум со ресурс. Ако е празно "
+"„името“ ке биде употребено."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -447,7 +456,7 @@ msgstr "Генерирани полиња"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -464,7 +473,7 @@ msgstr "Групи"
 #: field:report.document.file,id:0
 #: field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -531,7 +540,7 @@ msgstr "Корисник на последна измена"
 #: field:document.directory.dctx,write_uid:0
 #: field:document.storage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: document
 #: field:document.configuration,write_date:0
@@ -540,7 +549,7 @@ msgstr ""
 #: field:document.directory.dctx,write_date:0
 #: field:document.storage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -611,6 +620,11 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"Системот за менаџмент на документи на Odoo подржува мапирање на виртуални "
+"папки со документи. Виртуалната папка на документ може да се искористи за да "
+"се менаџира со датотеките прикачени на документот или да се испечати и симне "
+"било кој извештај. Оваа алатка автоматски ќе креира директориуми според "
+"инсталираните модули."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -698,6 +712,8 @@ msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
 msgstr ""
+"Изберете објект и ќе се добие по еден директориум за секој запис на тој "
+"ресурс."
 
 #. module: document
 #: selection:report.document.user,month:0

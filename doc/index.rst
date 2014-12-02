@@ -1,8 +1,6 @@
 ============================
-odoo developer documentation
+Odoo Technical Documentation
 ============================
-
-Welcome to the Odoo developer documentation.
 
 .. todo:: what's the documentation's license?
 

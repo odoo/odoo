@@ -110,19 +110,21 @@ class Forum(models.Model):
         User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
+        existing_keep = []
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
-                    post_tags.append((4, int(tag_ids[0])))
+                    existing_keep.append(int(tag_ids[0]))
                 else:
                     # check if user have Karma needed to create need tag
                     user = User.sudo().browse(self._uid)
                     if user.exists() and user.karma >= self.karma_retag:
-                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+                        post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
-                post_tags.append((4, int(tag)))
+                existing_keep.append(int(tag))
+        post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
 

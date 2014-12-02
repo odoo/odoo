@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-28 09:29+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:05+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:47+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -73,6 +73,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да дефинирате нов метод на испорака. \n"
+"              </p><p>\n"
+"                Секој курир (пр. ДХЛ) може да има повеќе методи на испорака "
+"(пр.\n"
+"                ДХЛ Експрес, ДХЛ Стандард) со сет правила за цени\n"
+"                прикачени на секој метод.\n"
+"              </p><p>\n"
+"                Овие методи ви дозволуваат автоматски да ја пресметате "
+"цената на испорака\n"
+"                според вашите подесувања; на налогот за продажба (базирано "
+"на\n"
+"                понудата) или фактурата (базирано на нарачките за "
+"испорака).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -98,7 +114,7 @@ msgstr "Напредно одредување на цени"
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Напредно одредување цени според дестинација"
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
@@ -117,7 +133,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,available:0
 msgid "Available"
-msgstr ""
+msgstr "Достапно"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -132,12 +148,12 @@ msgstr "Носач"
 #. module: delivery
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "Информации за курир"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Референца за следење на курир"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
@@ -177,14 +193,14 @@ msgstr "Држави"
 #: field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: delivery
 #: field:delivery.carrier,create_date:0
 #: field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -273,12 +289,12 @@ msgstr "Бесплатно доколку има повеќе од %.2f"
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
-msgstr ""
+msgstr "Општи информации"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "Го дава редоследот на секвенци при пресметка на мрежа на испорака."
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -318,7 +334,7 @@ msgstr "Дефиниција на мрежа"
 #: field:delivery.grid,id:0
 #: field:delivery.grid.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -359,12 +375,12 @@ msgstr ""
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Е испорака"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "Дали курирски начин на испорака е можен со моменталната нарачка."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
@@ -379,14 +395,14 @@ msgstr ""
 #: field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: delivery
 #: field:delivery.carrier,write_date:0
 #: field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -412,13 +428,13 @@ msgstr "Нето тежина"
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "Не постои мрежа!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "Не е пронајдена мрежа за овој курир!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -439,7 +455,7 @@ msgstr "Оператор"
 #: code:addons/delivery/sale.py:78
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "Нарачката не е во урнек на продажба."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -492,7 +508,7 @@ msgstr "Налог за продажба"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Ставка од налог за продажба"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
@@ -501,6 +517,8 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
 msgstr ""
+"Избраниот продукт во начинот на испорака не исполнува ниту еден од "
+"критериумите на мрежата на испорака."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -511,7 +529,7 @@ msgstr "Секвенца"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "Почетен поштенски број"
 
 #. module: delivery
 #: view:delivery.grid:delivery.view_delivery_grid_form
@@ -551,7 +569,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "До поштенски број"
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -562,7 +580,7 @@ msgstr "Транспортна компанија"
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "Не може да се одреди тип на испорака!"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
@@ -590,7 +608,7 @@ msgstr "Варијабла"
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "Варијабилен фактор"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -625,7 +643,7 @@ msgstr "Тежина * Волумен"
 #. module: delivery
 #: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr ""
+msgstr "Ке биде фактурирано на:"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -635,4 +653,4 @@ msgstr "Поштенски број"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "во функција на"

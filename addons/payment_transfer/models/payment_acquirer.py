@@ -45,7 +45,7 @@ class TransferPaymentAcquirer(osv.Model):
         """ Hook in create to create a default post_msg. This is done in create
         to have access to the name and other creation values. If no post_msg
         or a void post_msg is given at creation, generate a default one. """
-        if values.get('name') == 'transfer' and not values.get('post_msg'):
+        if values.get('provider') == 'transfer' and not values.get('post_msg'):
             values['post_msg'] = self._format_transfer_data(cr, uid, context=context)
         return super(TransferPaymentAcquirer, self).create(cr, uid, values, context=context)
 

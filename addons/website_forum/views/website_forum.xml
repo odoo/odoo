@@ -45,6 +45,10 @@
     </form>
 </template>
 
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
@@ -472,7 +476,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
-                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-value="#{tags}"/>
+                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>

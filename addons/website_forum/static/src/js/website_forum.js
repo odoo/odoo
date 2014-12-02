@@ -194,7 +194,7 @@
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
-                _.each(JSON.parse(element.val()), function(x) {
+                _.each(element.data('init-value'), function(x) {
                     data.push({ id: x.id, text: x.name, isNew: false });
                 });
                 element.val('');
@@ -209,22 +209,21 @@
                 }
             });
         }
-
-        function IsKarmaValid(eventNumber,minKarma){
-            "use strict";
-            if(parseInt($("#karma").val()) >= minKarma){
-                CKEDITOR.tools.callFunction(eventNumber,this);
-                return false;
-            } else {
-                alert("Sorry you need more than " + minKarma + " Karma.");
-            }
-        }
-
+        
         function CKEDITORLoadComplete(){
             "use strict";
-            $('.cke_button__link').on('click', function() { IsKarmaValid(33,30); });
-            $('.cke_button__unlink').on('click', function() { IsKarmaValid(37,30); });
-            $('.cke_button__image').on('click', function() { IsKarmaValid(41,30); });
+            $('.cke_button__link').attr('onclick','website_forum_IsKarmaValid(33,30)');
+            $('.cke_button__unlink').attr('onclick','website_forum_IsKarmaValid(37,30)');
+            $('.cke_button__image').attr('onclick','website_forum_IsKarmaValid(41,30)');
         }
     });
 
+   function website_forum_IsKarmaValid(eventNumber, minKarma){
+        "use strict";
+        if(parseInt($("#karma").val()) >= minKarma){
+            CKEDITOR.tools.callFunction(eventNumber, this);
+            return false;
+        } else {
+            alert("Sorry you need more than " + minKarma + " Karma.");
+        }
+    }
