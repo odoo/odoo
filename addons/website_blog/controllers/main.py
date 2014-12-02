@@ -135,9 +135,7 @@ class WebsiteBlog(http.Controller):
         pager_end = page * self._blog_post_per_page
         blog_posts = blog_posts[pager_begin:pager_end]
 
-        tag_obj = request.registry['blog.tag']
-        tag_ids = tag_obj.search(cr, uid, [], context=context)
-        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+        tags = blog.all_tags()[blog.id]
 
         values = {
             'blog': blog,
