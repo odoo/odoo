@@ -626,7 +626,7 @@
                 <div t-if="question.post_type != 'link' and question.create_uid.karma &lt; forum.karma_dofollow"><span t-field="question.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
 
                 <div class="clearfix">
-                    <ul class="pull-right list-inline mb0">
+                    <ul class="pull-right list-inline mb0" id="options">
                         <li t-if="question.state != 'close'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
