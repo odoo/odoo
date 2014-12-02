@@ -204,7 +204,6 @@
             <field name="name">Plan Comptable</field>
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="type">view</field>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_B" model="account.account.template">
@@ -213,7 +212,6 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_0"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1" model="account.account.template">
@@ -222,7 +220,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_B"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_10" model="account.account.template">
@@ -231,7 +228,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_1"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_100" model="account.account.template">
@@ -240,7 +236,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_13])]" name="financial_report_ids"/>
         </record>
@@ -250,7 +245,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">liquidity</field>
             <field name="parent_id" ref="ch_coa_100"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1020" model="account.account.template">
@@ -259,7 +253,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">liquidity</field>
             <field name="parent_id" ref="ch_coa_100"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1021" model="account.account.template">
@@ -269,7 +262,6 @@
             <field name="type">liquidity</field>
             <field name="currency_id" ref="base.EUR"/>
             <field name="parent_id" ref="ch_coa_100"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_106" model="account.account.template">
@@ -278,7 +270,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_47])]" name="financial_report_ids"/>
         </record>
@@ -288,7 +279,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_106"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1069" model="account.account.template">
@@ -297,7 +287,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_106"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_110" model="account.account.template">
@@ -306,7 +295,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_14])]" name="financial_report_ids"/>
         </record>
@@ -316,7 +304,6 @@
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="type">receivable</field>
             <field name="parent_id" ref="ch_coa_110"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1109" model="account.account.template">
@@ -325,7 +312,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_110"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_114" model="account.account.template">
@@ -334,7 +320,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_15])]" name="financial_report_ids"/>
         </record>
@@ -344,7 +329,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1149" model="account.account.template">
@@ -353,7 +337,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1170" model="account.account.template">
@@ -362,7 +345,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1171" model="account.account.template">
@@ -371,7 +353,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1176" model="account.account.template">
@@ -380,7 +361,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1180" model="account.account.template">
@@ -389,7 +369,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1189" model="account.account.template">
@@ -398,7 +377,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1190" model="account.account.template">
@@ -407,7 +385,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1199" model="account.account.template">
@@ -416,7 +393,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_114"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_120" model="account.account.template">
@@ -425,7 +401,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_16])]" name="financial_report_ids"/>
         </record>
@@ -435,7 +410,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1210" model="account.account.template">
@@ -444,7 +418,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1220" model="account.account.template">
@@ -453,7 +426,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1230" model="account.account.template">
@@ -462,7 +434,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1250" model="account.account.template">
@@ -471,7 +442,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1260" model="account.account.template">
@@ -480,7 +450,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1270" model="account.account.template">
@@ -489,7 +458,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1280" model="account.account.template">
@@ -498,7 +466,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_120"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_130" model="account.account.template">
@@ -507,7 +474,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_17])]" name="financial_report_ids"/>
         </record>
@@ -517,7 +483,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_130"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1301" model="account.account.template">
@@ -526,7 +491,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_130"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_14" model="account.account.template">
@@ -535,7 +499,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_1"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_140" model="account.account.template">
@@ -544,7 +507,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_19])]" name="financial_report_ids"/>
         </record>
@@ -554,7 +516,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1409" model="account.account.template">
@@ -563,7 +524,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1440" model="account.account.template">
@@ -572,7 +532,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1441" model="account.account.template">
@@ -581,7 +540,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1449" model="account.account.template">
@@ -590,7 +548,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_140"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_148" model="account.account.template">
@@ -599,7 +556,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_20])]" name="financial_report_ids"/>
         </record>
@@ -609,7 +565,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_148"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1489" model="account.account.template">
@@ -618,7 +573,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_148"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_150" model="account.account.template">
@@ -627,7 +581,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_21])]" name="financial_report_ids"/>
         </record>
@@ -637,7 +590,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1509" model="account.account.template">
@@ -646,7 +598,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1510" model="account.account.template">
@@ -655,7 +606,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1519" model="account.account.template">
@@ -664,7 +614,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1520" model="account.account.template">
@@ -673,7 +622,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1529" model="account.account.template">
@@ -682,7 +630,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1530" model="account.account.template">
@@ -691,7 +638,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1539" model="account.account.template">
@@ -700,7 +646,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1540" model="account.account.template">
@@ -709,7 +654,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1549" model="account.account.template">
@@ -718,7 +662,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_150"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_160" model="account.account.template">
@@ -727,7 +670,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_69])]" name="financial_report_ids"/>
         </record>
@@ -737,7 +679,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_160"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1609" model="account.account.template">
@@ -746,7 +687,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_160"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_170" model="account.account.template">
@@ -755,7 +695,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_22])]" name="financial_report_ids"/>
         </record>
@@ -765,7 +704,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1709" model="account.account.template">
@@ -774,7 +712,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1770" model="account.account.template">
@@ -783,7 +720,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_1779" model="account.account.template">
@@ -792,7 +728,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_170"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_180" model="account.account.template">
@@ -801,7 +736,6 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_14"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_23])]" name="financial_report_ids"/>
         </record>
@@ -811,7 +745,6 @@
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_180"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2" model="account.account.template">
@@ -820,7 +753,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_B"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_20" model="account.account.template">
@@ -829,7 +761,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_2"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_200" model="account.account.template">
@@ -838,7 +769,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_25])]" name="financial_report_ids"/>
         </record>
@@ -848,7 +778,6 @@
             <field name="user_type" ref="account.data_account_type_payable"/>
             <field name="type">payable</field>
             <field name="parent_id" ref="ch_coa_200"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
         </record>
         <record id="ch_coa_2030" model="account.account.template">
@@ -857,7 +786,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_200"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_210" model="account.account.template">
@@ -866,7 +794,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_26])]" name="financial_report_ids"/>
         </record>
@@ -876,7 +803,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_210"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2120" model="account.account.template">
@@ -885,7 +811,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_210"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2140" model="account.account.template">
@@ -894,7 +819,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_210"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_220" model="account.account.template">
@@ -903,7 +827,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_27])]" name="financial_report_ids"/>
         </record>
@@ -913,7 +836,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2201" model="account.account.template">
@@ -922,7 +844,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2206" model="account.account.template">
@@ -931,7 +852,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2208" model="account.account.template">
@@ -940,7 +860,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2210" model="account.account.template">
@@ -949,7 +868,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2261" model="account.account.template">
@@ -958,7 +876,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2270" model="account.account.template">
@@ -967,7 +884,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2279" model="account.account.template">
@@ -976,7 +892,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_220"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_230" model="account.account.template">
@@ -985,7 +900,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_20"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_29])]" name="financial_report_ids"/>
         </record>
@@ -995,7 +909,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2301" model="account.account.template">
@@ -1004,7 +917,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2330" model="account.account.template">
@@ -1013,7 +925,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_230"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_24" model="account.account.template">
@@ -1022,7 +933,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_2"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_240" model="account.account.template">
@@ -1031,7 +941,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_31])]" name="financial_report_ids"/>
         </record>
@@ -1041,7 +950,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2420" model="account.account.template">
@@ -1050,7 +958,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2430" model="account.account.template">
@@ -1059,7 +966,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2450" model="account.account.template">
@@ -1068,7 +974,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2451" model="account.account.template">
@@ -1077,7 +982,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_240"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_250" model="account.account.template">
@@ -1086,7 +990,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_37])]" name="financial_report_ids"/>
         </record>
@@ -1096,7 +999,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_250"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_260" model="account.account.template">
@@ -1105,7 +1007,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_24"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_33])]" name="financial_report_ids"/>
         </record>
@@ -1115,7 +1016,6 @@
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_260"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_28" model="account.account.template">
@@ -1124,7 +1024,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_2"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_280" model="account.account.template">
@@ -1133,7 +1032,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_28"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_38])]" name="financial_report_ids"/>
         </record>
@@ -1143,7 +1041,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_280"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_290" model="account.account.template">
@@ -1152,7 +1049,6 @@
             <field name="user_type" ref="account.account_type_liability_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_28"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_39])]" name="financial_report_ids"/>
         </record>
@@ -1162,7 +1058,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2940" model="account.account.template">
@@ -1171,7 +1066,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2950" model="account.account.template">
@@ -1180,7 +1074,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2960" model="account.account.template">
@@ -1189,7 +1082,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2970" model="account.account.template">
@@ -1198,7 +1090,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2979" model="account.account.template">
@@ -1207,7 +1098,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_2980" model="account.account.template">
@@ -1216,7 +1106,6 @@
             <field name="user_type" ref="account.conf_account_type_equity"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_290"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_R" model="account.account.template">
@@ -1225,7 +1114,6 @@
             <field name="user_type" ref="account.data_account_type_view"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_0"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_68,financial_report_46])]" name="financial_report_ids"/>
         </record>
@@ -1235,7 +1123,6 @@
             <field name="user_type" ref="account.account_type_income_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_60,financial_report_61,financial_report_62,financial_report_65,financial_report_67,financial_report_59,financial_report_58])]" name="financial_report_ids"/>
         </record>
@@ -1245,7 +1132,6 @@
             <field name="user_type" ref="account.account_type_income_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_3"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_45])]" name="financial_report_ids"/>
         </record>
@@ -1255,7 +1141,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3200" model="account.account.template">
@@ -1264,7 +1149,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3400" model="account.account.template">
@@ -1273,7 +1157,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3600" model="account.account.template">
@@ -1282,7 +1165,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3700" model="account.account.template">
@@ -1291,7 +1173,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3710" model="account.account.template">
@@ -1300,7 +1181,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3800" model="account.account.template">
@@ -1309,7 +1189,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3805" model="account.account.template">
@@ -1318,7 +1197,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_30"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_39" model="account.account.template">
@@ -1327,7 +1205,6 @@
             <field name="user_type" ref="account.account_type_income_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_3"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_57])]" name="financial_report_ids"/>
         </record>
@@ -1337,7 +1214,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_39"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3901" model="account.account.template">
@@ -1346,7 +1222,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_39"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_3940" model="account.account.template">
@@ -1355,7 +1230,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_39"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_4" model="account.account.template">
@@ -1364,7 +1238,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_62,financial_report_60,financial_report_61,financial_report_48,financial_report_65,financial_report_67,financial_report_59])]" name="financial_report_ids"/>
         </record>
@@ -1374,7 +1247,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_4200" model="account.account.template">
@@ -1383,7 +1255,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_4400" model="account.account.template">
@@ -1392,7 +1263,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_4500" model="account.account.template">
@@ -1401,7 +1271,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_4900" model="account.account.template">
@@ -1410,7 +1279,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_4"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_5" model="account.account.template">
@@ -1419,7 +1287,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_60,financial_report_61,financial_report_62,financial_report_49,financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1429,7 +1296,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_5"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_5700" model="account.account.template">
@@ -1438,7 +1304,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_5"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_5800" model="account.account.template">
@@ -1447,7 +1312,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_5"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_5900" model="account.account.template">
@@ -1456,7 +1320,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_5"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6" model="account.account.template">
@@ -1465,7 +1328,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_60" model="account.account.template">
@@ -1474,7 +1336,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_6"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_61,financial_report_62,financial_report_67,financial_report_50,financial_report_65])]" name="financial_report_ids"/>
         </record>
@@ -1484,7 +1345,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6100" model="account.account.template">
@@ -1493,7 +1353,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6105" model="account.account.template">
@@ -1502,7 +1361,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6200" model="account.account.template">
@@ -1511,7 +1369,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6260" model="account.account.template">
@@ -1520,7 +1377,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6300" model="account.account.template">
@@ -1529,7 +1385,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6400" model="account.account.template">
@@ -1538,7 +1393,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6500" model="account.account.template">
@@ -1547,7 +1401,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6570" model="account.account.template">
@@ -1556,7 +1409,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6600" model="account.account.template">
@@ -1565,7 +1417,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_6700" model="account.account.template">
@@ -1574,7 +1425,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_60"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_68" model="account.account.template">
@@ -1583,7 +1433,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_6"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_62,financial_report_51,financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1593,7 +1442,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_68"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_69" model="account.account.template">
@@ -1602,7 +1450,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_6"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_65,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1612,7 +1459,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_69"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_63])]" name="financial_report_ids"/>
         </record>
@@ -1622,7 +1468,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_69"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_52])]" name="financial_report_ids"/>
         </record>
@@ -1632,7 +1477,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_66,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1642,7 +1486,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_7010" model="account.account.template">
@@ -1651,7 +1494,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_7500" model="account.account.template">
@@ -1660,7 +1502,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_7510" model="account.account.template">
@@ -1669,7 +1510,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_7"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_8" model="account.account.template">
@@ -1678,7 +1518,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_R"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_80" model="account.account.template">
@@ -1687,7 +1526,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_53,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1697,7 +1535,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_80"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_8100" model="account.account.template">
@@ -1706,7 +1543,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_80"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_85" model="account.account.template">
@@ -1715,7 +1551,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_54,financial_report_67])]" name="financial_report_ids"/>
         </record>
@@ -1725,7 +1560,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_85"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_8510" model="account.account.template">
@@ -1734,7 +1568,6 @@
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_85"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="ch_coa_89" model="account.account.template">
@@ -1743,7 +1576,6 @@
             <field name="user_type" ref="account.account_type_expense_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_8"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_55])]" name="financial_report_ids"/>
         </record>
@@ -1753,7 +1585,6 @@
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="type">other</field>
             <field name="parent_id" ref="ch_coa_89"/>
-            <field name="company_id" ref="base.main_company"/>
             <field eval="False" name="reconcile"/>
         </record>
         <record id="vat_code_chart_root" model="account.tax.code.template">
