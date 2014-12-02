@@ -14,16 +14,18 @@ class account_bank_statement(models.Model):
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._context.get('default_journal_id', False))
             journal = self.env['account.journal'].browse(journal_id)
-            vals['name'] = self.env['ir.sequence'].with_context(context).next_by_id(journal.sequence_id.id)
+            vals['name'] = journal.sequence_id.with_context(self._context).next_by_id()
         return super(account_bank_statement, self).create(vals)
 
     @api.one
-    @api.depends('line_ids', 'move_line_ids', 'balance_start', 'line_ids.amount')
+    @api.depends('line_ids', 'move_line_ids', 'balance_start', 'line_ids.amount', 'balance_end_real')
     def _end_balance(self):
-        total = self.balance_start
+        total = 0
         for line in self.line_ids:
             total += line.amount
-        self.balance_end = total
+        self.total_entry_encoding = total
+        self.difference = self.balance_end_real - (self.balance_start + total)
+        self.balance_end = self.balance_start + total
 
     @api.one
     @api.depends('journal_id')
@@ -51,13 +53,15 @@ class account_bank_statement(models.Model):
     date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]},
         select=True, copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True,
-        readonly=True, states={'draft':[('readonly',False)]}, default=lambda self: self._default_journal_id())
+        readonly=True, states={'draft':[('readonly',False)]})
     balance_start = fields.Float(string='Starting Balance', digits=dp.get_precision('Account'), states={'confirm':[('readonly',True)]})
     balance_end_real = fields.Float('Ending Balance', digits=dp.get_precision('Account'),
         states={'confirm': [('readonly', True)]})
     balance_end = fields.Float(compute='_end_balance', store=True,
         string="Computed Balance", help='Balance as calculated based on Opening Balance and transaction lines')
-    company_id = fields.Many2one('res.company', related='journal_id.company_id',  string='Company', store=True, readonly=True,
+    total_entry_encoding = fields.Float(compute='_end_balance', string="Total Transactions", store=True, help="Total of transaction lines.")
+    difference = fields.Float(compute='_end_balance', string="Difference", help="Difference between the theoretical closing balance and the real closing balance.")
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
     line_ids = fields.One2many('account.bank.statement.line', 'statement_id', string='Statement lines',
         states={'confirm':[('readonly', True)]}, copy=True)
@@ -67,7 +71,7 @@ class account_bank_statement(models.Model):
             ('draft', 'New'),
             ('confirm', 'Closed')
         ],
-        string='Status', required=True, readonly=True, copy=False, default='draft'),
+        string='Status', required=True, readonly=True, copy=False, default='draft')
     currency = fields.Many2one('res.currency', compute='_currency', string='Currency')
     account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', string='Account used in this journal',
         readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.')
@@ -177,8 +181,8 @@ class account_bank_statement(models.Model):
     @api.one
     @api.constrains('state', 'balance_end', 'balance_end_real')
     def _balance_check(self, journal_type='bank'):
-        if self.state=='confirmed' and abs(self.balance_end - self.balance_end_real) > 0.0001:
-            raise ValidationError(_('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
+        if self.state == 'confirmed' and float_compare(self.difference, 0.0, precision_digits=dp.get('Account')) != 0:
+            raise ValidationError(_('The ending balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
         return True
 
     @api.multi

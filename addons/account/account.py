@@ -450,15 +450,6 @@ class account_journal(models.Model):
 
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
 
-    # Fields related to bank or cash registers
-    profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)])
-    loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)])
-    internal_account_id = fields.Many2one('account.account', string='Internal Transfers Account', index=True, domain=[('deprecated', '=', False)])
-    cash_control = fields.Boolean(string='Cash Control', default=False,
-        help='If you want the journal should be control at opening/closing, check this option')
-    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
-        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
-
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]

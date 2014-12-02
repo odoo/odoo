@@ -300,7 +300,7 @@
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
-                        <page string="Cash Registers">
+                        <page string="Cash Registers" attrs="{'invisible': [('type', '!=', 'cash')]}">
                             <group>
                                 <group string="Accounts">
                                     <field name="profit_account_id"/>
@@ -315,7 +315,7 @@
                             <separator string="Available Coins" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))] }"/>
                             <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))]}">
                                 <tree string="CashBox Lines" editable="bottom">
-                                    <field name="pieces" />
+                                    <field name="coin_value" />
                                 </tree>
                             </field>
                         </page>
@@ -389,14 +389,14 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statement">
+                <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1917,22 +1917,21 @@
                 </tree>
             </field>
         </record>
-        <record id="view_bank_statement_form2" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
+        <record id="view_cash_statement_form" model="ir.ui.view">
+            <field name="name">account.bank.cash.form</field>
+            <field name="model">account.cash.statement</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
-                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight"/>
+                        <button name="%(action_bank_reconcile_bank_statements)d" states="draft" string="Reconcile" type="action" class="oe_highlight"/>
                     </span>
                     <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
-                        <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
+                        <button name="button_confirm_cash" states="draft" string="Close CashBox" type="object" class="oe_highlight"/>
                     </span>
-                    <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm,open" string="Cancel CashBox" type="object"/>
+                    <button name="button_cancel" states="draft,confirm" string="Cancel CashBox" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">
@@ -1940,19 +1939,19 @@
                     <h1><field name="name" class="oe_inline" attrs="{'invisible':[('name','=','/')]}"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" widget="selection" domain="[('type', '=', 'cash')]" />
+                            <field name="journal_id" widget="selection" domain="[('type', '=', 'cash')]"/>
                             <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" string="Responsible"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
                         <group>
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="closing_date" readonly="1"/>
+                            <field name="date_done" readonly="1"/>
                             <field name="currency" invisible="1"/>
                             <field name="cash_control" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
+                        <page string="Cash Transactions">
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" invisible="1"/>
@@ -1978,34 +1977,16 @@
                         </page>
                         <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <group col="2" expand="1">
-                                <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
-                                    <field name="opening_details_ids" colspan="2" nolabel="1">
-                                        <tree string="Opening Cashbox Lines" editable="bottom">
-                                            <field name="pieces"/>
+                                <group string="Cash Control">
+                                    <field name="details_ids" colspan="2" nolabel="1">
+                                        <tree string="Cashbox Lines" editable="bottom">
+                                            <field name="coin_value"/>
                                             <field name="number_opening"/>
                                             <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                            <field name="number_closing"/>
+                                            <field name="subtotal_closing" string="Opening Subtotal" sum="Total"/>
                                         </tree>
                                     </field>
-                                </group>
-                                <group>
-                                    <group string="Opening Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                        <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
-                                            <tree string="Opening Cashbox Lines" editable="bottom">
-                                                <field name="pieces"/>
-                                                <field name="number_opening"/>
-                                                <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
-                                            </tree>
-                                        </field>
-                                    </group>
-                                    <group string="Closing Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                        <field name="closing_details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '=', 'confirm')]}">
-                                            <tree string="Closing Cashbox Lines" editable="bottom">
-                                                <field name="pieces" readonly="1" />
-                                                <field name="number_closing"/>
-                                                <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
-                                            </tree>
-                                        </field>
-                                    </group>
                                 </group>
                             </group>
                         </page>
@@ -2053,7 +2034,7 @@
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.bank.statement</field>
+            <field name="res_model">account.cash.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_cash_statement_tree"/>
@@ -2082,7 +2063,7 @@
         <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_bank_statement_form2"/>
+            <field name="view_id" ref="view_cash_statement_form"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement3_all">
