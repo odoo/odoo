@@ -8,7 +8,7 @@ Basic set up
 ============
 
 Create a basic theme module with :command:`odoo.py scaffold` and the ``theme``
-template: from the root odoo folder, use
+template: from the root Odoo folder, use
 
 .. code-block:: console
 
