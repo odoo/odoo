@@ -395,6 +395,7 @@ class ir_model_fields(osv.osv):
         # static table of properties
         model_props = [ # (our-name, fields.prop, set_fn)
             ('field_description', 'string', tools.ustr),
+            ('help', 'help', lambda s: s and tools.ustr(s) or None),
             ('required', 'required', bool),
             ('readonly', 'readonly', bool),
             ('domain', 'domain', eval),
@@ -404,6 +405,9 @@ class ir_model_fields(osv.osv):
             ('select_level', 'index', lambda x: bool(int(x))),
             ('selection', 'selection', eval),
         ]
+        if context.get('lang') not in (None, 'en_US'):
+            # do not patch registry with translations of field string and help
+            model_props = model_props[2:]
 
         if vals and ids:
             checked_selection = False # need only check it once, so defer
