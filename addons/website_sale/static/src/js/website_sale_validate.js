@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function payment_transaction_poll_status() {
         var order_node = $('div.oe_website_sale_tx_status');
-        if (! order_node || order_node.data('orderId') === undefined) {
+        if(!order_node.length || typeof order_node.data('orderId') === 'undefined'){
             return;
         }
         var order_id = order_node.data('orderId');
