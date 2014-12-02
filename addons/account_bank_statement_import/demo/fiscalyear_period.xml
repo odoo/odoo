@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--
+        Fiscal year
+        -->    
+        
+        <record id="data_fiscalyear_2013" model="account.fiscalyear">
+            <field eval="'Fiscal Year X 2013'" name="name"/>
+            <field eval="'FY2013'" name="code"/>
+            <field eval="'2013-01-01'" name="date_start"/>
+            <field eval="'2013-12-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!--
+        Fiscal Periods 2013
+        -->    
+        
+        <record id="period_1_2013" model="account.period">
+            <field eval="'01/2013'" name="code"/>
+            <field eval="'X 01/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-01-01'" name="date_start"/>
+            <field eval="'2013-01-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="period_2_2013" model="account.period">
+            <field eval="'02/2013'" name="code"/>
+            <field eval="'X 02/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-02-01'" name="date_start"/>
+            <field eval="'2013-02-28'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_3_2013" model="account.period">
+            <field eval="'03/2013'" name="code"/>
+            <field eval="'X 03/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-03-01'" name="date_start"/>
+            <field eval="'2013-03-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_4_2013" model="account.period">
+            <field eval="'04/2013'" name="code"/>
+            <field eval="'X 04/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-04-01'" name="date_start"/>
+            <field eval="'2013-04-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_5_2013" model="account.period">
+            <field eval="'05/2013'" name="code"/>
+            <field eval="'X 05/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-05-01'" name="date_start"/>
+            <field eval="'2013-05-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_6_2013" model="account.period">
+            <field eval="'06/2013'" name="code"/>
+            <field eval="'X 06/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-06-01'" name="date_start"/>
+            <field eval="'2013-06-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_7_2013" model="account.period">
+            <field eval="'07/2013'" name="code"/>
+            <field eval="'X 07/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-07-01'" name="date_start"/>
+            <field eval="'2013-07-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_8_2013" model="account.period">
+            <field eval="'08/2013'" name="code"/>
+            <field eval="'X 08/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-08-01'" name="date_start"/>
+            <field eval="'2013-08-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_9_2013" model="account.period">
+            <field eval="'09/2013'" name="code"/>
+            <field eval="'X 09/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-09-01'" name="date_start"/>
+            <field eval="'2013-09-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_10_2013" model="account.period">
+            <field eval="'10/2013'" name="code"/>
+            <field eval="'X 10/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-10-01'" name="date_start"/>
+            <field eval="'2013-10-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_11_2013" model="account.period">
+            <field eval="'11/2013'" name="code"/>
+            <field eval="'X 11/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-11-01'" name="date_start"/>
+            <field eval="'2013-11-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="period_12_2013" model="account.period">
+            <field eval="'12/2013'" name="code"/>
+            <field eval="'X 12/2013'" name="name"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear_2013"/>
+            <field eval="'2013-12-01'" name="date_start"/>
+            <field eval="'2013-12-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+</openerp>

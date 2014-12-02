@@ -235,7 +235,7 @@ class res_partner(osv.Model, format_address):
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Contact Reference', select=1),
+        'ref': fields.char('Internal Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -252,8 +252,8 @@ class res_partner(osv.Model, format_address):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
@@ -292,7 +292,7 @@ class res_partner(osv.Model, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'has_image': fields.function(_has_image, type="boolean"),
+        'has_image': fields.function(_has_image, string="Has image", type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),

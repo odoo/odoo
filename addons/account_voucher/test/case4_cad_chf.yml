@@ -55,7 +55,7 @@
     name: Bank Journal(CHF)
     code: BCHF
     type: bank
-    analytic_journal_id: account.sit
+    analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
     default_debit_account_id: account_cash_chf_id
     default_credit_account_id: account_cash_chf_id
@@ -94,7 +94,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert float_compare(move_line.debit - move_line.credit, 149.39, 2) == 0, "Invoice move is incorrect for debtors account"
+    assert (float_compare(move_line.debit - move_line.credit, 149.39, precision_digits=2) == 0), "Invoice move is incorrect for debtors account"
 -
   I set the context that will be used for the encoding of all the vouchers of this file
 -
@@ -121,11 +121,12 @@
   !python {model: account.voucher}: |
     import time
     from openerp import netsvc
+    from openerp.tools import float_compare
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case4'))
     data = []
     for item in voucher_id.line_cr_ids:
-        if item.amount_unreconciled == 186.74:
+        if float_compare(item.amount_unreconciled, 186.74, precision_digits=2) == 0:
             data += [(item.id, 186.74)]
         else:
             data += [(item.id, 0.0)]
@@ -136,9 +137,10 @@
   I check that writeoff amount computed is 13.26
 -
   !python {model: account.voucher}: |
+    from openerp.tools import float_compare
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (round(voucher_id.writeoff_amount,2) == 13.26), "Writeoff amount is not 13.26 CHF"
+    assert (float_compare(round(voucher_id.writeoff_amount,2), 13.26, precision_digits=2) == 0), "Writeoff amount is not 13.26 CHF"
 -
   I confirm the voucher
 -
@@ -174,23 +176,24 @@
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
     assert move_lines, "Voucher move has no lines"
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if float_compare(move_line.amount_currency, 200, 2) == 0:
-            assert float_compare(move_line.debit, 160.00, 2) == 0, "Bank account has wrong entry."
-        elif float_compare(move_line.amount_currency, -298.78, 2) == 0:
-            assert float_compare(move_line.credit, 149.39, 2) == 0, "Debtor account has wrong entry."
-        elif move_line.debit == 0.00 and move_line.credit == 0.00:
-            assert move_line.amount_currency == 98.78, "Incorrect Currency Difference, got %s as amount_currency (expected 98.78)." % (move_line.amount_currency)
+        if float_compare(move_line.amount_currency, 200, precision_digits=2) == 0:
+            assert float_compare(move_line.debit, 160.00, precision_digits=2) == 0, "Bank account has wrong entry."
+        elif float_compare(move_line.amount_currency, -298.78, precision_digits=2) == 0 :
+            assert float_compare(move_line.credit, 149.39, precision_digits=2) == 0, "Debtor account has wrong entry."
+        elif float_compare(move_line.debit, 0.00, precision_digits=2) == 0 and float_compare(move_line.credit, 0.00, precision_digits=2) == 0:
+            assert float_compare(move_line.amount_currency, 98.78, precision_digits=2) == 0, "Incorrect Currency Difference, got %s as amount_currency (expected 98.78)." % (move_line.amount_currency)
             assert move_line.currency_id.id == ref('base.CAD'), "Incorrect Currency Difference, got %s (expected 'CAD')" % (move_line.currency_id.name)
-        elif move_line.credit == 10.61:
-            assert move_line.amount_currency == -13.26, "Writeoff amount is wrong."
+        elif float_compare(move_line.credit, 10.61, precision_digits=2) == 0:
+            assert float_compare(move_line.amount_currency, -13.26, precision_digits=2) == 0, "Writeoff amount is wrong."
         else:
             assert False, "Wrong entry"
 -
   I check the residual amount of Invoice1, should be 0 in residual currency and 0 in amount_residual and paid
 -
   !python {model: account.invoice}: |
+    from openerp.tools import float_compare
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_cad"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0 and invoice_id.state == 'paid') , "Residual amount is not correct for first Invoice"
+    assert (float_compare(move_line.amount_residual_currency, 0.0, precision_digits=2) == 0 and float_compare(move_line.amount_residual, 0.0, precision_digits=2) == 0 and invoice_id.state == 'paid') , "Residual amount is not correct for first Invoice"

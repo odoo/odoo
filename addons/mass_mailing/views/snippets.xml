@@ -29,13 +29,10 @@
     </xpath>
 
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='mailing_list_subscribe'
+        <div data-js='mailing_list_subscribe'
             data-selector=".js_subscribe"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
-           >
-            <li>
-                <a href="#" class="button js_mailing_list">Change Newsletter</a>
-            </li>
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel">
+            <li data-choose_mailing_list=""><a>Change Newsletter</a></li>
         </div>
     </xpath>
 

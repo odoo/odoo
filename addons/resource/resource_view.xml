@@ -59,15 +59,13 @@
             <field name="model">resource.calendar</field>
             <field name="arch" type="xml">
                 <form string="Working Time">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="manager"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                            <field name="attendance_ids"/>
-                            <field name="leave_ids"/>
-                    </sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="manager"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="attendance_ids"/>
+                    <field name="leave_ids"/>
                 </form>
             </field>
         </record>

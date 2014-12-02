@@ -64,7 +64,7 @@ class procurement_group(osv.osv):
         'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
     }
     _defaults = {
-        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
+        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').next_by_code(cr, uid, 'procurement.group') or '',
         'move_type': lambda self, cr, uid, c: 'direct'
     }
 

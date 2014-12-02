@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <graph string="Claims" type="pivot" stacked="True">
                     <field name="stage_id" type="row"/>
-                    <field name="section_id" type="col"/>
+                    <field name="team_id" type="col"/>
                     <field name="nbr" type="measure"/>
                 </graph>
             </field>
@@ -32,18 +32,18 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
+                    <filter string="My Company" context="{'invisible_team': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
                     <separator/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <group  expand="0" string="Extended Filters...">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
-                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                        <field name="stage_id" domain="[('team_ids', '=', 'team_id')]"/>
+                        <field name="categ_id"/>
                         <field name="priority"/>
                         <field name="type_action"/>
                         <field name="create_date" />
@@ -52,7 +52,7 @@
                     </group>
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" name="partner" context="{'group_by':'partner_id'}" />
                         <filter string="Stage" context="{'group_by':'stage_id'}" />
                         <filter string="Category" context="{'group_by':'categ_id'}" />

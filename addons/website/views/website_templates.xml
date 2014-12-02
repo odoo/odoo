@@ -6,11 +6,6 @@
 
 <!-- Layout and generic templates -->
 
-<template id="website.theme" name="Theme">
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-    <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
-</template>
-
 <template id="website.assets_frontend" name="Website assets">
     <t t-call="website.theme"/>
 
@@ -21,6 +16,10 @@
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
     <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
+    <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+    <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+    
 </template>
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
@@ -106,7 +105,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="/" t-field="res_company.name"/>
+                                <a class="navbar-brand" href="/">YourCompany</a>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
                                 <ul class="nav navbar-nav navbar-right" id="top_menu">
@@ -117,13 +116,11 @@
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="user_id.name"/>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a href="/web" role="menuitem">My Account</a></li>
-                                            <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
@@ -194,10 +191,7 @@
     <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
     <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
     <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-    <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
-    <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-
-    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+    
     <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
@@ -221,8 +215,10 @@
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js" />
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
 
 </template>
 
@@ -248,7 +244,7 @@
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
         <div class="oe_structure" id="footer">
-            <section data-snippet-id='three-columns'>
+            <section>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
@@ -833,7 +829,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div id="wrap">
             <div class="oe_structure">
 
-                <section data-snippet-id="title">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12">
@@ -844,7 +840,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </section>
 
-                <section data-snippet-id="text-image">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-6 mt32">

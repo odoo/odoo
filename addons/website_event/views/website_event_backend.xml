@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="view_event_sale_form">
+        <field name="name">event.event.website.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//div[@class='oe_right oe_button_box']" position="before">
+                <field name="website_url" invisible="1"/>
+                <field name="website_published" class="pull-right" widget="website_button"/>
+            </xpath>
+            <xpath expr="//field[@name='organizer_id']" position="after">
+                <field name="twitter_hashtag"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_kanban">
+        <field name="name">event.event.kanban</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//t[@t-name='kanban-box']/div" position="attributes">
+                    <attribute name="data-routing">event</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+ </data>
+</openerp>

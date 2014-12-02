@@ -25,6 +25,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import Warning
 
 import openerp.addons.decimal_precision as dp
 import openerp.addons.product.product
@@ -72,6 +73,7 @@ class pos_config(osv.osv):
         'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+        'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
         'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
@@ -268,7 +270,7 @@ class pos_session(osv.osv):
                                     readonly=True,
                                     states={'opening_control' : [('readonly', False)]}
                                    ),
-        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
+        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currency"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
@@ -423,7 +425,7 @@ class pos_session(osv.osv):
             bank_statement_ids.append(statement_id)
 
         values.update({
-            'name': self.pool['ir.sequence'].get(cr, uid, 'pos.session'),
+            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session'),
             'statement_ids' : [(6, 0, bank_statement_ids)],
             'config_id': config_id
         })
@@ -600,11 +602,7 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
-                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
-                    if not len(cash_journal_ids):
-                        raise osv.except_osv( _('error!'),
-                            _("No cash statement found for this session. Unable to record returned cash."))
-                    cash_journal = cash_journal_ids[0].journal_id
+                    raise Warning(_('No cash statement found with cash control enabled for this session. Unable to record returned cash.'))
                 self.add_payment(cr, uid, order_id, {
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -684,7 +682,7 @@ class pos_order(osv.osv):
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', digits_compute=dp.get_precision('Account'),  multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
+        'amount_return': fields.function(_amount_all, string='Returned', digits_compute=dp.get_precision('Account'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
@@ -751,7 +749,7 @@ class pos_order(osv.osv):
             values['name'] = session.config_id.sequence_id._next()
         else:
             # fallback on any pos.order sequence
-            values['name'] = self.pool.get('ir.sequence').get_id(cr, uid, 'pos.order', 'code', context=context)
+            values['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order', context=context)
         return super(pos_order, self).create(cr, uid, values, context=context)
 
     def test_paid(self, cr, uid, ids, context=None):
@@ -1079,7 +1077,7 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], values['product_id'], values['debit'] > 0)
+                    key = ('product', values['partner_id'], (values['product_id'], values['name']), values['debit'] > 0)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_code_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
@@ -1152,9 +1150,14 @@ class pos_order(osv.osv):
                     if tax_code_id:
                         break
 
+                name = line.product_id.name
+                if line.notice:
+                    # add discount reason in move
+                    name = name + ' (' + line.notice + ')'
+
                 # Create a move for the line
                 insert_data('product', {
-                    'name': line.product_id.name,
+                    'name': name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
                     'account_id': income_account,
@@ -1249,7 +1252,7 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {
-        'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
+        'pos_statement_id': fields.many2one('pos.order', string="POS statement", ondelete='cascade'),
     }
 
 
@@ -1319,7 +1322,7 @@ class pos_order_line(osv.osv):
     }
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order.line'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line'),
         'qty': lambda *a: 1,
         'discount': lambda *a: 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,

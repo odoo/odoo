@@ -645,7 +645,7 @@ class stock_quant(osv.osv):
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
-    _description = "Picking List"
+    _description = "Transfer"
     _order = "priority desc, date asc, id desc"
 
     def _set_min_date(self, cr, uid, id, field, value, arg, context=None):
@@ -691,7 +691,7 @@ class stock_picking(osv.osv):
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
             ptype_id = vals.get('picking_type_id', context.get('default_picking_type_id', False))
             sequence_id = self.pool.get('stock.picking.type').browse(cr, user, ptype_id, context=context).sequence_id.id
-            vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
+            vals['name'] = self.pool.get('ir.sequence').next_by_id(cr, user, sequence_id, context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
 
     def _state_get(self, cr, uid, ids, field_name, arg, context=None):
@@ -1105,7 +1105,7 @@ class stock_picking(osv.osv):
 
     @api.cr_uid_ids_context
     def open_barcode_interface(self, cr, uid, picking_ids, context=None):
-        final_url="/barcode/web/#action=stock.ui&picking_id="+str(picking_ids[0])
+        final_url="/stock/barcode/#action=stock.ui&picking_id="+str(picking_ids[0])
         return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
 
     @api.cr_uid_ids_context
@@ -1524,7 +1524,7 @@ class stock_production_lot(osv.osv):
         'create_date': fields.datetime('Creation Date'),
     }
     _defaults = {
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'stock.lot.serial'),
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
@@ -1722,7 +1722,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True, copy=False),
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
-        'picking_id': fields.many2one('stock.picking', 'Reference', select=True, states={'done': [('readonly', True)]}),
+        'picking_id': fields.many2one('stock.picking', 'Transfer Reference', select=True, states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -1742,7 +1742,7 @@ class stock_move(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'split_from': fields.many2one('stock.move', string="Move Split From", help="Technical field used to track the origin of a split move, which can be useful in case of debug", copy=False),
         'backorder_id': fields.related('picking_id', 'backorder_id', type='many2one', relation="stock.picking", string="Back Order of", select=True),
-        'origin': fields.char("Source"),
+        'origin': fields.char("Source Document"),
         'procure_method': fields.selection([('make_to_stock', 'Default: Take From Stock'), ('make_to_order', 'Advanced: Apply Procurement Rules')], 'Supply Method', required=True, 
                                            help="""By default, the system will take from the stock in the source location and passively wait for availability. The other possibility allows you to directly create a procurement on the source location (and thus ignore its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, this second option should be chosen."""),
 
@@ -2785,6 +2785,14 @@ class stock_inventory_line(osv.osv):
         'product_qty': 1,
     }
 
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        if 'product_id' in values and not 'product_uom_id' in values:
+            values['product_uom_id'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
+        return super(stock_inventory_line, self).create(cr, uid, values, context=context)
+
     def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
         diff = inventory_line.theoretical_qty - inventory_line.product_qty
@@ -3720,7 +3728,7 @@ class stock_package(osv.osv):
                                     }, readonly=True, select=True),
     }
     _defaults = {
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
 
     def _check_location_constraint(self, cr, uid, packs, context=None):
@@ -4112,7 +4120,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'active': lambda *a: 1,
         'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
-        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.orderpoint') or '',
         'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }
@@ -4163,7 +4171,7 @@ class stock_picking_type(osv.osv):
     _order = 'sequence'
 
     def open_barcode_interface(self, cr, uid, ids, context=None):
-        final_url = "/barcode/web/#action=stock.ui&picking_type_id=" + str(ids[0]) if len(ids) else '0'
+        final_url = "/stock/barcode/#action=stock.ui&picking_type_id=" + str(ids[0]) if len(ids) else '0'
         return {'type': 'ir.actions.act_url', 'url': final_url, 'target': 'self'}
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):

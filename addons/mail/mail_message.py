@@ -579,6 +579,16 @@ class mail_message(osv.Model):
             thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         return message_list
 
+    def get_likers_list(self, cr, uid, ids, limit=10, context=None):
+        """ Return the people list who liked this message. """
+        voter_names = []
+        message = self.browse(cr, uid, ids, context=context)
+        for voter in message.vote_user_ids[:limit]:
+            voter_names.append(voter.name)
+        if len(message.vote_user_ids) > limit:
+            voter_names.append(_("and %s others like this") % (len(message.vote_user_ids) - limit))
+        return voter_names
+
     #------------------------------------------------------
     # mail_message internals
     #------------------------------------------------------

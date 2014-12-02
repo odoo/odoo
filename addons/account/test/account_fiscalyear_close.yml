@@ -34,7 +34,7 @@
     name: End of Year
     code: NEW
     type: situation
-    analytic_journal_id: sit
+    analytic_journal_id: analytic.sit
     default_debit_account_id: cash
     default_credit_account_id: cash
     company_id: base.main_company
@@ -75,5 +75,7 @@
 -
   I check that the past accounts are taken into account in partner credit
 -
-  !assert {model: res.partner, id: base.res_partner_2, string: Total Receivable does not takes unreconciled moves of previous years}:
-    - credit == 1040.0
+  !python {model: res.partner}: |
+    from openerp.tools import float_compare
+    credit = self.browse(cr, uid, ref('base.res_partner_2')).credit
+    assert float_compare(credit, 1040.0, precision_digits=2) == 0, "Total Receivable does not takes unreconciled moves of previous years"

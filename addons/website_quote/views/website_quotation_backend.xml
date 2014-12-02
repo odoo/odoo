@@ -6,15 +6,30 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//header/button[@name='invoice_corrected']" position="after">
-                    <button name="open_quotation" string="View Quotation" type="object"
-                        attrs="{'invisible': [('template_id','=',False)]}"/>
+                <xpath expr="//header/button[@name='action_button_confirm']" position="before">
+                    <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|',('template_id','=',False),('state','=','draft')]}"/>
+                </xpath>
+                <xpath expr="//header/button[@name='action_button_confirm']" position="before">
+                    <button name="open_quotation" string="Preview Quotation" type="object" attrs="{'invisible': ['|',('template_id','=',False),('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
+                    <button name="action_quotation_send" string="Send by Email" type="object"
+                        groups="base.group_user"
+                        attrs="{'invisible': ['|',('quote_viewed','=',True),('state','!=', 'draft')]}"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" groups="base.group_user"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|',('quote_viewed','=',False),('state','!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//header/button[@name='print_quotation'][1]" position="replace">
+                    <button name="print_quotation" string="Print" type="object" states="draft" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//page[@string='Order Lines']" position="after">
                     <page string="Suggested Products">
                         <label string="Optional Products &amp; Services" for="options"/>
+                        <field name="quote_viewed" invisible="1"/>
                         <field name="options">
-                            <tree string="Sales Quote Template Lines" editable="bottom">
+                            <tree string="Sales Quotation Template Lines" editable="bottom">
                                     <field name="product_id" on_change="on_change_product_id(product_id)"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
@@ -26,9 +41,10 @@
                         </field>
                     </page>
                 </xpath>
+                <xpath expr="//field[@name='payment_term']" position="after">
+                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>                    
+                </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>
-                    <field name="validity_date"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>
@@ -59,7 +75,7 @@
                         <notebook>
                             <page string="Lines">
                             <field name="quote_line">
-                                <form string="Sales Quote Template Lines">
+                                <form string="Sales Quotation Template Lines">
                                     <group>
                                         <group>
                                             <field name="product_id" on_change="on_change_product_id(product_id)"/>
@@ -84,7 +100,8 @@
                                         </page>
                                     </notebook>
                                 </form>
-                                <tree string="Sales Quote Template Lines" editable="bottom">
+                                <tree string="Sales Quotation Template Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="on_change_product_id(product_id)"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"/>
@@ -97,7 +114,7 @@
                         </page>
                         <page string="Suggested Products">
                             <field name="options">
-                              <tree string="Sales Quote Template Lines" editable="bottom">
+                              <tree string="Sales Quotation Template Lines" editable="bottom">
                                 <field name="product_id" on_change="on_change_product_id(product_id)"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
@@ -120,7 +137,7 @@
             <field name="model">sale.quote.template</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sale Quote Template">
+                <tree string="Sale Quotation Template">
                     <field name="name"/>
                 </tree>
             </field>
@@ -131,8 +148,34 @@
             <field name="res_model">sale.quote.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create your template.
+                </p><p>
+                    Use templates to create polished, professional quotes in minutes.
+                    Send these quotes by email and let your customers sign online.
+                    Use cross-selling and discounts to push and boost your sales.
+                </p>
+            </field>
         </record>
 
-        <menuitem action="action_sale_quotation_template" id="menu_sale_quote_template" parent="base.menu_base_config" sequence="6" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation, the first step of a new sale.
+                </p><p>
+                    Odoo will help you handling efficiently the complete sale flow:
+                    from the quotation to the sales order, the
+                    delivery, the invoicing and the payment collection.
+                </p><p>
+                    Promote products with a designed quotation template you send by email.
+                </p><p>
+                    The social feature helps you organizing discussions on each sales
+                    order, and allows your customers to keep track of the sales orders' evolution.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_sale_quotation_template" id="menu_sale_quote_template" parent="base.menu_sales_config" sequence="1" name="Quotation Templates" groups="base.group_sale_salesman,base.group_sale_manager"/>
     </data>
 </openerp>

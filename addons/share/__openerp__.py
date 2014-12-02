@@ -42,12 +42,10 @@ This is extremely useful for collaborative work, knowledge sharing,
 synchronization with other companies.
     """,
     'website': 'https://www.odoo.com',
-    'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
-        'share_data.xml',
         'views/share.xml',
     ],
     'installable': True,

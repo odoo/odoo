@@ -28,7 +28,7 @@
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                     </group>
                     <group string="Depreciation Method">
-                        <field name="method"/>
+                        <field name="method" widget="radio"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata"/>
                         <field name="open_asset"/>
@@ -116,7 +116,7 @@
                                     <field name="partner_id"/>
                                 </group>
                                 <group>
-                                    <field name="method"/>
+                                    <field name="method" widget="radio"/>
                                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                                     <label for="method_time"/>
                                     <div>
@@ -304,7 +304,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="9"/>
+    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="7" groups="account.group_account_user"/>
     <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
         sequence="100"
         action="action_account_asset_asset_tree"/>
@@ -321,7 +321,7 @@
 
     <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
-    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_configuration" sequence="25"/>
+    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_configuration" sequence="7"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
         <field name="name">Asset Categories</field>
         <field name="res_model">account.asset.category</field>

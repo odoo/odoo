@@ -20,6 +20,7 @@
 ##############################################################################
 
 import event
+import event_mail
 import wizard
 import report
-import res_partner
+import res_config

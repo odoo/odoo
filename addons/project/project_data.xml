@@ -24,50 +24,37 @@
             <field name="type">view</field>
         </record>
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
+        
+        <!-- alias domain: project.config.settings -->
+        <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', True)"/>
 
         <!-- Task Stages -->
 
-        <record id="project_tt_analysis" model="project.task.type">
+        <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>
-            <field name="name">Analysis</field>
+            <field name="name">To Do</field>
+            <field name="legend_blocked">Not validated</field>
+            <field name="legend_priority">Use the priority for tasks related to gold customers</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_specification" model="project.task.type">
+        <record id="project_stage_1" model="project.task.type">
             <field name="sequence">10</field>
-            <field name="name">Specification</field>
+            <field name="name">In Progress</field>
+            <field name="legend_blocked">Need functional or technical help</field>
+            <field name="legend_done">Buzz or set as done</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_design" model="project.task.type">
-            <field name="sequence">11</field>
-            <field name="name">Design</field>
-            <field name="case_default" eval="True"/>
-        </record>
-        <record id="project_tt_development" model="project.task.type">
-            <field name="sequence">12</field>
-            <field name="name">Development</field>
-            <field name="case_default" eval="True"/>
-        </record>
-        <record id="project_tt_testing" model="project.task.type">
-            <field name="sequence">13</field>
-            <field name="name">Testing</field>
-            <field name="case_default" eval="True"/>
-        </record>
-        <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">14</field>
-            <field name="name">Merge</field>
-            <field name="case_default" eval="False"/>
-            <field name="fold" eval="True"/>
-        </record>
-        <record id="project_tt_deployment" model="project.task.type">
+        <record id="project_stage_2" model="project.task.type">
             <field name="sequence">20</field>
             <field name="name">Done</field>
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
-        <record id="project_tt_cancel" model="project.task.type">
+        <record id="project_stage_3" model="project.task.type">
             <field name="sequence">30</field>
             <field name="name">Cancelled</field>
             <field name="case_default" eval="True"/>
+            <field name="legend_done">Ready to reopen</field>
             <field name="fold" eval="True"/>
         </record>
     </data>

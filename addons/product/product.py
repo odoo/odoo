@@ -518,8 +518,7 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'state': fields.selection([('',''),
-            ('draft', 'In Development'),
+        'state': fields.selection([('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status'),
@@ -727,12 +726,6 @@ class product_template(osv.osv):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if 'uom_po_id' in vals:
-            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
-            for product in self.browse(cr, uid, ids, context=context):
-                old_uom = product.uom_po_id
-                if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
@@ -1059,6 +1052,8 @@ class product_product(osv.osv):
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         if name:
@@ -1086,6 +1081,17 @@ class product_product(osv.osv):
                 res = ptrn.search(name)
                 if res:
                     ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            # still no results, partner in context: search on supplier info as last hope to find something
+            if not ids and context.get('partner_id'):
+                supplier_ids = self.pool['product.supplierinfo'].search(
+                    cr, user, [
+                        ('name', '=', context.get('partner_id')),
+                        '|',
+                        ('product_code', operator, name),
+                        ('product_name', operator, name)
+                    ], context=context)
+                if supplier_ids:
+                    ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
@@ -1251,7 +1257,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
-        'company_id':fields.many2one('res.company','Company',select=1),
+        'company_id':fields.many2one('res.company', string='Company',select=1),
     }
     _defaults = {
         'min_qty': 0.0,

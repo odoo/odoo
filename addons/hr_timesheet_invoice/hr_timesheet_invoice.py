@@ -74,6 +74,10 @@ class account_analytic_account(osv.osv):
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
 
+    _defaults = {
+         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
+    }
+    
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         if partner_id:

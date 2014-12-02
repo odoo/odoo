@@ -28,11 +28,6 @@ function openerp_picking_widgets(instance){
             var self = this;
             this.rows = [];
             this.search_filter = "";
-            jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
-                return function( elem ) {
-                    return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-                };
-            });
         },
         get_header: function(){
             return this.getParent().get_header();

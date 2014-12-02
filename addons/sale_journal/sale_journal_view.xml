@@ -41,8 +41,8 @@
             <field name="help">Invoice types are used for partners, sales orders and delivery orders. You can create a specific invoicing journal to group your invoicing according to your customer's needs: daily, each Wednesday, monthly, etc.</field>
         </record>
 
-     <menuitem id="menu_definition_journal_invoice_type" sequence="15"
-        parent="base.menu_base_config" action="action_definition_journal_invoice_type"/>
+     <menuitem id="menu_definition_journal_invoice_type" sequence="4"
+        parent="base.menu_sales_config" action="action_definition_journal_invoice_type"/>
 
     <!-- Inherit sales order form view -->
 
@@ -90,12 +90,9 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="Sales &amp; Purchases" position="inside">
-                    <group colspan="2" col="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                        <separator string="Invoicing" colspan="2"/>
-                        <field name="property_invoice_type"/>
-                    </group>
-                </page>
+                <group name="sale">
+                    <field name="property_invoice_type"/>
+                </group>
             </field>
         </record>
 

@@ -9,15 +9,15 @@ class pos_session_opening(osv.osv_memory):
     _name = 'pos.session.opening'
 
     _columns = {
-        'pos_config_id' : fields.many2one('pos.config', 'Point of Sale', required=True),
-        'pos_session_id' : fields.many2one('pos.session', 'PoS Session'),
+        'pos_config_id' : fields.many2one('pos.config', string='Point of Sale', required=True),
+        'pos_session_id' : fields.many2one('pos.session', string='PoS Session'),
         'pos_state' : fields.related('pos_session_id', 'state',
                                      type='selection',
                                      selection=pos_session.POS_SESSION_STATE,
                                      string='Session Status', readonly=True),
         'pos_state_str' : fields.char('Status', readonly=True),
         'show_config' : fields.boolean('Show Config', readonly=True),
-        'pos_session_name' : fields.related('pos_session_id', 'name',
+        'pos_session_name' : fields.related('pos_session_id', 'name', string="Session Name",
                                             type='char', size=64, readonly=True),
         'pos_session_username' : fields.related('pos_session_id', 'user_id', 'name',
                                                 type='char', size=64, readonly=True)

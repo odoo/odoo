@@ -20,9 +20,17 @@
                             <field name="suffix"/>
                             <field name="padding"/>
                             <field name="number_increment"/>
-                            <field name="number_next_actual"/>
+                            <field name="number_next_actual" attrs="{'invisible': [('use_date_range', '=', True)]}"/>
                             <field name="implementation"/>
+                            <field name="use_date_range"/>
                         </group>
+                        <field name="date_range_ids" attrs="{'invisible': [('use_date_range', '=', False)]}">
+                            <tree string="Sequences" editable="top">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="number_next_actual"/>
+                            </tree>
+                        </field>
                         <group col="3" string="Legend (for prefix, suffix)">
                             <group>
                                 <label colspan="2" string="Current Year with Century: %%(year)s"/>

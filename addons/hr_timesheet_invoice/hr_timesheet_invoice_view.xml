@@ -13,9 +13,6 @@
                         <field name="to_invoice"/>
                     </group>
                  </xpath>
-                <xpath expr="//field[@name='use_timesheets']" position="replace">
-                    <field name="use_timesheets"/>
-                </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
                         <button name="set_pending" string="To Renew" type="object" states="open" />
@@ -49,7 +46,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -71,7 +68,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -80,9 +77,9 @@
         <record id="view_account_analytic_line_search_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='others']" position="after">
+                <xpath expr="//field[@name='date']" position="after">
                     <separator/>
                     <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
@@ -107,7 +104,7 @@
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="after">
                     <field name="to_invoice"/>
@@ -117,7 +114,7 @@
           <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="amount" position="before">
                     <field name="to_invoice"/>
@@ -160,7 +157,7 @@
             </field>
         </record>
         <record id="action_hr_timesheet_invoice_factor_form" model="ir.actions.act_window">
-            <field name="name">Types of Invoicing</field>
+            <field name="name">Invoicing Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_invoice.factor</field>
             <field name="view_type">form</field>
@@ -181,7 +178,7 @@
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
             id="hr_timesheet_invoice_factor_view"
-            parent="account.menu_configuration_misc" sequence="25" groups="base.group_no_one"/>
+            parent="account.menu_analytic_accounting" sequence="99" groups="base.group_no_one"/>
 
     </data>
 </openerp>

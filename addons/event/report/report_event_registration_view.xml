@@ -9,7 +9,6 @@
                 <graph string="Event on Registration"  type="pivot" >
                     <field name="event_type" type="row"/>
                     <field name="event_date" interval="month" type="col"/>
-                    <field name="nbregistration" type="measure"/>
                     <field name="confirm_state" type="measure"/>
                 </graph>
             </field>
@@ -65,7 +64,7 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
         </record>
 
-        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="30" groups="event.group_event_manager" name="Events"/>
+        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="50" groups="event.group_event_manager" name="Events"/>
         <menuitem parent="menu_reporting_events" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
 
     </data>

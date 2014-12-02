@@ -49,7 +49,7 @@ allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
-     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
      ])
 
 

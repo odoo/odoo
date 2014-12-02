@@ -13,12 +13,8 @@
 
 <div id="snippet_structure" class="tab-pane active">
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
-            <span class="oe_snippet_thumbnail_title">Banner</span>
-        </div>
-        <div id="myCarousel" class="oe_snippet_body carousel slide mb32" style="height: 320px;">
+    <div name="Banner" class="o_block_banner">
+        <div id="myCarousel" class="carousel slide mb32" data-interval="10000" style="height: 320px;">
             <!-- Indicators -->
             <ol class="carousel-indicators hidden">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -46,12 +42,8 @@
         </div>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
-            <span class="oe_snippet_thumbnail_title">Text-Image</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="Text-Image" class="o_block_text_image">
+        <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 mt16">
@@ -74,12 +66,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_text.png"/>
-            <span class="oe_snippet_thumbnail_title">Image-Text</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="Image-Text" class="o_block_image_text">
+        <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 mt16">
@@ -148,12 +136,8 @@
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_jumbotron.png"/>
-            <span class="oe_snippet_thumbnail_title">Big Message</span>
-        </div>
-        <section class="oe_snippet_body jumbotron mt16 mb16">
+    <div name="Big Message" class="o_block_jumbotron">
+        <section class="jumbotron mt16 mb16">
             <div class="container">
                 <h1>Sell Online. Easily.</h1>
                 <p>
@@ -169,12 +153,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
-            <span class="oe_snippet_thumbnail_title">Text Block</span>
-        </div>
-        <section class="oe_snippet_body mt16 mb16">
+    <div name="Text Block" class="o_block_text_block">
+        <section class="mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt16 mb32">
@@ -207,12 +187,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_title.png"/>
-            <span class="oe_snippet_thumbnail_title">Title</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="Title" class="o_block_title">
+        <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -224,12 +200,8 @@
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_features.png"/>
-            <span class="oe_snippet_thumbnail_title">Features</span>
-        </div>
-        <section class="oe_snippet_body mb16">
+    <div name="Features" class="o_block_features">
+        <section class="mb16">
             <div class="container">
                 <div class="row mt16 mb16">
                     <div class="col-md-4 text-center">
@@ -255,12 +227,8 @@
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_big_picture.png"/>
-            <span class="oe_snippet_thumbnail_title">Big Picture</span>
-        </div>
-        <section class="oe_snippet_body oe_dark mt16 mb16">
+    <div name="Big Picture" class="o_block_big_picture">
+        <section class="oe_dark mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt32 mb32">
@@ -287,12 +255,8 @@
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_three_columns.png"/>
-            <span class="oe_snippet_thumbnail_title">Three Columns</span>
-        </div>
-        <section class="oe_snippet_body mt16 mb16">
+    <div name="Three Columns" class="o_block_three_columns">
+        <section class="mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
@@ -332,24 +296,16 @@
 
 <div id="snippet_content" class="tab-pane">
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_well.png"/>
-            <span class="oe_snippet_thumbnail_title">Well</span>
-        </div>
-        <div class="oe_snippet_body well">
+    <div name="Well" class="o_block_well">
+        <div class="well">
             Explain the benefits you offer. Don't write about products or
             services here, write about solutions.
         </div>
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quote.png"/>
-            <span class="oe_snippet_thumbnail_title">Quote</span>
-        </div>
-        <blockquote class="oe_snippet_body">
+    <div name="Quote" class="o_block_quote">
+        <blockquote>
             <p>
                 Write a quote here from one of your customers. Quotes are a
                 great way to build confidence in your products or services.
@@ -359,12 +315,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_panel.png"/>
-            <span class="oe_snippet_thumbnail_title">Panel</span>
-        </div>
-        <div class="oe_snippet_body panel panel-default">
+    <div name="Panel" class="o_block_panel">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Feature Title</h3>
             </div>
@@ -391,21 +343,13 @@
         </div>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
-            <span class="oe_snippet_thumbnail_title">Separator</span>
-        </div>
-        <hr class="oe_snippet_body"/>
+    <div name="Separator" class="o_block_separator">
+        <hr/>
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
-            <span class="oe_snippet_thumbnail_title">Share</span>
-        </div>
-        <div class="oe_snippet_body oe_share">
+    <div name="Share" class="o_block_button">
+        <div class="oe_share">
             <h3>
                 Share 
                 <a target="_Blank" class="oe_share_facebook" href="https://www.facebook.com/sharer/sharer.php?u={url}"><i class="fa fa-facebook-square"></i></a>
@@ -417,45 +361,65 @@
         </div>
     </div>
 
+    <div name="Table" class="o_block_table">
+        <section class="oe_snippet_body mt16 mb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <table cellspacing="0" class="table_desc">
+                            <tbody>
+                                <tr><th class="table_heading" colspan="2">Description</th></tr>
+                                <tr>
+                                    <td></td>
+                                    <td>(Press Tab to add a new row)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img img-rounded img-responsive" src="/website/static/src/img/library/ipad.png"/>
+                        <h4 class="mt16">Description</h4>
+                        <p>
+                            To add a related product list, reduce 
+                            the size of these three columns using 
+                            the right icon of each block.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 </div>
 
 <div id="snippet_feature" class="tab-pane">
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_image_gallery.png"/>
-            <span class="oe_snippet_thumbnail_title">Image Gallery</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="Image Gallery" class="o_block_image_gallery">
+        <section class="o_gallery o_nomode o_spc-none">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 text-center mt16 mb32">
-                        <h2>Our Customer References</h2>
-                        <h4 class="text-muted">More than 500 successful projects</h4>
+                    <div class="col-md-6">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
+                    </div>
+                    <div class="col-md-3">
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
                     </div>
                     <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert.jpg"/>
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/landscape.jpg"/>
                     </div>
                     <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/desert_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/landscape.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb16" src="/website/static/src/img/china_thumb.jpg"/>
+                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
                     </div>
                 </div>
             </div>
@@ -463,12 +427,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_comparison.png"/>
-            <span class="oe_snippet_thumbnail_title">Comparisons</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="Comparisons" class="o_block_comparison">
+        <section>
             <div class="container">
               <div class="row">
                 <div class="col-md-12 text-center mt16 mb32">
@@ -569,12 +529,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
-            <span class="oe_snippet_thumbnail_title">Button</span>
-        </div>
-        <section class="oe_snippet_body jumbotron">
+    <div name="Button" class="o_block_button">
+        <section class="jumbotron">
             <div class="container">
                 <div class="row">
                     <div class="col-md-9 text-muted">
@@ -596,12 +552,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_faq.png"/>
-            <span class="oe_snippet_thumbnail_title">FAQ</span>
-        </div>
-        <section class="oe_snippet_body">
+    <div name="FAQ" class="o_block_faq">
+        <section>
             <div class="container">
                 <h2 class="page-header">
                     Point of Sale Questions <small>v7</small>
@@ -643,12 +595,8 @@
     </div>
 
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_references.png"/>
-            <span class="oe_snippet_thumbnail_title">References</span>
-        </div>
-        <section class="oe_snippet_body mb32 mt16">
+    <div name="References" class="o_block_references">
+        <section class="mb32 mt16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -697,12 +645,8 @@
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
-            <span class="oe_snippet_thumbnail_title">Quotes Slider</span>
-        </div>
-        <div id="myQuoteCarousel" class="oe_snippet_body carousel quotecarousel slide mb0">
+    <div name="Quotes Slider" class="o_block_quotes_slider">
+        <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
             <!-- Indicators -->
             <ol class="carousel-indicators mb0">
                 <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -750,12 +694,8 @@
         </div>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_features.png"/>
-            <span class="oe_snippet_thumbnail_title">Feature Grid</span>
-        </div>
-        <section class="oe_snippet_body mb16">
+    <div name="Feature Grid" class="o_block_features">
+        <section class="mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-5 text-center">
@@ -810,28 +750,20 @@
 
 <div id="snippet_effect" class="tab-pane">
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-            <span class="oe_snippet_thumbnail_title">Parallax</span>
-        </div>
-        <section class="oe_snippet_body parallax"
+    <div name="Parallax" class="o_block_parallax">
+        <section class="parallax"
                 style="background-image: url('/website/static/src/img/banner/mountains.jpg')"
                 data-scroll-background-ratio="0.3">
                 <div><div class="oe_structure"/></div>
         </section>
     </div>
 
-    <div>
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
-            <span class="oe_snippet_thumbnail_title">Parallax Slider</span>
-        </div>
-        <section class="oe_snippet_body parallax"
+    <div name="Parallax Slider" class="o_block_quotes_slider">
+        <section class="parallax"
                  style="background-image: url('/website/static/src/img/parallax/quote.png')"
                 data-scroll-background-ratio="0.3">
             <div><div><div class="oe_structure">
-                    <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0">
+                    <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
                         <!-- Indicators -->
                         <ol class="carousel-indicators mb0">
                             <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -895,108 +827,227 @@
 
 <template id="snippet_options">
 
-    <div data-snippet-option-id='blog-style'
-        data-selector="section:not(.carousel):not(.parallax)">
+    <div data-js='blog-style'
+        data-selector="section:not(.carousel):not(.parallax):not(.o_gallery)">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu">
-                <li data-value="para_large"><a>Bigger Text</a></li>
-                <li data-value="readable"><a>Narrow</a></li>
+                <li data-toggle_class="para_large"><a>Bigger Text</a></li>
+                <li data-toggle_class="readable"><a>Narrow</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-option-id='background'
-        data-selector="section, .carousel, .parallax">
-        <li class="dropdown-submenu" data-required="true">
+    <div data-js='background'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+        <li class="dropdown-submenu" data-background="">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
-                <li class="dropdown-submenu">
-                    <a tabindex="-2" href="#">Uniform Color</a>
-                    <ul class="dropdown-menu">
-                        <li data-value='oe_dark'><a>Darken</a></li>
-                        <li data-value='oe_green'><a>Green</a></li>
-                        <li data-value='oe_red'><a>Red</a></li>
-                        <li data-value='oe_blue_light'><a>Turquoise</a></li>
-                        <li data-value='oe_blue'><a>Dark Blue</a></li>
-                        <li data-value='oe_orange'><a>Orange</a></li>
-                        <li data-value='oe_purple'><a>Purple</a></li>
-                        <li data-value='oe_black'><a>Black</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown-submenu">
-                    <a tabindex="-2" href="#">People</a>
-                    <ul class="dropdown-menu">
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown-submenu">
-                    <a tabindex="-2" href="#">Landscape</a>
-                    <ul class="dropdown-menu">
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown-submenu">
-                    <a tabindex="-2" href="#">Various</a>
-                    <ul class="dropdown-menu">
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
-                        <li data-value="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
-                    </ul>
-                </li>
-                <li data-value=""><a>None</a></li>
+                <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
+                <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                <li data-background="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-background="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                <li data-background="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-background="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-background="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-background="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-background="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-background="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-background="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                <li data-background="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li data-background="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+                <li data-background=""><a>None</a></li>
                 <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
-                <li class="oe_custom_bg" data-value="oe_img_bg"><a><b>Choose an image...</b></a></li>
+                <li data-choose_image="choose_image" data-background=""><a><b>Choose an image...</b></a></li>
             </ul>
         </li>
     </div>
+     
+    <div data-js='gallery' data-selector=".o_gallery">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Mode</a>
+            
+            <ul class="dropdown-menu">
+                <li data-mode="nomode"   > <a>None</a></li>
+                <li data-mode="masonry"  > <a>Masonry</a> </li>
+                <li data-mode="grid"     > <a>Grid</a> </li>
+                <li data-mode="slideshow"> <a>Slideshow</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Slideshow speed</a>
+            <ul class="dropdown-menu">
+                 <li data-interval="1000"> <a>1s</a> </li>
+                 <li data-interval="2000"> <a>2s</a> </li>
+                 <li data-interval="3000"> <a>3s</a> </li>
+                 <li data-interval="5000"> <a>5s</a> </li>
+                 <li data-interval="10000"> <a>10s</a></li>
+                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Columns</a>
+            
+            <ul class="dropdown-menu">
+                <li data-columns="1"  > <a>1</a> </li>
+                <li data-columns="2"  > <a>2</a> </li>
+                <li data-columns="3"  > <a>3</a> </li>
+                <li data-columns="4"  > <a>4</a> </li>
+                <li data-columns="6"  > <a>6</a> </li>
+                <li data-columns="12" > <a>12</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Images spacing</a>
 
-    <div data-snippet-option-id='carousel'
-        data-selector=".carousel">
+            <ul class="dropdown-menu">
+                <li data-select_class="o_spc-none"  > <a>None</a>   </li>
+                <li data-select_class="o_spc-small" > <a>Small</a>  </li>
+                <li data-select_class="o_spc-medium"> <a>Medium</a> </li>
+                <li data-select_class="o_spc-big"   > <a>Big</a>    </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Album</a>
+           
+           <ul class="dropdown-menu">
+               <li data-albumimages="images_add"> <a>Add images</a></li>
+               <li data-albumimages="images_rm"><a>Remove all images</a></li>
+           </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Styling</a>
+           
+           <ul class="dropdown-menu">
+               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
+               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
+               <li data-styling="img-circle"    ><a>Circle</a></li>
+               <li data-styling="shadow"        ><a>Shadows</a></li>
+               <li data-styling="fa-spin"       ><a>Spinning</a></li>
+           </ul>
+        </li>
+    </div>
+
+    <div data-js='colorpicker'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+     
+    <div data-js='gallery' data-selector=".gallery">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Mode</a>
+            
+            <ul class="dropdown-menu">
+                <li data-mode="nomode"   > <a>None</a></li>
+                <li data-mode="masonry"  > <a>Masonry</a> </li>
+                <li data-mode="grid"     > <a>Grid</a> </li>
+                <li data-mode="slideshow"> <a>Slideshow</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Slideshow speed</a>
+            <ul class="dropdown-menu">
+                 <li data-interval="1000"> <a>1s</a> </li>
+                 <li data-interval="2000"> <a>2s</a> </li>
+                 <li data-interval="3000"> <a>3s</a> </li>
+                 <li data-interval="5000"> <a>5s</a> </li>
+                 <li data-interval="10000"> <a>10s</a></li>
+                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Columns</a>
+            
+            <ul class="dropdown-menu">
+                <li data-columns="1"  > <a>1</a> </li>
+                <li data-columns="2"  > <a>2</a> </li>
+                <li data-columns="3"  > <a>3</a> </li>
+                <li data-columns="4"  > <a>4</a> </li>
+                <li data-columns="6"  > <a>6</a> </li>
+                <li data-columns="12" > <a>12</a> </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Images spacing</a>
+
+            <ul class="dropdown-menu">
+                <li data-select_class="spc-none"  > <a>None</a>   </li>
+                <li data-select_class="spc-small" > <a>Small</a>  </li>
+                <li data-select_class="spc-medium"> <a>Medium</a> </li>
+                <li data-select_class="spc-big"   > <a>Big</a>    </li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Album</a>
+           
+           <ul class="dropdown-menu">
+               <li data-albumimages="images_add"> <a>Add images</a></li>
+               <li data-albumimages="images_rm"><a>Remove all images</a></li>
+           </ul>
+        </li>
+        <li class="dropdown-submenu">
+           <a tabindex="-2" href="#">Styling</a>
+           
+           <ul class="dropdown-menu">
+               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
+               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
+               <li data-styling="img-circle"    ><a>Circle</a></li>
+               <li data-styling="shadow"        ><a>Shadows</a></li>
+               <li data-styling="fa-spin"       ><a>Spinning</a></li>
+           </ul>
+        </li>
+    </div>
+
+    <div data-js='carousel'
+        data-selector=":not(.o_gallery > .container) > .carousel">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Slideshow speed</a>
+            <ul class="dropdown-menu">
+                 <li data-interval="1000"> <a>1s</a> </li>
+                 <li data-interval="2000"> <a>2s</a> </li>
+                 <li data-interval="3000"> <a>3s</a> </li>
+                 <li data-interval="5000"> <a>5s</a> </li>
+                 <li data-interval="10000"> <a>10s</a></li>
+                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+            </ul>
+        </li>
         <li class="divider"></li>
-        <li>
-            <a href="#" class="button js_add">Add Slide</a>
-        </li>
-        <li>
-            <a href="#" class="button js_remove">Remove Slide</a>
-        </li>
+        <li data-add_slide="true"> <a href="#">Add Slide</a> </li>
+        <li data-remove_slide="true"> <a href="#" >Remove Slide</a></li>
     </div>
 
-    <div data-snippet-option-id='margin-y'
-        data-selector="section, .row > [class*='col-md-'], .carousel, .parallax, hr">
+    <div data-js='margin-y'
+        data-selector="section, .row > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
-    <div data-snippet-option-id='resize'
-        data-selector="section, .carousel, .parallax"
-        data-selector-children=".oe_structure, [data-oe-type=html]">
+    <div data-js='resize'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
-    <div data-snippet-option-id='margin-x'
+    <div data-js='margin-x'
         data-selector=".row > [class*='col-md-']"
-        data-selector-vertical-children='.row'>
+        data-drop-near=".row > [class*='col-md-']">
     </div>
 
-    <div data-snippet-option-id='content'
+    <div data-js='content'
         data-selector="blockquote, .well, .panel, .oe_share, .o_image_floating"
-        data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
-        data-selector-children=".content">
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
+        data-drop-in=".content">
     </div>
 
-    <div data-snippet-option-id='separator'
+    <div data-js='separator'
         data-selector="hr"
-        data-selector-children=".oe_structure, [data-oe-type=html]">
+        data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
     <div data-snippet-option-id='image_floating_margin'
@@ -1029,40 +1080,40 @@
         </li>
     </div>
 
-    <div data-snippet-option-id='parallax'
+    <div data-js='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-value="0"><a>Static</a></li>
-                <li data-value="0.3"><a>Very Slow</a></li>
-                <li data-value="0.6"><a>Slow</a></li>
-                <li data-value="1"><a>Fixed</a></li>
-                <li data-value="1.4"><a>Fast</a></li>
-                <li data-value="1.7"><a>Very Fast</a></li>
+                <li data-scroll="0"><a>Static</a></li>
+                <li data-scroll="0.3"><a>Very Slow</a></li>
+                <li data-scroll="0.6"><a>Slow</a></li>
+                <li data-scroll="1"><a>Fixed</a></li>
+                <li data-scroll="1.4"><a>Fast</a></li>
+                <li data-scroll="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-option-id='media'
+    <div data-js='media'
         data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa, .glyphicon">
-        <li><a href="#" class="edition">Change...</a></li>
+        <li data-edition="edition"><a>Change...</a></li>
     </div>
 
-    <div data-snippet-option-id='transform'
+    <div data-js='transform'
         data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-value="img-rounded"><a>Rounded corners</a></li>
-                <li data-value="img-thumbnail"><a>Box</a></li>
-                <li data-value="img-circle"><a>Circle</a></li>
-                <li data-value="shadow"><a>Shadow</a></li>
-                <li data-value="fa-spin"><a>Spin</a></li>
+                <li data-select_class="img-rounded"><a>Rounded corners</a></li>
+                <li data-select_class="img-thumbnail"><a>Box</a></li>
+                <li data-select_class="img-circle"><a>Circle</a></li>
+                <li data-select_class="shadow"><a>Shadow</a></li>
+                <li data-select_class="fa-spin"><a>Spin</a></li>
             </ul>
         </li>
-        <li><a href="#" class="style">Transform</a></li>
-        <li><a href="#" class="clear-style">Reset Transformation</a></li>
+        <li data-style=""><a>Transform</a></li>
+        <li data-clear_style=""><a>Reset Transformation</a></li>
     </div>
 
 </template>

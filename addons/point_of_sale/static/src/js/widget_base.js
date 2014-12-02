@@ -27,6 +27,12 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                 decimals = this.pos.dp[precision];
             }
 
+            this.format_currency_no_symbol = function(amount){
+                amount = round_pr(amount,this.currency.rounding);
+                amount = amount.toFixed(decimals);
+                return amount;
+            };
+
             if (typeof amount === 'number') {
                 amount = round_di(amount,decimals).toFixed(decimals);
             }

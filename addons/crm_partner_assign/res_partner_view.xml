@@ -33,7 +33,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act" groups="base.group_no_one"/>
+        <menuitem id="res_partner_activation_config_mi" parent="base.menu_localisation" action="res_partner_activation_act" groups="base.group_no_one"
+            sequence="6"/>
 
     <!--Partner Grade -->
 
@@ -68,7 +69,8 @@
     </record>
     <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
         groups="base.group_no_one"
-        parent="base.menu_crm_config_lead" />
+        parent="base.menu_localisation"
+        sequence="5" />
 
     <!-- Partner form -->
     <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
@@ -103,9 +105,8 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='geo_localization']" position="replace">
-            <!-- <xpath expr="//notebook[last()]" position="inside"> -->
-                <page string="Geo Localization" name="geo_localization">
+            <data>
+                <xpath expr="//page[@name='geo_location']" position="inside">
                     <group>
                         <group>
                             <separator string="Partner Activation" colspan="2"/>
@@ -119,45 +120,15 @@
                             <field name="date_review_next"/>
                             <field name="date_partnership"/>
                         </group>
+                        <group>
+                            <button name="%(crm.relate_partner_opportunities)d"  string="Assigned Opportunities" type="action" />
+                        </group>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Geo Localization" colspan="2"/>
-                        <button
-                            string="Geo Localize"
-                            name="geo_localize"
-                            colspan="2"
-                            icon="gtk-apply"
-                            type="object"/>
-                        <field name="partner_latitude"/>
-                        <field name="partner_longitude"/>
-                        <field name="date_localization"/>
-                    </group>
-                    <newline/>
-
-                    <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
-                         <tree string="Assigned Opportunities">
-                             <field name="create_date"/>
-                             <field name="name"/>
-                             <field name="type"/>
-                             <field name="probability" invisible="1"/>
-                             <field name="stage_id"/>
-                             <field name="section_id"
-                                    invisible="context.get('invisible_section', True)"
-                                    groups="base.group_multi_salesteams"/>
-                             <field name="user_id" />
-                             <button string="Convert to Opportunity"
-                                    name="convert_opportunity"
-                                    type="object" 
-                                    icon="gtk-convert"
-                                    attrs="{'invisible':[('type','=','opportunity')]}" />
-                             <button name="case_escalate" string="Escalate"
-                                    type="object"
-                                    icon="gtk-go-up" 
-                                    attrs="{'invisible':[('probability', '=', 100)]}" />
-                         </tree>
-                    </field>
-                </page>
-            </xpath>
+                </xpath>
+                <xpath expr="//group[@name='sale']" position="inside">
+                    <field name="assigned_partner_id"/>
+                </xpath>
+            </data>
         </field>
     </record>
 

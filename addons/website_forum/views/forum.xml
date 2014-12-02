@@ -12,6 +12,9 @@
             <field name="arch" type="xml">
                 <tree string="Forums">
                     <field name="name"/>
+                    <field name="allow_question"/>
+                    <field name="allow_link"/>
+                    <field name="allow_discussion"/>
                 </tree>
             </field>
         </record>
@@ -22,10 +25,26 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
-                        <group>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
                             <field name="name"/>
-                        </group>
+                        </h1>
                         <notebook>
+                            <page string="Options">
+                              <group string="Post Types">
+                                <field name="allow_question"/>
+                                <field name="allow_link"/>
+                                <field name="allow_discussion"/>
+                                <field name="default_post_type"/>
+                              </group>
+                              <group string="Orders">
+                                <field name="default_order"/>
+                                <label for="relevancy_post_vote" string="Relevancy Computation"/>
+                                <div>
+                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
+                                </div>
+                              </group>
+                            </page>
                             <page string='Karma Gains'>
                                 <group>
                                     <field name="karma_gen_question_new"/>
@@ -35,9 +54,10 @@
                                     <field name="karma_gen_answer_downvote"/>
                                     <field name="karma_gen_answer_accept"/>
                                     <field name="karma_gen_answer_accepted"/>
+                                    <field name="karma_gen_answer_flagged"/>
                                 </group>
                             </page>
-                            <page string='Karma Requirements'>
+                            <page string='Karma Related Rights'>
                                 <group>
                                     <group>
                                         <field name="karma_ask"/>
@@ -49,10 +69,13 @@
                                         <field name="karma_close_all"/>
                                         <field name="karma_unlink_own"/>
                                         <field name="karma_unlink_all"/>
+                                        <field name="karma_dofollow"/>
                                     </group>
                                     <group>
                                         <field name="karma_answer_accept_own"/>
                                         <field name="karma_answer_accept_all"/>
+                                        <field name="karma_editor_link_files"/>
+                                        <field name="karma_editor_clickable_link"/>
                                         <field name="karma_comment_own"/>
                                         <field name="karma_comment_all"/>
                                         <field name="karma_comment_convert_own"/>
@@ -124,6 +147,7 @@
                                 <field name="vote_count"/>
                                 <field name="favourite_count"/>
                                 <field name="child_count"/>
+                                <field name="relevancy"/>
                             </group>
                         </group>
                     </sheet>

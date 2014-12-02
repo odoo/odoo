@@ -21,6 +21,7 @@
   I check requisition details which created after run procurement.
 -
   !python {model: procurement.order}: |
+    from openerp.tools import float_compare
     procurement_ids = self.search(cr, uid, [('requisition_id','!=', False)])
     for procurement in self.browse(cr, uid, procurement_ids, context=context):
         requisition = procurement.requisition_id
@@ -29,7 +30,7 @@
         line = requisition.line_ids[0]
         assert line.product_id.id == procurement.product_id.id, "Product is not correspond."
         assert line.product_uom_id.id == procurement.product_uom.id, "UOM is not correspond."
-        assert line.product_qty == procurement.product_qty, "Quantity is not correspond."
+        assert float_compare(line.product_qty, procurement.product_qty, precision_digits=2) == 0, "Quantity is not correspond."
 -
   I send the purchase order associated to the requisition.
 -

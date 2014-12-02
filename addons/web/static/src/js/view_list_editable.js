@@ -255,7 +255,7 @@
                         $recordRow.addClass('oe_edition');
                         self.resize_fields();
                         var focus_field = options && options.focus_field ? options.focus_field : undefined;
-                        if (!focus_field){
+                        if (!focus_field || !fields[focus_field]){
                             focus_field = _.find(self.editor.form.fields_order, function(field){ return fields[field] && fields[field].$el.is(':visible:has(input)'); });
                         }
                         if (focus_field  && fields[focus_field]) fields[focus_field].$el.find('input').select();
@@ -364,7 +364,7 @@
                             // Record removed by third party during edition
                             return;
                         }
-                        return self.reload_record(record);
+                        return self.reload_record(record, {do_not_evict: true});
                     }
                     var to_delete = self.records.find(function (r) {
                         return !r.get('id');
@@ -805,7 +805,7 @@
             var record_id = $(event.currentTarget).data('id');
             return this.view.start_edition(
                 record_id ? this.records.get(record_id) : null, {
-                focus_field: $(event.target).data('field')
+                focus_field: $(event.target).not(".oe_readonly").data('field')
             });
         },
         /**

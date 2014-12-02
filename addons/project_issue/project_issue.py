@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
-from datetime import datetime
-
+import calendar
+from datetime import datetime,date
+from dateutil import relativedelta
+import json
+import time
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -103,20 +106,21 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve section_id from the context and write the domain
+        # retrieve team_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -189,6 +193,13 @@ class project_issue(osv.Model):
             res[issue.id] = {'progress' : progress}
         return res
 
+    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.project_id.parent_id.type == 'contract':
+                res[issue.id] = True
+        return res
+
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -220,7 +231,7 @@ class project_issue(osv.Model):
         'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
                                                multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
@@ -269,6 +280,7 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
@@ -360,28 +372,28 @@ class project_issue(osv.Model):
             return {'value': {'date_closed': fields.datetime.now()}}
         return {'value': {'date_closed': False}}
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
             - type: stage type must be the same or 'both'
-            - section_id: if set, stages must belong to this section or
+            - team_id: if set, stages must belong to this team or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all section_ids
-        section_ids = []
-        if section_id:
-            section_ids.append(section_id)
+        # collect all team_ids
+        team_ids = []
+        if team_id:
+            team_ids.append(team_id)
         for task in cases:
             if task.project_id:
-                section_ids.append(task.project_id.id)
-        # OR all section_ids and OR with case_default
+                team_ids.append(task.project_id.id)
+        # OR all team_ids and OR with case_default
         search_domain = []
-        if section_ids:
-            search_domain += [('|')] * (len(section_ids)-1)
-            for section_id in section_ids:
-                search_domain.append(('project_ids', '=', section_id))
+        if team_ids:
+            search_domain += [('|')] * (len(team_ids)-1)
+            for team_id in team_ids:
+                search_domain.append(('project_ids', '=', team_id))
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
@@ -472,13 +484,25 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
+    def _get_project_issue_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool['project.issue']
+        month_begin = date.today().replace(day=1)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        res = {}
+        for id in ids:
+            created_domain = [('project_id', '=', id), ('date_closed', '>=', date_begin ), ('date_closed', '<=', date_end )]
+            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'date_closed'], 'date_closed_count', 'date_closed', context=context))
+        return res
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
-        'issue_ids': fields.one2many('project.issue', 'project_id',
-                                     domain=[('stage_id.fold', '=', False)])
+        'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
+                                     domain=[('date_closed', '!=', False)]),
+        'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
+                                             string='Project Issue By Month')
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -514,12 +538,24 @@ class account_analytic_account(osv.Model):
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_issues:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
+
 
 class project_project(osv.Model):
     _inherit = 'project.project'
 
+    _columns = {
+        'label_issues': fields.char('Use Issues as', help="Customize the issues label, for example to call them cases."),
+    }
+
     _defaults = {
-        'use_issues': True
+        'use_issues': True,
+        'label_issues': 'Issues',
     }
 
     def _check_create_write_values(self, cr, uid, vals, context=None):

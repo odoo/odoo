@@ -293,11 +293,9 @@
             <field name="model">lunch.product.category</field>
             <field name="arch" type="xml">
                 <form string="Products Form">
-                    <sheet>
                     <group>
                         <field name='name' string="Product Category: "/>
                     </group>
-                    </sheet>
                 </form>
             </field>
         </record>
@@ -425,20 +423,18 @@
                 <form string="Products Form">
                     <header>
                     </header>
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name='name'/>
-                                <field name='category_id'/>
-                            </group>
-                            <group>
-                                <field name='supplier'/>
-                                <field name='price'/>
-                            </group>
+                            <field name='name'/>
+                            <field name='category_id'/>
                         </group>
-                        <label for='description'/>
-                        <field name='description'/>
-                    </sheet>
+                        <group>
+                            <field name='supplier'/>
+                            <field name='price'/>
+                        </group>
+                    </group>
+                    <label for='description'/>
+                    <field name='description'/>
                 </form>
             </field>
         </record>
@@ -462,35 +458,32 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form string="alert tree">
-                    <sheet>
-                        <group string="Schedule Date">
-                            <group>
-                                <field name="alter_type" class="oe_inline"/>
-                                <field name="specific_day" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
-                            </group>
+                    <group string="Schedule Date">
+                        <group>
+                            <field name="alter_type" class="oe_inline"/>
+                            <field name="specific_day" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
                         </group>
-                        <group attrs="{'invisible': [('alter_type','!=','week')]}">
-                            <group>
-                                <field name="monday"/>
-                                <field name="tuesday"/>
-                                <field name="wednesday"/>
-                                <field name="thursday"/>
-                            </group>
-                            <group>
-                                <field name="friday"/>
-                                <field name="saturday"/>
-                                <field name="sunday"/>
-                            </group>
+                    </group>
+                    <group attrs="{'invisible': [('alter_type','!=','week')]}">
+                        <group>
+                            <field name="monday"/>
+                            <field name="tuesday"/>
+                            <field name="wednesday"/>
+                            <field name="thursday"/>
                         </group>
-                        <group string="Schedule Hour">
-                            <field name='active_from' widget='float_time'/>
-                            <field name='active_to' widget='float_time'/>
+                        <group>
+                            <field name="friday"/>
+                            <field name="saturday"/>
+                            <field name="sunday"/>
                         </group>
-                        <group string='Message'>
-                            <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
-                        </group>
-
-                </sheet>
+                    </group>
+                    <group string="Schedule Hour">
+                        <field name='active_from' widget='float_time'/>
+                        <field name='active_to' widget='float_time'/>
+                    </group>
+                    <group string='Message'>
+                        <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
+                    </group>
                 </form>
             </field>
         </record>

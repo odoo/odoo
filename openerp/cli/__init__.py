@@ -52,17 +52,14 @@ def main():
     # Default legacy command
     command = "server"
 
+    # TODO: find a way to properly discover addons subcommands without importing the world
     # Subcommand discovery
     if len(args) and not args[0].startswith("-"):
-        logging.disable(logging.CRITICAL)
-        for m in module.get_modules():
-            m = 'openerp.addons.' + m
-            __import__(m)
-            #try:
-            #except Exception, e:
-            #    raise
-            #    print e
-        logging.disable(logging.NOTSET)
+    #     logging.disable(logging.CRITICAL)
+    #     for m in module.get_modules():
+    #         m = 'openerp.addons.' + m
+    #         __import__(m)
+    #     logging.disable(logging.NOTSET)
         command = args[0]
         args = args[1:]
 

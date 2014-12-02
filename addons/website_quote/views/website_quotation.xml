@@ -11,7 +11,7 @@
   </template>
 
   <template id="pricing" name="Price">
-      <section data-snippet-id="title">
+      <section>
           <h1 class="page-header">Pricing</h1>
       </section>
       <section id="quote">
@@ -258,7 +258,7 @@
                           <em t-esc="quotation.name"/>
                           <small t-field="quotation.state"/>
                           <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden">
-                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (quotation._name, quotation.id)">Update Quote</a>
+                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Update Quote</a>
                           </div>
                       </h1>
 
@@ -371,11 +371,11 @@
                       </div>
 
                       <a id="offer"/>
-                      <div t-field="quotation.website_description"/>
+                      <div t-field="quotation.website_description" class="oe_no_empty"/>
 
                       <t t-foreach="quotation.order_line" t-as="line">
                           <a t-att-id="line.id"/>
-                          <div t-field="line.website_description"/>
+                          <div t-field="line.website_description" class="oe_no_empty"/>
                       </t>
     
                       <div class="oe_structure"/>
@@ -420,7 +420,7 @@
 
   <template id="optional_products">
     <div class="container mt32" t-if="option">
-        <section data-snippet-id="title">
+        <section>
             <h1 class="page-header">Options</h1>
         </section>
         <section id="options">
@@ -497,7 +497,7 @@
                                 table of content automatically.
                             </p>
                         </div>
-                        <div id="template_introduction" t-field="template.website_description"/>
+                        <div id="template_introduction" t-field="template.website_description" class="oe_no_empty"/>
                         <t t-foreach="template.quote_line" t-as="line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -505,7 +505,7 @@
                                 this content will appear on the quotation only if this
                                 product is put on the quote.
                             </div>
-                            <div t-field="line.website_description"/>
+                            <div t-field="line.website_description" class="oe_no_empty"/>
                         </t>
                         <t t-foreach="template.options" t-as="option_line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
@@ -514,7 +514,7 @@
                                 this content will appear on the quotation only if this
                                 product is used in the quote.
                             </div>
-                            <div t-field="option_line.website_description"/>
+                            <div t-field="option_line.website_description" class="oe_no_empty"/>
                         </t>
                         <section id="terms" class="container" t-if="template.note">
                             <h1 class="page-header" t-ignore="True">Terms &amp; Conditions</h1>

@@ -78,7 +78,7 @@
             </field>
         </record>
 
-        <!-- Add section_id (SalesTeam) and contextual button on partner form view -->
+        <!-- Add team_id (SalesTeam) and contextual button on partner form view -->
         <record id="view_partners_form_crm1" model="ir.ui.view">
             <field name="name">view.res.partner.form.crm.inherited1</field>
             <field name="model">res.partner</field>
@@ -87,12 +87,12 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="user_id" position="after">
-                        <field name="section_id" completion="1" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" completion="1" groups="base.group_multi_salesteams"/>
                     </field>
                     <xpath expr="//div[@name='buttons']" position="inside">
                         <button class="oe_inline oe_stat_button" type="action"
                             attrs="{'invisible': [('customer', '=', False)]}"
-                            name="%(crm.crm_case_category_act_oppor11)d"
+                            name="%(crm.crm_lead_opportunities)d"
                             icon="fa-star"
                             context="{'search_default_partner_id': active_id}">
                             <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
@@ -104,7 +104,7 @@
                             <field string="Meetings" name="meeting_count" widget="statinfo"/>
                         </button>
                         <button class="oe_inline oe_stat_button" type="action"
-                            name="%(crm.crm_case_categ_phone_incoming0)d" 
+                            name="%(crm.crm_phonecall_category_phone_incoming0)d"
                             icon="fa-phone"
                             context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
                             <field string="Calls" name="phonecall_count" widget="statinfo"/>

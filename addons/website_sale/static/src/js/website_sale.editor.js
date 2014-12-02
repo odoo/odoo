@@ -18,68 +18,83 @@
         },
     });
 
-    function reload_enable_editor() {
-        var search = location.search.replace(/\?|$/, '?enable_editor=1&');
-        location.href = location.href.replace(/(\?|#|$).*/, search + location.hash);
-    }
+    website.snippet.options.website_sale = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            this.product_tmpl_id = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
-    $(document).on('click', '.js_options .js_go_to_top,.js_options .js_go_to_bottom,.js_options .js_go_up,.js_options .js_go_down', function (event) {
-        var $a = $(event.currentTarget);
-        var $data = $a.parents(".js_options:first");
-        var sequence = "top";
-        if ($a.hasClass('js_go_to_bottom'))
-            sequence = "bottom";
-        else if ($a.hasClass('js_go_up'))
-            sequence = "up";
-        else if ($a.hasClass('js_go_down'))
-            sequence = "down";
-        openerp.jsonRpc('/shop/change_sequence', 'call', {'id': $data.data('id'), 'sequence': sequence})
-            .then(reload_enable_editor);
-    });
+            var size_x = parseInt(this.$target.attr("colspan") || 1);
+            var size_y = parseInt(this.$target.attr("rowspan") || 1);
 
-    $(document).on('click', '.js_options ul[name="style"] a', function (event) {
-        var $a = $(event.currentTarget);
-        var $li = $a.parent();
-        var $data = $a.parents(".js_options:first");
-        var $product = $a.parents(".oe_product:first");
+            var $size = this.$el.find('ul[name="size"]');
+            var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
+            if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
+            if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
+            if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
+            $select.addClass("selected");
 
-        $li.parent().removeClass("active");
-        openerp.jsonRpc('/shop/change_styles', 'call', {'id': $data.data('id'), 'style_id': $a.data("id")})
-            .then(function (result) {
-                $product.toggleClass($a.data("class"));
-                $li.toggleClass("active", result);
+            website.session.model('product.style')
+                .call('search_read', [[]])
+                    .then(function (data) {
+                        var $ul = self.$el.find('ul[name="style"]');
+                        for (var k in data) {
+                            $ul.append(
+                                $('<li data-style="'+data[k]['id']+'" data-toggle_class="'+data[k]['html_class']+'"/>')
+                                    .append( $('<a/>').text(data[k]['name']) ));
+                        }
+                    });
+
+            this.bind_resize();
+        },
+        reload: function () {
+            if (location.href.match(/\?enable_editor/)) {
+                location.reload();
+            } else {
+                location.href = location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
+            }
+        },
+        bind_resize: function () {
+            var self = this;
+            this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
+                $(event.currentTarget).addClass("oe_hover");
             });
-    });
+            this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
+                $(event.currentTarget).removeClass("oe_hover");
+            });
+            this.$el.on('mouseover', 'ul[name="size"] td', function (event) {
+                var $td = $(event.currentTarget);
+                var $table = $td.closest("table");
+                var x = $td.index()+1;
+                var y = $td.parent().index()+1;
 
-    $(document).on('mouseenter', '#products_grid .js_options ul[name="size"] table', function (event) {
-        $(event.currentTarget).addClass("oe_hover");
-    });
-    $(document).on('mouseleave', '#products_grid .js_options ul[name="size"] table', function (event) {
-        $(event.currentTarget).removeClass("oe_hover");
-    });
-    $(document).on('mouseover', '#products_grid .js_options ul[name="size"] td', function (event) {
-        var $td = $(event.currentTarget);
-        var $table = $td.parents("table:first");
-        var x = $td.index()+1;
-        var y = $td.parent().index()+1;
+                var tr = [];
+                for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
+                var $select_tr = $table.find(tr.join(","));
+                var td = [];
+                for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
+                var $select_td = $select_tr.find(td.join(","));
 
-        var tr = [];
-        for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
-        var $select_tr = $table.find(tr.join(","));
-        var td = [];
-        for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
-        var $select_td = $select_tr.find(td.join(","));
-
-        $table.find("td").removeClass("select");
-        $select_td.addClass("select");
-    });
-    $(document).on('click', '#products_grid .js_options ul[name="size"] td', function (event) {
-        var $td = $(event.currentTarget);
-        var $data = $td.parents(".js_options:first");
-        var x = $td.index()+1;
-        var y = $td.parent().index()+1;
-        openerp.jsonRpc('/shop/change_size', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
-            .then(reload_enable_editor);
+                $table.find("td").removeClass("select");
+                $select_td.addClass("select");
+            });
+            this.$el.on('click', 'ul[name="size"] td', function (event) {
+                var $td = $(event.currentTarget);
+                var $data = $td.closest(".js_options:first");
+                var x = $td.index()+1;
+                var y = $td.parent().index()+1;
+                openerp.jsonRpc('/shop/change_size', 'call', {'id': self.product_tmpl_id, 'x': x, 'y': y})
+                    .then(self.reload);
+            });
+        },
+        style: function (type, value, $li) {
+            if(type !== "click") return;
+            openerp.jsonRpc('/shop/change_styles', 'call', {'id': this.product_tmpl_id, 'style_id': value});
+        },
+        go_to: function (type, value) {
+            if(type !== "click") return;
+            openerp.jsonRpc('/shop/change_sequence', 'call', {'id': this.product_tmpl_id, 'sequence': value})
+                .then(this.reload);
+        }
     });
 
 })();

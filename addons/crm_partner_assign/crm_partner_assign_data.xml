@@ -1,14 +1,14 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <record model="crm.case.stage" id="stage_portal_lead_assigned">
+        <record model="crm.stage" id="stage_portal_lead_assigned">
             <field name="name">Assigned</field>
             <field eval="1" name="case_default"/>
             <field eval="10" name="probability"/>
             <field eval="12" name="sequence"/>
             <field name="type">lead</field>
         </record>
-        <record model="crm.case.stage" id="stage_portal_lead_recycle">
+        <record model="crm.stage" id="stage_portal_lead_recycle">
             <field name="name">To Recycle</field>
             <field eval="1" name="case_default"/>
             <field eval="5" name="probability"/>

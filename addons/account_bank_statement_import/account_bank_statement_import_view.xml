@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="account_bank_statement_import_view" model="ir.ui.view">
+            <field name="name">Import Bank Statements</field>
+            <field name="model">account.bank.statement.import</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Import Bank Statements" version="7.0">
+                    <group>
+                        <group>
+                            <field name="data_file"/>
+                            <field name="file_type"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" context="{'default_type':'bank'}"/>
+                        </group>
+                        <group>
+                            <b colspan="2"> How to import your bank statement in OpenERP.</b>
+                            <label string= "1. Go to your bank account website." colspan="2"/>
+                            <label string= "2. Download your bank statements in the right format. (.OFX, .QIF or CODA are accepted)" colspan="2"/>
+                            <label string= "3. Upload right here the bank statements file into OpenERP. Click Import." colspan="2"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="parse_file" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_bank_statement_import" model="ir.actions.act_window">
+            <field name="name">Import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="account_bank_statement_import_view"/>
+        </record>
+
+        <menuitem parent="account.periodical_processing_bank_statements" id="menu_account_bank_statement_import" action="action_account_bank_statement_import" sequence="11"/>
+
+    </data>
+</openerp>

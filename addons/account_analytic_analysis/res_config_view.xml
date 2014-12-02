@@ -13,6 +13,12 @@
                         <label for="group_template_required"/>
                     </div>
                 </xpath>
+                <xpath expr="//div[@name='div_default_options']" position="inside">
+                    <div name='time_unit' attrs="{'required':[('module_account_analytic_analysis','=',True)]}">
+                        <label for="time_unit"/>
+                        <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
+                    </div>
+                </xpath> 
             </field>
         </record>
 

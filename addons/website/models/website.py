@@ -28,6 +28,7 @@ from openerp.osv import orm, osv, fields
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
+from werkzeug.exceptions import NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -123,6 +124,12 @@ def slug(value):
 # NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 
+DEFAULT_CDN_FILTERS = [
+    "^/[^/]+/static/",
+    "^/web/(css|js)/",
+    "^/website/image/",
+]
+
 def unslug(s):
     """Extract slug and id from a string.
         Always return un 2-tuple (str|None, int|None)
@@ -136,20 +143,19 @@ def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
-    def _get_menu_website(self, cr, uid, ids, context=None):
-        # IF a menu is changed, update all websites
-        return self.search(cr, uid, [], context=context)
-
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
-        root_domain = [('parent_id', '=', False)]
-        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
-        menu = menus and menus[0] or False
-        return dict( map(lambda x: (x, menu), ids) )
+        res = {}
+        menu_obj = self.pool.get('website.menu')
+        for id in ids:
+            menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False), ('website_id', '=', id)], order='id', context=context)
+            res[id] = menu_ids and menu_ids[0] or False
+        return res
 
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
-        'name': fields.char('Domain'),
+        'name': fields.char('Website Name'),
+        'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
@@ -162,15 +168,20 @@ class website(osv.osv):
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
+        'compress_html': fields.boolean('Compress HTML'),
+        'cdn_activated': fields.boolean('Activate CDN for assets'),
+        'cdn_url': fields.char('CDN Base URL'),
+        'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
-            store= {
-                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
-            })
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
-
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
+        'compress_html': False,
+        'cdn_activated': False,
+        'cdn_url': '//localhost:8069/',
+        'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -197,20 +208,15 @@ class website(osv.osv):
         except ValueError:
             # new page
             _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            page_id = view.copy(cr, uid, template_id, context=context)
+            website_id = context.get('website_id')
+            key = template_module+'.'+page_name
+            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
             page = view.browse(cr, uid, page_id, context=context)
             page.write({
                 'arch': page.arch.replace(template, page_xmlid),
                 'name': page_name,
                 'page': ispage,
             })
-            imd.create(cr, uid, {
-                'name': page_name,
-                'module': template_module,
-                'model': 'ir.ui.view',
-                'res_id': page_id,
-                'noupdate': True
-            }, context=context)
         return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
@@ -230,6 +236,16 @@ class website(osv.osv):
     def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
+
+    def get_cdn_url(self, cr, uid, uri, context=None):
+        # Currently only usable in a website_enable request context
+        if request and request.website and not request.debug:
+            cdn_url = request.website.cdn_url
+            cdn_filters = (request.website.cdn_filters or '').splitlines()
+            for flt in cdn_filters:
+                if flt and re.match(flt, uri):
+                    return urlparse.urljoin(cdn_url, uri)
+        return uri
 
     def get_languages(self, cr, uid, ids, context=None):
         return self._get_languages(cr, uid, ids[0], context=context)
@@ -258,9 +274,19 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
+    @openerp.tools.ormcache(skiparg=4)
+    def _get_current_website_id(self, cr, uid, domain_name, context=None):
+        website_id = 1
+        if request:
+            ids = self.search(cr, uid, [('domain', '=', domain_name)], context=context)
+            if ids:
+                website_id = ids[0]
+        return website_id
+
     def get_current_website(self, cr, uid, context=None):
-        # TODO: Select website, currently hard coded
-        return self.pool['website'].browse(cr, uid, 1, context=context)
+        domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        return self.browse(cr, uid, website_id, context=context)
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
@@ -272,14 +298,13 @@ class website(osv.osv):
         return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if isinstance(template, (int, long)):
-            view_id = template
-        else:
-            if '.' not in template:
-                template = 'website.%s' % template
-            module, xmlid = template.split('.', 1)
-            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
-        return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
+        if not isinstance(template, (int, long)) and '.' not in template:
+            template = 'website.%s' % template
+        View = self.pool['ir.ui.view']
+        view_id = View.get_view_id(cr, uid, template, context=context)
+        if not view_id:
+            raise NotFound
+        return View.browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)

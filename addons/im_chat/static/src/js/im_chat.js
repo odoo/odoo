@@ -165,6 +165,7 @@
         className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "keydown",
+            "click .oe_im_chatview_options" : "click_options",
             "click .oe_im_chatview_close": "click_close",
             "click .oe_im_chatview_header": "click_header"
         },
@@ -207,6 +208,38 @@
             self.$().show();
             // prepare the header and the correct state
             self.update_session();
+
+            self.init_options();
+        },
+        init_options: function(){
+            this.define_options();
+            if(this.$('.oe_im_chatview_option_list li').length === 0){
+                this.$('.oe_im_chatview_option_group').hide();
+            }
+        },
+        define_options: function(){
+            // add here the option to put in the dropdown menu
+            this._add_option("Shortcuts", "option_shortcut", "fa fa-info-circle");
+            this.$('.oe_im_chatview_option_list .option_shortcut').on('click', _.bind(this.click_option_shortcut, this));
+            // quit the conversation
+            this._add_option('Quit discussion', 'im_chat_option_quit', 'fa fa-minus-square');
+            this.$('.oe_im_chatview_option_list .im_chat_option_quit').on('click', this, _.bind(this.action_quit_conversation, this));
+
+        },
+        _add_option: function(label, style_class, icon_fa_class){
+            if(icon_fa_class){
+                label = '<i class="'+icon_fa_class+'"></i> ' + label;
+            }
+            this.$('.oe_im_chatview_option_list').append('<li class="'+style_class+'">'+label+'</li>');
+        },
+        action_quit_conversation: function(){
+            var self = this;
+            var Session = new openerp.Model("im_chat.session");
+            return Session.call("quit_user", [this.get("session").uuid]).then(function(res) {
+               if(! res){
+                    self.do_warn(_t("Warning"), _t("You are only 2 identified users. Just close the conversation to leave."));
+               }
+            });
         },
         show: function(){
             this.$().animate({
@@ -276,6 +309,7 @@
                 this.set("pending", this.get("pending") + 1);
             }
             this.insert_messages([message]);
+            this._go_bottom();
         },
         send_message: function(message, type) {
             var self = this;
@@ -292,16 +326,23 @@
         },
         insert_messages: function(messages){
         	var self = this;
+            var get_anonymous_name = function(){
+                var name = self.options["defaultUsername"];
+                _.each(self.get('session').users, function(u){
+                    if(!u.id){
+                        name = u.name;
+                    }
+                });
+                return name;
+            };
             // avoid duplicated messages
         	messages = _.filter(messages, function(m){ return !_.contains(_.pluck(self.get("messages"), 'id'), m.id) ; });
             // escape the message content and set the timezone
             _.map(messages, function(m){
                 if(!m.from_id){
-                    m.from_id = [false, self.options["defaultUsername"]];
+                    m.from_id = [false, get_anonymous_name()];
                 }
-                m.message = self.escape_keep_url(m.message);
-                m.message = self.smiley(m.message);
-                m.create_date = Date.parse(m.create_date).setTimezone("UTC").toString("yyyy-MM-dd HH:mm:ss");
+                m.create_date = moment.utc(m.create_date).format('YYYY-MM-DD HH:mm:ss');
                 return m;
             });
            	this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
@@ -332,10 +373,22 @@
                 }
             });
             // render and set the content of the chatview
+            // TODO jem : when refactoring this, don't forget to pre-process date in this function before render quweb template
+            // since, moment will not be define in qweb on the website pages, because the helper (see csn) is in core.js and cannot be
+            // imported in the frontend.
             this.$('.oe_im_chatview_content_bubbles').html($(openerp.qweb.render("im_chat.Conversation_content", {"list": res})));
             this._go_bottom();
         },
         keydown: function(e) {
+            if(e && e.which == 27) {
+                if(this.$el.prev().find('.oe_im_chatview_input').length > 0){
+                    this.$el.prev().find('.oe_im_chatview_input').focus();
+                }else{
+                    this.$el.next().find('.oe_im_chatview_input').focus();
+                }
+                e.stopPropagation();
+                this.update_fold_state('closed');
+            }
             if(e && e.which !== 13) {
                 return;
             }
@@ -346,62 +399,6 @@
             this.$("input").val("");
             this.send_message(mes, "message");
         },
-        get_smiley_list: function(){
-            var kitten = jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
-            var smileys = {
-                ":'(": "&#128546;",
-                ":O" : "&#128561;",
-                "3:)": "&#128520;",
-                ":)" : "&#128522;",
-                ":D" : "&#128517;",
-                ";)" : "&#128521;",
-                ":p" : "&#128523;",
-                ":(" : "&#9785;",
-                ":|" : "&#128528;",
-                ":/" : "&#128527;",
-                "8)" : "&#128563;",
-                ":s" : "&#128534;",
-                ":pinky" : "<img src='/im_chat/static/src/img/pinky.png'/>",
-                ":musti" : "<img src='/im_chat/static/src/img/musti.png'/>",
-            };
-            if(kitten){
-                _.extend(smileys, {
-                    ":)" : "&#128570;",
-                    ":D" : "&#128569;",
-                    ";)" : "&#128572;",
-                    ":p" : "&#128573;",
-                    ":(" : "&#128576;",
-                    ":|" : "&#128575;",
-                });
-            }
-            return smileys;
-        },
-        smiley: function(str){
-            var re_escape = function(str){
-                return String(str).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
-             };
-             var smileys = this.get_smiley_list();
-            _.each(_.keys(smileys), function(key){
-                str = str.replace( new RegExp("(?:^|\\s)(" + re_escape(key) + ")(?:\\s|$)"), ' <span class="smiley">'+smileys[key]+'</span> ');
-            });
-            return str;
-        },
-        escape_keep_url: function(str){
-            var url_regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi;
-            var last = 0;
-            var txt = "";
-            while (true) {
-                var result = url_regex.exec(str);
-                if (! result)
-                    break;
-                txt += _.escape(str.slice(last, result.index));
-                last = url_regex.lastIndex;
-                var url = _.escape(result[0]);
-                txt += '<a href="' + url + '" target="_blank">' + url + '</a>';
-            }
-            txt += _.escape(str.slice(last, str.length));
-            return txt;
-        },
         _go_bottom: function() {
             this.$(".oe_im_chatview_content").scrollTop(this.$(".oe_im_chatview_content").get(0).scrollHeight);
         },
@@ -411,11 +408,27 @@
         focus: function() {
             this.$(".oe_im_chatview_input").focus();
         },
-        click_header: function(){
-            this.update_fold_state();
+        click_options: function(e){
+            this.$('.oe_im_chatview_options').dropdown();
+        },
+        click_option_shortcut: function(){
+            openerp.client.action_manager.do_action({
+                type: 'ir.actions.act_window',
+                res_model: 'im_chat.shortcode',
+                view_mode: 'tree,form',
+                view_type: 'tree',
+                views: [[false, 'list'], [false, 'form']],
+                target: "current",
+                limit: 80,
+            });
+        },
+        click_header: function(event){
+            var classes = event.target.className.split(' ');
+            if(_.contains(classes, 'oe_im_chatview_header_name') || _.contains(classes, 'oe_im_chatview_header')){
+                this.update_fold_state();
+            }
         },
         click_close: function(event) {
-            event.stopPropagation();
             this.update_fold_state('closed');
         },
         destroy: function() {
@@ -539,6 +552,7 @@
             this.calc_box();
             var fct =  _.bind(function(place) {
                 this.set("right_offset", place + this.$el.outerWidth());
+                this.$(".oe_im_searchbox").focus();
             }, this);
             var opt = {
                 step: fct,

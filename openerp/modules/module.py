@@ -155,7 +155,7 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
-def get_module_resource(module, *args):
+def get_resource_path(module, *args):
     """Return the full path of a resource of the given module.
 
     :param module: module name
@@ -164,7 +164,6 @@ def get_module_resource(module, *args):
     :rtype: str
     :return: absolute path to the resource
 
-    TODO name it get_resource_path
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
@@ -175,6 +174,33 @@ def get_module_resource(module, *args):
         if os.path.exists(resource_path):
             return resource_path
     return False
+
+# backwards compatibility
+get_module_resource = get_resource_path
+
+def get_resource_from_path(path):
+    """Tries to extract the module name and the resource's relative path
+    out of an absolute resource path.
+
+    If operation is successfull, returns a tuple containing the module name, the relative path
+    to the resource using '/' as filesystem seperator[1] and the same relative path using
+    os.path.sep seperators.
+
+    [1] same convention as the resource path declaration in manifests
+
+    :param path: absolute resource path
+
+    :rtype: tuple
+    :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
+    """
+    resource = [path.replace(adpath, '') for adpath in ad_paths if path.startswith(adpath)]
+    if resource:
+        relative = resource[0].split(os.path.sep)
+        if not relative[0]:
+            relative.pop(0)
+        module = relative.pop(0)
+        return (module, '/'.join(relative), os.path.sep.join(relative))
+    return None
 
 def get_module_icon(module):
     iconpath = ['static', 'description', 'icon.png']
