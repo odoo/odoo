@@ -261,7 +261,7 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return login_redirect()
         user = request.env.user
-        if not post_type in ['question', 'link', 'discussion']:  # fixme: make dynamic
+        if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
             return werkzeug.utils.redirect('/forum/%s' % slug(forum))
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
@@ -272,7 +272,6 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="public", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return login_redirect()
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
@@ -420,12 +419,10 @@ class WebsiteForum(http.Controller):
 
         user = User.sudo().search([('id', '=', user_id)])
         current_user = request.env.user.sudo()
-        if not user or user.karma < 1:
 
         # Users with high karma can see users with karma <= 0 for
         # moderation purposes, IFF they have posted something (see below)
-        if (not user or
-               (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
+        if (not user or (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
 
