@@ -105,8 +105,7 @@ def check_object_name(name):
 def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
-        _logger.info(msg, exc_info=True)
-        raise UserError('ValueError', msg)
+        raise ValueError('ValueError', msg)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -346,9 +345,6 @@ class BaseModel(object):
     _depends = {}
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
-
-    def log(self, cr, uid, id, message, secondary=False, context=None):
-        return _logger.info("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
 
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""

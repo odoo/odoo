@@ -909,8 +909,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
-            _logger.info("Can't load unknown file type %s.", filename)
-            raise UserError(_t("Can't load unknown file type %s.")%filename)
+            raise ValueError('ValueError',"Can't load unknown file type %s."%filename)
     finally:
         fp.close()
 

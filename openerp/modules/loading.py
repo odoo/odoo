@@ -295,7 +295,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
-            raise ImportError(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
+            raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
