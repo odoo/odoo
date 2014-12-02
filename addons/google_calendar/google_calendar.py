@@ -641,7 +641,7 @@ class google_calendar(osv.AbstractModel):
                             cr.commit()
                         else:
                             _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                            _logger.warning("Response : %s" % response)
+                            _logger.debug("Response : %s" % response)
                     except:
                         pass
         return new_ids

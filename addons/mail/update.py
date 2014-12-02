@@ -102,7 +102,7 @@ class publisher_warranty_contract(AbstractModel):
                 try:
                     poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])
                 except Exception:
-                    _logger.warning('Cannot send ping message', exc_info=True)                  
+                    _logger.info('Cannot send ping message', exc_info=True)                  
         except Exception:
             if cron_mode:
                 return False    # we don't want to see any stack trace in cron

@@ -220,8 +220,8 @@ class Cursor(object):
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            _logger.debug(query)
-            _logger.warning("SQL queries cannot contain %d or %f anymore. Use only %s")
+            _logger.warning("SQL queries cannot contain %%d or %%f anymore. Use only %%s:\n%s" % query, 
+                exc_info=_logger.isEnabledFor(logging.DEBUG))
         if params and not isinstance(params, (tuple, list, dict)):
             _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
