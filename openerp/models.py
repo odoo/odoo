@@ -241,6 +241,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # check for new-api conversion error: leave comma after field definition
+        for key, val in attrs.iteritems():
+            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
+                _logger.error("Trailing comma after field definition: %s.%s", self, key)
+
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
