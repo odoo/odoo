@@ -133,16 +133,14 @@
             if ($link.attr("value").search("^http(s?)://.*")) {
                 var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
                     '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                    'Please enter valid URl.'+
+                    'Please enter valid URL. Example: http://www.odoo.com'+
                     '</div>');
                 $link.parent().append($warning);
-                $link.parent().find("button#btn_post_your_article")[0].disabled = true;
-                $link.parent().find("input[name='content']")[0].value = '';
+                $("button#btn_post_your_article")[0].disabled = true;
             } else {
                 openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.attr("value")}).then(function (data) {
-                    $link.parent().find("input[name='content']")[0].value = data;
-                    $('button').prop('disabled', false);
-                    $('input').prop('readonly', false);
+                    $("input[name='post_name']")[0].value = data;
+                    $('button#btn_post_your_article').prop('disabled', false);
                 });
             }
         });
