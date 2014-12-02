@@ -334,12 +334,19 @@ function odoo_project_timesheet_models(project_timesheet) {
             });
             return defer;
         },
+        reset_collections: function() {
+            var project_collection = this.get("projects");
+            var activity_collection = this.get("activities");
+            project_collection.reset();
+            activity_collection.reset();
+            console.log("Inside reset collection ::: ",project_collection, activity_collection);
+        },
         sync_complete: function(sync_result) {
             //This method will flush localstorage activities once it has been sync
             //TODO: Remove project_timesheet_session and reload with new fetched session, if session is new then we should also start sequence from 0
             //Set fail records with error and show error icon besides that record in activity listview
-            //TODO: Remove all models, project models, task models and activity models because after sync_complete we are going to reload localstorage data and going to create new models
             this.project_timesheet_db.flush_activities();
+            this.reset_collections();
             //this.project_timesheet_db.clear('session');
             //this.project_timesheet_db.initialize_reference_sequence();
             this.project_timesheet_db.add_activities(sync_result.activities);
