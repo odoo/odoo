@@ -201,19 +201,26 @@ class im_livechat_channel_rule(osv.Model):
                                  " Select 'Hide the button' to hide the chat button on the pages."),
         'auto_popup_timer' : fields.integer('Auto popup timer', help="Delay (in seconds) to automatically open the converssation window. Note : the selected action must be 'Auto popup', otherwise this parameter will not be take into account."),
         'channel_id': fields.many2one('im_livechat.channel', 'Channel', help="The channel of the rule"),
-        'country_ids': fields.many2many('res.country', 'im_livechat_channel_blocked_country_rel', 'channel_id', 'country_id', 'Blocked Country', help="For this country list, the channel will not be available on the web page matched with the Regular Expression. This feature requires GeoIP installed on your server."),
+        'country_ids': fields.many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country', help="The actual rule will match only for this country. So if you set select 'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 country will not be see the support button for the specified URL. This feature requires GeoIP installed on your server."),
+        'sequence' : fields.integer('Matching order', help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
     }
 
     _defaults = {
         'auto_popup_timer': 0,
         'action' : 'display_button',
+        'sequence' : 10,
     }
 
-    def match_rule(self, cr, uid, channel_id, word, context=None):
-        """ determine if a rule of the given channel match with the given word """
-        rule_ids = self.search(cr, uid, [('channel_id', '=', channel_id)], context=context)
+    _order = "sequence asc"
+
+    def match_rule(self, cr, uid, channel_id, url, country_id=False, context=None):
+        """ determine if a rule of the given channel match with the given url """
+        domain = [('channel_id', '=', channel_id)]
+        if country_id: # don't include the country in the research if geoIP is not installed
+            domain.append(('country_ids', 'in', country_id))
+        rule_ids = self.search(cr, uid, domain, context=context)
         for rule in self.browse(cr, uid, rule_ids, context=context):
-            if re.search(rule.regex_url, word):
+            if re.search(rule.regex_url, url):
                 return rule
         return False
 
@@ -293,13 +300,20 @@ class LiveChatController(http.Controller):
         info["dbname"] = dbname
         info["channel"] = channel_id
         info["username"] = kwargs.get("username", "Visitor")
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip and request.session.geoip.get('country_name', False) or False
+        if country_code:
+            country_ids = registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+            if country_ids:
+                country_id = country_ids[0]
+        # extract url
         url = request.httprequest.headers['Referer'] or request.httprequest.base_url
-        rule = registry.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, context=context)
+        # find the match rule for the given country and url
+        rule = registry.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, country_id, context=context)
         if rule:
-            if request.session.geoip and request.session.geoip.get('country_name', "") in [c.code for c in rule.country_ids]:
-                # don't return the initialization script, since its blocked in the country
-                return
             if rule.action == 'hide_button':
+                # don't return the initialization script, since its blocked (in the country)
                 return
             rule_data = {
                 'action' : rule.action,

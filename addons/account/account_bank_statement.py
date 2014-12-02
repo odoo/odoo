@@ -733,8 +733,8 @@ class account_statement_operation_template(models.Model):
     _description = "Preset for the lines that can be created in a bank statement reconciliation"
 
     name = fields.Char(string='Button Label', required=True)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade')
-    label = fields.Char(string='Label')
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('type','!=', 'consolidation'), ('deprecated', '=', False)])
+    label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage_of_total', 'Percentage of total amount'),
@@ -742,5 +742,6 @@ class account_statement_operation_template(models.Model):
         ], string='Amount type', required=True, default='percentage_of_balance')
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').",
         required=True, default=100)
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade', domain=[('type_tax_use','in',('purchase','all'))])
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('type','!=','view'), ('state','not in',('close','cancelled'))])
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
