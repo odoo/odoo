@@ -4,6 +4,7 @@ import time
 
 from openerp import api, fields, models, _
 import openerp.addons.decimal_precision as dp
+from openerp.tools import float_compare
 from openerp.exceptions import Warning
 
 
