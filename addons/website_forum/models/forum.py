@@ -210,15 +210,13 @@ class Post(models.Model):
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
-    @api.multi
+    @api.one
     @api.depends('create_uid', 'parent_id')
     def _is_self_reply(self):
-        self_replies = self.search([('parent_id.create_uid', '=', self._uid)])
-        for post in self:
-            post.is_self_reply = post in self_replies
+        self.self_reply = self.parent_id.create_uid.id == self._uid
 
     @api.one
-    @api.depends('child_ids', 'website_message_ids')
+    @api.depends('child_ids.create_uid', 'website_message_ids')
     def _get_child_count(self):
         def process(node):
             total = len(node.website_message_ids) + len(node.child_ids)
@@ -231,12 +229,10 @@ class Post(models.Model):
     def _get_uid_has_answered(self):
         self.uid_has_answered = any(answer.create_uid.id == self._uid for answer in self.child_ids)
 
-    @api.multi
-    @api.depends('child_ids', 'is_correct')
+    @api.one
+    @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
-        correct_posts = [ans.parent_id for ans in self.search([('parent_id', 'in', self._ids), ('is_correct', '=', True)])]
-        for post in self:
-            post.is_correct = post in correct_posts
+        self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
