@@ -684,7 +684,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     },
     childFocused: function () {
         this.$el.addClass('active');
-        this.view_id = this.view_id || data.view_id;
     },
     childBlurred: function () {
         this.$el.val('').removeClass('active').trigger('blur');
