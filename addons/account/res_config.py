@@ -173,7 +173,6 @@ class account_config_settings(models.TransientModel):
             else:
                 return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'))
 
-
     @api.model
     def create(self, values):
         rec = super(account_config_settings, self).create(values)

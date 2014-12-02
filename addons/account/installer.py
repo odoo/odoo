@@ -51,7 +51,6 @@ class account_installer(models.TransientModel):
         charts.insert(0, ('configurable', _('Custom')))
         return charts
 
-
     # Accounting
     charts = fields.Selection(_get_charts, string='Accounting Package', required=True, default='configurable',
         help="Installs localized accounting charts to match as closely as "
@@ -65,7 +64,6 @@ class account_installer(models.TransientModel):
         default=lambda self: self.env.user.company_id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
         readonly=True, default=lambda self: self._default_has_default_company())
-
 
     @api.model
     def _default_has_default_company(self):

@@ -73,7 +73,7 @@ class account_invoice(models.Model):
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
-        return journal[0]
+        return journal
 
     @api.one
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
