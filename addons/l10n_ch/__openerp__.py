@@ -62,6 +62,8 @@ https://github.com/OCA/l10n-switzerland
  'data': ['chart/account.xml',
           'chart/vat2011.xml',
           'chart/fiscal_position.xml',
+          'report/balance_sheet.xml',
+          'report/profit_and_loss.xml',
           ],
  'demo': [],
  'test': [],
