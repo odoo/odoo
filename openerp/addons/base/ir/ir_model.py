@@ -255,12 +255,12 @@ class ir_model_fields(osv.osv):
         'model_id': fields.many2one('ir.model', 'Model', required=True, select=True, ondelete='cascade',
             help="The model this field belongs to"),
         'field_description': fields.char('Field Label', required=True, translate=True),
+        'help': fields.text('Field Help', translate=True),
         'ttype': fields.selection(_get_fields_type, 'Field Type', required=True),
         'selection': fields.char('Selection Options', help="List of options for a selection field, "
             "specified as a Python expression defining a list of (key, label) pairs. "
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
-        'help': fields.text('Help', translate=True),
         'readonly': fields.boolean('Readonly'),
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
@@ -429,6 +429,7 @@ class ir_model_fields(osv.osv):
         # static table of properties
         model_props = [ # (our-name, fields.prop, set_fn)
             ('field_description', 'string', tools.ustr),
+            ('help', 'help', lambda s: s and tools.ustr(s) or None),
             ('required', 'required', bool),
             ('readonly', 'readonly', bool),
             ('domain', 'domain', eval),
@@ -438,6 +439,9 @@ class ir_model_fields(osv.osv):
             ('select_level', 'index', lambda x: bool(int(x))),
             ('selection', 'selection', eval),
         ]
+        if context.get('lang') not in (None, 'en_US'):
+            # do not patch registry with translations of field string and help
+            model_props = model_props[2:]
 
         if vals and ids:
             checked_selection = False # need only check it once, so defer

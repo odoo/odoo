@@ -396,14 +396,14 @@ class BaseModel(object):
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
+                'help': f.help,
                 'ttype': f._type,
                 'relation': f._obj or '',
                 'select_level': tools.ustr(int(f.select)),
-                'readonly': (f.readonly and 1) or 0,
-                'required': (f.required and 1) or 0,
-                'selectable': (f.selectable and 1) or 0,
-                'translate': (f.translate and 1) or 0,
-                'help': f.help or False,
+                'readonly': bool(f.readonly),
+                'required': bool(f.required),
+                'selectable': bool(f.selectable),
+                'translate': bool(f.translate),
                 'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
@@ -426,16 +426,11 @@ class BaseModel(object):
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
                 vals['id'] = id
-                cr.execute("""INSERT INTO ir_model_fields (
-                    id, model_id, model, name, field_description, ttype,
-                    relation,state,select_level,relation_field, translate, serialization_field_id
-                ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
-                )""", (
-                    id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], 'base',
-                    vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
-                ))
+                query = "INSERT INTO ir_model_fields (%s) VALUES (%s)" % (
+                    ",".join(vals),
+                    ",".join("%%(%s)s" % name for name in vals),
+                )
+                cr.execute(query, vals)
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
@@ -447,16 +442,11 @@ class BaseModel(object):
             else:
                 for key, val in vals.items():
                     if cols[k][key] != vals[key]:
-                        cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
-                        cr.execute("""UPDATE ir_model_fields SET
-                            model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
-                        WHERE
-                            model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'],
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
-                            ))
+                        names = set(vals) - set(['model', 'name'])
+                        query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
+                            ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                        )
+                        cr.execute(query, vals)
                         break
         self.invalidate_cache(cr, SUPERUSER_ID)
 
