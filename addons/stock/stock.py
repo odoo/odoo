@@ -1242,7 +1242,7 @@ class stock_picking(osv.osv):
                         need_rereserve = True
             elif ops.product_id.id:
                 #Check moves with same product
-                qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, round=False, context=context)
+                qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
@@ -1298,7 +1298,8 @@ class stock_picking(osv.osv):
         if op.product_id and op.product_uom_id and op.product_uom_id.id != product.uom_id.id:
             if op.product_uom_id.factor > product.uom_id.factor: #If the pack operation's is a smaller unit
                 uom_id = op.product_uom_id.id
-                qty = uom_obj._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.product_uom_id)
+                #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+                qty = uom_obj._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
         res = {
             'picking_id': picking.id,
@@ -1601,7 +1602,7 @@ class stock_move(osv.osv):
             for record in move.linked_move_operation_ids:
                 qty -= record.qty
             # Keeping in product default UoM
-            res[move.id] = qty
+            res[move.id] = float_round(qty, precision_rounding=move.product_id.uom_id.rounding)
         return res
 
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
@@ -2461,7 +2462,8 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         context = context or {}
 
-        uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom)
+        #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+        uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP', context=context)
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
 
         defaults = {
@@ -3838,7 +3840,7 @@ class stock_pack_operation(osv.osv):
                     qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 for record in ops.linked_move_operation_ids:
                     qty -= record.qty
-                res[ops.id] = qty
+                res[ops.id] = float_round(qty, precision_rounding=ops.product_id.uom_id.rounding)
         return res
 
     def product_id_change(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
