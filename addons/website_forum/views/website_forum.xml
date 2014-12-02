@@ -381,6 +381,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
+                    <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
                     <input type="text" name="post_tags" readonly="True" class="form-control js_select2"/>
                 </div>
             </div>
@@ -408,6 +409,7 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
+            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button class="btn btn-primary">Post Your Topic</button>
@@ -469,6 +471,7 @@
             </textarea>
             <div t-if="not is_answer">
                 <br/>
+                <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
                 <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-value="#{tags}"/>
                 <br/>
             </div>

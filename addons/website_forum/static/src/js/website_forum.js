@@ -164,7 +164,6 @@
                             isNew: true,
                         };
                     }
-                    
                 }
             },
             formatResult: function(term) {
