@@ -23,6 +23,7 @@ class account_report_general_ledger(models.TransientModel):
 
     @api.multi
     def _print_report(self, data):
+        context = dict(self._context or {})
         data = self.pre_print_report(data)
         data['form'].update(self.read(['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
@@ -33,6 +34,6 @@ class account_report_general_ledger(models.TransientModel):
         else:
             context['landscape'] = data['form']['landscape']
 
-        return self.env['report'].get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
+        return self.env['report'].with_context(context).get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
