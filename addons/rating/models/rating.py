@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import uuid
 import logging
+import uuid
 
-from openerp import models, fields, api, _
+from openerp import api, fields, models, _
 
 _logger = logging.getLogger(__name__)
 
@@ -40,23 +40,23 @@ class Rating(models.Model):
     def apply_rating(self, rating_state, res_model=None, res_id=None, token=None):
         """ apply a rating for given res_model and res_id (or token) and
             post a message in chatter of given res_id and res_model.
-            :param list res_ids : list of ids.
+            :param integer res_id : id.
             :param string res_model : name of model.
-            :param stering token : access token
-            :return recordset of relavent model
+            :param string token : access token
+            :return recordset of relevant model
         """
-        rating_obj = self.env['rating.rating']
         domain = [('access_token', '=', token)] if token else [
             ('res_model', '=', res_model), ('res_id', '=', res_id)]
-        rating = rating_obj.sudo().search(domain, limit=1)
+        rating = self.env['rating.rating'].sudo().search(domain, limit=1)
         if rating:
             rating.rating = float(rating_state)
-            record = self.env[rating.res_model].sudo().browse(rating.res_id)
-            if hasattr(record, 'message_post'):
+            if hasattr(self.env[rating.res_model], 'message_post'):
+                record = self.env[rating.res_model].sudo().browse(rating.res_id)
                 record.message_post(
                     body="%s %s <br/><img src='rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>"
                     % (record.partner_id.name, _('rated it'), rating_state))
             return record
+        return False
 
 
 class RatingMixin(models.AbstractModel):

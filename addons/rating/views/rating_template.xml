@@ -6,14 +6,14 @@
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
             </head>
             <div class='well' t-if="not is_rated">
-                <h1>Thanks For Voting!</h1>
+                <h1>Thanks For voting!</h1>
                 <div class="oe_right">
-                    <p>You have Given the following appreciation:</p>
+                    <p>You have given the following appreciation:</p>
                     <p>It was <t t-esc="rating"/> <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
                 </div>
             </div>
             <div class='well' t-if="is_rated">
-                <h1>Sorry you have already Voted!</h1>
+                <h1>Sorry you have already voted!</h1>
             </div>
         </template>
         <template id="403">

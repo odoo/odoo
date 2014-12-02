@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_rating_kanban_faces">
+        <record model="ir.ui.view" id="view_rating_rating_kanban">
             <field name="name">rating.rating.kanban</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
@@ -24,7 +24,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_rating_graph_faces">
+        <record model="ir.ui.view" id="view_rating_rating_graph">
            <field name="name">rating.rating.graph</field>
            <field name="model">rating.rating</field>
            <field name="arch" type="xml">
@@ -35,7 +35,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_rating_search_form" >
+        <record model="ir.ui.view" id="view_rating_rating_search" >
             <field name="name">rating.rating.search</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
@@ -53,9 +53,9 @@
                         <filter string="Customer" name="customer" context="{'group_by':'customer_id'}"/>
                         <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
                         <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'create_date:day'}"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'create_date:month'}"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'create_date:year'}"/>
+                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
                     </group>
                 </search>
             </field>

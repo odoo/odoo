@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from openerp import api, fields, models
 
 
 class ProjectTaskType(models.Model):
@@ -18,7 +18,7 @@ class Task(models.Model):
         if 'stage_id' in vals:
             template = self.env['project.task.type'].browse(
                 vals.get('stage_id')).template_id
-            if template.id:
+            if template:
                 self.rating_send_request(
                     template, self.stage_id.id, self.partner_id, self.user_id)
         return super(Task, self).write(vals)
