@@ -787,7 +787,7 @@ class ir_model_access(osv.osv):
             else:
                 msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
                 msg_params = (model_name,)
-            _logger.AccessError('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
+            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise openerp.exceptions.AccessError(msg % msg_params)
         return bool(r)
