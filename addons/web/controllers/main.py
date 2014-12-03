@@ -1588,19 +1588,25 @@ class XMLExport(ExportFormat, http.Controller):
             result = []
             for index, fields in enumerate(fields_name):
                 relfield_data = {}
+                o2m_record= {}
                 field_details = request.session.model(model).fields_get(fields)
                 field_type = field_details[fields[0]].get('type')
-                if (field_type == 'many2one') or (field_type == 'many2many'):
+                if (field_type == 'one2many'):
+                    recordsspan = []
+                    recordsspan.append(list(itertools.islice(row, index, None)))
+                    # o2m_values = list(
+                    #     for subfields, subrecordspan in self._extract_records(fields, recordsspan, model))
+                    o2m_record['child_ids'] = o2m_values
+                elif (field_type == 'many2one') or (field_type == 'many2many'):
                     record_span = list(itertools.islice(row, index, index + 1, None))
                     relfield_data[fields[1]] = record_span
                     rel_record[fields[0]] = relfield_data
                     result.append(rel_record)
                 elif (field_type != 'many2one') or (field_type != 'many2many') or (field_type != 'one2many'):
                     recordspan = list(itertools.islice(row, index, index + 1, None))
-                    print recordspan
                     record[fields[0]] = recordspan[0]
                     result.append(record)
-            yield result
+            # yield result
 
     def _generate_xml_record(self, model, root, record, rel_field=None):
         """Generate new Odoo compitable xml records"""
@@ -1616,7 +1622,7 @@ class XMLExport(ExportFormat, http.Controller):
                 continue
             elif field_details[field]['type'] == 'one2many':
                 for child_record in value:
-                    child_record.update({field_details[field]['relation_field']: [{'id': record['id']}]})
+                    child_record.update({field_details[field]['relation_field']: [{'id': record.get('id')}]})
                     self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
                 continue
             new_record_element = etree.SubElement(new_record, "field", name=field)
