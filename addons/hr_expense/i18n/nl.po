@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-22 18:59+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-24 10:16+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:54+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:59+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
 msgid "# of Accounts"
-msgstr "# rekeningen"
+msgstr "# Rekeningen"
 
 #. module: hr_expense
 #: field:hr.expense.report,nbr:0
@@ -30,7 +30,7 @@ msgstr "# Regels"
 #. module: hr_expense
 #: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
-msgstr "# producten"
+msgstr "# Producten"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -97,7 +97,6 @@ msgstr "Vliegticket"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Kostenplaatsen"
@@ -174,8 +173,8 @@ msgstr "Goedgekeurde declaraties"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
-msgid "Create Date"
-msgstr "Aanmaakdatum"
+msgid "Create Month"
+msgstr "Aanmaak maand"
 
 #. module: hr_expense
 #: field:hr.expense.expense,create_uid:0
@@ -305,7 +304,6 @@ msgstr "Concept"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Employee"
 msgstr "Werknemer"
 
@@ -323,8 +321,8 @@ msgstr "Werknemer:"
 #: code:addons/hr_expense/hr_expense.py:167
 #: code:addons/hr_expense/hr_expense.py:230
 #: code:addons/hr_expense/hr_expense.py:232
+#: code:addons/hr_expense/hr_expense.py:341
 #: code:addons/hr_expense/hr_expense.py:345
-#: code:addons/hr_expense/hr_expense.py:349
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -337,7 +335,7 @@ msgid "Expense"
 msgstr "Declaratie"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:374
+#: code:addons/hr_expense/hr_expense.py:370
 #, python-format
 msgid "Expense Account Move"
 msgstr "Kosten boeking"
@@ -578,7 +576,7 @@ msgstr ""
 "van het type \"Inkoop\"."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:345
+#: code:addons/hr_expense/hr_expense.py:341
 #, python-format
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
@@ -608,7 +606,7 @@ msgid "Paid"
 msgstr "Betaald"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:345
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -630,6 +628,11 @@ msgid "Product"
 msgstr "Product"
 
 #. module: hr_expense
+#: field:hr.expense.report,product_qty:0
+msgid "Product Quantity"
+msgstr "Product hoeveelheid"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
 msgstr "Product sjabloon"
@@ -640,7 +643,6 @@ msgid "Products"
 msgstr "Producten"
 
 #. module: hr_expense
-#: field:hr.expense.report,product_qty:0
 #: view:website:hr_expense.report_expense
 msgid "Qty"
 msgstr "Aantal"
@@ -678,7 +680,7 @@ msgid "Review Your Expenses Products"
 msgstr "Uw declaratieproducten inzien"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:443
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -839,7 +841,7 @@ msgid "Waiting confirmation"
 msgstr "Wacht op goedkeuring"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:443
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"

@@ -6,6 +6,7 @@ import time
 import openerp
 import openerp.service.report
 import uuid
+import collections
 from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -737,8 +738,10 @@ class calendar_event(osv.Model):
             ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
             if ids:
                 lang_params = res_lang.read(request.cr, uid, ids[0], ["date_format", "time_format"])
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
+
+        # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
+        format_date = lang_params.get("date_format", '%B-%d-%Y').encode('utf-8')
+        format_time = lang_params.get("time_format", '%I-%M %p').encode('utf-8')
         return (format_date, format_time)
 
     def get_display_time_tz(self, cr, uid, ids, tz=False, context=None):
@@ -761,6 +764,7 @@ class calendar_event(osv.Model):
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
             context['tz'] = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
             tz = context['tz']
+        tz = tools.ustr(tz).encode('utf-8') # make safe for str{p,f}time()
 
         format_date, format_time = self.get_date_formats(cr, uid, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -1046,7 +1050,9 @@ class calendar_event(osv.Model):
     def new_invitation_token(self, cr, uid, record, partner_id):
         return uuid.uuid4().hex
 
-    def create_attendees(self, cr, uid, ids, context):
+    def create_attendees(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         user_obj = self.pool['res.users']
         current_user = user_obj.browse(cr, uid, uid, context=context)
         res = {}
@@ -1076,8 +1082,9 @@ class calendar_event(osv.Model):
 
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
-                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                    if not context.get('no_email'):
+                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
+                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
@@ -1115,7 +1122,10 @@ class calendar_event(osv.Model):
                     name_get = browse_event[ord].name_get()
                     if len(name_get) and len(name_get[0]) >= 2:
                         sort_fields[ord] = name_get[0][1]
-
+        if r_date:
+            sort_fields['sort_start'] = r_date.strftime("%Y%m%d%H%M%S")
+        else:
+            sort_fields['sort_start'] = browse_event['display_start'].replace(' ', '').replace('-', '')
         return sort_fields
 
     def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
@@ -1195,6 +1205,8 @@ class calendar_event(osv.Model):
                 result_data.append(self.get_search_fields(ev, order_fields, r_date=r_date))
 
         if order_fields:
+            uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
             def comparer(left, right):
                 for fn, mult in comparers:
                     result = cmp(fn(left), fn(right))
@@ -1203,6 +1215,8 @@ class calendar_event(osv.Model):
                 return 0
 
             sort_params = [key.split()[0] if key[-4:].lower() != 'desc' else '-%s' % key.split()[0] for key in (order or self._order).split(',')]
+            sort_params = uniq([comp if comp not in ['start', 'start_date', 'start_datetime'] else 'sort_start' for comp in sort_params])
+            sort_params = uniq([comp if comp not in ['-start', '-start_date', '-start_datetime'] else '-sort_start' for comp in sort_params])
             comparers = [((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]
             ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
 
@@ -1523,8 +1537,8 @@ class calendar_event(osv.Model):
         res = False
         new_id = False
 
-         # Special write of complex IDS
-        for event_id in ids:
+        # Special write of complex IDS
+        for event_id in list(ids):
             if len(str(event_id).split('-')) == 1:
                 continue
 
@@ -1542,7 +1556,7 @@ class calendar_event(osv.Model):
                 if data.get('rrule'):
                     new_id = self._detach_one_event(cr, uid, event_id, values, context=None)
 
-        res = super(calendar_event, self).write(cr, uid, ids, values, context=context)
+        res = super(calendar_event, self).write(cr, uid, [int(event_id) for event_id in ids], values, context=context)
 
         # set end_date for calendar searching
         if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \

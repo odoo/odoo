@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:38+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:27+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
 #: field:product.template,product_variant_count:0
@@ -23,8 +23,8 @@ msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:724
-#: code:addons/product/product.py:1062
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -508,12 +508,12 @@ msgid "Blank DVD-RW"
 msgstr "Prazan DVD-RW"
 
 #. module: product
-#: model:product.template,name:product.product_product_5_product_template
+#: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
 msgstr ""
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_5_product_template
+#: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
 msgstr ""
 
@@ -572,6 +572,11 @@ msgstr "Nije moguće promijeniti kategoriju postojeće jedinice mjere '%s'."
 #: model:product.public.category,name:product.case
 msgid "Case"
 msgstr "Sanduk"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "Kategorija"
 
 #. module: product
 #: field:product.category,type:0
@@ -651,6 +656,11 @@ msgstr ""
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Računala"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr ""
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -768,6 +778,7 @@ msgstr ""
 
 #. module: product
 #: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
 msgstr ""
 
@@ -971,6 +982,13 @@ msgstr "Fiksno"
 #: field:product.template,message_follower_ids:0
 msgid "Followers"
 msgstr "Pratitelji"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1600,7 +1618,7 @@ msgid "New Price ="
 msgstr "Nova cijena ="
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1664,6 +1682,7 @@ msgstr ""
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Other Info"
 msgstr "Ostali podaci"
 
@@ -1678,6 +1697,11 @@ msgstr "Drugi cjenik"
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Ostali artikli"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1702,7 +1726,10 @@ msgstr "Pakiranje po slojevima"
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 #: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
 msgid "Packaging"
 msgstr "Pakiranje"
 
@@ -1718,6 +1745,7 @@ msgstr ""
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
 msgstr "Prebacivanje u palete"
 
@@ -2087,7 +2115,7 @@ msgid "Products by Category"
 msgstr "Proizvodi po kategorijama"
 
 #. module: product
-#: code:addons/product/product.py:805
+#: code:addons/product/product.py:809
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -2391,15 +2419,6 @@ msgstr "Odredite najveći iznos za granicu iznad osnovne cijene."
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Specificirajte minimalni iznos marže na osnovnu cijenu."
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-"Specificirajte minimalnu količinu za kupnju/prodaju kako bi se pravilo "
-"primjenilo."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -2772,7 +2791,7 @@ msgid "Unit of Measure Categories"
 msgstr "Kategorije JM"
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr "Neslaganje kategorija jedinice mjere!"
@@ -3082,3 +3101,10 @@ msgstr "Nadređena tvrtka"
 #: field:product.price.history,company_id:0
 msgid "unknown"
 msgstr ""
+
+#~ msgid ""
+#~ "Specify the minimum quantity that needs to be bought/sold for the rule to "
+#~ "apply."
+#~ msgstr ""
+#~ "Specificirajte minimalnu količinu za kupnju/prodaju kako bi se pravilo "
+#~ "primjenilo."

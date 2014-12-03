@@ -37,6 +37,7 @@ The module adds the possibility to synchronize Google Calendar with OpenERP
         'security/ir.model.access.csv',
         'views/google_calendar.xml',
         'views/res_users.xml',
+        'google_calendar.xml',
     ],
     'demo': [],
     'installable': True,

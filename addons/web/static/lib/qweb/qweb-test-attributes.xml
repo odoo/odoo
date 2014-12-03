@@ -2,21 +2,57 @@
     <t t-name="fixed-literal">
         <div t-att-foo="'bar'"/>
     </t>
+    <result id="fixed-literal"><![CDATA[<div foo="bar"></div>]]></result>
+
     <t t-name="fixed-variable">
         <div t-att-foo="value"/>
     </t>
+    <params id="fixed-variable">{"value": "ok"}</params>
+    <result id="fixed-variable"><![CDATA[<div foo="ok"></div>]]></result>
 
     <t t-name="tuple-literal">
         <div t-att="['foo', 'bar']"/>
     </t>
+    <result id="tuple-literal"><![CDATA[<div foo="bar"></div>]]></result>
+
     <t t-name="tuple-variable">
-        <div t-att="att"/>
+        <div t-att="value"/>
     </t>
+    <params id="tuple-variable">{"value": ["foo", "bar"]}</params>
+    <result id="tuple-variable"><![CDATA[<div foo="bar"></div>]]></result>
+
+    <t t-name="object">
+        <div t-att="value"/>
+    </t>
+    <params id="object">{"value": {"a": 1, "b": 2, "c": 3}}</params>
+    <result id="object"><![CDATA[<div a="1" b="2" c="3"></div>]]></result>
 
     <t t-name="format-literal">
         <div t-attf-foo="bar"/>
     </t>
+    <result id="format-literal"><![CDATA[<div foo="bar"></div>]]></result>
+
     <t t-name="format-value">
-        <div t-attf-foo="b#{value}r"/>
+        <div t-attf-foo="b{{value}}r"/>
     </t>
+    <params id="format-value">{"value": "a"}</params>
+    <result id="format-value"><![CDATA[<div foo="bar"></div>]]></result>
+
+    <t t-name="format-expression">
+        <div t-attf-foo="{{value + 37}}"/>
+    </t>
+    <params id="format-expression">{"value": 5}</params>
+    <result id="format-expression"><![CDATA[<div foo="42"></div>]]></result>
+
+    <t t-name="format-multiple">
+        <div t-attf-foo="a {{value1}} is {{value2}} of {{value3}} ]"/>
+    </t>
+    <params id="format-multiple">{
+        "value1": 0,
+        "value2": 1,
+        "value3": 2
+    }</params>
+    <result id="format-multiple"><![CDATA[
+        <div foo="a 0 is 1 of 2 ]"></div>
+    ]]></result>
 </templates>

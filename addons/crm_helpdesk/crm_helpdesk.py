@@ -46,7 +46,7 @@ class crm_helpdesk(osv.osv):
             'write_date': fields.datetime('Update Date' , readonly=True),
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
-            'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+            'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                             select=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
@@ -61,9 +61,7 @@ class crm_helpdesk(osv.osv):
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
             'probability': fields.float('Probability (%)'),
-            'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.helpdesk')]"),
+            'categ_id': fields.many2one('crm.helpdesk.category', 'Category'),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
             'state': fields.selection(
                 [('draft', 'New'),
@@ -108,9 +106,9 @@ class crm_helpdesk(osv.osv):
         """ Escalates case to parent level """
         data = {'active': True}
         for case in self.browse(cr, uid, ids, context=context):
-            if case.section_id and case.section_id.parent_id:
-                parent_id = case.section_id.parent_id
-                data['section_id'] = parent_id.id
+            if case.team_id and case.team_id.parent_id:
+                parent_id = case.team_id.parent_id
+                data['team_id'] = parent_id.id
                 if parent_id.change_responsible and parent_id.user_id:
                     data['user_id'] = parent_id.user_id.id
             else:
@@ -140,5 +138,13 @@ class crm_helpdesk(osv.osv):
         }
         defaults.update(custom_values)
         return super(crm_helpdesk, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+
+class crm_helpdesk_category(osv.Model):
+    _name = "crm.helpdesk.category"
+    _description = "Helpdesk Category"
+    _columns = {
+        'name': fields.char('Name', required=True, translate=True),
+        'team_id': fields.many2one('crm.team', 'Sales Team'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,7 +2,6 @@ import inspect
 import importlib
 import os.path
 from urlparse import urlunsplit
-import sphinx
 
 def setup(app):
     app.add_config_value('github_user', None, 'env')
@@ -73,13 +72,6 @@ def add_doc_link(app, pagename, templatename, context, doctree):
     if not app.config.github_user and app.config.github_project:
         return
 
-    def github_doc_link(mode='blob'):
-        """ returns the github URL for the current page
-
-        :param str mode: 'edit' for edition view
-        """
-        return make_github_link(
-            app,
-            'doc/%s%s' % (pagename, app.config.source_suffix),
-            mode=mode)
-    context['github_link'] = github_doc_link
+    # can't use functools.partial because 3rd positional is line not mode
+    context['github_link'] = lambda mode='mode': make_github_link(
+        app, 'doc/%s%s' % (pagename, app.config.source_suffix), mode=mode)

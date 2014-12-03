@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:50+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:261
+#: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "(n/a)"
 msgstr "(n/a)"
@@ -68,8 +68,8 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:272
-#: code:addons/sale_stock/sale_stock.py:345
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
 #, python-format
 msgid "Configuration Error!"
 msgstr "设置错误!"
@@ -176,7 +176,7 @@ msgid ""
 msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交付，以应对供应链中的意外延误。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:340
+#: code:addons/sale_stock/sale_stock.py:346
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "没足够的库存！： "
@@ -204,12 +204,7 @@ msgid ""
 msgstr "如果你允许部分交付， 选择‘每个产品可用时发运’"
 
 #. module: sale_stock
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
-msgid "Picked"
-msgstr "已装箱"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
+#: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
 msgstr "装箱信息！： "
@@ -228,6 +223,16 @@ msgstr ""
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
 msgstr "基于任务的进展准备发票"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr ""
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -337,7 +342,6 @@ msgstr "查看出货单"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
 #: field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "仓库"
@@ -356,7 +360,7 @@ msgid ""
 msgstr "你必须先取消这个销售订单附加的所有发运单。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:336
+#: code:addons/sale_stock/sale_stock.py:342
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -366,7 +370,7 @@ msgstr ""
 "实际库存有 %.2f %s。 （没有预订）"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
+#: code:addons/sale_stock/sale_stock.py:270
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -388,3 +392,6 @@ msgid ""
 "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
 "ue\"}"
 msgstr ""
+
+#~ msgid "Picked"
+#~ msgstr "已装箱"

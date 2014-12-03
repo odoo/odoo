@@ -55,6 +55,7 @@ You can manage:
         'hr_view.xml',
         'hr_installer.xml',
         'hr_data.xml',
+        'hr_tip_data.xml',
         'res_config_view.xml',
         'mail_hr_view.xml',
         'res_users_view.xml',

@@ -20,6 +20,7 @@
             <field name="arch" type="xml">
                 <field name="event_id" position="after">
                     <field name="event_ticket_id"/>
+                    <field name="origin"/>
                 </field>
             </field>
         </record>
@@ -29,8 +30,9 @@
             <field name="model">event.registration</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
+                <field name="event_id" position="after">
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
+                    <field name="origin"/>
                 </field>
             </field>
         </record>

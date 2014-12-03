@@ -7,133 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-11-09 09:03+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:47+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,toinvoice_total:0
-msgid " Sum of everything that could be invoiced for this contract."
-msgstr " Bu sözleşme için faturalanabilecek her şeyin toplamı"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click here to create a template of contract.\n"
-"                </p><p>\n"
-"                    Templates are used to prefigure contract/project that \n"
-"                    can be selected by the salespeople to quickly configure "
-"the\n"
-"                    terms and conditions of the contract.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_görünüm_içerikyok_oluştur\">\n"
-"                    Sözleşme şablonu oluşturmak için buraya tıklayın.\n"
-"                </p><p>\n"
-"                    Şablonlar, sözleşme ödeme koşullarının ve şartlarının \n"
-"                    kolayca yapılandırılması için satış elemanı tarafından "
-"seçilen \n"
-"                    sözleşme/projeyi öncanlandırma olarak kullanır.          "
-"          \n"
-"                </p>\n"
-"            "
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a new contract.\n"
-"                </p><p>\n"
-"                    Use contracts to follow tasks, issues, timesheets or "
-"invoicing based on\n"
-"                    work done, expenses and/or sales orders. Odoo will "
-"automatically manage\n"
-"                    the alerts for the renewal of the contracts to the right "
-"salesperson.\n"
-"                </p>\n"
-"            "
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
-"sales\n"
-"                order.\n"
-"              </p><p>\n"
-"                Use sale orders to track everything that should be invoiced\n"
-"                at a fix price on a contract.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Satış siparişine dönüştürülebilecek bir teklif oluşturmak "
-"için\n"
-"                tıklayın.\n"
-"              </p><p>\n"
-"                Satıl siparişlerini, bir sözleşmede sabit fiyatla "
-"faturalanacak\n"
-"                herşeyi izlemek için kullanın.\n"
-"              </p>\n"
-"            "
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new contract.\n"
-"              </p><p>\n"
-"                You will find here the contracts to be renewed because the\n"
-"                end date is passed or the working effort is higher than the\n"
-"                maximum authorized one.\n"
-"              </p><p>\n"
-"                Odoo automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
-"                pending contracts.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
-msgid ""
-"<p>\n"
-"                You will find here timesheets and purchases you did for\n"
-"                contracts that can be reinvoiced to the customer.  If you "
-"want\n"
-"                to record new activities to invoice, you should use the "
-"timesheet\n"
-"                menu instead.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Burada müşteriye faturalabilecek sözleşmelerde için yapılan\n"
-"                satınalmaları ve zaman çizelgelerini bulacaksınız. Eğer "
-"faturalanacak\n"
-"                aktiviteler girmek istiyorsanız, zaman çizelgeleri menüsünü "
-"kullanmalısınız.\n"
-"              </p>\n"
-"            "
+"X-Launchpad-Export-Date: 2014-11-10 06:32+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
 msgid ""
-"<p>Hello ${object.name},\n"
+"\n"
+"Hello ${object.name},\n"
 "\n"
 "% macro account_table(values):\n"
-"</p><table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
 "    <tr>\n"
 "        <th>Customer</th>\n"
 "        <th>Contract</th>\n"
@@ -145,7 +36,9 @@ msgid ""
 "        % for account in accounts:\n"
 "        <tr>\n"
 "            <td>${partner.name}</td>\n"
-"            <td><a href=\"${ctx[\" base_url>${account.name}</a></td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
 "            <td>${account.date_start} to ${account.date and account.date or "
 "'???'}</td>\n"
 "            <td>\n"
@@ -193,11 +86,214 @@ msgid ""
 "\n"
 "            "
 msgstr ""
+"\n"
+"Sayın ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Müşteri</th>\n"
+"        <th>Sözleşme</th>\n"
+"        <th>Tarihler</th>\n"
+"        <th>Ön Ödemeli Birimler</th>\n"
+"        <th>İlgili Kişi</th>\n"
+"    </tr>\n"
+"    % iş ortağı için, hesap değerleri:\n"
+"        % hesaplardaki hesap için:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki sözleşmeler sona ermiştir: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki biten sözleşmeler halen yürütülmemektedir: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki sözleşmeler bir aydan kısa bir sürede sona erecektir: "
+"</h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    Bu menüyü kullanarak yenilenecek bütün sözleşmeleri "
+"denetleyebilirsiniz:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Satış / Faturalama / Yenilenecek Sözleşmeler</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"Odoo Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,toinvoice_total:0
+msgid " Sum of everything that could be invoiced for this contract."
+msgstr " Bu sözleşme için faturalanabilecek her şeyin toplamı"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click here to create a template of contract.\n"
+"                </p><p>\n"
+"                    Templates are used to prefigure contract/project that \n"
+"                    can be selected by the salespeople to quickly configure "
+"the\n"
+"                    terms and conditions of the contract.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_görünüm_içerikyok_oluştur\">\n"
+"                    Sözleşme şablonu oluşturmak için buraya tıklayın.\n"
+"                </p><p>\n"
+"                    Şablonlar, sözleşme ödeme koşullarının ve şartlarının \n"
+"                    kolayca yapılandırılması için satış elemanı tarafından "
+"seçilen \n"
+"                    sözleşme/projeyi öncanlandırma olarak kullanır.          "
+"          \n"
+"                </p>\n"
+"            "
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to create a new contract.\n"
+"                </p><p>\n"
+"                    Use contracts to follow tasks, issues, timesheets or "
+"invoicing based on\n"
+"                    work done, expenses and/or sales orders. Odoo will "
+"automatically manage\n"
+"                    the alerts for the renewal of the contracts to the right "
+"salesperson.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Yeni bir sözleşme oluşturmak için tıklayın.\n"
+"                </p><p>\n"
+"                    Görevleri, sorunları, zaman çizelgelerini izlemek veya "
+"biten işlere, giderlere,\n"
+"                    ve/veya satış siparişlerine göre fatura kesmek için "
+"sözleşmeleri kullanın. Odoo \n"
+"                    otomatik olarak yenilenecek sözleşmeler için doğru satış "
+"temsilcisini uyracaktır.\n"
+"                </p>\n"
+"            "
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Satış siparişine dönüştürülebilecek bir teklif oluşturmak "
+"için\n"
+"                tıklayın.\n"
+"              </p><p>\n"
+"                Satıl siparişlerini, bir sözleşmede sabit fiyatla "
+"faturalanacak\n"
+"                herşeyi izlemek için kullanın.\n"
+"              </p>\n"
+"            "
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new contract.\n"
+"              </p><p>\n"
+"                You will find here the contracts to be renewed because the\n"
+"                end date is passed or the working effort is higher than the\n"
+"                maximum authorized one.\n"
+"              </p><p>\n"
+"                Odoo automatically sets contracts to be renewed in a "
+"pending\n"
+"                state. After the negociation, the salesman should close or "
+"renew\n"
+"                pending contracts.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir sözleşme tanımlamak için tıklayın.\n"
+"              </p><p>\n"
+"                Burada bitiş tarihleri geçtiği için yenilenecek "
+"sözleşmeleri\n"
+"                veya çalışma çabası ençok yetkilendirilmiş olanlardan daha\n"
+"                fazla olanları bulacaksınız.\n"
+"              </p><p>\n"
+"                Odoo automatically sets contracts to be renewed in a "
+"pending\n"
+"                state. After the negociation, the salesman should close or "
+"renew\n"
+"                pending contracts.\n"
+"              </p>\n"
+"            "
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
+msgid ""
+"<p>\n"
+"                You will find here timesheets and purchases you did for\n"
+"                contracts that can be reinvoiced to the customer.  If you "
+"want\n"
+"                to record new activities to invoice, you should use the "
+"timesheet\n"
+"                menu instead.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                Burada müşteriye faturalabilecek sözleşmelerde için yapılan\n"
+"                satınalmaları ve zaman çizelgelerini bulacaksınız. Eğer "
+"faturalanacak\n"
+"                aktiviteler girmek istiyorsanız, zaman çizelgeleri menüsünü "
+"kullanmalısınız.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "Analiz Muhasebesi Satırları"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -258,6 +354,8 @@ msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
 msgstr ""
+"Bu formül kullanılarak hesaplanmıştır: Zaman çizelgelerinden beklenen - "
+"Zaman çizelgelerinden toplam faturalanan"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -345,12 +443,12 @@ msgstr "Yenilenecek Sözleşmeler"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturma"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -370,7 +468,7 @@ msgstr "Son Faturalanmış Maliyet Tarihi"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Sonraki Fatura Tarihi"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -380,17 +478,17 @@ msgstr "Bu hesapta yapılan son işlem tarihi"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Gün"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Ay Sonu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -406,7 +504,7 @@ msgstr "Son tarih geçmiş veya önödemeli birim tüketilmiş"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hata!"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
@@ -447,12 +545,12 @@ msgstr "Sabit Fiyat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoices:0
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "Yinelenen fatruraları otomatik oluştur"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr ""
+msgstr "Guruplandır"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -469,7 +567,7 @@ msgstr "Aya göre saatlik özet"
 #: field:account_analytic_analysis.summary.month,id:0
 #: field:account_analytic_analysis.summary.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -503,12 +601,12 @@ msgstr "Devam Eden"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Fatura Satırları"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_rule_type:0
 msgid "Invoice automatically repeat at specified interval"
-msgstr ""
+msgstr "Belirlenen aralıklarda faturalar otomatik yinelenir"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -538,12 +636,12 @@ msgstr "Son Fatura Tarihi"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
@@ -564,13 +662,13 @@ msgstr "Ay"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Ay"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Tanımlı Müşteri Yok!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -636,7 +734,7 @@ msgstr "Bekleyen sözleşmeler"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr ""
+msgstr "Lütfen \"%s\" firması için bir satış günlüğü tanımlayın."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -646,12 +744,12 @@ msgstr "Fiyat Listesi"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -666,12 +764,12 @@ msgstr "Reel Kâr Oranı (%)"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Yinelenme"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Yinelenen Faturalar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -694,12 +792,12 @@ msgstr "Kalan Süre"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Tekrarlama Durumu"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Tekrarlama Durumu (Gün/Hafta/Ay/Yıl)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -710,7 +808,7 @@ msgstr "Saat başına Gelir (gerçek)"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
-msgstr ""
+msgstr "Faturalanacak %s Sipariş Kalemleri"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -721,7 +819,7 @@ msgstr "Satış Siparişleri"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Start Month"
-msgstr ""
+msgstr "Başlangıç Ayı"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -731,7 +829,7 @@ msgstr "Durumu"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Ara Toplam"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -854,12 +952,12 @@ msgstr "Faturalanmamış Zaman"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyatı"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Ölçü Birimi"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -880,7 +978,7 @@ msgstr "Kullanıcı"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Hafta"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -890,17 +988,23 @@ msgid ""
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
 msgstr ""
+"Maliyetleri yeniden faturalandırırken, Odoo \n"
+"                            sözleşme için hazırlanan ilgili ürüne ait fiyat "
+"listesini \n"
+"                            kullanır (örn. her çalışana tanımlanmış zaman "
+"çizelgesi  \n"
+"                            ürünleri)."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Yıl"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr ""
+msgstr "Önce %s Sözleşmesi için bir Müşteri seçmelisiniz!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -920,6 +1024,9 @@ msgid ""
 "[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
 "('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
 msgstr ""
+"{'required': "
+"[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_template_required
@@ -938,4 +1045,4 @@ msgstr "⇒ Fatura"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ create invoices"
-msgstr ""
+msgstr "⇒ fatura oluştur"

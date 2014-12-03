@@ -112,7 +112,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
     }
     _defaults = {
         'date_p': lambda *a: time.strftime('%Y-%m-%d'),
-        'comment': 'Write-off',
+        'comment': _('Write-off'),
     }
 
     def trans_rec_addendum(self, cr, uid, ids, context=None):

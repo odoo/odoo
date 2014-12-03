@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:42+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:30+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
@@ -130,6 +130,7 @@ msgid "Assigned"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,user_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,user_id:0
@@ -203,6 +204,7 @@ msgid "Communication channel."
 msgstr "Komunikacijski kanal"
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,company_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,company_id:0
@@ -220,17 +222,22 @@ msgid "Configure"
 msgstr "Nastavitve"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,partner_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Stik"
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue.report:project_issue.view_project_issue_report_filter
+msgid "Create Day"
 msgstr ""
 
 #. module: project_issue
@@ -253,11 +260,6 @@ msgstr ""
 #: field:project.issue,create_date:0
 msgid "Creation Date"
 msgstr "Ustvarjeno dne"
-
-#. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Creation Month"
-msgstr ""
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:424
@@ -320,6 +322,11 @@ msgstr "Rok"
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
 msgstr "Kritična napaka"
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_delay
+msgid "Delay"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -536,7 +543,6 @@ msgstr ""
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
@@ -575,13 +581,9 @@ msgstr "Sporočila in zgodovina sporočil"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "My Issues"
 msgstr "Moje zadeve"
-
-#. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
-msgid "My Task"
-msgstr ""
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -635,6 +637,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 #: view:project.issue:project_issue.project_issue_tree_view
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,priority:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,priority:0
@@ -672,6 +675,11 @@ msgid "Project Issue"
 msgstr "Projektna zadeva"
 
 #. module: project_issue
+#: view:project.issue:project_issue.project_issue_graph_view
+msgid "Project Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Project:"
 msgstr "Projekt:"
@@ -682,12 +690,11 @@ msgid "Ready for next stage"
 msgstr "Pripravljeno za naslednjo stopnjo"
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Responsible"
-msgstr "Odgovoren"
+#: field:project.issue.report,reviewer_id:0
+msgid "Reviewer"
+msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Prodajna ekipa"
@@ -751,6 +758,7 @@ msgid "Tags"
 msgstr "Ključne besede"
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,task_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,task_id:0
@@ -809,7 +817,6 @@ msgstr ""
 
 #. module: project_issue
 #: field:project.issue,version_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Različica"
@@ -881,3 +888,6 @@ msgstr ""
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "⇒ Escalate"
 msgstr "⇒ Stopnjuj"
+
+#~ msgid "Responsible"
+#~ msgstr "Odgovoren"

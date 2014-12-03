@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-31 12:54+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-11-01 07:14+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
-msgstr "Műveletek száma"
+msgstr "Műveletek küzül a #"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -42,25 +42,23 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_1
-msgid "<p>Hello, you will receive your welcome pack via email shortly.</p>"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"<p>Hi, we are delighted to let you know that you have entered the select "
-"circle of our Gold Partners</p>"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"<p>Hi, we are delighted to welcome you among our Silver Partners as of "
-"today!</p>"
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Kattintson egy marketing kampány létrehozásához.\n"
+"          </p><p>\n"
+"            Odoo rendszer marketing kampánya lehetővé teszi az üzlet \n"
+"            lehetőségeivel kapcsolatos automatikus hírközléseket.\n"
+"            Meghatározhat egy szelvényt az érdeklődők és \n"
+"            ügyfelek (feltételeinek beállításával) a kampány\n"
+"            teljesítéséhez.\n"
+"          </p><p>\n"
+"            Egy kampánynak több tevékenysége lehet, mint email kiküldése, "
+"levél\n"
+"            nyomtatása, csoporthoz rendelése, stb. Ezek a tevékenységek egy\n"
+"            jellegzetes körülmény által kapcsolhatóak; kapcsolati űrlap, 10 "
+"nappal\n"
+"            az első találkozótól, ha az érdeklődés még nincs lezárva, stb.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,server_action_id:0
@@ -92,7 +90,7 @@ msgstr "Után %(interval_nbr)d %(interval_type)s"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "All"
-msgstr "Összes"
+msgstr "Mind"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -106,7 +104,7 @@ msgid ""
 "workitem is always created when a signal is sent"
 msgstr ""
 "Egy tevékenység jeladóval ellátva úgy is nevezhető mint programozott "
-"végrehajtó. Vigyázzon, a feladatelem mindig létre lesz hozva, ha a jelet "
+"végrehajtó. Vigyázzon, a feladatelemet  mindig létrehozza, ha a jelet "
 "elküldik"
 
 #. module: marketing_campaign
@@ -136,9 +134,8 @@ msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
-"Ennek a lehetőségnek a aktiválásával, feladatelemek melyek a körülmények "
-"miatt nem végrehajthatóak azok visszavontak ahelyett, hogy törölte volna "
-"azokat."
+"Ennek a variációnak az aktiválásával, feladatelemek melyek a körülmények "
+"miatt nem végrehajthatóak, a törlésük helyett érvénytelenítésre kerülnek."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -280,7 +277,7 @@ msgstr "Ország"
 #: field:marketing.campaign.transition,create_uid:0
 #: field:marketing.campaign.workitem,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,create_date:0
@@ -289,7 +286,7 @@ msgstr ""
 #: field:marketing.campaign.transition,create_date:0
 #: field:marketing.campaign.workitem,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -316,7 +313,6 @@ msgid "Date this segment was last closed or cancelled."
 msgstr "Dátum amikor ez a szakasz utoljára le volt zárva vagy visszavonva."
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,day:0
 msgid "Day"
 msgstr "Nap"
@@ -435,7 +431,7 @@ msgstr "Kivitelezés dátuma"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Execution Month"
-msgstr ""
+msgstr "Végrehajttási hónap"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -488,7 +484,26 @@ msgstr "Fizetési emlékeztető"
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr "Helló, nemsokára emailben megkapja az üdvözlő csomagot."
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle "
+"of our Gold Partners"
 msgstr ""
+"Helló, mi örömmel tudatjuk, hogy bekerül az arany kiválasztott tagok körébe"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr "Helló, örömmel köszöntjük az Ezüst Partnereink között a mai naptól!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -508,7 +523,7 @@ msgstr "Ahogy a végső feladatelem kapcsolva lesz"
 #: field:marketing.campaign.transition,id:0
 #: field:marketing.campaign.workitem,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -585,7 +600,7 @@ msgstr "Utolsó szinkronizáció"
 #: field:marketing.campaign.transition,write_uid:0
 #: field:marketing.campaign.workitem,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,write_date:0
@@ -594,7 +609,7 @@ msgstr ""
 #: field:marketing.campaign.transition,write_date:0
 #: field:marketing.campaign.workitem,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_run:0
@@ -604,7 +619,7 @@ msgstr "Indulás időpontja"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr ""
+msgstr "Indítási hónap"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
@@ -642,10 +657,11 @@ msgstr "Marketing kampány szakasz"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign Statistics"
-msgstr ""
+msgstr "Marketing kampány statisztikák"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
+#: view:campaign.analysis:marketing_campaign.view_report_campaign_analysis_graph
 msgid "Marketing Reports"
 msgstr "Marketing jelentések"
 
@@ -777,7 +793,6 @@ msgid "Outgoing Transitions"
 msgstr "Kimenő átmenetek"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,partner_id:0
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
@@ -850,7 +865,6 @@ msgid "Reset"
 msgstr "Visszaállítás"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,res_id:0
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
 #: field:marketing.campaign,object_id:0
@@ -959,7 +973,7 @@ msgstr "Indítás"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Statistics"
-msgstr ""
+msgstr "Statisztikák"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -1172,7 +1186,7 @@ msgstr "Változó költség"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "Üdvözöljük az Ügyfél csatornán!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1185,7 +1199,6 @@ msgid "Workitems"
 msgstr "Feladatelemek"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "Év"

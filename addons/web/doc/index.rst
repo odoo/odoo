@@ -34,10 +34,6 @@ Javascript
     :maxdepth: 1
 
     guidelines
-    widget
-    rpc
-    async
-    qweb
     client_action
     testing
 

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api, _
+import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
+from openerp.osv import fields as old_fields
 
 
 class event_event(models.Model):
@@ -9,7 +11,7 @@ class event_event(models.Model):
 
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket',
-        default=lambda rec: rec._default_tickets())
+            default=lambda rec: rec._default_tickets(), copy=True)
     seats_max = fields.Integer(
         string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
@@ -49,7 +51,7 @@ class event_ticket(models.Model):
         required=True, domain=[("event_type_id", "!=", False)],
         default=lambda self: self._default_product_id())
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', 'Registrations')
-    price = fields.Float('Price')
+    price = fields.Float('Price', digits=dp.get_precision('Product Price'))
     deadline = fields.Date("Sales End")
     is_expired = fields.Boolean('Is Expired', compute='_is_expired', store=True)
 
@@ -71,6 +73,32 @@ class event_ticket(models.Model):
         current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
         self.is_expired = self.deadline < current_date
 
+    # FIXME non-stored fields wont ends up in _columns (and thus _all_columns), which forbid them
+    #       to be used in qweb views. Waiting a fix, we create an old function field directly.
+    """
+    price_reduce = fields.Float("Price Reduce", compute="_get_price_reduce", store=False,
+                                digits=dp.get_precision('Product Price'))
+    @api.one
+    @api.depends('price', 'product_id.lst_price', 'product_id.price')
+    def _get_price_reduce(self):
+        product = self.product_id
+        discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+        self.price_reduce = (1.0 - discount) * self.price
+    """
+    def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0.0)
+        for ticket in self.browse(cr, uid, ids, context=context):
+            product = ticket.product_id
+            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+            res[ticket.id] = (1.0 - discount) * ticket.price
+        return res
+
+    _columns = {
+        'price_reduce': old_fields.function(_get_price_reduce, type='float', string='Price Reduce',
+                                            digits_compute=dp.get_precision('Product Price')),
+    }
+
+    # seats fields
     seats_max = fields.Integer('Maximum Available Seats', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
@@ -78,7 +106,7 @@ class event_ticket(models.Model):
     seats_used = fields.Integer(compute='_compute_seats', store=True)
 
     @api.multi
-    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
+    @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0
@@ -91,7 +119,7 @@ class event_ticket(models.Model):
                 'open': 'seats_reserved',
                 'done': 'seats_used',
             }
-            query = """ SELECT event_ticket_id, state, sum(nb_register)
+            query = """ SELECT event_ticket_id, state, count(event_id)
                         FROM event_registration
                         WHERE event_ticket_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_ticket_id, state
@@ -121,9 +149,30 @@ class event_registration(models.Model):
     _inherit = 'event.registration'
 
     event_ticket_id = fields.Many2one('event.event.ticket', 'Event Ticket')
+    # sale_order_line_id = fields.Many2one('sale.order.line', 'Sale Order Line', ondelete='cascade')
 
     @api.one
-    @api.constrains('event_ticket_id', 'nb_register', 'state')
+    @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         if self.event_ticket_id.seats_max and self.event_ticket_id.seats_available < 0:
             raise Warning('No more available seats for this ticket')
+
+    @api.one
+    def _check_auto_confirmation(self):
+        res = super(event_registration, self)._check_auto_confirmation()[0]
+        if res and self.origin:
+            orders = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
+            if orders and orders[0].state == 'draft':
+                res = False
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(event_registration, self).create(vals)
+        if res.origin:
+            message = _("The registration has been created for event %(event_name)s%(ticket)s from sale order %(order)s") % ({
+                'event_name': '<i>%s</i>' % res.event_id.name,
+                'ticket': res.event_ticket_id and _(' with ticket %s') % (('<i>%s</i>') % res.event_ticket_id.name) or '',
+                'order': res.origin})
+            res.message_post(body=message)
+        return res

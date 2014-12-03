@@ -494,6 +494,7 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
+        api.Environment.reset()
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
         config = registry['res.config'].next(cr, uid, [], context=context) or {}

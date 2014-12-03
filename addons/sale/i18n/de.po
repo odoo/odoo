@@ -7,88 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-19 19:46+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-06 06:46+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-20 06:44+0000\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:03+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
-
-#. module: sale
-#: field:product.product,sales_count:0
-#: field:product.template,sales_count:0
-msgid "# Sales"
-msgstr "# Verkäufe"
-
-#. module: sale
-#: field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "# Positionen"
-
-#. module: sale
-#: field:sale.report,product_uom_qty:0
-msgid "# of Qty"
-msgstr "Menge"
-
-#. module: sale
-#: field:res.partner,sale_order_count:0
-msgid "# of Sales Order"
-msgstr "# des Auftrags"
-
-#. module: sale
-#: model:email.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#. module: sale
-#: view:sale.order:sale.view_order_form
-msgid "(update)"
-msgstr "(aktualisieren)"
-
-#. module: sale
-#: help:sale.order.line,state:0
-msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
-"* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-"* Der Status \"Entwurf\" wird zugewiesen, wenn der zugehörige Auftrag ein "
-"Entwurf  ist.\n"
-"* Der Status \"Bestätigt\" wird zugewiesen, wenn der korrespondierende "
-"Auftrag bestätigt wurde.\n"
-"* Der Status \"Sonderfall\" wird zugewiesen, wenn korrespondierende Belege "
-"des Auftrags abgebrochen wurden.\n"
-"* Der Status \"Erledigt\" wird zugewiesen, wenn die Auftragspositionen "
-"versendet wurden.\n"
-"* Der Status \"Abgebrochen\" wird zugewiesen, wenn ein Benutzer den "
-"korrespondierenden Auftrag abbricht."
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
 msgid ""
+"\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
 "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
@@ -98,20 +31,20 @@ msgid ""
 "'order confirmation'} from ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENCES</strong><br>\n"
-"         Order number: <strong>${object.name}</strong><br>\n"
-"         Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br>\n"
-"         Order date: ${object.date_order}<br>\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
-"         Order reference: ${object.origin}<br>\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
 "       % if object.client_order_ref:\n"
-"         Your reference: ${object.client_order_ref}<br>\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"         Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order ${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "    <p>\n"
@@ -121,24 +54,24 @@ msgid ""
 "color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
 "font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
 "none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" "
-"href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in "
-"('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
-"    <br>\n"
+"    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
 "            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\">\n"
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
-"    <br>\n"
+"    <br/>\n"
 "    <p>If you have any question, do not hesitate to contact us.</p>\n"
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br>\n"
-"    <br>\n"
+"    <br/>\n"
+"    <br/>\n"
 "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
 "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
 "background-repeat: repeat no-repeat;\">\n"
@@ -151,30 +84,30 @@ msgid ""
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
+"            ${object.company_id.street}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
+"            ${object.company_id.street2}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
 "            ${object.company_id.state_id and ('%s, ' % "
 "object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
+"or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
 "0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
 "0px; padding-left: 0px; \">\n"
-"                Phone:  ${object.company_id.phone}\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web : <a "
+"                Web :&nbsp;<a "
 "href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
@@ -183,36 +116,46 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
 "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hallo ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>hier ist für Sie ein  ${object.state in ('draft', 'sent') and "
-"'Angebot' or 'Auftrag'} von ${object.company_id.name}: </p>\n"
+"    <p>Hier ist Ihre ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} von ${object.company_id.name}: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENZ</strong><br />\n"
-"       &nbsp;&nbsp;Nummer: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Betrag: <strong>${object.amount_total} "
+"       &nbsp;&nbsp;<strong>REFERENZEN</strong><br />\n"
+"       &nbsp;&nbsp;Auftragsnummer: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Bestellbetrag: <strong>${object.amount_total} "
 "${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Datum: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Bestelldatum: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
-"       &nbsp;&nbsp;Referenz Bestellung: ${object.origin}<br />\n"
+"       &nbsp;&nbsp;Auftragsreferenz: ${object.origin}<br />\n"
 "       % endif\n"
 "       % if object.client_order_ref:\n"
 "       &nbsp;&nbsp;Ihre Referenz: ${object.client_order_ref}<br />\n"
 "       % endif\n"
 "       % if object.user_id:\n"
-"       &nbsp;&nbsp;Ihr Ansprechpartner: <a "
-"href=\"mailto:${object.user_id.email or "
+"       &nbsp;&nbsp;Ihr Kontakt: <a href=\"mailto:${object.user_id.email or "
 "''}?subject=Auftrag%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
+"    <p>\n"
+"        Sie können jetzt Ihr Angebot auch Online einsehen:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">Anzeige "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
-"    <p>Sie können auch direkt mit Paypal bezahlen:</p>\n"
+"    <p>Sie können auch Online mit Paypal bezahlen:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
 "            <img class=\"oe_edi_paypal_button\" "
 "src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
@@ -220,9 +163,8 @@ msgstr ""
 "    % endif\n"
 "\n"
 "    <br/>\n"
-"    <p>Bei Rückfragen, kontaktieren Sie uns gerne.</p>\n"
-"    <p>Vielen Dank für Ihren Einkauf bei ${object.company_id.name or "
-"'us'}!</p>\n"
+"    <p>Im Falle von Fragen kontaktieren Sie uns gerne.</p>\n"
+"    <p>Vielen Dank ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
 "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
@@ -268,6 +210,74 @@ msgstr ""
 "    </div>\n"
 "</div>\n"
 "            "
+
+#. module: sale
+#: field:product.product,sales_count:0
+#: field:product.template,sales_count:0
+msgid "# Sales"
+msgstr "# Verkäufe"
+
+#. module: sale
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "# Positionen"
+
+#. module: sale
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr "# Menge"
+
+#. module: sale
+#: field:res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr "# Aufträge"
+
+#. module: sale
+#: model:email.template,report_name:sale.email_template_edi_sale
+msgid ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+
+#. module: sale
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "(update)"
+msgstr "(Aktualisieren)"
+
+#. module: sale
+#: help:sale.order.line,state:0
+msgid ""
+"* The 'Draft' status is set when the related sales order in draft status.    "
+"                 \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.   "
+"                  \n"
+"* The 'Exception' status is set when the related sales order is set as "
+"exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.        "
+"             \n"
+"* The 'Cancelled' status is set when a user cancel the sales order related."
+msgstr ""
+"* Der Status \"Entwurf\" wird zugewiesen, wenn der zugehörige Auftrag ein "
+"Entwurf  ist.\n"
+"* Der Status \"Bestätigt\" wird zugewiesen, wenn der korrespondierende "
+"Auftrag bestätigt wurde.\n"
+"* Der Status \"Sonderfall\" wird zugewiesen, wenn korrespondierende Belege "
+"des Auftrags abgebrochen wurden.\n"
+"* Der Status \"Erledigt\" wird zugewiesen, wenn die Auftragspositionen "
+"versendet wurden.\n"
+"* Der Status \"Abgebrochen\" wird zugewiesen, wenn ein Benutzer den "
+"korrespondierenden Auftrag abbricht."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -425,7 +435,7 @@ msgstr "Ein Partner, dem dieses bestimmte Produkt zugeordnet wurde."
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Adressen in Aufträgen"
+msgstr "Weitere Adressen in Aufträgen"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -491,7 +501,8 @@ msgstr "Vertriebspartner"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr "Ermöglicht everschiedene Adressen für Auslieferung und Abrechnung "
+msgstr ""
+"Ermöglichen Sie verschiedene Adressen für Auslieferung und Abrechnung "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -503,7 +514,7 @@ msgstr ""
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
 msgstr ""
-"Ermöglicht die Konfiguration von Hinweisen nach Kunden oder Produkten"
+"Ermöglichen Sie die Konfiguration von Warnhinweisen für Kunden oder Produkte"
 
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
@@ -513,7 +524,8 @@ msgstr "Erlaube Online Angebote und Vorlagen"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr "Ermöglicht die Eingabe von Rabatt für einzelne Auftragspositionen"
+msgstr ""
+"Ermöglichen Sie die Eingabe von Rabatt für einzelne Auftragspositionen"
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -532,7 +544,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr "Ermöglicht die Nutzung verschiedener Mengeneinheiten"
+msgstr "Ermöglichen Sie die Nutzung verschiedener Mengeneinheiten"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -569,14 +581,14 @@ msgid ""
 "Manage Related Stock.\n"
 "-This installs the module sale_stock."
 msgstr ""
-"Ermöglicht die Erstellung von Angeboten oder Aufträgen mit unterschiedlichen "
-"Liefer- und Lagerbedingungen.\n"
+"Ermöglichen Sie die Erstellung von Angeboten oder Aufträgen mit "
+"unterschiedlichen Liefer- und Lagerbedingungen.\n"
 "- Es wird das Modul sale_stock installiert."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr "Ermöglicht die Vergabe von Rabatt je Auftragsposition"
+msgstr "Ermöglichen Sie die Vergabe von Rabatt je Auftragsposition"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -611,7 +623,7 @@ msgstr ""
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
-"Ermöglicht die Auswahl und Verwaltung verschiedener Mengeneinheiten für "
+"Ermöglichen Sie die Auswahl und Verwaltung verschiedener Mengeneinheiten für "
 "Produkte."
 
 #. module: sale
@@ -625,11 +637,10 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
-"Ermöglicht verschiedene Adressen bei Lieferschein und Rechnung eines "
+"Ermöglichen Sie verschiedene Adressen bei Lieferschein und Rechnung eines "
 "Auftrags."
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Kostenstelle"
@@ -650,7 +661,7 @@ msgid "Before Delivery"
 msgstr "Vor Lieferung"
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -704,19 +715,19 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: sale
-#: code:addons/sale/sale.py:581
+#: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Der Auftrag kann nicht abgebrochen werden!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "Kann eine Auftragszeile im Status '%s' nicht löschen."
 
 #. module: sale
-#: code:addons/sale/sale.py:1134
+#: code:addons/sale/sale.py:1133
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -778,7 +789,7 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: sale
-#: code:addons/sale/sale.py:1142
+#: code:addons/sale/sale.py:1141
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
@@ -882,11 +893,12 @@ msgstr "Währung"
 #: view:sale.order:sale.view_sales_order_filter
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
+#: view:sale.report:sale.view_order_product_search
 msgid "Customer"
 msgstr "Kunde"
 
 #. module: sale
-#: code:addons/sale/sale.py:457
+#: code:addons/sale/sale.py:464
 #, python-format
 msgid "Customer Invoices"
 msgstr "Ausgangsrechnungen"
@@ -1040,15 +1052,15 @@ msgstr "E-Mail Assistent"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr "Abrechnung einzelner Auftragspositionen erlauben"
+msgstr "Einzelne Auftragspositionen abrechnen"
 
 #. module: sale
-#: code:addons/sale/sale.py:148
-#: code:addons/sale/sale.py:383
-#: code:addons/sale/sale.py:515
-#: code:addons/sale/sale.py:612
-#: code:addons/sale/sale.py:930
-#: code:addons/sale/sale.py:947
+#: code:addons/sale/sale.py:154
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522
+#: code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:927
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
@@ -1069,7 +1081,7 @@ msgid "False"
 msgstr "Ungültig"
 
 #. module: sale
-#: code:addons/sale/sale.py:582
+#: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -1206,7 +1218,7 @@ msgid "If checked new messages require your attention."
 msgstr "Wenn aktiviert, erfordern neue Nachrichten Ihr Handeln"
 
 #. module: sale
-#: code:addons/sale/sale.py:298
+#: code:addons/sale/sale.py:305
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1226,7 +1238,7 @@ msgid "In Progress"
 msgstr "In Arbeit"
 
 #. module: sale
-#: code:addons/sale/sale.py:267
+#: code:addons/sale/sale.py:274
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
@@ -1241,9 +1253,9 @@ msgid "Incorrect Data"
 msgstr "Fehlerhafte Daten"
 
 #. module: sale
-#: code:addons/sale/sale.py:267
-#: code:addons/sale/sale.py:986
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:274
+#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ungültige Aktion!"
@@ -1333,7 +1345,7 @@ msgid "Invoice created"
 msgstr "Abrechnung erstellt"
 
 #. module: sale
-#: code:addons/sale/sale.py:1224
+#: code:addons/sale/sale.py:1217
 #, python-format
 msgid "Invoice paid"
 msgstr "Rechnung bezahlt"
@@ -1457,19 +1469,19 @@ msgid "New Mail"
 msgstr "Neue E-Mail"
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid "No Customer Defined!"
 msgstr "Es ist kein Kunde definiert!"
 
 #. module: sale
-#: code:addons/sale/sale.py:1126
+#: code:addons/sale/sale.py:1125
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Keine Preisliste! "
 
 #. module: sale
-#: code:addons/sale/sale.py:1137
+#: code:addons/sale/sale.py:1136
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Keine gültige Preisliste gefunden"
@@ -1530,11 +1542,6 @@ msgid "Order"
 msgstr "Auftrag"
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Order Date"
-msgstr "Auftragsdatum"
-
-#. module: sale
 #: view:sale.order:sale.view_order_form
 #: field:sale.order,order_line:0
 msgid "Order Lines"
@@ -1547,6 +1554,7 @@ msgstr "Auftragszeilen für Rechnung"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
 msgstr "Auftragsdatum"
 
@@ -1598,7 +1606,6 @@ msgstr "Bezahlt"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -1624,13 +1631,13 @@ msgid "Percentage"
 msgstr "Prozentsatz"
 
 #. module: sale
-#: code:addons/sale/sale.py:931
+#: code:addons/sale/sale.py:928
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Weisen Sie ein Ertragskonto für dieses Produkt zu: \"%s\" (id:%d)."
 
 #. module: sale
-#: code:addons/sale/sale.py:384
+#: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -1653,7 +1660,7 @@ msgid "Pricelist"
 msgstr "Preisliste"
 
 #. module: sale
-#: code:addons/sale/sale.py:297
+#: code:addons/sale/sale.py:304
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Preisliste Warnung!"
@@ -1685,10 +1692,10 @@ msgstr "Beschaffung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
+#: field:sale.order,product_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: field:sale.order.line,product_id:0
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,product_id:0
 msgid "Product"
 msgstr "Produkt"
@@ -1778,7 +1785,7 @@ msgid "Quotation confirmed"
 msgstr "Auftrag bestätigt"
 
 #. module: sale
-#: code:addons/sale/sale.py:355
+#: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
 msgstr "Angebot erstellt"
@@ -1830,11 +1837,6 @@ msgid "Recreate Invoice"
 msgstr "Wiederherstellung Rechnung"
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Reference Unit of Measure"
-msgstr "Basis Mengeneinheit"
-
-#. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
 msgstr "Referenz zu Beleg, der den Verkaufsauftrag ausgelöst hat"
@@ -1860,9 +1862,14 @@ msgid "Revenue of sent invoices per month."
 msgstr "Abgerechnete Umsätze pro Monat"
 
 #. module: sale
+#: field:procurement.order,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Auftragspositionen"
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "Verkaufsauftragszeile Erzeuge Rechnung"
+msgstr "Abrechnung einer einzelnen Auftragsposition"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1895,13 +1902,17 @@ msgid "Sales Analysis"
 msgstr "Statistik Verkäufe"
 
 #. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_sales_funnel
+msgid "Sales Funnel"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
 msgstr "Verkauf erstellt Rechnung"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:598
+#: code:addons/sale/sale.py:284
 #: model:ir.model,name:sale.model_sale_order
 #: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
@@ -2012,11 +2023,6 @@ msgstr "Verkaufsteams"
 #: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
 msgstr "Fehlerhafte Verkäufe"
-
-#. module: sale
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr "Auftragszeile"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2196,7 +2202,7 @@ msgid "The value of Advance Amount must be positive."
 msgstr "Der Wert einer Anzahlung muss positiv sein"
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:945
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2206,7 +2212,7 @@ msgstr ""
 "Einstellung bei den Produkt Kategorien hinterlegt wurde."
 
 #. module: sale
-#: code:addons/sale/sale.py:148
+#: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
 msgstr "Es gibt noch kein zugewiesenes Unternehmen für diesen Benutzer."
@@ -2467,7 +2473,7 @@ msgstr "Warteliste"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Warehouse Features"
-msgstr "Lager Eigenschaften"
+msgstr "Lagereigenschaften"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -2498,14 +2504,14 @@ msgid "What do you want to invoice?"
 msgstr "Was möchten Sie abrechnen ?"
 
 #. module: sale
-#: code:addons/sale/sale.py:986
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
 "Sie können keine Auftragsposition abbrechen, die bereits abgerechnet wurde."
 
 #. module: sale
-#: code:addons/sale/sale.py:612
+#: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
@@ -2518,7 +2524,7 @@ msgid "You cannot create invoice when sales order is not confirmed."
 msgstr "Sie können nicht abrechnen, wenn der Auftrag nicht bestätigt ist"
 
 #. module: sale
-#: code:addons/sale/sale.py:516
+#: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -2527,7 +2533,7 @@ msgstr ""
 "Partner gruppiert werden."
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:1123
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -2550,4 +2556,10 @@ msgstr "Ihre Referenz:"
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
+
+#~ msgid "Order Date"
+#~ msgstr "Auftragsdatum"
+
+#~ msgid "Reference Unit of Measure"
+#~ msgstr "Basis Mengeneinheit"

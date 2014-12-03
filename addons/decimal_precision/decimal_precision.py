@@ -53,7 +53,7 @@ class decimal_precision(orm.Model):
             for field in model._fields.values():
                 if field.type == 'float':
                     field._setup_digits(env)
-        RegistryManager.signal_caches_change(cr.dbname)
+        RegistryManager.signal_registry_change(cr.dbname)
 
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
@@ -85,14 +85,14 @@ class DecimalPrecisionFloat(orm.AbstractModel):
     _inherit = 'ir.qweb.field.float'
 
 
-    def precision(self, cr, uid, column, options=None, context=None):
+    def precision(self, cr, uid, field, options=None, context=None):
         dp = options and options.get('decimal_precision')
         if dp:
             return self.pool['decimal.precision'].precision_get(
                 cr, uid, dp)
 
         return super(DecimalPrecisionFloat, self).precision(
-            cr, uid, column, options=options, context=context)
+            cr, uid, field, options=options, context=context)
 
 class DecimalPrecisionTestModel(orm.Model):
     _name = 'decimal.precision.test'

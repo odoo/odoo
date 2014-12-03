@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
+from openerp.tools import float_compare, float_round
 
 import time
 
@@ -221,7 +222,7 @@ class account_bank_statement(osv.osv):
             'ref': st_line.ref,
         }
 
-    def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_account(self, cr, uid, st_line, context=None):
         """Retrieve the account to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
@@ -231,7 +232,7 @@ class account_bank_statement(osv.osv):
             return st_line.statement_id.journal_id.default_credit_account_id.id
         return st_line.statement_id.journal_id.default_debit_account_id.id
 
-    def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_partner(self, cr, uid, st_line, context=None):
         """Retrieve the partner to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
@@ -383,12 +384,17 @@ class account_bank_statement(osv.osv):
         return {'value': res}
 
     def unlink(self, cr, uid, ids, context=None):
+        statement_line_obj = self.pool['account.bank.statement.line']
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
+            # Explicitly unlink bank statement lines
+            # so it will check that the related journal entries have
+            # been deleted first
+            statement_line_obj.unlink(cr, uid, [line.id for line in item.line_ids], context=context)
         return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
@@ -513,16 +519,24 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line. """
+    def _domain_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
         if excluded_ids is None:
             excluded_ids = []
+        domain = [('ref', '=', st_line.name),
+                  ('reconcile_id', '=', False),
+                  ('state', '=', 'valid'),
+                  ('account_id.reconcile', '=', True),
+                  ('id', 'not in', excluded_ids)]
+        return domain
+
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line. """
         mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
         if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
-            match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
+            domain = self._domain_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
+            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=1, context=context)
             if match_id:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
@@ -534,34 +548,51 @@ class account_bank_statement_line(osv.osv):
                     mv_line['has_no_partner'] = False
                 return [mv_line]
 
-        # If there is no identified partner or structured communication, don't look further
-        if not st_line.partner_id.id:
-            return []
-
-        # Look for a move line whose amount matches the statement line's amount
-        company_currency = st_line.journal_id.company_id.currency_id.id
-        statement_currency = st_line.journal_id.currency.id or company_currency
-        sign = 1
-        if statement_currency == company_currency:
-            amount_field = 'credit'
-            if st_line.amount > 0:
-                amount_field = 'debit'
-            else:
+        # How to compare statement line amount and move lines amount
+        precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        currency_id = st_line.currency_id.id or st_line.journal_id.currency.id
+        # NB : amount can't be == 0 ; so float precision is not an issue for amount > 0 or amount < 0
+        amount = st_line.amount_currency or st_line.amount
+        domain = [('reconcile_partial_id', '=', False)]
+        if currency_id:
+            domain += [('currency_id', '=', currency_id)]
+        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
+        amount_field = 'debit'
+        if currency_id == False:
+            if amount < 0:
+                amount_field = 'credit'
                 sign = -1
         else:
             amount_field = 'amount_currency'
-            if st_line.amount < 0:
-                sign = -1
-        if st_line.amount_currency:
-            amount = st_line.amount_currency
-        else:
-            amount = st_line.amount
 
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * amount))])
+        # Look for a matching amount
+        domain_exact_amount = domain + [(amount_field, '=', float_round(sign * amount, precision_digits=precision_digits))]
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=domain_exact_amount)
         if match_id:
-            return [match_id[0]]
+            return match_id
 
-        return []
+        if not st_line.partner_id.id:
+            return []
+
+        # Look for a set of move line whose amount is <= to the line's amount
+        if amount > 0: # Make sure we can't mix receivable and payable
+            domain += [('account_id.type', '=', 'receivable')]
+        else:
+            domain += [('account_id.type', '=', 'payable')]
+        if amount_field == 'amount_currency' and amount < 0:
+            domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
+        else:
+            domain += [(amount_field, '>', 0), (amount_field, '<', (sign * amount))]
+        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
+        ret = []
+        total = 0
+        for line in mv_lines:
+            total += abs(line['debit'] - line['credit'])
+            if float_compare(total, abs(amount), precision_digits=precision_digits) != 1:
+                ret.append(line)
+            else:
+                break
+        return ret
 
     def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Bridge between the web client reconciliation widget and get_move_lines_for_reconciliation (which expects a browse record) """
@@ -572,6 +603,35 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, st_line_id, context=context)
         return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
 
+    def _domain_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, additional_domain=None, context=None):
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
+        # Make domain
+        domain = additional_domain + [
+            ('reconcile_id', '=', False),
+            ('state', '=', 'valid'),
+            ('account_id.reconcile', '=', True)
+        ]
+        if st_line.partner_id.id:
+            domain += [('partner_id', '=', st_line.partner_id.id)]
+        if excluded_ids:
+            domain.append(('id', 'not in', excluded_ids))
+        if str:
+            domain += [
+                '|', ('move_id.name', 'ilike', str),
+                '|', ('move_id.ref', 'ilike', str),
+                ('date_maturity', 'like', str),
+            ]
+            if not st_line.partner_id.id:
+                domain.insert(-1, '|', )
+                domain.append(('partner_id.name', 'ilike', str))
+            if str != '/':
+                domain.insert(-1, '|', )
+                domain.append(('name', 'ilike', str))
+        return domain
+
     def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
@@ -580,27 +640,9 @@ class account_bank_statement_line(osv.osv):
             :param boolean count: just return the number of records
             :param tuples list additional_domain: additional domain restrictions
         """
-        if excluded_ids is None:
-            excluded_ids = []
-        if additional_domain is None:
-            additional_domain = []
         mv_line_pool = self.pool.get('account.move.line')
-
-        # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid'), ('account_id.reconcile', '=', True)]
-        if st_line.partner_id.id:
-            domain += [('partner_id', '=', st_line.partner_id.id)]
-        if excluded_ids:
-            domain.append(('id', 'not in', excluded_ids))
-        if str:
-            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
-            if not st_line.partner_id.id:
-                domain.insert(-1, '|', )
-                domain.append(('partner_id.name', 'ilike', str))
-            if str != '/':
-                domain.insert(-1, '|', )
-                domain.append(('name', 'ilike', str))
-
+        domain = self._domain_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, context=context)
+        
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
         reconcile_partial_ids = []
@@ -796,7 +838,7 @@ class account_bank_statement_line(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
         'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
-        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
+        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='restrict'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
         'ref': fields.char('Reference'),
@@ -816,17 +858,18 @@ class account_statement_operation_template(osv.osv):
     _description = "Preset for the lines that can be created in a bank statement reconciliation"
     _columns = {
         'name': fields.char('Button Label', required=True),
-        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
-        'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
-        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
+        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type', 'not in', ('view', 'closed', 'consolidation'))]),
+        'label': fields.char('Journal Item Label'),
+        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')], 'Amount type', required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), required=True, help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance')."),
+        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='restrict', domain=[('type_tax_use','in',('purchase','all')), ('parent_id','=',False)]),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='set null', domain=[('type','!=','view'), ('state','not in',('close','cancelled'))]),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'amount_type': 'percentage_of_balance',
-        'amount': 100.0
+        'amount': 100.0,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

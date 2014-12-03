@@ -90,8 +90,3 @@ class website_hr_recruitment(http.Controller):
             'default': default,
         })
 
-    @http.route('/jobs/thankyou', type='http', auth="public", website=True)
-    def jobs_thankyou(self):
-        return request.render("website_hr_recruitment.thankyou", {})
-
-# vim :et:

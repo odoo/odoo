@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-09 12:07+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-06 07:20+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-10 08:14+0000\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:03+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:222
+#: code:addons/mrp/stock.py:260
 #, python-format
 msgid " Manufacture"
 msgstr " Fertigung"
@@ -36,13 +36,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Fertigungsaufträge"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353
+#: code:addons/mrp/mrp.py:356
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:957
+#: code:addons/mrp/mrp.py:958
 #, python-format
 msgid "%s produced"
 msgstr "%s gefertigt"
@@ -510,13 +510,13 @@ msgid "BoM"
 msgstr "Stückliste"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:324
+#: code:addons/mrp/mrp.py:322
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr "Die Stückliste \"%s\" beinhaltet eine rekursive Position: \"%s\"."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:348
 #, python-format
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
@@ -546,7 +546,7 @@ msgid "BoM Type"
 msgstr "Stücklisten Typ"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:219
+#: code:addons/mrp/stock.py:257
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Ein passender Fertigungsablaufplan kann nicht ermittelt werden."
@@ -572,19 +572,19 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:147
+#: code:addons/mrp/stock.py:182
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Eine negative oder Nullbuchung eines Verbrauchs ist nicht möglich."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:613
+#: code:addons/mrp/mrp.py:617
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Ein Fertigungsauftrag mit Status '%s' kann nicht gelöscht werden."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:700
+#: code:addons/mrp/mrp.py:704
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Es konnte keine Stückliste gefunden werden."
@@ -878,9 +878,9 @@ msgid "End Date"
 msgstr "Enddatum"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:700
-#: code:addons/mrp/stock.py:147
-#: code:addons/mrp/stock.py:219
+#: code:addons/mrp/mrp.py:704
+#: code:addons/mrp/stock.py:182
+#: code:addons/mrp/stock.py:257
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1080,9 +1080,9 @@ msgid "Internal Reference"
 msgstr "Interne Referenz"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:324
-#: code:addons/mrp/mrp.py:345
-#: code:addons/mrp/mrp.py:613
+#: code:addons/mrp/mrp.py:322
+#: code:addons/mrp/mrp.py:348
+#: code:addons/mrp/mrp.py:617
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ungültige Aktion!"
@@ -1205,7 +1205,7 @@ msgstr "Manager"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:32
-#: code:addons/mrp/stock.py:216
+#: code:addons/mrp/stock.py:254
 #, python-format
 msgid "Manufacture"
 msgstr "Fertigung"
@@ -1501,7 +1501,7 @@ msgid "Planning"
 msgstr "Fertigungsterminierung"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:134
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Bitte geben Sie eine korrekte Anzahl an"
@@ -2135,8 +2135,8 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "Datenfeld, das zur Verfolgung der Fertigungsprodukte eingesetzt wird"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:363
-#: code:addons/mrp/mrp.py:430
+#: code:addons/mrp/mrp.py:366
+#: code:addons/mrp/mrp.py:433
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2265,7 +2265,7 @@ msgstr "Gesamtkosten von %s %s"
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr "Gesamt Zyklen"
+msgstr "Gesamte Zyklen"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -2392,17 +2392,16 @@ msgid "Warehouse"
 msgstr "Zentrallager"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:363
-#: code:addons/mrp/mrp.py:430
+#: code:addons/mrp/mrp.py:366
+#: code:addons/mrp/mrp.py:433
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:923
 #: code:addons/mrp/stock.py:42
 #: code:addons/mrp/stock.py:44
-#: code:addons/mrp/stock.py:134
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Warning!"
 msgstr "Warnung!"
@@ -2581,16 +2580,6 @@ msgid "Working Time"
 msgstr "Arbeitszeit"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:923
-#, python-format
-msgid ""
-"You are going to produce total %s quantities of \"%s\".\n"
-"But you can only produce up to total %s quantities."
-msgstr ""
-"Sie möchten %s Einheiten von \"%s\" produzieren.\n"
-"Sie können aber nur %s Einheiten produzieren.."
-
-#. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
 msgid ""
 "You can configure by-products in the bill of material.\n"
@@ -2636,3 +2625,11 @@ msgstr "Plus"
 #: field:mrp.production,ready_production:0
 msgid "unknown"
 msgstr "unbekannt"
+
+#, python-format
+#~ msgid ""
+#~ "You are going to produce total %s quantities of \"%s\".\n"
+#~ "But you can only produce up to total %s quantities."
+#~ msgstr ""
+#~ "Sie möchten %s Einheiten von \"%s\" produzieren.\n"
+#~ "Sie können aber nur %s Einheiten produzieren.."

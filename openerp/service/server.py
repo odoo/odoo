@@ -9,10 +9,6 @@ import os.path
 import platform
 import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -24,10 +20,15 @@ import unittest2
 
 import werkzeug.serving
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -203,8 +204,8 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = openerp.modules.registry.RegistryManager.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                while True and registry.ready:
+            for db_name, registry in registries.iteritems():
+                while registry.ready:
                     acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     if not acquired:
                         break
@@ -346,7 +347,11 @@ class GeventServer(CommonServer):
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except:
+            _logger.exception("Evented Service (longpolling): uncaught error during main loop")
+            raise
 
     def stop(self):
         import gevent
@@ -428,6 +433,8 @@ class PreforkServer(CommonServer):
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
+        if pid == self.long_polling_pid:
+            self.long_polling_pid = None
         if pid in self.workers:
             _logger.debug("Worker (%s) unregistered", pid)
             try:
@@ -622,8 +629,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)

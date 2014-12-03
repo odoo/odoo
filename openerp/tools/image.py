@@ -96,19 +96,21 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
-def image_resize_and_sharpen(image, size, factor=2.0):
+def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0):
     """
         Create a thumbnail by resizing while keeping ratio.
         A sharpen filter is applied for a better looking result.
 
         :param image: PIL.Image.Image()
         :param size: 2-tuple(width, height)
+        :param preserve_aspect_ratio: boolean (default: False)
         :param factor: Sharpen factor (default: 2.0)
     """
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
     image.thumbnail(size, Image.ANTIALIAS)
-    size = image.size
+    if preserve_aspect_ratio:
+        size = image.size
     sharpener = ImageEnhance.Sharpness(image)
     resized_image = sharpener.enhance(factor)
     # create a transparent image for background and paste the image on it

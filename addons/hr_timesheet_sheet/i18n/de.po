@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-22 10:45+0000\n"
-"Last-Translator: Thorsten Vocks <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-26 15:25+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-23 07:26+0000\n"
+"X-Launchpad-Export-Date: 2014-09-27 06:38+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet_sheet
@@ -36,23 +37,23 @@ msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
-msgid "#Nbr"
-msgstr "#Nummer"
+msgid "# Nbr Timesheet"
+msgstr "# Anzahl Stundenzettel"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
-msgid "#Total Attendance"
-msgstr "#Anwesenheit"
+msgid "# Total Attendance"
+msgstr "# Gesamte Arbeitszeit"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
-msgid "#Total Diff"
-msgstr "# Abweichung"
+msgid "# Total Diff"
+msgstr "# Gesamtabweichung"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
-msgid "#Total Timesheet"
-msgstr "# Projektstunden"
+msgid "# Total Timesheet"
+msgstr "# Gesamte Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -308,13 +309,18 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:378
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:491
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:519
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Externe Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -403,8 +409,13 @@ msgstr ""
 "ein Produkt zugewiesen werden."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:253
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:255
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Interne Zeiterfassung"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ungültige Aktion!"
@@ -532,7 +543,7 @@ msgstr ""
 "Bitte legen Sie einen Mitarbeiter an und weisen Sie ihm einen Benutzer zu."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:128
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
@@ -757,8 +768,8 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:493
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:512
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid "User Error!"
 msgstr "Benutzerfehler!"
@@ -780,7 +791,7 @@ msgid "Warning !"
 msgstr "Warnung"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:128
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid "Warning!"
 msgstr "Warnung !"
@@ -802,13 +813,13 @@ msgid "Week"
 msgstr "Woche"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:245
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
 msgid "Week "
 msgstr "Woche "
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:493
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
@@ -817,7 +828,7 @@ msgstr ""
 "Datums des Zeiterfassungsformulars liegen."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:491
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
@@ -828,14 +839,14 @@ msgstr ""
 "mit Ihrem Vorgesetzten."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:255
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
 msgstr ""
 "Sie können keine Zeiterfassung löschen, die Anwesenheitseinträge enthält."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:253
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Sie können keine Zeiterfassung löschen, die bereits bestätigt wurde."
@@ -847,7 +858,7 @@ msgid "You cannot duplicate a timesheet."
 msgstr "Sie können keine Zeiterfassung duplizieren."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:512
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -885,13 +896,13 @@ msgstr ""
 "Stundenzettel übernehmen"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:519
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Sie können keinen Eintrag in einer bestätigten Zeiterfassung ändern"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:378
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr ""
@@ -905,3 +916,15 @@ msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
 msgstr "Sie können sämtliche Arbeitszeiten und Aktivitäten eingeben."
+
+#~ msgid "#Total Timesheet"
+#~ msgstr "# Projektstunden"
+
+#~ msgid "#Total Diff"
+#~ msgstr "# Abweichung"
+
+#~ msgid "#Total Attendance"
+#~ msgstr "#Anwesenheit"
+
+#~ msgid "#Nbr"
+#~ msgstr "#Nummer"

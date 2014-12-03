@@ -119,10 +119,10 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                    <img t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.value)" class="oe_employee_picture"/>
+                                <a type="open" href="#" class="oe_kanban_action">
+                                    <img t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.value)" class="img-responsive" style="width:100px;"/>
                                 </a>
-                                <div style="text-align:center;">
+                                <div class="text-center">
                                     <h4 class="oe_partner_heading">
                                         <a type="open">
                                             <field name="name"/>
@@ -130,9 +130,6 @@
                                     </h4>
                                 </div>
                             </div>
-                            <script>
-                            $('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                        </script>
                         </t>
                     </templates>
                 </kanban>
@@ -355,7 +352,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
-                                <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
+                                <a type="open" href="#" class="oe_kanban_action">
                                     <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>
                                 </a>
                                 <div class="oe_kanban_details">
@@ -366,7 +363,7 @@
                                         </a>
                                     </h4>
                                     <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
@@ -374,7 +371,7 @@
                                     </t>
 
                                     <t t-if="record.contract_renewal_overdue.raw_value">
-                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
                                                 <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
