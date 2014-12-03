@@ -27,7 +27,7 @@
 Swiss localization
 ==================
 
-**Multilang swiss Swiss PME/KMU 2015 account chart and taxes**
+**Multilang Swiss PME/KMU 2015 account chart and taxes**
 
 **Author:** Camptocamp SA
 
