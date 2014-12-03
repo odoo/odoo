@@ -88,108 +88,102 @@
         },
 
         send: function(e) {
-                e.preventDefault();
-                // if(!this.check()) return;
-                var self              = this;
-                var fail_required     = [];
-                var empty_field       = [];
-                var model             = this.$target.data('model');
-                var args              = {"context": website.get_context()};
+            e.preventDefault();
+            // if(!this.check()) return;
+            var self              = this;
+            var fail_required     = [];
+            var empty_field       = [];
+            var model             = this.$target.data('model');
+            var args              = {"context": website.get_context()};
 
-                var field_value;
-                 this.field_label_list = {};
-                var label;
-                /*
-                this.$target.find('.form-field').each(function(i,elem) {
-                    label = $(elem).find('label').html();
-                    if(label.length > 1) this.field_list[label] = $(elem).find('.form-data').attr('name'); 
-                });
-                */
-                this.file = 0;
-                this.$target.find('.form-data').each(function(j,elem){
-                    
-                    for (var i in getDataForm) {
-                        if($(elem).is(i)) {
-                            field_value = getDataForm[i].call(self, $(elem));
-                            if(field_value) {
-                                _.extend(args,field_value);
-                            }
-                            else if($(elem).attr('required')) {
-                                console.log($(elem));
-                                fail_required.push($(elem).attr('name'));
-                            }
-                            else {
-                                empty_field.push($(elem).attr('name'));
-                            }
+            var field_value;
+             this.field_label_list = {};
+            var label;
+
+            this.file = 0;
+            this.$target.find('.form-data').each(function(j,elem){
+                for (var i in getDataForm) {
+                    if($(elem).is(i)) {
+                        field_value = getDataForm[i].call(self, $(elem));
+                        if(field_value) {
+                            _.extend(args,field_value);
                         }
-                    }
-                });
-                if(fail_required.length) {
-                    this.indicateRequired(fail_required,empty_field);
-                    return;
-                }
-                
-                var progress = $(openerp.qweb.render('website.form.editor.progress'))
-                                    .appendTo('body')
-                                    .modal({"keyboard" :true});
-
-               if(!this.file) progress.addClass('hidden');
-
-                var success_page = this.$target.data('success');
-                var redirect     = this.$target.data('redirect');
-
-                console.log(args);
-                openerp.post('/website_form/'+model,args)
-                .then(function(data) {
-                        progress.modal('hide');
-                        // if the data are not inserted on the DB and server dont return list of 
-                        // bad fields, we display an error
-               
-                        if(!(data && (data.id || (data.fail_required && data.fail_required.length)))) {
-                            console.log('error without list');
-                            self.$target.find('.o_form-success').show(500)
-                                        .parent().find('.form-group').hide(500)
-                                        .closest('form').removeClass('o_send-success')
-                                                        .addClass('o_send-fail');
-                            return;
-                        }
-
-                        // if the server return a list of bad fields, show theses fields for users
-                        if(data.fail_required && data.fail_required.length) {
-                            console.log('error with list');
-                            self.indicateRequired(data.fail_required, empty_field);
-                            return;
-                        }
-                        console.log('no_error', success_page, redirect);
-                        // if success, show success or redirect sync or redirect async following configuration 
-                        if(success_page) {
-                            success_page = '/website_form/thanks' + ((success_page[0] == '/')? '':'/') + success_page;
-                            $(location).attr('href', success_page);
+                        else if($(elem).attr('required')) {
+                            console.log($(elem));
+                            fail_required.push($(elem).attr('name'));
                         }
                         else {
-                            self.$target.find('.o_form-success').show(500)
-                                        .parent().find('.form-group').hide(500)
-                                        .closest('form').removeClass('o_send-failed')
-                                                        .addClass('o_send-success');
+                            empty_field.push($(elem).attr('name'));
                         }
-                })
-                .fail(function(data){
-                    progress.modal('hide');
+                    }
+                }
+            });
+            if(fail_required.length) {
+                this.indicateRequired(fail_required,empty_field);
+                return;
+            }
+            
+            var progress = $(openerp.qweb.render('website.form.editor.progress'))
+                                .appendTo('body')
+                                .modal({"keyboard" :true});
+
+            if(!this.file) progress.addClass('hidden');
+
+            var success_page = this.$target.data('success');
+            var redirect     = this.$target.data('redirect');
+
+            console.log(args);
+            openerp.post('/website_form/'+model,args)
+            .then(function(data) {
+                progress.modal('hide');
+                // if the data are not inserted on the DB and server dont return list of 
+                // bad fields, we display an error
+                data = $.parseJSON(data);
+                debugger;
+                if(!(data && (data.id || (data.fail_required && data.fail_required.length)))) {
+                    console.log('error without list');
+                    self.$target.find('.o_form-danger').show(500)
+                                .parent().find('.form-group').hide(500)
+                                .closest('form').removeClass('o_send-success')
+                                                .addClass('o_send-failed');
+                    return;
+                }
+
+                // if the server return a list of bad fields, show theses fields for users
+                if(data.fail_required && data.fail_required.length) {
+                    console.log('error with list');
+                    self.indicateRequired(data.fail_required, empty_field);
+                    return;
+                }
+                console.log('no_error', success_page, redirect);
+                // if success, show success or redirect sync or redirect async following configuration 
+                if(success_page) {
+                    success_page = '/website_form/thanks' + ((success_page[0] == '/')? '':'/') + success_page;
+                    $(location).attr('href', success_page);
+                }
+                else {
                     self.$target.find('.o_form-success').show(500)
-                                        .parent().find('.form-group').hide(500)
-                                        .closest('form').removeClass('o_send-success')
-                                                        .addClass('o_send-fail');
-                })
-                .progress(function(data){
-                    var label = (data.pcent == 100) ? 'Please wait ...':data.pcent+'%';
-                    progress.find('.progress-bar')
-                                .attr('aria-valuenow',data.pcent)
-                                .html(label)
-                                .width(data.pcent+'%');
-                    progress.find('.download-size').html(data.h_loaded);
-                    progress.find('.total-size').html(data.h_total);
-                });
-        
+                                .parent().find('.form-group').hide(500)
+                                .closest('form').removeClass('o_send-failed')
+                                                .addClass('o_send-success');
+                }
+            })
+            .fail(function(data){
+                progress.modal('hide');
+                self.$target.find('.o_form-danger').show(500)
+                                    .parent().find('.form-group').hide(500)
+                                    .closest('form').removeClass('o_send-success')
+                                                    .addClass('o_send-failed');
+            })
+            .progress(function(data){
+                var label = (data.pcent == 100) ? 'Please wait ...':data.pcent+'%';
+                progress.find('.progress-bar')
+                            .attr('aria-valuenow',data.pcent)
+                            .html(label)
+                            .width(data.pcent+'%');
+                progress.find('.download-size').html(data.h_loaded);
+                progress.find('.total-size').html(data.h_total);
+            });
         }
     });
     

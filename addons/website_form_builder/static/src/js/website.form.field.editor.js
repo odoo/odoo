@@ -884,6 +884,10 @@
         save: function () {
             var form = $('form[action*="/website_form/"]:not(.oe_snippet_body)');
             form.removeClass('o_send-failed o_send-success');
+            form.find('.o_form-success').hide(0);
+            form.find('.o_form-danger').hide(0);
+            form.find('.form-group').show(0);
+
             form.find('.form-builder-error-message').remove();
             var required_error = '';
             if(!form.data('model')) return this._super();
