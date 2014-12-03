@@ -1582,38 +1582,30 @@ class XMLExport(ExportFormat, http.Controller):
 
     def _extract_records(self, fields_name, rows, model):
         """Extract Records in dictionaries"""
+        result = {}
         for row in rows:
-            rel_record = {}
-            record = {}
-            result = []
             for index, fields in enumerate(fields_name):
                 relfield_data = {}
-                o2m_record= {}
                 field_details = request.session.model(model).fields_get(fields)
-                field_type = field_details[fields[0]].get('type')
-                if (field_type == 'one2many'):
-                    recordsspan = []
-                    recordsspan.append(list(itertools.islice(row, index, None)))
-                    # o2m_values = list(
-                    #     for subfields, subrecordspan in self._extract_records(fields, recordsspan, model))
-                    o2m_record['child_ids'] = o2m_values
-                elif (field_type == 'many2one') or (field_type == 'many2many'):
+                is_relational = lambda field: field_details[fields[0]].get('relation')
+                if is_relational(fields[0]):
+                    if field_details[fields[0]].get('type') == "one2many":
+                      recordsspan = list(itertools.islice(row, index, None))
+                      # o2m_values = list(subfields for subfields in self._extract_records(o2m_fields, recordsspan, model))
                     record_span = list(itertools.islice(row, index, index + 1, None))
                     relfield_data[fields[1]] = record_span
-                    rel_record[fields[0]] = relfield_data
-                    result.append(rel_record)
-                elif (field_type != 'many2one') or (field_type != 'many2many') or (field_type != 'one2many'):
+                    result[fields[0]] = relfield_data
+                if not is_relational(fields[0]):
                     recordspan = list(itertools.islice(row, index, index + 1, None))
-                    record[fields[0]] = recordspan[0]
-                    result.append(record)
-            # yield result
+                    result[fields[0]] = recordspan[0]
+            yield result
 
     def _generate_xml_record(self, model, root, record, rel_field=None):
         """Generate new Odoo compitable xml records"""
         new_record = etree.SubElement(root, "record", model=model)
         #new_record.set("model", model)
-        field_details = request.session.model(model).fields_get(record[0].keys())
-        for field, value in record[0].iteritems():
+        field_details = request.session.model(model).fields_get(record.keys())
+        for field, value in record.iteritems():
             # Only fields which contain data should be exported
             if not value:
                 continue
