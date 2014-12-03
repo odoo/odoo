@@ -751,6 +751,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.pos_widget.screen_selector.show_popup('error',{
+                    'message':_t('Error: Could not Save Changes'),
+                    'comment':_t('Your Internet connection is probably down.'),
+                });
             });
         },
         

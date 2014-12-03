@@ -25,6 +25,7 @@ import json
 import time
 
 from openerp.osv import fields, osv
+from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID, api
@@ -377,9 +378,10 @@ class stock_quant(osv.osv):
             if move.picking_id:
                 self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
         #check if move'state needs to be set as 'assigned'
-        if reserved_availability == move.product_qty and move.state in ('confirmed', 'waiting'):
+        rounding = move.product_id.uom_id.rounding
+        if float_compare(reserved_availability, move.product_qty, precision_rounding=rounding) == 0 and move.state in ('confirmed', 'waiting')  :
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
-        elif reserved_availability > 0 and not move.partially_available:
+        elif float_compare(reserved_availability, 0, precision_rounding=rounding) > 0 and not move.partially_available:
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
     def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
@@ -402,7 +404,6 @@ class stock_quant(osv.osv):
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to, context=context)
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
-                quant.refresh()
                 to_move_quants.append(quant)
             quants_reconcile.append(quant)
         if to_move_quants:
@@ -412,7 +413,6 @@ class stock_quant(osv.osv):
         if location_to.usage == 'internal':
             if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context):
                 for quant in quants_reconcile:
-                    quant.refresh()
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
@@ -438,7 +438,8 @@ class stock_quant(osv.osv):
         if not prefered_domain_list:
             return self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
         for prefered_domain in prefered_domain_list:
-            if res_qty > 0:
+            res_qty_cmp = float_compare(res_qty, 0, precision_rounding=product.uom_id.rounding)
+            if res_qty_cmp > 0:
                 #try to replace the last tuple (None, res_qty) with something that wasn't chosen at first because of the prefered order
                 quants.pop()
                 tmp_quants = self.quants_get(cr, uid, location, product, res_qty, domain=domain + prefered_domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
@@ -485,10 +486,11 @@ class stock_quant(osv.osv):
             context = {}
         price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
         location = force_location_to or move.location_dest_id
+        rounding = move.product_id.uom_id.rounding
         vals = {
             'product_id': move.product_id.id,
             'location_id': location.id,
-            'qty': qty,
+            'qty': float_round(qty, precision_rounding=rounding),
             'cost': price_unit,
             'history_ids': [(4, move.id)],
             'in_date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
@@ -503,7 +505,7 @@ class stock_quant(osv.osv):
             #it means that a negative quant has to be created as well.
             negative_vals = vals.copy()
             negative_vals['location_id'] = force_location_from and force_location_from.id or move.location_id.id
-            negative_vals['qty'] = -qty
+            negative_vals['qty'] = float_round(-qty, precision_rounding=rounding)
             negative_vals['cost'] = price_unit
             negative_vals['negative_move_id'] = move.id
             negative_vals['package_id'] = src_package_id
@@ -516,11 +518,13 @@ class stock_quant(osv.osv):
 
     def _quant_split(self, cr, uid, quant, qty, context=None):
         context = context or {}
-        if (quant.qty > 0 and quant.qty <= qty) or (quant.qty <= 0 and quant.qty >= qty):
+        rounding = quant.product_id.uom_id.rounding
+        if float_compare(abs(quant.qty), abs(qty), precision_rounding=rounding) <= 0: # if quant <= qty in abs, take it entirely
             return False
-        new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': quant.qty - qty}, context=context)
-        self.write(cr, SUPERUSER_ID, quant.id, {'qty': qty}, context=context)
-        quant.refresh()
+        qty_round = float_round(qty, precision_rounding=rounding)
+        new_qty_round = float_round(quant.qty - qty, precision_rounding=rounding)
+        new_quant = self.copy(cr, SUPERUSER_ID, quant.id, default={'qty': new_qty_round, 'history_ids': [(4, x.id) for x in quant.history_ids]}, context=context)
+        self.write(cr, SUPERUSER_ID, quant.id, {'qty': qty_round}, context=context)
         return self.browse(cr, uid, new_quant, context=context)
 
     def _get_latest_move(self, cr, uid, quant, context=None):
@@ -549,9 +553,11 @@ class stock_quant(osv.osv):
             dom += [('lot_id', '=', quant.lot_id.id)]
         dom += [('owner_id', '=', quant.owner_id.id)]
         dom += [('package_id', '=', quant.package_id.id)]
+        dom += [('id', '!=', quant.propagated_from_id.id)]
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
+        product_uom_rounding = quant.product_id.uom_id.rounding
         for quant_neg, qty in quants:
-            if not quant_neg:
+            if not quant_neg or not solving_quant:
                 continue
             to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
             if not to_solve_quant_ids:
@@ -559,7 +565,7 @@ class stock_quant(osv.osv):
             solving_qty = qty
             solved_quant_ids = []
             for to_solve_quant in self.browse(cr, uid, to_solve_quant_ids, context=context):
-                if solving_qty <= 0:
+                if float_compare(solving_qty, 0, precision_rounding=product_uom_rounding) <= 0:
                     continue
                 solved_quant_ids.append(to_solve_quant.id)
                 self._quant_split(cr, uid, to_solve_quant, min(solving_qty, to_solve_quant.qty), context=context)
@@ -571,12 +577,15 @@ class stock_quant(osv.osv):
                 remaining_to_solve_quant_ids = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id), ('id', 'not in', solved_quant_ids)], context=context)
                 if remaining_to_solve_quant_ids:
                     self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+            if solving_quant.propagated_from_id and solved_quant_ids:
+                self.write(cr, uid, solved_quant_ids, {'propagated_from_id': solving_quant.propagated_from_id.id}, context=context)
             #delete the reconciled quants, as it is replaced by the solved quants
             self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
-            #price update + accounting entries adjustments
-            self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
-            #merge history (and cost?)
-            self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
+            if solved_quant_ids:
+                #price update + accounting entries adjustments
+                self._price_update(cr, uid, solved_quant_ids, solving_quant.cost, context=context)
+                #merge history (and cost?)
+                self._quants_merge(cr, uid, solved_quant_ids, solving_quant, context=context)
             self.unlink(cr, SUPERUSER_ID, [solving_quant.id], context=context)
             solving_quant = remaining_solving_quant
 
@@ -607,16 +616,17 @@ class stock_quant(osv.osv):
             domain += [('company_id', '=', self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)]
         res = []
         offset = 0
-        while quantity > 0:
+        while float_compare(quantity, 0, precision_rounding=product.uom_id.rounding) > 0:
             quants = self.search(cr, uid, domain, order=orderby, limit=10, offset=offset, context=context)
             if not quants:
                 res.append((None, quantity))
                 break
             for quant in self.browse(cr, uid, quants, context=context):
-                if quantity >= abs(quant.qty):
+                rounding = product.uom_id.rounding
+                if float_compare(quantity, abs(quant.qty), precision_rounding=rounding) >= 0:
                     res += [(quant, abs(quant.qty))]
                     quantity -= abs(quant.qty)
-                elif quantity != 0:
+                elif float_compare(quantity, 0.0, precision_rounding=rounding) != 0:
                     res += [(quant, quantity)]
                     quantity = 0
                     break
@@ -864,7 +874,6 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
                 self.action_confirm(cr, uid, [pick.id], context=context)
-            pick.refresh()
             #skip the moves that don't need to be checked
             move_ids = [x.id for x in pick.move_lines if x.state not in ('draft', 'cancel', 'done')]
             if not move_ids:
@@ -1015,6 +1024,14 @@ class stock_picking(osv.osv):
                 product_putaway_strats[product.id] = location
             return location or picking.location_dest_id.id
 
+        # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
+        product_uom = {} # Determines UoM used in pack operations
+        for move in picking.move_lines:
+            if not product_uom.get(move.product_id.id):
+                product_uom[move.product_id.id] = move.product_id.uom_id.id
+            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id]:
+                product_uom[move.product_id.id] = move.product_uom.id
+
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
         vals = []
@@ -1065,17 +1082,24 @@ class stock_picking(osv.osv):
                 qtys_grouped[key] = qty
 
         # Create the necessary operations for the grouped quants and remaining qtys
+        uom_obj = self.pool.get('product.uom')
         for key, qty in qtys_grouped.items():
+            product = self.pool.get("product.product").browse(cr, uid, key[0], context=context)
+            uom_id = product.uom_id.id
+            qty_uom = qty
+            if product_uom.get(key[0]):
+                uom_id = product_uom[key[0]]
+                qty_uom = uom_obj._compute_qty(cr, uid, product.uom_id.id, qty, uom_id)
             vals.append({
                 'picking_id': picking.id,
-                'product_qty': qty,
+                'product_qty': qty_uom,
                 'product_id': key[0],
                 'package_id': key[1],
                 'lot_id': key[2],
                 'owner_id': key[3],
                 'location_id': key[4],
                 'location_dest_id': key[5],
-                'product_uom_id': self.pool.get("product.product").browse(cr, uid, key[0], context=context).uom_id.id,
+                'product_uom_id': uom_id,
             })
         return vals
 
@@ -1111,8 +1135,8 @@ class stock_picking(osv.osv):
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
                 forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
-                #if we used force_assign() on the move, or if the move is incomming, forced_qty > 0
-                if forced_qty:
+                #if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
+                if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                     if forced_qties.get(move.product_id):
                         forced_qties[move.product_id] += forced_qty
                     else:
@@ -1165,15 +1189,21 @@ class stock_picking(osv.osv):
             '''method that creates the link between a given operation and move(s) of given product, for the given quantity.
             Returns True if it was possible to create links for the requested quantity (False if there was not enough quantity on stock moves)'''
             qty_to_assign = qty
+            prod_obj = self.pool.get("product.product")
+            product = prod_obj.browse(cr, uid, product_id)
+            rounding = product.uom_id.rounding
+            qtyassign_cmp = float_compare(qty_to_assign, 0.0, precision_rounding=rounding)
             if prod2move_ids.get(product_id):
-                while prod2move_ids[product_id] and qty_to_assign > 0:
+                while prod2move_ids[product_id] and qtyassign_cmp > 0:
                     qty_on_link = _create_link_for_index(operation_id, 0, product_id, qty_to_assign, quant_id=False)
                     qty_to_assign -= qty_on_link
-            return qty_to_assign == 0
+                    qtyassign_cmp = float_compare(qty_to_assign, 0.0, precision_rounding=rounding)
+            return qtyassign_cmp == 0
 
         uom_obj = self.pool.get('product.uom')
         package_obj = self.pool.get('stock.quant.package')
         quant_obj = self.pool.get('stock.quant')
+        link_obj = self.pool.get('stock.move.operation.link')
         quants_in_package_done = set()
         prod2move_ids = {}
         still_to_do = []
@@ -1189,8 +1219,9 @@ class stock_picking(osv.osv):
         operations = picking.pack_operation_ids
         operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         #delete existing operations to start again from scratch
-        cr.execute("DELETE FROM stock_move_operation_link WHERE operation_id in %s", (tuple([x.id for x in operations]),))
-
+        links = link_obj.search(cr, uid, [('operation_id', 'in', [x.id for x in operations])], context=context)
+        if links:
+            link_obj.unlink(cr, uid, links, context=context)
         #1) first, try to create links when quants can be identified without any doubt
         for ops in operations:
             #for each operation, create the links with the stock move by seeking on the matching reserved quants,
@@ -1230,7 +1261,8 @@ class stock_picking(osv.osv):
                             max_qty_on_link = min(quant.qty, qty_to_assign)
                             qty_on_link = _create_link_for_quant(ops.id, quant, max_qty_on_link)
                             qty_to_assign -= qty_on_link
-                if qty_to_assign > 0:
+                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=ops.product_id.uom_id.rounding)
+                if qty_assign_cmp > 0:
                     #qty reserved is less than qty put in operations. We need to create a link but it's deferred after we processed
                     #all the quants (because they leave no choice on their related move and needs to be processed with higher priority)
                     still_to_do += [(ops, ops.product_id.id, qty_to_assign)]
@@ -1259,14 +1291,22 @@ class stock_picking(osv.osv):
         """
         Creates an extra move when there is no corresponding original move to be copied
         """
+        uom_obj = self.pool.get("product.uom")
+        uom_id = product.uom_id.id
+        qty = remaining_qty
+        if op.product_id and op.product_uom_id and op.product_uom_id.id != product.uom_id.id:
+            if op.product_uom_id.factor > product.uom_id.factor: #If the pack operation's is a smaller unit
+                uom_id = op.product_uom_id.id
+                #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+                qty = uom_obj._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
         res = {
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
-            'product_uom_qty': remaining_qty,
+            'product_uom': uom_id,
+            'product_uom_qty': qty,
             'name': _('Extra Move: ') + product.name,
             'state': 'draft',
             }
@@ -1281,8 +1321,8 @@ class stock_picking(osv.osv):
         moves = []
         for op in picking.pack_operation_ids:
             for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
-                if remaining_qty > 0:
-                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
                     vals = self._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
                     moves.append(move_obj.create(cr, uid, vals, context=context))
         if moves:
@@ -1341,9 +1381,7 @@ class stock_picking(osv.osv):
                 if not all_op_processed:
                     todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
 
-                picking.refresh()
-                #split move lines eventually
-
+                #split move lines if needed
                 toassign_move_ids = []
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
@@ -1352,10 +1390,11 @@ class stock_picking(osv.osv):
                         continue
                     elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
-                    if remaining_qty == 0:
+                    if float_compare(remaining_qty, 0,  precision_rounding = move.product_id.uom_id.rounding) == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif remaining_qty > 0 and remaining_qty < move.product_qty:
+                    elif float_compare(remaining_qty,0, precision_rounding = move.product_id.uom_id.rounding) > 0 and \
+                                float_compare(remaining_qty, move.product_qty, precision_rounding = move.product_id.uom_id.rounding) < 0:
                         new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
@@ -1368,7 +1407,6 @@ class stock_picking(osv.osv):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
-            picking.refresh()
             self._create_backorder(cr, uid, picking, context=context)
             if toassign_move_ids:
                 stock_move_obj.action_assign(cr, uid, toassign_move_ids, context=context)
@@ -1549,7 +1587,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, round=False, context=context)
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
         return res
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
@@ -1559,8 +1597,8 @@ class stock_move(osv.osv):
             qty = move.product_qty
             for record in move.linked_move_operation_ids:
                 qty -= record.qty
-            #converting the remaining quantity in the move UoM
-            res[move.id] = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, round=False, context=context)
+            # Keeping in product default UoM
+            res[move.id] = float_round(qty, precision_rounding=move.product_id.uom_id.rounding)
         return res
 
     def _get_lot_ids(self, cr, uid, ids, field_name, args, context=None):
@@ -1654,11 +1692,10 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, _type='float', store={
+        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, type='float', digits=0, store={
                 'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
                 'product.product': (_get_moves_from_prod, ['uom_id'], 20),
             }, string='Quantity',
-            digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True, states={'done': [('readonly', True)]},
@@ -1715,8 +1752,8 @@ class stock_move(osv.osv):
         'quant_ids': fields.many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Moved Quants'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'linked_move_operation_ids': fields.one2many('stock.move.operation.link', 'move_id', string='Linked Operations', readonly=True, help='Operations that impact this move for the computation of the remaining quantities'),
-        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity',
-                                         digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]},),
+        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits=0,
+                                         states={'done': [('readonly', True)]}, help="Remaining Quantity in default UoM according to operations matched with this move"),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The pull rule that created this stock move'),
@@ -1808,9 +1845,9 @@ class stock_move(osv.osv):
             'company_id': move.company_id and move.company_id.id or False,
             'date_planned': move.date,
             'product_id': move.product_id.id,
-            'product_qty': move.product_qty,
+            'product_qty': move.product_uom_qty,
             'product_uom': move.product_uom.id,
-            'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
+            'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_uom_qty,
             'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
             'location_id': move.location_id.id,
             'move_dest_id': move.id,
@@ -2170,7 +2207,6 @@ class stock_move(osv.osv):
         for move in todo_moves:
             if move.linked_move_operation_ids:
                 continue
-            move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
@@ -2300,11 +2336,14 @@ class stock_move(osv.osv):
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
+                if not move_qty.get(move.id):
+                    raise osv.except_osv(_("Error"), _("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in
         move_dest_ids = set()
         for move in self.browse(cr, uid, ids, context=context):
-            if move_qty[move.id] > 0:  # (=In case no pack operations in picking)
+            move_qty_cmp = float_compare(move_qty[move.id], 0, precision_rounding=move.product_id.uom_id.rounding)
+            if move_qty_cmp > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
                 prefered_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
@@ -2418,7 +2457,8 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         context = context or {}
 
-        uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom)
+        #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+        uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP', context=context)
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
 
         defaults = {
@@ -2571,7 +2611,6 @@ class stock_inventory(osv.osv):
                 if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.theoretical_qty:
                     raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             self.action_check(cr, uid, [inv.id], context=context)
-            inv.refresh()
             self.write(cr, uid, [inv.id], {'state': 'done'}, context=context)
             self.post_inventory(cr, uid, inv, context=context)
         return True
@@ -3317,7 +3356,6 @@ class stock_warehouse(osv.osv):
         new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
         warehouse = self.browse(cr, uid, new_id, context=context)
         self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
-        warehouse.refresh()
 
         #create routes and push/pull rules
         new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
@@ -3437,7 +3475,6 @@ class stock_warehouse(osv.osv):
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
                 # Check if we need to change something to resupply warehouses and associated MTO rules
                 self._check_resupply(cr, uid, warehouse, vals.get('reception_steps'), vals.get('delivery_steps'), context=context)
-                warehouse.refresh()
             if vals.get('code') or vals.get('name'):
                 name = warehouse.name
                 #rename sequence
@@ -3579,7 +3616,6 @@ class stock_location_path(osv.osv):
                 'date_expected': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
-            move.refresh()
             #avoid looping if a push rule is not well configured
             if rule.location_dest_id.id != old_dest_location:
                 #call again push_apply to see if a next step is defined
@@ -3795,10 +3831,7 @@ class stock_pack_operation(osv.osv):
                     qty = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, ops.product_qty, ops.product_id.uom_id, context=context)
                 for record in ops.linked_move_operation_ids:
                     qty -= record.qty
-                #converting the remaining quantity in the pack operation UoM
-                if ops.product_uom_id:
-                    qty = uom_obj._compute_qty_obj(cr, uid, ops.product_id.uom_id, qty, ops.product_uom_id, context=context)
-                res[ops.id] = qty
+                res[ops.id] = float_round(qty, precision_rounding=ops.product_id.uom_id.rounding)
         return res
 
     def product_id_change(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
@@ -3844,7 +3877,7 @@ class stock_pack_operation(osv.osv):
         'cost': fields.float("Cost", help="Unit Cost for this product line"),
         'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'linked_move_operation_ids': fields.one2many('stock.move.operation.link', 'operation_id', string='Linked Moves', readonly=True, help='Moves impacted by this operation for the computation of the remaining quantities'),
-        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Qty'),
+        'remaining_qty': fields.function(_get_remaining_qty, type='float', digits = 0, string="Remaining Qty", help="Remaining quantity in default UoM according to moves matched with this operation. "),
         'location_id': fields.many2one('stock.location', 'Source Location', required=True),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
         'processed': fields.selection([('true','Yes'), ('false','No')],'Has been processed?', required=True),

@@ -215,6 +215,7 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -595,7 +596,7 @@
                                 <field name="factor"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                            'readonly':[('uom_type','=','bigger')]}"/>
                                 <field name="factor_inv"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','bigger')],
@@ -610,7 +611,7 @@
                         </group>
                         <group>
                             <field name="active"/>
-                            <field name="rounding"/>
+                            <field name="rounding" digits="[42, 5]"/>
                         </group>
                     </group>
                 </form>

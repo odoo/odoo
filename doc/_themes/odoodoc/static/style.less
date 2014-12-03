@@ -1,5 +1,5 @@
 @import "bootstrap/less/bootstrap";
-@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Lato);
 
 @icon-font-path: 'fonts/';
 @brand-primary: #a24689;
@@ -472,7 +472,6 @@ div.section > h2 {
  */
 .highlight pre {
   padding: 4px;
-
   font-size: 75%;
   // don't break lines within words
   word-break: normal;
@@ -590,6 +589,11 @@ td.field-body {
     }
   }
 }
+
+@background-right: @gray-dark;
+@color-right: @gray-lighter;
+@color-right-code: lighten(#000, 80%);
+@separator-right: @gray-light;
 // STRIPE-STYLE PAGES
 .stripe {
   .section {
@@ -606,16 +610,129 @@ td.field-body {
       clear: left;
     }
     // column 2
+    .section > .force-right {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
     .section > .force-right,
     .section > [class*=highlight] {
       float: none;
       clear: none;
-      margin-left: 51%;
+      margin-left: 50%;
+      width: 50%;
+      color: @color-right;
+      a {
+        color: lighten(@link-color, 30%);
+      }
+      code, .literal {
+        color: @code-bg;
+        background-color: @gray;
+      }
+      &:not(.highlight-json) .highlight {
+        border-bottom-color: @separator-right;
+      }
+      &.admonition {
+        margin-left: 51%;
+        width: 49%;
+        border-top-color: @separator-right;
+        border-bottom-color: @separator-right;
+        border-right-color: @separator-right;
+      }
+      pre {
+        // padding leads to overflow scrollbar in safari for no reason I understand,
+        // margin does not have that issue
+        padding: 0;
+        margin: 10px;
+
+        background: none;
+        border: none;
+      }
+      .highlight {
+        border-color: @gray;
+        border-style: solid;
+        border-width: 1px 0;
+        // solarized-ish from https://gist.github.com/qguv/7936275
+        color: @color-right-code;
+        background: none;
+        .lineno { color: #586e75 } /* Line Numbers */
+        .c { color: #586e75 } /* Comment */
+        .err { color: @color-right-code } /* Error */
+        .g { color: @color-right-code } /* Generic */
+        .k { color: #859900 } /* Keyword */
+        .l { color: @color-right-code } /* Literal */
+        .n { color: @color-right-code } /* Name */
+        .o { color: #859900 } /* Operator */
+        .x { color: #cb4b16 } /* Other */
+        .p { color: @color-right-code } /* Punctuation */
+        .cm { color: #586e75 } /* Comment.Multiline */
+        .cp { color: #859900 } /* Comment.Preproc */
+        .c1 { color: #586e75 } /* Comment.Single */
+        .cs { color: #859900 } /* Comment.Special */
+        .gd { color: #2aa198 } /* Generic.Deleted */
+        .ge { color: @color-right-code; font-style: italic } /* Generic.Emph */
+        .gr { color: #dc322f } /* Generic.Error */
+        .gh { color: #cb4b16 } /* Generic.Heading */
+        .gi { color: #859900 } /* Generic.Inserted */
+        .go { color: @color-right-code } /* Generic.Output */
+        .gp { color: @color-right-code } /* Generic.Prompt */
+        .gs { color: @color-right-code; font-weight: bold } /* Generic.Strong */
+        .gu { color: #cb4b16 } /* Generic.Subheading */
+        .gt { color: @color-right-code } /* Generic.Traceback */
+        .kc { color: #cb4b16 } /* Keyword.Constant */
+        .kd { color: #268bd2 } /* Keyword.Declaration */
+        .kn { color: #859900 } /* Keyword.Namespace */
+        .kp { color: #859900 } /* Keyword.Pseudo */
+        .kr { color: #268bd2 } /* Keyword.Reserved */
+        .kt { color: #dc322f } /* Keyword.Type */
+        .ld { color: @color-right-code } /* Literal.Date */
+        .m { color: #2aa198 } /* Literal.Number */
+        .s { color: #2aa198 } /* Literal.String */
+        .na { color: @color-right-code } /* Name.Attribute */
+        .nb { color: #B58900 } /* Name.Builtin */
+        .nc { color: #268bd2 } /* Name.Class */
+        .no { color: #cb4b16 } /* Name.Constant */
+        .nd { color: #268bd2 } /* Name.Decorator */
+        .ni { color: #cb4b16 } /* Name.Entity */
+        .ne { color: #cb4b16 } /* Name.Exception */
+        .nf { color: #268bd2 } /* Name.Function */
+        .nl { color: @color-right-code } /* Name.Label */
+        .nn { color: @color-right-code } /* Name.Namespace */
+        .nx { color: @color-right-code } /* Name.Other */
+        .py { color: @color-right-code } /* Name.Property */
+        .nt { color: #268bd2 } /* Name.Tag */
+        .nv { color: #268bd2 } /* Name.Variable */
+        .ow { color: #859900 } /* Operator.Word */
+        .w { color: @color-right-code } /* Text.Whitespace */
+        .mf { color: #2aa198 } /* Literal.Number.Float */
+        .mh { color: #2aa198 } /* Literal.Number.Hex */
+        .mi { color: #2aa198 } /* Literal.Number.Integer */
+        .mo { color: #2aa198 } /* Literal.Number.Oct */
+        .sb { color: #586e75 } /* Literal.String.Backtick */
+        .sc { color: #2aa198 } /* Literal.String.Char */
+        .sd { color: @color-right-code } /* Literal.String.Doc */
+        .s2 { color: #2aa198 } /* Literal.String.Double */
+        .se { color: #cb4b16 } /* Literal.String.Escape */
+        .sh { color: @color-right-code } /* Literal.String.Heredoc */
+        .si { color: #2aa198 } /* Literal.String.Interpol */
+        .sx { color: #2aa198 } /* Literal.String.Other */
+        .sr { color: #dc322f } /* Literal.String.Regex */
+        .s1 { color: #2aa198 } /* Literal.String.Single */
+        .ss { color: #2aa198 } /* Literal.String.Symbol */
+        .bp { color: #268bd2 } /* Name.Builtin.Pseudo */
+        .vc { color: #268bd2 } /* Name.Variable.Class */
+        .vg { color: #268bd2 } /* Name.Variable.Global */
+        .vi { color: #268bd2 } /* Name.Variable.Instance */
+        .il { color: #2aa198 } /* Literal.Number.Integer.Long */
+      }
     }
-    // fullwidth elements
+    // separator above H2
+    .body > .section > .section {
+      border-top: 1px solid @color-right;
+    }
     .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
     .section > h6 {
-      background-color: fadeout(@body-bg, 30%);
+      max-width: 50%;
+
     }
     .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
     .section > h6, .section > .section {
@@ -625,8 +742,8 @@ td.field-body {
       clear: both;
     }
 
-    .bodywrapper {
-      position: relative;
+    .documentwrapper {
+      overflow: auto;
       // middle separator
       &:before {
         position: absolute;
@@ -634,14 +751,27 @@ td.field-body {
         bottom: 0;
         left: 50%;
         content: "";
-        width: 0;
-        border-left: 1px solid @gray-light;
+        width: 50%;
+        background: @background-right;
       }
     }
 
     .highlight pre {
       // but allow additional line-breaks between "words" to avoid overflow
       white-space: pre-wrap;
+    }
+
+    .btn-clipboard {
+      background-color: transparent;
+      color: @color-right;
+      border-color: @separator-right;
+      border-top: none;
+      border-top-right-radius: 0;
+
+      &.active {
+        background-color: @gray;
+        .transition(background-color .5s linear);
+      }
     }
   }
 
@@ -650,7 +780,7 @@ td.field-body {
     width: auto !important;
     float: none !important;
 
-    position: fixed;
+    position: absolute;
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: flex-end;
@@ -661,6 +791,10 @@ td.field-body {
     padding: 0;
     margin: 0;
     z-index: 5;
+    &.affix {
+      position: fixed;
+      top: 0;
+    }
 
     li {
       background-color: #0f131a;
@@ -670,10 +804,10 @@ td.field-body {
       cursor: pointer;
       &:first-child {
         border-left-width: 1px;
-        border-radius: 5px 0 0 5px;
+        border-radius: 0 0 0 5px;
       }
       &:last-child {
-        border-radius: 0 5px 5px 0;
+        border-radius: 0 0 5px 0;
       }
       &:hover {
         background-color: #222;
