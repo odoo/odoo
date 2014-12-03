@@ -1519,7 +1519,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
     @api.onchange('sale_tax_rate')
     def onchange_tax_rate(self):
-        return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
+        self.purchase_tax_rate = self.sale_tax_rate or False
 
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):
