@@ -528,6 +528,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     reload_record: function (record) {
         var self = this;
+        var fields = this.fields_view.fields;
         // Use of search_read instead of read to check if we can still read the record (security rules)
         return this.dataset.read_ids(
             [record.get('id')],
@@ -542,7 +543,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 return;
             }
             _.each(values, function (value, key) {
-                record.set(key + '__display', false, {silent: true});
+                if (fields[key] && fields[key].type === 'many2many')
+                    record.set(key + '__display', false, {silent: true});
                 record.set(key, value, {silent: true});            
             });
             record.trigger('change', record);
