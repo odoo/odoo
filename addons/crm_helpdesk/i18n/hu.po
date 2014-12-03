@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-06 21:12+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:03+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:02+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
@@ -24,8 +24,8 @@ msgstr "E-mailek száma"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
-msgid "# of Cases"
-msgstr "Esetek száma"
+msgid "# of Requests"
+msgstr "# Kérelmek száma"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
@@ -44,6 +44,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új igény létrehozásához. \n"
+"              </p><p>\n"
+"                Ügyfélszolgálat és Támogatás lehetővé teszi a beavatkozásai "
+"nyomon követését.\n"
+"              </p><p>\n"
+"                Hadználja az Odoo rendszer Garanciális ügyek kezelőjét a "
+"támogatási tevékenységei\n"
+"                kezelésére. Garanciális ügyek hozzákapcsolhatók email "
+"csatornához: új\n"
+"                emaileket hozhat létre egy garanciális ügy, mindegyik "
+"automatikusan kap egy egyedi történet\n"
+"                nyomonkövetést az ügyféllél történt kommunikációról.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,active:0
@@ -84,7 +99,6 @@ msgstr "Kategória"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,channel_id:0
-#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,channel_id:0
 msgid "Channel"
 msgstr "Csatorna"
@@ -132,7 +146,7 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_date:0
@@ -143,7 +157,6 @@ msgstr "Létrehozás dátuma"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
 #: field:crm.helpdesk,date:0
-#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 #: field:crm.helpdesk.report,date:0
 msgid "Date"
 msgstr "Dátum"
@@ -151,7 +164,7 @@ msgstr "Dátum"
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
@@ -199,7 +212,7 @@ msgstr "E-mail"
 #: code:addons/crm_helpdesk/crm_helpdesk.py:117
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
@@ -235,7 +248,7 @@ msgstr "Általános"
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
@@ -354,12 +367,12 @@ msgstr "Utolsó művelet"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
@@ -389,6 +402,11 @@ msgstr "Vegyes"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Month"
+msgstr "Hónap"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "Month of helpdesk requests"
 msgstr "Ügyfélközponti bejelentés hónapja"
 
@@ -406,11 +424,6 @@ msgstr "Cégem"
 #: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
 msgid "My Sales Team(s)"
 msgstr "Az én értékesítő csapato(ai)m"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
-msgid "My company"
-msgstr "Saját cégem"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,name:0
@@ -533,12 +546,12 @@ msgstr "Hivatkozások"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Date by Month"
-msgstr ""
+msgstr "Igénylési dátum havi szinten"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
 msgid "Request Month"
-msgstr ""
+msgstr "Havi igénylés"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
@@ -654,12 +667,12 @@ msgstr "Követők e-mailjei"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Weboldal üzenetek"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: crm_helpdesk
 #: code:addons/crm_helpdesk/crm_helpdesk.py:117
@@ -668,3 +681,11 @@ msgid ""
 "You can not escalate, you are already at the top level regarding your sales-"
 "team category."
 msgstr ""
+"Nem tud feljebb lépni, már az értékesítési csoportját illetően a legmagasabb "
+"fokon áll az értékesítési létrán."
+
+#~ msgid "# of Cases"
+#~ msgstr "Esetek száma"
+
+#~ msgid "My company"
+#~ msgstr "Saját cégem"

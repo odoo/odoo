@@ -2,14 +2,14 @@
 <openerp>
     <data>
 
-<!-- Phone calls by user and section Graph View -->
+<!-- Phone calls by user and team Graph View -->
 
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
             <field name="name">crm.phonecall.report.graph</field>
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Phone calls" type="pivot" stacked="True">
-                    <field name="section_id" type="row"/>
+                    <field name="team_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
                     <field name="nbr" type="measure"/>
                     <field name="duration" type="measure"/>
@@ -23,25 +23,25 @@
             <field name="model_id">crm.phonecall.report</field>
             <field name="domain">[('state','=','done')]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'measures': ['nbr', 'duration']}</field>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['categ_id'], 'measures': ['nbr', 'duration']}</field>
         </record>
         <record id="filter_crm_phonecall_delay_to_close" model="ir.filters">
             <field name="name">Delay To Close</field>
             <field name="model_id">crm.phonecall.report</field>
             <field name="domain">[('state','=','done')]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'measures': ['delay_close']}</field>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['categ_id'], 'measures': ['delay_close']}</field>
         </record>
         <record id="filter_crm_phonecall_phone_call_to_do" model="ir.filters">
             <field name="name">Phone Calls To Do</field>
             <field name="model_id">crm.phonecall.report</field>
             <field name="domain">[('state','in',('draft','open'))]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['section_id'], 'measures': ['nbr']}</field>
+            <field name="context">{'group_by': ['team_id'], 'measures': ['nbr']}</field>
         </record>
 
 
-<!-- Phone calls by user and section Search View -->
+<!-- Phone calls by user and team Search View -->
 
     <record id="view_report_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">crm.phonecall.report.select</field>
@@ -55,11 +55,11 @@
                     <filter string="Not Held" domain="[('state','=','pending')]"
                         help="Phone calls which are in pending state"/>
                     <separator/>
-                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                    <filter string="My Sales Team(s)" context="{'invisibteamion': False}" domain="[('team_id.user_id','=',uid)]"
                             help="Phone calls that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
@@ -70,7 +70,7 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Customer" context="{'group_by':'partner_id'}" />
                         <filter string="Status" context="{'group_by':'state'}" />
                         <separator/>
@@ -80,7 +80,7 @@
             </field>
         </record>
 
-<!-- Phone calls by user and section Action -->
+<!-- Phone calls by user and team Action -->
 
         <record id="action_report_crm_phonecall" model="ir.actions.act_window">
             <field name="name">Phone Calls Analysis</field>

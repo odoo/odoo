@@ -64,7 +64,6 @@ class res_partner(osv.Model):
             # when required, make sure the partner has a valid signup token
             if context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
-                partner.refresh()
 
             route = 'login'
             # the parameters to encode for the query

@@ -4,9 +4,10 @@ import time
 import werkzeug.urls
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from collections import OrderedDict
 
 from openerp import http
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.tools.translate import _
@@ -195,6 +196,7 @@ class website_event(http.Controller):
             'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
+            'seats_available': 1000,
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
         event = Event.browse(request.cr, request.uid, event_id, context=context)
@@ -225,3 +227,48 @@ class website_event(http.Controller):
                 "event": event,
                 "url": event.website_url})
         return request.website.render("website_event.country_events_list", result)
+
+    def _process_tickets_details(self, data):
+        nb_register = int(data.get('nb_register-0', 0))
+        if nb_register:
+            return [{'id': 0, 'name': 'Subscription', 'quantity': nb_register, 'price': 0}]
+        return []
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        tickets = self._process_tickets_details(post)
+        if not tickets:
+            return request.redirect("/event/%s" % slug(event))
+        return request.website._render("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+
+    def _process_registration_details(self, details):
+        ''' Process data posted from the attendee details form. '''
+        registrations = {}
+        for key, value in details.iteritems():
+            counter, field_name = key.split('-', 1)
+            registrations.setdefault(counter, dict())[field_name] = value
+        return registrations.values()
+
+    @http.route(['/event/<model("event.event"):event>/registration/confirm'], type='http', auth="public", methods=['POST'], website=True)
+    def registration_confirm(self, event, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        Registration = request.registry['event.registration']
+        registrations = self._process_registration_details(post)
+
+        registration_ids = []
+        user = request.registry.get('res.users').browse(cr, uid, uid, context=context)
+        for registration in registrations:
+            registration_ids.append(
+                Registration.create(cr, SUPERUSER_ID, {
+                    'name': registration.get('name', user.name),
+                    'phone': registration.get('phone', user.phone),
+                    'email': registration.get('email', user.email),
+                    'partner_id': user.partner_id.id,
+                    'event_id': event.id,
+                }, context=context))
+
+        attendees = Registration.browse(cr, uid, registration_ids, context=context)
+        return request.website.render("website_event.registration_complete", {
+            'attendees': attendees,
+            'event': event,
+        })

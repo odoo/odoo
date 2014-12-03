@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-26 18:18+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-24 10:54+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-27 08:31+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:59+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -179,14 +179,14 @@ msgid "Current"
 msgstr "Huidig"
 
 #. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr "Huidige productie"
+
+#. module: mrp_operations
 #: field:mrp.workorder,date:0
 msgid "Date"
 msgstr "Datum"
-
-#. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
-msgid "Date Planned"
-msgstr "Datum gepland"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
@@ -344,6 +344,11 @@ msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr "Productieorder kan niet worden gestart in de status ¨%s¨!"
 
 #. module: mrp_operations
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Month Planned"
+msgstr "Maand gepland"
+
+#. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:462
 #, python-format
 msgid "No operation to cancel."
@@ -483,6 +488,11 @@ msgstr "Productie te laat gestart"
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
 msgstr "Aantal"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr "Hoeveelheid geproduceerd"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -676,3 +686,11 @@ msgstr "Werkopdrachten planning"
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
 msgstr "Werkuren"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
+msgstr "Werkdruk"
+
+#~ msgid "Date Planned"
+#~ msgstr "Datum gepland"

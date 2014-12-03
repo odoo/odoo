@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP (<http://www.openerp.com>).
+#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -693,6 +693,13 @@ class Environment(object):
             finally:
                 release_local(cls._local)
 
+    @classmethod
+    def reset(cls):
+        """ Clear the set of environments.
+            This may be useful when recreating a registry inside a transaction.
+        """
+        cls._local.environments = Environments()
+
     def __new__(cls, cr, uid, context):
         assert context is not None
         args = (cr, uid, context)
@@ -710,7 +717,7 @@ class Environment(object):
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = set()                  # set(record)
+        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -808,6 +815,24 @@ class Environment(object):
             env.computed.clear()
             env.dirty.clear()
 
+    def clear(self):
+        """ Clear all record caches, and discard all fields to recompute.
+            This may be useful when recovering from a failed ORM operation.
+        """
+        self.invalidate_all()
+        self.all.todo.clear()
+
+    @contextmanager
+    def clear_upon_failure(self):
+        """ Context manager that clears the environments (caches and fields to
+            recompute) upon exception.
+        """
+        try:
+            yield
+        except Exception:
+            self.clear()
+            raise
+
     def field_todo(self, field):
         """ Check whether `field` must be recomputed, and returns a recordset
             with all records to recompute for `field`.
@@ -830,11 +855,10 @@ class Environment(object):
 
     def remove_todo(self, field, records):
         """ Mark `field` as recomputed on `records`. """
-        recs_list = self.all.todo.get(field, [])
-        if records in recs_list:
-            recs_list.remove(records)
-            if not recs_list:
-                del self.all.todo[field]
+        recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        recs_list = filter(None, recs_list)
+        if recs_list:
+            self.all.todo[field] = recs_list
 
     def has_todo(self):
         """ Return whether some fields must be recomputed. """

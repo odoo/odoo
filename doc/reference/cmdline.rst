@@ -15,20 +15,32 @@ Running the server
 
     database used when installing or updating modules.
 
+.. option:: --db-filter=<filter>
+
+    hides databases that do not match ``<filter>``. The filter is a
+    `regular expression`_, with the additions that:
+
+    - ``%h`` is replaced by the whole hostname the request is made on.
+    - ``%d`` is replaced by the subdomain the request is made on, with the
+      exception of ``www`` (so domain ``odoo.com`` and ``www.odoo.com`` both
+      match the database ``odoo``)
+
 .. option:: -i <modules>, --init=<modules>
 
-    comma-separated list of modules to install before running the server.
+    comma-separated list of modules to install before running the server
+    (requires :option:`-d`).
 
 .. option:: -u <modules>, --update=<modules>
 
-    comma-separated list of modules to update before running the server.
+    comma-separated list of modules to update before running the server
+    (requires :option:`-d`).
 
-.. option:: --addons-path <directories>
+.. option:: --addons-path=<directories>
 
     comma-separated list of directories in which modules are stored. These
     directories are scanned for modules (nb: when and why?)
 
-.. option:: -c <config>, --config <config>
+.. option:: -c <config>, --config=<config>
 
     provide an alternate configuration file
 
@@ -37,6 +49,16 @@ Running the server
     saves the server configuration to the current configuration file
     (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
     :option:`-c`)
+
+.. option:: --test-enable
+
+    runs tests after installing modules
+
+.. option:: --debug
+
+    when an unexpected error is raised (not a warning or an access error),
+    automatically starts :mod:`python:pdb` before logging and returning the
+    error
 
 .. _reference/cmdline/scaffold:
 
@@ -55,7 +77,7 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 .. option:: -t <template>
 
     a template directory, files are passed through jinja2_ then copied to
-    the :option:`destination` directory
+    the ``destination`` directory
 
 .. option:: name
 
@@ -81,3 +103,4 @@ can be overridden using :option:`--config <odoo.py -c>`. Specifying
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org
+.. _regular expression: https://docs.python.org/2/library/re.html

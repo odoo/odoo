@@ -4,17 +4,17 @@ openerp.testing.section('web-formats', {
     test("format_datetime", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"datetime"});
-        equal(str, date.toString("MM/dd/yyyy HH:mm:ss"));
+        equal(str, moment(date).format("MM/DD/YYYY HH:mm:ss"));
     });
     test("format_date", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"date"});
-        equal(str, date.toString("MM/dd/yyyy"));
+        equal(str, moment(date).format("MM/DD/YYYY"));
     });
     test("format_time", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"time"});
-        equal(str, date.toString("HH:mm:ss"));
+        equal(str, moment(date).format("HH:mm:ss"));
     });
     test("format_float_time", function (instance) {
         strictEqual(
@@ -67,21 +67,6 @@ openerp.testing.section('web-formats', {
         equal(instance.web.format_value(-11.25, {type: 'float'}),
               "-1,1.25");
     });
-//    test("parse_datetime", function () {
-//        var val = openerp.web.str_to_datetime("2009-05-04 12:34:23");
-//        var res = openerp.web.parse_value(val.toString("MM/dd/yyyy HH:mm:ss"), {type:"datetime"});
-//        equal(val.toString("MM/dd/yyyy HH:mm:ss"), res.toString("MM/dd/yyyy HH:mm:ss"));
-//    });
-//    test("parse_date", function () {
-//        var val = openerp.web.str_to_date("2009-05-04");
-//        var res = openerp.web.parse_value(val.toString("MM/dd/yyyy"), {type:"date"});
-//        equal(val.toString("MM/dd/yyyy"), res.toString("MM/dd/yyyy"));
-//    });
-//    test("parse_time", function () {
-//        var val = openerp.web.str_to_time("12:34:23");
-//        var res = openerp.web.parse_value(val.toString("HH:mm:ss"), {type:"time"});
-//        equal(val.toString("HH:mm:ss"), res.toString("HH:mm:ss"));
-//    });
     test('parse_integer', function (instance) {
         var tmp = instance.web._t.database.parameters.thousands_sep;
         try {
@@ -181,27 +166,25 @@ openerp.testing.section('web-formats', {
 openerp.testing.section('web-formats', {
     dependencies: ['web.formats']
 }, function (test) {
-    test('format stripper', function (instance) {
-        strictEqual(instance.web.strip_raw_chars('%a, %Y %b %d'),
-                    '%a, %Y %b %d');
-        strictEqual(instance.web.strip_raw_chars('%a, %Y.eko %bren %da'),
-                    '%a, %Y. %b %d');
-    });
     test('ES date format', function (instance) {
+        var old_format = instance.web._t.database.parameters.date_format;
         instance.web._t.database.parameters.date_format = '%a, %Y %b %d';
         var date = instance.web.str_to_date("2009-05-04");
         strictEqual(instance.web.format_value(date, {type:"date"}),
                     'Mon, 2009 May 04');
         strictEqual(instance.web.parse_value('Mon, 2009 May 04', {type: 'date'}),
                     '2009-05-04');
+        instance.web._t.database.parameters.date_format = old_format;
     });
     test('extended ES date format', function (instance) {
-            instance.web._t.database.parameters.date_format = '%a, %Y.eko %bren %da';
-            var date = instance.web.str_to_date("2009-05-04");
-            strictEqual(instance.web.format_value(date, {type:"date"}),
-                        'Mon, 2009. May 04');
-            strictEqual(instance.web.parse_value('Mon, 2009. May 04', {type: 'date'}),
-                        '2009-05-04');
-        });
+        var old_format = instance.web._t.database.parameters.date_format;
+        instance.web._t.database.parameters.date_format = '%a, %Y.eko %b %da';
+        var date = instance.web.str_to_date("2009-05-04");
+        strictEqual(instance.web.format_value(date, {type:"date"}),
+                    'Mon, 2009.eko May 04a');
+        strictEqual(instance.web.parse_value('Mon, 2009.eko May 04a', {type: 'date'}),
+                    '2009-05-04');
+        instance.web._t.database.parameters.date_format = old_format;
+    });
 
 });

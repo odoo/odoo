@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-21 17:21+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2014-11-01 07:14+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-22 08:01+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:19+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:365
@@ -54,7 +54,7 @@ msgstr "Ekler"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "Yazanın İmzası (yalnızca toplu postalarda)"
 
 #. module: email_template
 #: field:email.template,auto_delete:0
@@ -89,7 +89,7 @@ msgstr "Cc"
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
 msgid "Choose a template to display its values."
-msgstr ""
+msgstr "Değerlerini görüntülemek için bir şablon seçin."
 
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
@@ -99,7 +99,7 @@ msgstr "Bir örnek seçin"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Virgülle ayrılmış karbon kopya alıcı adresleri"
 
 #. module: email_template
 #: view:email.template:email_template.email_template_form
@@ -158,7 +158,7 @@ msgstr "Varsayılan Değer"
 #: field:email.template,use_default_to:0
 #: field:email_template.preview,use_default_to:0
 msgid "Default recipients"
-msgstr ""
+msgstr "Varsayılan alıcılar"
 
 #. module: email_template
 #: help:email.template,use_default_to:0
@@ -168,6 +168,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Raporun varsayılan alıcıları:\n"
+"- is ortağı (iş ortağı veya iş ortağı_id alanı kullanılarak) VEYA\n"
+"- eposta (eposta gönderen veya eposta alanı kullanılarak)"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:355
@@ -187,7 +190,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "Dinamik Yertutucu Oluşturucu"
 
 #. module: email_template
 #: view:ir.actions.server:email_template.view_server_action_form_template
@@ -347,6 +350,9 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"Bir posta gönderirken seçilecek isteğe bağlı çeviri dili (ISO kodu). Eğer "
+"ayarlanmamışsa, ingilizce sürümü kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yrttutucu ifadesidir, örn. ${object.partner_id.lang}."
 
 #. module: email_template
 #: help:email.template,null_value:0
@@ -363,7 +369,7 @@ msgstr "Giden Posta Sunucusu"
 #. module: email_template
 #: view:email.template:email_template.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Yazarın e-postasını geçersiz kılar."
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_res_partner
@@ -511,7 +517,7 @@ msgstr ""
 msgid ""
 "Sender email is missing or empty after template rendering. Specify one to "
 "deliver your message"
-msgstr ""
+msgstr "Gönderen epostası eksiktir veya şablonun yapılmasından sonra boştur."
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -598,6 +604,8 @@ msgid ""
 "values\n"
 "                                will be taken from the email template."
 msgstr ""
+"Burada gösterilen değerler bilgi amaçlıdır. Eposta gönderirken, değerle\n"
+"                                eposta şablonundan alınacaktır."
 
 #. module: email_template
 #: field:email.template,email_to:0
@@ -666,8 +674,10 @@ msgstr ""
 msgid ""
 "Your template does not defined any email_from. Please update your template."
 msgstr ""
+"Şablonunuzda tanımlanmış herhangi bir eposta_kimden yok. Lütfen şablonunuzu "
+"güncelleyin."
 
 #. module: email_template
 #: view:email_template.preview:email_template.email_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "kayıt:"

@@ -7,15 +7,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:07+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:05+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_event
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is "
+"confirmed and will be held from "
+"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
+"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        For any further information please contact our event "
+"department.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_registration
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>We confirm that your registration to the event "
+"${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical "
+"information (such as the schedule, the agenda...) as soon as the event is "
+"confirmed.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
@@ -575,33 +604,6 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:email.template,body_html:event.confirmation_event
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from "
-"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
-"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: model:email.template,body_html:event.confirmation_registration
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr ""
-
-#. module: event
 #: view:event.registration:event.view_event_registration_form
 #: selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
@@ -831,7 +833,6 @@ msgid "Event Confirmation Email"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,event_date:0
 msgid "Event Date"
 msgstr ""
@@ -844,6 +845,11 @@ msgstr ""
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Details"
+msgstr ""
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Month"
 msgstr ""
 
 #. module: event
@@ -871,7 +877,6 @@ msgid "Event Registration confirmed."
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr ""
@@ -1145,6 +1150,11 @@ msgid "No ticket available."
 msgstr ""
 
 #. module: event
+#: field:report.event.registration,nbevent:0
+msgid "Number of Events"
+msgstr ""
+
+#. module: event
 #: field:event.registration,nb_register:0
 msgid "Number of Participants"
 msgstr ""
@@ -1155,7 +1165,7 @@ msgid "Number of Participations"
 msgstr ""
 
 #. module: event
-#: field:report.event.registration,nbevent:0
+#: field:report.event.registration,nbregistration:0
 msgid "Number of Registrations"
 msgstr ""
 
@@ -1186,12 +1196,8 @@ msgstr ""
 
 #. module: event
 #: view:event.registration:event.view_registration_search
-msgid "Participant"
-msgstr ""
-
-#. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
-msgid "Participant / Contact"
+msgid "Participant"
 msgstr ""
 
 #. module: event
@@ -1217,7 +1223,6 @@ msgid "Reference of the sales order which created the registration"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,user_id_registration:0
 msgid "Register"
 msgstr ""
@@ -1257,7 +1262,6 @@ msgid "Registration Month"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,registration_state:0
 msgid "Registration State"
 msgstr ""

@@ -46,13 +46,13 @@ class crm_opportunity_report(osv.Model):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
         'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="[('team_ids', '=', team_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -60,6 +60,7 @@ class crm_opportunity_report(osv.Model):
             ('lead','Lead'),
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', readonly=True),
     }
 
     def init(self, cr):
@@ -82,7 +83,7 @@ class crm_opportunity_report(osv.Model):
                     c.type,
                     c.company_id,
                     c.priority,
-                    c.section_id,
+                    c.team_id,
                     c.campaign_id,
                     c.source_id,
                     c.medium_id,
@@ -93,7 +94,8 @@ class crm_opportunity_report(osv.Model):
                     c.create_date as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
-                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
+                    c.lost_reason
                 FROM
                     crm_lead c
                 WHERE c.active = 'true'

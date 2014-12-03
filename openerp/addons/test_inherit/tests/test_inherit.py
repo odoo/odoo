@@ -10,24 +10,33 @@ class test_inherits(common.TransactionCase):
         # to verify the purpose of the inheritance computing of the class
         # in the openerp.osv.orm._build_model.
         mother = self.env['test.inherit.mother']
-        daugther = self.env['test.inherit.daughter']
+        daughter = self.env['test.inherit.daughter']
 
         self.assertIn('field_in_mother', mother._fields)
-        self.assertIn('field_in_mother', daugther._fields)
+        self.assertIn('field_in_mother', daughter._fields)
 
     def test_field_extension(self):
         """ check the extension of a field in an inherited model """
-        # the field mother.name should inherit required=True, and have a default
-        # value
         mother = self.env['test.inherit.mother']
+        daughter = self.env['test.inherit.daughter']
+
+        # the field mother.name must have required=True and "Bar" as default
         field = mother._fields['name']
         self.assertTrue(field.required)
-        self.assertEqual(field.default, 'Unknown')
+        self.assertEqual(field.default(mother), "Bar")
+        self.assertEqual(mother._defaults.get('name'), "Bar")
+        self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
 
-        # the field daugther.template_id should inherit
-        # model_name='test.inherit.mother', string='Template', required=True
-        daugther = self.env['test.inherit.daughter']
-        field = daugther._fields['template_id']
+        # the field daughter.name must have required=False and "Baz" as default
+        field = daughter._fields['name']
+        self.assertFalse(field.required)
+        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(daughter._defaults.get('name'), "Baz")
+        self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
+
+        # the field daughter.template_id should have
+        # comodel_name='test.inherit.mother', string='Template', required=True
+        field = daughter._fields['template_id']
         self.assertEqual(field.comodel_name, 'test.inherit.mother')
         self.assertEqual(field.string, "Template")
         self.assertTrue(field.required)
@@ -43,10 +52,12 @@ class test_inherits(common.TransactionCase):
     def test_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
         mother = self.env['test.inherit.mother']
-        field = mother._fields['state']
 
-        # the extra values are added
-        self.assertEqual(field.selection, [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+        # the extra values are added, both in the field and the column
+        self.assertEqual(mother._fields['state'].selection,
+                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+        self.assertEqual(mother._columns['state'].selection,
+                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

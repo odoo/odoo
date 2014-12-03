@@ -68,7 +68,7 @@ class sale_order(osv.osv):
                     'message': message,
             }
             if partner.sale_warn == 'block':
-                return {'value': {'partner_id': False}, 'warning': warning}
+                return {'value': {'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id':False, 'pricelist_id' : False}, 'warning': warning}
 
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
 
@@ -149,7 +149,7 @@ class account_invoice(osv.osv):
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -166,7 +166,7 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
+        result = {}
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']

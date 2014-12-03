@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-27 16:34+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-30 22:04+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:36+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-10-01 06:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: website
 #. openerp-web
@@ -27,6 +27,7 @@ msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: website
+#: view:website:website.info
 #: view:website:website.themes
 msgid "&times;"
 msgstr "&times;"
@@ -38,10 +39,19 @@ msgstr "' en el cuadro siguiente si quiere confirmar."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:356
+#: code:addons/website/static/src/xml/website.editor.xml:366
 #, python-format
 msgid "(Youtube, Vimeo, Dailymotion)"
 msgstr "(Youtube, Vimeo, Dailymotion)"
+
+#. module: website
+#: view:website:website.info
+msgid ""
+",\n"
+"                            updated:"
+msgstr ""
+",\n"
+"                            updated:"
 
 #. module: website
 #: view:website:website.layout
@@ -51,6 +61,16 @@ msgid ""
 msgstr ""
 ",\n"
 "                the #1"
+
+#. module: website
+#: view:website:website.info
+msgid ", author:"
+msgstr ", autor:"
+
+#. module: website
+#: view:website:website.info
+msgid ", updated:"
+msgstr ", actualizado:"
 
 #. module: website
 #: view:website:website.sitemap_index_xml
@@ -189,7 +209,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:215
+#: code:addons/website/static/src/xml/website.editor.xml:225
 #: code:addons/website/static/src/xml/website.seo.xml:30
 #, python-format
 msgid "Add"
@@ -227,7 +247,7 @@ msgstr "Añadir un idioma..."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:212
+#: code:addons/website/static/src/xml/website.editor.xml:222
 #, python-format
 msgid "Add an image URL"
 msgstr "Añadir una URL de imágen"
@@ -260,6 +280,13 @@ msgid ""
 msgstr ""
 "Todos estos iconos tienen licencia Creative Commons, por lo que puede "
 "usarlos."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:212
+#, python-format
+msgid "Alternate Upload"
+msgstr "Carga alternativa"
 
 #. module: website
 #: view:website:website.themes
@@ -312,7 +339,7 @@ msgstr "Redimensionar automáticamente"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:394
+#: code:addons/website/static/src/xml/website.editor.xml:404
 #, python-format
 msgid "Autoplay"
 msgstr "Reproducción automática"
@@ -431,7 +458,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:300
+#: code:addons/website/static/src/xml/website.editor.xml:310
 #: code:addons/website/static/src/xml/website.translator.xml:46
 #: code:addons/website/static/src/xml/website.xml:74
 #: view:website:website.500
@@ -448,7 +475,7 @@ msgstr "Azul claro"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:308
+#: code:addons/website/static/src/xml/website.editor.xml:318
 #, python-format
 msgid "Change"
 msgstr "Cambiar"
@@ -465,7 +492,7 @@ msgstr "Cambiar iconos"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:315
+#: code:addons/website/static/src/xml/website.editor.xml:325
 #, python-format
 msgid "Change Media"
 msgstr "Cambiar recurso"
@@ -735,7 +762,7 @@ msgstr "Crujiente como una hoja nueva de papel."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:313
+#: code:addons/website/static/src/xml/website.editor.xml:323
 #: code:addons/website/static/src/xml/website.snippets.xml:31
 #: view:website:website.layout
 #, python-format
@@ -868,8 +895,8 @@ msgstr "Descripciòn..."
 #: code:addons/website/static/src/xml/website.editor.xml:11
 #: code:addons/website/static/src/xml/website.editor.xml:30
 #: code:addons/website/static/src/xml/website.editor.xml:191
-#: code:addons/website/static/src/xml/website.editor.xml:239
-#: code:addons/website/static/src/xml/website.editor.xml:298
+#: code:addons/website/static/src/xml/website.editor.xml:249
+#: code:addons/website/static/src/xml/website.editor.xml:308
 #: code:addons/website/static/src/xml/website.seo.xml:71
 #, python-format
 msgid "Discard"
@@ -877,7 +904,7 @@ msgstr "Descartar"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:288
+#: code:addons/website/static/src/xml/website.editor.xml:298
 #, python-format
 msgid "Discard edition"
 msgstr "Descartar edición"
@@ -1021,7 +1048,7 @@ msgstr "Efectos"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:368
+#: code:addons/website/static/src/xml/website.editor.xml:378
 #, python-format
 msgid "Embed Video (HTML)"
 msgstr "Vídeo incrustado (HTML)"
@@ -1293,7 +1320,7 @@ msgstr "Página de inicio"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:321
+#: code:addons/website/static/src/xml/website.editor.xml:331
 #, python-format
 msgid "Horizontal flip"
 msgstr "Voltear horizontalmente"
@@ -1339,7 +1366,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:291
+#: code:addons/website/static/src/xml/website.editor.xml:301
 #, python-format
 msgid "If you discard the current edition,"
 msgstr "Si descarta la edición actual,"
@@ -1401,6 +1428,11 @@ msgid "Info"
 msgstr "Información"
 
 #. module: website
+#: view:website:website.info
+msgid "Information about the"
+msgstr "Información sobre"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.snippets.xml:7
 #, python-format
@@ -1423,6 +1455,16 @@ msgstr "Instalar aplicaciones"
 #: model:ir.model,name:website.model_base_language_install
 msgid "Install Language"
 msgstr "Instalar idioma"
+
+#. module: website
+#: view:website:website.info
+msgid "Installed Applications"
+msgstr "Aplicaciones instalados"
+
+#. module: website
+#: view:website:website.info
+msgid "Installed Modules"
+msgstr "Módulos locales"
 
 #. module: website
 #: view:website:website.500
@@ -1702,9 +1744,21 @@ msgid "Not Published"
 msgstr "No publicado"
 
 #. module: website
+#: view:website:website.info
+msgid "Note: To hide this page, uncheck it from the top Customize menu."
+msgstr ""
+"Nota: Para ocultar esta página, desmárquela desde el menú superior "
+"'Personalizar'."
+
+#. module: website
 #: view:website:website.layout
 msgid "Odoo"
 msgstr "Odoo"
+
+#. module: website
+#: view:website:website.info
+msgid "Odoo Version"
+msgstr "Versión de Odoo"
 
 #. module: website
 #: view:website:website.snippets
@@ -1752,6 +1806,11 @@ msgstr ""
 #, python-format
 msgid "Ok"
 msgstr "Aceptar"
+
+#. module: website
+#: view:website:website.info
+msgid "Open Source ERP"
+msgstr "ERP de código abierto"
 
 #. module: website
 #: view:website:website.layout
@@ -1935,8 +1994,8 @@ msgstr "Anterior"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:135
-#: code:addons/website/static/src/xml/website.editor.xml:365
-#: code:addons/website/static/src/xml/website.editor.xml:376
+#: code:addons/website/static/src/xml/website.editor.xml:375
+#: code:addons/website/static/src/xml/website.editor.xml:386
 #, python-format
 msgid "Preview"
 msgstr "Previsualización"
@@ -2106,7 +2165,7 @@ msgstr "Contenido del archivo redimensionado"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:318
+#: code:addons/website/static/src/xml/website.editor.xml:328
 #, python-format
 msgid "Rotation"
 msgstr "Rotación"
@@ -2194,7 +2253,7 @@ msgstr "Seleccione un recurso"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:232
+#: code:addons/website/static/src/xml/website.editor.xml:242
 #, python-format
 msgid "Select a Picture"
 msgstr "Seleccione una imagen"
@@ -2244,7 +2303,7 @@ msgstr "Secuencia"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:357
+#: code:addons/website/static/src/xml/website.editor.xml:367
 #, python-format
 msgid "Set a video URL"
 msgstr "Establecer una URL de vídeo"
@@ -2263,6 +2322,11 @@ msgstr "Sombra"
 #: view:website:website.snippets
 msgid "Share"
 msgstr "Compartir"
+
+#. module: website
+#: field:ir.ui.view,customize_show:0
+msgid "Show As Optional Inherit"
+msgstr "Mostrar como herencia opcional"
 
 #. module: website
 #: view:website:website.layout
@@ -2323,7 +2387,7 @@ msgstr "Laboratorio espacial"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:320
+#: code:addons/website/static/src/xml/website.editor.xml:330
 #: view:website:website.snippet_options
 #, python-format
 msgid "Spin"
@@ -2361,7 +2425,7 @@ msgstr "Estructura"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:81
-#: code:addons/website/static/src/xml/website.editor.xml:316
+#: code:addons/website/static/src/xml/website.editor.xml:326
 #: view:website:website.snippet_options
 #, python-format
 msgid "Style"
@@ -2398,6 +2462,11 @@ msgstr "Girasoles"
 #: view:website:website.themes
 msgid "Sweet and cheery"
 msgstr "Dulce y alegre"
+
+#. module: website
+#: view:website:website.info
+msgid "Technical name:"
+msgstr "Nombre técnico:"
 
 #. module: website
 #: view:website:website.snippets
@@ -2483,7 +2552,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:258
+#: code:addons/website/static/src/xml/website.editor.xml:268
 #, python-format
 msgid ""
 "The image could not be deleted because it is used in the\n"
@@ -2680,14 +2749,21 @@ msgstr "Anular publicación"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:207
+#: code:addons/website/static/src/xml/website.editor.xml:209
 #, python-format
 msgid "Upload an image from your computer"
 msgstr "Subir una imagen de su ordenador"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:208
+#: code:addons/website/static/src/xml/website.editor.xml:215
+#, python-format
+msgid "Upload image without optimization"
+msgstr "Subir imagen sin optimización"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:218
 #, python-format
 msgid "Uploading..."
 msgstr "Subiendo..."
@@ -2709,7 +2785,7 @@ msgstr "Terciopelo"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:322
+#: code:addons/website/static/src/xml/website.editor.xml:332
 #, python-format
 msgid "Vertical flip"
 msgstr "Voltear verticalmente"
@@ -3024,7 +3100,7 @@ msgstr "Está a punto de entrar en el modo de traducción."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:295
+#: code:addons/website/static/src/xml/website.editor.xml:305
 #, python-format
 msgid "You can cancel to return to the edition mode."
 msgstr "Puede cancelar para regresar al modo de edición."
@@ -3055,7 +3131,7 @@ msgstr "Cuenta de Youtube"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:292
+#: code:addons/website/static/src/xml/website.editor.xml:302
 #, python-format
 msgid "all"
 msgstr "todos"
@@ -3067,7 +3143,7 @@ msgstr "y evaluando la siguiente expresión:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:325
+#: code:addons/website/static/src/xml/website.editor.xml:335
 #, python-format
 msgid "border"
 msgstr "borde"
@@ -3110,7 +3186,7 @@ msgstr "http://odoo.com"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:214
+#: code:addons/website/static/src/xml/website.editor.xml:224
 #, python-format
 msgid "http://openerp.com/logo.png"
 msgstr "http://odop.com/logo.png"
@@ -3172,6 +3248,11 @@ msgid "https://youraccount.github.io"
 msgstr "https://youraccount.github.io"
 
 #. module: website
+#: view:website:website.info
+msgid "instance of Odoo, the"
+msgstr "instancia de Odoo, el"
+
+#. module: website
 #: view:website:website.snippets
 msgid "not what you want to show."
 msgstr "no lo que quiere mostrar."
@@ -3181,7 +3262,7 @@ msgstr "no lo que quiere mostrar."
 #: code:addons/website/static/src/xml/website.editor.xml:9
 #: code:addons/website/static/src/xml/website.editor.xml:28
 #: code:addons/website/static/src/xml/website.editor.xml:189
-#: code:addons/website/static/src/xml/website.editor.xml:298
+#: code:addons/website/static/src/xml/website.editor.xml:308
 #: code:addons/website/static/src/xml/website.seo.xml:69
 #: code:addons/website/static/src/xml/website.translator.xml:44
 #, python-format
@@ -3239,7 +3320,7 @@ msgstr "desconocido"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:292
+#: code:addons/website/static/src/xml/website.editor.xml:302
 #, python-format
 msgid "unsaved changes will be lost."
 msgstr "se perderán los cambios no guardados."
@@ -3268,8 +3349,8 @@ msgstr "su página de inicio"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:211
-#: code:addons/website/static/src/xml/website.editor.xml:368
+#: code:addons/website/static/src/xml/website.editor.xml:221
+#: code:addons/website/static/src/xml/website.editor.xml:378
 #, python-format
 msgid "— or —"
 msgstr "— o —"

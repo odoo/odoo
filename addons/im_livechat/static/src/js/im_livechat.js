@@ -126,7 +126,7 @@
     };
 
     im_livechat.LiveSupport = openerp.Widget.extend({
-        init: function(server_url, db, channel, options) {
+        init: function(server_url, db, channel, options, rule) {
             this._super();
             options = options || {};
             _.defaults(options, {
@@ -136,9 +136,9 @@
                 defaultUsername: _t("Visitor"),
             });
             openerp.session = new openerp.Session(null, server_url, { use_cors: false });
-            this.load_template(db, channel, options);
+            this.load_template(db, channel, options, rule);
         },
-        load_template: function(db, channel, options){
+        load_template: function(db, channel, options, rule){
             var self = this;
             // load the qweb templates
             var defs = [];
@@ -149,27 +149,29 @@
                 }));
             });
             return $.when.apply($, defs).then(function() {
-                self.setup(db, channel, options);
+                self.setup(db, channel, options, rule);
             });
         },
-        setup: function(db, channel, options){
+        setup: function(db, channel, options, rule){
             var self = this;
             var session = openerp.get_cookie(im_livechat.COOKIE_NAME);
             if(session){
-                self.build_button(channel, options, JSON.parse(session));
+                self.build_button(channel, options, JSON.parse(session), rule);
             }else{
                 openerp.session.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                     if(activated){
-                        self.build_button(channel, options);
+                        self.build_button(channel, options, false, rule);
                     }
                 });
             }
         },
-        build_button: function(channel, options, session){
+        build_button: function(channel, options, session, rule){
             var button = new im_livechat.ChatButton(null, channel, options, session);
             button.appendTo($("body"));
-            if (options.auto){
-                button.click();
+            if (rule.action === 'auto_popup'){
+                setTimeout(function() {
+                    button.click();
+                }, rule.auto_popup_timer*1000);
             }
         }
     });

@@ -4,6 +4,7 @@ from openerp import models, fields, api, _
 
 # from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
+from openerp.models import NewId
 
 # from openerp.tools.translate import _
 import re
@@ -14,6 +15,12 @@ from openerp.addons.website.models.website import slug
 class event(models.Model):
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata']
+    _track = {
+        'website_published': {
+            'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
+            'website_event.mt_event_unpublished': lambda self, cr, uid, obj, ctx=None: not obj.website_published
+        },
+    }
 
     twitter_hashtag = fields.Char('Twitter Hashtag', default=lambda self: self._default_hashtag())
     website_published = fields.Boolean('Visible in Website', copy=False)
@@ -31,11 +38,13 @@ class event(models.Model):
     @api.one
     @api.depends('name')
     def _website_url(self):
-        self.website_url = "/event/" + slug(self)
+        if isinstance(self.id, NewId):
+            self.website_url = ''
+        else:
+            self.website_url = "/event/" + slug(self)
 
-    @api.one
     def _default_hashtag(self):
-        self.twitter_hashtag = re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
+        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
 
     show_menu = fields.Boolean('Has Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu')
     menu_id = fields.Many2one('website.menu', 'Event Menu')

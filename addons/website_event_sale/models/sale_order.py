@@ -2,6 +2,7 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 # defined for access rules
 class sale_order(osv.Model):

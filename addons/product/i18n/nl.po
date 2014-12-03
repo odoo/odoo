@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-17 07:03+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-24 09:54+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-19 08:21+0000\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:59+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
@@ -23,8 +23,8 @@ msgid "# of Product Variants"
 msgstr "# aantal product varianten"
 
 #. module: product
-#: code:addons/product/product.py:724
-#: code:addons/product/product.py:1062
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -557,12 +557,12 @@ msgid "Blank DVD-RW"
 msgstr "Blanco dvd-RW"
 
 #. module: product
-#: model:product.template,name:product.product_product_5_product_template
+#: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
 msgstr "Bose Mini Bluetooth Speaker"
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_5_product_template
+#: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
 msgstr "Bose's kleinste portable Bluetooth speaker"
 
@@ -624,6 +624,11 @@ msgstr ""
 #: model:product.public.category,name:product.case
 msgid "Case"
 msgstr "Schap"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "Categorie"
 
 #. module: product
 #: field:product.category,type:0
@@ -711,6 +716,11 @@ msgstr "Computer all-in-one"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Computers"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr "Instellingen"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -829,6 +839,7 @@ msgstr "Maatwerk laptop op klant specificatie"
 
 #. module: product
 #: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
 msgstr ""
 "Klant computer, gemaakt op bestelling op basis van klant specificaties."
@@ -1034,6 +1045,15 @@ msgstr "Vastgezet"
 #: field:product.template,message_follower_ids:0
 msgid "Followers"
 msgstr "Volgers"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
+"De regel wordt toegepast als de gekochten of verkochte  hoeveelheid groter "
+"of gelijk is aan de minimum hoeveelheid hier opgegeven."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1701,7 +1721,7 @@ msgid "New Price ="
 msgstr "Nieuwe prijs ="
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1765,6 +1785,7 @@ msgstr "Maar 1 productvariant"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Other Info"
 msgstr "Overige informatie"
 
@@ -1779,6 +1800,11 @@ msgstr "Andere prijslijst"
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Overige producten"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr "PC assemblage+ Maatwerk (PC oop afroep) "
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1803,7 +1829,10 @@ msgstr "Verpakken per laag"
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 #: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
 msgid "Packaging"
 msgstr "Verpakking"
 
@@ -1819,6 +1848,7 @@ msgstr "Pallet logistieke eenheid"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
 msgstr "Palletstapeling"
 
@@ -2190,7 +2220,7 @@ msgid "Products by Category"
 msgstr "Producten op categorie"
 
 #. module: product
-#: code:addons/product/product.py:805
+#: code:addons/product/product.py:809
 #, python-format
 msgid "Products: "
 msgstr "Producten: "
@@ -2502,15 +2532,6 @@ msgstr "Specificeer het maximale marge bedrag over de basisprijs."
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Specificeer het minimale marge bedrag over de basisprijs."
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-"Specificeer de minimale hoeveelheid dat moet worden ingekocht/verkocht, "
-"zodat de regel van toepassing is."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -2908,7 +2929,7 @@ msgid "Unit of Measure Categories"
 msgstr "Maateenheid categorieën"
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr "Verschillende maateenheid categorie."
@@ -3218,3 +3239,10 @@ msgstr "het bovenliggende bedrijf"
 #: field:product.price.history,company_id:0
 msgid "unknown"
 msgstr "onbekend"
+
+#~ msgid ""
+#~ "Specify the minimum quantity that needs to be bought/sold for the rule to "
+#~ "apply."
+#~ msgstr ""
+#~ "Specificeer de minimale hoeveelheid dat moet worden ingekocht/verkocht, "
+#~ "zodat de regel van toepassing is."

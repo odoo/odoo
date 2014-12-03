@@ -66,8 +66,11 @@ _logger = logging.getLogger(__name__)
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def find_in_path(name):
+    path = os.environ.get('PATH', os.defpath).split(os.pathsep)
+    if config.get('bin_path') and config['bin_path'] != 'None':
+        path.append(config['bin_path'])
     try:
-        return which(name)
+        return which(name, path=os.pathsep.join(path))
     except IOError:
         return None
 
@@ -460,7 +463,7 @@ ALL_LANGUAGES = {
         'am_ET': u'Amharic / አምሃርኛ',
         'ar_SY': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
-        'bs_BS': u'Bosnian / bosanski jezik',
+        'bs_BA': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',

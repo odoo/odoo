@@ -486,7 +486,8 @@ class email_template(osv.osv):
                 # body: add user signature, sanitize
                 if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
+                    if signature:
+                        values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # technical settings

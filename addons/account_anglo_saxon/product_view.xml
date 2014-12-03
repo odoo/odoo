@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <field name="property_account_expense" position="after">
                     <label string="" colspan="2"/>
-                    <field name="purchase_ok" invisible="1"/>
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
                 </field>
