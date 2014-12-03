@@ -511,6 +511,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
+        reloaded.then(function () {
+            if (!self.grouped) self.$pager.show();
+        });
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
