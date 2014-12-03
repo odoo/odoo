@@ -22,7 +22,7 @@
 #from openerp.test.common import TransactionCase
 from datetime import date
 from openerp.tests import common
-from openerp import netsvc
+from openerp import workflow
 
 
 class TestAveragePrice(common.TransactionCase):
@@ -49,7 +49,6 @@ class TestAveragePrice(common.TransactionCase):
         _, self.supplier_location_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_suppliers')
         _, input_account_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'xfa')
         _, output_account_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'account', 'xfa')
-        wf_service = netsvc.LocalService("workflow")
 
         self.standard_price = 10
         self.order_price_unit = 20
@@ -97,8 +96,7 @@ class TestAveragePrice(common.TransactionCase):
             'price_unit': self.order_price_unit
         }, context=context)
 
-        wf_service.trg_validate(uid, 'purchase.order', self.po_01_id, 'purchase_confirm', cr)
-
+        workflow.trg_validate(uid, 'purchase.order', self.po_01_id, 'purchase_confirm', cr)
 
     def test_10_stock_move_action_done(self):
         cr, uid, context = self.cr, self.uid, {}
