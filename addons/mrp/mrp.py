@@ -1054,7 +1054,7 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
-            'procurement_id': procurement.id,
+            'procurement_id': procurement and procurement.id,
             'company_id': production.company_id.id,
             'production_id': production.id,
             'origin': production.name,
