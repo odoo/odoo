@@ -8,16 +8,16 @@
   In order to check account voucher module in OpenERP I create a customer voucher
 -
   !record {model: account.voucher, id: account_voucher_voucherforaxelor0, view: view_sale_receipt_form}:
-    type: sale
+    voucher_type: sale
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company
     journal_id: account.sales_journal
     name: Voucher for Axelor
     narration: Basic Pc
-    line_cr_ids:
+    line_ids:
       - account_id: account.a_recv
-        amount: 1000.0
+        price_unit: 1000.0
         name: Voucher for Axelor
     partner_id: base.res_partner_12
     date: !eval time.strftime('%Y-%m-%d')
@@ -55,7 +55,7 @@
   Now I create a Vendor Voucher
 -
   !record {model: account.voucher, id: account_voucher_voucheraxelor0, view: view_voucher_filter_vendor}:
-    type: purchase
+    voucher_type: purchase
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company

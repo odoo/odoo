@@ -11,13 +11,13 @@
     amount: 30000.0
     company_id: base.main_company
     journal_id: account.sales_journal
-    line_cr_ids:
+    line_ids:
       - account_id: account.a_sale
-        amount: 30000.0
-        type: cr
+        price_unit: 30000.0
+        name: Voucher Seagate
     partner_id: base.res_partner_19
     date: !eval time.strftime("%Y/%m/%d")
-    type: sale
+    voucher_type: sale
     
 -
   I check that the voucher state is Draft
@@ -61,10 +61,10 @@
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
         'date': time.strftime("%Y/%m/%d"),
-        'type': 'receipt',
+        'voucher_type': 'receipt',
     }
     if not res['value']['line_cr_ids']:
-      res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
+      res['value']['line_cr_ids'] = [{'voucher_type': 'cr', 'account_id': ref('account.a_recv'),}]
     res['value']['line_cr_ids'][0]['amount'] = 30000.0
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
