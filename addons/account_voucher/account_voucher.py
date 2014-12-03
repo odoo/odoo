@@ -28,7 +28,7 @@ from openerp.tools import float_compare
 class account_voucher(models.Model):
 
     @api.one
-    @api.depends('move_id.line_id.reconcile_id', 'move_id.line_id.user_type.type')
+    @api.depends('move_id.line_id.reconcile_id', 'move_id.line_id.account_id.user_type.type')
     def _check_paid(self):
         self.paid = any([((line.account_id.user_type.type, 'in', ('receivable', 'payable')) and line.reconcile_id) for line in self.move_id.line_id])
 
@@ -100,28 +100,25 @@ class account_voucher(models.Model):
         Tax_Obj = self.env['account.tax']
         for voucher in self:
             voucher_amount = 0.0
+            total = 0.0
+            total_tax = 0.0
             for line in voucher.line_ids:
                 voucher_amount += line.price_subtotal
+                if not line.tax_ids:
+                    voucher.write({'amount': voucher_amount, 'tax_amount': 0.0})
+                    continue
 
-            if not line.tax_ids:
-                voucher.write({'amount': voucher_amount, 'tax_amount': 0.0})
-                continue
+                tax = line.tax_ids
+                partner = voucher.partner_id or False
+                taxes = self.env['account.fiscal.position'].map_tax(tax)
+                tax = Tax_Obj.browse(taxes.ids)
 
-            tax = line.tax_ids
-            partner = voucher.partner_id or False
-            taxes = self.env['account.fiscal.position'].map_tax(tax)
-            tax = Tax_Obj.browse(taxes.ids)
-
-            total = voucher_amount
-            total_tax = 0.0
-
-            if not tax[0].price_include:
-                for line in voucher.line_ids:
+                total = voucher_amount
+                if not tax[0].price_include:
                     for tax_line in tax.compute_all((line.price_unit * line.quantity), 1).get('taxes', []):
                         total_tax += tax_line.get('amount', 0.0)
-                total += total_tax
-            else:
-                for line in voucher.line_ids:
+                    total += total_tax
+                else:
                     line_total = 0.0
                     line_tax = 0.0
 
