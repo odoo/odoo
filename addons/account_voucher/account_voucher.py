@@ -22,17 +22,15 @@
 
 from openerp import fields, models, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
 from openerp.tools import float_compare
-import openerp
 
 
 class account_voucher(models.Model):
 
     @api.one
-    @api.depends('move_id.line_id.reconcile_id')
+    @api.depends('move_id.line_id.reconcile_id', 'move_id.line_id.user_type.type')
     def _check_paid(self):
-        self.paid = any([((line.account_id.user_type.type, 'in', ('receivable', 'payable')) and line.reconcile_id) for line in self.move_id])
+        self.paid = any([((line.account_id.user_type.type, 'in', ('receivable', 'payable')) and line.reconcile_id) for line in self.move_id.line_id])
 
     @api.model
     def _get_currency(self):
