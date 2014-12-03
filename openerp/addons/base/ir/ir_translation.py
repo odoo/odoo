@@ -461,38 +461,65 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
-    def translate_fields(self, cr, uid, model, id, field=None, context=None):
-        trans_model = self.pool[model]
-        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
-        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
-        if not langs_ids:
-            raise UserError(_("Translation features are unavailable until you install an extra OpenERP translation."))
-        langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
+    @api.model
+    def translate_fields(self, model, id, field=None):
+        """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'
-        translatable_fields = []
-        for k, f in trans_model._fields.items():
-            if getattr(f, 'translate', False):
-                if f.inherited:
-                    parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
-                    translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model_name})
+        langs = self.env['res.lang'].search([('code', '!=', main_lang)])
+        if not langs:
+            raise UserError(_("Translation features are unavailable until you install an extra OpenERP translation."))
+
+        record = self.env[model].with_context(lang=main_lang).browse(id)
+        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
+
+        # determine translatable fields
+        field_ids = []
+        for name, fld in record._fields.items():
+            if getattr(fld, 'translate', False):
+                if fld.inherited:
+                    parent = record[fld.related[0]]
                     domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (f.base_field.model_name, k))])
+                    domain.extend(['&', ('res_id', '=', parent.id), ('name', '=', "%s,%s" % (fld.base_field.model_name, name))])
+                    field_ids.append((fld.base_field, parent.id))
                 else:
-                    translatable_fields.append({'name': k, 'id': id, 'model': model })
-        if len(langs):
-            fields = [f.get('name') for f in translatable_fields]
-            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
-            for lg in langs:
-                for f in translatable_fields:
-                    # Check if record exists, else create it (at once)
-                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
+                    field_ids.append((fld, id))
+
+        for fld, rid in field_ids:
+            src = record[fld.name] or None
+            if fld.translate is True:
+                # insert missing translations for src
+                query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                            SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                            FROM res_lang l
+                            WHERE l.code != 'en_US' AND NOT EXISTS (
+                                SELECT 1 FROM ir_translation
+                                WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            );
+                            UPDATE ir_translation SET src=%(src)s
+                            WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                         """
-                    src = record[f['name']] or None
-                    name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+                self._cr.execute(query, {
+                    'name': "%s,%s" % (fld.model_name, fld.name),
+                    'res_id': rid,
+                    'src': src,
+                })
+            elif src:
+                # insert missing translations for each term
+                terms = set(fld.translate(src))
+                for term in terms:
+                    query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                                SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                                FROM res_lang l
+                                WHERE l.code != 'en_US' AND NOT EXISTS (
+                                    SELECT 1 FROM ir_translation
+                                    WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                                );
+                            """
+                    self._cr.execute(query, {
+                        'name': "%s,%s" % (fld.model_name, fld.name),
+                        'res_id': rid,
+                        'src': term,
+                    })
 
         action = {
             'name': 'Translate',
@@ -503,9 +530,9 @@ class ir_translation(osv.osv):
             'domain': domain,
         }
         if field:
-            f = trans_model._fields[field]
+            fld = record._fields[field]
             action['context'] = {
-                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
+                'search_default_name': "%s,%s" % (fld.base_field.model_name, field)
             }
         return action
 
