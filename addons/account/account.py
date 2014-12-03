@@ -596,10 +596,10 @@ class account_tax(models.Model):
         if not all(child.type_tax_use in ('as_child', self.type_tax_use) for child in self.children_tax_ids):
             raise Warning(_('The application scope of taxes in a group must be either the same as the group or "Only in Tax Group".'))
 
-    #@api.one
-    #def copy_data(self, default=None):
-    #    default = dict(default or {}, name=_("%s (Copy)") % self.name)
-    #    return super(account_tax, self).copy_data(default=default)
+    @api.one
+    def copy(self, default=None):
+        default = dict(default or {}, name=_("%s (Copy)") % self.name)
+        return super(account_tax, self).copy(default=default)
 
     #@api.model
     #def name_search(self, name, args=None, operator='ilike', limit=80):
@@ -701,6 +701,7 @@ class account_tax(models.Model):
             if tax.amount_type != 'group':
                 tax_amount = round(tax_amount, prec)
                 total = tax.price_include and total - tax_amount or total
+                base = total
                 total_included = tax.price_include and total_included or total_included + tax_amount
                 taxes.append({
                     'id': tax.id,
