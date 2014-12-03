@@ -420,12 +420,12 @@ class account_account(osv.osv):
         journal_obj = self.pool.get('account.journal')
         jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
         if not jids:
-            raise UserError(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance."))
+            raise UserError(_("You need an Opening journal with centralisation checked to set the initial balance."))
 
         period_obj = self.pool.get('account.period')
         pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
         if not pids:
-            raise UserError(_('Error!'),_("There is no opening/closing period defined, please create one to set the initial balance."))
+            raise UserError(_("There is no opening/closing period defined, please create one to set the initial balance."))
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
@@ -442,7 +442,7 @@ class account_account(osv.osv):
             }, context=context)
         else:
             if diff<0.0:
-                raise UserError(_('Error!'),_("Unable to adapt the initial balance (negative value)."))
+                raise UserError(_("Unable to adapt the initial balance (negative value)."))
             nameinv = (name=='credit' and 'debit') or 'credit'
             move_id = move_obj.create(cr, uid, {
                 'name': _('Opening Balance'),
@@ -655,14 +655,14 @@ class account_account(osv.osv):
 
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
             if method == 'write':
-                raise UserError(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
+                raise UserError(_('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
-                raise UserError(_('Error!'), _('You cannot remove an account that contains journal items.'))
+                raise UserError(_('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in ids]
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','in', values)], context=context)
         if partner_prop_acc:
-            raise UserError(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
+            raise UserError(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
@@ -674,7 +674,7 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise UserError(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
+                    raise UserError(_("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
                 # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
                 if (new_type in restricted_groups):
                     raise UserError(_('Warning!'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))

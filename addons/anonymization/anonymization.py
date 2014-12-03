@@ -522,7 +522,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # check that all the defined fields are in the 'anonymized' state
         state = ir_model_fields_anonymization_model._get_global_state(cr, uid, context=context)
         if state == 'clear':
-            raise UserError_('Error!', "The database is not currently anonymized, you cannot reverse the anonymization.")
+            raise UserError(_("The database is not currently anonymized, you cannot reverse the anonymization."))
         elif state == 'unstable':
             msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
