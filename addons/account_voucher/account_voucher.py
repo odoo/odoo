@@ -102,25 +102,23 @@ class account_voucher(models.Model):
         for voucher in self:
             voucher_amount = 0.0
             for line in voucher.line_ids:
-                voucher_amount += line.untax_amount or line.amount
-                line.amount = line.untax_amount or line.amount
-                line.write({'amount': line.amount, 'untax_amount': line.untax_amount})
+                voucher_amount += line.price_subtotal
 
-            if not voucher.tax_id:
+            if not line.tax_ids:
                 voucher.write({'amount': voucher_amount, 'tax_amount': 0.0})
                 continue
 
-            tax = [Tax_Obj.browse(voucher.tax_id.id)]
+            tax = Tax_Obj.browse(line.tax_ids.ids)
             partner = voucher.partner_id or False
-            taxes = self.env['account.fiscal.position'].map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-            tax = Tax_Obj.browse(taxes)
+            taxes = self.env['account.fiscal.position'].map_tax(tax)
+            tax = Tax_Obj.browse(taxes.ids)
 
             total = voucher_amount
             total_tax = 0.0
 
             if not tax[0].price_include:
                 for line in voucher.line_ids:
-                    for tax_line in tax.compute_all(line.amount, 1).get('taxes', []):
+                    for tax_line in tax.compute_all((line.price_unit * line.quantity), 1).get('taxes', []):
                         total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
@@ -128,12 +126,10 @@ class account_voucher(models.Model):
                     line_total = 0.0
                     line_tax = 0.0
 
-                    for tax_line in tax.compute_all(line.untax_amount or line.amount, 1).get('taxes', []):
+                    for tax_line in tax.compute_all((line.price_unit * line.quantity), 1).get('taxes', []):
                         line_tax += tax_line.get('amount', 0.0)
                         line_total += tax_line.get('price_unit')
                     total_tax += line_tax
-                    untax_amount = line.untax_amount or line.amount
-                    line.write({'amount': line_total, 'untax_amount': untax_amount})
 
             voucher.write({'amount': total, 'tax_amount': total_tax})
         return True
