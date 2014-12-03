@@ -1742,7 +1742,7 @@ attributes are:
             <t t-name="PetToy">
                 <div class="oe_petstore_pettoy" t-att-data-id="item.id">
                     <p><t t-esc="item.name"/></p>
-                    <p><img t-attf-src="data:image/jpg;base64,#{item.image}"/></p>
+                    <p><img t-attf-src="data:image/jpg;base64,{{item.image}}"/></p>
                 </div>
             </t>
 
