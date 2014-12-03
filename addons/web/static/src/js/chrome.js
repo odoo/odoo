@@ -271,7 +271,7 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        if (error.data.exception_type === "user_error") {
+        if (error.data.exception_type === "user_error" && error.data.arguments.length > 1){
             error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
         }
         new instance.web.Dialog(this, {

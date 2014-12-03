@@ -1477,7 +1477,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.info("Who asks for %s:%s?" % (ns, prop))
+            _logger.info("Who asks for %s:%s?", (ns, prop))
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid

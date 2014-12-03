@@ -36,10 +36,15 @@ class except_orm(Exception):
         self.args = (name, value)
 
 class Warning(except_orm):
-    pass
+    def __init__(self, msg):
+        super(Warning, self).__init__('Warning', msg)
 
-class UserError(Warning):
-    pass
+class UserError(except_orm):
+    def __init__(self, msg):
+        super(UserError, self).__init__('Warning', msg)
+
+# deprecated due to collision with builtins, kept for compatibility
+Warning = UserError
 
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
@@ -53,29 +58,25 @@ class RedirectWarning(Exception):
 
 class AccessDenied(Exception):
     """ Login/password error. No message, no traceback.
-    Type: Business error 
     Example: When you try to log with a wrong password."""
     def __init__(self):
         super(AccessDenied, self).__init__('Access denied.')
         self.traceback = ('', '', '')
 
 class AccessError(except_orm):
-    """ Access rights error.
-    Type: Business error 
+    """ Access rights error. 
     Example: When you try to read a record that you are not allowed to."""
     def __init__(self, msg):
         super(AccessError, self).__init__('AccessError', msg)
 
 class MissingError(except_orm):
     """ Missing record(s).
-    Type: Business error
     Example: When you try to write on a deleted record."""
     def __init__(self, msg):
         super(MissingError, self).__init__('MissingError', msg)
 
 class ValidationError(except_orm):
     """ Violation of python constraints 
-    Type: Business error
     Example: When you try to create a new user with a login which already exist in the db."""
     def __init__(self, msg):
         super(ValidationError, self).__init__('ValidateError', msg)

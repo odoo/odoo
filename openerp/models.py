@@ -105,7 +105,7 @@ def check_object_name(name):
 def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
-        raise ValueError('ValueError', msg)
+        raise ValueError(msg)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -2633,7 +2633,7 @@ class BaseModel(object):
                             # and add constraints if needed
                             if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 if f._obj not in self.pool:
-                                    raise UserError('Programming Error', 'There is no reference available for %s' % (f._obj,))
+                                    raise ValueError(_('There is no reference available for %s'), (f._obj,))
                                 dest_model = self.pool[f._obj]
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
@@ -3381,7 +3381,7 @@ class BaseModel(object):
             res = cr.fetchone()
             if res:
                 # mention the first one only to keep the error message readable
-                raise UserError('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
+                raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
     def _check_record_rules_result_count(self, cr, uid, ids, result_ids, operation, context=None):
         """Verify the returned rows after applying record rules matches

@@ -544,7 +544,7 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError('Not allowed to vote for its own post')
+            raise UserError(_('Not allowed to vote for its own post'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
             raise KarmaError('Not enough karma to upvote.')
@@ -564,7 +564,7 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError('Not allowed to vote for its own post')
+                    raise UserError(_('Not allowed to vote for its own post'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
                     raise KarmaError('Not enough karma to upvote.')

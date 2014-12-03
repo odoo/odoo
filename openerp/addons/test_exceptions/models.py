@@ -15,15 +15,15 @@ class m(openerp.osv.osv.Model):
 
     def generate_except_osv(self, cr, uid, ids, context=None):
         # title is ignored in the new (6.1) exceptions
-        raise UserError('title', 'description')
+        raise UserError('description')
 
     def generate_except_orm(self, cr, uid, ids, context=None):
         # title is ignored in the new (6.1) exceptions
         #from pudb import set_trace; set_trace()
-        raise UserError('title', 'description')
+        raise except_orm('title', 'description')
 
     def generate_warning(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.UserError('title','description')
+        raise openerp.exceptions.Warning('description')
 
     def generate_redirect_warning(self, cr, uid, ids, context=None):
         dummy, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'test_exceptions', 'action_test_exceptions')

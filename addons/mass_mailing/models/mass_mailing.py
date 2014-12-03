@@ -617,7 +617,7 @@ class MassMailing(osv.Model):
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
             if not res_ids:
-                raise UserError('Please select recipients.')
+                raise UserError(_('Please select recipients.'))
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,

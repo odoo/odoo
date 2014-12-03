@@ -85,7 +85,7 @@ class res_partner(osv.osv, EDIMixin):
                                              bank_name, ext_bank_id, context=import_ctx)
                 except UserError:
                     # failed to import it, try again with unrestricted default type
-                    _logger.warning('Failed to import bank account using'
+                    _logger.info('Failed to import bank account using'
                                                                  'bank type: %s, ignoring', import_ctx['default_state'],
                                                                  exc_info=True)
         return contact_id

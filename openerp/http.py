@@ -525,9 +525,12 @@ def serialize_exception(e):
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": to_jsonable(e.args),
+        "exception_type": "internal_error"
     }
     if isinstance(e, openerp.exceptions.UserError):
         tmp["exception_type"] = "user_error"
+    elif isinstance(e, openerp.exceptions.Warning):
+        tmp["exception_type"] = "warning"
     elif isinstance(e, openerp.exceptions.RedirectWarning):
         tmp["exception_type"] = "warning"
     elif isinstance(e, openerp.exceptions.AccessError):
@@ -536,6 +539,8 @@ def serialize_exception(e):
         tmp["exception_type"] = "missing_error"
     elif isinstance(e, openerp.exceptions.AccessDenied):
         tmp["exception_type"] = "access_denied"
+    elif isinstance(e, openerp.exceptions.except_orm):
+        tmp["exception_type"] = "user_error"
     return tmp
 
 def to_jsonable(o):

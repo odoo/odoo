@@ -84,7 +84,7 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
 
 def xmlrpc_handle_exception_int(e):
     if isinstance(e, openerp.exceptions.UserError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_CLIENT_ERROR, openerp.tools.ustr(e.value))
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
@@ -121,7 +121,7 @@ def xmlrpc_handle_exception_int(e):
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, openerp.exceptions.UserError):
-        fault = xmlrpclib.Fault('user_error -- ' + e.name + '\n\n' + e.value, '')
+        fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')

@@ -137,7 +137,7 @@ class event_ticket(models.Model):
     @api.constrains('registration_ids', 'seats_max')
     def _check_seats_limit(self):
         if self.seats_max and self.seats_available < 0:
-            raise UserError('No more available seats for the ticket')
+            raise UserError(_('No more available seats for the ticket'))
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -155,7 +155,7 @@ class event_registration(models.Model):
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         if self.event_ticket_id.seats_max and self.event_ticket_id.seats_available < 0:
-            raise UserError('No more available seats for this ticket')
+            raise UserError(_('No more available seats for this ticket'))
 
     @api.one
     def _check_auto_confirmation(self):

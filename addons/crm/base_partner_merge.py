@@ -287,7 +287,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         if parent_id and parent_id != dst_partner.id:
             try:
                 dst_partner.write({'parent_id': parent_id})
-            except (UserError):
+            except UserError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
     @mute_logger('openerp.osv.expression', 'openerp.models')
