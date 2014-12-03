@@ -637,11 +637,8 @@ class product_product(osv.osv):
         return result
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
-        result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
-        for el in template_ids:
-            result.add(el)
-        return list(result)
+        return list(set(template_ids))
 
     _columns = {
         'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
