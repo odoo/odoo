@@ -569,12 +569,9 @@ class account_tax(models.Model):
         help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
-    active = fields.Boolean(default=True,
-        help="Set active to false to hide the tax without removing it.")
+    active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
-
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 3))
@@ -585,9 +582,9 @@ class account_tax(models.Model):
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
-    include_base_amount = fields.Boolean(string='Affect subsequent taxes', default=False,
+    include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic_cost = fields.Boolean(string="Analytic Cost")
+    analytic_cost = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -599,30 +596,24 @@ class account_tax(models.Model):
         if not all(child.type_tax_use in ('as_child', self.type_tax_use) for child in self.children_tax_ids):
             raise Warning(_('The application scope of taxes in a group must be either the same as the group or "Only in Tax Group".'))
 
-    @api.one
-    @api.constrains('children_tax_ids', 'type_tax_use')
-    def _check_single_filiation_level(self):
-        if any(child.amount_type == 'group' for child in self.children_tax_ids):
-            raise Warning(_('A group of taxes can only be used in and of itself ; not in a group.'))
+    #@api.one
+    #def copy_data(self, default=None):
+    #    default = dict(default or {}, name=_("%s (Copy)") % self.name)
+    #    return super(account_tax, self).copy_data(default=default)
 
-    @api.one
-    def copy_data(self, default=None):
-        default = dict(default or {}, name=_("%s (Copy)") % self.name)
-        return super(account_tax, self).copy_data(default=default)
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=80):
-        """
-        Returns a list of tupples containing id, name, as internally it is called {def name_get}
-        result format: {[(id, name), (id, name), ...]}
-        """
-        args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('description', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('description', operator, name), ('name', operator, name)]
-        taxes = self.search(expression.AND([domain, args]), limit=limit)
-        return taxes.name_get()
+    #@api.model
+    #def name_search(self, name, args=None, operator='ilike', limit=80):
+    #    """
+    #    Returns a list of tupples containing id, name, as internally it is called {def name_get}
+    #    result format: {[(id, name), (id, name), ...]}
+    #    """
+    #    args = args or []
+    #    if operator in expression.NEGATIVE_TERM_OPERATORS:
+    #        domain = [('description', operator, name), ('name', operator, name)]
+    #    else:
+    #        domain = ['|', ('description', operator, name), ('name', operator, name)]
+    #    taxes = self.search(expression.AND([domain, args]), limit=limit)
+    #    return taxes.name_get()
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -641,14 +632,14 @@ class account_tax(models.Model):
 
         return super(account_tax, self).search(args, offset, limit, order, count=count)
 
-    @api.multi
-    @api.depends('name', 'description')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.description and record.description or record.name
-            res.append((record.id, name ))
-        return res
+    #@api.multi
+    #@api.depends('name', 'description')
+    #def name_get(self):
+    #    res = []
+    #    for record in self:
+    #        name = record.description and record.description or record.name
+    #        res.append((record.id, name))
+    #    return res
 
     @api.onchange('amount')
     def onchange_amount(self):
@@ -690,26 +681,26 @@ class account_tax(models.Model):
             if tax.amount_type == 'fixed':
                 tax_amount = tax.amount
             elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
-                tax_amount = base * tax.amount/100
-            elif tax.amount_type == 'percent':
-                tax_amount = base - (base / (1 + tax.amount/100))
-            elif tax.amount_type == 'division':
-                tax_amount = base / (1 - tax.amount/100) - base
+                tax_amount = base * tax.amount / 100
+            elif tax.amount_type == 'percent' and tax.price_include:
+                tax_amount = base - (base / (1 + tax.amount / 100))
+            elif tax.amount_type == 'division' and not tax.price_include:
+                tax_amount = base / (1 - tax.amount / 100) - base
             elif tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, quantity)
-                tax_amount = ret['total_included'] - ret['total']
-                child_taxes = ret['taxes']
-            
-            total = tax.price_include and total - tax_amount or total
-            total_included = tax.price_include and total_included or total_included + tax_amount
+                total = ret['total']
+                total_included = ret['total_included']
+                tax_amount = total_included - total
+                taxes += ret['taxes']
 
-            if tax.amount_type == 'group':
-                taxes = child_taxes
-            else:
+            if tax.amount_type != 'group':
+                tax_amount = round(tax_amount, prec)
+                total = tax.price_include and total - tax_amount or total
+                total_included = tax.price_include and total_included or total_included + tax_amount
                 taxes.append({
                     'id': tax.id,
                     'name': tax.name,
-                    'amount': round(tax_amount, prec),
+                    'amount': tax_amount,
                     'sequence': tax.sequence,
                     'account_id': tax.account_id.id,
                     'refund_account_id': tax.refund_account_id.id,
@@ -728,7 +719,7 @@ class account_tax(models.Model):
     @api.v7
     def compute_all(self, cr, uid, ids, price_unit, quantity=1.0, product=None, partner=None, context=None):
         """ Called by RPC by the bank statement reconciliation widget """
-        ids = isinstance(ids, (str, int, long)) and [ids] or ids
+        ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
         return recs.compute_all(price_unit, quantity, product, partner)
 
