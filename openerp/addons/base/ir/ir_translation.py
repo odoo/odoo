@@ -106,6 +106,7 @@ class ir_translation_import_cursor(object):
         elif params['type'] == 'view':
             params['type'] = 'model'
             params['name'] = 'ir.ui.view,arch'
+            params['imd_model'] = "ir.ui.view"
 
         if params['type'] == 'model' and params['res_id'] == 0:
             # We cannot leave 0 here, because the function field 'source' would
