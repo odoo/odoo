@@ -4,6 +4,12 @@
     var website = openerp.website;
     var _t = openerp._t;
     var ValidOption = false;
+
+    var removeWizard = function() {
+        this.wizard.remove();
+        if(this.DefFormPopUp.state() == 'pending') this.DefFormPopUp.reject();
+    };
+
     var getModel = function(model_field) {
 
         var self   = this;
@@ -244,7 +250,11 @@
         loadData: function (wizard,target, get) {
             var self = this;
             var tb_line = $(self.fieldModel());
-            this.lock = (wizard.find('.form-select-field').val() != 'custom');
+            var field_selected = wizard.find('.form-select-field').val();
+            var field_properties = this.parent.$target.closest('form[action*="/website_form/"]').data('fields').all[field_selected];
+            this.lock = (   (field_selected != 'custom') &&
+                            (field_properties.relation || field_properties.selection)   );
+
             if(this.lock)   {
                 tb_line.find('a.delete').remove();
                 tb_line.find('.option-value').addClass('hidden');
@@ -327,7 +337,7 @@
                 this.$target.attr('data-fail',this.wizard.find('#fail').val());
 
                 this.getModel(model_sel).then(function(){
-                    var mail = self.wizard.find('.o_form-action-mailto textarea').val();
+                    var mail = self.wizard.find('.o_form-action-mailto input[type=hidden]').val();
 
                     if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
                     else if(mail.length > 0) {
@@ -351,13 +361,15 @@
                                         .parent()
                                         .addClass('active');
                     $('button[data-action=snippet]').trigger('click');
-                    self.wizard.modal('hide');
                     
                     $('#oe_snippets')   .removeClass('hidden')
                                         .find('.active')
                                         .removeClass('active');
                     $('#oe_snippets')   .find('#snippet_form')
                                         .addClass('active');
+                    self.wizard.modal('hide');
+                    self.getModel();
+                
                 });
         },
         organizeForm: function() {
@@ -379,43 +391,42 @@
         },
         on_prompt: function () {
             var self = this;
-            var DefFormPopUp = $.Deferred();
+            this.DefFormPopUp = $.Deferred();
             
             new openerp.Model(openerp.website.session,"website.form")
             .call("search_read", [[],['model_name','model_id','name','metadata_field_id']], {context: website.get_context()})
 
             .then(function(options_list) {
                 var options = '';
+                var res_partner = new openerp.Model(openerp.website.session,"res.partner");
                 $.each(options_list, function(i,elem) {
                     options += '<option value="'+elem.model_name+'">'+elem.name+'</option>';
                 });
                 self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
                 self.wizard.appendTo('body').modal({"keyboard" :true});
+                self.wizard.on('hidden.bs.modal', _.bind(self.removeWizard, self));
                 self.loadData();
                 
-                self.wizard.find('.o_form-action-mailto').find('textarea')
-                    .textext({  plugins: 'autocomplete arrow',
-                                ext: {
-                                    itemManager: {
-                                        itemToString: function(item) {
-                                            return item.email;
-                                        }
-                                    }
-                                }})
-                    .bind('getSuggestions', function(e,data) {
-                        var _this = this;
-                        new openerp.Model(openerp.website.session,"res.partner")
-                        .call("search_read",[[['email', '=like', $(this).val()+'%']],['email']], { limit: 5, context: website.get_context()}).then(function(tlist) {
-                            $(_this).trigger('setSuggestions', {result: tlist});
+                self.wizard.find('.o_form-action-mailto input[type=hidden]').select2({
+                    enable: true,
+                    query: function(query) {
+                        var data = {results:[{id:query.term, text:query.term}]};
+                        res_partner.call("search_read",[[['email', '=like', query.term+'%']],['email']], { limit: 5, context: website.get_context()}).then(function(tlist) {
+                            $.each(tlist, function(i, obj) {
+                                data.results.push({id:obj.email, text:obj.email});
+                            });
+                            query.callback(data);
                         });
-                    });
+                    }
+                });
                 
                 self.organizeForm();
                 self.wizard.find('select').on('change',_.bind(self.organizeForm,self));
-                self.wizard.find('.validate').on('click',_.bind(self.validate,self,DefFormPopUp));
+                self.wizard.find('.validate').on('click',_.bind(self.validate,self,self.DefFormPopUp));
             });
 
-            return DefFormPopUp;
+            return self.DefFormPopUp;
+
         },
         drop_and_build_snippet: function() {
             var self = this;
@@ -425,6 +436,7 @@
         start : function () {
             this._super();
             this.getModel = getModel;
+            this.removeWizard = removeWizard;
         },
         clean_for_save: function () {},
     });
@@ -451,7 +463,7 @@
         //-------------------------------
         
         
-        // Get list of fields with RPC Call
+        // Get list of fields from model
         getFields: function(types) {
             console.log(arguments);
             var options = '';
@@ -556,64 +568,23 @@
                     return {label: data[1], value: data[0], last: 0};
                 });
             }
+            else {
+                this.optionEditor.restore();
+            }
             this.wizard.find('.form-field-label').val(field.label);
             this.wizard.find('.form-field-required').prop('checked',field.required);
         },
         hiddenLoadData: function() {
             this.getFields(['integer', 'date','char','text','float']);
             this.wizard.find('.field_name').html(_t('Hidden Field'));
-            /*
-            var field_list = [];
-            var field_label_list = [];
-            var label;
-            //var tags = $.parseJSON(this.$target.find('input').val()) || [];
-            var tagsZone = this.wizard.find('.form-field-value');
-
-            this.$target.closest('form').find('.form-field').each(function(i,elem) {
-                label = $(elem).find('label').html();
-                if(label.length > 1) {
-                    field_label_list.push($(elem).find('.form-data').attr('name'));
-                    field_list.push(label);
-                }
-            });
-            
-            tagsZone.textext({
-                plugins : 'tags autocomplete arrow',
-                ext : {
-                    tags: {
-                        renderTag: function(tag) {
-                            var self = this;
-                            var node = $(self.opts('html.tag'));
-                            var value = field_label_list[field_list.indexOf(tag)];
-                            node.find('.text-label').text(tag);
-                            node.data('text-tag', value ? "@"+value : tag);
-                            if(!value) node.find('.text-button').css('background-color','#ffffff');
-                            return node;
-                        }
-                    }
-                }
-            })
-            .bind('getSuggestions', function(e, data) {
-                var textext  = $(e.target).textext()[0],
-                query    = (data ? data.query : '') || '';
-                $(this).trigger('setSuggestions',
-                                { result : textext.itemManager().filter(field_list, query) });
-            });
-            /*
-            .bind('ready', function(e,data){
-                $.each(tags, function(i,elem) {
-                    tagsZone.textext()[0].tags().addTags((elem[0] == '@') ? [elem.substring(1)]:[elem]);
-                });
-            });
-*/
             this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name'));
             this.wizard.find('.form-field-required').parent().parent().addClass('hidden');
             this.wizard.find('.form-field-help').parent().parent().addClass('hidden');
-           
+            this.wizard.find('.form-field-value').val(this.$target.find('.form-data').val());
         },
         inputLoadData: function() {
             this.wizard.find('.field_name').html(_t('Text Field'));
-            this.getFields(['integer', 'date','char','text','float']);
+            this.getFields(['integer', 'date', 'char', 'text', 'float']);
             this.wizard.find('.form-field-append-check') .prop('checked',(this.$target.find('.append').length > 0));
             this.wizard.find('.form-field-prepend-check').prop('checked',(this.$target.find('.prepend').length > 0));
             this.wizard.find('.form-field-append')       .val(this.$target.find('.append').html());
@@ -621,35 +592,22 @@
         },
         textareaLoadData: function() {
             this.wizard.find('.field_name').html(_t('Textarea'));
-            this.getFields(['char','text']);
+            this.getFields(['char', 'text']);
             this.wizard.find('.form-field-placeholder')  .val(this.$target.find('.form-data').prop('placeholder'));        // Load placeholder on wizard
         },
         inputfileLoadData: function() {
             this.wizard.find('.field_name').html(_t('Upload Field'));
-            this.getFields(['binary','manyBinary2many','oneBinary2many']);
+            this.getFields(['binary', 'manyBinary2many', 'oneBinary2many']);
             this.wizard.find('.form-field-placeholder')  .val(this.$target.find('.form-data').prop('placeholder'));
             this.wizard.find('.form-button-label')       .val(this.$target.find('.browse-label').html());
             this.wizard.find('.form-field-multiple')     .prop('checked',this.$target.find('input[type=file]').attr('multiple') == "multiple");
         },
-        searchLoadData: function() {
-            var self = this;
-            this.wizard.find('.field_name').html(_t('Autocomplete Field'));
-            this.getFields(['many2one','one2many','many2many','selection']);
-            this.wizard.find('.form-field-multiple').prop('checked',this.$target.find('.form-data').attr('data-multiple') == "multiple");
-            
-            self.optionEditor.enable(    this.wizard,
-                                        this.$target.find('.wrap-options'),
-                                        function (elem) {
-                                            elem = $(elem);
-                                            return {label : elem.html(), value : elem.val(), last: !$(elem).next().length};
-                                        });
-        },
         selectLoadData: function() {
             var self = this;
             this.wizard.find('.field_name').html(_t('Select Field'));
-            this.getFields(['many2one','one2many','many2many','selection']);
+            this.getFields(['integer', 'date','char','text','float','many2one','one2many','many2many','selection']);
             this.wizard.find('.form-field-multiple').prop('checked',self.$target.find('.form-data').attr('multiple') == "multiple");
-            
+            this.wizard.find('.form-field-autocomplete').prop('checked',(self.$target.find('.form-data').attr('autocomplete') == 'on'));
             self.optionEditor.enable(    this.wizard,
                                         self.$target.find('.wrap-options'),
                                         function (elem) {
@@ -671,7 +629,7 @@
         },
         radioLoadData: function() {
             this.wizard.find('.field_name').html(_t('Radio Field'));
-            this.getFields(['many2one','selection']);
+            this.getFields(['integer', 'date','char','text','float','many2one','selection']);
             this.wizard.find('.form-field-inline').prop('checked',this.$target.find('.wrap-options label').hasClass('checkbox-inline'));
             
             this.optionEditor.enable(   this.wizard,
@@ -696,7 +654,7 @@
         // from data on the wizard assistant
         //------------------------------------
         hiddenValidate: function() {
-            this.$target.find('.form-data').val(this.wizard.find('input[type=hidden]').val());
+            this.$target.find('.form-data').val(this.wizard.find('.form-field-value').val());
             this.$target.find('.help-block').html('');
         },
         textareaValidate: function() {
@@ -708,21 +666,13 @@
             this.$target.find('.browse-label').html(this.wizard.find('.form-button-label').val());
             this.$target.find('input[type=file]').attr('multiple',multiple);
         },
-        searchValidate: function() {
-            var optionsSelector = this.$target.find('.wrap-options');
-            var field_name      = this.wizard.find('.form-select-field').val();
-            var name            = (field_name  == 'custom') ? $.trim(this.wizard.find('.form-field-label').val()) : field_name;
-            var multiple        = this.wizard.find('.form-field-multiple').is(':checked') ? 'multiple': false;
-
-            this.$target.find('.form-data').attr('data-multiple',multiple);
-            this.optionEditor.addOptions(optionsSelector,'search',{id_label:''})();
-            this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
-        },
         selectValidate: function() {
             var optionsSelector = this.$target.find('.wrap-options');
             var i = 0;
             var multiple = this.wizard.find('.form-field-multiple').is(':checked') ? 'multiple': false;
             this.$target.find('.form-data').attr('multiple',multiple);
+            var autocomplete = this.wizard.find('.form-field-autocomplete').is(':checked')? 'on':'off';
+            this.$target.find('.form-data').attr('autocomplete',autocomplete);
             this.optionEditor.addOptions(optionsSelector,'select',{id_label:''})();
         },
         checkboxValidate: function () {
@@ -746,6 +696,7 @@
             var field_name = this.wizard.find('.form-select-field').val();
             var name = (field_name  == 'custom') ? $.trim(this.wizard.find('.form-field-label').val()) : field_name;
             this.optionEditor.addOptions(optionsSelector,'radio',{id_label:name})();
+            $(this.$target.find('input[type=radio]')[0]).attr('checked', 'checked');
             if(this.wizard.find('.form-field-inline').is(':checked')) {
                 this.$target.find('.wrap-options label').addClass('checkbox-inline');
                 this.$target.find('.wrap-options div').addClass('div-inline');
@@ -832,7 +783,7 @@
             $('#oe_snippets').removeClass('hidden');
             this.wizard.modal('hide');
         },
-        
+
         confirm: function (DefferedForm) {
                 if(ValidOption) DefferedForm.resolve();
                 else            DefferedForm.reject();
@@ -887,14 +838,14 @@
             this.loadData();
 
             this.wizard.appendTo('body').modal({"keyboard" :true});
-            
-            var DefFormPopUp = $.Deferred();
+            this.wizard.on('hidden.bs.modal', _.bind(this.removeWizard, this));
+            this.DefFormPopUp = $.Deferred();
             var selectFields = this.wizard.find('.form-select-field');
             selectFields.on('change',_.bind(this.getValues,this,selectFields));
-            this.wizard.on('hide.bs.modal',_.bind(this.confirm, this, DefFormPopUp));
+            this.wizard.on('hide.bs.modal',_.bind(this.confirm, this, this.DefFormPopUp));
             this.wizard.find('.validate').on('click',_.bind(this.validate,this));
 
-            return DefFormPopUp;
+            return this.DefFormPopUp;
         },
 
         drop_and_build_snippet: function() {
@@ -911,6 +862,7 @@
 
             var self = this;
             this.getModel = getModel;
+            this.removeWizard = removeWizard;
             this.optionEditor = new website.snippet.editFormFieldOptionEditor(this);
             if(this.$target.data('form') == 'hidden') this.$target.addClass('website-form-editor-hidden-under-edit');
             this.getModel();
@@ -922,22 +874,23 @@
             this.$target.removeClass('has-error has-success has-warning has-feedback')
                         .find('.form-control-feedback').remove();
             if(this.$target.data('form') == 'hidden') this.$target.removeClass('website-form-editor-hidden-under-edit');
+            if(this.$target.data('form') == 'select') this.$target.find('select').select2('destroy');
             if(type == 'search')
                   this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
-        },
+        }
     });
 
     website.EditorBar.include({
         save: function () {
-            var form = $('main form');
+            var form = $('form[action*="/website_form/"]:not(.oe_snippet_body)');
+            form.removeClass('o_send-failed o_send-success');
             form.find('.form-builder-error-message').remove();
             var required_error = '';
             if(!form.data('model')) return this._super();
             if(!form.data('fields')) return this._super();
             
-            form.removeClass('o_send-failed o_send-success');
             form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
-
+            console.log(form.data('fields').required);
             $.each(form.data('fields').required,function(i,name){
                 var present = 0;
                 form.find('.form-data').each(function(j,elem){

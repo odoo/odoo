@@ -29,14 +29,6 @@
                 var subelem = $field.find('input[type=radio]:checked');
                 return subelem.val() ? _.object([$(subelem).prop('name')],[subelem.val()]): null;
             },
-            ':has(textarea)': function($field) {
-                var extracted_data = $.parseJSON($field.find('textarea').textext()[0].hiddenInput().val());
-                var args = [];
-                $.each(extracted_data, function (i, val) {
-                    args.push(val.id);
-                });
-                return (args.length) ? _.object([$field.attr('name')],[args]) : null;
-            },
             'input[type=file]': function($field) {
                 var args = {};
                 var size = $field.prop('files').length;
@@ -75,6 +67,7 @@
                 empty_field     = empty_fields.indexOf(name);
                 fail_required   = _.without(fail_required,name);
                 empty_fields    = _.without(empty_fields,name);
+
                 $(elem)    .removeClass('has-error has-warning has-success has-feedback')
                            .find('i').remove();
 
@@ -93,6 +86,7 @@
                                     
             });
         },
+
         send: function(e) {
                 e.preventDefault();
                 // if(!this.check()) return;
@@ -117,12 +111,16 @@
                     for (var i in getDataForm) {
                         if($(elem).is(i)) {
                             field_value = getDataForm[i].call(self, $(elem));
-                            if(field_value) _.extend(args,field_value);
-                            else if($(elem).attr('required')) fail_required.push($(elem).attr('name'));
-                            else empty_field.push($(elem).attr('name'));
-
-                            console.log(field_value);
-                            console.log(empty_field);
+                            if(field_value) {
+                                _.extend(args,field_value);
+                            }
+                            else if($(elem).attr('required')) {
+                                console.log($(elem));
+                                fail_required.push($(elem).attr('name'));
+                            }
+                            else {
+                                empty_field.push($(elem).attr('name'));
+                            }
                         }
                     }
                 });
@@ -134,52 +132,62 @@
                 var progress = $(openerp.qweb.render('website.form.editor.progress'))
                                     .appendTo('body')
                                     .modal({"keyboard" :true});
-                console.log('files ????????   ', this.file);
-               if(!this.file) progress.addClass('hidden');
-                var display_size = function(size) {
-                
-                    var order   = ['o', 'Ko', 'Mo', 'Go', 'To'];
-                    var log1000 = Math.floor(Math.log(size)/Math.log(1000));
-                    var integer = Math.floor(size/Math.pow(1000,log1000));
-                    var decimal = Math.round((size - integer*Math.pow(1000,log1000))/(100*Math.pow(1000,log1000-1)));
-                    var result  = integer+Math.round(decimal/10);
-                    var order_l = order[Math.min(4,log1000)];
-                    return result*Math.max(log1000-4, 1)+((result == integer) ? '.'+decimal:'')+order_l;
 
-                };
+               if(!this.file) progress.addClass('hidden');
 
                 var success_page = this.$target.data('success');
+                var redirect     = this.$target.data('redirect');
+
                 console.log(args);
                 openerp.post('/website_form/'+model,args)
                 .then(function(data) {
                         progress.modal('hide');
-                        if(data) {
-                            var len = (data.fail_required) ? data.fail_required.length:0;
-                            if(data.id){
-                                if(success_page) $(location).attr('href',success_page);
-                                else self.$target.switchClass('o_send-failed', 'o_send-success');
-                            }
-                            else {
-                                if(!len) self.$target.switchClass('o_send-success', 'o_send-failed');
-                                else self.indicateRequired(data.fail_required, empty_field);
-                            }
+                        // if the data are not inserted on the DB and server dont return list of 
+                        // bad fields, we display an error
+               
+                        if(!(data && (data.id || (data.fail_required && data.fail_required.length)))) {
+                            console.log('error without list');
+                            self.$target.find('.o_form-success').show(500)
+                                        .parent().find('.form-group').hide(500)
+                                        .closest('form').removeClass('o_send-success')
+                                                        .addClass('o_send-fail');
+                            return;
                         }
-                        else self.$target.switchClass('o_send-success', 'o_send-failed');
+
+                        // if the server return a list of bad fields, show theses fields for users
+                        if(data.fail_required && data.fail_required.length) {
+                            console.log('error with list');
+                            self.indicateRequired(data.fail_required, empty_field);
+                            return;
+                        }
+                        console.log('no_error', success_page, redirect);
+                        // if success, show success or redirect sync or redirect async following configuration 
+                        if(success_page) {
+                            success_page = '/website_form/thanks' + ((success_page[0] == '/')? '':'/') + success_page;
+                            $(location).attr('href', success_page);
+                        }
+                        else {
+                            self.$target.find('.o_form-success').show(500)
+                                        .parent().find('.form-group').hide(500)
+                                        .closest('form').removeClass('o_send-failed')
+                                                        .addClass('o_send-success');
+                        }
                 })
                 .fail(function(data){
                     progress.modal('hide');
-                    self.$target.switchClass('o_send-success', 'o_send-failed');
+                    self.$target.find('.o_form-success').show(500)
+                                        .parent().find('.form-group').hide(500)
+                                        .closest('form').removeClass('o_send-success')
+                                                        .addClass('o_send-fail');
                 })
                 .progress(function(data){
                     var label = (data.pcent == 100) ? 'Please wait ...':data.pcent+'%';
-                    console.log('progress', data);
                     progress.find('.progress-bar')
                                 .attr('aria-valuenow',data.pcent)
                                 .html(label)
                                 .width(data.pcent+'%');
-                    console.log(display_size(data.loaded));
-                    progress.find('.download-size').html(display_size(data.loaded));
-                    progress.find('.total-size').html(display_size(data.total));
+                    progress.find('.download-size').html(data.h_loaded);
+                    progress.find('.total-size').html(data.h_total);
                 });
         
         }
@@ -193,16 +201,15 @@
             
             self.$target.find('.btn-file :file').on('change', function() {
                 
-                 var input = $(this),
-                  numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                  labels = '';
+                var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                labels = '';
                   
-                  $.each(input.get(0).files, function(index, value) {
+                $.each(input.get(0).files, function(index, value) {
                     if(labels.length) labels += ', ';
-                       labels += value.name.replace(/\\/g, '/').replace(/.*\//, '');
-                      
-                  });
-                  self.$target.find(':text').val(labels);
+                        labels += value.name.replace(/\\/g, '/').replace(/.*\//, '');
+                });
+                self.$target.find(':text').val(labels);
             });
         },
         
@@ -212,33 +219,19 @@
     });
     
     website.snippet.animationRegistry.form_builder_autocomplete =  website.snippet.Animation.extend({
-
-        selector:'.form-field-search',
+        selector:'select[autocomplete=on]',
         start: function() {
-            var plugin_list = (this.$target.find('.form-control').attr('data-multiple') == 'multiple') ? 'tags autocomplete arrow' : 'autocomplete arrow';
-            var list = [];
-            var assocList = [];
-            
-            this.$target.find('.wrap-options').children().each(function (i,child) {
-                list[i] = {name:$(child).html()};
-                assocList[$(child).html()] = $(child).val();
+            if(this.$target.closest('[contenteditable=true]').length) return;
+
+            this.$target.select2({
+                'enable': true
             });
-            
-            this.$target.find('textarea')
-                .textext({
-                    plugins : plugin_list,
-                    ext : {
-                        itemManager: {
-                            itemToString: function(i)    {return i.name;},
-                            stringToItem: function(str)  {return {name:str,id:assocList[str]};}
-                        }
-                }})
-                .bind('getSuggestions', function(e, data) {
-                     var textext  = $(e.target).textext()[0],
-                    query      = (data ? data.query : '') || '';
-                    $(this).trigger('setSuggestions',
-                                    { result : textext.itemManager().filter(list, query) });
-                });
+
+            this.$target.closest('.form-group').find('.select2-container').removeClass('form-data wrap-options');
+        },
+        stop: function() {
+            this.$target.select2('destroy');
         }
     });
+
 })();

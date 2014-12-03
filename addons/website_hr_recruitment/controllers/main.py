@@ -94,8 +94,4 @@ class website_hr_recruitment(http.Controller):
     def jobs_thankyou(self):
         return request.render("website_hr_recruitment.thankyou", {})
 
-    @http.route('/jobs/error', type='http', auth="public", website=True)
-    def jobs_error(self):
-        return request.render("website_hr_recruitment.error", {})
-
 # vim :et:

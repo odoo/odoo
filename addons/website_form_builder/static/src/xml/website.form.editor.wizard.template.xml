@@ -22,16 +22,14 @@
                                 </div>
                             </div>
                             <div class="form-group o_form-action-mailto hidden">
-                                <label for="search" class="col-md-3 col-sm-4 control-label">E-mail :</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <div class="form-control form-data">
-                                        <textarea class="search" rows="1"></textarea>
-                                    </div>
+                                <label for="formEditor-select-email" class="col-md-3 col-sm-4 control-label">E-mail :</label>
+                                <div class="col-md-9 col-sm-8">
+                                    <input type="hidden" id="formEditor-select-email" class="form-control form-select-email" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="success" class="col-md-3 col-sm-4 control-label">Success Page (Optional) :</label>
-                                <div class="col-md-7 col-sm-8">
+                                <div class="col-md-9 col-sm-8">
                                     <input class="form-control form-data" type="text" name="success" id="success" value="" />
                                 </div>
                             </div>
@@ -121,7 +119,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Sufix :</label>
+                    <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Suffix :</label>
                     <div class="col-md-9 col-sm-8">
                         <input type="text"  class="form-control form-field-append" id="formFieldEditor-append" />
                     </div>
@@ -233,41 +231,15 @@
                     <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
                 </div>
             </div>
-        </div>
-    </t>
-    <!-- MODAL SEARCH WIZARD ADD-ON FORM FOR FORM EDITOR -->
-    <t t-name="website.form.editor.wizard.template.search">
-        
-            <div>
-                <div class="form-group">
-                    <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
-                    <div class="col-md-9 col-sm-8">
-                        <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
-                    <div class="col-md-9 col-sm-8 o_form-editor-table">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Option</th>
-                                    <th>Value</th>
-                                    <th class="o_tb-actions"><input type="checkbox" /></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
-                    <div class="col-md-9 col-sm-8">
-                        <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
-                    </div>
+            <div class="form-group">
+                <label for="formFieldEditor-autocomplete" class="col-md-3 col-sm-4 control-label">Autocomplete :</label>
+                <div class="col-md-9 col-sm-8">
+                    <input type="checkbox" class="form-field-autocomplete" id="formFieldEditor-autocomplete" />
                 </div>
             </div>
+        </div>
     </t>
+   
     <!-- MODAL UPLOAD WIZARD ADD-ON FORM FOR FORM EDITOR -->
     <t t-name="website.form.editor.wizard.template.inputfile">
         <div>

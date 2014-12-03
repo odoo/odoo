@@ -10,7 +10,7 @@
 
         /*
 
-            
+            DROP A FORM BUILDER SNIPPET AND CONFIGURE IT
 
         */
             {
@@ -63,17 +63,69 @@
             {
                 title:          "Valid the configuration",
                 waitFor:        ".modal-body .text-suggestion:hidden",
-                element:        ".modal-body button.validate"
+                element:        ".modal-footer button.validate"
+            },
+
+        /*
+
+            DROP AN INPUT TEXT SNIPPET AND CONFIGURE IT
+
+        */
+
+            {
+                title:          "Put a text field snippet",
+                waitFor:        "#snippet_form .oe_snippet[name='Input Text']",
+                snippet:        "#snippet_form .oe_snippet[name='Input Text']"
             },
             {
-                title:       "Edit current "
+                title:          "Select a DB field for this input snippet",
+                waitFor:        ".modal-title .field_name:contains('Text Field')",
+                element:        ".modal-body .form-select-field",
+                sampleText:     "display_name"
+            },
+            {
+                title:          "Change the label",
+                element:        ".modal-body .form-field-label",
+                sampleText:     "Name"
+            },
+            {
+                title:          "Change the placeholder",
+                element:        ".modal-body .form-field-placeholder",
+                sampleText:     "John Smith"
+            },
+            {
+                title:          "Change the prefix",
+                element:        ".modal-body .form-field-prepend",
+                sampleText:     "Mr."
+            },
+            {
+                title:          "Change the sufix",
+                element:        ".modal-body .form-field-append",
+                sampleText:     "."
+            },
+            {
+                title:          "Change the help text",
+                element:        ".modal-body .form-field-help",
+                sampleText:     "Read the word witch following 'name' and write it on the input"
+            },
+            {
+                title:          "Make this input required",
+                element:        ".modal-body .form-field-required",
+                sampleText:     "checked"
+            },
+            {
+                title:          "Valid the configuration for input text",
+                element:        ".modal-footer input.validate"
+            },
+
+
+
+
+            {
+                title:          "Usless step",
+                waitFor:        "html"
             }
 
-/*
-waitFor:   'label:contains(32 GB) input[checked]',
-waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
-sampleText: '1',
-*/
         ]
     });
 

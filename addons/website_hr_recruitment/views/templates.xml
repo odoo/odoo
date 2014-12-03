@@ -153,13 +153,23 @@
                                                             class=          "editForm form-horizontal mt32" 
                                                             enctype=        "multipart/form-data" 
                                                             data-model=     "hr.applicant" 
-                                                            data-success=   "/jobs/thankyou"
-                                                            data-fail=      "/jobs/error">
+                                                            data-success=   "/jobs/thankyou">
 
-                    
                     <input type="hidden" class="form-control form-data" t-att-value="job and job.department_id.id or False" name="department_id"/>
                     <input type="hidden" class="form-control form-data" t-att-value="job and job.id or False" name="job_id"/>    
                     <div class="oe_structure">
+                        <div class="container o_form-success">
+                            <div class="alert alert-success">
+                                Your message has been sent successfully.
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                            </div>
+                        </div>
+                        <div class="container o_form-danger">
+                            <div class="alert alert-danger">
+                                Your message has not been sent.
+                                <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                            </div>
+                        </div>
                         <div class="form-group form-field form-init" data-form="input">
                             <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
                             <div class="col-md-7 col-sm-8">

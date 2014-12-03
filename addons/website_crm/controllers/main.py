@@ -20,3 +20,7 @@ class contactus(http.Controller):
     @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True)
     def contact(self, **kwargs):
         return request.website.render("website.contactus")
+
+    @http.route(['/page/website_crm/thankyou'], type='http', auth="public", website=True)
+    def thankyou(self, **kwargs):
+        return request.website.render("website_crm.thankyou");

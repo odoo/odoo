@@ -2,7 +2,6 @@
 import base64
 
 import json
-import collections
 
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
@@ -72,8 +71,8 @@ class form_builder(http.Controller):
         data = {
             'files'     : [],                    # List of attached files
             'post'      : {},                    # Dict of values to create entry on the model
-            'custom'    : self.custom_label,
-            'meta'      : self.meta_label,
+            'custom'    : '',
+            'meta'      : '',
             'error'     : '',
             'message'   : { 
                             'body'           : _('<p>Attatched files : </p>'),
@@ -99,13 +98,13 @@ class form_builder(http.Controller):
                 data['custom'] += "%s : %s\n" % (field_name, field_value)
                 
                 
-        environ = request.httprequest.headers.environ
+        #environ = request.httprequest.headers.environ
         
-        data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % ("IP"                , environ.get("REMOTE_ADDR"), 
-                                                                  "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
-                                                                  "ACCEPT_LANGUAGE"   , environ.get("HTTP_ACCEPT_LANGUAGE"),
-                                                                  "REFERER"           , environ.get("HTTP_REFERER"))
-
+        #data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % ("IP"                , environ.get("REMOTE_ADDR"), 
+        #                                                          "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
+        #                                                          "ACCEPT_LANGUAGE"   , environ.get("HTTP_ACCEPT_LANGUAGE"),
+        #                                                          "REFERER"           , environ.get("HTTP_REFERER"))
+        print data
         if hasattr(ref_model, "website_form_input_filter"):
             data = ref_model.website_form_input_filter(data)
         print "Model %s \n\n" % model['name']
@@ -123,7 +122,7 @@ class form_builder(http.Controller):
     def insertRecord(self, model, data):
         values = data['post'];
         if model['default_field'] not in values : values[model['default_field']] = ''
-        values[model['default_field']] += "\n\n" + data['custom'] + "\n\n" + data['meta']
+        values[model['default_field']] += "\n\n" + (self.custom_label if (data['custom'] != '') else '') + data['custom'] #+ "\n\n" + data['meta']
         print 'INSERT :: ', values
         return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context);
 
@@ -153,28 +152,41 @@ class form_builder(http.Controller):
     def insert(self, model, data):
         id_list   = self.insertAttachment(model, data)
         id_record = self.insertRecord(model, data)
-        self.insertMessage(model, data, id_record)  
-        return request.registry['ir.attachment'].write(request.cr, SUPERUSER_ID, id_list, {'res_id': id_record}, context=request.context)
-        
+        self.insertMessage(model, data, id_record)
+        request.registry['ir.attachment'].write(request.cr, SUPERUSER_ID, id_list, {'res_id': id_record}, context=request.context)
+        request.session['form_builder_model'] = model['name']
+        request.session['form_builder_id_record'] = id_record
+        return id_record
+
     def authorized_fields(self, model):
         request.registry['website.form'].get_authorized_fields(request.cr, SUPERUSER_ID, model['name'])
-    
-    @http.route('/page/website.form.thankyou', type='http', auth="public", website=True)
-    def form_thankyou(self):
-        return request.website.render("website_form_builder.form_thankyou")
 
-    @http.route('/page/website.form.error', type='http', auth="public", website=True)
-    def form_error(self):
-        return request.website.render("website_form_builder.form_error")
+    @http.route('/website_form/thanks/page/<template>', type='http', auth="public", website=True)
+    def thanks_page(self, template):
+        template    = ('website.' if template.split('.',1)[0] != 'website' else '')+template
 
+        try:                request.website.get_template(template)
+        except ValueError:  return request.redirect('/page/'+template)
+
+        if 'form_builder_model'     not in request.session: return False
+        if 'form_builder_id_record' not in request.session: return False
+
+        model       = request.session['form_builder_model']
+        id_record   = request.session['form_builder_id_record']
+
+        if not model or not id_record: return False
+
+        record = request.registry[model].read(request.cr,SUPERUSER_ID,[id_record],[], context=request.context)
+        return request.website.render(template, {"record":record[0]})
 
     @http.route('/website_form/<model>', type='http', auth="public", website=True)
     def contactus(self,model, ** kwargs):
 
         obj_form = request.registry['website.form']
         id_model = obj_form.search(request.cr,SUPERUSER_ID,[('model_id', '=', model),],context=request.context)
-        if not id_model: #if not authorized model
-            return request.website.render("website_form_builder.xmlresponse",{'response':False})
+        
+        #if not authorized model
+        if not id_model: return None;
 
         # return all meta-fields of the selected model
         formModel = obj_form.browse(request.cr, SUPERUSER_ID, id_model)
@@ -187,8 +199,7 @@ class form_builder(http.Controller):
         }
 
         data = self.extractData(model, **kwargs) 
-        
-        print "error : ", data['error'], "\n\n"
+
         try:     
             if(any(data['error'])) :    success = 0
             else :                      success = self.insert(model, data)
@@ -196,9 +207,5 @@ class form_builder(http.Controller):
             print ValueError
             success = 0
 
-        if data['error'] : 
-            response = json.dumps({'id': success, 'fail_required' : data['error']});
-        else : 
-            response = json.dumps({'id': success, 'fail_required': None});
-
-        return request.website.render("website_form_builder.xmlresponse",{'response':response})
+        if data['error'] : return json.dumps({'id': success, 'fail_required' : data['error']});
+        return json.dumps({'id': success, 'fail_required': None});
