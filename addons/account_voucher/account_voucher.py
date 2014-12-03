@@ -35,15 +35,14 @@ class account_voucher(models.Model):
     @api.model
     def _get_currency(self):
         journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
-        currency_id = self.env.user.company_id.currency_id.id
         if journal.currency:
-            currency_id = journal.currency.id
-        return currency_id
+            return journal.currency.id
+        return self.env.user.company_id.currency_id.id
 
     @api.multi
     @api.depends('name', 'number')
     def name_get(self):
-        return [(r['id'], (r['number'] or _('Voucher'))) for r in self]
+        return [(r.id, (r.number or _('Voucher'))) for r in self]
 
     @api.one
     @api.depends('journal_id', 'company_id')
@@ -168,11 +167,8 @@ class account_voucher(models.Model):
     @api.multi
     def cancel_voucher(self):
         for voucher in self:
-            # refresh to make sure you don't unlink an already removed move
-            voucher.refresh()
-            if voucher.move_id:
-                voucher.move_id.button_cancel()
-                voucher.move_id.unlink()
+            voucher.move_id.button_cancel()
+            voucher.move_id.unlink()
         self.write({'state': 'cancel', 'move_id': False})
 
     @api.multi
