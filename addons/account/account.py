@@ -705,6 +705,7 @@ class account_tax(models.Model):
                     'account_id': tax.account_id.id,
                     'refund_account_id': tax.refund_account_id.id,
                     'analytic_cost': tax.analytic_cost,
+                    'include_base_amount': tax.include_base_amount,
                 })
 
             if tax.include_base_amount:

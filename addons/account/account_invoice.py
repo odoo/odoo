@@ -1392,9 +1392,10 @@ class account_invoice_tax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
-    invoice_id = fields.Many2one('account.invoice', string='Invoice Line', ondelete='cascade', index=True)
+    invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
     tax_id = fields.Many2one('account.tax', string='Tax')
+    subsequent_tax_ids = fields.Many2many('account.tax', string='Subsequent Taxes', help="In case the tax amount has to be added for the computation of taxes that comes after.")
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     base = fields.Float(string='Base', digits=dp.get_precision('Account'))
@@ -1410,7 +1411,10 @@ class account_invoice_tax(models.Model):
         for line in invoice.invoice_line:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_id.compute_all(price_unit, line.quantity, line.product_id, invoice.partner_id)['taxes']
+            base_amount = currency.round(price_unit * line.quantity)
+            subsequent_taxes = [x['id'] for x in taxes].reverse()
             for tax in taxes:
+                subsequent_taxes.pop()
                 val = {
                     'invoice_id': invoice.id,
                     'name': tax['name'],
@@ -1418,10 +1422,13 @@ class account_invoice_tax(models.Model):
                     'amount': tax['amount'],
                     'manual': False,
                     'sequence': tax['sequence'],
-                    'base': currency.round(price_unit * line.quantity),
+                    'base': base_amount,
+                    'subsequent_tax_ids': tax['include_base_amount'] and [(4, x) for x in subsequent_taxes] or [],
                     'account_analytic_id': line.account_analytic_id.id,
                     'account_id': invoice.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id)
                 }
+                if tax['include_base_amount']:
+                    base_amount += tax['amount']
 
                 # If the taxes generate moves on the same financial account as the invoice line
                 # and no default analytic account is defined at the tax level, propagate the
@@ -1453,22 +1460,19 @@ class account_invoice_tax(models.Model):
     @api.model
     def move_line_get(self, invoice_id):
         res = []
-        self._cr.execute(
-            'SELECT * FROM account_invoice_tax WHERE invoice_id = %s',
-            (invoice_id,)
-        )
-        for row in self._cr.dictfetchall():
-            if not row['amount']:
+        for tax_line in self.env['account.invoice'].browse(invoice_id).tax_line:
+            if not tax_line.amount:
                 continue
             res.append({
-                'tax_line_id': row['tax_id'],
+                'tax_line_id': tax_line.tax_id.id,
                 'type': 'tax',
-                'name': row['name'],
-                'price_unit': row['amount'],
+                'name': tax_line.name,
+                'price_unit': tax_line.amount,
                 'quantity': 1,
-                'price': row['amount'] or 0.0,
-                'account_id': row['account_id'],
-                'account_analytic_id': row['account_analytic_id'],
+                'price': tax_line.amount or 0.0,
+                'account_id': tax_line.account_id.id,
+                'account_analytic_id': tax_line.account_analytic_id.id,
+                'tax_ids': [(4, x.id) for x in tax_line.subsequent_tax_ids],
             })
         return res
 
