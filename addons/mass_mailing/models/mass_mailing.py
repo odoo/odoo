@@ -11,7 +11,6 @@ from openerp.exceptions import UserError
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import ustr
-from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
 URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
@@ -128,6 +127,23 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
         ),
+        'popup_content': fields.html("Website Popup Content", translate=True, required=True, sanitize=False),
+        'popup_redirect_url': fields.char("Website Popup Redirect URL"),
+    }
+
+    def _get_default_popup_content(self, cr, uid, context=None):
+        return """<div class="o_popup_modal_header text-center">
+    <h3 class="o_popup_modal_title mt8">Odoo Presents</h3>
+</div>
+<div class="o_popup_message">
+    <font>7</font>
+    <strong>Business Hacks</strong>
+    <span> to<br/>boost your marketing</span>
+</div>
+<p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
+
+    _defaults = {
+        'popup_content': _get_default_popup_content,
     }
 
 

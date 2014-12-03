@@ -255,7 +255,15 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
+                            <group>
+                                <field name="popup_redirect_url"/>
+                            </group>
                         </div>
+                        <notebook>
+                            <page string="Popup Content">
+                                <field name="popup_content" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
