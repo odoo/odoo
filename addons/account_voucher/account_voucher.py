@@ -133,22 +133,15 @@ class account_voucher(models.Model):
             voucher.write({'amount': total, 'tax_amount': total_tax})
         return True
 
-    @api.multi
-    def basic_onchange_partner(self, partner, journal, ttype):
-        account_id = False
-        if journal.type in ('sale','sale_refund'):
-            account_id = partner.property_account_receivable.id
-        elif journal.type in ('purchase', 'purchase_refund','expense'):
-            account_id = partner.property_account_payable.id
-        else:
-            account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-        self.account_id = account_id
-
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        #TODO: comment me and use me directly in the sales/purchases views
-        res = self.basic_onchange_partner(self.partner_id, self.journal_id, self.voucher_type)
-        return res
+        if self.journal_id.type in ('sale', 'sale_refund'):
+            account_id = self.partner_id.property_account_receivable.id
+        elif self.journal_id.type in ('purchase', 'purchase_refund','expense'):
+            account_id = self.partner_id.property_account_payable.id
+        else:
+            account_id = self.journal_id.default_credit_account_id.id or self.journal_id.default_debit_account_id.id
+        self.account_id = account_id
 
     @api.multi
     def button_proforma_voucher(self):
