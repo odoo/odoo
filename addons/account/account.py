@@ -667,17 +667,22 @@ class account_tax(models.Model):
                 'id': int,
                 'name': str,
                 'amount': float,
+                'base_amount': float,
                 'sequence': int,
                 'account_id': int,
                 'refund_account_id': int,
                 'analytic_cost': boolean,
+                'subsequent_tax_ids': list of int,
             }]
         } """
 
         taxes = []
         total = total_included = base = price_unit * quantity
         prec = self.env['decimal.precision'].precision_get('Account')
-        for tax in self.normalized_set():
+        to_apply_taxes = self.normalized_set()
+        subsequent_taxes = [x.id for x in to_apply_taxes]
+        for tax in to_apply_taxes:
+            del(subsequent_taxes[0])
             if tax.amount_type == 'fixed':
                 tax_amount = tax.amount
             elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
@@ -700,12 +705,13 @@ class account_tax(models.Model):
                 taxes.append({
                     'id': tax.id,
                     'name': tax.name,
+                    'base_amount': base,
                     'amount': tax_amount,
                     'sequence': tax.sequence,
                     'account_id': tax.account_id.id,
                     'refund_account_id': tax.refund_account_id.id,
                     'analytic_cost': tax.analytic_cost,
-                    'include_base_amount': tax.include_base_amount,
+                    'subsequent_tax_ids': tax.include_base_amount and list(subsequent_taxes) or [],
                 })
 
             if tax.include_base_amount:
