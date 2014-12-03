@@ -1,5 +1,5 @@
 @import "bootstrap/less/bootstrap";
-@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Lato);
 
 @icon-font-path: 'fonts/';
 @brand-primary: #a24689;
@@ -759,6 +759,19 @@ td.field-body {
     .highlight pre {
       // but allow additional line-breaks between "words" to avoid overflow
       white-space: pre-wrap;
+    }
+
+    .btn-clipboard {
+      background-color: transparent;
+      color: @color-right;
+      border-color: @separator-right;
+      border-top: none;
+      border-top-right-radius: 0;
+
+      &.active {
+        background-color: @gray;
+        .transition(background-color .5s linear);
+      }
     }
   }
 

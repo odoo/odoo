@@ -23,6 +23,32 @@ class Blog(osv.Model):
         'description': fields.text('Description'),
     }
 
+    def all_tags(self, cr, uid, ids, min_limit=1, context=None):
+        req = """
+            SELECT
+                p.blog_id, count(*), r.blog_tag_id
+            FROM
+                blog_post_blog_tag_rel r
+                    join blog_post p on r.blog_post_id=p.id
+            WHERE
+                p.blog_id in %s
+            GROUP BY
+                p.blog_id,
+                r.blog_tag_id
+            ORDER BY
+                count(*) DESC
+        """
+        cr.execute(req, [tuple(ids)])
+        tag_by_blog = {i: [] for i in ids}
+        for blog_id, freq, tag_id in cr.fetchall():
+            if freq >= min_limit:
+                tag_by_blog[blog_id].append(tag_id)
+
+        tag_obj = self.pool['blog.tag']
+        for blog_id in tag_by_blog:
+            tag_by_blog[blog_id] = tag_obj.browse(cr, uid, tag_by_blog[blog_id], context=context)
+        return tag_by_blog
+
 
 class BlogTag(osv.Model):
     _name = 'blog.tag'

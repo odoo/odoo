@@ -474,6 +474,10 @@ class Field(object):
                 self._free_attrs.append(attr)
                 setattr(self, attr, getattr(field, attr))
 
+        # special case for states: copy it only for inherited fields
+        if not self.states and self.inherited:
+            self.states = field.states
+
         # special case for required: check if all fields are required
         if not self.store and not self.required:
             self.required = all(field.required for field in fields)
