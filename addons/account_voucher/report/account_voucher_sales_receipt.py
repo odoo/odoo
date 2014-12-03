@@ -18,46 +18,46 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
 from openerp import tools
+from openerp import models, fields
 
-class sale_receipt_report(osv.osv):
+class sale_receipt_report(models.Model):
     _name = "sale.receipt.report"
     _description = "Sales Receipt Statistics"
     _auto = False
     _rec_name = 'date'
-    _columns = {
-        'date': fields.date('Date', readonly=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'price_total': fields.float('Total Without Tax', readonly=True),
-        'price_total_tax': fields.float('Total With Tax', readonly=True),
-        'nbr':fields.integer('# of Voucher Lines', readonly=True),
-        'type': fields.selection([
-            ('sale','Sale'),
-            ('purchase','Purchase'),
-            ('payment','Payment'),
-            ('receipt','Receipt'),
-            ],'Type', readonly=True),
-        'state': fields.selection([
-            ('draft','Draft'),
-             ('proforma','Pro-forma'),
-             ('posted','Posted'),
-             ('cancel','Cancelled')
-            ], 'Voucher Status', readonly=True),
-        'pay_now':fields.selection([
-            ('pay_now','Pay Directly'),
-            ('pay_later','Pay Later or Group Funds'),
-        ],'Payment', readonly=True),
-        'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)]),
-        'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
-        'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg")
-    }
+    date = fields.Date('Date', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    price_total = fields.Float(string='Total Without Tax', readonly=True)
+    price_total_tax = fields.Float(string='Total With Tax', readonly=True)
+    nbr = fields.Integer(string='# of Voucher Lines', readonly=True)
+    type = fields.Selection([
+        ('sale', 'Sale'),
+        ('purchase', 'Purchase'),
+        ('payment', 'Payment'),
+        ('receipt', 'Receipt'),
+    ], string='Type', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('proforma', 'Pro-forma'),
+        ('posted', 'Posted'),
+        ('cancel', 'Cancelled')
+    ], string='Voucher Status', readonly=True)
+    pay_now = fields.Selection([
+        ('pay_now', 'Pay Directly'),
+        ('pay_later', 'Pay Later or Group Funds'),
+    ], string='Payment', readonly=True)
+    date_due = fields.Date(string='Due Date', readonly=True)
+    account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
+    delay_to_pay = fields.Float(string='Avg. Delay To Pay', readonly=True, group_operator="avg")
+    due_delay = fields.Float(string='Avg. Due Delay', readonly=True, group_operator="avg")
+
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_receipt_report')
         cr.execute("""

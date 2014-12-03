@@ -22,17 +22,41 @@
             <field name="model">account.voucher.line</field>
             <field name="arch" type="xml">
                 <form string="Voucher Lines">
-                    <group col="4">
-                        <field name="product_id"/>
-                        <field name="name"/>
-                        <field name="account_id"/>
-                        <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', voucher_id.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
-                        <field name="quantity"/>
-                        <field name="price_unit"/>
-                        <field name="tax_ids"/>
-                        <field name="price_subtotal"/>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="quantity" class="oe_inline"/>
+                            <field name="price_unit"/>
+                            <field name="price_subtotal"/>
+                        </group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                            <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
                     </group>
+                    <label for="name"/>
+                    <field name="name"/>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_voucher_line_tree">
+            <field name="name">account.voucher.line.tree</field>
+            <field name="model">account.voucher.line</field>
+            <field name="arch" type="xml">
+                <tree string="Voucher Lines" editable="bottom">
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
+                    <field name="quantity"/>
+                    <field name="price_unit"/>
+                    <field name="tax_ids" widget="many2many_tags"/>
+                    <field name="price_subtotal"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
             </field>
         </record>
 
@@ -75,7 +99,7 @@
         <act_window
             id="act_journal_voucher_open"
             name="Voucher Entries"
-            context="{'search_default_journal_id': active_id, 'vouche_type':voucher_type, 'default_journal_id': active_id}"
+            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
             res_model="account.voucher"
             src_model="account.journal"/>
 
@@ -86,7 +110,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('state','=','posted')]</field>
-            <field name="context">{'state':'posted'}</field>
+            <field name="context">{'state':'posted', 'voucher_type': voucher_type}</field>
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
 
