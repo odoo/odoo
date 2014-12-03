@@ -107,6 +107,11 @@ class ir_translation_import_cursor(object):
             params['type'] = 'model'
             params['name'] = 'ir.ui.view,arch'
 
+        if params['type'] == 'model' and params['res_id'] == 0:
+            # We cannot leave 0 here, because the function field 'source' would
+            # read the field's value for some record with id=0!
+            params['res_id'] = None
+
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
                                     %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
