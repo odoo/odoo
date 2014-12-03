@@ -37,7 +37,7 @@ class account_voucher(models.Model):
     @api.model
     def _get_currency(self):
         journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
-        currency_id = self.env.user.currency_id.id
+        currency_id = self.env.user.company_id.currency_id.id
         if journal.currency:
             currency_id = journal.currency.id
         return currency_id
@@ -72,7 +72,7 @@ class account_voucher(models.Model):
                                    readonly=True, copy=True,
                                    states={'draft': [('readonly', False)]})
     narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
-    currency_id = fields.Many2one('res.currency', compute='_get_journal_currency', string='Currency', readonly=True, required=True, default=lambda self: self._get_currency)
+    currency_id = fields.Many2one('res.currency', compute='_get_journal_currency', string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['res.company']._company_default_get('account.voucher'))
     state = fields.Selection(
             [('draft', 'Draft'),
@@ -186,6 +186,7 @@ class account_voucher(models.Model):
 
     @api.onchange('pay_now')
     def onchange_payment(self):
+        account_id = False
         if self.pay_now == 'pay_later':
             partner = self.partner_id
             journal = self.journal_id
