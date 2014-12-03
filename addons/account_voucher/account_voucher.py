@@ -30,23 +30,25 @@ import openerp
 class account_voucher(models.Model):
 
     @api.one
+    @api.depends('move_id.line_id.reconcile_id')
     def _check_paid(self):
         self.paid = any([((line.account_id.user_type.type, 'in', ('receivable', 'payable')) and line.reconcile_id) for line in self.move_id])
 
-    @api.one
+    @api.model
     def _get_currency(self):
         journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
         currency_id = self.env.user.currency_id.id
         if journal.currency:
             currency_id = journal.currency.id
-        self.currency_id = currency_id
+        return currency_id
 
     @api.multi
     @api.depends('name', 'number')
     def name_get(self):
-        return [(r['id'], (r['number'] or _('Voucher'))) for r in self.read(['number'], load='_classic_write')]
+        return [(r['id'], (r['number'] or _('Voucher'))) for r in self]
 
     @api.one
+    @api.depends('journal_id', 'company_id')
     def _get_journal_currency(self):
         self.currency_id = self.journal_id.currency and self.journal_id.currency.id or self.company_id.currency_id.id
 
@@ -108,7 +110,7 @@ class account_voucher(models.Model):
                 voucher.write({'amount': voucher_amount, 'tax_amount': 0.0})
                 continue
 
-            tax = Tax_Obj.browse(line.tax_ids.ids)
+            tax = line.tax_ids
             partner = voucher.partner_id or False
             taxes = self.env['account.fiscal.position'].map_tax(tax)
             tax = Tax_Obj.browse(taxes.ids)
@@ -135,10 +137,7 @@ class account_voucher(models.Model):
         return True
 
     @api.multi
-    def basic_onchange_partner(self, partner_id, journal_id, ttype):
-        journal = self.env['account.journal'].browse(journal_id)
-        partner = self.env['res.partner'].browse(partner_id)
-        res = {'value': {'account_id': False}}
+    def basic_onchange_partner(self, partner, journal, ttype):
         account_id = False
         if journal.type in ('sale','sale_refund'):
             account_id = partner.property_account_receivable.id
@@ -146,13 +145,12 @@ class account_voucher(models.Model):
             account_id = partner.property_account_payable.id
         else:
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-        res['value']['account_id'] = account_id
-        return res
+        self.account_id = account_id
 
-    @api.multi
-    def onchange_partner_id(self, partner_id, journal_id, amount, currency_id, ttype, date):
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
         #TODO: comment me and use me directly in the sales/purchases views
-        res = self.basic_onchange_partner(partner_id, journal_id, ttype)
+        res = self.basic_onchange_partner(self.partner_id, self.journal_id, self.voucher_type)
         return res
 
     @api.multi
@@ -186,23 +184,18 @@ class account_voucher(models.Model):
                 raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(account_voucher, self).unlink()
 
-    @api.multi
-    def onchange_payment(self, pay_now, journal_id, partner_id, ttype='sale'):
-        res = {}
-        if not partner_id:
-            return res
-        if pay_now == 'pay_later':
-            partner = self.env['res.partner'].browse(partner_id)
-            journal = self.env['account.journal'].browse(journal_id)
+    @api.onchange('pay_now')
+    def onchange_payment(self):
+        if self.pay_now == 'pay_later':
+            partner = self.partner_id
+            journal = self.journal_id
             if journal.type in ('sale','sale_refund'):
                 account_id = partner.property_account_receivable.id
             elif journal.type in ('purchase', 'purchase_refund','expense'):
                 account_id = partner.property_account_payable.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-            if account_id:
-                res['account_id'] = account_id
-        return {'value':res}
+        self.account_id = account_id
 
     @api.multi
     def first_move_line_get(self, move_id, company_currency, current_currency):
@@ -244,8 +237,7 @@ class account_voucher(models.Model):
             elif voucher.journal_id.sequence_id:
                 if not voucher.journal_id.sequence_id.active:
                     raise Warning(_('Please activate the sequence of selected journal !'))
-                c = dict(context)
-                name = self.env['ir.sequence'].next_by_id(voucher.journal_id.sequence_id.id)
+                name = voucher.journal_id.sequence_id.next_by_id()
             else:
                 raise Warning(_('Please define a sequence on the journal.'))
             if not voucher.reference:
@@ -267,7 +259,6 @@ class account_voucher(models.Model):
         '''
         This function convert the amount given in company currency. It takes either the rate in the voucher (if the
         payment_rate_currency_id is relevant) either the rate encoded in the system.
-
         :param amount: float. The amount to convert
         :param voucher: id of the voucher on which we want the conversion
         :param context: to context to use for the conversion. It may contain the key 'date' set to the voucher date
@@ -276,7 +267,7 @@ class account_voucher(models.Model):
         :rtype: float
         '''
         for voucher in self:
-            return self.env['res.currency'].compute(voucher.currency_id.id, voucher.company_id.currency_id.id, amount)
+            return voucher.currency_id.compute(amount, voucher.company_id.currency_id)
 
     @api.multi
     def voucher_move_line_create(self, line_total, move_id, company_currency, current_currency):
@@ -296,7 +287,9 @@ class account_voucher(models.Model):
         for voucher in self:
             tot_line = line_total
             date = voucher.date
-            self._context.update({'date': date})
+            ctx = self._context.copy()
+            ctx['date'] = date
+            self.with_context(ctx)
             prec = self.env['decimal.precision'].precision_get('Account')
             for line in voucher.line_ids:
                 #create one move line per voucher line where amount is not 0.0
@@ -349,7 +342,6 @@ class account_voucher(models.Model):
     def _get_company_currency(self):
         '''
         Get the currency of the actual company.
-
         :param voucher_id: Id of the voucher what i want to obtain company currency.
         :return: currency id of the company of the voucher
         :rtype: int
@@ -361,7 +353,6 @@ class account_voucher(models.Model):
     def _get_current_currency(self):
         '''
         Get the currency of the voucher.
-
         :param voucher_id: Id of the voucher what i want to obtain current currency.
         :return: currency id of the voucher
         :rtype: int
@@ -384,12 +375,12 @@ class account_voucher(models.Model):
             context = voucher._sel_context()
             # But for the operations made by _convert_amount, we always need to give the date in the context
             ctx = context.copy()
-            ctx.update({'date': voucher.date})
+            ctx['date'] = voucher.date
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
             # Get the name of the account_move just created
             # Create the first line of the voucher
-            move_line = self.env['account.move.line'].with_context(force_company=voucher.journal_id.company_id.id).create(voucher.first_move_line_get(move.id, company_currency, current_currency))
+            move_line = self.env['account.move.line'].with_context(local_context).create(voucher.first_move_line_get(move.id, company_currency, current_currency))
             line_total = move_line.debit - move_line.credit
             if voucher.type == 'sale':
                 line_total = line_total - voucher._convert_amount(voucher.tax_amount)
