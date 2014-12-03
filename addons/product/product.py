@@ -898,11 +898,8 @@ class product_product(osv.osv):
         return dict.fromkeys(ids, True)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
-        result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
-        for el in template_ids:
-            result.add(el)
-        return list(result)
+        return list(set(template_ids))
 
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
