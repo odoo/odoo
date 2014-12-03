@@ -3251,29 +3251,29 @@ class BaseModel(object):
             if context.get('lang'):
                 ir_translation = env['ir.translation']
                 for field in fields_pre:
-                    f = field.name
                     if field.inherited:
                         continue
-                    elif field.column.translate is True:
-                        #TODO: optimize out of this loop
+                    f = field.name
+                    translate = field.column.translate
+                    if translate is True:
                         res_trans = ir_translation._get_ids(
-                            '%s,%s' % (self._name, f), 'model', context['lang'], ids)
+                            '%s,%s' % (self._name, f), 'model', context['lang'], ids
+                        )
                         for vals in result:
-                            vals[f] = res_trans.get(vals['id'], False) or vals[f]
-                    elif field.column.translate and True: 
+                            vals[f] = res_trans.get(vals['id']) or vals[f]
+                    elif translate and True:
                         # TODO: replace "and True" by something like this:
                         # context.get('website'): translate=lambda ... fields
                         # should not be translated in the backend but must be
                         # translated in the frontend. (e.g. ir.ui.view, you see
                         # and write the english version only in the backend,
                         # but it's translated in the frontend)
+                        res_trans = ir_translation._get_terms_translations(
+                            self._name, f, context['lang'], ids
+                        )
                         for vals in result:
-                            for term in field.column.translate(vals[f]):
-                                # TODO: optimize
-                                res_trans = ir_translation._get_source(
-                                    '%s,%s' % (self._name, f), 'model', context['lang'], term, vals['id'])
-                                if res_trans:
-                                    vals[f] = vals[f].replace(term, res_trans)
+                            rec_trans = res_trans[vals['id']]
+                            vals[f] = translate(lambda t: rec_trans.get(t) or t, vals[f])
 
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:

@@ -147,6 +147,15 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 #
+# Functions to manipulate translated fields
+#
+def get_translate_terms(translate, value):
+    """ Return the sequence of terms found in `value` for a given `translate` function. """
+    terms = []
+    translate(lambda t: terms.append(t) or t, value)
+    return terms
+
+#
 # Warning: better use self.pool.get('ir.translation')._get_source if you can
 #
 def translate(cr, name, source_type, lang, source=None):
@@ -727,7 +736,7 @@ def trans_generate(lang, modules, cr):
                 if field_def.translate is True:
                     push_translation(module, 'model', name, xml_name, encode(term))
                 else:
-                    for t in field_def.translate(term):
+                    for t in set(get_translate_terms(field_def.translate, term)):
                         push_translation(module, 'model', name, xml_name, encode(t))
 
         # End of data for ir.model.data query results
