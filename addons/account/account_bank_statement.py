@@ -109,15 +109,6 @@ class account_bank_statement(models.Model):
     cash_control = fields.Boolean(related='journal_id.cash_control', string='Cash control')
     all_lines_reconciled = fields.Boolean(compute='_all_lines_reconciled', string='All lines reconciled')
 
-    @api.onchange('date')
-    def onchange_date(self):
-        """
-            Find the correct period to use for the given date and company_id, return it and set it in the context
-        """
-        ctx = dict(self._context or {})
-        ctx['company_id'] = self.company_id.id
-        self.date = self.date
-
     @api.model
     def _prepare_move(self, st_line, st_line_number):
         """Prepare the dict of values to create the move from a
@@ -733,7 +724,7 @@ class account_statement_operation_template(models.Model):
     _description = "Preset for the lines that can be created in a bank statement reconciliation"
 
     name = fields.Char(string='Button Label', required=True)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('type','!=', 'consolidation'), ('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('type', '!=', 'consolidation'), ('deprecated', '=', False)])
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -742,6 +733,6 @@ class account_statement_operation_template(models.Model):
         ], string='Amount type', required=True, default='percentage_of_balance')
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').",
         required=True, default=100)
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade', domain=[('type_tax_use','in',('purchase','all'))])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('type','!=','view'), ('state','not in',('close','cancelled'))])
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade', domain=[('type_tax_use', 'in', ('purchase', 'all'))])
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('type', '!=', 'view'), ('state', 'not in', ('close', 'cancelled'))])
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
