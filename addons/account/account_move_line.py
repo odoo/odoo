@@ -9,7 +9,18 @@ from openerp.exceptions import RedirectWarning, Warning
 import openerp.addons.decimal_precision as dp
 from openerp import tools
 from openerp.report import report_sxw
+from openerp.tools import float_is_zero
 
+
+class account_partial_reconcile(models.Model):
+    _name = "account.partial.reconcile"
+    _table = "account_partial_reconcile_rel"
+    _description = "Partial Reconcile"
+
+    source_move_id = fields.Many2one('account.move.line')
+    rec_move_id = fields.Many2one('account.move.line')
+    amount = fields.Float()
+    amount_currency = fields.Float()
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -127,51 +138,89 @@ class account_move_line(models.Model):
             else:
                 line.reconcile_ref = False
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'reconcile_id', 'reconcile_partial_id', 'reconcile_partial_with_ids.reconcile_partial_id', 'account_id.reconcile')
+    # @api.depends('reconcile_partial_ids.debit', 'reconcile_partial_ids.credit')
+    # def _is_reconciled(self):
+    #     for line in self:
+    #         total = self.debit if self.debit != 0.0 else self.credit
+    #         for partial_reconcile_line in self.env['account_partial_reconcile'].search([('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
+    #         # for partial_reconcile_line in self.reconcile_partial_ids:
+    #             total += partial_reconcile_line.amount
+    #         if float_zero(total, dp.get_precision('Account')):
+    #             line.reconciled = True
+    #         else:
+    #             line.reconciled = False
+
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 
+        'reconcile_partial_ids.debit', 'reconcile_partial_ids.credit', 
+        'account_id.reconcile')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines. """
         for line in self:
-            if line.reconcile_id or not line.account_id.reconcile:
+
+            if line.reconciled:
                 line.amount_residual = 0.0
                 line.amount_residual_currency = 0.0
                 continue
-            
-            amount = line.currency_id and line.amount_currency or line.debit - line.credit
 
-            for rec_line in line.reconcile_partial_with_ids:
-                if rec_line.currency_id and line.currency_id and rec_line.currency_id.id == line.currency_id.id:
-                    amount += rec_line.amount_currency
-                elif not rec_line.currency_id and not line.currency_id:
-                    amount += (rec_line.debit - rec_line.credit)
-                else:
-                    payment_line_amount = rec_line.currency_id and rec_line.amount_currency or rec_line.debit - rec_line.credit
-                    from_currency = rec_line.currency_id or rec_line.company_id.currency_id
-                    from_currency = rec_line.with_context(date=rec_line.date)
-                    to_currency = line.currency_id or line.company_id.currency_id
-                    amount += from_currency.compute(payment_line_amount, to_currency)
+            amount = line.debit - line.credit
 
-            if line.reconcile_partial_id:
-                payment_line = line.reconcile_partial_id
-                if payment_line.currency_id and line.currency_id and payment_line.currency_id.id == line.currency_id.id:
-                    amount += payment_line.amount_currency if abs(payment_line.amount_currency)<=abs(amount) else -amount
-                elif not payment_line.currency_id and not line.currency_id:
-                    amount += (payment_line.debit - payment_line.credit) if abs((payment_line.debit - payment_line.credit))<=abs(amount) else -amount
-                else:
-                    payment_line_amount = payment_line.currency_id and payment_line.amount_currency or payment_line.debit - payment_line.credit
-                    from_currency = payment_line.currency_id or payment_line.company_id.currency_id
-                    from_currency = from_currency.with_context(date=payment_line.date)
-                    to_currency = line.currency_id or line.company_id.currency_id
-                    convert_amount = from_currency.compute(payment_line_amount, to_currency)
-                    amount += convert_amount if abs(convert_amount)<=abs(amount) else -amount
+            for rec_line in self.env['account_partial_reconcile'].search([('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
+                    amount += rec_line.amount
 
+            line.amount_residual = amount
             if line.currency_id:
-                line.amount_residual = line.currency_id.compute(amount, line.company_id.currency_id)
-                line.amount_residual_currency = amount
+                line.amount_residual_currency = line.company_id.currency_id.compute(amount, line.currency_id)
+                digits_rounding_precision = line.currency_id.rounding
             else:
-                line.amount_residual = amount
                 line.amount_residual_currency = 0.0
+                digits_rounding_precision = line.company_id.currency_id.rounding
+
+            if float_zero(amount, digits_rounding_precision):
+                line.reconciled = True
+            else:
+                line.reconciled = False
+
+            # if line.reconcile_id or not line.account_id.reconcile:
+            #     line.amount_residual = 0.0
+            #     line.amount_residual_currency = 0.0
+            #     continue
+            
+            # amount = line.currency_id and line.amount_currency or line.debit - line.credit
+
+            # for rec_line in line.reconcile_partial_with_ids:
+            #     if rec_line.currency_id and line.currency_id and rec_line.currency_id.id == line.currency_id.id:
+            #         amount += rec_line.amount_currency
+            #     elif not rec_line.currency_id and not line.currency_id:
+            #         amount += (rec_line.debit - rec_line.credit)
+            #     else:
+            #         payment_line_amount = rec_line.currency_id and rec_line.amount_currency or rec_line.debit - rec_line.credit
+            #         from_currency = rec_line.currency_id or rec_line.company_id.currency_id
+            #         from_currency = rec_line.with_context(date=rec_line.date)
+            #         to_currency = line.currency_id or line.company_id.currency_id
+            #         amount += from_currency.compute(payment_line_amount, to_currency)
+
+            # if line.reconcile_partial_id:
+            #     payment_line = line.reconcile_partial_id
+            #     if payment_line.currency_id and line.currency_id and payment_line.currency_id.id == line.currency_id.id:
+            #         amount += payment_line.amount_currency if abs(payment_line.amount_currency)<=abs(amount) else -amount
+            #     elif not payment_line.currency_id and not line.currency_id:
+            #         amount += (payment_line.debit - payment_line.credit) if abs((payment_line.debit - payment_line.credit))<=abs(amount) else -amount
+            #     else:
+            #         payment_line_amount = payment_line.currency_id and payment_line.amount_currency or payment_line.debit - payment_line.credit
+            #         from_currency = payment_line.currency_id or payment_line.company_id.currency_id
+            #         from_currency = from_currency.with_context(date=payment_line.date)
+            #         to_currency = line.currency_id or line.company_id.currency_id
+            #         convert_amount = from_currency.compute(payment_line_amount, to_currency)
+            #         amount += convert_amount if abs(convert_amount)<=abs(amount) else -amount
+
+            # if line.currency_id:
+            #     line.amount_residual = line.currency_id.compute(amount, line.company_id.currency_id)
+            #     line.amount_residual_currency = amount
+            # else:
+            #     line.amount_residual = amount
+            #     line.amount_residual_currency = 0.0
 
     @api.model
     def _get_currency(self):
@@ -224,13 +273,15 @@ class account_move_line(models.Model):
     ref = fields.Char(related='move_id.ref', string='Reference', store=True)
     statement_id = fields.Many2one('account.bank.statement', string='Statement', 
         help="The bank statement used for bank reconciliation", index=True, copy=False)
+    reconciled = fields.Boolean(compute='_amount_residual', store=True)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile', 
-        readonly=True, ondelete='set null', index=True, copy=False)
+        readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
+    reconcile_partial_ids = fields.Many2many('account.move.line', 'account_partial_reconcile_rel', 'source_move_id', 'rec_move_id', string='Partial Reconcile')
     reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
-        readonly=True, ondelete='set null', index=True, copy=False)
+        readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
     reconcile_partial_with_ids = fields.One2many('account.move.line', 'reconcile_partial_id', 
-        String="Reconciled with", help="Show the lines implied in partial reconciliation for this move line")
-    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
+        String="Reconciled with", help="Show the lines implied in partial reconciliation for this move line") #TO BE REMOVED
+    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True) #TO BEREMOVED
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
@@ -448,20 +499,21 @@ class account_move_line(models.Model):
     @api.multi
     def reconcile_partial(self, main_reconcile_line, writeoff_acc_id=False, writeoff_period_date=False, writeoff_journal_id=False):
         currency = self.env['res.currency']
-        total = main_reconcile_line.amount_residual
-        if main_reconcile_line.account_id.currency_id:
-            total = main_reconcile_line.amount_residual_currency
+        total = 0.0
+        # total = main_reconcile_line.amount_residual
+        # if main_reconcile_line.account_id.currency_id:
+        #     total = main_reconcile_line.amount_residual_currency
         start_amount = total
         company_ids = set([l.company_id.id for l in self+main_reconcile_line])
         if len(company_ids) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries.'))
         lines_debit = lines_credit = False
         for line in self:
-            if line.reconcile_id:
+            if line.reconciled:
                 raise Warning(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
-            if line.reconcile_partial_id:
-                raise Warning(_("Journal Item '%s' (id: %s), is already partially reconciled with \
-                    Journal Item '%s' (id: %s)!") % (line.name, line.id, line.reconcile_partial_id.name, line.reconcile_partial_id.id))
+            # if line.reconcile_partial_id:
+            #     raise Warning(_("Journal Item '%s' (id: %s), is already partially reconciled with \
+            #         Journal Item '%s' (id: %s)!") % (line.name, line.id, line.reconcile_partial_id.name, line.reconcile_partial_id.id))
             if line.debit > 0:
                 lines_debit = True
             else:
@@ -472,15 +524,13 @@ class account_move_line(models.Model):
             else:
                 currency = line.company_id.currency_id
                 total += line.amount_residual
+            res = self.env['account.partial.reconcile'].create({'source_move_id': main_reconcile_line.id, 'rec_move_id': line.id, 'amount': total,})
         if (lines_debit and lines_credit) or (main_reconcile_line.debit > 0 and lines_debit) or (main_reconcile_line.credit > 0 and lines_credit):
             raise Warning(_("You are trying to reconcile a line with wrong lines (payment with another payment, or invoice with anoter invoice)"))
         if (start_amount <= 0 and total > 0) or (start_amount >= 0 and total < 0):
             raise Warning(_("You are trying to reconcile an entry with too much lines or with a line having a larger quantity"))
-        res = self.write({'reconcile_partial_id': main_reconcile_line.id})
-        if currency.is_zero(total):
-            #add line already partially reconciled in this computation
-            to_reconcile_ids = main_reconcile_line.reconcile_partial_with_ids + main_reconcile_line
-            res = to_reconcile_ids.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
+        
+        res = self.env['account.partial.reconcile'].create({'source_move_id': main_reconcile_line.id, 'rec_move_id': self.id, 'amount': total,})
         return res
 
     @api.multi

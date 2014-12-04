@@ -242,7 +242,7 @@ class account_account(models.Model):
             RIGHT JOIN account_account a ON (a.id = l.account_id)
             WHERE a.reconcile IS TRUE
             AND a.id = %s
-            AND l.reconcile_id IS NULL
+            AND l.reconciled IS FALSE
             AND (a.last_time_entries_checked IS NULL OR l.date > a.last_time_entries_checked)
             AND l.state <> 'draft'
             GROUP BY l.account_id''', (self.id,))
@@ -522,7 +522,7 @@ class account_move(models.Model):
             "of credits equals the sum of debits"
         return True
 
-
+#OBJECT TO BE REMOVED
 class account_move_reconcile(models.Model):
     _name = "account.move.reconcile"
     _description = "Account Reconciliation"
