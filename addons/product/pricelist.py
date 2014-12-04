@@ -24,6 +24,7 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import except_orm
 
 import openerp.addons.decimal_precision as dp
 
@@ -251,8 +252,11 @@ class product_pricelist(osv.osv):
             price = False
             rule_id = False
             for rule in items:
-                if 'uom' in context:
-                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
+                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
+                    try:
+                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
+                    except except_orm:
+                        qty_in_product_uom = qty
                 else:
                     qty_in_product_uom = qty
                 if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
@@ -463,8 +467,11 @@ class product_pricelist_item(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
-
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="For the rule to apply, bought/sold quantity must be greater than or equal to minimum quantity specified in this field."),
+        'min_quantity': fields.integer('Min. Quantity', required=True,
+            help="For the rule to apply, bought/sold quantity must be greater "
+              "than or equal to the minimum quantity specified in this field.\n"
+              "Expressed in the default UoM of the product."
+            ),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),

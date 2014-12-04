@@ -93,7 +93,7 @@ class stock_landed_cost(osv.osv):
     }
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.landed.cost'),
         'state': 'draft',
         'date': fields.date.context_today,
     }

@@ -113,13 +113,14 @@ class project_issue(osv.Model):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -548,8 +549,13 @@ class account_analytic_account(osv.Model):
 class project_project(osv.Model):
     _inherit = 'project.project'
 
+    _columns = {
+        'label_issues': fields.char('Use Issues as', help="Customize the issues label, for example to call them cases."),
+    }
+
     _defaults = {
-        'use_issues': True
+        'use_issues': True,
+        'label_issues': 'Issues',
     }
 
     def _check_create_write_values(self, cr, uid, vals, context=None):

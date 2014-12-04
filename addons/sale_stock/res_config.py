@@ -84,9 +84,7 @@ class sale_configuration(osv.osv_memory):
         res = super(sale_configuration, self).set_sale_defaults(cr, uid, ids, context)
         return res
 
-    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, group_invoice_deli_orders, context=None):
+    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_deli_orders, context=None):
         if not group_invoice_deli_orders:
             return {'value': {'default_order_policy': 'manual'}}
-        if not group_invoice_so_lines:
-            return {'value': {'default_order_policy': 'picking'}}
         return {}

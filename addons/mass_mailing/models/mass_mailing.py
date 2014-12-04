@@ -119,6 +119,7 @@ class MassMailingList(osv.Model):
 
     _columns = {
         'name': fields.char('Mailing List', required=True),
+        'create_date': fields.datetime('Creation Date'),
         'contact_nbr': fields.function(
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
@@ -620,6 +621,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
+                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing.body_html,
                 'subject': mailing.name,
                 'model': mailing.mailing_model,

@@ -123,7 +123,7 @@ class product_template(osv.Model):
             string='Website Comments',
         ),
         'website_published': fields.boolean('Available in the website', copy=False),
-        'website_description': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website', translate=True),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),

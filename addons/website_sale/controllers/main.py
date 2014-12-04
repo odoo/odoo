@@ -126,9 +126,10 @@ class website_sale(http.Controller):
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
-                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, price])
         else:
-            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
+            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, p.lst_price]
+                for p in product.product_variant_ids]
 
         return attribute_value_ids
 
@@ -145,7 +146,7 @@ class website_sale(http.Controller):
             domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
                 ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
         if category:
-            domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
+            domain += [('public_categ_ids', 'child_of', int(category))]
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
@@ -179,6 +180,7 @@ class website_sale(http.Controller):
         if search:
             post["search"] = search
         if category:
+            category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
 
         style_obj = pool['product.style']
@@ -735,21 +737,22 @@ class website_sale(http.Controller):
                 }
             else:
                 state = 'done'
-                message = ""
+                message = '<h2>%s</h2>' % _('Your order has been confirmed, thank you for your loyalty.')
                 validation = None
         else:
             tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
+            message = '<h2>%s</h2>' % _('Thank you for your order.')
             if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
+                message += '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
+                message += '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {

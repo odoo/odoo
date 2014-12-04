@@ -45,8 +45,8 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)"
-                                            context="{'show_address': 1, 'default_customer': False}"
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" 
+                                            context="{'show_address': 1}" 
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
@@ -75,8 +75,8 @@
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id"
-                                            context="{'show_address': 1, 'default_customer': False}"
+                                        <field name="address_home_id" 
+                                            context="{'show_address': 1}" 
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                     <group string="Status">
@@ -159,11 +159,11 @@
                 <field name="message_unread"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_employee_vignette">
-                            <div class="oe_employee_image">
-                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
+                        <div class="oe_employee_details">
+                            <div class="col-md-4">
+                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_image"/></a>
                             </div>
-                            <div class="oe_employee_details">
+                            <div class="col-md-6">
                                 <h4>
                                     <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
                                 </h4>
@@ -192,9 +192,6 @@
                                 </div>
                             </div>
                         </div>
-                        <script>
-                            $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                        </script>
                     </t>
                 </templates>
             </kanban>

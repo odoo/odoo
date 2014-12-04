@@ -1228,7 +1228,7 @@ openerp.testing.section('search.filters.saved', {
     templates: true
 }, function (test) {
     test('checkboxing', {asserts: 6}, function (instance, $fix, mock) {
-        var view = makeSearchView(instance);
+        var view = makeSearchView(instance, undefined, undefined, {action: {id: 1}});
         mock('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
         });
@@ -1266,7 +1266,7 @@ openerp.testing.section('search.filters.saved', {
             });
     });
     test('toggling', {asserts: 2}, function (instance, $fix, mock) {
-        var view = makeSearchView(instance);
+        var view = makeSearchView(instance, undefined, undefined, {action: {id: 1}});
         mock('ir.filters:get_filters', function () {
             return [{name: 'filter name', user_id: 42, id: 1}];
         });
@@ -1280,7 +1280,7 @@ openerp.testing.section('search.filters.saved', {
             });
     });
     test('replacement', {asserts: 4}, function (instance, $fix, mock) {
-        var view = makeSearchView(instance);
+        var view = makeSearchView(instance, undefined, undefined, {action: {id: 1}});
         mock('ir.filters:get_filters', function () {
             return [
                 {name: 'f', user_id: 42, id: 1, context: {'private': 1}},

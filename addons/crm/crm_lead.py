@@ -272,6 +272,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
+        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange')
     }
 
     _defaults = {
@@ -788,7 +789,7 @@ class crm_lead(format_address, osv.osv):
                 partner_id = self._create_lead_partner(cr, uid, lead, context)
                 self.pool['res.partner'].write(cr, uid, partner_id, {'team_id': lead.team_id and lead.team_id.id or False})
             if partner_id:
-                lead.write({'partner_id': partner_id}, context=context)
+                lead.write({'partner_id': partner_id})
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -1085,6 +1086,7 @@ class crm_lead(format_address, osv.osv):
                     break
         return res
 
+
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
@@ -1093,4 +1095,11 @@ class crm_lead_tag(osv.Model):
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class crm_lost_reason(osv.Model):
+    _name = "crm.lost.reason"
+    _description = 'Reason for loosing leads'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
+    }

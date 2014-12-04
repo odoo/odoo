@@ -60,11 +60,11 @@
                             <div class="oe_title" style="width: 390px;">
                                 <label class="oe_edit_only" for="name" string="Product Name"/>
                                 <h1><field name="name" class="oe_inline"/></h1>
-                            </div>
-                            <div class="oe_left" name="options" groups="base.group_user">
-                                <div>
-                                    <field name="sale_ok"/>
-                                    <label for="sale_ok"/>
+                                <div name="options" groups="base.group_user">
+                                    <div>
+                                        <field name="sale_ok"/>
+                                        <label for="sale_ok"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -199,8 +199,13 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -212,12 +217,18 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you buy or sell,
-                whether it's a physical product, a consumable or service.
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
               </p>
             </field>
         </record>
@@ -246,7 +257,7 @@
                                 <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
-                        <field name="attribute_line_ids" widget="one2many_list">
+                        <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
                                 <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
@@ -300,6 +311,15 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_kanban_view"/>
             <field name="context">{"search_default_filter_to_sell":1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p><p>
+                    You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to  customers.               
+                </p><p>
+                    The product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.
+                </p>
+            </field>
         </record>
 
         <menuitem action="product_template_action"
@@ -590,7 +610,7 @@
                                 <field name="factor"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                            'readonly':[('uom_type','=','bigger')]}"/>
                                 <field name="factor_inv"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','bigger')],
@@ -605,7 +625,7 @@
                         </group>
                         <group>
                             <field name="active"/>
-                            <field name="rounding"/>
+                            <field name="rounding" digits="[42, 5]"/>
                         </group>
                     </group>
                 </form>

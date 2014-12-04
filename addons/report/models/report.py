@@ -23,7 +23,8 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv
-from openerp.tools import config, which
+from openerp.tools import config
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -48,8 +49,10 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    return which('wkhtmltopdf', path=os.pathsep.join(defpath))
+    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
+    if wkhtmltopdf_bin is None:
+        raise IOError
+    return wkhtmltopdf_bin
 
 
 #--------------------------------------------------------------------------

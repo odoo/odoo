@@ -60,6 +60,7 @@ class crm_opportunity_report(osv.Model):
             ('lead','Lead'),
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', readonly=True),
     }
 
     def init(self, cr):
@@ -93,7 +94,8 @@ class crm_opportunity_report(osv.Model):
                     c.create_date as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
-                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
+                    c.lost_reason
                 FROM
                     crm_lead c
                 WHERE c.active = 'true'

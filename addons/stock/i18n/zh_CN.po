@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-23 08:58+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2014-10-28 05:14+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:40+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:52+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -102,14 +102,14 @@ msgstr ""
 #: code:addons/stock/stock.py:3428
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr " 装箱序列"
 
 #. module: stock
 #: code:addons/stock/stock.py:3153
 #: code:addons/stock/stock.py:3429
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr " 分拣序列"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
@@ -146,11 +146,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* 新建: 当移库单被创建还没被确实时。\n"
-"* 等待另外的移库: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流.\n"
-"* 等待可用: 当需求还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在等待制造等等...\n"
-"* 可用: 当产品已经被保留了，状态就被设置为 可用。\n"
-"* 完成: 当这次装运被处理，状态就是“完成”。"
+"* 新建: 当移库被创建还没被确实时。\n"
+"* 等待另外的移库: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流。\n"
+"* 等待可用: 当补货还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在制造等等...\n"
+"* 可用: 当产品被保留，状态就被设置为 可用。\n"
+"* 完成: 当装运处理好，状态就是“完成”。"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -427,7 +427,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/widgets.js:654
 #, python-format
 msgid "<p>We could not find a picking to display.</p>"
-msgstr "<p>找不到要现实的分拣单。</p>"
+msgstr "<p>找不到要显示的分拣。</p>"
 
 #. module: stock
 #: code:addons/stock/stock.py:2495
@@ -482,7 +482,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr "高级：应用需求规则"
+msgstr "高级：应用补货规则"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_form
@@ -522,14 +522,14 @@ msgstr "允许在发运单上索赔"
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
 msgid "Allow to define several packaging methods on products"
-msgstr "允许产品定义多种包装方式"
+msgstr "允许为产品定义多种包装方法"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
-msgstr "允许创建和管理你要在系统中保留的的包装尺寸和类型。"
+msgstr "允许创建和管理在系统中维护的包装尺寸以及类型。"
 
 #. module: stock
 #: help:stock.config.settings,group_uom:0
@@ -607,7 +607,7 @@ msgstr "自动，但不增加"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr "自动生成需求单"
+msgstr "自动补货"
 
 #. module: stock
 #: field:stock.move,string_availability_info:0
@@ -628,7 +628,7 @@ msgstr "可用产品"
 #: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "之延期交货清单。"
+msgstr "延期交货"
 
 #. module: stock
 #: code:addons/stock/stock.py:943
@@ -919,7 +919,7 @@ msgstr "配置仓库"
 #: code:addons/stock/static/src/xml/picking.xml:175
 #, python-format
 msgid "Configure package"
-msgstr "配置包装"
+msgstr "配置包裹"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
@@ -945,7 +945,7 @@ msgstr "消耗品"
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,children_ids:0
 msgid "Contained Packages"
-msgstr "所含包装"
+msgstr "包含的包裹"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -990,7 +990,7 @@ msgstr "创建批次"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr "创建产品需求单"
+msgstr "创建补货"
 
 #. module: stock
 #. openerp-web
@@ -1007,7 +1007,7 @@ msgstr "已创建库存调拨"
 #. module: stock
 #: field:stock.warehouse.orderpoint,procurement_ids:0
 msgid "Created Procurements"
-msgstr "创建产品需求单"
+msgstr "创建补货"
 
 #. module: stock
 #: field:make.procurement,create_uid:0
@@ -1405,12 +1405,12 @@ msgstr "调拨目的地"
 #. module: stock
 #: field:stock.pack.operation,result_package_id:0
 msgid "Destination Package"
-msgstr ""
+msgstr "目的包裹"
 
 #. module: stock
 #: field:stock.transfer_details_items,result_package_id:0
 msgid "Destination package"
-msgstr ""
+msgstr "目的包裹"
 
 #. module: stock
 #: field:stock.move,route_ids:0
@@ -1511,7 +1511,7 @@ msgstr "欧洲客户"
 #: code:addons/stock/stock.py:3682
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr "一个包装中的所有东西都必须在同一个库位下"
+msgstr "包裹里面的东西应该在同一个库位"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
@@ -1703,7 +1703,7 @@ msgstr "一般信息"
 #. module: stock
 #: field:stock.config.settings,module_procurement_jit:0
 msgid "Generate procurement in real time"
-msgstr "实时生成产品需求单"
+msgstr "实时生产补货"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -1740,7 +1740,7 @@ msgstr "分组于"
 #. module: stock
 #: view:procurement.order:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr "分组的分拣单"
+msgstr "同组的分拣"
 
 #. module: stock
 #: field:stock.pack.operation,processed:0
@@ -2212,7 +2212,7 @@ msgstr ""
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr "指定包装的属性如数量,类型等"
+msgstr "它指定包装的属性，如类型，包装的数量等"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -2232,7 +2232,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,last_done_picking:0
 msgid "Last 10 Done Pickings"
-msgstr "最近10笔完成的分拣单"
+msgstr "最近10笔完成的分拣"
 
 #. module: stock
 #: field:stock.picking,message_last_post:0
@@ -2505,7 +2505,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
 msgid "Make Procurements"
-msgstr "生成产品需求单"
+msgstr "生成补货"
 
 #. module: stock
 #: code:addons/stock/stock.py:2997
@@ -2538,7 +2538,7 @@ msgstr "管理多个库位和仓库"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr "管理产品包装"
+msgstr "管理包裹"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
@@ -2573,7 +2573,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage picking wave"
-msgstr ""
+msgstr "管理波次分拣"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -2704,7 +2704,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr ""
+msgstr "已移动的份"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2723,7 +2723,7 @@ msgstr "调拨"
 #. module: stock
 #: help:procurement.order,move_ids:0
 msgid "Moves created by the procurement"
-msgstr "此需求单创建的调拨"
+msgstr "补货创建的移库"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,group_id:0
@@ -2801,7 +2801,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/widgets.js:647
 #, python-format
 msgid "No Picking Available"
-msgstr ""
+msgstr "无可用分拣"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
@@ -2813,7 +2813,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:195
 #, python-format
 msgid "No picking found."
-msgstr ""
+msgstr "没有找到分拣"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:84
@@ -3086,7 +3086,7 @@ msgstr ""
 #: help:stock.pack.operation,owner_id:0
 #: help:stock.transfer_details_items,owner_id:0
 msgid "Owner of the quants"
-msgstr ""
+msgstr "份的所有者"
 
 #. module: stock
 #: code:addons/stock/product.py:265
@@ -3120,47 +3120,47 @@ msgstr "包装类型"
 #: view:stock.quant.package:stock.view_quant_package_tree
 #: view:website:stock.report_inventory
 msgid "Package"
-msgstr "包装"
+msgstr "包裹"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
 msgid "Package BarCode"
-msgstr "包装条码"
+msgstr "包裹条码"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "有内容的包裹条码"
 
 #. module: stock
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,complete_name:0
 msgid "Package Name"
-msgstr ""
+msgstr "包裹名称"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 #: field:stock.quant.package,name:0
 msgid "Package Reference"
-msgstr ""
+msgstr "包裹参考"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:57
 #, python-format
 msgid "Package type"
-msgstr "包装类型"
+msgstr "包裹类型"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 msgid "Packages"
-msgstr "包装"
+msgstr "包裹"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Packages To Move"
-msgstr ""
+msgstr "要移动的包裹"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -3172,19 +3172,19 @@ msgstr "包装"
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
 msgid "Packing Location"
-msgstr ""
+msgstr "装修库位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "装箱作业"
 
 #. module: stock
 #: code:addons/stock/stock.py:3280
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "装箱区"
 
 #. module: stock
 #: field:stock.transfer_details,packop_ids:0
@@ -3205,7 +3205,7 @@ msgstr "上级库位"
 #. module: stock
 #: field:stock.quant.package,parent_id:0
 msgid "Parent Package"
-msgstr "上级包装"
+msgstr "父级包裹"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3249,7 +3249,7 @@ msgstr "物理库位"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "物理包裹"
 
 #. module: stock
 #: code:addons/stock/stock.py:3228
@@ -3285,12 +3285,12 @@ msgstr "分拣"
 #: model:ir.model,name:stock.model_stock_picking
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "分拣清单"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "拣货单"
+msgstr "分拣清单"
 
 #. module: stock
 #: field:procurement.rule,picking_type_id:0
@@ -3299,17 +3299,17 @@ msgstr "拣货单"
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "拣货单类型"
+msgstr "分拣类型"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
 msgid "Picking Type Code"
-msgstr "拣货单类型代码"
+msgstr "分拣类型代码"
 
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr ""
+msgstr "分拣类型名称"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
@@ -3321,34 +3321,34 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
 msgid "Picking Type for Returns"
-msgstr ""
+msgstr "退货的分拣类型"
 
 #. module: stock
 #: view:stock.picking.type:stock.view_picking_type_form
 #: view:stock.picking.type:stock.view_picking_type_tree
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "分拣类型"
 
 #. module: stock
 #: view:stock.picking:stock.vpicktree
 msgid "Picking list"
-msgstr "分拣单"
+msgstr "分拣清单"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details
 msgid "Picking wizard"
-msgstr ""
+msgstr "分拣向导"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details_items
 msgid "Picking wizard items"
-msgstr ""
+msgstr "分拣向导项目"
 
 #. module: stock
 #: view:procurement.group:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr ""
+msgstr "分拣"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3358,7 +3358,7 @@ msgstr "已处理的分拣"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr ""
+msgstr "要分组的分拣"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3397,7 +3397,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,product_packaging:0
 msgid "Prefered Packaging"
-msgstr ""
+msgstr "首选的包装"
 
 #. module: stock
 #: field:procurement.order,route_ids:0
@@ -3426,14 +3426,14 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Print Picking List"
-msgstr ""
+msgstr "打印分拣清单"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:177
 #, python-format
 msgid "Print package label"
-msgstr ""
+msgstr "打印包裹标签"
 
 #. module: stock
 #: field:stock.fixed.putaway.strat,sequence:0
@@ -3469,7 +3469,7 @@ msgstr "稍候处理"
 #: selection:stock.location,usage:0
 #: field:stock.move,procurement_id:0
 msgid "Procurement"
-msgstr "需求"
+msgstr "补货"
 
 #. module: stock
 #: field:stock.move,group_id:0
@@ -3477,47 +3477,47 @@ msgstr "需求"
 #: field:stock.picking,group_id:0
 #: field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "补货组"
 
 #. module: stock
 #: field:procurement.order,location_id:0
 #: field:procurement.rule,location_id:0
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "需求库位"
+msgstr "补货库位"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "待处理的补货"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
 #: view:make.procurement:stock.view_make_procurment_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "补货请求"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "补货申请"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
 #: field:stock.move,rule_id:0
 msgid "Procurement Rule"
-msgstr ""
+msgstr "补货规则"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
 msgid "Procurement Rules"
-msgstr ""
+msgstr "补货规则"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement_action
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "需求"
+msgstr "补货"
 
 #. module: stock
 #: code:addons/stock/product.py:277
@@ -3890,7 +3890,7 @@ msgstr ""
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr ""
+msgstr "份"
 
 #. module: stock
 #. openerp-web
@@ -4016,7 +4016,7 @@ msgstr "文档的参照"
 #. module: stock
 #: field:stock.picking,pack_operation_ids:0
 msgid "Related Packing Operations"
-msgstr ""
+msgstr "相关的装箱作业"
 
 #. module: stock
 #: field:stock.pack.operation,remaining_qty:0
@@ -4055,7 +4055,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:176
 #, python-format
 msgid "Remove from package"
-msgstr ""
+msgstr "从包裹中移除"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,logic:0
@@ -4089,7 +4089,7 @@ msgstr ""
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr ""
+msgstr "保留的份"
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
@@ -4099,7 +4099,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr ""
+msgstr "保留的份"
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
@@ -4124,12 +4124,12 @@ msgstr "退货"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退回分拣"
+msgstr "退货分拣"
 
 #. module: stock
 #: view:stock.return.picking.line:stock.stock_return_line_form_in
 msgid "Return Picking Memory"
-msgstr "退回分拣存储区"
+msgstr "退货分拣记忆"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -4238,7 +4238,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:226
 #, python-format
 msgid "Scanned picking could not be found"
-msgstr ""
+msgstr "找不到扫描的分拣"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -4478,7 +4478,7 @@ msgstr "源库位"
 #. module: stock
 #: field:stock.pack.operation,package_id:0
 msgid "Source Package"
-msgstr ""
+msgstr "源包裹"
 
 #. module: stock
 #: help:procurement.rule,location_src_id:0
@@ -4488,7 +4488,7 @@ msgstr ""
 #. module: stock
 #: field:stock.transfer_details_items,package_id:0
 msgid "Source package"
-msgstr ""
+msgstr "源包裹"
 
 #. module: stock
 #: help:stock.inventory,lot_id:0
@@ -4603,7 +4603,7 @@ msgstr ""
 #. module: stock
 #: field:stock.pack.operation,picking_id:0
 msgid "Stock Picking"
-msgstr ""
+msgstr "库存分拣"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -4810,7 +4810,7 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr ""
+msgstr "份所属于的公司"
 
 #. module: stock
 #: help:stock.inventory,date:0
@@ -4851,17 +4851,17 @@ msgstr ""
 #. module: stock
 #: help:stock.quant.package,parent_id:0
 msgid "The package containing this item"
-msgstr ""
+msgstr "该包裹包含此项目"
 
 #. module: stock
 #: help:stock.quant,package_id:0
 msgid "The package containing this quant"
-msgstr ""
+msgstr "该包裹包含此份"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "分拣类型决定分拣视图"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -5054,7 +5054,7 @@ msgstr "该库位将被使用以替换默认的，同样的，库存调拨的源
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr "该库位将被使用以替换默认的，同样的，库存调拨的源库位将根据需求单生成。"
+msgstr "该库位将被使用以替换默认的，同样的，库存调拨的源库位将根据补货生成。"
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -5116,7 +5116,7 @@ msgstr ""
 #: view:stock.production.lot:stock.view_production_lot_form
 #, python-format
 msgid "Traceability"
-msgstr "可追溯的"
+msgstr "产品追踪"
 
 #. module: stock
 #: field:product.template,track_incoming:0
@@ -5194,7 +5194,7 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "包装的类型"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
@@ -5309,7 +5309,7 @@ msgstr "紧急"
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Use packages: pallets, boxes, ..."
-msgstr ""
+msgstr "使用包裹：托盘，箱子，..."
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -5358,7 +5358,7 @@ msgstr "审核盘点"
 #: code:addons/stock/static/src/xml/picking.xml:67
 #, python-format
 msgid "Validate package"
-msgstr ""
+msgstr "验证包裹"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -5379,7 +5379,7 @@ msgstr "视图"
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "View Contained Packages content"
-msgstr ""
+msgstr "查看包含的包裹内容"
 
 #. module: stock
 #: field:stock.warehouse,view_location_id:0
@@ -5545,7 +5545,7 @@ msgstr "向导"
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
+msgstr "向导检测所有的库存最小规则，并生成补货订单"
 
 #. module: stock
 #: selection:stock.pack.operation,processed:0
@@ -5682,7 +5682,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:243
 #, python-format
 msgid "picking(s)"
-msgstr ""
+msgstr "分拣"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -5750,7 +5750,7 @@ msgstr ""
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Request Procurement"
-msgstr ""
+msgstr "⇒ 请求补货"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -5764,12 +5764,3 @@ msgstr ""
 
 #~ msgid "Warehouse Management"
 #~ msgstr "仓库管理"
-
-#~ msgid "Container Package"
-#~ msgstr "容器包装"
-
-#~ msgid "Enter Transfer Details"
-#~ msgstr "输入移货明细"
-
-#~ msgid "Open Barcode interface"
-#~ msgstr "打开条码界面"

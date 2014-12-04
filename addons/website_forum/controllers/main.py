@@ -51,7 +51,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/send_validation_email', type='json', auth='user', website=True)
     def send_validation_email(self, forum_id=None, **kwargs):
-        request.env['res.users'].send_forum_validation_email(request.uid, forum_id=forum_id)
+        if request.env.uid != request.website.user_id.id:
+            request.env.user.send_forum_validation_email(forum_id=forum_id)
         request.session['validation_email_sent'] = True
         return True
 
@@ -62,7 +63,7 @@ class WebsiteForum(http.Controller):
                 forum_id = int(forum_id)
             except ValueError:
                 forum_id = None
-        done = request.env['res.users'].process_forum_validation_token(token, int(id), email, forum_id=forum_id)
+        done = request.env['res.users'].sudo().browse(int(id)).process_forum_validation_token(token, email, forum_id=forum_id)[0]
         if done:
             request.session['validation_email_done'] = True
         if forum_id:
@@ -155,9 +156,12 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
-    def tag_read(self, **post):
-        tags = request.env['forum.tag'].search_read([], ['name'])
-        data = [tag['name'] for tag in tags]
+    def tag_read(self, q='', l=25, **post):
+        data = request.env['forum.tag'].search_read(
+            domain=[('name', '=ilike', (q or '') + "%")],
+            fields=['id', 'name'],
+            limit=int(l),
+        )
         return simplejson.dumps(data)
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
@@ -252,38 +256,25 @@ class WebsiteForum(http.Controller):
 
     # Post
     # --------------------------------------------------
-
     @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="public", website=True)
     def forum_post(self, forum, post_type=None, **post):
         if not request.session.uid:
             return login_redirect()
         user = request.env.user
-        if not post_type in ['question', 'link', 'discussion']:  # fixme: make dynamic
+        if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
             return werkzeug.utils.redirect('/forum/%s' % slug(forum))
         if not user.email or not tools.single_email_re.match(user.email):
-            return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), self._uid))
-        values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
+            return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
+        values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
         return request.website.render("website_forum.new_%s" % post_type, values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="public", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return login_redirect()
-
-        post_tag_ids = []
-        Tag = request.env['forum.tag']
-        if post.get('post_tags', False) and post.get('post_tags').strip('[]'):
-            tags = post.get('post_tags').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_rec = Tag.search([('name', '=', tag)])
-                if tag_rec:
-                    post_tag_ids.append((4, tag_rec.id))
-                else:
-                    post_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
-
+        post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
             'name': post.get('post_name', ''),
@@ -330,9 +321,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
-        tags = ""
-        for tag_name in post.tag_ids:
-            tags += tag_name.name + ","
+        tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
+        tags = simplejson.dumps(tags)
         values = self._prepare_forum_values(forum=forum)
         values.update({
             'tags': tags,
@@ -344,19 +334,9 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        post_tags = []
-        if kwargs.get('post_tag') and kwargs.get('post_tag').strip('[]'):
-            Tag = request.env['forum.tag']
-            tags = kwargs.get('post_tag').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_rec = Tag.search([('name', '=', tag)])
-                if tag_rec:
-                    post_tags += tag_rec.ids
-                else:
-                    new_tag = Tag.create({'name': tag, 'forum_id': forum.id})
-                    post_tags.append(new_tag.id)
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
         vals = {
-            'tag_ids': [(6, 0, post_tags)],
+            'tag_ids': post_tags,
             'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
         }
@@ -438,18 +418,26 @@ class WebsiteForum(http.Controller):
         Data = request.env["ir.model.data"]
 
         user = User.sudo().search([('id', '=', user_id)])
-        if not user or user.karma < 1:
+        current_user = request.env.user.sudo()
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user or (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search([
             ('parent_id', '=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
             order='create_date desc')
         count_user_questions = len(user_question_ids)
+
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
         # displaying only the 20 most recent questions
         user_questions = user_question_ids[:20]
 
@@ -482,7 +470,8 @@ class WebsiteForum(http.Controller):
 
         # activity by user.
         model, comment = Data.get_object_reference('mail', 'mt_comment')
-        activities = Activity.search([('res_id', 'in', (user_question_ids+user_answer_ids).ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100)
+        activities = Activity.search([('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)],
+                                     order='date DESC', limit=100)
 
         posts = {}
         for act in activities:
@@ -557,7 +546,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True)
     def badge_users(self, forum, badge, **kwargs):
-        users = [badge_user.user_id for badge_user in badge.owner_ids]
+        users = [badge_user.user_id for badge_user in badge.sudo().owner_ids]
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
             'badge': badge,

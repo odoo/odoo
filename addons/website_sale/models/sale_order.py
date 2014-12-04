@@ -22,8 +22,8 @@ class sale_order(osv.Model):
             help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
         ),
         'cart_quantity': fields.function(_cart_qty, type='integer', string='Cart Quantity'),
-        'payment_acquirer_id': fields.many2one('payment.acquirer', 'Payment Acquirer', on_delete='set null'),
-        'payment_tx_id': fields.many2one('payment.transaction', 'Transaction', on_delete='set null'),
+        'payment_acquirer_id': fields.many2one('payment.acquirer', 'Payment Acquirer', on_delete='set null', copy=False),
+        'payment_tx_id': fields.many2one('payment.transaction', 'Transaction', on_delete='set null', copy=False),
     }
 
     def _get_errors(self, cr, uid, order, context=None):
@@ -158,7 +158,6 @@ class website(orm.Model):
                     pricelist_id = pricelist_ids[0]
                     request.session['sale_order_code_pricelist_id'] = pricelist_id
                     update_pricelist = True
-                request.session['sale_order_code_pricelist_id'] = False
 
             pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
 

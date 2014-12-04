@@ -44,6 +44,18 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
+        'legend_priority': fields.text(
+            'Priority Management Explanation', translate=True,
+            help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
+        'legend_blocked': fields.char(
+            'Kanban Blocked Explanation', translate=True,
+            help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.'),
+        'legend_done': fields.char(
+            'Kanban Valid Explanation', translate=True,
+            help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.'),
+        'legend_normal': fields.char(
+            'Kanban Ongoing Explanation', translate=True,
+            help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -280,6 +292,7 @@ class project(osv.osv):
             help="Link this project to an analytic account if you need financial management on projects. "
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
+        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -347,6 +360,7 @@ class project(osv.osv):
     _defaults = {
         'active': True,
         'type': 'contract',
+        'label_tasks': 'Tasks',
         'state': 'open',
         'sequence': 10,
         'type_ids': _get_type_common,
@@ -672,12 +686,13 @@ class task(osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -1230,7 +1245,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks', help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 

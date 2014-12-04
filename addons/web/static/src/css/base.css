@@ -532,7 +532,7 @@
   background-image: -webkit-radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
   background-image: -moz-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
   background-image: -ms-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
-  background-image: radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
 }
 .openerp .oe_kanban_status_green {
   background: green;
@@ -1155,6 +1155,13 @@
 .openerp .oe-view-manager-header .oe_form_buttons {
   padding: 0;
 }
+.openerp .oe-view-manager-header .oe_form_buttons_view > button {
+  float: left;
+}
+.openerp .oe-view-manager-header .oe_form_buttons_view > button:last-child {
+  float: right;
+  margin-left: 4px;
+}
 .openerp .oe-view-manager-header .oe-pager-buttons {
   min-height: 30px;
 }
@@ -1360,6 +1367,10 @@
 }
 .openerp .oe-search-options .divider {
   display: none;
+}
+.openerp .oe-search-options .filters-menu {
+  overflow: auto;
+  overflow-x: hidden;
 }
 .openerp .oe-search-options .filters-menu .divider {
   display: list-item;
@@ -1688,7 +1699,7 @@
   border-right: none;
 }
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
-  width: 108px;
+  min-width: 108px;
   border-top: 1px solid #cacaca;
   margin-top: 4px;
   padding-top: 4px;

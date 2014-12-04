@@ -85,8 +85,8 @@ There are three types of inheritance specs:
 * any other element, the first element with the same name and identical
   attributes (ignoring ``position``) is matched
 
-The inheritance spec can an optional ``position`` attribute specifhing how
-the matched node should be altered:
+The inheritance spec may have an optional ``position`` attribute specifying
+how the matched node should be altered:
 
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
@@ -98,7 +98,7 @@ the matched node should be altered:
 ``before``
     the content of the inheritance spec is added to the matched node's
     parent, before the matched node
-``attribute``
+``attributes``
     the content of the inheritance spec should be ``attribute`` elements
     with a ``name`` attribute and an optional body:
 
@@ -132,6 +132,14 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+``default_order``
+    overrides the ordering of the view, replacing the model's default order.
+    The value is a comma-separated list of fields, postfixed by ``desc`` to
+    sort in reverse order:
+
+    .. code-block:: xml
+
+        <tree default_order="sequence,name desc">
 ``colors``
     allows changing the color of a row's text based on the corresponding
     record's attributes.

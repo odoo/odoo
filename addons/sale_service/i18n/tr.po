@@ -1,180 +1,95 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-06 22:11+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-09 14:09+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:02+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-10 05:51+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_procuretasktask0
-msgid "For each product, on type service and on order"
-msgstr "Her bir ürün için, hizmet türünde ve sipariş üzerine"
+#. module: sale_service
+#: field:project.task.type,closed:0
+msgid "Close"
+msgstr "Kapat"
 
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
-msgstr "Ürün türü hizmettir, sonra görevi oluşturur."
+#. module: sale_service
+#: field:product.template,auto_create_task:0
+msgid "Create Task Automatically"
+msgstr "Otomatik Görev Oluştur"
 
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:92
-#, python-format
-msgid "Task created"
-msgstr "Görev oluşturuldu"
+#. module: sale_service
+#: view:project.task:sale_service.view_sale_service_inherit_form2
+msgid "Order Line"
+msgstr "Sipariş Satırı"
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sales order"
-msgstr "Satış siparişi üzerine hizmet satmanız durumunda"
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "Hizmetin sağlanması için bir görev oluşturuldu."
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
-msgstr "Ürün"
-
-#. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sales Order Task"
-msgstr "Satış Sipariş Görevi"
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr "ürün türü 'hizmet' ise görevi oluşturur."
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_ordertask0
-msgid "Order Task"
-msgstr "Sipariş Görevi"
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
-msgstr "Tedarik Görevi"
-
-#. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr "Satış sipariş kalemi"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "Görev"
-
-#. module: project_mrp
-#: view:product.product:0
-msgid ""
-"will be \n"
-"                        created to follow up the job to do. This task will "
-"appear\n"
-"                        in the project related to the contract of the sales "
-"order."
-msgstr ""
-"yapılacaklar \n"
-"                        işlerin izlenmesi oluşturulacak. Bu görev, satış "
-"siparişi\n"
-"                        sözleşmesi ile ilişkili projede görünecektir."
-
-#. module: project_mrp
-#: view:product.product:0
-msgid "When you sell this service to a customer,"
-msgstr "Bu hizmeti bir müşteriye sattığınızda,"
-
-#. module: project_mrp
-#: field:product.product,project_id:0
-msgid "Project"
-msgstr "Proje"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_procurement_order
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
 msgstr "Tedarik"
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "False"
-msgstr "Yanlış"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_product
+msgid "Product"
+msgstr "Ürün"
 
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:86
-#, python-format
-msgid "Task created."
-msgstr "Görev oluşturuldu."
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_template
+msgid "Product Template"
+msgstr "Ürün Şablonu"
 
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procurement method is Make to order and supply method is produce"
-msgstr "Eğer satınalma yöntemi Sipariş etmek ve tedarik yöntemi üretmekse"
+#. module: sale_service
+#: field:product.template,project_id:0
+msgid "Project"
+msgstr "Proje"
 
-#. module: project_mrp
+#. module: sale_service
+#: view:product.template:sale_service.view_product_task_form
+msgid "Project Management Information"
+msgstr "Proje Yönetimi Bilgi"
+
+#. module: sale_service
 #: field:project.task,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Satış Sipariş Kalemi"
+msgstr "Satış Sipariş Satırı"
 
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_createtask0
-msgid "Create Task"
-msgstr "Görev Oluştur"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Görev"
 
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_sale_order
-msgid "Sales Order"
-msgstr "Satış Siparişi"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task_type
+msgid "Task Stage"
+msgstr "Görev Aşaması"
 
-#. module: project_mrp
-#: view:project.task:0
-msgid "Order Line"
-msgstr "Sipariş Kalemi"
+#. module: sale_service
+#: code:addons/sale_service/models/sale_service.py:96
+#, python-format
+msgid "Task created"
+msgstr "Görev oluşturuldu"
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "a task"
-msgstr "bir görev"
+#. module: sale_service
+#: help:project.task.type,closed:0
+msgid "Tasks in this stage are considered as closed."
+msgstr "Kapalı olarak, bu aşamada görevler kabul edilir."
 
-#~ msgid "Project Management - MRP and Sale Integration"
-#~ msgstr "Proje Yönetimi - MRP ve Satış Entegrasyonu"
-
-#~ msgid "Sale Order Task"
-#~ msgstr "Satış Sipariş Görevi"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Hata: Geçersiz barkod"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "Hata! görev bitiş tarihi başlangıç tarihinden sonra olmalı"
-
-#~ msgid "Sale order line"
-#~ msgstr "Satış Siparişi Satırı"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Hata ! Yinelenen görevler oluşturamazsınız."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Sipariş Kaynağı Her Şirket İçin Eşsiz Olmalı!"
-
-#~ msgid "In case you sell services on sale order"
-#~ msgstr "Satış siparişi üzerine hizmet satılması durumunda"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Satış Sipariş Satırı"
+#. module: sale_service
+#: help:product.template,auto_create_task:0
+msgid ""
+"Thick this option if you want to create a task automatically each time this "
+"product is sold"
+msgstr ""
+"Eğer otomatik olarak bu ürünün satıldığı her zaman bir görev oluşturmak "
+"istiyorsanız , bu seçenek Kalın"

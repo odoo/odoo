@@ -72,7 +72,7 @@ class crm_tracking_mixin(osv.AbstractModel):
         'campaign_id': fields.many2one('crm.tracking.campaign', 'Campaign',  # old domain ="['|',('team_id','=',team_id),('team_id','=',False)]"
                                        help="This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"),
         'source_id': fields.many2one('crm.tracking.source', 'Source', help="This is the source of the link Ex: Search Engine, another domain, or name of email list"),
-        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad"),
+        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad", oldname='channel_id'),
     }
 
     def tracking_fields(self):
@@ -128,6 +128,9 @@ class crm_stage(osv.Model):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+        'legend_priority': fields.text(
+            'Priority Management Explanation', translate=True,
+            help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),

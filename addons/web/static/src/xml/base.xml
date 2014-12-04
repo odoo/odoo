@@ -793,14 +793,14 @@
 </t>
 <div t-name="FormView.buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <div class="btn-group btn-group-sm oe_form_buttons_view">
+        <div class="oe_form_buttons_view">
             <button t-if="widget.is_action_enabled('edit')" 
                     type="button" 
-                    class="oe_form_button_edit btn btn-default" accesskey="E">
+                    class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
                 Edit
             </button>
             <button t-if="widget.is_action_enabled('create')"
-                    type="button" class="oe_form_button_create btn btn-default"
+                    type="button" class="oe_form_button_create btn btn-default btn-sm"
                     accesskey="C">
                 Create
             </button>
