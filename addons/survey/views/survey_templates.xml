@@ -6,6 +6,7 @@
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="container">
+                    <t t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
@@ -50,6 +51,7 @@
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="container">
+                    <t t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1>Not ready</h1>
                         <p>This survey has no pages by now!</p>
@@ -59,15 +61,20 @@
         </t>
     </template>
 
+    <!-- Back Button to redirect in form view of survey -->
+    <template id="back" name="Back">
+        <div groups="base.group_website_publisher" t-ignore="true" class="pull-right">
+            <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
+        </div>
+    </template>
+
     <!-- First page of a survey -->
     <template id="survey_init" name="Survey">
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="oe_structure" />
                 <div class="container">
-                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
-                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
-                    </div>
+                    <t t-call="survey.back" />
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' class="oe_no_empty"/>
@@ -92,9 +99,7 @@
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
-                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
-                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
-                    </div>
+                    <t t-call="survey.back" />
                     <t t-call="survey.page" />
                 </div>
                 <div class="oe_structure"/>
@@ -168,7 +173,10 @@
     </template>
 
     <template id="datetime" name="Datetime box">
-        <input type="text" class="form-control" t-att-name="prefix" placeholder="YYYY-MM-DD HH:mm:ss" />
+        <div class='input-group date'>
+            <input type="text" class="form-control" data-date-format="YYYY-MM-DD hh:mm:ss" t-att-name="prefix" placeholder="YYYY-MM-DD hh:mm:ss" />
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
     </template>
 
     <template id="simple_choice" name="Simple choice">
@@ -264,6 +272,7 @@
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="container">
+                    <t t-call="survey.back" />
                     <div class="row">
                         <div class='jumbotron mt32'>
                             <h1><span t-field='survey.title'/></h1>

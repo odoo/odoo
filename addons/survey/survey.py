@@ -168,7 +168,6 @@ class survey_survey(osv.Model):
 
     _columns = {
         'title': fields.char('Title', required=1, translate=True),
-        'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages', copy=True),
         'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null", copy=False),
         'auth_required': fields.boolean('Login required',
@@ -573,8 +572,8 @@ class survey_question(osv.Model):
             oldname='descriptive_text'),
 
         # Answer
-        'type': fields.selection([('free_text', 'Long Text Zone'),
-                ('textbox', 'Text Input'),
+        'type': fields.selection([('free_text', 'Multiple Lines Text Box'),
+                ('textbox', 'Single Line Text Box'),
                 ('numerical_box', 'Numerical Value'),
                 ('datetime', 'Date and Time'),
                 ('simple_choice', 'Multiple choice: only one answer'),
@@ -601,7 +600,7 @@ class survey_question(osv.Model):
                                        ('2', '6')],
             'Number of columns'),
             # These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap
-        'display_mode': fields.selection([('columns', 'Radio Buttons/Checkboxes'),
+        'display_mode': fields.selection([('columns', 'Radio Buttons'),
                                           ('dropdown', 'Selection Box')],
                                          'Display mode'),
 
@@ -656,6 +655,9 @@ class survey_question(osv.Model):
         ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
     ]
+
+    def onchange_validation_email(self, cr, uid, ids, validation_email, context=None):
+        return {'value': {'validation_required': False}} if validation_email else {}
 
     def copy_data(self, cr, uid, ids, default=None, context=None):
         current_rec = self.read(cr, uid, ids, context=context)
@@ -746,7 +748,17 @@ class survey_question(osv.Model):
             # Answer is not in the right range
             try:
                 dateanswer = datetime.datetime.strptime(answer, DF)
-                if not (datetime.datetime.strptime(question.validation_min_date, DF) <= dateanswer <= datetime.datetime.strptime(question.validation_max_date, DF)):
+                min_date = question.validation_min_date and datetime.datetime.strptime(question.validation_min_date, DF) or False
+                max_date = question.validation_max_date and datetime.datetime.strptime(question.validation_max_date, DF) or False
+
+                if (min_date and max_date and not(min_date <= dateanswer <= max_date)):
+                    # If Minimum and Maximum Date are entered
+                    errors.update({answer_tag: question.validation_error_msg})
+                elif (min_date and not(min_date <= dateanswer)):
+                    # If only Minimum Date is entered and not Define Maximum Date
+                    errors.update({answer_tag: question.validation_error_msg})
+                elif (max_date and not(dateanswer <= max_date)):
+                    # If only Maximum Date is entered and not Define Minimum Date
                     errors.update({answer_tag: question.validation_error_msg})
             except ValueError:  # check that it is a datetime has been done hereunder
                 pass
@@ -821,7 +833,7 @@ class survey_label(osv.Model):
         'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
             required=True),
-        'quizz_mark': fields.float('Score for this answer', help="A positive score indicates a correct answer; a negative or null score indicates a wrong answer"),
+        'quizz_mark': fields.float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer"),
     }
     _defaults = {
         'sequence': 10,
@@ -990,7 +1002,7 @@ class survey_user_input_line(osv.Model):
         'value_free_text': fields.text("Free Text answer"),
         'value_suggested': fields.many2one('survey.label', "Suggested answer"),
         'value_suggested_row': fields.many2one('survey.label', "Row answer"),
-        'quizz_mark': fields.float("Score given for this answer")
+        'quizz_mark': fields.float("Score given for this choice")
     }
 
     _defaults = {

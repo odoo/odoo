@@ -35,6 +35,7 @@ openerp.website.if_dom_contains('.js_surveyform', function (the_form) {
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
+        $(".js_surveyform .input-group-addon span.fa-calendar").css("pointer-events", "none");
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
     }
@@ -43,6 +44,18 @@ openerp.website.if_dom_contains('.js_surveyform', function (the_form) {
     if (! _.isUndefined(scores_controller)) {
         quiz_correction_mode = true;
     }
+
+    $("div.input-group span.fa-calendar").on('click', function(e) {
+        $(e.currentTarget).closest("div.date").datetimepicker({
+            useSeconds: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down'
+            },
+        });
+    });
 
     // Custom code for right behavior of radio buttons with comments box
     $('.js_comments>input[type="text"]').focusin(function(){
