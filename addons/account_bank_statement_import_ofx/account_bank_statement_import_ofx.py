@@ -36,7 +36,7 @@ class account_bank_statement_import(osv.TransientModel):
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
             ofx = ofxparser.parse(file(path))
         except:
-            raise UserError(_('Import Error!'), _('Please check OFX file format is proper or not.'))
+            raise UserError( _('Please check OFX file format is proper or not.'))
         line_ids = []
         total_amt = 0.00
         try:
@@ -53,7 +53,7 @@ class account_bank_statement_import(osv.TransientModel):
                 total_amt += float(transaction.amount)
                 line_ids.append((0, 0, vals_line))
         except Exception, e:
-            raise UserError(_('Error!'), _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
+            raise UserError( _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
         st_start_date = ofx.account.statement.start_date or False
         st_end_date = ofx.account.statement.end_date or False
         period_obj = self.pool.get('account.period')

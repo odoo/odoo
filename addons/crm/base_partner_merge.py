@@ -299,10 +299,10 @@ class MergePartnerAutomatic(osv.TransientModel):
             return
 
         if len(partner_ids) > 3:
-            raise UserError(_('Error'), _("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+            raise UserError( _("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
         if openerp.SUPERUSER_ID != uid and len(set(partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context))) > 1:
-            raise UserError(_('Error'), _("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
+            raise UserError( _("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         if dst_partner and dst_partner.id in partner_ids:
             src_partners = proxy.browse(cr, uid, [id for id in partner_ids if id != dst_partner.id], context=context)
@@ -314,7 +314,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         if openerp.SUPERUSER_ID != uid and self._model_is_installed(cr, uid, 'account.move.line', context=context) and \
                 self.pool.get('account.move.line').search(cr, openerp.SUPERUSER_ID, [('partner_id', 'in', [partner.id for partner in src_partners])], context=context):
-            raise UserError(_('Error'), _("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
+            raise UserError( _("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
         call_it = lambda function: function(cr, uid, src_partners, dst_partner,
                                             context=context)
@@ -443,7 +443,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         ]
 
         if not groups:
-            raise UserError(_('Error'),
+            raise UserError(
                                  _("You have to specify a filter for your selection"))
 
         return groups

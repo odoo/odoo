@@ -172,7 +172,7 @@ class mail_group(osv.Model):
         except ValueError:
             all_emp_group = None
         if all_emp_group and all_emp_group in ids:
-            raise UserError(_('Warning!'), _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+            raise UserError( _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
         # Cascade-delete mail aliases as well, as they should not exist without the mail group.
         self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)

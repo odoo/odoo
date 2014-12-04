@@ -798,7 +798,7 @@ class marketing_campaign_workitem(osv.osv):
                 'datas' : datas,
             }
         else:
-            raise UserError(_('No preview'),_('The current step for this item has no email or report to preview.'))
+            raise UserError(_('The current step for this item has no email or report to preview.'))
         return res
 
 

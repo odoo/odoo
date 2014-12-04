@@ -498,7 +498,7 @@ class pos_session(osv.osv):
                         raise UserError( _('Error!'),
                             _("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
-                    raise UserError(_('Error!'), 
+                    raise UserError( 
                         _("The type of the journal for your payment method should be bank or cash "))
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
@@ -644,7 +644,7 @@ class pos_order(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ('draft','cancel'):
-                raise UserError(_('Unable to Delete!'), _('In order to delete a sale, it must be new or cancelled.'))
+                raise UserError( _('In order to delete a sale, it must be new or cancelled.'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
@@ -790,7 +790,7 @@ class pos_order(osv.osv):
                 destination_id = order.partner_id.property_stock_customer.id
             elif picking_type:
                 if not picking_type.default_location_dest_id:
-                    raise UserError(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
+                    raise UserError( _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
                 destination_id = picking_type.default_location_dest_id.id
             else:
                 destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
@@ -832,7 +832,7 @@ class pos_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.action_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
-                raise UserError(_('Error!'), _('Unable to cancel the picking.'))
+                raise UserError( _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
@@ -857,7 +857,7 @@ class pos_order(osv.osv):
                 msg = _('There is no receivable account defined to make payment.')
             else:
                 msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
-            raise UserError(_('Configuration Error!'), msg)
+            raise UserError( msg)
 
         context.pop('pos_session_id', False)
 
@@ -874,7 +874,7 @@ class pos_order(osv.osv):
                 break
 
         if not statement_id:
-            raise UserError(_('Error!'), _('You have to open at least one cashbox.'))
+            raise UserError( _('You have to open at least one cashbox.'))
 
         args.update({
             'statement_id': statement_id,
@@ -897,7 +897,7 @@ class pos_order(osv.osv):
                 ('state', '!=', 'closed'),
                 ('user_id', '=', uid)], context=context)
             if not current_session_ids:
-                raise UserError(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+                raise UserError( _('To return product(s), you need to open a session that will be used to register the refund.'))
 
             clone_id = self.copy(cr, uid, order.id, {
                 'name': order.name + ' REFUND', # not used, name forced by create
@@ -941,7 +941,7 @@ class pos_order(osv.osv):
                 continue
 
             if not order.partner_id:
-                raise UserError(_('Error!'), _('Please provide a partner for the sale.'))
+                raise UserError( _('Please provide a partner for the sale.'))
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
@@ -1020,7 +1020,7 @@ class pos_order(osv.osv):
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
-            raise UserError(_('Error!'), _('Selected orders do not have the same session!'))
+            raise UserError( _('Selected orders do not have the same session!'))
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
@@ -1135,7 +1135,7 @@ class pos_order(osv.osv):
                 elif line.product_id.categ_id.property_account_income_categ.id:
                     income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
-                    raise UserError(_('Error!'), _('Please define income '\
+                    raise UserError( _('Please define income '\
                         'account for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id, ))
 
@@ -1280,7 +1280,7 @@ class pos_order_line(osv.osv):
        if not product_id:
             return {}
        if not pricelist:
-           raise UserError(_('No Pricelist!'),
+           raise UserError(
                _('You have to select a pricelist in the sale form !\n' \
                'Please set one before choosing a product.'))
 

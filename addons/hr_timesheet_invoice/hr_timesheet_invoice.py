@@ -142,7 +142,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise UserError(_('Error!'),
+                    raise UserError(
                         _('You cannot modify an invoiced analytic line!'))
         return True
 
@@ -181,7 +181,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise UserError(_('Analytic Account Incomplete!'),
+                    raise UserError(
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False

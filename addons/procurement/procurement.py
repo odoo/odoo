@@ -153,7 +153,7 @@ class procurement_order(osv.osv):
             if s['state'] == 'cancel':
                 unlink_ids.append(s['id'])
             else:
-                raise UserError(_('Invalid Action!'),
+                raise UserError(
                         _('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 

@@ -411,7 +411,7 @@ class BaseModel(object):
                 # resolve link to serialization_field if specified by name
                 serialization_field_id = ir_model_fields_obj.search(cr, SUPERUSER_ID, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
                 if not serialization_field_id:
-                    raise UserError(_('Error'), _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
+                    raise UserError( _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
 
             # When its a custom field,it does not contain f.select
@@ -1452,7 +1452,7 @@ class BaseModel(object):
                     break
 
             if not date_found:
-                raise UserError(_('Invalid Object Architecture!'), _("Insufficient fields for Calendar View!"))
+                raise UserError( _("Insufficient fields for Calendar View!"))
         view.set('date_start', self._date_name)
 
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
@@ -1535,7 +1535,7 @@ class BaseModel(object):
                 result['type'] = view_type
                 result['name'] = 'default'
             except AttributeError:
-                raise UserError(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
+                raise UserError( _("No default view of type '%s' could be found !") % view_type)
 
         # Apply post processing, groups and modifiers etc...
         xarch, xfields = View.postprocess_and_fields(cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
@@ -2085,7 +2085,7 @@ class BaseModel(object):
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
             if not (gb in self._fields):
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
-                raise UserError(_('Invalid group_by'),
+                raise UserError(
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(gb,))
 
         aggregated_fields = [
@@ -3528,7 +3528,7 @@ class BaseModel(object):
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
         if ir_property.search(cr, uid, domain, context=context):
-            raise UserError(_('Error'), _('Unable to delete this document because it is used as a default property'))
+            raise UserError( _('Unable to delete this document because it is used as a default property'))
 
         # Delete the records' properties.
         property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
@@ -3886,7 +3886,7 @@ class BaseModel(object):
                             position = cr.fetchone()[0] + 1
 
                     if pleft < position <= pright:
-                        raise UserError(_('UserError'), _('Recursivity Detected.'))
+                        raise UserError( _('Recursivity Detected.'))
 
                     if pleft < position:
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
@@ -4365,7 +4365,7 @@ class BaseModel(object):
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
-            raise UserError(_('AccessError'), _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
+            raise UserError( _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
     def _apply_ir_rules(self, cr, uid, query, mode='read', context=None):

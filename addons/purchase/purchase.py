@@ -163,7 +163,7 @@ class purchase_order(osv.osv):
         if not types:
             types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
             if not types:
-                raise UserError(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+                raise UserError( _("Make sure you have at least an incoming picking type defined"))
         return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
@@ -340,7 +340,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise UserError(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
+                raise UserError( _('In order to delete a purchase order, you must cancel it first.'))
 
         # automatically sending subflow.delete upon deletion
         self.signal_workflow(cr, uid, unlink_ids, 'purchase_cancel')
@@ -416,7 +416,7 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
         if not inv_ids:
-            raise UserError(_('Error!'), _('Please create Invoices.'))
+            raise UserError( _('Please create Invoices.'))
          #choose the view_mode accordingly
         if len(inv_ids)>1:
             result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
@@ -541,7 +541,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise UserError(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+                raise UserError(_('You cannot confirm a purchase order without any purchase order line.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)        
@@ -558,7 +558,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise UserError(_('Error!'), _('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+                raise UserError( _('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
@@ -1019,7 +1019,7 @@ class purchase_order_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.state not in ['draft', 'cancel']:
-                raise UserError(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
+                raise UserError( _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_cancel = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_cancel:
@@ -1090,9 +1090,9 @@ class purchase_order_line(osv.osv):
 
         # - check for the presence of partner_id and pricelist_id
         #if not partner_id:
-        #    raise UserError(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        #    raise UserError( _('Select a partner in purchase order to choose a product.'))
         #if not pricelist_id:
-        #    raise UserError(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
+        #    raise UserError( _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
         context_partner = context.copy()
@@ -1227,7 +1227,7 @@ class procurement_order(osv.osv):
 
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
-                    raise UserError(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
+                    raise UserError( _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
         return True
 

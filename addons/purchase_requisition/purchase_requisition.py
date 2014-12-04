@@ -187,7 +187,7 @@ class purchase_requisition(osv.osv):
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
             if not requisition.multiple_rfq_per_supplier and supplier.id in filter(lambda x: x, [rfq.state != 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
-                raise UserError(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
+                raise UserError( _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             context.update({'mail_create_nolog': True})
             purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
             purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
@@ -238,7 +238,7 @@ class purchase_requisition(osv.osv):
         id_per_supplier = {}
         for tender in self.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
-                raise UserError(_('Warning!'), _('You have already generate the purchase order(s).'))
+                raise UserError( _('You have already generate the purchase order(s).'))
 
             confirm = False
             #check that we have at least confirm one line
@@ -247,7 +247,7 @@ class purchase_requisition(osv.osv):
                     confirm = True
                     break
             if not confirm:
-                raise UserError(_('Warning!'), _('You have no line selected for buying.'))
+                raise UserError( _('You have no line selected for buying.'))
 
             #check for complete RFQ
             for quotation in tender.purchase_ids:

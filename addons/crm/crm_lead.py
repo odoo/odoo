@@ -390,7 +390,7 @@ class crm_lead(format_address, osv.osv):
                 else:
                     stages_leads[stage_id] = [lead.id]
             else:
-                raise UserError(_('Warning!'),
+                raise UserError(
                     _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
                         'probability = 0 %, select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
@@ -410,7 +410,7 @@ class crm_lead(format_address, osv.osv):
                 else:
                     stages_leads[stage_id] = [lead.id]
             else:
-                raise UserError(_('Warning!'),
+                raise UserError(
                     _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
                         'probability = 100 % and select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
@@ -428,7 +428,7 @@ class crm_lead(format_address, osv.osv):
                     if case.team_id.parent_id.user_id:
                         data['user_id'] = case.team_id.parent_id.user_id.id
             else:
-                raise UserError(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
+                raise UserError( _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
@@ -637,7 +637,7 @@ class crm_lead(format_address, osv.osv):
             context = {}
 
         if len(ids) <= 1:
-            raise UserError(_('Warning!'), _('Please select more than one element (lead or opportunity) from the list view.'))
+            raise UserError( _('Please select more than one element (lead or opportunity) from the list view.'))
 
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []

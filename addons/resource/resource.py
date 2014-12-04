@@ -771,7 +771,7 @@ class resource_resource(osv.osv):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
             else:
-                raise UserError(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
+                raise UserError(_('Make sure the Working time has been configured with proper week days!'))
             hour_from_str = hours_time_string(week['hour_from'])
             hour_to_str = hours_time_string(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str

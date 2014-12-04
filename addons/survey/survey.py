@@ -437,12 +437,12 @@ class survey_survey(osv.Model):
         ''' Open a window to compose an email, pre-filled with the survey
         message '''
         if not self._has_questions(cr, uid, ids, context=None):
-            raise UserError(_('Error!'), _('You cannot send an invitation for a survey that has no questions.'))
+            raise UserError( _('You cannot send an invitation for a survey that has no questions.'))
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
         if survey_browse.stage_id.closed:
-            raise UserError(_('Warning!'),
+            raise UserError(
                 _("You cannot send invitations for closed surveys."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
@@ -896,7 +896,7 @@ class survey_user_input(osv.Model):
     ]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise UserError(_('Warning!'), _('You cannot duplicate this \
+        raise UserError( _('You cannot duplicate this \
             element!'))
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
@@ -1028,7 +1028,7 @@ class survey_user_input_line(osv.Model):
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise UserError(_('Warning!'), _('You cannot duplicate this \
+        raise UserError( _('You cannot duplicate this \
             element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,

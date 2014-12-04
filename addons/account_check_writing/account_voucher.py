@@ -75,7 +75,7 @@ class account_voucher(osv.osv):
 
     def print_check(self, cr, uid, ids, context=None):
         if not ids:
-            raise UserError(_('Printing error'), _('No check selected '))
+            raise UserError( _('No check selected '))
 
         data = {
             'id': ids and ids[0],

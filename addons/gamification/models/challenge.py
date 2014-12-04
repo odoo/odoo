@@ -554,7 +554,7 @@ class gamification_challenge(osv.Model):
 
             if challenge.visibility_mode == 'personal':
                 if not user_id:
-                    raise UserError(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                    raise UserError(_("Retrieving progress for personal challenge without user information"))
                 domain.append(('user_id', '=', user_id))
                 sorting = goal_obj._order
                 limit = 1

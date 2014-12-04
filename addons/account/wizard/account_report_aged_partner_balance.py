@@ -55,9 +55,9 @@ class account_aged_trial_balance(osv.osv_memory):
 
         period_length = data['form']['period_length']
         if period_length<=0:
-            raise UserError(_('User Error!'), _('You must set a period length greater than 0.'))
+            raise UserError( _('You must set a period length greater than 0.'))
         if not data['form']['date_from']:
-            raise UserError(_('User Error!'), _('You must set a start date.'))
+            raise UserError( _('You must set a start date.'))
 
         start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
 

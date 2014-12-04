@@ -82,7 +82,7 @@ class account_bank_statement_import(osv.TransientModel):
         return statement_ids
 
     def process_none(self, cr, uid, data_file, journal_id=False, context=None):
-        raise UserError(_('Error'), _('No available format for importing bank statement. You can install one of the file format available through the module installation.'))
+        raise UserError( _('No available format for importing bank statement. You can install one of the file format available through the module installation.'))
 
     def parse_file(self, cr, uid, ids, context=None):
         """ Process the file chosen in the wizard and returns a list view of the imported bank statements"""

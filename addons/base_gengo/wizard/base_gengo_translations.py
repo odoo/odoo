@@ -100,7 +100,7 @@ class base_gengo_translations(osv.osv_memory):
 
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
         if not flag:
-            raise UserError(_('Gengo Authentication Error: %s'), gengo)
+            raise UserError( gengo)
         for wizard in self.browse(cr, uid, ids, context=context):
             supported_langs = self.pool.get('ir.translation')._get_all_supported_languages(cr, uid, context=context)
             language = self.pool.get('ir.translation')._get_gengo_corresponding_language(wizard.lang_id.code)

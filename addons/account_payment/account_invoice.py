@@ -40,7 +40,7 @@ class Invoice(osv.osv):
             if pl_line_ids:
                 pay_line = payment_line_obj.browse(cr, uid, pl_line_ids, context=context)
                 payment_order_name = ','.join(map(lambda x: x.order_id.reference, pay_line))
-                raise UserError(_('Error!'), _("You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."%(payment_order_name)))
+                raise UserError( _("You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."%(payment_order_name)))
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
 

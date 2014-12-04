@@ -232,7 +232,7 @@ class account_bank_statement_import(osv.TransientModel):
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
                     balance_start_check = statement['journal_id'].default_debit_account_id.balance
                 else:
-                    raise UserError(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
+                    raise UserError( _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
             if balance_start_check != statement['balance_start']:
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
             if not(statement.get('period_id')):

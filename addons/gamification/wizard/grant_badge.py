@@ -41,7 +41,7 @@ class grant_badge_wizard(osv.TransientModel):
 
         for wiz in self.browse(cr, uid, ids, context=context):
             if uid == wiz.user_id.id:
-                raise UserError(_('Warning!'), _('You can not grant a badge to yourself'))
+                raise UserError( _('You can not grant a badge to yourself'))
 
             #create the badge
             values = {

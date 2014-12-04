@@ -174,7 +174,7 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             for model in self.browse(cr, user, ids, context):
                 if model.state != 'manual':
-                    raise UserError(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
+                    raise UserError( _("Model '%s' contains module data and cannot be removed!") % (model.name,))
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
@@ -290,7 +290,7 @@ class ir_model_fields(osv.osv):
             selection_list = eval(selection)
         except Exception:
             _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
-            raise UserError(_('Error'),
+            raise UserError(
                     _("The Selection Options expression is not a valid Pythonic expression."
                       "Please provide an expression in the [('key','Label'), ...] format."))
 
@@ -304,7 +304,7 @@ class ir_model_fields(osv.osv):
                     break
 
         if not check:
-                raise UserError(_('Error'),
+                raise UserError(
                     _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
         return True
 
@@ -344,7 +344,7 @@ class ir_model_fields(osv.osv):
             ids = [ids]
         if not context.get(MODULE_UNINSTALL_FLAG) and \
                 any(field.state != 'manual' for field in self.browse(cr, user, ids, context)):
-            raise UserError(_('Error'), _("This column contains module data and cannot be removed!"))
+            raise UserError( _("This column contains module data and cannot be removed!"))
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
@@ -367,15 +367,15 @@ class ir_model_fields(osv.osv):
             vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
             if not vals.get('selection',False):
-                raise UserError(_('Error'), _('For selection fields, the Selection Options must be given!'))
+                raise UserError( _('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
-                raise UserError(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
+                raise UserError( _("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
-                raise UserError(_('Error'), _("Model %s does not exist!") % vals['relation'])
+                raise UserError( _("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
                 model = self.pool[vals['model']]
@@ -412,9 +412,9 @@ class ir_model_fields(osv.osv):
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise UserError(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.')%field.name)
+                    raise UserError(  _('Changing the storing system for field "%s" is not allowed.')%field.name)
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise UserError(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
+                    raise UserError(  _('Renaming sparse field "%s" is not allowed')%field.name)
 
         # if set, *one* column can be renamed here
         column_rename = None
@@ -442,7 +442,7 @@ class ir_model_fields(osv.osv):
                 obj = self.pool.get(item.model)
 
                 if item.state != 'manual':
-                    raise UserError(_('Error!'),
+                    raise UserError(
                         _('Properties of base fields cannot be altered in this manner! '
                           'Please modify them through Python code, '
                           'preferably through a custom addon!'))
@@ -456,11 +456,11 @@ class ir_model_fields(osv.osv):
                 if 'name' in vals and vals['name'] != item.name:
                     # We need to rename the column
                     if column_rename:
-                        raise UserError(_('Error!'), _('Can only rename one column at a time!'))
+                        raise UserError( _('Can only rename one column at a time!'))
                     if vals['name'] in obj._columns:
-                        raise UserError(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
+                        raise UserError( _('Cannot rename column to %s, because that column already exists!') % vals['name'])
                     if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
-                        raise UserError(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
+                        raise UserError( _('New column name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')
                     column_rename = (obj, (obj._table, item.name, vals['name']))

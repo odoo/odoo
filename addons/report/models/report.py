@@ -444,7 +444,7 @@ class Report(osv.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise UserError(_('Report (PDF)'),
+                    raise UserError(
                                          _('Wkhtmltopdf failed (error code: %s). '
                                            'Message: %s') % (str(process.returncode), err))
 

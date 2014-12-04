@@ -152,7 +152,7 @@ class sale_order(osv.osv):
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
-            raise UserError(_('Error!'), _('There is no default company for the current user!'))
+            raise UserError( _('There is no default company for the current user!'))
         return company_id
 
     def _get_default_team_id(self, cr, uid, context=None):
@@ -271,7 +271,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise UserError(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before!'))
+                raise UserError( _('In order to delete a confirmed sales order, you must cancel it before!'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -387,7 +387,7 @@ class sale_order(osv.osv):
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
-            raise UserError(_('Error!'),
+            raise UserError(
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         invoice_vals = {
             'name': order.client_order_ref or '',
@@ -602,7 +602,7 @@ class sale_order(osv.osv):
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise UserError(_('Error!'),_('You cannot confirm a sales order which has no line.'))
+                raise UserError(_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
@@ -931,7 +931,7 @@ class sale_order_line(osv.osv):
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
-                        raise UserError(_('Error!'),
+                        raise UserError(
                                 _('Please define income account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
@@ -948,7 +948,7 @@ class sale_order_line(osv.osv):
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
-                raise UserError(_('Error!'),
+                raise UserError(
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             res = {
                 'name': line.name,
@@ -987,7 +987,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise UserError(_('Invalid Action!'), _('You cannot cancel a sales order line that has already been invoiced.'))
+                raise UserError( _('You cannot cancel a sales order line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -1154,7 +1154,7 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise UserError(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
+                raise UserError( _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 

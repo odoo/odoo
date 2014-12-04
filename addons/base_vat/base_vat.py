@@ -112,7 +112,7 @@ class res_partner(osv.osv):
     def button_check_vat(self, cr, uid, ids, context=None):
         if not self.check_vat(cr, uid, ids, context=context):
             msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise UserError(_('Error!'), msg)
+            raise UserError( msg)
         return True
 
     def check_vat(self, cr, uid, ids, context=None):

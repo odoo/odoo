@@ -400,10 +400,10 @@ class Partner(osv.osv):
             fpos_id = partner.property_account_position and partner.property_account_position.id or False
             addr = self.address_get(cr, uid, [partner.id], ['invoice'])
             if partner.free_member:
-                raise UserError(_('Error!'),
+                raise UserError(
                         _("Partner is a free Member."))
             if not addr.get('invoice', False):
-                raise UserError(_('Error!'),
+                raise UserError(
                         _("Partner doesn't have an address to make the invoice."))
             quantity = 1
             line_value =  {

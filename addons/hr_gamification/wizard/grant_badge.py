@@ -43,10 +43,10 @@ class hr_grant_badge_wizard(osv.TransientModel):
 
         for wiz in self.browse(cr, uid, ids, context=context):
             if not wiz.user_id:
-                raise UserError(_('Warning!'), _('You can send badges only to employees linked to a user.'))
+                raise UserError( _('You can send badges only to employees linked to a user.'))
 
             if uid == wiz.user_id.id:
-                raise UserError(_('Warning!'), _('You can not send a badge to yourself'))
+                raise UserError( _('You can not send a badge to yourself'))
 
             values = {
                 'user_id': wiz.user_id.id,

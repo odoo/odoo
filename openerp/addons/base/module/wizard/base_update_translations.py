@@ -37,7 +37,7 @@ class base_update_translations(osv.osv_memory):
         lang_obj = self.pool.get('res.lang')
         ids = lang_obj.search(cr, uid, [('code', '=', lang_code)])
         if not ids:
-            raise UserError(_('Error!'), _('No language with code "%s" exists') % lang_code)
+            raise UserError( _('No language with code "%s" exists') % lang_code)
         lang = lang_obj.browse(cr, uid, ids[0])
         return lang.name
 

@@ -37,7 +37,7 @@ class sale_order(osv.Model):
         if event_ticket_id:
             ticket = self.pool.get('event.event.ticket').browse(cr, uid, event_ticket_id, context=context)
             if product_id != ticket.product_id.id:
-                raise UserError(_('Error!'),_("The ticket doesn't match with this product."))
+                raise UserError(_("The ticket doesn't match with this product."))
 
             values['product_id'] = ticket.product_id.id
             values['event_id'] = ticket.event_id.id

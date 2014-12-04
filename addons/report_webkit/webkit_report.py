@@ -282,7 +282,7 @@ class WebKitParser(report_sxw):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise UserError(_('Error!'), _('Webkit report template not found!'))
+            raise UserError( _('Webkit report template not found!'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.use_global_header:
@@ -322,7 +322,7 @@ class WebKitParser(report_sxw):
                 except Exception, e:
                     msg = u"%s" % e
                     _logger.info(msg, exc_info=True)
-                    raise UserError(_('Webkit render!'), msg)
+                    raise UserError( msg)
         else:
             try :
                 html = body_mako_tpl.render(dict(parser_instance.localcontext))
@@ -330,12 +330,12 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = u"%s" % e
                 _logger.info(msg, exc_info=True)
-                raise UserError(_('Webkit render!'), msg)
+                raise UserError( msg)
         head_mako_tpl = mako_template(header)
         try :
             head = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=False))
         except Exception, e:
-            raise UserError(_('Webkit render!'), u"%s" % e)
+            raise UserError( u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
@@ -344,14 +344,14 @@ class WebKitParser(report_sxw):
             except Exception, e:
                 msg = u"%s" % e
                 _logger.info(msg, exc_info=True)
-                raise UserError(_('Webkit render!'), msg)
+                raise UserError( msg)
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.info(msg, exc_info=True)
-                raise UserError(_('Webkit render!'), msg)
+                raise UserError( msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)

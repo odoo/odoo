@@ -36,7 +36,7 @@ class account_state_open(osv.osv_memory):
         if isinstance(active_ids, list):
             invoice = proxy.browse(cr, uid, active_ids[0], context=context)
             if invoice.reconciled:
-                raise UserError(_('Warning!'), _('Invoice is already reconciled.'))
+                raise UserError( _('Invoice is already reconciled.'))
             invoice.signal_workflow('open_test')
         return {'type': 'ir.actions.act_window_close'}
 

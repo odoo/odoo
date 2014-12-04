@@ -38,7 +38,7 @@ def geo_find(addr):
     try:
         result = json.load(urllib.urlopen(url))
     except Exception, e:
-        raise UserError(_('Network error'),
+        raise UserError(
                              _('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
     if result['status'] != 'OK':
         return None

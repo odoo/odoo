@@ -34,7 +34,7 @@ class twitter_config_settings(osv.osv_memory):
             website_obj.fetch_favorite_tweets(cr, uid, [website_config.website_id.id], context=context)
         except Exception:
             _logger.info('Failed to verify twitter API authorization', exc_info=True)
-            raise UserError(_('Twitter authorization error!'), _('Please double-check your Twitter API Key and Secret'))
+            raise UserError( _('Please double-check your Twitter API Key and Secret'))
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(twitter_config_settings, self).create(cr, uid, vals, context=context)

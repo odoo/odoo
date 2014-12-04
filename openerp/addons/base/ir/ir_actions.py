@@ -843,12 +843,12 @@ class ir_actions_server(osv.osv):
                 try:
                     self.pool.get('ir.values').unlink(cr, SUPERUSER_ID, action.menu_ir_values_id.id, context)
                 except Exception:
-                    raise UserError(_('Warning'), _('Deletion of the action record failed.'))
+                    raise UserError( _('Deletion of the action record failed.'))
         return True
 
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
-            raise UserError(_('Error'), _("Please specify an action to launch!"))
+            raise UserError( _("Please specify an action to launch!"))
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):

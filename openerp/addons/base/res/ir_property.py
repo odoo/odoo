@@ -97,7 +97,7 @@ class ir_property(osv.osv):
 
         field = TYPE2FIELD.get(type_)
         if not field:
-            raise UserError(_('Error'), _('Invalid type'))
+            raise UserError( _('Invalid type'))
 
         if field == 'value_reference':
             if isinstance(value, orm.BaseModel):

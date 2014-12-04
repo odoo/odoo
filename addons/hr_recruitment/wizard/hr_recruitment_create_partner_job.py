@@ -36,7 +36,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
             context = {}
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             if case.partner_id:
-                raise UserError(_('Error!'),
+                raise UserError(
                     _('A contact is already defined on this job request.'))
         pass
 
@@ -54,7 +54,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)], context=context)
             if partner_id:
-                raise UserError(_('Error!'),_('A contact is already existing with the same name.'))
+                raise UserError(_('A contact is already existing with the same name.'))
             partner_id = partner_obj.create(cr, uid, {
                 'name': case.partner_name or case.name,
                 'user_id': case.user_id.id,

@@ -180,7 +180,7 @@ class hr_employee(osv.osv):
                 if employee.state == 'absent': action = 'sign_in'
 
             if not self._action_check(cr, uid, employee.id, action_date, context):
-                raise UserError(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.')%(warning_sign[action],))
+                raise UserError( _('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.')%(warning_sign[action],))
 
             vals = {'action': action, 'employee_id': employee.id}
             if action_date:

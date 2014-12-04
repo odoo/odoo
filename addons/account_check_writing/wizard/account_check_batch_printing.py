@@ -57,7 +57,7 @@ class account_check_write(osv.osv_memory):
         for check in voucher_obj.browse(cr, uid, voucher_ids, context=context):
             new_value += increment
             if check.number:
-                raise UserError(_('Error!'),_("One of the printed check already got a number."))
+                raise UserError(_("One of the printed check already got a number."))
         voucher_obj.proforma_voucher(cr, uid, voucher_ids, context=context)
 
         #update the sequence again (because the assignation using next_val was made during the same transaction of

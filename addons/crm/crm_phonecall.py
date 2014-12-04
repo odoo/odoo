@@ -287,7 +287,7 @@ class crm_phonecall(osv.osv):
         :return dict: containing view information
         """
         if len(ids) != 1:
-            raise UserError(_('Warning!'),_('It\'s only possible to convert one phonecall at a time.'))
+            raise UserError(_('It\'s only possible to convert one phonecall at a time.'))
 
         opportunity_dict = self.convert_opportunity(cr, uid, ids, context=context)
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, opportunity_dict[ids[0]], context)

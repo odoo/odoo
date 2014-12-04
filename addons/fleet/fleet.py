@@ -44,7 +44,7 @@ class fleet_vehicle_cost(osv.Model):
 
     def _set_odometer(self, cr, uid, id, name, value, args=None, context=None):
         if not value:
-            raise UserError(_('Operation not allowed!'), _('Emptying the odometer value of a vehicle is not allowed.'))
+            raise UserError( _('Emptying the odometer value of a vehicle is not allowed.'))
         date = self.browse(cr, uid, id, context=context).date
         if not(date):
             date = fields.date.context_today(self, cr, uid, context=context)

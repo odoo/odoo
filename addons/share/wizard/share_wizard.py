@@ -59,7 +59,7 @@ class share_wizard(osv.TransientModel):
            The error_message should have been translated with _().
         """
         if not condition:
-            raise UserError(_('Sharing access cannot be created.'), error_message)
+            raise UserError( error_message)
 
     def has_group(self, cr, uid, module, group_xml_id, context=None):
         """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""
@@ -202,7 +202,7 @@ class share_wizard(osv.TransientModel):
     def go_step_1(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr,uid,ids,context)[0]
         if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
-            raise UserError(_('No email address configured'),
+            raise UserError(
                                  _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool[model].read(cr, uid, [res_id], context=context)[0]
@@ -633,7 +633,7 @@ class share_wizard(osv.TransientModel):
                          rule_name=rule_name, restrict=True, context=context)
         except Exception:
             _logger.info('Failed to create share access', exc_info=True)
-            raise UserError(_('Sharing access cannot be created.'),
+            raise UserError(
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
@@ -756,7 +756,7 @@ class share_wizard(osv.TransientModel):
                     res_id = cond[2]
             # Record id not found: issue
             if res_id <= 0:
-                raise UserError(_('Record id not found'), _('The share engine has not been able to fetch a record_id for your invitation.'))
+                raise UserError( _('The share engine has not been able to fetch a record_id for your invitation.'))
             self.pool[model.model].message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
             # self.send_invite_email(cr, uid, wizard_data, context=context)
             # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
@@ -811,7 +811,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise UserError(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise UserError( _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -842,7 +842,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise UserError(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise UserError( _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []

@@ -74,7 +74,7 @@ class ir_translation(osv.Model):
     def _get_all_supported_languages(self, cr, uid, context=None):
         flag, gengo = self.pool.get('base.gengo.translations').gengo_authentication(cr, uid, context=context)
         if not flag:
-            raise UserError(_('Gengo Authentication Error: %s'), gengo)
+            raise UserError( gengo)
         supported_langs = {}
         lang_pair = gengo.getServiceLanguagePairs(lc_src='en')
         if lang_pair['opstat'] == 'ok':

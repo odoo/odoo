@@ -570,7 +570,7 @@ class document_storage(osv.osv):
             _logger.info("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
-            raise UserError(_('Error at doc write!'), str(e))
+            raise UserError( str(e))
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)

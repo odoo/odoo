@@ -29,11 +29,11 @@ class CashBox(osv.osv_memory):
         for box in self.browse(cr, uid, ids, context=context):
             for record in records:
                 if not record.journal_id:
-                    raise UserError(_('Error!'),
+                    raise UserError(
                                          _("Please check that the field 'Journal' is set on the Bank Statement"))
                     
                 if not record.journal_id.internal_account_id:
-                    raise UserError(_('Error!'),
+                    raise UserError(
                                          _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
 
                 self._create_bank_statement_line(cr, uid, box, record, context=context)
@@ -55,7 +55,7 @@ class CashBoxIn(CashBox):
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         if not record.journal_id.internal_account_id.id:
-            raise UserError(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError( _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
@@ -73,7 +73,7 @@ class CashBoxOut(CashBox):
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         if not record.journal_id.internal_account_id.id:
-            raise UserError(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError( _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         amount = box.amount or 0.0
         return {
             'statement_id': record.id,

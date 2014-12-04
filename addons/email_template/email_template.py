@@ -550,7 +550,7 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         if not values.get('email_from'):
-            raise UserError(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+            raise UserError( _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
