@@ -1590,8 +1590,10 @@ class XMLExport(ExportFormat, http.Controller):
                 is_relational = lambda field: field_details[fields[0]].get('relation')
                 if is_relational(fields[0]):
                     if field_details[fields[0]].get('type') == "one2many":
-                      recordsspan = list(itertools.islice(row, index, None))
-                      # o2m_values = list(subfields for subfields in self._extract_records(o2m_fields, recordsspan, model))
+                        o2m_fields = [fields[1:]]
+                        recordsspan = [list(itertools.islice(row, index, None))]
+                        result['child_ids'] = list(subfields for subfields in self._extract_records(o2m_fields, recordsspan, model))
+                        yield result
                     record_span = list(itertools.islice(row, index, index + 1, None))
                     relfield_data[fields[1]] = record_span
                     result[fields[0]] = relfield_data
@@ -1614,7 +1616,7 @@ class XMLExport(ExportFormat, http.Controller):
                 continue
             elif field_details[field]['type'] == 'one2many':
                 for child_record in value:
-                    child_record.update({field_details[field]['relation_field']: [{'id': record.get('id')}]})
+                    child_record.update({field_details[field]['relation_field']: {'id': [record.get('id')]}})
                     self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
                 continue
             new_record_element = etree.SubElement(new_record, "field", name=field)
