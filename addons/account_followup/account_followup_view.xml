@@ -73,7 +73,7 @@
                 <form string="Follow-up">
                     <h1><field name="name"/></h1>
                     <label for="company_id" groups="base.group_multi_company"/>
-                    <field name="company_id" widget="selection" class="oe_inline" groups="base.group_multi_company"/>
+                    <field name="company_id" options="{'no_create': True}" class="oe_inline" groups="base.group_multi_company"/>
                     <p class="oe_grey">
                         To remind customers of paying their invoices, you can
                         define different actions depending on how severely
