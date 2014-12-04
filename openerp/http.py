@@ -67,6 +67,14 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+# don't trigger debugger for those exceptions, they carry user-facing warnings
+# and indications, they're not necessarily indicative of anything being
+# *broken*
+NO_POSTMORTEM = (openerp.osv.orm.except_orm,
+                 openerp.exceptions.AccessError,
+                 openerp.exceptions.AccessDenied,
+                 openerp.exceptions.Warning,
+                 openerp.exceptions.RedirectWarning)
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -110,9 +118,7 @@ def dispatch_rpc(service_name, method, params):
                 openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
-            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
-            openerp.exceptions.RedirectWarning):
+    except NO_POSTMORTEM:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(openerp.tools.exception_to_unicode(e))
@@ -256,6 +262,9 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
+        if not isinstance(exception, NO_POSTMORTEM):
+            openerp.tools.debugger.post_mortem(
+                openerp.tools.config, sys.exc_info())
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -507,16 +516,19 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            if not isinstance(exception, openerp.exceptions.Warning):
+            if not isinstance(exception, (openerp.exceptions.Warning, SessionExpiredException)):
                 _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
-                    'message': "OpenERP Server Error",
+                    'message': "Odoo Server Error",
                     'data': serialize_exception(exception)
             }
             if isinstance(exception, AuthenticationError):
                 error['code'] = 100
-                error['message'] = "OpenERP Session Invalid"
+                error['message'] = "Odoo Session Invalid"
+            if isinstance(exception, SessionExpiredException):
+                error['code'] = 100
+                error['message'] = "Odoo Session Expired"
             return self._json_response(error=error)
 
     def dispatch(self):

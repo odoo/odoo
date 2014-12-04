@@ -243,6 +243,10 @@ class stock_warehouse(osv.osv):
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
     }
 
+    _defaults = {
+        'manufacture_to_resupply': True,
+    }
+
     def _get_manufacture_pull_rule(self, cr, uid, warehouse, context=None):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')

@@ -756,7 +756,7 @@ class purchase_order(osv.osv):
             res.append(tmp)
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
         #split the future stock move in two because the route followed may be different.
-        if diff_quantity > 0:
+        if float_compare(diff_quantity, 0.0, precision_rounding=order_line.product_uom.rounding) > 0:
             move_template['product_uom_qty'] = diff_quantity
             move_template['product_uos_qty'] = diff_quantity
             res.append(move_template)

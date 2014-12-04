@@ -73,6 +73,9 @@ class mail_compose_message(osv.TransientModel):
         result['res_id'] = result.get('res_id', context.get('active_id'))
         result['parent_id'] = result.get('parent_id', context.get('message_id'))
 
+        if not result['model'] or not self.pool.get(result['model']) or not hasattr(self.pool[result['model']], 'message_post'):
+            result['no_auto_thread'] = True
+
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
         if result['composition_mode'] == 'reply':
             result['composition_mode'] = 'comment'

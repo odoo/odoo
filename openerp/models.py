@@ -241,6 +241,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # check for new-api conversion error: leave comma after field definition
+        for key, val in attrs.iteritems():
+            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
+                _logger.error("Trailing comma after field definition: %s.%s", self, key)
+
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
@@ -4769,14 +4774,15 @@ class BaseModel(object):
 
         By convention, new records are returned as existing.
         """
-        ids = filter(None, self._ids)           # ids to check in database
+        ids, new_ids = [], []
+        for i in self._ids:
+            (ids if isinstance(i, (int, long)) else new_ids).append(i)
         if not ids:
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
-        self._cr.execute(query, (ids,))
-        ids = ([r[0] for r in self._cr.fetchall()] +    # ids in database
-               [id for id in self._ids if not id])      # new ids
-        existing = self.browse(ids)
+        self._cr.execute(query, [tuple(ids)])
+        ids = [r[0] for r in self._cr.fetchall()]
+        existing = self.browse(ids + new_ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
             exc = MissingError(_("Record does not exist or has been deleted."))
