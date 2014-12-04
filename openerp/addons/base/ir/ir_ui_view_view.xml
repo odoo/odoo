@@ -19,6 +19,7 @@
                             <field name="inherit_id"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
+                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>
@@ -60,6 +61,9 @@
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
+                    <filter string="Active" name="active" domain="[('active', '=',True)]"/>
+                    <filter string="Unactive" domain="[('active', '=',False)]"/>
+                    <separator/>
                     <filter string="Form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" domain="[('type', '=', 'tree')]"/>
                     <filter string="Kanban" domain="[('type', '=', 'kanban')]"/>
@@ -82,7 +86,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view</field>
             <field name="view_id" ref="view_view_tree"/>
-            <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help">Views allows you to personalize each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
 

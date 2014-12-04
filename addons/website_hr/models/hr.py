@@ -12,6 +12,3 @@ class hr(osv.osv):
     _defaults = {
         'website_published': False
     }
-
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])

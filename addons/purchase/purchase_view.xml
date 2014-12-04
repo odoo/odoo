@@ -47,7 +47,7 @@
         <menuitem
             action="purchase_pricelist_version_action" id="menu_purchase_pricelist_version_action"
             parent="menu_purchase_config_pricelist" sequence="2" groups="product.group_purchase_pricelist"/>
-        
+
         <menuitem
             action="product.product_price_type_action" id="menu_product_pricelist_action2_purchase_type"
             parent="menu_purchase_config_pricelist" sequence="60" />
@@ -65,19 +65,11 @@
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_product_in_config_purchase" sequence="5" />
+             parent="purchase.menu_product_in_config_purchase" sequence="10" />
 
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_product_in_config_purchase" sequence="10"/>
-
-        <menuitem
-            id="menu_purchase_partner_cat" name="Address Book"
-            parent="menu_purchase_config_purchase"/>
-
-        <menuitem
-            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Tags"
-            parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
+              parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
     <!--Supplier menu-->
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
@@ -87,7 +79,7 @@
       <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Incoming Products"
             parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
+      <menuitem action="stock.action_receipt_picking_move" id="menu_action_picking_tree_in_move"
             parent="menu_procurement_management_inventory" sequence="11"/>
 
     <!--Invoice control-->
@@ -108,8 +100,8 @@
             Click to create a draft invoice.
           </p><p>
             Use this menu to control the invoices to be received from your
-            supplier. OpenERP generates draft invoices from your purchase
-            orders or receptions, according to your settings.
+            supplier. Odoo generates draft invoices from your purchase
+            orders or receipts, according to your settings.
           </p><p>
             Once you receive a supplier invoice, you can match it with the
             draft invoice and validate it.
@@ -125,6 +117,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{"search_default_filter_to_purchase":1}</field>
+        <field name="search_view_id" eval="False"/> <!-- Force empty -->
+        <field name="view_id" eval="False"/> <!-- Force empty -->
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to define a new product.
@@ -152,10 +146,10 @@
           parent="base.menu_purchase_root" sequence="8"/>
 
       <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
-           parent="menu_procurement_management_product" sequence="10"/>
+           parent="menu_procurement_management_product" sequence="2"/>
 
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
-          parent="menu_procurement_management_product"/>
+          parent="menu_procurement_management_product" sequence="1"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -200,8 +194,7 @@
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','in', ['picking', 'manual']), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
-                    <button name="purchase_cancel" states="draft,confirmed,sent,bid" string="Cancel"/>
-                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel" type="object" />
+                    <button name="action_cancel" states="draft,confirmed,sent,bid,approved,except_picking,except_invoice" string="Cancel" type="object" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,bid,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
@@ -222,7 +215,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
+                            <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
                             <field name="related_location_id" invisible="1"/>
@@ -236,13 +229,13 @@
                         <page string="Products">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)" context="{'partner_id': parent.partner_id}"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
-                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
+                                    <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                     <field name="price_subtotal"/>
@@ -264,7 +257,6 @@
                         </page>
                         <page string="RFQ &amp; Bid">
                             <group>
-                                <field name="payment_term_id" widget="selection"/>
                                 <field name="incoterm_id"/>
                                 <field name="bid_date"/>
                                 <field name="bid_validity"/>
@@ -280,7 +272,7 @@
                                 <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                    <field name="payment_term_id" widget="selection"/>
+                                    <field name="payment_term_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
@@ -377,12 +369,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a request for quotation.
               </p><p>
-                The quotation contains the history of the discussion/negociation
+                The quotation contains the history of the discussion/negotiation
                 you had with your supplier. Once confirmed, a request for
                 quotation is converted into a purchase order.
               </p><p>
                 Most propositions of purchase orders are created automatically
-                by OpenERP based on inventory needs.
+                by Odoo based on inventory needs.
               </p>
             </field>
         </record>
@@ -419,11 +411,12 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,'draft',context)"/>
+                                <field name="product_id"
+                                    on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,context)" context="{'partner_id': parent.partner_id}"/>
                                 <label for="product_qty"/>
                                 <div>
-                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,'draft',context)" class="oe_inline"/>
-                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,'draft',context)" class="oe_inline"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>
@@ -587,7 +580,7 @@
             <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <div>
-                        <field name="purchase_ok" attrs="{'readonly': [('is_product_variant', '=', False)]}"/>
+                        <field name="purchase_ok"/>
                         <label for="purchase_ok"/>
                     </div>
                 </div>
@@ -599,9 +592,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <filter name="filter_to_sell" position="before">
-                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
-                </filter>
                 <filter name="filter_to_sell" position="after">
                    <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                 </filter>
@@ -620,18 +610,42 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
-                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
-                       <field string="Purchases" name="purchase_count" widget="statinfo" />
-                   </button>
-                </xpath>
                 <field name="property_account_expense" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
                 </field>
+            </field>
+        </record>
+        
+        <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.template.purchase.button.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object" 
+                       icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_product_normal_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.product.purchase.button.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                       icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </xpath>
             </field>
         </record>
     </data>

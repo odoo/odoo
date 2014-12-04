@@ -69,7 +69,66 @@ class PaymentAcquirerOgone(osv.Model):
             if inout == 'in':
                 return True
             else:
-                keys = "ORDERID CURRENCY AMOUNT PM ACCEPTANCE STATUS CARDNO ALIAS ED CN TRXDATE PAYID NCERROR BRAND ECI IP COMPLUS".split()
+                # SHA-OUT keys
+                # source https://viveum.v-psp.com/Ncol/Viveum_e-Com-BAS_EN.pdf
+                keys = [
+                    'AAVADDRESS',
+                    'AAVCHECK',
+                    'AAVMAIL',
+                    'AAVNAME',
+                    'AAVPHONE',
+                    'AAVZIP',
+                    'ACCEPTANCE',
+                    'ALIAS',
+                    'AMOUNT',
+                    'BIC',
+                    'BIN',
+                    'BRAND',
+                    'CARDNO',
+                    'CCCTY',
+                    'CN',
+                    'COMPLUS',
+                    'CREATION_STATUS',
+                    'CURRENCY',
+                    'CVCCHECK',
+                    'DCC_COMMPERCENTAGE',
+                    'DCC_CONVAMOUNT',
+                    'DCC_CONVCCY',
+                    'DCC_EXCHRATE',
+                    'DCC_EXCHRATESOURCE',
+                    'DCC_EXCHRATETS',
+                    'DCC_INDICATOR',
+                    'DCC_MARGINPERCENTAGE',
+                    'DCC_VALIDHOURS',
+                    'DIGESTCARDNO',
+                    'ECI',
+                    'ED',
+                    'ENCCARDNO',
+                    'FXAMOUNT',
+                    'FXCURRENCY',
+                    'IBAN',
+                    'IP',
+                    'IPCTY',
+                    'NBREMAILUSAGE',
+                    'NBRIPUSAGE',
+                    'NBRIPUSAGE_ALLTX',
+                    'NBRUSAGE',
+                    'NCERROR',
+                    'NCERRORCARDNO',
+                    'NCERRORCN',
+                    'NCERRORCVC',
+                    'NCERRORED',
+                    'ORDERID',
+                    'PAYID',
+                    'PM',
+                    'SCO_CATEGORY',
+                    'SCORING',
+                    'STATUS',
+                    'SUBBRAND',
+                    'SUBSCRIPTION_ID',
+                    'TRXDATE',
+                    'VC'
+                ]
                 return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())

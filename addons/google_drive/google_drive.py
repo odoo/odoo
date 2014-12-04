@@ -106,7 +106,7 @@ class config(osv.Model):
             raise osv.except_osv(_('Warning!'), _("The Google Template cannot be found. Maybe it has been deleted."))
         parents_dict = json.loads(parents)
 
-        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
+        record_url = "Click on link to open Record in Odoo\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
         data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
         request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, access_token)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -124,7 +124,7 @@ class config(osv.Model):
             cr.commit()
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
-            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+Odoo&sendNotificationEmails=false&access_token=%s" % (key, access_token)
             data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)

@@ -128,7 +128,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True),
+        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
@@ -183,6 +183,7 @@ class res_partner_bank(osv.osv):
                 try:
                     if not data.get('bank_name'):
                         data['bank_name'] = _('BANK')
+                    data = dict((k, v or '') for (k, v) in data.iteritems())
                     name = bank_code_format[data['state']] % data
                 except Exception:
                     raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
@@ -192,7 +193,7 @@ class res_partner_bank(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        bank_dicts = self.read(cr, uid, ids, context=context)
+        bank_dicts = self.read(cr, uid, ids, self.fields_get_keys(cr, uid, context=context), context=context)
         return self._prepare_name_get(cr, uid, bank_dicts, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):

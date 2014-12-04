@@ -1,26 +1,35 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-01-25 00:15+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-14 18:59+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:23+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-15 20:29+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Ürün Kategorisi"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+"Fatura bir stoktan toplamadan oluşturlmuşsa, ilgili hareket satırına "
+"başvurun."
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Fatura"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +37,14 @@ msgid "Invoice Line"
 msgstr "Fatura Öğesi"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Satınalma Siparişi"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr "Hareket satırı"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Ürün Şablonu"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Toplama Listesi"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +53,19 @@ msgid "Price Difference Account"
 msgstr "Fiyat Farkı Hesabı"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Fatura"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Ürün Kategorisi"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Toplama Listesi"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Ürün Şablonu"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Satınalma Siparişi"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,55 +76,3 @@ msgid ""
 msgstr ""
 "Bu hesap satınalma fiyatı ile maliyet fiyatı arasındaki fiyat farkını "
 "değerlendirmek için kullanılacaktır."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Hata ! İç içe çağırılan kategoriler oluşturamazsınız."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Sipariş referansı eşsiz olmalı !"
-
-#~ msgid " Accounting Property"
-#~ msgstr " Muhasebe Özellikleri"
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "Anglo Saxon ülkeleri için Stok Muhasebesi"
-
-#~ msgid ""
-#~ "This module will support the Anglo-Saxons accounting methodology by\n"
-#~ "    changing the accounting logic with stock transactions. The difference "
-#~ "between the Anglo-Saxon accounting countries\n"
-#~ "    and the Rhine or also called Continental accounting countries is the "
-#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
-#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
-#~ "created, Continental accounting will take the cost at the moment the goods "
-#~ "are shipped.\n"
-#~ "    This module will add this functionality by using a interim account, to "
-#~ "store the value of shipped goods and will contra book this interim account\n"
-#~ "    when the invoice is created to transfer this amount to the debtor or "
-#~ "creditor account.\n"
-#~ "    Secondly, price differences between actual purchase price and fixed "
-#~ "product standard price are booked on a separate account"
-#~ msgstr ""
-#~ "Bu modül, Anglo-Saxon muhasebe yöntemini stok işlemleri yoluyla muhasebe \n"
-#~ "    mantığını değştirerek destekleyecektir."
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Geçersiz BBA Yapılı İletişim !"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Fatura Numarası her Firmada eşsiz olmalı!"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Hata: Varsayılan ölçü birimi ile satınalma ölçü birimi aynı kategoride "
-#~ "bulunmalı."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Sipariş Referansı her Firma için eşsiz olmalı!"
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "Hata! Özyinelenen kategoriler oluşturamazsınız."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referans her firma için eşsiz olmalı!"

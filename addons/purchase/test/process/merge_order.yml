@@ -21,25 +21,25 @@
         product_uom = []
         res = {}
         for line in lines:
-          product_id.append(line.product_id.id) 
-          product_uom.append(line.product_uom.id) 
+          product_id.append(line.product_id.id)
+          product_uom.append(line.product_uom.id)
         res.update({'product_ids': product_id,'product_uom':product_uom})
         return res
+
     for order in self.browse(cr, uid, new_id.keys()):
-       total_new_qty = [x.product_qty for x in order.order_line]
-       total_new_qty = sum(total_new_qty)
-       
-       assert total_new_qty == total_qty,"product quantities are not correspond" 
-       assert order.partner_id == order3.partner_id ,"partner is not correspond"
        assert order.state == 'draft',"New created order state should be in draft"
+       assert order.partner_id == order3.partner_id ,"partner is not correspond"
        assert order.pricelist_id == order3.pricelist_id,"Price list is not correspond"
-       assert order.date_order == order3.date_order ,"Date of order is not correspond"
        assert order.location_id == order3.location_id ,"Location is not correspond"
+
+       total_new_qty = sum(x.product_qty for x in order.order_line)
+       assert total_new_qty == total_qty,"product quantities are not correspond"
+
+       date_order = min(order3.date_order, order7.date_order)
+       assert order.date_order == date_order, "Date of order is not correspond"
+
        n_product_data = merged_data(order.order_line)
        o_product_data= merged_data(order3.order_line)
        o_pro_data = merged_data(order7.order_line)
-       
        assert n_product_data == o_product_data or o_pro_data,"product data are not correspond"
-       
-
 

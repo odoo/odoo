@@ -19,11 +19,16 @@
         <record id="action_open_forum" model="ir.actions.act_url">
             <field name="name">Forum</field>
             <field name="target">self</field>
-            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))+'/#tutorial.forum=true'"/>
+            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_forum"/>
             <field name="state">open</field>
+        </record>
+
+        <!-- Set Admin karma -->
+        <record id="base.user_root" model="res.users">
+            <field name="karma">2500</field>
         </record>
 
         <!-- Answers subtypes -->
@@ -76,7 +81,7 @@
 
         <!-- Reasons for closing Post -->
         <record id="reason_1" model="forum.post.reason">
-            <field name="name">duplicate question</field>
+            <field name="name">duplicate post</field>
         </record>
         <record id="reason_2" model="forum.post.reason">
             <field name="name">off-topic or not relevant</field>
@@ -85,7 +90,7 @@
             <field name="name">too subjective and argumentative</field>
         </record>
         <record id="reason_4" model="forum.post.reason">
-            <field name="name">not a real question</field>
+            <field name="name">not a real post</field>
         </record>
         <record id="reason_6" model="forum.post.reason">
             <field name="name">not relevant or out dated</field>
@@ -98,6 +103,37 @@
         </record>
         <record id="reason_9" model="forum.post.reason">
             <field name="name">too localized</field>
+        </record>
+
+        <!-- Email template for email validation (for karma purpose) -->
+        <record id="validation_email" model="email.template">
+            <field name="name">Email Verification</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_to">${object.email|safe}</field>
+            <field name="subject"><![CDATA[${object.company_id.name} Forums validation]]></field>
+            <field name="body_html"><![CDATA[
+<p>
+    Hello ${object.name},
+</p>
+<p>
+    You have been invited to validate your email in order to get access to "${object.company_id.name}" Q/A Forums.
+</p>
+<p>
+    To validate your email, please click on the following link:
+</p>
+<ul>
+    <li><a href="${ctx.get('token_url')}">Validate my account for "${object.company_id.name}" Q/A Forums</a></li>
+</ul>
+<p>
+    Thanks,
+</p>
+<pre>
+--
+${object.company_id.name or ''}
+${object.company_id.email or ''}
+${object.company_id.phone or ''}
+</pre>]]></field>
         </record>
 
     </data>

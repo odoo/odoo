@@ -1,21 +1,96 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-02-10 21:18+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-12 15:37+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:48+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-13 06:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you "
+"do\n"
+"                to your suppliers using checks. When you select a supplier, "
+"the\n"
+"                payment method and an amount for the payment, Odoo will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir çek oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Çek ödeme formu, tedarikçilerinize çek ile yaptığınız "
+"ödemeleri\n"
+"                izlemenizi sağlar. Bir tedarikçiyi, ödeme yöntemini ve ödeme "
+"tutarını\n"
+"                seçtiğinizde, Odoo size ödemenizin açık tedarikçi faturaları "
+"ve hesapları\n"
+"                ile uzlaştırmanızı önerecektir.\n"
+"              </p>\n"
+"            "
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Muhasebe Makbuzu"
+
+#. module: account_check_writing
+#: field:account.voucher,allow_check:0
+msgid "Allow Check Writing"
+msgstr "Çek Yazmaya İzin ver"
+
+#. module: account_check_writing
+#: field:account.journal,allow_check_writing:0
+msgid "Allow Check writing"
+msgstr "Çek yazmaya izin ver"
+
+#. module: account_check_writing
+#: field:account.voucher,amount_in_word:0
+msgid "Amount in Word"
+msgstr "Yazı ile Tutar"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: model:ir.actions.report.xml,name:account_check_writing.action_report_check
+msgid "Check"
+msgstr "Çek"
+
+#. module: account_check_writing
+#: field:res.company,check_layout:0
+msgid "Check Layout"
+msgstr "Çek yerleşimi"
+
+#. module: account_check_writing
+#: help:account.journal,use_preprint_check:0
+msgid "Check if you use a preformated sheet for check"
+msgstr "Ön tanımlı çek sayfası kullanacaksanız işaretleyin"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check in middle"
+msgstr "Çek ortada"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -23,20 +98,9 @@ msgid "Check on Top"
 msgstr "Çek Üstte"
 
 #. module: account_check_writing
-#: report:account.print.check.top:0
-msgid "Open Balance"
-msgstr "Açık Bakiye"
-
-#. module: account_check_writing
-#: view:account.check.write:0
-#: view:account.voucher:0
-msgid "Print Check"
-msgstr "Çeki Yazdır"
-
-#. module: account_check_writing
 #: selection:res.company,check_layout:0
-msgid "Check in middle"
-msgstr "Çek ortada"
+msgid "Check on bottom"
+msgstr "Çek altta"
 
 #. module: account_check_writing
 #: help:res.company,check_layout:0
@@ -50,135 +114,39 @@ msgstr ""
 "DacEasy ile uyumludur."
 
 #. module: account_check_writing
-#: selection:res.company,check_layout:0
-msgid "Check on bottom"
-msgstr "Çek altta"
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
-msgid "Print Check in Batch"
-msgstr "Toplu Çek Yazdır"
-
-#. module: account_check_writing
-#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
-#, python-format
-msgid "One of the printed check already got a number."
-msgstr "Yazdırılan çekin birinin halihazırda numarası var."
-
-#. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
 msgid "Check this if the journal is to be used for writing checks."
 msgstr "Günlük çek yazmak için kullanılacaksa bunu işaretleyin."
 
 #. module: account_check_writing
-#: field:account.journal,allow_check_writing:0
-msgid "Allow Check writing"
-msgstr "Çek yazmaya izin ver"
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: field:account.check.write,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: account_check_writing
+#: field:account.check.write,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
 msgid "Description"
 msgstr "Açıklama"
 
 #. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_journal
-msgid "Journal"
-msgstr "Yevmiye"
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,name:account_check_writing.action_write_check
-#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
-msgid "Write Checks"
-msgstr "Çekleri Yazma"
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: view:website:account_check_writing.report_check
 msgid "Discount"
 msgstr "İndirim"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Original Amount"
-msgstr "İlk Tutar"
-
-#. module: account_check_writing
-#: field:res.company,check_layout:0
-msgid "Check Layout"
-msgstr "Çek yerleşimi"
-
-#. module: account_check_writing
-#: field:account.voucher,allow_check:0
-msgid "Allow Check Writing"
-msgstr "Çek Yazmaya İzin ver"
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Payment"
-msgstr "Ödeme"
-
-#. module: account_check_writing
-#: field:account.journal,use_preprint_check:0
-msgid "Use Preprinted Check"
-msgstr "Ön basılı çek kullan"
-
-#. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
-msgid "Print Check (Bottom)"
-msgstr "Çek Yazdır (taban)"
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,help:account_check_writing.action_write_check
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new check. \n"
-"              </p><p>\n"
-"                The check payment form allows you to track the payment you "
-"do\n"
-"                to your suppliers using checks. When you select a supplier, "
-"the\n"
-"                payment method and an amount for the payment, OpenERP will\n"
-"                propose to reconcile your payment with the open supplier\n"
-"                invoices or bills.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Yeni bir çek oluşturmak için tıklayın. \n"
-"              </p><p>\n"
-"                Çek ödeme formu tedarikçilerinize çek ile yaptığınız "
-"ödemeleri takip\n"
-"                etmenize olanak verir. Tedarikçi , ödeme yöntemi ve tutar "
-"seçtiğinizde,\n"
-"                OpenERP ödemenizi açık tedarikçi faturaları ya da fişleri "
-"ile    \n"
-"                uzlaştırmak için öneride bulunur.\n"
-"              </p>\n"
-"            "
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: view:website:account_check_writing.report_check
 msgid "Due Date"
 msgstr "Vade Tarihi"
-
-#. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
-msgid "Print Check (Middle)"
-msgstr "Çek Yazdır (Orta)"
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
 
 #. module: account_check_writing
 #: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
@@ -187,52 +155,25 @@ msgid "Error!"
 msgstr "Hata!"
 
 #. module: account_check_writing
-#: help:account.check.write,check_number:0
-msgid "The number of the next check number to be printed."
-msgstr "Yazdırılacak sonraki çekin numarası."
+#: field:account.check.write,id:0
+#: field:report.account_check_writing.report_check,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-msgid "Balance Due"
-msgstr "Borç Bakiyesi"
+#: model:ir.model,name:account_check_writing.model_account_journal
+msgid "Journal"
+msgstr "Yevmiye"
 
 #. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
-msgid "Print Check (Top)"
-msgstr "Çek Yazdır (Üst)"
+#: field:account.check.write,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Check Amount"
-msgstr "Çek Tutarı"
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_voucher
-msgid "Accounting Voucher"
-msgstr "Muhasebe Makbuzu"
-
-#. module: account_check_writing
-#: view:account.check.write:0
-msgid "or"
-msgstr "ya da"
-
-#. module: account_check_writing
-#: field:account.voucher,amount_in_word:0
-msgid "Amount in Word"
-msgstr "Yazı ile Tutar"
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_check_write
-msgid "Prin Check in Batch"
-msgstr "Toplu Çek Yazdır"
-
-#. module: account_check_writing
-#: view:account.check.write:0
-msgid "Cancel"
-msgstr "İptal"
+#: field:account.check.write,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
 
 #. module: account_check_writing
 #: field:account.check.write,check_number:0
@@ -240,44 +181,66 @@ msgid "Next Check Number"
 msgstr "Sonraki Çek Numarası"
 
 #. module: account_check_writing
-#: view:account.check.write:0
-msgid "Check"
-msgstr "Çek"
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "No check selected "
+msgstr "Seçilen çek yok "
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Hata! özyinelemeli şirketler oluşturamazsınız."
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "One of the printed check already got a number."
+msgstr "Yazdırılan çekin birinin halihazırda numarası var."
 
-#~ msgid "Configuration"
-#~ msgstr "Yapılandırma"
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Open Balance"
+msgstr "Açık Bakiye"
 
-#~ msgid "The company name must be unique !"
-#~ msgstr "Şirket adı tekil olmalı !"
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Original Amount"
+msgstr "İlk Tutar"
 
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Yevmiye kodu her firma için benzersiz olmalı."
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Payment"
+msgstr "Ödeme"
 
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Yapılandırma hatası! Seçilen döviz kuru öntanımlı hesaplarla aynı olmalı."
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_check_write
+msgid "Prin Check in Batch"
+msgstr "Toplu Çek Yazdır"
 
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Yevmiye defteri adı her firmada benzersiz olmalı."
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: view:account.voucher:account_check_writing.view_vendor_payment_check_form
+msgid "Print Check"
+msgstr "Çeki Yazdır"
 
-#~ msgid ""
-#~ "The check payment form allows you to track the payment you do to your "
-#~ "suppliers specially by check. When you select a supplier, the payment method "
-#~ "and an amount for the payment, OpenERP will propose to reconcile your "
-#~ "payment with the open supplier invoices or bills.You can print the check"
-#~ msgstr ""
-#~ "Çek ödeme formu, tedarikçilerinize özellikle çek ile yaptığınız ödemeleriniz "
-#~ "izlemenizi sağlar. Bir tedarikçi, ödeme yöntemi ve ödenecek tutar "
-#~ "seçtiğinizde, OpenERP, size açık faturalar ya da fişlerinizin ödemeniz ile "
-#~ "uzlaştırılmasını önerecektir. Çeki yazdırabilirsiniz."
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
+msgid "Print Check in Batch"
+msgstr "Toplu Çek Yazdır"
 
-#~ msgid "Choose Check layout"
-#~ msgstr "Çek düzenini seç"
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "Printing error"
+msgstr "Yazdırma hatası"
 
-#~ msgid "Default Check layout"
-#~ msgstr "Varsayıla çek düzeni"
+#. module: account_check_writing
+#: help:account.check.write,check_number:0
+msgid "The number of the next check number to be printed."
+msgstr "Yazdırılacak sonraki çekin numarası."
+
+#. module: account_check_writing
+#: field:account.journal,use_preprint_check:0
+msgid "Use Preprinted Check"
+msgstr "Ön basılı çek kullan"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_write_check
+#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
+msgid "Write Checks"
+msgstr "Çekleri Yazma"

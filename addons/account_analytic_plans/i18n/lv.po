@@ -1,21 +1,52 @@
 # Latvian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-09-01 12:44+0000\n"
-"Last-Translator: Nauris Sedlers <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:58+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:218
+#, python-format
+msgid "A model with this name and code already exists."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Konta Id"
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Account Name"
+msgstr "Konta Nosaukums"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account1_ids:0
+msgid "Account1 Id"
+msgstr "Konts1 Id"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account2_ids:0
+msgid "Account2 Id"
+msgstr "Konta2 Id"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Konts3 Id"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -23,36 +54,82 @@ msgid "Account4 Id"
 msgstr "Konts4 Id"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-#: view:account.crossovered.analytic:0
-#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
-#: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
-msgid "Crossovered Analytic"
-msgstr "Šķērsanalīze"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
 msgstr "Konts5 Id"
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,date2:0
-msgid "End Date"
-msgstr "Beigu Datums"
+#: field:account.analytic.plan.instance,account6_ids:0
+msgid "Account6 Id"
+msgstr "Konta6 Id"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,rate:0
-msgid "Rate (%)"
-msgstr "Likme (%)"
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Amount"
+msgstr "Summa"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analītiskais Konts"
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,ref:0
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Analytic Account Reference"
+msgstr "Analītiskā Konta Reference"
+
+#. module: account_analytic_plans
+#. openerp-web
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:account_analytic_plans.account_analytic_plan_instance_form
+#: view:account.analytic.plan.instance:account_analytic_plans.account_analytic_plan_instance_tree
+#: field:account.analytic.plan.instance,name:0
+#: field:account.bank.statement.line,analytics_id:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+#: code:addons/account_analytic_plans/static/src/js/account_bank_reconciliation.js:16
+#: code:addons/account_analytic_plans/static/src/js/account_bank_reconciliation.js:23
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 #, python-format
-msgid "The total should be between %s and %s."
+msgid "Analytic Distribution"
+msgstr "Analītiskais Sadalījums"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:account_analytic_plans.account_analytic_plan_instance_line_form
+msgid "Analytic Distribution Line"
+msgstr "Analītiskā Sadaklījuma Rinda"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:account_analytic_plans.account_analytic_plan_instance_line_tree
+msgid "Analytic Distribution Lines"
+msgstr "Analītiskā Sadaklījuma Rindas"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
+msgid "Analytic Distribution's Models"
+msgstr "Analītiskā Sadalījuma Modeļi"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
+msgstr "Analītiskās Instances Rinda"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,journal_id:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+#: field:account.crossovered.analytic,journal_ids:0
+msgid "Analytic Journal"
+msgstr "Analītskais Žurnāls"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan:0
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_form
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_search
 #: field:account.analytic.plan,name:0
 #: field:account.analytic.plan.line,plan_id:0
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
@@ -62,130 +139,87 @@ msgid "Analytic Plan"
 msgstr "Analītiskais Plāns"
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid ""
-"This distribution model has been saved.You will be able to reuse it later."
-msgstr ""
-"Šo sadalījuma modelis ir saglabāts. Jūs varēsiet to atkārtoti izmantot vēlāk."
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr "Analītiskākā Plāna Instance"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
-msgid "Analytic Instance Line"
-msgstr "Analītiskās Instances Rinda"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Lines"
-msgstr "Analītiskā Sadaklījuma Rindas"
-
-#. module: account_analytic_plans
-#: view:account.crossovered.analytic:0
-msgid "Print"
-msgstr "Drukāt"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "To Date"
-msgstr "Līdz Datumam"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,plan_id:0
-msgid "Plan Id"
-msgstr "Plāna Id"
-
-#. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
-msgid "Analytic Distribution's Models"
-msgstr "Analītiskā Sadalījuma Modeļi"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Account Name"
-msgstr "Konta Nosaukums"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
-msgstr "Analītiskā Sadaklījuma Rinda"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Sadalījuma Kods"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-#: field:account.analytic.line,percentage:0
-msgid "Percentage"
-msgstr "Procenti"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Izdrukas datums"
-
-#. module: account_analytic_plans
-#: field:account.crossovered.analytic,empty_line:0
-msgid "Dont show empty lines"
-msgstr "Nerādīt tukšās rindas"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
-#, python-format
-msgid "There are no analytic lines related to account %s."
-msgstr ""
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Konts3 Id"
-
-#. module: account_analytic_plans
-#: view:account.crossovered.analytic:0
-#: view:analytic.plan.create.model:0
-msgid "or"
-msgstr ""
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "100.00%"
-msgstr "100.00%"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Currency"
-msgstr "Valūta"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account :"
-msgstr "Analītiskais Konts:"
-
-#. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid "Save This Distribution as a Model"
-msgstr "Saglabāt šo Sadalījumu kā Modeli"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
+#: view:account.analytic.plan.line:account_analytic_plans.account_analytic_plan_line_form
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
 msgstr "Analītiskā Plāna Rinda"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account Reference:"
-msgstr "Analītiskā Konta Reference"
+#: view:account.analytic.plan.line:account_analytic_plans.account_analytic_plan_line_tree
+msgid "Analytic Plan Lines"
+msgstr "Analītiskā Plāna Rindas"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_search
+#: view:account.analytic.plan:account_analytic_plans.account_analytic_plan_tree
+#: field:account.analytic.plan,plan_ids:0
+#: field:account.journal,plan_id:0
+msgid "Analytic Plans"
+msgstr "Analītiskie Plāni"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
-msgid "Plan Name"
-msgstr "Plāna Nosaukums"
+msgid "Axis Name"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Bankas Konta Izraksts"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Konta Izraksta Rinda"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
+msgid "Cancel"
+msgstr "Atcelt"
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Code"
+msgstr "Kods"
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Company:"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,create_uid:0
+#: field:account.analytic.plan.instance,create_uid:0
+#: field:account.analytic.plan.instance.line,create_uid:0
+#: field:account.analytic.plan.line,create_uid:0
+#: field:account.crossovered.analytic,create_uid:0
+#: field:analytic.plan.create.model,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,create_date:0
+#: field:account.analytic.plan.instance,create_date:0
+#: field:account.analytic.plan.instance.line,create_date:0
+#: field:account.analytic.plan.line,create_date:0
+#: field:account.crossovered.analytic,create_date:0
+#: field:analytic.plan.create.model,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
+#: model:ir.actions.report.xml,name:account_analytic_plans.action_account_analytic_account_crossovered_analytic
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Crossovered Analytic"
+msgstr "Šķērsanalīze"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
@@ -193,53 +227,17 @@ msgid "Default Entries"
 msgstr "Noklusētās Vērtības"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan:0
-#: field:account.analytic.plan,plan_ids:0
-#: field:account.journal,plan_id:0
-msgid "Analytic Plans"
-msgstr "Analītiskie Plāni"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Perc(%)"
-msgstr "Proc(%)"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_move_line
-msgid "Journal Items"
-msgstr "Žurnāla Vienumi"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
-msgid "analytic.plan.create.model"
-msgstr "analytic.plan.create.model"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account1_ids:0
-msgid "Account1 Id"
-msgstr "Konts1 Id"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,max_required:0
-msgid "Maximum Allowed (%)"
-msgstr "Maksimāli Pieļaujamie (%)"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
-msgstr "Pamata Konts"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Sadalījuma Kods"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
-#: view:analytic.plan.create.model:0
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
 #, python-format
 msgid "Distribution Model Saved"
 msgstr "Sadalījuma Modelis Saglabāts"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-msgid "Analytic Plan Instance"
-msgstr "Analītiskākā Plāna Instance"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
@@ -247,14 +245,84 @@ msgid "Distribution Models"
 msgstr "Sadalījuma Modeļi"
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid "Ok"
-msgstr "Labi"
+#: field:account.crossovered.analytic,empty_line:0
+msgid "Dont show empty lines"
+msgstr "Nerādīt tukšās rindas"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
-msgid "Analytic Plan Lines"
-msgstr "Analītiskā Plāna Rindas"
+#: field:account.crossovered.analytic,date2:0
+msgid "End Date"
+msgstr "Beigu Datums"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:218
+#: code:addons/account_analytic_plans/account_analytic_plans.py:231
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "From Date:"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,id:0
+#: field:account.analytic.plan.instance,id:0
+#: field:account.analytic.plan.instance.line,id:0
+#: field:account.analytic.plan.line,id:0
+#: field:account.crossovered.analytic,id:0
+#: field:analytic.plan.create.model,id:0
+#: field:report.account_analytic_plans.report_crossoveredanalyticplans,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice
+msgid "Invoice"
+msgstr "Rēķins"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Rēķina Rinda"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_journal
+msgid "Journal"
+msgstr "Žurnāls"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_move_line
+msgid "Journal Items"
+msgstr "Žurnāla Vienumi"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,write_uid:0
+#: field:account.analytic.plan.instance,write_uid:0
+#: field:account.analytic.plan.instance.line,write_uid:0
+#: field:account.analytic.plan.line,write_uid:0
+#: field:account.crossovered.analytic,write_uid:0
+#: field:analytic.plan.create.model,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,write_date:0
+#: field:account.analytic.plan.instance,write_date:0
+#: field:account.analytic.plan.instance.line,write_date:0
+#: field:account.analytic.plan.line,write_date:0
+#: field:account.crossovered.analytic,write_date:0
+#: field:analytic.plan.create.model,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,max_required:0
+msgid "Maximum Allowed (%)"
+msgstr "Maksimāli Pieļaujamie (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -267,51 +335,31 @@ msgid "Model's Plan"
 msgstr "Modeļa Plāns"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account2_ids:0
-msgid "Account2 Id"
-msgstr "Konta2 Id"
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
+msgid "Multi Plans"
+msgstr "Multi Plāni"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Konta Izraksta Rinda"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#: code:addons/account_analytic_plans/account_analytic_plans.py:335
+#: code:addons/account_analytic_plans/account_analytic_plans.py:469
 #, python-format
-msgid "Error!"
+msgid "No Analytic Journal!"
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Amount"
-msgstr "Summa"
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Perc(%)"
+msgstr "Proc(%)"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
-msgid "Print Crossovered Analytic"
-msgstr "Izdrukāt Šķērssaistīto Analītiku"
+#: field:account.analytic.line,percentage:0
+msgid "Percentage"
+msgstr "Procenti"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
-#, python-format
-msgid "User Error!"
-msgstr ""
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account6_ids:0
-msgid "Account6 Id"
-msgstr "Konta6 Id"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,journal_id:0
-#: view:account.crossovered.analytic:0
-#: field:account.crossovered.analytic,journal_ids:0
-msgid "Analytic Journal"
-msgstr "Analītskais Žurnāls"
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
+msgstr "Plāna Id"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
@@ -320,48 +368,49 @@ msgid "Please put a name and a code before saving the model."
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
+#: view:account.crossovered.analytic:account_analytic_plans.view_account_crossovered_analytic
+msgid "Print"
+msgstr "Drukāt"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
+msgid "Print Crossovered Analytic"
+msgstr "Izdrukāt Šķērssaistīto Analītiku"
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "Printing Date:"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
 msgid "Quantity"
 msgstr "Daudzums"
 
 #. module: account_analytic_plans
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
-msgid "Multi Plans"
-msgstr "Multi Plāni"
+#: field:account.analytic.plan.instance.line,rate:0
+msgid "Rate (%)"
+msgstr "Likme (%)"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Konta Id"
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "Pamata Konts"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Kods"
+#: help:account.analytic.plan.line,root_analytic_id:0
+msgid "Root account of this plan."
+msgstr "Šā plāna pamata konts."
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_journal
-msgid "Journal"
-msgstr "Žurnāls"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Pasūtījuma Rinda"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
-#, python-format
-msgid "You have to define an analytic journal on the '%s' journal."
-msgstr ""
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
-#, python-format
-msgid "No Analytic Journal !"
-msgstr "Nav norādīts analītiskais žurnāls!"
-
-#. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
-msgid "analytic.plan.create.model.action"
-msgstr "analytic.plan.create.model.action"
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model_msg
+msgid "Save This Distribution as a Model"
+msgstr "Saglabāt šo Sadalījumu kā Modeli"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -369,9 +418,21 @@ msgid "Sequence"
 msgstr "Secība"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Rēķina Rinda"
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "Sākuma Datums"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:231
+#, python-format
+msgid "The total should be between %s and %s."
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:62
+#, python-format
+msgid "There are no analytic lines related to account %s."
+msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
@@ -380,205 +441,31 @@ msgid "There is no analytic plan defined."
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
-msgid "Bank Statement"
-msgstr "Bankas Konta Izraksts"
+#: view:analytic.plan.create.model:account_analytic_plans.view_analytic_plan_create_model
+msgid ""
+"This distribution model has been saved.You will be able to reuse it later."
+msgstr ""
+"Šo sadalījuma modelis ir saglabāts. Jūs varēsiet to atkārtoti izmantot vēlāk."
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analītiskais Konts"
-
-#. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.bank.statement.line,analytics_id:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
-msgid "Analytic Distribution"
-msgstr "Analītiskais Sadalījums"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
-#, python-format
-msgid "A model with this name and code already exists."
+#: view:website:account_analytic_plans.report_crossoveredanalyticplans
+msgid "To Date:"
 msgstr ""
 
 #. module: account_analytic_plans
-#: help:account.analytic.plan.line,root_analytic_id:0
-msgid "Root account of this plan."
-msgstr "Šā plāna pamata konts."
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:62
+#, python-format
+msgid "User Error!"
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,ref:0
-msgid "Analytic Account Reference"
-msgstr "Analītiskā Konta Reference"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:335
+#: code:addons/account_analytic_plans/account_analytic_plans.py:469
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal."
+msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_invoice
-msgid "Invoice"
-msgstr "Rēķins"
-
-#. module: account_analytic_plans
-#: view:account.crossovered.analytic:0
-#: view:analytic.plan.create.model:0
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: account_analytic_plans
-#: field:account.crossovered.analytic,date1:0
-msgid "Start Date"
-msgstr "Sākuma Datums"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "at"
-msgstr "uz"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Uzņēmums"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Pasūtījuma Rinda"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "From Date"
-msgstr "No Datuma"
-
-#, python-format
-#~ msgid "User Error"
-#~ msgstr "Lietotāja Kļūda"
-
-#~ msgid "Multiple-plans management in Analytic Accounting"
-#~ msgstr "Vairāku plānu apstrāde Analītiskajā Grāmatvedībā"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Nav iespējams veikt grāmatojumus slēgtā kontā."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Kļūdaina kredīta vai debeta vērtība grāmatojumā!"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Žurnāla kodam ir jābūt unikālam katram uzņēmumam!"
-
-#~ msgid ""
-#~ "The amount of the voucher must be the same amount as the one on the "
-#~ "statement line"
-#~ msgstr "Rēķina summai ir jāsakrīt ar konta izraksta rindā esošo"
-
-#, python-format
-#~ msgid "A model having this name and code already exists !"
-#~ msgstr "Modelis ar šo vārdu un kodu jau eksistē!"
-
-#, python-format
-#~ msgid "No analytic plan defined !"
-#~ msgstr "Nav nodefinēts analītiskais plāns!"
-
-#, python-format
-#~ msgid "You have to define an analytic journal on the '%s' journal!"
-#~ msgstr "Žurnālam '%s'  ir jādefinē atbilstošs analītiskais žurnāls!"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Uzņēmumam ir jāsakrīt ar saistīto kontu un periodu."
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Kļūda"
-
-#, python-format
-#~ msgid "Please put a name and a code before saving the model !"
-#~ msgstr "Lūdzu, norādiet nosaukumu un kodu, pirms saglabāt modeli!"
-
-#, python-format
-#~ msgid "The Total Should be Between %s and %s"
-#~ msgstr "Kopsummai ir jābūt starp %s un %s"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#, python-format
-#~ msgid "Value Error"
-#~ msgstr "Vērtības Kļūda"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Žurnāla nosaukumam katrai kompānijai ir jābūt unikālam!"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Jūs nevarat izveidor grāmatojumu pārskata kontam."
-
-#~ msgid ""
-#~ "This module allows to use several analytic plans, according to the general "
-#~ "journal,\n"
-#~ "so that multiple analytic lines are created when the invoice or the entries\n"
-#~ "are confirmed.\n"
-#~ "\n"
-#~ "For example, you can define the following analytic structure:\n"
-#~ "  Projects\n"
-#~ "      Project 1\n"
-#~ "          SubProj 1.1\n"
-#~ "          SubProj 1.2\n"
-#~ "      Project 2\n"
-#~ "  Salesman\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
-#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-#~ "Fabien. The amount can also be split. The following example is for\n"
-#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    SubProject 1.1 : 50%\n"
-#~ "    SubProject 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
-#~ "lines,\n"
-#~ "for one account entry.\n"
-#~ "The analytic plan validates the minimum and maximum percentage at the time "
-#~ "of creation\n"
-#~ "of distribution models.\n"
-#~ "        "
-#~ msgstr ""
-#~ "Šis modulis ļauj izmantot vairākus analītiskos plānus, atbilstoši galvenajam "
-#~ "žurnālam,\n"
-#~ "tādejādi apstiprinot rēķinus vai ievades rindas, tiek izveidotas vairākas "
-#~ "analītisko\n"
-#~ "kontu rindas.\n"
-#~ "\n"
-#~ "Piemēram, jūs varat nodefinēt sekojošu analītisko struktūru:\n"
-#~ "  Projekts\n"
-#~ "      Projekts 1\n"
-#~ "          Apakš Projekts 1.1\n"
-#~ "          Apakš Projekts 1.2\n"
-#~ "      Projekts 2\n"
-#~ "  Pārdevēji\n"
-#~ "      Ēriks\n"
-#~ "      Gatis\n"
-#~ "\n"
-#~ "Šeit mums ir redzami divi plāni: Projekti un Pārdevēji. Rēķina rindā ir "
-#~ "jāievada\n"
-#~ "divas analītiskās pazīmes: Apakš Projekts 1.1 un Gatis.\n"
-#~ "Arī kopējo summu var sadalīt. Sekojošais piemērs ir rēķiniem\n"
-#~ "kas saistīti ar viena pārdevēja diviem apakš projektiem:\n"
-#~ "\n"
-#~ "Plāns1:\n"
-#~ "    Apakš Projekts 1.1: 50%\n"
-#~ "    Apakš Projekts 1.2: 50%\n"
-#~ "Plāns2:\n"
-#~ "    Gatis: 100%\n"
-#~ "\n"
-#~ "Tādejādi grāmatojot šo rēķina rindiņu, tā izveidos 3 analītiskās rindiņas,\n"
-#~ "katram konta ierakstam.\n"
-#~ "Analītiskais plāns sadalījuma modeļa izveides brīdi pārbauda noteikto "
-#~ "minimālo\n"
-#~ "un maksimālo procentuālo sadalījumu.\n"
-#~ "        "
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr "analytic.plan.create.model.action"

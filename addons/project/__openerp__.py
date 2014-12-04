@@ -23,7 +23,7 @@
     'name': 'Project Management',
     'version': '1.1',
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/project-management',
     'category': 'Project Management',
     'sequence': 8,
     'summary': 'Projects, Tasks',
@@ -44,7 +44,8 @@
         'board',
         'mail',
         'resource',
-        'web_kanban'
+        'web_kanban',
+        'web_kanban_sparkline'
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks

@@ -24,7 +24,7 @@
     'author' : 'OpenERP S.A.',
     'sequence': 110,
     'category': 'Managing vehicles and contracts',
-    'website' : 'http://www.openerp.com',
+    'website' : 'https://www.odoo.com/page/fleet',
     'summary' : 'Vehicle, leasing, insurances, costs',
     'description' : """
 Vehicle, leasing, insurances, cost

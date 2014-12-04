@@ -38,7 +38,7 @@ team. Once you get back your migrated database, you restore it and reverse the
 anonymization process to recover your previous data.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['base'],
     'demo': ['anonymization_demo.xml'],
     'data': [

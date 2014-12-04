@@ -172,7 +172,7 @@
           <p class="oe_view_nocontent_create">
             Click to create a marketing campaign.
           </p><p>
-            OpenERP's marketing campaign allows you to automate communication
+            Odoo's marketing campaign allows you to automate communication
             to your prospects. You can define a segment (set of conditions) on
             your leads and partners to fullfil the campaign.
           </p><p>
@@ -184,7 +184,8 @@
         </field>
     </record>
 
-    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager"/>
+    <menuitem name="Lead Automation" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager" 
+    sequence="3"/>
     <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
 
     <!-- Marketing Segments -->
@@ -315,14 +316,14 @@
                 <separator string="Previous Activities"/>
                 <field name="from_ids" mode="tree" context="{'default_activity_to_id': active_id}">
                     <tree string="Incoming Transitions" editable="bottom">
-                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
                     <form string="Incoming Transitions">
                         <group col="4">
-                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
@@ -332,14 +333,14 @@
                 <separator string="Next Activities"/>
                 <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
                     <tree string="Outgoing Transitions" editable="bottom">
-                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
                     <form string="Outgoing Transitions">
                         <group col="4">
-                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
@@ -449,7 +450,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Campaign Follow-up</field>
+        <field name="name">Follow-up</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>

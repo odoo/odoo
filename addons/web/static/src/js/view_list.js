@@ -167,11 +167,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {String} CSS style declaration
      */
     style_for: function (record) {
-        var style= '';
+        var len, style= '';
 
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
-            current_date: new Date().toString('yyyy-MM-dd')
+            current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta
         });
         var i;
@@ -289,7 +289,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Pager
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self})).hide();
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
@@ -374,9 +374,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var $column = $(e.currentTarget);
         var col_name = $column.data('id');
         var field = this.fields_view.fields[col_name];
-        // test if the field is a function field with store=false, since it's impossible
-        // for the server to sort those fields we desactivate the feature
-        if (field && field.store === false) {
+        // test whether the field is sortable
+        if (field && !field.sortable) {
             return false;
         }
         this.dataset.sort(col_name);
@@ -405,11 +404,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        if (total === 0)
-            this.$pager.hide();
-        else
-            this.$pager.css("display", "");
-        this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
+        this.$pager.find('.oe-pager-button').toggle(total > limit);
+        this.$pager.find('.oe_pager_value').toggle(total !== 0);
         var spager = '-';
         if (total) {
             var range_start = this.page * limit + 1;
@@ -515,6 +511,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
+        reloaded.then(function () {
+            if (!self.grouped) self.$pager.show();
+        });
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
@@ -522,7 +521,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         self.dataset.index = 0;
                     }
                 } else if (self.dataset.index >= self.records.length) {
-                    self.dataset.index = 0;
+                    self.dataset.index = self.records.length ? 0 : null;
                 }
 
                 self.compute_aggregates();
@@ -539,6 +538,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     reload_record: function (record) {
         var self = this;
+        var fields = this.fields_view.fields;
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
@@ -551,8 +551,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 self.records.remove(record);
                 return;
             }
-            _(_.keys(values)).each(function(key){
-                record.set(key, values[key], {silent: true});
+            _.each(values, function (value, key) {
+                if (fields[key] && fields[key].type === 'many2many')
+                    record.set(key + '__display', false, {silent: true});
+                record.set(key, value, {silent: true});            
             });
             record.trigger('change', record);
         });
@@ -901,9 +903,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
-        var create_nocontent = this.$buttons;
+        var $buttons = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.openerpBounce();
+            $buttons.width($buttons.width() + 1).openerpBounce();
         });
     }
 });
@@ -1518,12 +1520,10 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                 }))
                             .end()
                             .find('button[data-pager-action=previous]')
-                                .css('visibility',
-                                     page === 0 ? 'hidden' : '')
+                                .toggleClass('disabled', page === 0)
                             .end()
                             .find('button[data-pager-action=next]')
-                                .css('visibility',
-                                     page === pages - 1 ? 'hidden' : '');
+                                .toggleClass('disabled', page === pages - 1);
                     }
                 }
 
@@ -1623,6 +1623,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.setup_resequence_rows(list, dataset);
                 }).always(function() {
                     if (post_render) { post_render(); }
+                    self.view.trigger('view_list_rendered');
                 });
             });
         return $el;
@@ -2154,7 +2155,8 @@ instance.web.list.columns = new instance.web.Registry({
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
     'field.reference': 'instance.web.list.Reference',
-    'field.many2many': 'instance.web.list.Many2Many'
+    'field.many2many': 'instance.web.list.Many2Many',
+    'button.toggle_button': 'instance.web.list.toggle_button',
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2393,5 +2395,18 @@ instance.web.list.Reference = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
+instance.web.list.toggle_button = instance.web.list.Column.extend({
+    format: function (row_data, options) {
+        this._super(row_data, options);
+        var button_tips = JSON.parse(this.options);
+        var fieldname = this.field_name;
+        var has_value = row_data[fieldname] && !!row_data[fieldname].value;
+        this.icon = has_value ? 'gtk-yes' : 'gtk-normal';
+        this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
+        return QWeb.render('toggle_button', {
+            widget: this,
+            prefix: instance.session.prefix,
+        });
+    },
+});
 })();
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

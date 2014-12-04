@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bootstrap Plugin Test Suite</title>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery.min.js"></script>
+
+    <!-- QUnit -->
+    <link rel="stylesheet" href="vendor/qunit.css" media="screen">
+    <script src="vendor/qunit.js"></script>
+    <script>
+      // See https://github.com/axemclion/grunt-saucelabs#test-result-details-with-qunit
+      var log = []
+      QUnit.done = function (test_results) {
+        var tests = log.map(function (details) {
+          return {
+            name: details.name,
+            result: details.result,
+            expected: details.expected,
+            actual: details.actual,
+            source: details.source
+          }
+        })
+        test_results.tests = tests
+
+        // Delaying results a bit because in real-world scenario you won't get them immediately
+        setTimeout(function () {
+          window.global_test_results = test_results
+        }, 2000)
+      }
+
+      QUnit.testStart(function (testDetails) {
+        QUnit.log = function (details) {
+          if (!details.result) {
+            details.name = testDetails.name
+            log.push(details)
+          }
+        }
+      })
+    </script>
+
+    <!-- Plugin sources -->
+    <script>$.support.transition = false</script>
+    <script src="../alert.js"></script>
+    <script src="../button.js"></script>
+    <script src="../carousel.js"></script>
+    <script src="../collapse.js"></script>
+    <script src="../dropdown.js"></script>
+    <script src="../modal.js"></script>
+    <script src="../scrollspy.js"></script>
+    <script src="../tab.js"></script>
+    <script src="../tooltip.js"></script>
+    <script src="../popover.js"></script>
+    <script src="../affix.js"></script>
+
+    <!-- Unit tests -->
+    <script src="unit/alert.js"></script>
+    <script src="unit/button.js"></script>
+    <script src="unit/carousel.js"></script>
+    <script src="unit/collapse.js"></script>
+    <script src="unit/dropdown.js"></script>
+    <script src="unit/modal.js"></script>
+    <script src="unit/scrollspy.js"></script>
+    <script src="unit/tab.js"></script>
+    <script src="unit/tooltip.js"></script>
+    <script src="unit/popover.js"></script>
+    <script src="unit/affix.js"></script>
+
+  </head>
+  <body>
+    <div>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+    </div>
+  </body>
+</html>

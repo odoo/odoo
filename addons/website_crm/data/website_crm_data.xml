@@ -12,7 +12,7 @@
             <field name="state">open</field>
         </record>
 
-        <record model="crm.case.section" id="website.salesteam_website_sales">
+        <record model="crm.team" id="website.salesteam_website_sales">
             <field name="name">Website Sales</field>
             <field name="code">WS</field>
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>

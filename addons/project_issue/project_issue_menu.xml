@@ -9,13 +9,13 @@
         <field name="name">Issues</field>
         <field name="res_model">project.issue</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,calendar</field>
+        <field name="view_mode">kanban,tree,calendar,form,graph</field>
         <field name="view_id" eval="False"/>
         <field name="domain" eval=""/>
         <field name="search_view_id" ref="view_project_issue_filter"/>
         <field name="help" type="html">
             <p>
-                The OpenERP issues tacker allows you to efficiantly manage things
+                The Odoo issues tacker allows you to efficiently manage things
                 like internal requests, software development bugs, customer
                 complaints, project troubles, material breakdowns, etc.
             </p>
@@ -47,6 +47,13 @@
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="project_issue_form_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view0">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="project_issue_graph_view"/>
         <field name="act_window_id" ref="project_issue_categ_act0"/>
     </record>
 

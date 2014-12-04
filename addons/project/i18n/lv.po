@@ -1,634 +1,45 @@
 # Latvian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-02-06 16:52+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 05:53+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:28+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: project
-#: view:project.project:0
-msgid "Email Interface"
+#: field:res.partner,task_count:0
+msgid "# Tasks"
 msgstr ""
 
 #. module: project
-#: help:account.analytic.account,use_tasks:0
-msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
+#: field:report.project.task.user,no_of_days:0
+msgid "# of Days"
+msgstr "Dienu skaits"
+
+#. module: project
+#: field:project.task.history.cumulative,nbr_tasks:0
+#: field:report.project.task.user,nbr:0
+msgid "# of Tasks"
 msgstr ""
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,progress:0
-msgid "Progress"
-msgstr "Progress"
-
-#. module: project
-#: model:process.node,name:project.process_node_taskbydelegate0
-msgid "Task by delegate"
-msgstr "Uzdevumi šķiroti pēc saņēmēja"
-
-#. module: project
-#: view:project.project:0
-msgid "Parent"
-msgstr "Vecāks"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.dblc_proj
-msgid "Project's tasks"
-msgstr "Projekta uzdevumi"
-
-#. module: project
-#: field:project.task.type,name:0
-msgid "Stage Name"
-msgstr "Posma nosaukums"
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_openpendingtask0
-msgid "Set pending"
-msgstr "Mainīt uz Atlikts"
-
-#. module: project
-#: view:project.project:0
-msgid "New Project Based on Template"
-msgstr "Jauns Projekts no parauga"
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
-msgid "Day"
-msgstr "Diena"
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_merge
-msgid "Merge"
-msgstr "Sapludināt"
-
-#. module: project
-#: view:res.partner:0
-msgid "Start Task"
-msgstr "Sākt Uzdevumu"
-
-#. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:360
+#: code:addons/project/project.py:380
+#: code:addons/project/project.py:703
 #, python-format
-msgid "Warning !"
+msgid "%s (copy)"
 msgstr ""
-
-#. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: project
-#: model:process.node,name:project.process_node_donetask0
-msgid "Done task"
-msgstr "Veiktais uzdevums"
-
-#. module: project
-#: model:process.node,note:project.process_node_donetask0
-msgid "Task is Completed"
-msgstr "Uzdevums ir pabeigts"
-
-#. module: project
-#: view:res.partner:0
-msgid "False"
-msgstr ""
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
-msgstr "Testēšana"
-
-#. module: project
-#: model:ir.model,name:project.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analītiskais Konts"
-
-#. module: project
-#: field:project.config.settings,group_time_work_estimation_tasks:0
-msgid "Manage time estimation on tasks"
-msgstr ""
-
-#. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_res_partner
-msgid "Partner"
-msgstr "Partneris"
-
-#. module: project
-#: field:project.config.settings,group_manage_delegation_task:0
-msgid "Allow task delegation"
-msgstr ""
-
-#. module: project
-#: field:project.task.delegate,planned_hours:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_planned:0
-msgid "Planned Hours"
-msgstr "Plānotās Stundas"
-
-#. module: project
-#: view:project.project:0
-msgid "Reset as Project"
-msgstr "Atjaunot kā Projektu"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "In progress tasks"
-msgstr ""
-
-#. module: project
-#: help:project.project,progress_rate:0
-msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "Pabeigto darbu % attiecībā pret kopējiem veicamajiem uzdevumiem."
-
-#. module: project
-#: model:ir.actions.client,name:project.action_client_project_menu
-msgid "Open Project Menu"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.action_project_task_user_tree
-msgid ""
-"This report allows you to analyse the performance of your projects and "
-"users. You can analyse the quantities of tasks, the hours spent compared to "
-"the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-"Atskaite nodrošina projektu un lietotāju efektivitātes analīzi. Iespējams "
-"analizēt darbu skaitu, pavadītās stundas atttiecībā pret ieplānotajām, "
-"vidējos darba uzdevumu izpildes termiņu rādītājus."
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "Validation Task Title"
-msgstr "Validācijas uzdevuma virsraksts"
-
-#. module: project
-#: model:res.groups,name:project.group_delegate_task
-msgid "Task Delegation"
-msgstr ""
-
-#. module: project
-#: field:project.project,planned_hours:0
-#: field:project.task.history,planned_hours:0
-#: field:project.task.history.cumulative,planned_hours:0
-msgid "Planned Time"
-msgstr "Plānotais Laiks"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr ""
-
-#. module: project
-#: model:project.category,name:project.project_category_01
-msgid "Contact's suggestion"
-msgstr ""
-
-#. module: project
-#: help:project.config.settings,group_time_work_estimation_tasks:0
-msgid "Allows you to compute Time Estimation on tasks."
-msgstr ""
-
-#. module: project
-#: field:report.project.task.user,user_id:0
-msgid "Assigned To"
-msgstr "Piesaistīts"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_task_closed
-#: model:mail.message.subtype,name:project.mt_task_closed
-msgid "Task Done"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,partner_id:0
-msgid "Contact"
-msgstr "Kontakts"
-
-#. module: project
-#: model:process.transition,name:project.process_transition_delegate0
-#: view:project.task:0
-msgid "Delegate"
-msgstr "Deleģēt"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_view_template_project
-#: view:project.project:0
-msgid "Templates of Projects"
-msgstr "Projektu sagataves"
-
-#. module: project
-#: field:project.project,analytic_account_id:0
-msgid "Contract/Analytic"
-msgstr ""
-
-#. module: project
-#: view:project.config.settings:0
-msgid "Project Management"
-msgstr "Projektu Vadība"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_delegate
-#: view:project.task.delegate:0
-msgid "Project Task Delegate"
-msgstr "Projekta uzdevumu deliģēšana"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_task_started
-#: model:mail.message.subtype,name:project.mt_task_started
-msgid "Task Started"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Very Important"
-msgstr ""
-
-#. module: project
-#: view:project.config.settings:0
-msgid "Support"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Member"
-msgstr "Dalībnieks"
-
-#. module: project
-#: view:project.task:0
-msgid "Cancel Task"
-msgstr ""
-
-#. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's members are users who can have an access to the tasks related to "
-"this project."
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
-msgid "Project Manager"
-msgstr "Projektu Vadītājs"
-
-#. module: project
-#: field:project.project,state:0
-#: field:project.task,state:0
-#: field:project.task.history,state:0
-#: field:project.task.history.cumulative,state:0
-#: field:report.project.task.user,state:0
-msgid "Status"
-msgstr "Statuss"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "Augusts"
-
-#. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
-msgid "Project Name"
-msgstr "Projekta Nosaukums"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "June"
-msgstr "Jūnijs"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "October"
-msgstr "Oktobris"
-
-#. module: project
-#: help:project.project,total_hours:0
-msgid ""
-"Sum of total hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
-"Kopējo stundu summa ar šo projektu saistītiem uzdevumiem un apakšprojektiem."
-
-#. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the project "
-"without removing it."
-msgstr ""
-"Ja lauks aktīvs ir iestatīts uz \"nē\", tas ļaus paslēpt projektu to "
-"nedzēšot."
-
-#. module: project
-#: model:process.transition,note:project.process_transition_opendonetask0
-msgid "When task is completed, it will come into the done state."
-msgstr "Kad uzdevums ir paveikts, tas tiek atzīmēts kā paveikts."
-
-#. module: project
-#: field:project.project,message_summary:0
-#: field:project.task,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "In Progress Tasks"
-msgstr ""
-
-#. module: project
-#: help:res.company,project_time_mode_id:0
-msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"Ar šo tiks noteikta projekta mērvienība. Ja izmantojat darba laika uzskaites "
-"tabeles, tad neaizmirstiet uzstādīt pareizo mērvienību arī savu darbinieku "
-"uzstādījumos."
-
-#. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
-msgid "Assigned to"
-msgstr "Piešķirts"
-
-#. module: project
-#: code:addons/project/project.py:1033
-#, python-format
-msgid "Delegated User should be specified"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Project(s) Manager"
-msgstr ""
-
-#. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: selection:report.project.task.user,state:0
-msgid "In Progress"
-msgstr "Progresā"
-
-#. module: project
-#: view:project.task:0
-msgid "Reactivate"
-msgstr "Aktivizēt atkal"
-
-#. module: project
-#: field:project.project,resource_calendar_id:0
-msgid "Working Time"
-msgstr "Darba Laiks"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_reevaluate
-msgid "Re-evaluate Task"
-msgstr "Pārvērtēt uzdevumu"
-
-#. module: project
-#: view:project.task:0
-msgid "Validate planned time"
-msgstr ""
-
-#. module: project
-#: field:project.config.settings,module_pad:0
-msgid "Use integrated collaborative note pads on task"
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_task_blocked
-#: model:mail.message.subtype,name:project.mt_task_blocked
-msgid "Task Blocked"
-msgstr ""
-
-#. module: project
-#: model:process.node,note:project.process_node_opentask0
-msgid "Encode your working hours."
-msgstr "Ievadiet savas darba stundas."
-
-#. module: project
-#: field:project.project,alias_id:0
-msgid "Alias"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "oe_kanban_text_red"
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,description:project.mt_task_blocked
-msgid "Task blocked"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Delegation"
-msgstr ""
-
-#. module: project
-#: field:project.task,create_date:0
-msgid "Create Date"
-msgstr "Izveidošanas datums"
-
-#. module: project
-#: view:res.partner:0
-msgid "For changing to open state"
-msgstr ""
-
-#. module: project
-#: view:project.config.settings:0
-msgid "Apply"
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_delegate
-msgid "Task Delegate"
-msgstr "Uzdevumu deliģēšana"
-
-#. module: project
-#: help:project.task.delegate,new_task_description:0
-msgid "Reinclude the description of the task in the task of the user"
-msgstr "Ievietot uzdevuma aprakstu lietotāja uzdevumā"
-
-#. module: project
-#: view:project.project:0
-msgid "Project Settings"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "My tasks"
-msgstr ""
-
-#. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr "Atvērt Pabeigtu Uzdevumu"
-
-#. module: project
-#: field:project.task.delegate,planned_hours_me:0
-msgid "Hours to Validate"
-msgstr "Neapstiprinātās Stundas"
-
-#. module: project
-#: help:project.task,remaining_hours:0
-msgid ""
-"Total remaining time, can be re-estimated periodically by the assignee of "
-"the task."
-msgstr ""
-"Kopējais atlikušais laiks, šo laiku periodiski var mainīt darba uzdevuma "
-"uzdevējs."
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "March"
-msgstr "Marts"
-
-#. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.my_open_tasks_action
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "My Tasks"
-msgstr "Mani Uzdevumi"
-
-#. module: project
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Pending tasks"
-msgstr ""
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
-msgstr "_Novērtēt"
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,opening_days:0
-msgid "Days to Open"
-msgstr "Dienas līdz Atvēršanai"
-
-#. module: project
-#: selection:report.project.task.user,priority:0
-msgid "Very urgent"
-msgstr "Ļoti steidzams"
-
-#. module: project
-#: help:project.task.delegate,project_id:0
-#: help:project.task.delegate,user_id:0
-msgid "User you want to delegate this task to"
-msgstr "Lietotājs, kuram gribat deleģēt šo uzdevumu"
-
-#. module: project
-#: view:project.project:0
-msgid "Set as Template"
-msgstr "Veidot Paraugu"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task
-#: view:project.config.settings:0
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,task_id:0
-#: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
-msgid "Task"
-msgstr "Uzdevums"
-
-#. module: project
-#: help:project.config.settings,group_tasks_work_on_tasks:0
-msgid "Allows you to compute work on tasks."
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Administration"
-msgstr "Administrēšana"
-
-#. module: project
-#: field:project.config.settings,group_tasks_work_on_tasks:0
-msgid "Log work activities on tasks"
-msgstr ""
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_analysis
-msgid "Analysis"
-msgstr "Analīze"
-
-#. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
-msgid "Task Summary"
-msgstr "Uzdevuma kopsavilkums"
-
-#. module: project
-#: field:project.task,active:0
-msgid "Not a Template Task"
-msgstr "Nav sagataves uzdevums"
-
-#. module: project
-#: field:project.task,planned_hours:0
-msgid "Initially Planned Hours"
-msgstr ""
-
-#. module: project
-#: model:process.transition,note:project.process_transition_delegate0
-msgid "Delegates tasks to the other user"
-msgstr "Nodod uzdevumu citam lietotājam"
-
-#. module: project
-#: help:project.task,effective_hours:0
-msgid "Computed using the sum of the task work done."
-msgstr "Tiek aprēķināts summējot visus paveiktos darba uzdevuma darbus."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -648,537 +59,12 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.config.settings:0
-msgid "Planning"
-msgstr "Plānošana"
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
-#: field:report.project.task.user,date_deadline:0
-msgid "Deadline"
-msgstr "Termiņš"
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Ready"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "New Tasks"
-msgstr ""
-
-#. module: project
-#: field:project.config.settings,module_project_issue_sheet:0
-msgid "Invoice working time on issues"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
-msgstr "Beigu Datums"
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_specification
-msgid "Specification"
-msgstr "Specifikācija"
-
-#. module: project
-#: model:process.transition,note:project.process_transition_draftopentask0
-msgid "From draft state, it will come into the open state."
-msgstr "No melnraksta uz atvērtu."
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Task's Analysis"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
-msgstr "Jauns Darba Uzdevuma Apraksts"
-
-#. module: project
-#: field:report.project.task.user,delay_endings_days:0
-msgid "Overpassed Deadline"
-msgstr "Noilgušie termiņi"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "New tasks"
-msgstr ""
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Medium"
-msgstr "Vidējs"
-
-#. module: project
-#: field:project.project,total_hours:0
-msgid "Total Time"
-msgstr "Kopējais Laiks"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Creation Date"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Miscellaneous"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,stage_id:0
-#: field:project.task.history,type_id:0
-#: field:project.task.history.cumulative,type_id:0
-msgid "Stage"
-msgstr "Posms"
-
-#. module: project
-#: model:process.transition,name:project.process_transition_draftopentask0
-msgid "Draft Open task"
-msgstr "Atvērts Melnraksta Uzdevums"
-
-#. module: project
-#: field:project.project,alias_model:0
-msgid "Alias Model"
-msgstr ""
-
-#. module: project
-#: help:report.project.task.user,closing_days:0
-msgid "Number of Days to close the task"
-msgstr "Dienu skaits līdz uzdevuma pabeigšanai"
-
-#. module: project
-#: view:board.board:0
-msgid "My Board"
-msgstr "Mana tāfele"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_task_type_form
-msgid "Stages"
-msgstr "Posmi"
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "Delete"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "In progress"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "September"
-msgstr "Septembris"
-
-#. module: project
-#: selection:report.project.task.user,priority:0
-msgid "Urgent"
-msgstr "Steidzams"
-
-#. module: project
-#: model:project.category,name:project.project_category_02
-msgid "Feature request"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Delegated tasks"
-msgstr "Uzdotie Uzdevumi"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_work
-msgid "Project Task Work"
-msgstr "Projekta uzdevumu darbs"
-
-#. module: project
-#: code:addons/project/wizard/project_task_delegate.py:81
-#, python-format
-msgid "CHECK: %s"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Close Project"
-msgstr ""
-
-#. module: project
-#: field:project.project,tasks:0
-msgid "Task Activities"
-msgstr ""
-
-#. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
-msgid "Time Spent"
-msgstr "Patērētais Laiks"
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "í"
-msgstr ""
-
-#. module: project
-#: field:account.analytic.account,company_uom_id:0
-msgid "unknown"
-msgstr ""
-
-#. module: project
-#: field:project.project,message_is_follower:0
-#: field:project.task,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Paveiktais Darbs"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Extended Filters..."
-msgstr "Paplašinātie filtri..."
-
-#. module: project
-#: model:ir.ui.menu,name:project.menu_tasks_config
-msgid "GTD"
-msgstr ""
-
-#. module: project
-#: help:project.task,state:0
+#: model:ir.actions.act_window,help:project.project_category_action
 msgid ""
-"The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_res_company
-msgid "Companies"
-msgstr "Uzņēmumi"
-
-#. module: project
-#: field:project.task.type,fold:0
-msgid "Folded by Default"
-msgstr ""
-
-#. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Datums"
-
-#. module: project
-#: help:project.config.settings,module_project_issue:0
-msgid ""
-"Provides management of issues/bugs in projects.\n"
-"                This installs the module project_issue."
-msgstr ""
-
-#. module: project
-#: help:project.task,kanban_state:0
-msgid ""
-"A task's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "10"
-msgstr ""
-
-#. module: project
-#: help:project.project,analytic_account_id:0
-msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
-"and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Norādiet projektam analītisko kontu, ja nepieciešama finansu analīze. Tas "
-"ļaus analizēt projektus budžeta, plānošanas, izmaksu un ieņēmumu utt. "
-"ietvaros."
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
-#: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
-#: view:project.task.reevaluate:0
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: project
-#: view:project.project:0
-msgid "Other Info"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "_Delegate"
-msgstr "_Deleģēt"
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Very Low"
-msgstr "Ļoti zems"
-
-#. module: project
-#: help:project.project,effective_hours:0
-msgid ""
-"Sum of spent hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
-"Patērēto stundu summa visiem ar projektu saistītiem uzdevumiem un "
-"apakšprojektiem."
-
-#. module: project
-#: view:project.project:0
-msgid ""
-"Follow this project to automatically track the events associated to tasks "
-"and issues of this project."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Users"
-msgstr "Lietotāji"
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_task_stage
-msgid "Stage Changed"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr "Vadītājs"
-
-#. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr ""
-
-#. module: project
-#: field:project.category,name:0
-msgid "Name"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "November"
-msgstr "Novembris"
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "Reevaluate Task"
-msgstr "Pārvērtēt uzdevumu"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_type
-#: view:project.task.type:0
-msgid "Task Stage"
-msgstr "Uzdevuma posms"
-
-#. module: project
-#: view:project.task.type:0
-msgid "Common"
-msgstr ""
-
-#. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid ""
-"To invoice or setup invoicing and renewal options, go to the related "
-"contract:"
-msgstr ""
-
-#. module: project
-#: field:project.task.delegate,state:0
-msgid "Validation State"
-msgstr "Apstiprinājuma Statuss"
-
-#. module: project
-#: field:project.task.work,name:0
-msgid "Work summary"
-msgstr "Paveiktais darbs"
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
-msgid "Group By..."
-msgstr "Grupēt pēc..."
-
-#. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
-msgid "Template"
-msgstr "Sagatave"
-
-#. module: project
-#: view:project.project:0
-msgid "Re-open project"
-msgstr ""
-
-#. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying the list of projects"
-msgstr "Nosaka kādā secībā tiks attēloti projekti sarakstā"
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr "Kļūda! Projekta sākuma datumam jābūt mazākam nekā beigu."
-
-#. module: project
-#: field:project.project,members:0
-msgid "Project Members"
-msgstr "Projekta Locekļi"
-
-#. module: project
-#: field:project.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Citiem nodotie uzdevumi"
-
-#. module: project
-#: view:project.project:0
-#: field:project.project,message_unread:0
-#: view:project.task:0
-#: field:project.task,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
-msgstr "Virsuzdevumi"
-
-#. module: project
-#: model:process.node,name:project.process_node_opentask0
-msgid "Open task"
-msgstr "Atvērt Darba Uzdevumu"
-
-#. module: project
-#: view:project.task.type:0
-msgid "Stages common to all projects"
-msgstr ""
-
-#. module: project
-#: model:process.node,name:project.process_node_drafttask0
-msgid "Draft task"
-msgstr "Uzdevums (Melnraksts)"
-
-#. module: project
-#: field:project.task,notes:0
-msgid "Notes"
-msgstr "Piezīmes"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "Pending Tasks"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Show only tasks having a deadline"
-msgstr ""
-
-#. module: project
-#: model:project.category,name:project.project_category_04
-msgid "Usability"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_delay:0
-msgid "Avg. Plan.-Eff."
-msgstr "Avg. Plan.-Eff."
-
-#. module: project
-#: field:project.task.work,user_id:0
-msgid "Done by"
-msgstr "Veica"
-
-#. module: project
-#: code:addons/project/project.py:181
-#, python-format
-msgid "Invalid Action!"
-msgstr ""
-
-#. module: project
-#: help:project.task.type,state:0
-msgid ""
-"The status of your document is automatically changed regarding the selected "
-"stage. For example, if a stage is related to the status 'Close', when your "
-"document reaches this stage, it is automatically closed."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Extra Info"
-msgstr "Papildus Info"
-
-#. module: project
-#: view:project.task:0
-msgid "Edit..."
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
-msgid "# of tasks"
-msgstr "Uzd. skaits"
-
-#. module: project
-#: field:project.project,doc_count:0
-msgid "Number of documents attached"
-msgstr ""
-
-#. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
-msgid "Priority"
-msgstr "Prioritāte"
-
-#. module: project
-#: view:project.project:0
-msgid "Open Projects"
-msgstr ""
-
-#. module: project
-#: help:project.project,alias_id:0
-msgid ""
-"Internal email associated with this project. Incoming emails are "
-"automatically synchronizedwith Tasks (or optionally Issues if the Issue "
-"Tracker module is installed)."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: project
@@ -1197,168 +83,33 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: help:project.task,total_hours:0
-msgid "Computed as: Time Spent + Remaining Time."
-msgstr "Aprēķināts kā: Pavadītais laiks + Atlikušais laiks"
-
-#. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
-#, python-format
-msgid "%s (copy)"
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,name:project.mt_project_task_stage
-msgid "Task Stage Changed"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task.history,remaining_hours:0
-#: field:project.task.history.cumulative,remaining_hours:0
-msgid "Remaining Time"
-msgstr ""
-
-#. module: project
-#: field:project.task.delegate,name:0
-msgid "Delegated Title"
-msgstr "Deleģētais Nosaukums"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "July"
-msgstr "Jūlijs"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_reevaluate
-msgid "project.task.reevaluate"
-msgstr "project.task.reevaluate"
-
-#. module: project
-#: field:project.task,delay_hours:0
-msgid "Delay Hours"
-msgstr "Kavētās Stundas"
-
-#. module: project
-#: view:project.project:0
-msgid "Team"
-msgstr ""
-
-#. module: project
-#: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
-msgstr ""
-
-#. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,month:0
-msgid "Month"
-msgstr "Mēnesis"
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_design
-msgid "Design"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Start Date"
-msgstr "Sākuma Datums"
-
-#. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: view:project.task.history.cumulative:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Blocked"
-msgstr ""
-
-#. module: project
-#: help:project.task,progress:0
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
-"If the task has a progress of 99.99% you should close the task if it's "
-"finished or reevaluate the time"
+"<p>\n"
+"                    Odoo's project management allows you to manage the "
+"pipeline\n"
+"                    of tasks in order to get things done efficiently. You "
+"can\n"
+"                    track progress, discuss on tasks, attach documents, "
+"etc.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: project
-#: field:project.task,user_email:0
-msgid "User Email"
-msgstr ""
-
-#. module: project
-#: help:project.task.delegate,prefix:0
-msgid "Title for your validation task"
-msgstr "Validācijas uzdevuma virsraksts"
-
-#. module: project
-#: field:project.config.settings,time_unit:0
-msgid "Working time unit"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Projects in which I am a member."
-msgstr ""
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Low"
-msgstr "Zems"
-
-#. module: project
-#: selection:project.project,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-msgid "Pending"
-msgstr "Gaida"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.project_category_action
-#: model:ir.ui.menu,name:project.menu_project_category_act
-#: view:project.category:0
-#: field:project.task,categ_ids:0
-msgid "Tags"
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_history
-#: model:ir.model,name:project.model_project_task_history_cumulative
-msgid "History of Tasks"
-msgstr ""
-
-#. module: project
-#: help:project.task.delegate,state:0
+#: help:project.task,kanban_state:0
 msgid ""
-"New state of your own task. Pending will be reopened automatically when the "
-"delegated task is closed"
+"A task's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this task\n"
+" * Ready for next stage indicates the task is ready to be pulled to the next "
+"stage"
 msgstr ""
-"Jauns jūsu paša uzdevuma stāvoklis. Gaidošais tiks atkal atsākts "
-"automātiski, kad norīkotais uzdevums tiks pabeigts"
 
 #. module: project
-#: help:project.config.settings,group_manage_delegation_task:0
-msgid "Allows you to delegate tasks to other users."
+#: view:project.project:project.edit_project
+msgid "Accept Emails From"
 msgstr ""
 
 #. module: project
@@ -1367,14 +118,213 @@ msgid "Active"
 msgstr "Aktīvs"
 
 #. module: project
+#: view:project.task:project.view_task_form2
+msgid "Add a Description..."
+msgstr ""
+
+#. module: project
+#: view:project.task.type:project.task_type_edit
+msgid "Add a description..."
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Administration"
+msgstr "Administrēšana"
+
+#. module: project
+#: field:project.project,alias_id:0
+msgid "Alias"
+msgstr ""
+
+#. module: project
+#: field:project.project,alias_model:0
+msgid "Alias Model"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,group_manage_delegation_task:0
+msgid "Allow task delegation"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,group_time_work_estimation_tasks:0
+msgid "Allows you to compute Time Estimation on tasks."
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Allows you to compute work on tasks."
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,group_manage_delegation_task:0
+msgid "Allows you to delegate tasks to other users."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_analysis
+msgid "Analysis"
+msgstr "Analīze"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analītiskais Konts"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Append this project to another one using analytic accounts hierarchy"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+msgid "Apply"
+msgstr ""
+
+#. module: project
+#: field:project.task.delegate,user_id:0
+msgid "Assign To"
+msgstr "Piešķirt"
+
+#. module: project
+#: field:report.project.task.user,date_start:0
+msgid "Assignation Date"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Assignation Month"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
+msgid "Assigned Tasks"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "Assigned To"
+msgstr "Piesaistīts"
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: field:project.task,user_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Assigned to"
+msgstr "Piešķirts"
+
+#. module: project
+#: code:addons/project/project.py:212
+#, python-format
+msgid "Attachments"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr "Avg. Plan.-Eff."
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:project.task.history,kanban_state:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Blocked"
+msgstr ""
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_responsible
+msgid "By Responsible"
+msgstr ""
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_reviewer
+msgid "By Reviewer"
+msgstr ""
+
+#. module: project
+#: code:addons/project/wizard/project_task_delegate.py:69
+#: code:addons/project/wizard/project_task_delegate.py:70
+#: code:addons/project/wizard/project_task_delegate.py:77
+#: code:addons/project/wizard/project_task_delegate.py:78
+#, python-format
+msgid "CHECK: "
+msgstr "PĀRBAUDĪT: "
+
+#. module: project
+#: code:addons/project/wizard/project_task_delegate.py:81
+#, python-format
+msgid "CHECK: %s"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "Cancel"
+msgstr "Atcelt"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Cancel Project"
+msgstr ""
+
+#. module: project
+#: selection:project.project,state:0
+#: model:project.task.type,name:project.project_tt_cancel
+msgid "Cancelled"
+msgstr "Atcelts"
+
+#. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
 msgstr ""
 
 #. module: project
-#: help:project.project,resource_calendar_id:0
-msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Darba stundu saraksts gantt diagrammas atskaitei"
+#: code:addons/project/project.py:921
+#, python-format
+msgid ""
+"Child task still open.\n"
+"Please cancel or complete child task first."
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Close Project"
+msgstr ""
+
+#. module: project
+#: selection:project.project,state:0
+msgid "Closed"
+msgstr ""
+
+#. module: project
+#: field:project.project,color:0
+#: field:project.task,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: project
+#: view:project.task.type:project.task_type_search
+msgid "Common"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
+msgstr "Uzņēmumi"
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: field:project.task,company_id:0
+#: field:project.task.work,company_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
+#: field:report.project.task.user,company_id:0
+msgid "Company"
+msgstr "Uzņēmums"
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1386,19 +336,258 @@ msgstr ""
 "uzdevuma pabeigšanas laiku."
 
 #. module: project
-#: view:project.config.settings:0
-msgid "Helpdesk & Support"
+#: help:project.task,total_hours:0
+msgid "Computed as: Time Spent + Remaining Time."
+msgstr "Aprēķināts kā: Pavadītais laiks + Atlikušais laiks"
+
+#. module: project
+#: help:project.task,effective_hours:0
+msgid "Computed using the sum of the task work done."
+msgstr "Tiek aprēķināts summējot visus paveiktos darba uzdevuma darbus."
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_config_settings
+#: view:project.config.settings:project.view_config_settings
+msgid "Configure Project"
 msgstr ""
 
 #. module: project
-#: help:report.project.task.user,opening_days:0
-msgid "Number of Days to Open the task"
-msgstr "Dienu skaits līdz uzdevuma sākumam"
+#: view:project.project:project.view_project
+#: view:project.project:project.view_project_project_filter
+#: field:report.project.task.user,partner_id:0
+msgid "Contact"
+msgstr "Kontakts"
+
+#. module: project
+#: model:project.category,name:project.project_category_01
+msgid "Contact's suggestion"
+msgstr ""
+
+#. module: project
+#: field:project.project,analytic_account_id:0
+msgid "Contract/Analytic"
+msgstr ""
+
+#. module: project
+#: field:project.task,create_date:0
+msgid "Create Date"
+msgstr "Izveidošanas datums"
+
+#. module: project
+#: field:project.category,create_uid:0
+#: field:project.config.settings,create_uid:0
+#: field:project.project,create_uid:0
+#: field:project.task,create_uid:0
+#: field:project.task.delegate,create_uid:0
+#: field:project.task.type,create_uid:0
+#: field:project.task.work,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: project
+#: field:project.category,create_date:0
+#: field:project.config.settings,create_date:0
+#: field:project.project,create_date:0
+#: field:project.task.delegate,create_date:0
+#: field:project.task.type,create_date:0
+#: field:project.task.work,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Creation Date"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
+#: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
+msgid "Cumulative Flow"
+msgstr ""
+
+#. module: project
+#: field:project.task,partner_id:0
+msgid "Customer"
+msgstr "Klients"
+
+#. module: project
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Datums"
+
+#. module: project
+#: help:project.project,message_last_post:0
+#: help:project.task,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,opening_days:0
+msgid "Days to Assign"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,closing_days:0
+msgid "Days to Close"
+msgstr "Dienas līdz pabeigšanai"
+
+#. module: project
+#: field:project.task,date_deadline:0
+#: field:report.project.task.user,date_deadline:0
+msgid "Deadline"
+msgstr "Termiņš"
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
+msgstr ""
+
+#. module: project
+#: field:project.task,delay_hours:0
+msgid "Delay Hours"
+msgstr "Kavētās Stundas"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Delegate"
+msgstr "Deleģēt"
+
+#. module: project
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "Delegated Task"
+msgstr "Deleģētais Darba Uzdevums"
+
+#. module: project
+#: field:project.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Citiem nodotie uzdevumi"
+
+#. module: project
+#: field:project.task.delegate,name:0
+msgid "Delegated Title"
+msgstr "Deleģētais Nosaukums"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
 msgstr "Kam uzticēts"
+
+#. module: project
+#: code:addons/project/project.py:938
+#, python-format
+msgid "Delegated User should be specified"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Delegated tasks"
+msgstr "Uzdotie Uzdevumi"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Delegation"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_kanban
+#: view:project.task:project.view_task_kanban
+msgid "Delete"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_form2
+#: field:project.task,description:0
+#: field:project.task.type,description:0
+msgid "Description"
+msgstr "Apraksts"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_design
+msgid "Design"
+msgstr ""
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_development
+msgid "Development"
+msgstr "Attīstība"
+
+#. module: project
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project_kanban
+msgid "Documents"
+msgstr ""
+
+#. module: project
+#: selection:project.task.delegate,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+msgid "Done"
+msgstr "Pabeigts"
+
+#. module: project
+#: field:project.task.work,user_id:0
+msgid "Done by"
+msgstr "Veica"
+
+#. module: project
+#: view:project.task:project.view_task_kanban
+msgid "Edit..."
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Efektīvas stundas"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Email Alias"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
+msgstr "Beigu Datums"
+
+#. module: project
+#: field:project.task,date_end:0
+#: field:report.project.task.user,date_end:0
+msgid "Ending Date"
+msgstr "Beigu Datums"
+
+#. module: project
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
+
+#. module: project
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "Kļūda! Projekta sākuma datumam jābūt mazākam nekā beigu."
+
+#. module: project
+#: help:project.task.delegate,planned_hours_me:0
+msgid ""
+"Estimated time for you to validate the work done by the user to whom you "
+"delegate this task"
+msgstr ""
+"Jūsu novērtētais laiks, lai validētu lietotāja, kuram jūs norīkojat šo "
+"uzdevumu, padarīto darbu"
+
+#. module: project
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr "Laika novērtējums uzdevuma pabeigšanai norīkotajam lietotājam"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -1410,38 +599,525 @@ msgstr ""
 "kamēr uzdevums vēl ir melnrakstā."
 
 #. module: project
-#: code:addons/project/project.py:230
-#, python-format
-msgid "Attachments"
+#: model:project.category,name:project.project_category_03
+msgid "Experiment"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Pabeigts"
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Extended Filters"
+msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:182
-#, python-format
+#: view:project.task:project.view_task_form2
+msgid "Extra Info"
+msgstr "Papildus Info"
+
+#. module: project
+#: model:project.category,name:project.project_category_02
+msgid "Feature request"
+msgstr ""
+
+#. module: project
+#: field:project.task.type,fold:0
+msgid "Folded in Kanban View"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
 msgid ""
-"You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
 msgstr ""
 
 #. module: project
-#: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0
+#: field:project.project,message_follower_ids:0
+#: field:project.task,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_tasks_config
+msgid "GTD"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,module_sale_service:0
+msgid "Generate tasks from sale orders"
+msgstr ""
+
+#. module: project
+#: help:project.project,sequence:0
+msgid "Gives the sequence order when displaying a list of Projects."
+msgstr "Ļauj attēlot projektu sarakstu secībā pēc kārtas."
+
+#. module: project
+#: help:project.task,sequence:0
+msgid "Gives the sequence order when displaying a list of tasks."
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Group By"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+msgid "Helpdesk & Support"
+msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "High"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_history
+#: model:ir.model,name:project.model_project_task_history_cumulative
+msgid "History of Tasks"
+msgstr ""
+
+#. module: project
+#: help:project.project,message_summary:0
+#: help:project.task,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: project
+#: help:project.project,privacy_visibility:0
+msgid ""
+"Holds visibility of the tasks or issues that belong to the current project:\n"
+"- Public: everybody sees everything; if portal is activated, portal users\n"
+"   see all tasks or issues; if anonymous portal is activated, visitors\n"
+"   see all tasks or issues\n"
+"- Portal (only available if Portal is installed): employees see everything;\n"
+"   if portal is activated, portal users see the tasks or issues followed by\n"
+"   them or by someone of their company\n"
+"- Employees Only: employees see all tasks or issues\n"
+"- Followers Only: employees see only the followed tasks or issues; if "
+"portal\n"
+"   is activated, portal users see the followed tasks or issues."
+msgstr ""
+
+#. module: project
+#: field:project.task,effective_hours:0
+msgid "Hours Spent"
+msgstr "Pavadītas Stundas"
+
+#. module: project
+#: field:project.task.delegate,planned_hours_me:0
+msgid "Hours to Validate"
+msgstr "Neapstiprinātās Stundas"
+
+#. module: project
+#: field:project.category,id:0
+#: field:project.config.settings,id:0
+#: field:project.project,id:0
+#: field:project.task,id:0
+#: field:project.task.delegate,id:0
+#: field:project.task.history,id:0
+#: field:project.task.history.cumulative,id:0
+#: field:project.task.type,id:0
+#: field:project.task.work,id:0
+#: field:report.project.task.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: project
+#: help:project.project,message_unread:0
+#: help:project.task,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: project
+#: help:account.analytic.account,use_tasks:0
+msgid ""
+"If checked, this contract will be available in the project menu and you will "
+"be able to manage tasks or track issues"
+msgstr ""
+
+#. module: project
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
+"Ja lauks aktīvs ir iestatīts uz \"nē\", tas ļaus paslēpt projektu to "
+"nedzēšot."
+
+#. module: project
+#: help:project.task,progress:0
+msgid ""
+"If the task has a progress of 99.99% you should close the task if it's "
+"finished or reevaluate the time"
+msgstr ""
+
+#. module: project
+#: help:project.task.type,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each new "
+"project. It will not assign this stage to existing projects."
+msgstr ""
+
+#. module: project
+#: selection:project.project,state:0
+#: selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "In Progress"
+msgstr "Progresā"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Incoming Emails create"
+msgstr ""
+
+#. module: project
+#: field:project.task,planned_hours:0
+msgid "Initially Planned Hours"
+msgstr ""
+
+#. module: project
+#: help:project.project,alias_id:0
+msgid ""
+"Internal email associated with this project. Incoming emails are "
+"automatically synchronizedwith Tasks (or optionally Issues if the Issue "
+"Tracker module is installed)."
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:171
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,module_project_issue_sheet:0
+msgid "Invoice working time on issues"
+msgstr ""
+
+#. module: project
+#: field:project.project,message_is_follower:0
+#: field:project.task,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: project
+#: view:project.category:project.project_category_search_view
+msgid "Issue Version"
+msgstr ""
+
+#. module: project
+#: field:project.task,kanban_state:0
+#: field:project.task.history,kanban_state:0
+#: field:project.task.history.cumulative,kanban_state:0
+msgid "Kanban State"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+msgid "Last Message"
+msgstr ""
+
+#. module: project
+#: field:project.project,message_last_post:0
+#: field:project.task,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
+
+#. module: project
+#: field:project.task,date_last_stage_update:0
+#: field:report.project.task.user,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr ""
+
+#. module: project
+#: field:project.category,write_uid:0
+#: field:project.config.settings,write_uid:0
+#: field:project.project,write_uid:0
+#: field:project.task,write_uid:0
+#: field:project.task.delegate,write_uid:0
+#: field:project.task.type,write_uid:0
+#: field:project.task.work,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: project
+#: field:project.category,write_date:0
+#: field:project.config.settings,write_date:0
+#: field:project.project,write_date:0
+#: field:project.task.delegate,write_date:0
+#: field:project.task.type,write_date:0
+#: field:project.task.work,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,module_pad:0
+msgid ""
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://ietherpad.com/).\n"
+"-This installs the module pad."
+msgstr ""
+
+#. module: project
+#: help:project.project,analytic_account_id:0
+msgid ""
+"Link this project to an analytic account if you need financial management on "
+"projects. It enables you to connect projects with budgets, planning, cost "
+"and revenue analysis, timesheets on projects, etc."
+msgstr ""
+"Norādiet projektam analītisko kontu, ja nepieciešama finansu analīze. Tas "
+"ļaus analizēt projektus budžeta, plānošanas, izmaksu un ieņēmumu utt. "
+"ietvaros."
+
+#. module: project
+#: field:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Log work activities on tasks"
+msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Low"
+msgstr "Zems"
+
+#. module: project
+#: field:project.config.settings,group_time_work_estimation_tasks:0
+msgid "Manage time estimation on tasks"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Vadītājs"
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
+msgid "Member"
+msgstr "Dalībnieks"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_merge
+msgid "Merge"
+msgstr "Sapludināt"
+
+#. module: project
+#: field:project.project,message_ids:0
+#: field:project.task,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: project
+#: help:project.project,message_ids:0
+#: help:project.task,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Miscellaneous"
+msgstr ""
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "Month"
+msgstr "Mēnesis"
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "My Projects"
+msgstr "Mani Projekti"
+
+#. module: project
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "My Task"
+msgstr "Mans uzdevums"
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "My Tasks"
+msgstr "Mani Uzdevumi"
+
+#. module: project
+#: field:project.category,name:0
+msgid "Name"
+msgstr ""
+
+#. module: project
+#: selection:project.project,state:0
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "New"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
+#: view:project.task:project.view_task_search_form
+msgid "New Mail"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "New Project Based on Template"
+msgstr "Jauns Projekts no parauga"
+
+#. module: project
+#: view:project.task.delegate:project.view_project_task_delegate
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
+msgstr "Jauns Darba Uzdevuma Apraksts"
+
+#. module: project
+#: help:project.task.delegate,state:0
+msgid ""
+"New state of your own task. Pending will be reopened automatically when the "
+"delegated task is closed"
+msgstr ""
+"Jauns jūsu paša uzdevuma stāvoklis. Gaidošais tiks atkal atsākts "
+"automātiski, kad norīkotais uzdevums tiks pabeigts"
+
+#. module: project
+#: help:project.task.delegate,name:0
+msgid "New title of the task delegated to the user"
+msgstr "Jauns lietotājam deleģēta uzdevuma virsraksts"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:project.task.history,kanban_state:0
+#: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,priority:0
+msgid "Normal"
+msgstr ""
+
+#. module: project
+#: field:project.task,active:0
+msgid "Not a Template Task"
+msgstr "Nav sagataves uzdevums"
+
+#. module: project
+#: field:project.task,notes:0
+msgid "Notes"
+msgstr "Piezīmes"
+
+#. module: project
+#: help:report.project.task.user,opening_days:0
+msgid "Number of Days to Open the task"
+msgstr "Dienu skaits līdz uzdevuma sākumam"
+
+#. module: project
+#: help:report.project.task.user,closing_days:0
+msgid "Number of Days to close the task"
+msgstr "Dienu skaits līdz uzdevuma pabeigšanai"
+
+#. module: project
+#: field:project.project,doc_count:0
+msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
 msgid "Open"
 msgstr "Atvērt"
+
+#. module: project
+#: model:ir.actions.client,name:project.action_client_project_menu
+msgid "Open Project Menu"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Other Info"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,delay_endings_days:0
+msgid "Overpassed Deadline"
+msgstr "Noilgušie termiņi"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
+msgid "Overpassed Tasks"
+msgstr "Nokavētie uzdevumi"
+
+#. module: project
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project
+#: view:project.project:project.view_project_project_filter
+msgid "Parent"
+msgstr "Vecāks"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
+msgstr "Virsuzdevumi"
+
+#. module: project
+#: model:ir.model,name:project.model_res_partner
+msgid "Partner"
+msgstr "Partneris"
+
+#. module: project
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project_project_filter
+#: selection:project.project,state:0
+#: selection:project.task.delegate,state:0
+msgid "Pending"
+msgstr "Gaida"
+
+#. module: project
+#: help:project.project,progress_rate:0
+msgid "Percent of tasks closed according to the total of tasks todo."
+msgstr "Pabeigto darbu % attiecībā pret kopējiem veicamajiem uzdevumiem."
+
+#. module: project
+#: field:project.task.delegate,planned_hours:0
+#: field:report.project.task.user,hours_planned:0
+msgid "Planned Hours"
+msgstr "Plānotās Stundas"
+
+#. module: project
+#: field:project.project,planned_hours:0
+#: field:project.task.history,planned_hours:0
+#: field:project.task.history.cumulative,planned_hours:0
+msgid "Planned Time"
+msgstr "Plānotais Laiks"
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+msgid "Planning"
+msgstr "Plānošana"
+
+#. module: project
+#: code:addons/project/project.py:1228
+#, python-format
+msgid "Please delete the project linked with this account first."
+msgstr ""
+
+#. module: project
+#: field:project.task,priority:0
+#: field:report.project.task.user,priority:0
+msgid "Priority"
+msgstr "Prioritāte"
 
 #. module: project
 #: field:project.project,privacy_visibility:0
@@ -1449,23 +1125,178 @@ msgid "Privacy / Visibility"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
+#: field:project.project,progress_rate:0
+#: field:report.project.task.user,progress:0
+msgid "Progress"
+msgstr "Progress"
+
+#. module: project
+#: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_management
+#: view:project.project:project.edit_project
+#: view:project.task:project.view_task_form2
+#: view:project.task:project.view_task_search_form
+#: field:project.task,project_id:0
+#: field:project.task.delegate,project_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:project.task.history.cumulative,project_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
+#: field:report.project.task.user,project_id:0
+#: model:res.request.link,name:project.req_link_project
+msgid "Project"
+msgstr "Projekts"
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+msgid "Project Management"
+msgstr "Projektu Vadība"
+
+#. module: project
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project
+#: view:project.project:project.view_project_project_filter
+#: field:project.task,manager_id:0
+msgid "Project Manager"
+msgstr "Projektu Vadītājs"
+
+#. module: project
+#: field:project.project,members:0
+msgid "Project Members"
+msgstr "Projekta Locekļi"
+
+#. module: project
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project
+#: view:project.project:project.view_project_project_filter
+msgid "Project Name"
+msgstr "Projekta Nosaukums"
+
+#. module: project
+#: view:project.project:project.view_project_kanban
+msgid "Project Settings"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Project Stages"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_delegate
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "Project Task Delegate"
+msgstr "Projekta uzdevumu deliģēšana"
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_work
+msgid "Project Task Work"
+msgstr "Projekta uzdevumu darbs"
+
+#. module: project
+#: view:project.task:project.view_project_task_graph
+#: view:project.task.history.cumulative:project.view_task_history_graph
+msgid "Project Tasks"
+msgstr "Projekta uzdevumi"
+
+#. module: project
+#: field:res.company,project_time_mode_id:0
+msgid "Project Time Unit"
+msgstr "Projekta Laika Vienība"
+
+#. module: project
+#: model:res.request.link,name:project.req_link_task
+msgid "Project task"
+msgstr "Projekta uzdevums"
+
+#. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's members are users who can have an access to the tasks related to "
+"this project."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.dblc_proj
+msgid "Project's tasks"
+msgstr "Projekta uzdevumi"
+
+#. module: project
+#: code:addons/project/project.py:401
+#: model:ir.actions.act_window,name:project.open_view_project_all
+#: model:ir.ui.menu,name:project.menu_projects
+#: view:project.project:project.view_project
+#: view:project.project:project.view_project_project_gantt
+#: field:project.task.type,project_ids:0
+#: view:res.company:project.task_company
+#, python-format
+msgid "Projects"
+msgstr "Projekti"
+
+#. module: project
+#: help:project.config.settings,module_project_issue:0
+msgid ""
+"Provides management of issues/bugs in projects.\n"
+"-This installs the module project_issue."
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,module_project_issue_sheet:0
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Re-open project"
+msgstr ""
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "Ready"
+msgstr ""
+
+#. module: project
+#: selection:project.task,kanban_state:0
+#: selection:project.task.history,kanban_state:0
+#: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
+msgid "Ready for next stage"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,module_project_timesheet:0
+msgid "Record timesheet lines per tasks"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,new_task_description:0
+msgid "Reinclude the description of the task in the task of the user"
+msgstr "Ievietot uzdevuma aprakstu lietotāja uzdevumā"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Remaining"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_tree2
 #: field:project.task,remaining_hours:0
-#: field:project.task.reevaluate,remaining_hours:0
-#: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Atlikušās Stundas"
 
 #. module: project
-#: model:mail.message.subtype,description:project.mt_task_stage
-msgid "Stage changed"
+#: view:project.task:project.view_task_kanban
+#: field:project.task.history,remaining_hours:0
+#: field:project.task.history.cumulative,remaining_hours:0
+msgid "Remaining Time"
 msgstr ""
 
 #. module: project
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+#: view:project.project:project.edit_project
+msgid "Reset as Project"
+msgstr "Atjaunot kā Projektu"
 
 #. module: project
 #: field:project.task.history,user_id:0
@@ -1474,30 +1305,327 @@ msgid "Responsible"
 msgstr "Atbildīgais"
 
 #. module: project
-#: view:project.project:0
+#: field:project.task,reviewer_id:0
+#: field:report.project.task.user,reviewer_id:0
+msgid "Reviewer"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
 msgid "Search Project"
 msgstr "Meklēt projektu"
 
 #. module: project
-#: view:project.task.delegate:0
-msgid "Delegated Task"
-msgstr "Deleģētais Darba Uzdevums"
+#: field:project.project,sequence:0
+#: field:project.task,sequence:0
+#: field:project.task.type,sequence:0
+msgid "Sequence"
+msgstr "Secība"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,total_hours:0
-msgid "Total Hours"
-msgstr "Stundas Kopā"
+#: view:project.project:project.edit_project
+msgid "Set as Template"
+msgstr "Veidot Paraugu"
 
 #. module: project
-#: model:ir.model,name:project.model_project_config_settings
-msgid "project.config.settings"
+#: model:project.task.type,name:project.project_tt_specification
+msgid "Specification"
+msgstr "Specifikācija"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+#: view:project.task:project.view_task_tree2
+msgid "Spent Hours"
+msgstr "Iztērētās stundas"
+
+#. module: project
+#: view:project.task:project.view_task_search_form
+#: field:project.task,stage_id:0
+#: field:project.task.history,type_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:project.task.history.cumulative,type_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
+#: field:report.project.task.user,stage_id:0
+msgid "Stage"
+msgstr "Posms"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_task_stage
+msgid "Stage Changed"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_development
-msgid "Development"
-msgstr "Attīstība"
+#: field:project.task.type,name:0
+msgid "Stage Name"
+msgstr "Posma nosaukums"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_task_type_form
+msgid "Stages"
+msgstr "Posmi"
+
+#. module: project
+#: view:project.task.type:project.task_type_search
+msgid "Stages common to all projects"
+msgstr ""
+
+#. module: project
+#: field:project.task,date_start:0
+msgid "Starting Date"
+msgstr "Sākuma Datums"
+
+#. module: project
+#: field:project.project,state:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:report.project.task.user,state:0
+msgid "Status"
+msgstr "Statuss"
+
+#. module: project
+#: help:project.project,planned_hours:0
+msgid ""
+"Sum of planned hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Plānoto stundu summa visiem ar šo projektu saistītiem uzdevumiem un "
+"apakšprojektiem."
+
+#. module: project
+#: help:project.project,effective_hours:0
+msgid ""
+"Sum of spent hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Patērēto stundu summa visiem ar projektu saistītiem uzdevumiem un "
+"apakšprojektiem."
+
+#. module: project
+#: help:project.project,total_hours:0
+msgid ""
+"Sum of total hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Kopējo stundu summa ar šo projektu saistītiem uzdevumiem un apakšprojektiem."
+
+#. module: project
+#: field:project.project,message_summary:0
+#: field:project.task,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+msgid "Support"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:project.project_category_form_view
+#: field:project.task,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task:project.view_task_form2
+#: view:project.task:project.view_task_search_form
+#: field:project.task.history,task_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:project.task.history.cumulative,task_id:0
+#: field:project.task.work,task_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Task"
+msgstr "Uzdevums"
+
+#. module: project
+#: field:project.project,tasks:0
+msgid "Task Activities"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_assigned
+#: model:mail.message.subtype,name:project.mt_project_task_assigned
+#: model:mail.message.subtype,name:project.mt_task_assigned
+msgid "Task Assigned"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_delegate
+msgid "Task Delegate"
+msgstr "Uzdevumu deliģēšana"
+
+#. module: project
+#: model:res.groups,name:project.group_delegate_task
+msgid "Task Delegation"
+msgstr ""
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_task_pipe
+msgid "Task Pipe"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_ready
+#: model:mail.message.subtype,name:project.mt_task_ready
+msgid "Task Ready for Next Stage"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_type
+#: view:project.task.type:project.task_type_edit
+#: view:project.task.type:project.task_type_tree
+msgid "Task Stage"
+msgstr "Uzdevuma posms"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr ""
+
+#. module: project
+#: field:project.task,name:0
+#: field:report.project.task.user,name:0
+msgid "Task Summary"
+msgstr "Uzdevuma kopsavilkums"
+
+#. module: project
+#: view:project.task:project.view_task_form2
+#: view:project.task.work:project.view_task_work_form
+#: view:project.task.work:project.view_task_work_tree
+msgid "Task Work"
+msgstr "Darba uzdevuma Darbi"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
+msgstr ""
+
+#. module: project
+#: view:project.task:project.view_task_form2
+msgid "Task summary..."
+msgstr ""
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "Task's Analysis"
+msgstr ""
+
+#. module: project
+#: model:res.groups,name:project.group_tasks_work_on_tasks
+msgid "Task's Work on Tasks"
+msgstr ""
+
+#. module: project
+#: field:account.analytic.account,use_tasks:0
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.ui.menu,name:project.menu_action_view_task
+#: view:project.project:project.edit_project
+#: view:project.project:project.view_project_kanban
+#: field:project.project,task_count:0
+#: view:project.task:project.view_task_calendar
+#: view:project.task:project.view_task_gantt
+#: view:project.task:project.view_task_search_form
+#: view:project.task:project.view_task_tree2
+#: view:res.partner:project.view_task_partner_info_form
+#: field:res.partner,task_ids:0
+msgid "Tasks"
+msgstr "Uzdevumi"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.project.task.user:project.view_task_project_user_graph
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Tasks Analysis"
+msgstr "Uzdevumu analīze"
+
+#. module: project
+#: field:project.project,type_ids:0
+#: view:project.task.type:project.task_type_search
+msgid "Tasks Stages"
+msgstr "Uzdevumu posmi"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Uzdevumi pēc lietotāja un projekta"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Team"
+msgstr ""
+
+#. module: project
+#: view:project.project:project.view_project_project_filter
+#: selection:project.project,state:0
+msgid "Template"
+msgstr "Sagatave"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_template_project
+msgid "Templates of Projects"
+msgstr "Projektu sagataves"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
+msgstr "Testēšana"
+
+#. module: project
+#: help:project.project,alias_model:0
+msgid ""
+"The kind of document created when an email is received on this project's "
+"email alias"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,module_project_timesheet:0
+msgid ""
+"This allows you to transfer the entries under tasks defined for Project "
+"Management to the timesheet line entries for particular date and user, with "
+"the effect of creating, editing and deleting either ways.\n"
+"-This installs the module project_timesheet."
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,module_sale_service:0
+msgid ""
+"This feature automatically creates project tasks from service products in "
+"sale orders. More precisely, tasks are created for procurement lines with "
+"product of type 'Service', procurement method 'Make to Order', and supply "
+"method 'Manufacture'.\n"
+"-This installs the module sale_service."
+msgstr ""
 
 #. module: project
 #: help:project.task,active:0
@@ -1511,50 +1639,65 @@ msgstr ""
 "tas ir noslēpts, ja nav norādīts pretēji."
 
 #. module: project
-#: model:res.request.link,name:project.req_link_task
-msgid "Project task"
-msgstr "Projekta uzdevums"
-
-#. module: project
-#: field:project.task,effective_hours:0
-msgid "Hours Spent"
-msgstr "Pavadītas Stundas"
-
-#. module: project
-#: help:project.config.settings,module_pad:0
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads\n"
-"                (by default, http://ietherpad.com/).\n"
-"                This installs the module pad."
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+"Atskaite nodrošina projektu un lietotāju efektivitātes analīzi. Iespējams "
+"analizēt darbu skaitu, pavadītās stundas atttiecībā pret ieplānotajām, "
+"vidējos darba uzdevumu izpildes termiņu rādītājus."
+
+#. module: project
+#: help:project.task.type,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
 msgstr ""
 
 #. module: project
-#: field:project.task,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
-msgid "Overpassed Tasks"
-msgstr "Nokavētie uzdevumi"
-
-#. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid ""
-"Child task still open.\n"
-"Please cancel or complete child task first."
+#: help:project.config.settings,time_unit:0
+msgid "This will set the unit of measure used in projects and tasks."
 msgstr ""
 
 #. module: project
-#: field:project.task.delegate,user_id:0
-msgid "Assign To"
-msgstr "Piešķirt"
+#: help:res.company,project_time_mode_id:0
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects (project_timesheet module), "
+"don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"Ar šo tiks noteikta projekta mērvienība. Ja izmantojat darba laika uzskaites "
+"tabeles, tad neaizmirstiet uzstādīt pareizo mērvienību arī savu darbinieku "
+"uzstādījumos."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
+msgstr ""
+
+#. module: project
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
+msgid "Time Spent"
+msgstr "Patērētais Laiks"
+
+#. module: project
+#: help:project.project,resource_calendar_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr "Darba stundu saraksts gantt diagrammas atskaitei"
+
+#. module: project
+#: help:project.task.delegate,prefix:0
+msgid "Title for your validation task"
+msgstr "Validācijas uzdevuma virsraksts"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid ""
+"To invoice or setup invoicing and renewal options, go to the related "
+"contract:"
 msgstr ""
 
 #. module: project
@@ -1563,80 +1706,23 @@ msgid "Total"
 msgstr ""
 
 #. module: project
-#: model:process.node,note:project.process_node_taskbydelegate0
-msgid "Delegate your task to the other user"
-msgstr "Piešķirt uzdevumu citam lietotājam"
+#: field:report.project.task.user,total_hours:0
+msgid "Total Hours"
+msgstr "Stundas Kopā"
 
 #. module: project
-#: model:mail.message.subtype,description:project.mt_task_started
-msgid "Task started"
-msgstr ""
+#: field:project.project,total_hours:0
+msgid "Total Time"
+msgstr "Kopējais Laiks"
 
 #. module: project
-#: help:project.task.reevaluate,remaining_hours:0
-msgid "Put here the remaining hours required to close the task."
-msgstr "Norādiet šeit atlikušās stundas nepieciešamas uzdevuma pabeigšanai."
-
-#. module: project
-#: help:project.task.type,fold:0
+#: help:project.task,remaining_hours:0
 msgid ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
 msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Deadlines"
-msgstr "Termiņi"
-
-#. module: project
-#: code:addons/project/wizard/project_task_delegate.py:69
-#: code:addons/project/wizard/project_task_delegate.py:70
-#: code:addons/project/wizard/project_task_delegate.py:77
-#: code:addons/project/wizard/project_task_delegate.py:78
-#, python-format
-msgid "CHECK: "
-msgstr "PĀRBAUDĪT: "
-
-#. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Pending Projects"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Remaining"
-msgstr ""
-
-#. module: project
-#: field:project.task,progress:0
-msgid "Progress (%)"
-msgstr "Progress (%)"
-
-#. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
-msgid "Company"
-msgstr "Uzņēmums"
-
-#. module: project
-#: help:project.config.settings,module_project_timesheet:0
-msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to\n"
-"                the timesheet line entries for particular date and user, "
-"with the effect of creating,\n"
-"                editing and deleting either ways.\n"
-"                This installs the module project_timesheet."
-msgstr ""
+"Kopējais atlikušais laiks, šo laiku periodiski var mainīt darba uzdevuma "
+"uzdevējs."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1644,310 +1730,31 @@ msgid "Track issues and bugs"
 msgstr ""
 
 #. module: project
-#: field:project.config.settings,module_project_mrp:0
-msgid "Generate tasks from sale orders"
+#: view:project.task:project.view_task_search_form
+#: view:report.project.task.user:project.view_task_project_user_search
+msgid "Unassigned"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr ""
-
-#. module: project
-#: model:process.node,note:project.process_node_drafttask0
-msgid "Define the Requirements and Set Planned Hours."
-msgstr "Nodefinēt Prasības un Plānotās darba Stundas"
-
-#. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
-msgid "Color Index"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_board_project
-#: model:ir.model,name:project.model_project_project
-#: model:ir.ui.menu,name:project.menu_project_dashboard
-#: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
-#: field:project.task.history.cumulative,project_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,project_id:0
-#: model:res.request.link,name:project.req_link_project
-msgid "Project"
-msgstr "Projekts"
-
-#. module: project
-#: selection:project.project,state:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_cancel
-#: selection:project.task.type,state:0
-#: selection:report.project.task.user,state:0
-msgid "Cancelled"
-msgstr "Atcelts"
-
-#. module: project
-#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
-#: model:ir.actions.act_window,help:project.action_view_task
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new task.\n"
-"              </p><p>\n"
-"                OpenERP's project management allows you to manage the "
-"pipeline\n"
-"                of tasks in order to get things done efficiently. You can\n"
-"                track progress, discuss on tasks, attach documents, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
-msgid "Ending Date"
-msgstr "Beigu Datums"
-
-#. module: project
-#: field:project.task.type,state:0
-msgid "Related Status"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Documents"
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,description:project.mt_task_new
-msgid "Task created"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
-msgid "# of Days"
-msgstr "Dienu skaits"
-
-#. module: project
-#: field:project.project,message_follower_ids:0
-#: field:project.task,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: project
-#: selection:project.project,state:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-msgid "New"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
-#: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
-msgid "Cumulative Flow"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_effective:0
-msgid "Effective Hours"
-msgstr "Efektīvas stundas"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "OverPass delay"
-msgstr "Pēc termiņa aizkave"
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "Validation Task"
-msgstr "Apstiprinājuma Uzdevums"
-
-#. module: project
-#: field:project.config.settings,module_project_long_term:0
-msgid "Manage resources planning on gantt view"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 msgid "Unassigned Tasks"
 msgstr "Nepiešķirtie uzdevumi"
 
 #. module: project
-#: help:project.project,planned_hours:0
-msgid ""
-"Sum of planned hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
-"Plānoto stundu summa visiem ar šo projektu saistītiem uzdevumiem un "
-"apakšprojektiem."
-
-#. module: project
-#: view:res.partner:0
-msgid "For changing to done state"
+#: field:project.project,message_unread:0
+#: field:project.task,message_unread:0
+msgid "Unread Messages"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-msgid "My Task"
-msgstr "Mans uzdevums"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
-msgid "My Projects"
-msgstr "Mani Projekti"
-
-#. module: project
-#: help:project.task,sequence:0
-msgid "Gives the sequence order when displaying a list of tasks."
+#: model:project.category,name:project.project_category_04
+msgid "Usability"
 msgstr ""
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
-msgid "Starting Date"
-msgstr "Sākuma Datums"
-
-#. module: project
-#: code:addons/project/project.py:410
-#: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_projects
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
-#: view:res.company:0
-#, python-format
-msgid "Projects"
-msgstr "Projekti"
-
-#. module: project
-#: model:res.groups,name:project.group_tasks_work_on_tasks
-msgid "Task's Work on Tasks"
+#: field:project.config.settings,module_pad:0
+msgid "Use integrated collaborative note pads on task"
 msgstr ""
-
-#. module: project
-#: help:project.task.delegate,name:0
-msgid "New title of the task delegated to the user"
-msgstr "Jauns lietotājam deleģēta uzdevuma virsraksts"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_user_tree
-#: model:ir.ui.menu,name:project.menu_project_task_user_tree
-#: view:report.project.task.user:0
-msgid "Tasks Analysis"
-msgstr "Uzdevumu analīze"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "Project Tasks"
-msgstr "Projekta uzdevumi"
-
-#. module: project
-#: field:account.analytic.account,use_tasks:0
-#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
-#: model:ir.actions.act_window,name:project.action_view_task
-#: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.project:0
-#: view:project.task:0
-#: view:res.partner:0
-#: field:res.partner,task_ids:0
-msgid "Tasks"
-msgstr "Uzdevumi"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "December"
-msgstr "Decembris"
-
-#. module: project
-#: view:project.config.settings:0
-#: view:project.task.delegate:0
-#: view:project.task.reevaluate:0
-msgid "or"
-msgstr ""
-
-#. module: project
-#: help:project.config.settings,module_project_mrp:0
-msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders.\n"
-"                More precisely, tasks are created for procurement lines with "
-"product of type 'Service',\n"
-"                procurement method 'Make to Order', and supply method "
-"'Manufacture'.\n"
-"                This installs the module project_mrp."
-msgstr ""
-
-#. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
-msgstr "Laika novērtējums uzdevuma pabeigšanai norīkotajam lietotājam"
-
-#. module: project
-#: model:project.category,name:project.project_category_03
-msgid "Experiment"
-msgstr ""
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: selection:report.project.task.user,state:0
-msgid "Draft"
-msgstr "Melnraksts"
-
-#. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
-#: field:project.task.history.cumulative,kanban_state:0
-msgid "Kanban State"
-msgstr ""
-
-#. module: project
-#: field:project.config.settings,module_project_timesheet:0
-msgid "Record timesheet lines per tasks"
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Uzdevumi pēc lietotāja un projekta"
-
-#. module: project
-#: field:res.company,project_time_mode_id:0
-msgid "Project Time Unit"
-msgstr "Projekta Laika Vienība"
-
-#. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Normal"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,closing_days:0
-msgid "Days to Close"
-msgstr "Dienas līdz pabeigšanai"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -1955,27 +1762,82 @@ msgid "User"
 msgstr ""
 
 #. module: project
-#: help:project.project,alias_model:0
+#: field:project.task,user_email:0
+msgid "User Email"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,project_id:0
+#: help:project.task.delegate,user_id:0
+msgid "User you want to delegate this task to"
+msgstr "Lietotājs, kuram gribat deleģēt šo uzdevumu"
+
+#. module: project
+#: field:project.task.delegate,state:0
+msgid "Validation State"
+msgstr "Apstiprinājuma Statuss"
+
+#. module: project
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "Validation Task"
+msgstr "Apstiprinājuma Uzdevums"
+
+#. module: project
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "Validation Task Title"
+msgstr "Validācijas uzdevuma virsraksts"
+
+#. module: project
+#: code:addons/project/project.py:435
+#: code:addons/project/project.py:921
+#: code:addons/project/project.py:1228
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Paveiktais Darbs"
+
+#. module: project
+#: field:project.task.work,name:0
+msgid "Work summary"
+msgstr "Paveiktais darbs"
+
+#. module: project
+#: field:project.project,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Darba Laiks"
+
+#. module: project
+#: field:project.task,progress:0
+msgid "Working Time Progress (%)"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,time_unit:0
+msgid "Working time unit"
+msgstr ""
+
+#. module: project
+#: model:ir.filters,name:project.filter_task_report_workload
+msgid "Workload"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:172
+#, python-format
 msgid ""
-"The kind of document created when an email is received on this project's "
-"email alias"
+"You cannot delete a project containing tasks. You can either delete all the "
+"project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_config_settings
-#: view:project.config.settings:0
-msgid "Configure Project"
+#: code:addons/project/project.py:435
+#, python-format
+msgid "You must assign members on the project '%s'!"
 msgstr ""
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Tasks's Cumulative Flow"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
-msgstr "Janvāris"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1983,964 +1845,29 @@ msgid "Your Task Title"
 msgstr "Jūsu Uzdevuma Nosaukums"
 
 #. module: project
-#: view:project.task.reevaluate:0
-msgid "Reevaluation Task"
-msgstr "Pārvērtēšanas uzdevums"
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "_Delegate"
+msgstr "_Deleģēt"
 
 #. module: project
-#: code:addons/project/project.py:1332
-#, python-format
-msgid "Please delete the project linked with this account first."
+#: view:project.task:project.view_task_kanban
+msgid "oe_kanban_text_red"
 msgstr ""
 
 #. module: project
-#: model:mail.message.subtype,name:project.mt_project_task_new
-#: model:mail.message.subtype,name:project.mt_task_new
-msgid "Task Created"
+#: code:addons/project/project.py:878
+#, python-format
+msgid "tasks"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-msgid "Non Assigned Tasks to users"
-msgstr "Lietotājiem nepiesaistītie uzdevumi"
-
-#. module: project
-#: view:project.project:0
-msgid "Projects in which I am a manager"
+#: field:account.analytic.account,company_uom_id:0
+#: field:project.project,task_ids:0
+msgid "unknown"
 msgstr ""
 
-#. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Ready for next stage"
-msgstr ""
-
-#. module: project
-#: field:project.task.type,case_default:0
-msgid "Default for New Projects"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,description:0
-#: field:project.task.type,description:0
-msgid "Description"
-msgstr "Apraksts"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "May"
-msgstr "Maijs"
-
-#. module: project
-#: help:project.task.type,case_default:0
-msgid ""
-"If you check this field, this stage will be proposed by default on each new "
-"project. It will not assign this stage to existing projects."
-msgstr ""
-
-#. module: project
-#: field:project.task,partner_id:0
-msgid "Customer"
-msgstr "Klients"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "February"
-msgstr "Februāris"
-
-#. module: project
-#: help:project.config.settings,module_project_long_term:0
-msgid ""
-"A long term project management module that tracks planning, scheduling, and "
-"resource allocation.\n"
-"                This installs the module project_long_term."
-msgstr ""
-
-#. module: project
-#: model:mail.message.subtype,description:project.mt_task_closed
-msgid "Task closed"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "April"
-msgstr "Aprīlis"
-
-#. module: project
-#: view:project.task:0
-msgid "Spent Hours"
-msgstr "Iztērētās stundas"
-
-#. module: project
-#: help:project.project,sequence:0
-msgid "Gives the sequence order when displaying a list of Projects."
-msgstr "Ļauj attēlot projektu sarakstu secībā pēc kārtas."
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
-msgid "Assigned Tasks"
-msgstr ""
-
-#. module: project
-#: help:project.config.settings,module_project_issue_sheet:0
-msgid ""
-"Provides timesheet support for the issues/bugs management in project.\n"
-"                This installs the module project_issue_sheet."
-msgstr ""
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr ""
-
-#. module: project
-#: view:board.board:0
-#: field:project.project,task_count:0
-msgid "Open Tasks"
-msgstr ""
-
-#. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
-msgid "Sequence"
-msgstr "Secība"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.work:0
-msgid "Task Work"
-msgstr "Darba uzdevuma Darbi"
-
-#. module: project
-#: help:project.task.delegate,planned_hours_me:0
-msgid ""
-"Estimated time for you to validate the work done by the user to whom you "
-"delegate this task"
-msgstr ""
-"Jūsu novērtētais laiks, lai validētu lietotāja, kuram jūs norīkojat šo "
-"uzdevumu, padarīto darbu"
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
-msgid "Year"
-msgstr "Gads"
-
-#. module: project
-#: field:project.project,type_ids:0
-#: view:project.task.type:0
-msgid "Tasks Stages"
-msgstr "Uzdevumu posmi"
-
-#~ msgid "Change Remaining Hours"
-#~ msgstr "Izmainīt Atlikušās stundas"
-
-#~ msgid "Close Task"
-#~ msgstr "Aizvērt Uzdevumu"
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Uzdotie uzdevumi"
-
-#~ msgid "My Draft Tasks"
-#~ msgstr "Mani uzdevumi (Melnraksts)"
-
-#~ msgid "Tasks in Progress"
-#~ msgstr "Uzdevumu Progress"
-
-#~ msgid "All Tasks"
-#~ msgstr "Visi uzdevumi"
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr "Visu veikto projekta uzdevumu stundu summa"
-
-#~ msgid "Project tasks"
-#~ msgstr "Projekta Uzdevumi"
-
-#, python-format
-#~ msgid "Operation Not Permitted !"
-#~ msgstr "Darbība nav atļauta!"
-
-#~ msgid "Delegations"
-#~ msgstr "Citiem uzdotie Uzdevumi"
-
-#~ msgid "Subproject"
-#~ msgstr "Apakšprojekts"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Uzdevumu Process"
-
-#~ msgid "Importance"
-#~ msgstr "Svarīgums"
-
-#~ msgid "Update"
-#~ msgstr "Jaunināt"
-
-#~ msgid "My Running Projects"
-#~ msgstr "Mani Ejošie Projekti"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Lietotājs kuram vēlaties uzdot šo uzdevumu"
-
-#~ msgid "Task Types"
-#~ msgstr "Uzdevumu Tipi"
-
-#~ msgid "Validate"
-#~ msgstr "Apstiprināt"
-
-#~ msgid "Days"
-#~ msgstr "Dienas"
-
-#~ msgid ""
-#~ "Project's member. Not used in any computation, just for information purpose."
-#~ msgstr ""
-#~ "Projekta darba grupas loceklis. Tiek izmantots tikai informatīviem mērķiem."
-
-#~ msgid ""
-#~ "Project management module that track multi-level projects, tasks,\n"
-#~ "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Projektu vadības modulis, kas ir saistīts ar multi-līmeņa projektiem, darbu "
-#~ "uzdevumiem, paveiktajiem darbiem utt.\n"
-#~ "Tas spēj ģenerēt plānošanu, uzdot uzdevumus utt.\n"
-#~ "    "
-
-#~ msgid "New title of the task delegated to the user."
-#~ msgstr "Uzdotā darba uzdevuma jaunais nosaukums"
-
-#~ msgid ""
-#~ "Automatic variables for headers and footer. Use exactly the same notation."
-#~ msgstr ""
-#~ "Automātiskie mainīgie e-pasta sākumam un beigām. Jālieto tieši tāds pats "
-#~ "pieraksts."
-
-#~ msgid ""
-#~ "If you check this, the user will have a popup when closing a task that "
-#~ "propose a message to send by email to the customer."
-#~ msgstr ""
-#~ "Ieķeksējot šo, lietotājam, pabeidzot darba uzdevumu vērsies vaļā popup logs, "
-#~ "kas piedāvās nosūtīt e-pasta ziņojumu klientam."
-
-#, python-format
-#~ msgid ""
-#~ "A new project has been created !\n"
-#~ "We suggest you to close this one and work on this new project."
-#~ msgstr ""
-#~ "Jauns projekts ir izveidots!\n"
-#~ "Lūdzu aizveriet esošo un sāciet strādāt ar jauno."
-
-#~ msgid "Send Message"
-#~ msgstr "Sūtīt ziņojumu"
-
-#~ msgid "My projects"
-#~ msgstr "Mani Projekti"
-
-#~ msgid "All projects"
-#~ msgstr "Visi Projekti"
-
-#~ msgid "Parent Project"
-#~ msgstr "VirsProjekts"
-
-#~ msgid "New Project"
-#~ msgstr "Jauns Projekts"
-
-#~ msgid "Weeks"
-#~ msgstr "Nedēļas"
-
-#~ msgid "Internal description of the project."
-#~ msgstr "Iekšējais projekta apraksts"
-
-#~ msgid "Type"
-#~ msgstr "Veids"
-
-#~ msgid "Estimated time to close this task by the delegated user."
-#~ msgstr ""
-#~ "Aprēķinātais laiks, kas nepiešams, lai deleģētais lietotājs pabeigtu šo "
-#~ "darba uzdevumu."
-
-#~ msgid "Hours"
-#~ msgstr "Stundas"
-
-#~ msgid "Project task type"
-#~ msgstr "Tips: Projekta Darba uzdevums"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Veiktās Darbības"
-
-#~ msgid "Configuration"
-#~ msgstr "Konfigurācija"
-
-#~ msgid "Task Details"
-#~ msgstr "Uzdevuma detaļas"
-
-#~ msgid "Dates"
-#~ msgstr "Datumi"
-
-#~ msgid "Trigger Invoice"
-#~ msgstr "Ieslēgt (Izrakstīt rēķinu)"
-
-#~ msgid "Task type"
-#~ msgstr "Darba uzdevuma tips"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nepareizs Skatījuma uzbūves XML!"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Pēc darba uzdevuma veikšanas piestādīt rēķinu."
-
-#~ msgid "New Task"
-#~ msgstr "Jauns Uzdevums"
-
-#~ msgid "Project's members"
-#~ msgstr "Projekta darba grupa"
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Aprēķināts kā: Patērētais Laiks / Kopējo Laiku."
-
-#~ msgid "Planned"
-#~ msgstr "Plānots"
-
-#~ msgid "E-Mails"
-#~ msgstr "E-pasts"
-
-#~ msgid "Review"
-#~ msgstr "Apskats"
-
-#~ msgid "Information"
-#~ msgstr "Informācija"
-
-#~ msgid "Bug"
-#~ msgstr "Programmas kļūda"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Kļūda"
-
-#~ msgid "Months"
-#~ msgstr "Mēneši"
-
-#~ msgid "User's projects"
-#~ msgstr "Lietotāja Projekti"
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Deleģēt Darba uzdevumu lietotājam"
-
-#~ msgid "Date Closed"
-#~ msgstr "Slēgšanas Datums"
-
-#~ msgid "Sum of spent hours of all tasks related to this project."
-#~ msgstr "Visu šā projekta darba uzdevumu patērēto stundu summa"
-
-#~ msgid "Reactivate Project"
-#~ msgstr "Aktivizēt Projektu no jauna"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr "Nevar nosūtīt e-pastu, jo Jums nav izveidota e-pasta adrese!"
-
-#~ msgid "State"
-#~ msgstr "Stāvoklis"
-
-#~ msgid "Gantt Representation"
-#~ msgstr "Gantt Attēlojums"
-
-#~ msgid "Warn Partner"
-#~ msgstr "Brīdināt Partneri"
-
-#~ msgid "Month works"
-#~ msgstr "Mēneša darbi"
-
-#~ msgid "Sum of planned hours of all tasks related to this project."
-#~ msgstr "Visu šā projekta darba uzdevumu plānoto stundu summa."
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "Nevar izdzēst projektu, kas satur darba uzdevumus. No sākuma izdzēsiet tos!"
-
-#~ msgid "Delay"
-#~ msgstr "Aizture"
-
-#~ msgid "Create a Task"
-#~ msgstr "Izveidot Darba Uzdevumu"
-
-#~ msgid "Date Start: %(date_start)s"
-#~ msgstr "Sākuma Datums: %(date_start)s"
-
-#~ msgid "ID: %(task_id)s"
-#~ msgstr "ID: %(task_id)s"
-
-#~ msgid "Task invoice"
-#~ msgstr "Uzdevuma Rēķins"
-
-#~ msgid "Running"
-#~ msgstr "Palaists"
-
-#~ msgid "New Feature"
-#~ msgstr "Jauna Iespēja"
-
-#~ msgid "Delegate Task"
-#~ msgstr "Uzdot Uzdevumu"
-
-#, python-format
-#~ msgid "Task '%s' closed"
-#~ msgstr "Uzdevums '%s' pabeigts"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Projektu Struktūra"
-
-#~ msgid "Template of Projects"
-#~ msgstr "Projektu Sagataves"
-
-#~ msgid "Partner Info"
-#~ msgstr "Informācija par Partneri"
-
-#~ msgid "Expected End"
-#~ msgstr "Paredzamās Beigas"
-
-#~ msgid "Date Stop: %(date_stop)s"
-#~ msgstr "Datums Pabeigts: %(date_stop)s"
-
-#~ msgid "Error ! You can not create recursive projects."
-#~ msgstr "Kļūda! Jūs nevarat veidot rekursīvus projektus."
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Saskaitīt Atlikušās Stundas"
-
-#, python-format
-#~ msgid "Task '%s' set in progress"
-#~ msgstr "Uzdevuma '%s' progress"
-
-#~ msgid "Task: %(name)s"
-#~ msgstr "Uzdevums: %(name)s"
-
-#~ msgid "Reinclude the description of the task in the task of the user."
-#~ msgstr "Ievietot uzdevuma aprakstu arī lietotāja uzdevumā."
-
-#~ msgid "User: %(user_id)s"
-#~ msgstr "Lietotājs: %(user_id)s"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Izrakstīt rēķinus no tirdzniecības pasūtījuma vienībām"
-
-#, python-format
-#~ msgid "Task '%s' cancelled"
-#~ msgstr "Uzdevums '%s' atcelts"
-
-#~ msgid ""
-#~ "Estimated time for you to validate the work done by the user to whom you "
-#~ "delegate this task."
-#~ msgstr "Aprēķinātais citam lietotājam nodotā darba apstiprināšanas termiņš."
-
-#~ msgid "Status: %(state)s"
-#~ msgstr "Statuss: %(state)s"
-
-#~ msgid ""
-#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
-#~ "time estimated by the project manager and the real time to close the task."
-#~ msgstr ""
-#~ "Aprēķināts kā: Kopējais laiks - Aprēķinātais laiks. Tas parāda atšķirību "
-#~ "starp projekta vadītāja noteikto laiku un reālo uzdevuma laiku."
-
-#~ msgid "Task edition"
-#~ msgstr "Uzdevuma versija"
-
-#~ msgid ""
-#~ "If you have [?] in the name, it means there are no analytic account linked "
-#~ "to project."
-#~ msgstr ""
-#~ "Ja Jūs redzat nosaukumā [?], tad tas nozīmē, ka projektam nav piesaistīts "
-#~ "neviens analītiskais konts."
-
-#~ msgid ""
-#~ "If you check this field, the project manager will receive a request each "
-#~ "time a task is completed by his team."
-#~ msgstr ""
-#~ "Ja iezīmēsiet šo lauku, tad projekta vadītājs saņems paziņojumu katru reizi, "
-#~ "kad kāds būs pabeidzis savu darbu grupas ietvaros."
-
-#~ msgid "Warn Manager"
-#~ msgstr "Brīdināt Atbildīgo"
-
-#~ msgid "New title of your own task to validate the work done."
-#~ msgstr "Jauns nosaukums uzdevumam pēc paveikto darbu apstiprināšanas."
-
-#~ msgid "Quiet close"
-#~ msgstr "Aizvērt bez Brīdinājumiem"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Nosūtīt e-pastu klientam"
-
-#~ msgid "config.compute.remaining"
-#~ msgstr "config.compute.remaining"
-
-#~ msgid "Parent Task"
-#~ msgstr "Virsuzdevums"
-
-#~ msgid "Quotation"
-#~ msgstr "Pasūtījums"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekta nosaukumam jāsākas ar x_ un tas nedrīkst saturēt speciālos simbolus!"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Nevar nosūtīt e-pastu, jo uzdevuma (%s) partnerim nav e-pasta adreses!"
-
-#~ msgid ""
-#~ "New state of your own task. Pending will be reopened automatically when the "
-#~ "delegated task is closed."
-#~ msgstr ""
-#~ "Jauns statuss Jūsu uzdevumam. Gaidīšanas režīms ieslēgsies automātiski, kad "
-#~ "tālāk nodotais udzevums būs pabeigts."
-
-#~ msgid ""
-#~ "If you have [?] in the project name, it means there are no analytic account "
-#~ "linked to this project."
-#~ msgstr ""
-#~ "Ja projekta nosaukumā redzams [?], tad tas nozīmē, ka tam nav piesaistīts "
-#~ "neviens analītiskais konts."
-
-#~ msgid "Mail Footer"
-#~ msgstr "Iestarpinājums e-pasta beigās"
-
-#~ msgid ""
-#~ "Footer added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Iestarpinājums e-pasta beigās paziņojumam, ko saņems klients, kad uzdevums "
-#~ "būs pabeigts."
-
-#~ msgid "Mail Header"
-#~ msgstr "Iestarpinājums e-pasta sākumā"
-
-#~ msgid ""
-#~ "Header added at the beginning of the email for the warning message sent to "
-#~ "the customer when a task is closed."
-#~ msgstr ""
-#~ "Iestarpinājums e-pasta sākumā paziņojumam, kas tiek nosūtīts klientam, kad "
-#~ "darbs ir pabeigts."
-
-#~ msgid "Task summary"
-#~ msgstr "Uzdevuma nosaukums"
-
-#~ msgid "Running projects"
-#~ msgstr "Projekti Progresā"
-
-#~ msgid "My Tasks in Progress"
-#~ msgstr "Mani Uzdevumi Progresā"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Mani Uzdevumi Progresā"
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Mani Uzdevumi (Gaida)"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Izvēlēta kompānija nav atļauto kompāniju sarakstā šim lietotājam"
-
-#, python-format
-#~ msgid "Task '%s' Closed"
-#~ msgstr "Uzdevums '%s' slēgts"
-
-#~ msgid "Timesheets"
-#~ msgstr "Darba uzkaites Tabeles"
-
-#~ msgid "Warn Message"
-#~ msgstr "Brīdinājuma ziņojums"
-
-#~ msgid "Projects: Planned Vs Total hours"
-#~ msgstr "Projekti: Plānotas pret kopējām stundām"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Kļūda! Nedrīkst piešķirt eskalāciju uz to pašu projektu!"
-
-#~ msgid "Change Stage"
-#~ msgstr "Mainīt posmu"
-
-#~ msgid "SCRUM"
-#~ msgstr "SCRUM"
-
-#, python-format
-#~ msgid "The task '%s' is done"
-#~ msgstr "Uzdevums '%s' izpildīts"
-
-#~ msgid "Project Close Task"
-#~ msgstr "Projekta noslēguma uzdevums"
-
-#~ msgid "Project vs remaining hours"
-#~ msgstr "Projekta stundas pret atlikušajām"
-
-#~ msgid "Invoice Address"
-#~ msgstr "Rēķina Adrese"
-
-#~ msgid "Members"
-#~ msgstr "Dalībnieki"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Atcelt"
-
-#~ msgid "Previous"
-#~ msgstr "Iepriekšējais"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopija)"
-
-#~ msgid "Methodologies"
-#~ msgstr "Metodoloģijas"
-
-#~ msgid "Next"
-#~ msgstr "Nākamais"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Kļūda! Jums nav tiesību veidot rekursīvus uzņēmumus."
-
-#~ msgid "Warn Manager by Email"
-#~ msgstr "Brīdināt vadītāju uz e-pastu"
-
-#, python-format
-#~ msgid "Send Email after close task"
-#~ msgstr "Nosūtīt e-pastu pēc uzdevumu pabeigšanas"
-
-#~ msgid "Email Address of Customer"
-#~ msgstr "Klienta e-pasta adrese"
-
-#~ msgid "Public Notes"
-#~ msgstr "Publiskas piezīmes"
-
-#~ msgid "Project vs Planned and Total Hours"
-#~ msgstr "Projekta stundas pret plānotajām un kopējām"
-
-#, python-format
-#~ msgid "The task '%s' is opened."
-#~ msgstr "Uzdevums '%s' nav pabeigts"
-
-#, python-format
-#~ msgid "Please specify the email address of Project Manager."
-#~ msgstr "Lūdzu, norādiet projekta vadītāja e-pasta adresi"
-
-#~ msgid "Image"
-#~ msgstr "Attēls"
-
-#~ msgid "Billing"
-#~ msgstr "Rēķinu izrakstīšana"
-
-#~ msgid "  Year  "
-#~ msgstr "  Gads  "
-
-#~ msgid "Long Term Planning"
-#~ msgstr "Ilgtermiņa plānošana"
-
-#~ msgid "My Task's Deadlines"
-#~ msgstr "Manu uzdevumu termiņi"
-
-#~ msgid "Configure"
-#~ msgstr "Konfigurēt"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
-
-#~ msgid "Task Edition"
-#~ msgstr "Uzdevum labošana"
-
-#~ msgid "Performance"
-#~ msgstr "Veiktspēja"
-
-#~ msgid "Project Dashboard"
-#~ msgstr "Projekta tāfele"
-
-#~ msgid "Customer Email"
-#~ msgstr "Klienta e-pasts"
-
-#, python-format
-#~ msgid "The project '%s' has been closed."
-#~ msgstr "Projekts '%s' ir pabeigts."
-
-#~ msgid "History"
-#~ msgstr "Vēsture"
-
-#~ msgid "Getting Things Done"
-#~ msgstr "Getting Things Done"
-
-#~ msgid "Dashboard"
-#~ msgstr "Instrumentu panelis"
-
-#~ msgid "Manager Email"
-#~ msgstr "Vadītāja e-pasts"
-
-#, python-format
-#~ msgid "The project '%s' has been opened."
-#~ msgstr "Projets '%s' ir sākts"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfigurācijas Progress"
-
-#~ msgid " Project vs  hours"
-#~ msgstr " Projekts pret stundām"
-
-#~ msgid "Warn Customer by Email"
-#~ msgstr "Brīdināt klientu uz e-pastu"
-
-#~ msgid "Close"
-#~ msgstr "Aizvērt"
-
-#, python-format
-#~ msgid "Please specify the email address of Customer."
-#~ msgstr "Lūdzu, norādiet klienta e-pasta adresi."
-
-#~ msgid "Send Email"
-#~ msgstr "Nosūtīt e-pastu"
-
-#~ msgid "Current Activity"
-#~ msgstr "Darbība pašlaik"
-
-#~ msgid "Current"
-#~ msgstr "Pašreizējs"
-
-#~ msgid "My Remaining Hours by Project"
-#~ msgstr "Atlikušās stundas pēc projekta"
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Izrakstīt rēķinus par uzdevumu laiku"
-
-#~ msgid "Total tasks"
-#~ msgstr "Pavisam uzdevumu"
-
-#~ msgid "Email Address of Project's Manager"
-#~ msgstr "Projekta vadītāja e-pasta adrese"
-
-#~ msgid "Task By Days"
-#~ msgstr "Uzdevumi pa dienām"
-
-#~ msgid "Warn Customer"
-#~ msgstr "Brīdināt klienta"
-
-#~ msgid "Edit"
-#~ msgstr "Labot"
-
-#~ msgid "My Projects: Planned vs Total Hours"
-#~ msgstr "Mani projekti: Plānotās pret kopējām stundām"
-
-#~ msgid "project.installer"
-#~ msgstr "project.installer"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Dažādi"
-
-#, python-format
-#~ msgid "The task '%s' is pending."
-#~ msgstr "Uzdevums '%s' neizlemts."
-
-#~ msgid "Remaining Hours Per Project"
-#~ msgstr "Atlikušās stundas pēc projekta"
-
-#~ msgid "Issues Tracker"
-#~ msgstr "Incidentu reģistrs"
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Mani nepabeigtie uzdevumi"
-
-#~ msgid ""
-#~ "Helps generate invoices based on time spent on tasks, if activated on the "
-#~ "project."
-#~ msgstr ""
-#~ "Ja aktivizēts projektam, palīdz ģenerēt rēķinus pēc laika, kas patērēts "
-#~ "uzdevumiem."
-
-#~ msgid "   Month   "
-#~ msgstr "   Mēnesis   "
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Configure Your Project Management Application"
-#~ msgstr "Konfigurējiet savu projektu vadības sistēmu"
-
-#~ msgid "Reevaluate"
-#~ msgstr "Pārvērtēt"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Uzskaita un palīdz lietotājiem kodēt un validēt laika tabulas un apmeklējumu."
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Kļūda! Nedrīkst veidot rekursīvus analītiskos kontus"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Nevar būt divi lietotāji ar vienādu pieteikuma vārdu!"
-
-#~ msgid "Date Stop: %(date)s"
-#~ msgstr "Pārtraukšanas datums: %(date)s"
-
-#~ msgid "Helps accountants manage analytic and crossover budgets."
-#~ msgstr "Palīdz grāmatvežiem pārvaldīt analītiskos un salīdzinošos budžetus"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mēnesis-1    "
-
-#~ msgid ""
-#~ "Implements and tracks the concepts and task types defined in the SCRUM "
-#~ "methodology."
-#~ msgstr ""
-#~ "Realizē un uzskaite koncepcijas un uzdevumu tipus, kas definēti SCRUM "
-#~ "metodoloģijā."
-
-#~ msgid "My accounts to invoice"
-#~ msgstr "Klienti ar izrakstāmiem rēķiniem"
-
-#~ msgid ""
-#~ "Computed as difference of the time estimated by the project manager and the "
-#~ "real time to close the task."
-#~ msgstr ""
-#~ "Tiek aprēķināts kā starpība starp projektu vadītāja novērtēto un reālo "
-#~ "uzdevuma pabeigšanas laiku."
-
-#~ msgid "Project Application Configuration"
-#~ msgstr "Projektu sistēmas konfigurācija"
-
-#~ msgid ""
-#~ "Enables long-term projects tracking, including multiple-phase projects and "
-#~ "resource allocation handling."
-#~ msgstr ""
-#~ "Iespējo ilgtermiņa projektu uzskaiti, ieskaitot vairāku fāžu projektus un "
-#~ "resursu sadalīšanas vadību."
-
-#~ msgid "_Send"
-#~ msgstr "_Sūtīt"
-
-#, python-format
-#~ msgid "The task '%s' is cancelled."
-#~ msgstr "Uzdevums '%s' ir atcelts."
-
-#~ msgid "Automatically synchronizes project tasks and crm cases."
-#~ msgstr "Automātiski sinhronizē projektu uzdevumus un crm lietas."
-
-#~ msgid "title"
-#~ msgstr "nosaukums"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail! Check the email ids and smtp configuration settings"
-#~ msgstr ""
-#~ "Neizdodas nosūtīt e-pastu! Pārbaudiet e-pasta identifikācijas un SMTP "
-#~ "konfigurācijas iestatījumus!"
-
-#~ msgid "Budgets"
-#~ msgstr "Budžeti"
-
-#~ msgid ""
-#~ "Various OpenERP applications are available to manage your projects with "
-#~ "different level of control and flexibility."
-#~ msgstr ""
-#~ "OpenERP nodrošina vairākus moduļus, ar ko palīdzību iespējams vadīt "
-#~ "projektus ar nepieciešamo kontroles dziļumu un elastīgumu."
-
-#~ msgid ""
-#~ "Define the steps that will be used in the project from the creation of the "
-#~ "task, up to the closing of the task or issue. You will use these stages in "
-#~ "order to track the progress in solving a task or an issue."
-#~ msgstr ""
-#~ "Nosaka soļus, kas tiks izpildīti projektā- sākot ar darba uzdevuma vai "
-#~ "notikuma izveidi, līdz tā slēgšanai. Soļi tiek izmantoti, lai sekotu darba "
-#~ "uzdevuma izpildes progresam."
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "Kļūda! Valūtai jāsakrīt ar izvēlētā uzņēmuma valūtu."
-
-#~ msgid ""
-#~ "A task represents a work that has to be done. Each user works in his own "
-#~ "list of tasks where he can record his task work in hours. He can work and "
-#~ "close the task itself or delegate it to another user. If you delegate a task "
-#~ "to another user, you get a new task in pending state, which will be reopened "
-#~ "when you have to review the work achieved. If you install the "
-#~ "project_timesheet module, task work can be invoiced based on the project "
-#~ "configuration. With the project_mrp module, sales orders can create tasks "
-#~ "automatically when they are confirmed."
-#~ msgstr ""
-#~ "Darba Uzdevums ir darbs, kurš ir jāveic. Katrs lietotājs uzskaita savus "
-#~ "darbus kā Darba Uzdevumus, kuros uzskaita darba izpildes laikā patērētās "
-#~ "stundas. Lietotājs var strādāt ar Darba Uzdevumu individuāli, vai arī "
-#~ "deleģēt tā izpildi citam lietotājam. Ja darbs tiek deleģēts citam "
-#~ "lietotājam, tad tas iegūst statusu \"Gaida\" un automātiski atgūst statusu "
-#~ "\"Progresā\", ja deleģētais darba uzdevums tiek pabeigts. Ja ir uzinstalēts "
-#~ "modulis project_timesheet, iespējams piestādīt klientiem rēķinus, kas ir "
-#~ "bāzēti uz projektu darba uzdevumiem. project_mrp modulis nodrošina "
-#~ "automātisku darba uzdevumu izveidi, ja tiek veikts pasūtījums tirdzniecības "
-#~ "modulī."
-
-#~ msgid ""
-#~ "GTD is a methodology to efficiently organise yourself and your tasks. This "
-#~ "module fully integrates GTD principle with OpenERP's project management."
-#~ msgstr ""
-#~ "GTD ir darbu organizācijas metodika. Modulis pilnībā nodrošina GTD principus "
-#~ "OpenERP projektu vadībā."
-
-#~ msgid ""
-#~ "Project management module tracks multi-level projects, tasks,\n"
-#~ "work done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ " Dashboard for project members that includes:\n"
-#~ "    * List of my open tasks\n"
-#~ "    * Members list of project\n"
-#~ "    "
-#~ msgstr ""
-#~ "Projektu Vadības modulis nodrošina multi-līmeņu projektu koku, darba "
-#~ "uzdevumu un patērēto darba stundu uzskaiti utt. Ar tā palīdzību iespējams "
-#~ "veikt plānošanu, vadību utt.\n"
-#~ "Rīku panelis projekta darba grupai ietver:\n"
-#~ "    * atvērto Darba Uzdevumu sarakstu,\n"
-#~ "    * Projekta darba grupas locekļu sarakstu.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "A project contains a set of tasks or issues that will be performed by your "
-#~ "resources assigned to it. A project can be hierarchically structured, as a "
-#~ "child of a Parent Project. This allows you to design large project "
-#~ "structures with different phases spread over the project duration cycle. "
-#~ "Each user can set his default project in his own preferences to "
-#~ "automatically filter the tasks or issues he usually works on. If you choose "
-#~ "to invoice the time spent on a project task, you can find project tasks to "
-#~ "be invoiced in the billing section."
-#~ msgstr ""
-#~ "Projekts satur noteiktus Darba Uzdevumus, kuru izpildei nepieciešams "
-#~ "piesaistīt uzņēmuma resursus. Projekta struktūra var būt kokveida ar "
-#~ "apakšprojektiem. Tas rada iespēju definēt lielas projektu struktūras, ar "
-#~ "dažādām progresa fāzēm un termiņiem. Iespējams automātiski filtrēt katram "
-#~ "lietotājam tikai tos Darba Uzdevumus, kas attiecas uz konkrēto lietotāju. Ja "
-#~ "projekts ir atzīmēts, ka par to ir jāpiestāda rēķins, tad tas parādīsies "
-#~ "sekcijā \"Projekti, par kuriem jāpiestāda rēķini\"."
-
-#~ msgid ""
-#~ "If the task is created the state is 'Draft'.\n"
-#~ " If the task is started, the state becomes 'In Progress'.\n"
-#~ " If review is needed the task is in 'Pending' state.                         "
-#~ "         \n"
-#~ " If the task is over, the states is set to 'Done'."
-#~ msgstr ""
-#~ "Jaunizveidots Darba Uzdevums automātiski iegūst statusu \"Melnraksts\".\n"
-#~ "Ja Darba Uzdevums tiek sākts, tas iegūst statusu \"Progresā\".\n"
-#~ "Ja nepieciešams pārskatīt kaut ko Darba Uzdevumā, tas iegūst statusu "
-#~ "\"Gaida\".\n"
-#~ "Ja Darba Uzdevums ir slēgts,  iegūst statusu \"Pabeigts\"."
-
-#, python-format
-#~ msgid "The task '%s' has been delegated to %s."
-#~ msgstr "Uzdevums '%s' tika deleģēts %s."
-
-#~ msgid "My Delegated Tasks"
-#~ msgstr "Mani deleģētie uzdevumi"
+#~ msgid "# of tasks"
+#~ msgstr "Uzd. skaits"
+
+#~ msgid "Users"
+#~ msgstr "Lietotāji"

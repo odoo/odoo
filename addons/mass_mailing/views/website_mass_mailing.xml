@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-
-<template id="head" inherit_id="website.layout" name="Mail customization">
-    <xpath expr="//head" position="inside">
-        <script type="text/javascript" src="/mass_mailing/static/src/js/website_mass_mailing.editor.js" groups="base.group_website_publisher"></script>
+    <data>
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="wesbite_mass_mailing assets">
+            <xpath expr="." position="inside">
     </xpath>
 </template>
 
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Mail Frontend Assets">
     <xpath expr="." position="inside">
-        <script type="text/javascript" src="/mass_mailing/static/src/js/website_mass_mailing.js"></script>
-    </xpath>
-</template>
+                <script type="text/javascript" src="/mass_mailing/static/src/js/website_mass_mailing.js"></script>
+            </xpath>
+        </template>
 
-</data>
+        <template id="assets_editor" inherit_id="website.assets_editor" name="wesbite_mass_mailing Editor assets">
+            <xpath expr="/t" position="inside">
+                <script type="text/javascript" src="/mass_mailing/static/src/js/website_mass_mailing.editor.js" groups="base.group_website_publisher"></script>
+            </xpath>
+        </template>
+    </data>
 </openerp>

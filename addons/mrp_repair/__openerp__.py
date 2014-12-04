@@ -40,6 +40,7 @@ The following topics should be covered by this module:
     'author': 'OpenERP SA',
     'images': ['images/repair_order.jpeg'],
     'depends': ['mrp', 'sale', 'account'],
+    'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
         'security/mrp_repair_security.xml',

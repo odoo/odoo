@@ -40,7 +40,7 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('type','=','other')]),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear: Computed on basis of Gross Value / Number of Depreciations'),('degressive','Degressive: Computed on basis of Residual Value * Degressive Factor')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
@@ -262,7 +262,7 @@ class account_asset_asset(osv.osv):
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
         'active': fields.boolean('Active'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear: Computed on basis of Gross Value / Number of Depreciations'),('degressive','Degressive: Computed on basis of Residual Value * Degressive Factor')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="The number of depreciations needed to depreciate your asset"),
@@ -280,7 +280,7 @@ class account_asset_asset(osv.osv):
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'account.asset.code'),
         'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
         'active': True,
         'state': 'draft',
@@ -390,7 +390,7 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
+            depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id

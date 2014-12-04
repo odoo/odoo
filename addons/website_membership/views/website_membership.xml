@@ -14,7 +14,7 @@
         <t t-set="additional_title">Members</t>
         <div id="wrap">
             <div class="oe_structure">
-                <section data-snippet-id="title">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12">
@@ -84,12 +84,12 @@
 </template>
 
 <template id="opt_index_country" name="Location"
-        optional="enabled" inherit_id="website_membership.index">
+        customize_show="True" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[1]" position="after">
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries" t-as="country">
-                <li t-if="country['country_id']" t-att-class="country['country_id'][0] == current_country_id and 'active' or ''">
+                <li t-if="country['country_id']" t-att-class="country['country_id'] and country['country_id'][0] == current_country_id and 'active' or ''">
                     <a t-attf-href="/members#{ membership and '/association/%s' % membership.id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"><t t-esc="country['country_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="country['country_id_count'] or '0'"/></span>
                     </a>
@@ -101,7 +101,7 @@
 
 <!-- Option: index: Left Google Map -->
 <template id="opt_index_google_map" name="Left World Map"
-        optional="enabled" inherit_id="website_membership.index">
+        customize_show="True" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
         <!-- modal for large map -->
         <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

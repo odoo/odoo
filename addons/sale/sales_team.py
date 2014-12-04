@@ -9,8 +9,8 @@ from openerp import tools
 from openerp.osv import fields, osv
 
 
-class crm_case_section(osv.osv):
-    _inherit = 'crm.case.section'
+class crm_team(osv.Model):
+    _inherit = 'crm.team'
 
     def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool['sale.order']
@@ -21,8 +21,8 @@ class crm_case_section(osv.osv):
         res = {}
         for id in ids:
             res[id] = {}
-            created_domain = [('section_id', '=', id), ('state', '=', 'draft'), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
-            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            created_domain = [('team_id', '=', id), ('state', '=', 'draft'), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            validated_domain = [('team_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
             res[id]['monthly_confirmed'] = json.dumps(self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
 
@@ -36,7 +36,7 @@ class crm_case_section(osv.osv):
 
         res = {}
         for id in ids:
-            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
+            created_domain = [('team_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
             res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context))
         return res
 
@@ -50,13 +50,13 @@ class crm_case_section(osv.osv):
             help="Target of invoice revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
-            type='any', readonly=True, multi='_get_sale_orders_data',
+            type='char', readonly=True, multi='_get_sale_orders_data',
             string='Rate of created quotation per duration'),
         'monthly_confirmed': fields.function(_get_sale_orders_data,
-            type='any', readonly=True, multi='_get_sale_orders_data',
+            type='char', readonly=True, multi='_get_sale_orders_data',
             string='Rate of validate sales orders per duration'),
         'monthly_invoiced': fields.function(_get_invoices_data,
-            type='any', readonly=True,
+            type='char', readonly=True,
             string='Rate of sent invoices per duration'),
     }
 

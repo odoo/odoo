@@ -185,7 +185,7 @@
                                 <span class="oe_e">í</span> <!-- icon for dropdown menu -->
                                 <ul class="oe_dropdown_menu">
                                     <li><a type="edit">Survey Options</a></li>
-                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
+                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
@@ -204,8 +204,8 @@
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
-                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyse Answers</a></t>
+                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
+                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
                                 </ul></div>
                             </div>
@@ -344,7 +344,7 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>
                                     <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 </group>
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
@@ -517,14 +517,13 @@
 
         <!-- Left menu categories-->
         <menuitem name="Surveys" id="menu_surveys" parent="base.marketing_menu" sequence="25" groups="base.group_survey_user"/>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" />
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
         <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
 
         <!-- Left menu elements: Technical Configuration -->
-        <menuitem name="Surveys" id="menu_surveys_configuration" parent="base.menu_marketing_config_root" groups="base.group_no_one" sequence="25" />
+        <menuitem name="Surveys" id="menu_surveys_configuration" parent="base.menu_marketing_config_root" groups="base.group_no_one" sequence="2" />
         <menuitem name="Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
         <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>

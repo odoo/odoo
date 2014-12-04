@@ -62,9 +62,15 @@ DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
-    func = appdirs.user_data_dir if os.path.exists(home) else appdirs.site_data_dir
+    if os.path.isdir(home):
+        func = appdirs.user_data_dir
+    else:
+        if sys.platform in ['win32', 'darwin']:
+            func = appdirs.site_data_dir
+        else:
+            func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
-    return func(appname='Odoo', appauthor=release.author)
+    return func(appname=release.product_name, appauthor=release.author)
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -119,7 +125,7 @@ class configmanager(object):
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
-                         help="Directory where to store OpenERP data")
+                         help="Directory where to store Odoo data")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -230,7 +236,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
-            "Use these options to translate OpenERP to another language."
+            "Use these options to translate Odoo to another language."
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
             )
@@ -255,8 +261,7 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        if os.name == 'posix':
-            group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
+        group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
@@ -276,6 +281,8 @@ class configmanager(object):
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+        group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat',
+                         help="Absolute path to the GeoIP database file.")
         parser.add_option_group(group)
 
         if os.name == 'posix':
@@ -355,8 +362,8 @@ class configmanager(object):
             "the i18n-export option cannot be used without the database (-d) option")
 
         # Check if the config file exists (-c used, but not -s)
-        die(not opt.save and opt.config and not os.path.exists(opt.config),
-            "The config file '%s' selected with -c/--config doesn't exist, "\
+        die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
+            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
         # place/search the config file on Win32 near the server installation
@@ -389,8 +396,9 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
-                ]
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
+                'geoip_database',
+        ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
@@ -407,7 +415,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'smtp_ssl', 'load_language',
+            'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
@@ -416,7 +424,7 @@ class configmanager(object):
         ]
 
         posix_keys = [
-            'auto_reload', 'workers',
+            'workers',
             'limit_memory_hard', 'limit_memory_soft',
             'limit_time_cpu', 'limit_time_real', 'limit_request',
         ]

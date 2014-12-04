@@ -7,59 +7,221 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2014-02-01 22:19+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Od"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Predložak"
-
-#. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Dugme za otvaranje akcije sidebar-a"
-
-#. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "Isključiti iz masovne e-pošte"
-
-#. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Za (E-mailovi)"
-
-#. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Odlazni E-mail server"
-
-#. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
-msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
 msgstr ""
-"Akcija sidebar-a za postavljanje ovog prijedloga dostupnog na akcijama "
-"povezanog modela dokumenta"
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Dodaj potpis"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Odnosi se na"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Zakačke"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Auto brisanje"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Dostupan za masovno slanje e-pošte"
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Sadržaj"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Primaoci kopije(mogu se koristiti držači mjesta)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr ""
+"IDovi zarezom odvojeni partnera primatelja(mogu se koristiti držači mjesta)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "Adrese primatelja odvojene zarezom"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Podrazumijevana vrijednost"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Brisanje zapisa akcije polja."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+"Na povezanim dokumentima prikaži opciju  koja poziva čarobnjak sa ovim "
+"predloškom"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Pregled e-maila"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Pregled e-mail predloška"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "E-mail predlošci"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Čarobnjak sastavljanja email-a"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -68,59 +230,32 @@ msgid "Field"
 msgstr "Polje"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr "Ukloni kontekstnu akciju"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Opcioni preferirani server za izlaznu poštu. Ako nije podešen koristiti će "
-"se onaj sa najvišim prioritetom."
+"Krajnji izraz držača mjesta, koji će biti kopiran-zalijepljen na željenom "
+"polju predloška."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Naziv fajla izvještaja"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Od"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "Pregled"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Grupiši po..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Odgovori na"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Koristi predložak"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Sadržaj"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (kopija)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -132,29 +267,44 @@ msgstr ""
 "Ako je odabrano, potpis korisnika biti će dodan tekst verziji poruke."
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "SMTP server"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Spremi kao novi predložak"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"Kada je relaciono polje odabrano kao prvo polje, ovo polje prikazuje model "
-"dokumenta kojem relacija odlazi."
+"Ako je ovo polje označeno, ovaj kontakt je odbio da prima masovne email-ove "
+"i markentiške kampanje. Filter 'Dostupan za masovne email-ove' dozvoljava "
+"korisnicima da filtriraju partnere kada šalju masovne email-ove."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "E-mail predlošci"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Jezik"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Naziv"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -168,10 +318,25 @@ msgstr ""
 "Ekstenzija može biti zanemarena i biće zamjenjena tipom izvještaja."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Akcija sidebar-a"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Isključiti iz masovne e-pošte"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Opcioni preferirani server za izlaznu poštu. Ako nije podešen koristiti će "
+"se onaj sa najvišim prioritetom."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Opcioni izvještaj za ispis i zakačku"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -179,18 +344,138 @@ msgstr "Akcija sidebar-a"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Opcioni jezik prevoda (ISO šifra) za izbor prilikom slanja email-a. Ako nije "
-"postavljeno, koristiće se engleska verzija. Ovo bi najčešće treblo biti "
-"izraz držača mjesta koja obezbjeđuje odgovarajuću šifru jezika, npr: "
-"${object.partner_id.lang.code}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Opciona vrijednost koja će se koristiti ako je ciljano polje prazno"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Odlazni E-mail server"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+"Partneri koji nisu tražili da budu uključeni u kampanju masovnog slanja e-"
+"mailova."
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "Trajno obriši ovaj e-mail nakon slanja, radi uštede prostora"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Izraz držača mjesta"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Preferirana adresa za odgovor (modu se koristiti držači mjesta)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Pregled"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Pregled"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Povezani model dokumenta"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+"Ukloni dodatnu akciju da se ovaj predložak koristi na povezanim dokumentima"
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Odgovori na"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Naziv fajla izvještaja"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "Rich-text/HTML verzija poruke"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP server"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Primjer dokumenta"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Spremi kao novi predložak"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Spremi kao novi predložak"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -205,115 +490,28 @@ msgstr ""
 "relacije."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "Kreator dinamičke vrijednosti"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Pošalji e-mail (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Pregled predloška"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Spremi kao novi predložak"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
-"Na povezanim dokumentima prikaži opciju  koja poziva čarobnjak sa ovim "
-"predloškom"
+"Adresa pošaljioca. Ako nije podešena, koristiti će se e-mail alias autora "
+"ukoliko je podešen, ili e-mail adresa."
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Primaoci kopije(mogu se koristiti držači mjesta)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "Adrese primatelja odvojene zarezom"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Napredno"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Pregled"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Koristi primjer dokumenta"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Predlošci"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Naziv"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Jezik"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Pregled e-mail predloška"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Pregled e-maila"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-"Ukloni dodatnu akciju da se ovaj predložak koristi na povezanim dokumentima"
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "Izraz držača mjesta"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Podmodel"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Tema(mogu se koristiti držači mjesta)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Preferirana adresa za odgovor (modu se koristiti držači mjesta)"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -322,102 +520,26 @@ msgid "Sidebar Button"
 msgstr "Dugme sidebar-a"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Opcioni izvještaj za ispis i zakačku"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Akcija sidebar-a"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "Opciona vrijednost koja će se koristiti ako je ciljano polje prazno"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Model"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Čarobnjak sastavljanja email-a"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "Dodaj kontekstualnu akciju"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Vrsta dokumenta koja se može koristiti sa ovi predloškom"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "Za (Partneri)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Auto brisanje"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Krajnji izraz držača mjesta, koji će biti kopiran-zalijepljen na željenom "
-"polju predloška."
+"Akcija sidebar-a za postavljanje ovog prijedloga dostupnog na akcijama "
+"povezanog modela dokumenta"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "Povezani model dokumenta"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "Adresiranje"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"IDovi zarezom odvojeni partnera primatelja(mogu se koristiti držači mjesta)"
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Zakačke"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Brisanje zapisa akcije polja."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Cc"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "Odnosi se na"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Dugme za otvaranje akcije sidebar-a"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -426,33 +548,89 @@ msgid "Sub-field"
 msgstr "Podpolje"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Detalji e-maila"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Podmodel"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Pošalji e-mail (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Tema"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Tema(mogu se koristiti držači mjesta)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Dobavljači"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Pregled predloška"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Predlošci"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Vrsta dokumenta koja se može koristiti sa ovi predloškom"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "Trajno obriši ovaj e-mail nakon slanja, radi uštede prostora"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Za (E-mailovi)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Grupiši po..."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Za (Partneri)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Koristi predložak"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -465,27 +643,14 @@ msgstr ""
 "odaberete ciljno polje u sklopu odredišnok dokumentnog modela (podmodela)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Upozorenje"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Dodaj potpis"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "Podrazumijevana vrijednost"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Kada je relaciono polje odabrano kao prvo polje, ovo polje prikazuje model "
+"dokumenta kojem relacija odlazi."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -498,18 +663,12 @@ msgstr ""
 "mailovima kreiranim iz ovog predloška"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr "Rich-text/HTML verzija poruke"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "Sadržaj"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Tema"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""

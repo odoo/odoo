@@ -1,91 +1,44 @@
 <templates>
+
+    <t t-name="graph-view-buttons">
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-default fa fa-table oe-pivot-mode" title="Pivot Table"></button>
+            <button class="btn btn-default fa fa-bar-chart-o oe-bar-mode" title="Bar Chart"></button>
+            <button class="btn btn-default fa fa-line-chart oe-line-mode" title="Line Chart"></button>
+            <button class="btn btn-default fa fa-pie-chart oe-pie-mode" title="Pie Chart"></button>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-default fa fa-expand oe-pivot" title="Flip columns and rows"></button>
+            <button class="btn btn-default fa fa-arrows-alt oe-pivot" title="Expand"></button>
+            <button class="btn btn-default fa fa-download oe-pivot" title="Download Data"></button>
+        </div>
+        <div class="btn-group btn-group-sm"> 
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Measures <span class="caret"/>
+            </button>
+            <ul class="oe-measure-list dropdown-menu"/>
+        </div>
+    </t>
     <div t-name="GraphWidget" class="graph_widget">
-    	<div class="graph_header">
-
-      <div class="btn-toolbar hidden-print" role="toolbar">
-
-        <div class="btn-group graph_mode_selection" data-toggle="buttons">
-            <label class="btn btn-default" data-mode="pivot" title="Table Mode">
-                <input type="radio" name="modes"/><span class="fa fa-table"></span>
-            </label>
-            <label class="btn btn-default" data-mode="bar" title="Bar Chart">
-                <input type="radio" name="modes"/><span class="fa fa-bar-chart-o"></span>
-            </label>
-            <label class="btn btn-default" data-mode="line" title="Line Chart">
-                <input type="radio" name="modes"/><span class="fa fa-check-square"></span>
-            </label>
-            <label class="btn btn-default" data-mode="pie" title="Pie Chart">
-                <input type="radio" name="modes"/><span class="fa fa-adjust"></span>
-            </label>
-        </div>
-
-        <div class="btn-group graph_heatmap" data-toggle="buttons" >
-            <label class="btn btn-default" data-mode="both" title="Heat Map">
-                <input type="radio" name="heatmap"/><span class="fa fa-th"></span>
-            </label>
-            <label class="btn btn-default" data-mode="row" title="Heat Map (rows)">
-                <input type="radio" name="heatmap"/><span class="fa fa-bars"></span>
-            </label>
-            <label class="btn btn-default" data-mode="col" title="Heat Map (columns)">
-                <input type="radio" name="heatmap"/><span class="fa fa-bars fa-rotate-90"></span>
-            </label>
-        </div>
-
-        <div class="btn-group graph_options_selection">
-            <label class="btn btn-default" data-choice="swap_axis" title="Swap Axis">
-                <span class="fa fa-expand"></span>
-            </label>
-            <label class="btn btn-default" data-choice="expand_all" title="Expand All">
-                <span class="fa fa-arrows-alt"></span>
-            </label>
-            <label class="btn btn-default" data-choice="update_values" title="Reload Data">
-                <span class="fa fa-refresh"></span>
-            </label>
-            <label class="btn btn-default" data-choice="export_data" title="Export Data" style="display:none">
-                <span class="fa fa-download"></span>
-            </label>
-        </div>
-        <div class="btn-group">
-            <label class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Measures <span class="caret"></span>
-            </label>
-                <ul class="dropdown-menu graph_measure_selection" role="menu">
-                </ul>
-        </div>
-    </div>
-	</div>
     	<div class="graph_main_content"></div>
     </div>
 
-	<div t-name="field_selection" class="btn-group">
+	<div t-name="field_selection" class="dropdown">
 		<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu multi-level" role="menu">
 	    	<t t-foreach="fields" t-as="field">
                 <t t-if="(field.type === 'date') || (field.type === 'datetime')">
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'day'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (day)'"/>
+                    <li class="graph-dropdown-submenu">
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'month'" href="#">
+                            <t t-esc="field.value"/>
                         </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'week'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (week)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'month'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (month)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'quarter'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (quarter)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'year'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (year)'"/>
-                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'day'">Day</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'week'">Week</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'month'">Month</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'quarter'">Quarter</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'year'">Year</a></li>
+                        </ul>
                     </li>
                 </t>
 

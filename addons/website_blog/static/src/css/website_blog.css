@@ -59,6 +59,23 @@ div#blog_angle_down a:hover {
   cursor: pointer;
 }
 
+/* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
+@media (max-width: 768px) {
+  .cover h1 {
+    font-size: 26px;
+  }
+  .cover h2 {
+    font-size: 20px;
+  }
+
+  .cover_footer {
+    min-height: 280px;
+    height: 50vh;
+  }
+  .cover_footer .blog_title {
+    top: 2%;
+  }
+}
 /*Inline Discussion */
 .discussion {
   padding: 5px 10px 10px;

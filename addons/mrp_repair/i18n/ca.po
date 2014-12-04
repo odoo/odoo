@@ -1,180 +1,58 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp_repair
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 17:52+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp_repair
-#: field:mrp.repair.line,move_id:0
-msgid "Inventory Move"
-msgstr "Moviment d'inventari"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Group By..."
-msgstr "Agrupa per..."
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Recrea factura"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
-"Heu de seleccionar una adreça de factura d'empresa en el formulari de "
-"reparació!"
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
-#: view:mrp.repair.cancel:0
-msgid "Cancel Repair Order"
-msgstr "Cancel·la ordre reparació"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
-msgid "To Invoice"
-msgstr "A facturar"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Unit of Measure"
+#: help:mrp.repair.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically as draft when repair order in "
+"draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order "
+"in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.     "
+"                   \n"
+"* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Printing Date"
-msgstr "Data d'impressió"
-
-#. module: mrp_repair
-#: field:mrp.repair.make_invoice,group:0
-msgid "Group by partner invoice address"
-msgstr "Agrupa per adreça facturació"
-
-#. module: mrp_repair
-#: field:mrp.repair,message_unread:0
-msgid "Unread Messages"
+#: help:mrp.repair,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.      "
+"       \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
-#, python-format
-msgid "No product defined on Fees!"
-msgstr "No s'ha definit cap producte en honoraris!"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "(Add)"
+msgstr "(Afegeix)"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,company_id:0
-msgid "Company"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "(update)"
 msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Set to Draft"
-msgstr "Canvia a esborrany"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Invoice Exception"
-msgstr "Excepció de factura"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Serial Number"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,address_id:0
-msgid "Delivery Address"
-msgstr "Adreça de lliurament"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "History"
-msgstr "Historial"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,price_subtotal:0
-#: field:mrp.repair.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Subtotal"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Invoice address :"
-msgstr "Adreça de factura"
-
-#. module: mrp_repair
-#: help:mrp.repair,partner_id:0
-msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Guarantee limit"
-msgstr "Límit de garantia"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Notes"
-msgstr "Notes"
-
-#. module: mrp_repair
-#: field:mrp.repair,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,amount_tax:0
-#: field:mrp.repair.fee,tax_id:0
-#: field:mrp.repair.line,tax_id:0
-msgid "Taxes"
-msgstr "Impostos"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Net Total :"
-msgstr "Total net :"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Operations"
-msgstr "Operacions"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -198,37 +76,231 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: help:mrp.repair.line,state:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#, python-format
+msgid "Active ID not Found"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Afegeix"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "Després de la reparació"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Abans de reparació"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Cancel·la reparació"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr "Cancel·la ordre reparació"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+#: selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: mrp_repair
+#: help:mrp.repair,partner_id:0
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Confirma reparació"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0
+#: selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Confirmat"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:541
+#, python-format
 msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in "
-"draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order "
-"in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.     "
-"                   \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,move_id:0
-msgid "Move"
-msgstr "Moviment"
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create Invoice"
+msgstr "Crea factura"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr "Crea factures"
+
+#. module: mrp_repair
+#: field:mrp.repair,create_uid:0
+#: field:mrp.repair.cancel,create_uid:0
+#: field:mrp.repair.fee,create_uid:0
+#: field:mrp.repair.line,create_uid:0
+#: field:mrp.repair.make_invoice,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
-msgid "Repair Orders"
-msgstr "Comandes de reparació"
+#: field:mrp.repair,create_date:0
+#: field:mrp.repair.cancel,create_date:0
+#: field:mrp.repair.fee,create_date:0
+#: field:mrp.repair.line,create_date:0
+#: field:mrp.repair.make_invoice,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
-msgid "Quotation / Order"
-msgstr "Pressupost / Comanda"
+#: field:mrp.repair,location_id:0
+msgid "Current Location"
+msgstr "Ubicació actual"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,address_id:0
+msgid "Delivery Address"
+msgstr "Adreça de lliurament"
+
+#. module: mrp_repair
+#: field:mrp.repair,location_dest_id:0
+msgid "Delivery Location"
+msgstr "Ubicació de lliurament"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,name:0
+#: field:mrp.repair.line,name:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Descripció"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,location_dest_id:0
+msgid "Dest. Location"
+msgstr "Ubicació destí"
+
+#. module: mrp_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Desitgeu crear la/es factura/es?"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Finalitzat"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Esborrany"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Fi reparació"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr "Informació extra"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair,fees_lines:0
+msgid "Fees"
+msgstr "Càrrecs"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Fees Line(s)"
+msgstr "Línia(es) càrrec"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.make_invoice,group:0
+msgid "Group by partner invoice address"
+msgstr "Agrupa per adreça facturació"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Guarantee Limit:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr "Historial"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_summary:0
@@ -238,173 +310,43 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Extra Info"
-msgstr "Informació extra"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Warning!"
-msgstr "Avís!"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "(update)"
+#: field:mrp.repair,id:0
+#: field:mrp.repair.cancel,id:0
+#: field:mrp.repair.fee,id:0
+#: field:mrp.repair.line,id:0
+#: field:mrp.repair.make_invoice,id:0
+msgid "ID"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,partner_id:0
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr "No s'ha definit un compte per l'empresa \"%s\"."
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Confirmed"
-msgstr "Confirmat"
-
-#. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.      "
-"       \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
+#: help:mrp.repair,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Repairs order"
-msgstr "Comanda de reparacions"
+#: field:mrp.repair,internal_notes:0
+msgid "Internal Notes"
+msgstr "Notes internes"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#, python-format
-msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+#: field:mrp.repair.line,move_id:0
+msgid "Inventory Move"
+msgstr "Moviment d'inventari"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Order N° :"
-msgstr "Comanda reparació nº"
+#: field:mrp.repair,invoice_id:0
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: mrp_repair
-#: field:mrp.repair,prodlot_id:0
-#: field:mrp.repair.line,prodlot_id:0
-#: report:repair.order:0
-msgid "Lot Number"
-msgstr "Número de lot"
-
-#. module: mrp_repair
-#: field:mrp.repair,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,fees_lines:0
-msgid "Fees Lines"
-msgstr "Línies de càrrecs"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,type:0
-msgid "Type"
-msgstr "Tipus"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Fees Line(s)"
-msgstr "Línia(es) càrrec"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoice Corrected"
+msgstr "Factura corregida"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-msgid "To be Invoiced"
-msgstr "Per ser facturat"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Shipping address :"
-msgstr "Adreça d'enviament:"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Total :"
-msgstr "Total :"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr ""
-"Aquesta operació cancel·larà el procés de reparació, però no cancel·larà la "
-"factura. Desitgeu continuar?"
-
-#. module: mrp_repair
-#: field:mrp.repair,pricelist_id:0
-msgid "Pricelist"
-msgstr "Tarifa"
-
-#. module: mrp_repair
-#: field:mrp.repair,quotation_notes:0
-msgid "Quotation Notes"
-msgstr "Notes del pressupost"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,state:0
-#: field:mrp.repair.line,state:0
-msgid "Status"
-msgstr "Estat"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Search Reair Orders"
-msgstr "Cerca ordres reparació"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "(Add)"
-msgstr "(Afegeix)"
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: view:mrp.repair:0
-msgid "Repair Line"
-msgstr "Línia reparació"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "N° :"
-msgstr "N° :"
-
-#. module: mrp_repair
-#: field:mrp.repair,invoice_method:0
-msgid "Invoice Method"
-msgstr "Mètode facturació"
-
-#. module: mrp_repair
-#: field:mrp.repair,repaired:0
-#: selection:mrp.repair,state:0
-msgid "Repaired"
-msgstr "Reparat"
+msgid "Invoice Exception"
+msgstr "Excepció de factura"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -413,28 +355,22 @@ msgid "Invoice Line"
 msgstr "Línia de factura"
 
 #. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "Before Repair"
-msgstr "Abans de reparació"
+#: field:mrp.repair,invoice_method:0
+msgid "Invoice Method"
+msgstr "Mètode facturació"
 
 #. module: mrp_repair
-#: field:mrp.repair,location_id:0
-msgid "Current Location"
-msgstr "Ubicació actual"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid "Yes"
-msgstr "Sí"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 #: field:mrp.repair,invoiced:0
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
@@ -442,30 +378,297 @@ msgid "Invoiced"
 msgstr "Facturat"
 
 #. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: mrp_repair
+#: field:mrp.repair,partner_invoice_id:0
+msgid "Invoicing Address"
+msgstr "Adreça de facturació"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,write_uid:0
+#: field:mrp.repair.cancel,write_uid:0
+#: field:mrp.repair.fee,write_uid:0
+#: field:mrp.repair.line,write_uid:0
+#: field:mrp.repair.make_invoice,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,write_date:0
+#: field:mrp.repair.cancel,write_date:0
+#: field:mrp.repair.fee,write_date:0
+#: field:mrp.repair.line,write_date:0
+#: field:mrp.repair.make_invoice,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.line,lot_id:0
+msgid "Lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Lot Number"
+msgstr "Número de lot"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Crea factura"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: mrp_repair
+#: help:mrp.repair,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,move_id:0
+msgid "Move"
+msgstr "Moviment"
+
+#. module: mrp_repair
+#: help:mrp.repair,move_id:0
+msgid "Move created by the repair order"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "No facturar"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:528
+#, python-format
+msgid "No Pricelist!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "No s'ha definit un compte per l'empresa \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "No s'ha definit un compte per al producte \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:389
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No s'ha definit cap producte en honoraris!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:539
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr "Notes"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Operation Line(s)"
+msgstr "Línia(es) operació"
+
+#. module: mrp_repair
+#: field:mrp.repair,operations:0
+msgid "Operation Lines"
+msgstr "Línies d'operacions"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr "Operacions"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,partner_id:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Preu"
+
+#. module: mrp_repair
+#: field:mrp.repair,pricelist_id:0
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: mrp_repair
+#: help:mrp.repair,pricelist_id:0
+msgid "Pricelist of the selected partner."
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Printing Date:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair.fee,product_id:0
+#: field:mrp.repair.line,product_id:0
+msgid "Product"
+msgstr "Producte"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Product Information"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,product_qty:0
+msgid "Product Quantity"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,product_uom:0
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create invoices"
-msgstr "Crea factures"
+#: field:mrp.repair,product_id:0
+msgid "Product to Repair"
+msgstr "Producte a reparar"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "(Remove)"
-msgstr "(Suprimeix)"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Product to Repair:"
+msgstr ""
+
+#. module: mrp_repair
+#: help:mrp.repair,lot_id:0
+msgid "Products repaired are all belonging to this lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Quantity"
+msgstr "Quantitat"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Pressupost"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Pressupost / Comanda"
+
+#. module: mrp_repair
+#: field:mrp.repair,quotation_notes:0
+msgid "Quotation Notes"
+msgstr "Notes del pressupost"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr "Cites"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr "Preparat per reparar"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Preparat per reparació"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Reair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Recreate Invoice"
+msgstr "Recrea factura"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
-msgid "Add"
-msgstr "Afegeix"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Remove"
+msgstr "Elimina"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Esborrany"
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr "Línies honoraris reparació"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr "Línia reparació"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr "Ordre de reparació"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Order N°:"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,repair_id:0
+#: field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
+msgstr "Referència ordre reparació"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repair Orders"
+msgstr "Comandes de reparació"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation N°:"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
@@ -473,25 +676,38 @@ msgid "Repair Reference"
 msgstr "Referència de la reparació"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: view:mrp.repair:0
-msgid "Repair Order"
-msgstr "Ordre de reparació"
+#: code:addons/mrp_repair/mrp_repair.py:302
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr "Ordre de reparació no està facturada."
+
+#. module: mrp_repair
+#: field:mrp.repair,repaired:0
 #: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "En reparació"
+msgid "Repaired"
+msgstr "Reparat"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Ready To Repair"
-msgstr "Preparat per reparar"
+#: field:mrp.repair,lot_id:0
+msgid "Repaired Lot"
+msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Base imposable"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Comanda de reparacions"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Search Reair Orders"
+msgstr "Cerca ordres reparació"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -502,71 +718,43 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,guarantee_limit:0
-msgid "Warranty Expiration"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,pricelist_id:0
-msgid "Pricelist of the selected partner."
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Guarantee Limit"
-msgstr "Límit de garantia"
-
-#. module: mrp_repair
-#: field:mrp.repair,default_address_id:0
-msgid "unknown"
-msgstr "desconegut"
-
-#. module: mrp_repair
-#: field:mrp.repair,product_id:0
-#: report:repair.order:0
-msgid "Product to Repair"
-msgstr "Producte a reparar"
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "After Repair"
-msgstr "Després de la reparació"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#: code:addons/mrp_repair/mrp_repair.py:289
 #, python-format
-msgid "Active ID not Found"
+msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Canvia a esborrany"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Date"
-msgstr "Data"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Shipping address :"
+msgstr "Adreça d'enviament:"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
-msgid "Repair Fees Line"
-msgstr "Línies honoraris reparació"
+#: field:mrp.repair.line,location_id:0
+msgid "Source Location"
+msgstr "Ubicació origen"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "Pressupost"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Inici reparació"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "Confirma reparació"
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,state:0
+#: field:mrp.repair.line,state:0
+msgid "Status"
+msgstr "Estat"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Quotation"
-msgstr "Pressupost de reparació"
+#: field:mrp.repair.fee,price_subtotal:0
+#: field:mrp.repair.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Subtotal"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_summary:0
@@ -574,96 +762,29 @@ msgid "Summary"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "End Repair"
-msgstr "Fi reparació"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
-#, python-format
-msgid "No account defined for product \"%s\"."
-msgstr "No s'ha definit un compte per al producte \"%s\"."
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Quotations"
-msgstr "Cites"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_uom_qty:0
-#: field:mrp.repair.line,product_uom_qty:0
-#: report:repair.order:0
-msgid "Quantity"
-msgstr "Quantitat"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Product Information"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Tax"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
-msgid "Make Invoice"
-msgstr "Crea factura"
+#: field:mrp.repair,amount_tax:0
+#: field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair.line,tax_id:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Impostos"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Start Repair"
-msgstr "Inici reparació"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
-#: report:repair.order:0
-msgid "Unit Price"
-msgstr "Preu unitari"
-
-#. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Done"
-msgstr "Finalitzat"
-
-#. module: mrp_repair
-#: field:mrp.repair,invoice_id:0
-msgid "Invoice"
-msgstr "Factura"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Fees"
-msgstr "Càrrecs"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "Cancel"
-msgstr "Cancel·la"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,location_dest_id:0
-msgid "Dest. Location"
-msgstr "Ubicació destí"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Operation Line(s)"
-msgstr "Línia(es) operació"
-
-#. module: mrp_repair
-#: field:mrp.repair,location_dest_id:0
-msgid "Delivery Location"
-msgstr "Ubicació de lliurament"
-
-#. module: mrp_repair
-#: help:mrp.repair,deliver_bool:0
+#: code:addons/mrp_repair/mrp_repair.py:224
+#, python-format
 msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired and create a picking with selected product. Note that you can "
-"select the locations in the Info tab, if you have the extended view."
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
 msgstr ""
 
 #. module: mrp_repair
@@ -676,433 +797,133 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create Invoice"
-msgstr "Crea factura"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Reair Orders"
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
 msgstr ""
+"Aquesta operació cancel·larà el procés de reparació, però no cancel·larà la "
+"factura. Desitgeu continuar?"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,name:0
-#: field:mrp.repair.line,name:0
-#: report:repair.order:0
-msgid "Description"
-msgstr "Descripció"
+#: field:mrp.repair.fee,to_invoice:0
+#: field:mrp.repair.line,to_invoice:0
+msgid "To Invoice"
+msgstr "A facturar"
 
 #. module: mrp_repair
-#: field:mrp.repair,operations:0
-msgid "Operation Lines"
-msgstr "Línies d'operacions"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_id:0
-#: field:mrp.repair.line,product_id:0
-msgid "Product"
-msgstr "Producte"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoice Corrected"
-msgstr "Factura corregida"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Price"
-msgstr "Preu"
-
-#. module: mrp_repair
-#: field:mrp.repair,deliver_bool:0
-msgid "Deliver"
-msgstr "Enviament"
-
-#. module: mrp_repair
-#: field:mrp.repair,internal_notes:0
-msgid "Internal Notes"
-msgstr "Notes internes"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Taxes:"
-msgstr "Impostos:"
-
-#. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr "Desitgeu crear la/es factura/es?"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,picking_id:0
-msgid "Picking"
-msgstr "Albarà"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Untaxed amount"
-msgstr "Base imposable"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
-msgid "Repair Order Reference"
-msgstr "Referència ordre reparació"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Repair order is not invoiced."
-msgstr "Ordre de reparació no està facturada."
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Total amount"
-msgstr "Import total"
-
-#. module: mrp_repair
-#: selection:mrp.repair.line,type:0
-msgid "Remove"
-msgstr "Elimina"
-
-#. module: mrp_repair
-#: field:mrp.repair,partner_invoice_id:0
-msgid "Invoicing Address"
-msgstr "Adreça de facturació"
-
-#. module: mrp_repair
-#: help:mrp.repair,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoicing"
-msgstr "Facturació"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,location_id:0
-msgid "Source Location"
-msgstr "Ubicació origen"
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: view:mrp.repair:0
-msgid "Cancel Repair"
-msgstr "Cancel·la reparació"
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "No Invoice"
-msgstr "No facturar"
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "Per ser facturat"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
+#: view:website:mrp_repair.report_mrprepairorder
 msgid "Total"
 msgstr "Total"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Ready to Repair"
-msgstr "Preparat per reparació"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Total Without Taxes"
+msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr "Import total"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,type:0
+msgid "Type"
+msgstr "Tipus"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "En reparació"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,price_unit:0
+#: field:mrp.repair.line,price_unit:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Preu unitari"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Base imposable"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr "Base imposable"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "VAT:"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:224
 #, python-format
-msgid "No partner !"
-msgstr "No existeix empresa!"
+msgid "Warning"
+msgstr "Avís"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid "Make invoices"
-#~ msgstr "Realitza factures"
-
-#~ msgid "Fees Line"
-#~ msgstr "Línia de càrrec"
-
-#~ msgid "Repair State"
-#~ msgstr "Estat de reparació"
-
-#~ msgid "Repair Order Ref"
-#~ msgstr "Referència comanda reparació"
-
-#~ msgid "VAT"
-#~ msgstr "CIF/NIF"
-
-#~ msgid "Repairs in quotation"
-#~ msgstr "Reparacions en pressupost"
-
-#~ msgid "Packing"
-#~ msgstr "Paquet/Albarà"
-
-#~ msgid "Repair Fees line"
-#~ msgstr "Línia càrrec de reparació"
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "Quantitat (UdM)"
-
-#~ msgid "Repairs"
-#~ msgstr "Reparacions"
-
-#~ msgid "Repairs in progress"
-#~ msgstr "Reparacions en progrés"
-
-#~ msgid "Gives the state of the Repair Order"
-#~ msgstr "Indica l'estat de la comanda de reparació"
-
-#~ msgid ""
-#~ "The garantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the garantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "El límit de garantia és calculat com: Data de l'últim moviment més el temps "
-#~ "de garantia definit per al producte. Si la data actual és inferior al límit "
-#~ "de garantia, cada operació i els seus càrrecs seran afegits com \"no "
-#~ "facturables\" lo per defecte. Destacar que posteriorment és possible "
-#~ "modificar manualment."
-
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:289
+#: code:addons/mrp_repair/mrp_repair.py:302
+#: code:addons/mrp_repair/mrp_repair.py:389
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
-#~ msgid "You have to select a partner in the repair form !"
-#~ msgstr "¡Heu de seleccionar una empresa en el formulari de reparació!"
+msgid "Warning!"
+msgstr "Avís!"
 
-#~ msgid "No"
-#~ msgstr "No"
+#. module: mrp_repair
+#: field:mrp.repair,guarantee_limit:0
+msgid "Warranty Expiration"
+msgstr ""
 
-#~ msgid "Canceled"
-#~ msgstr "Cancel·lat"
+#. module: mrp_repair
+#: field:mrp.repair,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
 
-#~ msgid ""
-#~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
-#~ "Invoice. Do you want to continue?"
-#~ msgstr ""
-#~ "Aquesta operació cancel larà el procés de reparació, però no la seva "
-#~ "facturació. Voleu continuar?"
+#. module: mrp_repair
+#: help:mrp.repair,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
 
-#~ msgid "The pricelist comes from the selected partner, by default."
-#~ msgstr "Per defecte s'utilitzarà la tarifa del client seleccionat."
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr "Sí"
 
-#~ msgid "New Repair"
-#~ msgstr "Nova reparació"
-
-#~ msgid "Repairs Ready to Start"
-#~ msgstr "Reparacions preparades per començar"
-
-#~ msgid "Compute"
-#~ msgstr "Calcula"
-
-#~ msgid "Repairs Order"
-#~ msgstr "Comanda de reparacions"
-
-#~ msgid "Products Repairs Module"
-#~ msgstr "Mòdul de reparació de productes"
-
-#~ msgid "Repair Operations Lines"
-#~ msgstr "Línies d'operacions de reparació"
-
-#~ msgid "Repairs to be invoiced"
-#~ msgstr "Reparacions per ser facturades"
-
-#~ msgid ""
-#~ "This field allow you to change the workflow of the repair order. If value "
-#~ "selected is different from 'No Invoice', it also allow you to select the "
-#~ "pricelist and invoicing address."
-#~ msgstr ""
-#~ "Aquest camp us permet canviar el flux de la comanda de reparació. Si el "
-#~ "valor seleccionat és diferent de \"No facturar\", també us permetrà "
-#~ "seleccionar la tarifa i l'adreça de facturació."
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "Realment voleu crear les factures?"
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a packing with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Seleccioneu aquesta opció si voleu gestionar el lliurament un cop el "
-#~ "producte estigui reparat. Si la seleccioneu, es crearà un albarà amb el "
-#~ "producte seleccionat. És possible seleccionar la ubicació a la pestanya "
-#~ "\"Info\" si es té activa la vista estesa."
-
-#~ msgid "Repair Ref"
-#~ msgstr "Ref. reparació"
-
-#~ msgid "Product UoM"
-#~ msgstr "UdM del producte"
-
-#~ msgid "Cancel Repair...??"
-#~ msgstr "Cancel·la reparació... ?"
-
-#~ msgid "UoM"
-#~ msgstr "UdM"
-
-#~ msgid ""
-#~ "This field allow you to choose the parner that will be invoiced and delivered"
-#~ msgstr ""
-#~ "Aquest camp permet seleccionar l'empresa a la qual es facturarà i lliurarà "
-#~ "el producte."
-
-#~ msgid "States"
-#~ msgstr "Estats"
-
-#~ msgid "Quality"
-#~ msgstr "Qualitat"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Qty"
-#~ msgstr "Qtat."
-
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "Avís!"
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
 
-#~ msgid ""
-#~ "Repair orders allow you to organize your product repairs. In a repair order, "
-#~ "you can detail the components you remove, add or replace and record the time "
-#~ "you spent on the different operations. The repair order uses the warranty "
-#~ "date on the production lot in order to know if whether the repair should be "
-#~ "invoiced to the customer or not."
-#~ msgstr ""
-#~ "Les ordres de reparació li permeten organitzar les seves reparacions del "
-#~ "producte. En una ordre de reparació, podeu detallar els components que "
-#~ "elimina, afegeix o substitueix i registrar el temps que heu consumit en les "
-#~ "diferents operacions. L'ordre de reparació utilitza la data de garantia del "
-#~ "lot de producció per saber si la reparació ha de ser facturada al client o "
-#~ "no."
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a picking with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Marqueu aquesta opció si desitgeu gestionar el lliurament una vegada que el "
-#~ "producte és reparat. Si està marcada, es crearà un albarà amb el producte "
-#~ "seleccionat. Tingueu en compte que podeu seleccionar les ubicacions en la "
-#~ "pestanya Informació, si teniu la vista estesa."
-
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:530
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Error !"
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+"Please set one before choosing a product."
+msgstr ""
 
-#~ msgid "Products Repairs Module - Manage All products Repairs"
-#~ msgstr ""
-#~ "Mòdul reparació de productes - Gestiona totes les reparacions de productes"
-
-#~ msgid "State"
-#~ msgstr "Estat"
-
-#~ msgid "invoiced"
-#~ msgstr "Facturat"
-
-#~ msgid ""
-#~ "The guarantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the guarantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "El termini de garantia es calcula com: Data de l'últim moviment + Garantia "
-#~ "definida en el producte seleccionat. Si la data actual està per sota del "
-#~ "límit de garantia, cada operació i honorari que s'afegeixin es marcaran com "
-#~ "\"No a facturar\" per defecte. Tingueu en compte que després podeu canviar-"
-#~ "ho manualment."
-
-#~ msgid ""
-#~ "\n"
-#~ "           The aim is to have a complete module to manage all products "
-#~ "repairs. The following topics should be covered by this module:\n"
-#~ "           * Add/remove products in the reparation\n"
-#~ "           * Impact for stocks\n"
-#~ "           * Invoicing (products and/or services)\n"
-#~ "           * Warranty concept\n"
-#~ "           * Repair quotation report\n"
-#~ "           * Notes for the technician and for the final customer\n"
-#~ msgstr ""
-#~ "\n"
-#~ "           L'objectiu és tenir un mòdul complet per gestionar totes les "
-#~ "reparacions de productes. Aquest mòdul cobreix els següents assumptes:\n"
-#~ "           * Afegir/treure productes en la reparació.\n"
-#~ "           * Impacte en l'estoc.\n"
-#~ "           * Facturació (productes i/o serveis).\n"
-#~ "           * Concepte de garantia.\n"
-#~ "           * Informe de pressupost de reparació.\n"
-#~ "           * Notes per al tècnic i el client final.\n"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "repair order.             \n"
-#~ "* The 'Confirmed' state is used when a user confirms the repair order.       "
-#~ "      \n"
-#~ "* The 'Ready to Repair' state is used to start to repairing, user can start "
-#~ "repairing only after repair order is confirmed.             \n"
-#~ "* The 'To be Invoiced' state is used to generate the invoice before or after "
-#~ "repairing done.             \n"
-#~ "* The 'Done' state is set when repairing is completed.            \n"
-#~ "* The 'Cancelled' state is used when user cancel repair order."
-#~ msgstr ""
-#~ " L'estat 'Esborrany' s'utilitza quan un usuari està introduint una nova "
-#~ "ordre de reparació sense confirmar             \n"
-#~ "L'estat 'Confirmat' s'utilitza quan un usuari confirma l'ordre de reparació. "
-#~ "            \n"
-#~ "L'estat 'Llest per reparar' s'utilitza per iniciar la reparació, l'usuari "
-#~ "pot iniciar la reparació sol després de la confirmació de l'ordre de "
-#~ "reparació             \n"
-#~ "L'estat 'A facturar' s'utilitza per generar la factura abans o després de la "
-#~ "realització de la reparació.             \n"
-#~ "L'estat 'Realitzat' s'utilitza quan la reparació ha estat acabada.           "
-#~ "  \n"
-#~ "L'estat 'Cancel·lat' s'utilitza quan un usuari cancel·la l'ordre de "
-#~ "reparació."
-
-#~ msgid ""
-#~ " * The 'Draft' state is set automatically as draft when repair order in "
-#~ "draft state.                         \n"
-#~ "* The 'Confirmed' state is set automatically as confirm when repair order in "
-#~ "confirm state.                         \n"
-#~ "* The 'Done' state is set automatically when repair order is completed.      "
-#~ "                  \n"
-#~ "* The 'Cancelled' state is set automatically when user cancel repair order."
-#~ msgstr ""
-#~ " * L'estat 'Esborrany' s'estableix automàticament quan crea una ordre de "
-#~ "reparació.                         \n"
-#~ "* L'estat 'Confirmat' s'estableix automàticament quan es confirma l'ordre de "
-#~ "reparació.                         \n"
-#~ "* L'estat 'Fet' s'estableix automàticament quan es completa l'ordre de "
-#~ "reparació.                         \n"
-#~ "* L'estat 'Cancel·lat' s'estableix automàticament quan l'usuari cancel·la "
-#~ "l'ordre de reparació."
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Desitgeu crear la/es factura/es?"
-
-#, python-format
-#~ msgid "Active ID is not Found"
-#~ msgstr "ID no es troba actiu"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Avís"
-
-#, python-format
-#~ msgid "Production lot is required for opration line with product '%s'"
-#~ msgstr ""
-#~ "El lot de producció és obligatori per al funcionament en línia amb el "
-#~ "producte '%s'"
+#. module: mrp_repair
+#: field:mrp.repair,default_address_id:0
+msgid "unknown"
+msgstr "desconegut"

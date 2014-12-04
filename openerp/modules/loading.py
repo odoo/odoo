@@ -52,7 +52,7 @@ _test_logger = logging.getLogger('openerp.tests')
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
-       :param status: status dictionary for keeping track of progress
+       :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                               for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
@@ -120,9 +120,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False
 
-    if status is None:
-        status = {}
-
     processed_modules = []
     loaded_modules = []
     registry = openerp.registry(cr.dbname)
@@ -162,9 +159,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            registry.setup_models(cr)
+            registry.setup_models(cr, partial=True)
             init_module_models(cr, package.name, models)
-        status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
         # registered by init_module_models() above.
@@ -186,7 +182,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, kind='data')
             has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
             if has_demo:
-                status['progress'] = (index + 0.75) / len(graph)
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
                 modobj.invalidate_cache(cr, SUPERUSER_ID, ['demo'], [module_id])
@@ -230,7 +225,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry._init_modules.add(package.name)
         cr.commit()
 
-    registry.setup_models(cr)
+    registry.setup_models(cr, partial=True)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
@@ -272,9 +267,6 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     return processed_modules
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
-    # TODO status['progress'] reporting is broken: used twice (and reset each
-    # time to zero) in load_module_graph, not fine-grained enough.
-    # It should be a method exposed by the registry.
     initialize_sys_path()
 
     force = []
@@ -286,6 +278,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             _logger.info("init db")
             openerp.modules.db.initialize(cr)
+            update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
@@ -368,6 +361,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.execute('select model from ir_model where state=%s', ('manual',))
         for model in cr.dictfetchall():
             registry['ir.model'].instanciate(cr, SUPERUSER_ID, model['model'], {})
+        registry.setup_models(cr)
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
@@ -438,6 +432,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
+                openerp.api.Environment.reset()
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
         # STEP 7: verify custom views on every model

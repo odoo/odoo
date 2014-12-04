@@ -1,63 +1,224 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-25 04:53+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "差出人"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "テンプレート"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr ""
 
 #. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "サイドバーの機能を開くためのサイドバーボタン"
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "署名を追加する"
 
 #. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "オプトアウト"
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "宛先(Eメール)"
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "適用"
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "送信メールサーバ"
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "添付"
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "自動削除"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "写しの宛先名"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "写し(CC)"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
 msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
-msgstr "このテンプレートを関連する文書モデルのレコードに対して適用するサイドバーの機能"
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr "カンマで区切られた取引先のID(プレースホルダはここで使用します)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "コンマで区切られた受取人アドレス"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "デフォルト値"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "活動レコードを削除できません。"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Eメールの表示"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Eメールテンプレートの表示"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Eメールテンプレート"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -66,56 +227,29 @@ msgid "Field"
 msgstr "項目"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "送信者アドレス"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
-msgstr "送信メールの優先サーバ。これを設定しないと、最も優先度が高いものが使われます。"
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr "最終表見。これが、コピーされてテンプレートの項目にペーストされます。"
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "報告書ファイル名"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "差出人"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "プレビュー表示"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "グル―化…"
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "返信先"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "テンプレートを使用"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr ""
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
 msgstr ""
 
 #. module: email_template
@@ -127,27 +261,43 @@ msgid ""
 msgstr "これをチェックすると、メッセージのテキストにユーザの署名が添付されます。"
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "SMTP サーバ"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "新しいテンプレートとして保存"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
-msgstr "関係項目を最初の項目として指定すると、この項目は関係の文書モデルを表します。"
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
+"オプトアウトをチェックすると、大量メールとマーケティングキャンペーンのためのメールは受信が拒絶されます。'Available for Mass "
+"Mailing'フィルタは大量メールを実行する際に取引先を選別できます。"
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "Eメールテンプレート"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "言語"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "モデル"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "氏名"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -160,10 +310,23 @@ msgstr ""
 "拡張子を省略すると報告書のタイプが使われます。"
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "サイドバーのアクション"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "オプトアウト"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr "送信メールの優先サーバ。これを設定しないと、最も優先度が高いものが使われます。"
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "印刷して添付する報告書"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -171,16 +334,135 @@ msgstr "サイドバーのアクション"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Eメールを送信するときに選択できる翻訳言語（ISOコード）。これを設定しないと、英語版が使われます。これは通常、言語コードを設定するためのものです。例えば"
-"、${object.partner_id.lang.code} など。"
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "目標項目が空白の場合に使う値"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "送信メールサーバ"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "取引先"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "送信後、このEメールを削除する（そうすればスペースが節約できます）"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "プレースホルダ表現"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "好ましい応答アドレス"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "プレビュー表示"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr ""
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "関連する文書モデル"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "返信先"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "報告書ファイル名"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "メッセージのリッチテキスト / HTML 版"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP サーバ"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "文書のサンプル"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "新しいテンプレートとして保存する。"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "新しいテンプレートとして保存"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -194,112 +476,27 @@ msgstr ""
 "それが関連項目である場合は、関係の目的として項目を選ぶことができます。"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "動的値ビルダ"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Eメールを送信する (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "テンプレートを表示"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "新しいテンプレートとして保存する。"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
+"送信者アドレス(プレースホルダはここで使用します)。設定されない場合、デフォルト値は作成者の電子メールエイリアスまたはメールアドレスになります。"
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "写しの宛先名"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "コンマで区切られた受取人アドレス"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "高度"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr ""
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "テンプレート"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "氏名"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "言語"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Eメールテンプレートの表示"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Eメールの表示"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "プレースホルダ表現"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "サブモデル"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "件名"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "好ましい応答アドレス"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -308,99 +505,24 @@ msgid "Sidebar Button"
 msgstr "サイドバーボタン"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "印刷して添付する報告書"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "サイドバーのアクション"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "目標項目が空白の場合に使う値"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "モデル"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "コンテキストアクションを追加"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "このテンプレートで使用できる文書の種類"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "宛先(取引先)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "自動削除"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
-msgstr "最終表見。これが、コピーされてテンプレートの項目にペーストされます。"
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr "このテンプレートを関連する文書モデルのレコードに対して適用するサイドバーの機能"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "関連する文書モデル"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "住所"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr "カンマで区切られた取引先のID(プレースホルダはここで使用します)"
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "添付"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "活動レコードを削除できません。"
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "写し(CC)"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "適用"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "サイドバーの機能を開くためのサイドバーボタン"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -409,33 +531,89 @@ msgid "Sub-field"
 msgstr "小項目"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Eメールの詳細"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "サブモデル"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Eメールを送信する (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "件名"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "件名"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr ""
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "テンプレートを表示"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "テンプレート"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "このテンプレートで使用できる文書の種類"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
-msgstr "これをチェックすると、この相手には請求書などに関するEメールの通知は自動的に送られません。"
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
+msgstr ""
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "送信後、このEメールを削除する（そうすればスペースが節約できます）"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "宛先(Eメール)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "グル―化…"
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "宛先(取引先)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "テンプレートを使用"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "警告"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -446,27 +624,12 @@ msgid ""
 msgstr "最初の項目として関係項目を選ぶと、送り先の文書モデル（サブモデル）の中から目標項目を指定することができます。"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "警告"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "署名を追加する"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "取引先"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "デフォルト値"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr "関係項目を最初の項目として指定すると、この項目は関係の文書モデルを表します。"
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -477,212 +640,12 @@ msgid ""
 msgstr "このテンプレートにファイルを添付できます。（このテンプレートを使って作られた全てのEメールに添付）"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr "メッセージのリッチテキスト / HTML 版"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "内容"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "件名"
-
-#~ msgid "Message type"
-#~ msgstr "メッセージタイプ"
-
-#~ msgid "Sidebar button"
-#~ msgstr "サイドバーボタン"
-
-#~ msgid "Received"
-#~ msgstr "受信済み"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr "文書について表示されているサイドバーボタンを消す。"
-
-#~ msgid "Email Content"
-#~ msgstr "Eメールの内容"
-
-#~ msgid "Cancelled"
-#~ msgstr "キャンセルされました"
-
-#~ msgid "Attach existing files"
-#~ msgstr "ファイルを添付"
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "ダイナミックに値を生成"
-
-#~ msgid "Related Document ID"
-#~ msgstr "関係する文書ID"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Eメール作成ツール"
-
-#~ msgid "Related partner"
-#~ msgstr "関係する取引先"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "Sent"
-#~ msgstr "送信しました"
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "送信Eメールに特別な追跡マークを付けるのであれば、これを有効にして下さい。そうすると、これに対する返信があると、　そに関連する原レコードに連係付けられます"
-#~ "。\r\n"
-#~ "顧客のリードを把握する場合などに役に立ちます。"
-
-#~ msgid "To"
-#~ msgstr "宛先"
-
-#~ msgid "Use Template"
-#~ msgstr "テンプレートを使う"
-
-#~ msgid "Related Document model"
-#~ msgstr "関連する文書モデル"
-
-#~ msgid "Language Selection"
-#~ msgstr "言語選択"
-
-#~ msgid "Null value"
-#~ msgstr "値ゼロ"
-
-#~ msgid "Preview Template"
-#~ msgstr "テンプレートを表示する"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "注意：これは HTML 形式です。"
-
-#~ msgid "Files to attach"
-#~ msgstr "添付するファイル"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "ネットワークで送信された場合のメッセージの原型"
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "このメッセージのテキスト"
-
-#~ msgid "Related document model"
-#~ msgstr "関連する文書モデル"
-
-#~ msgid "Options"
-#~ msgstr "オプション"
-
-#~ msgid "Message-Id"
-#~ msgstr "メッセージID"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(コピー)"
-
-#~ msgid "Use a message template"
-#~ msgstr "メッセージテンプレートを使う"
-
-#~ msgid "Date"
-#~ msgstr "日付"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "本文 (リッチテキスト / HTML)"
-
-#~ msgid "Outgoing"
-#~ msgstr "送信"
-
-#~ msgid "Expression"
-#~ msgstr "表現"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "サイドバーボタンを追加する"
-
-#~ msgid "Body (Text)"
-#~ msgstr "本文（テキスト）"
-
-#~ msgid "Advanced Options"
-#~ msgstr "高度なオプション"
-
-#~ msgid "Original"
-#~ msgstr "原文"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "リッチテキストの内容"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr "メッセージの見出し。例えばSMTPセッションの見出し（通常、受信メッセージのみ）。"
-
-#~ msgid "Close"
-#~ msgstr "閉じる"
-
-#~ msgid "References"
-#~ msgstr "参照"
-
-#~ msgid "Text contents"
-#~ msgstr "テキストの内容"
-
-#~ msgid "Display Text"
-#~ msgstr "テキストを表示する"
-
-#~ msgid "Related user"
-#~ msgstr "関連するユーザ"
-
-#~ msgid "Opt-out"
-#~ msgstr "オプトアウト"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "BCCの宛先"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "リソースの記録"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "メッセージID：このテンプレートで送信するメッセージに使うSMTPの見出し。これはリソース追跡オプションを上書きしますのでご注意。この送信メールに対する回"
-#~ "答を追跡するのであれば、このオプションを有効にして下さい。"
-
-#~ msgid "Bcc"
-#~ msgstr "BCC"
-
-#~ msgid "Message headers"
-#~ msgstr "メッセージの見出し"
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "サイドバーボタンを消去する"
-
-#~ msgid "Attach Report"
-#~ msgstr "報告書を添付する"
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr "このテンプレートを使って作文する関連文書のサイドバーのボタンを表示する。"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "メッセージの参照。前のメッセージの識別番号など"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "エラー：重複した会員を作ることはできません。"
-
-#~ msgid "Delivery Failed"
-#~ msgstr "配信に失敗しました。"
-
-#~ msgid "Addresses"
-#~ msgstr "アドレス"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr "メッセージのタイプ。通常はテキストあるいはリッチテキストを指定するための 「テキスト」あるいは「HTML」"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""

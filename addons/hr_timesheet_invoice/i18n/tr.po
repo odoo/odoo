@@ -1,92 +1,107 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr_timesheet_invoice
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-09-09 07:21+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:01+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-#: view:report_timesheet.user:0
-msgid "Timesheet by user"
-msgstr "Kullanıcıya göre ZamanÇizegesi"
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
+msgid "50%"
+msgstr "50%"
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,name:0
-msgid "Internal Name"
-msgstr "Dahili Adı"
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
+msgid "80%"
+msgstr "80%"
 
 #. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Type of invoicing"
-msgstr "Faturanın türü"
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,pricelist_id:0
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
 msgid ""
-"The product to invoice is defined on the employee form, the price will be "
-"deducted by this pricelist on the product."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new type of invoicing.\n"
+"              </p><p>\n"
+"                Odoo allows you to create default invoicing types. You "
+"might\n"
+"                have to regularly assign discounts because of a specific\n"
+"                contract or agreement with a customer. From this menu, you "
+"can\n"
+"                create additional types of invoicing to speed up your\n"
+"                invoicing.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Faturaya ürün personel formunda tanımlanan, fiyat olacaktır Ürünün bu fiyat "
-"listesine göre mahsup edlir."
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Account"
+msgstr "Hesap"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,amount:0
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
+#: field:report.timesheet.line,account_id:0
+#: field:report_timesheet.account,account_id:0
+#: field:report_timesheet.account.date,account_id:0
+msgid "Analytic Account"
+msgstr "Analitik Hesabı"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
-msgid "No record(s) found for this report."
-msgstr "Bu rapor için Kayıt (lar) bulunamadı."
+msgid "Analytic Account Incomplete!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Veri Yetersiz!"
+#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analitik Satırlar"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Group By..."
-msgstr "Grupla İle"
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
+msgid "Analytic Lines"
+msgstr "Analitik Satırları"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Force to use a specific product"
-msgstr "Belirli bir ürünü kullanmaya için zorla"
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_form
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_graph
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_tree
+msgid "Analytic Lines to Invoice"
+msgstr "Fatura Analitik Satırlar"
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Income"
-msgstr "Gelir"
+#: field:report.account.analytic.line.to.invoice,account_id:0
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Analitik Hesabı"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,name:0
-msgid "Log of Activity"
-msgstr "Oturum Açma Faaliyeti"
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Analitik hesabı kapatmak için"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Re-open project"
-msgstr "Projeyi Yeniden Aç"
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,product_uom_id:0
-msgid "Unit of Measure"
-msgstr "Ölçü Birimi"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr "Günlük ZamanÇizelgesi"
+#: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
+msgid "Analytic lines to invoice report"
+msgstr "Fatura Raporu Analitik Satırları"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -94,24 +109,193 @@ msgstr "Günlük ZamanÇizelgesi"
 #: selection:report_timesheet.account,month:0
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
-msgid "March"
-msgstr "Mart"
+msgid "April"
+msgstr "Nisan"
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Profit"
-msgstr "Kar"
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "August"
+msgstr "Ağustos"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
+#: field:report.analytic.account.close,balance:0
+msgid "Balance"
+msgstr "Bakiye"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Billing Data"
+msgstr "Fatura Verileri"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Cancel"
+msgstr "iptal"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Cancel Contract"
+msgstr "Sözleşme İptal"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Close Contract"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
-msgid "You cannot modify an invoiced analytic line!"
-msgstr "Bir fatura analitik satırı değiştiremezsiniz!"
+msgid "Configuration Error!"
+msgstr "Yapılandırma Hatası"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
-msgid "Invoice Rate"
-msgstr "Fatura Oranı"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
+#, python-format
+msgid ""
+"Contract incomplete. Please fill in the Customer and Pricelist fields."
+msgstr "Eksik Sözleşme.Müşteri ve Fiyat Listesi alanları doldurun."
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,price:0
+#: field:hr.timesheet.invoice.create.final,price:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+#: field:report.timesheet.line,cost:0
+#: field:report_timesheet.user,cost:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Cost"
+msgstr "Maliyet"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Maliyetleri Faturala"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
+msgid "Create Invoice"
+msgstr "Fatura Oluştur"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Create Invoices"
+msgstr "Faturaları Oluştur"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
+msgid "Create invoice from timesheet"
+msgstr "ZamanÇizelgesinde fatura oluştur"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
+msgid "Create invoice from timesheet final"
+msgstr "ZamanÇizelgesi son faturayı oluşturma"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,create_uid:0
+#: field:hr.timesheet.invoice.create,create_uid:0
+#: field:hr.timesheet.invoice.create.final,create_uid:0
+#: field:hr_timesheet_invoice.factor,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,create_date:0
+#: field:hr.timesheet.invoice.create,create_date:0
+#: field:hr.timesheet.invoice.create.final,create_date:0
+#: field:hr_timesheet_invoice.factor,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Currency:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
+msgid "Daily Timesheet by Account"
+msgstr "Hesap Günlük ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_form
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
+msgid "Daily timesheet by account"
+msgstr "Hesap günlük zamançizelgesi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph_account
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_tree
+msgid "Daily timesheet per account"
+msgstr "Hesap başına günlük zaman çizelgesi"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,date:0
+#: field:hr.timesheet.invoice.create.final,date:0
+#: field:report.timesheet.line,date:0
+msgid "Date"
+msgstr "Tarih"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,day:0
+msgid "Day"
+msgstr "Gün"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "ZamanSınırı"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "December"
+msgstr "Aralık"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,name:0
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,factor:0
+msgid "Discount (%)"
+msgstr "İndirim (%)"
+
+#. module: hr_timesheet_invoice
+#: help:hr_timesheet_invoice.factor,factor:0
+msgid "Discount in percentage"
+msgstr "İndirim yüzdesi"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Yeniden fatura kalemin maliyeti görüntüleme"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,date:0
+msgid "Display date in the history of works"
+msgstr "Personel geçmişleri tarih bazında görüntüleme"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,name:0
+msgid "Display detail of work in the invoice line."
+msgstr "Fatura satırında çalışma ayrıntılı görüntüle."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,time:0
@@ -119,10 +303,52 @@ msgid "Display time in the history of works"
 msgstr "Çalışmaların tarihinin zamanı gösterir"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,day:0
-msgid "Day"
-msgstr "Gün"
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Do you want to show details of each activity to your customer?"
+msgstr "Müşteri her bir faaliyetin ayrıntıları göstermek istiyor musunuz?"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Do you want to show details of work in invoice?"
+msgstr "Faturada iş ayrıntıları göstermek istiyor musunuz?"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+msgid "Duration"
+msgstr "Süre"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Eff."
+msgstr "Eff."
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
+#, python-format
+msgid "Error!"
+msgstr "Hata!"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_form
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_tree
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_graph
+msgid "Expired analytic accounts"
+msgstr "Süresi Dolmuş analitik hesaplar"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Extended Filters..."
+msgstr "Genişletilmiş Filtreler ..."
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "February"
+msgstr "Şubat"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -134,43 +360,116 @@ msgstr ""
 "doldurun.Maliyet gelen gerçek ürünü kullanmak için boş tutun."
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new type of invoicing.\n"
-"              </p><p>\n"
-"                OpenERP allows you to create default invoicing types. You "
-"might\n"
-"                have to regularly assign discounts because of a specific\n"
-"                contract or agreement with a customer. From this menu, you "
-"can\n"
-"                create additional types of invoicing to speed up your\n"
-"                invoicing.\n"
-"              </p>\n"
-"            "
+#: field:hr.timesheet.invoice.create,product:0
+msgid "Force Product"
+msgstr "Ürüne Zorla"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Force to use a special product"
+msgstr "Özel bir ürünü kullanma için zorlama"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Force to use a specific product"
+msgstr "Belirli bir ürünü kullanmaya için zorla"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Free of charge"
+msgstr "Ücretsiz"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_from:0
+msgid "From"
+msgstr "Dan"
+
+#. module: hr_timesheet_invoice
+#: field:report.timesheet.line,general_account_id:0
+msgid "General Account"
+msgstr "Genel Hesap"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Group By"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Yeni bir fatura eklemek için tıklayaın.\n"
-"              </p><p>\n"
-"                OpenERP varsayılan fatura türleri oluşturman için izin "
-"verir. \n"
-"                have to regularly assign discounts because of a specific\n"
-"                contract or agreement with a customer. From this menu, you "
-"can\n"
-"                create additional types of invoicing to speed up your\n"
-"                invoicing.\n"
-"              </p>\n"
-"            "
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Account"
-msgstr "Hesap"
+#: field:hr.timesheet.analytic.profit,id:0
+#: field:hr.timesheet.invoice.create,id:0
+#: field:hr.timesheet.invoice.create.final,id:0
+#: field:hr_timesheet_invoice.factor,id:0
+#: field:report.account.analytic.line.to.invoice,id:0
+#: field:report.analytic.account.close,id:0
+#: field:report.hr_timesheet_invoice.report_analyticprofit,id:0
+#: field:report.timesheet.line,id:0
+#: field:report_timesheet.account,id:0
+#: field:report_timesheet.account.date,id:0
+#: field:report_timesheet.invoice,id:0
+#: field:report_timesheet.user,id:0
+msgid "ID"
+msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,time:0
-msgid "Time spent"
-msgstr "Harcanan Süre"
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Income"
+msgstr "Gelir"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Veri Yetersiz!"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,name:0
+msgid "Internal Name"
+msgstr "Dahili Adı"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.line,invoice_id:0
+#: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
+msgid "Invoice Rate"
+msgstr "Fatura Oranı"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Invoice contract"
+msgstr "Fatura sözleşme"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
+#, python-format
+msgid "Invoice is already linked to some of the analytic line(s)!"
+msgstr "Fatura zaten analitik satırı(lar) 'ın bazı ile bağlantılıdır!"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Invoice on Timesheets Options"
+msgstr "ZamanÇizelgeleri Seçeneklerinde Fatura"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Invoice rate by user"
+msgstr "Kullanıcı tarafından Fatura oranı"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.line,to_invoice:0
+msgid "Invoiceable"
+msgstr "Faturalanabilir"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
+#: field:report.timesheet.line,invoice_id:0
+msgid "Invoiced"
+msgstr "Faturalandı"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
@@ -178,30 +477,191 @@ msgid "Invoiced Amount"
 msgstr "Fatura Tutarı"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:58
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
-msgid "Analytic Account incomplete !"
-msgstr "Analitik Hesap eksik!"
+msgid "Invoices"
+msgstr "Faturalar"
 
 #. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,account_id:0
-msgid "Project"
-msgstr "Proje"
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.hr_timesheet_line_form
+msgid "Invoicing"
+msgstr "Faturalama"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr "ZamanÇizelgeleri Seçeneklerinde Fatura"
+#: help:account.analytic.line,to_invoice:0
+msgid ""
+"It allows to set the discount while making invoice, keep empty if the "
+"activities should not be invoiced."
+msgstr ""
+"Bu fatura yaparken, indirimli belirlenen faaliyetler fatura edilmemelidir "
+"boşsa saklamanızı sağlar."
 
 #. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,amount:0
-msgid "Amount"
-msgstr "Tutar"
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "January"
+msgstr "Ocak"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,name:0
-msgid "The detail of each work done will be displayed on the invoice"
-msgstr "Yapılan her işin ayrıntılı fatura üzerinde gösterilecektir"
+#: field:hr.timesheet.analytic.profit,journal_ids:0
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
+msgid "Journal Items"
+msgstr "Yevmiye Kalemleri"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "July"
+msgstr "Temmuz"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "June"
+msgstr "Haziran"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_max:0
+msgid "Keep empty if this contract is not limited to a total fixed price."
+msgstr "Bu sözleşmenin toplam sabit fiyat ile sınırlı değilse boş tutun."
+
+#. module: hr_timesheet_invoice
+#: help:hr_timesheet_invoice.factor,customer_name:0
+msgid "Label for the customer"
+msgstr "Müşteri için Etiket"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,write_uid:0
+#: field:hr.timesheet.invoice.create,write_uid:0
+#: field:hr.timesheet.invoice.create.final,write_uid:0
+#: field:hr_timesheet_invoice.factor,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,write_date:0
+#: field:hr.timesheet.invoice.create,write_date:0
+#: field:hr.timesheet.invoice.create.final,write_date:0
+#: field:hr_timesheet_invoice.factor,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,name:0
+msgid "Log of Activity"
+msgstr "Oturum Açma Faaliyeti"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,manager_id:0
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "March"
+msgstr "Mart"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,amount_max:0
+msgid "Max. Invoice Price"
+msgstr "Maks. Fatura Fiyat"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Max. Miktar"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "May"
+msgstr "Mayıs"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,month:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,month:0
+#: field:report_timesheet.account,month:0
+#: field:report_timesheet.account.date,month:0
+#: field:report_timesheet.user,month:0
+msgid "Month"
+msgstr "Ay"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Name"
+msgstr "Adı"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
+#, python-format
+msgid "No record(s) found for this report."
+msgstr "Bu rapor için Kayıt (lar) bulunamadı."
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Non Assigned timesheets to users"
+msgstr "ZamanÇizelgelerine Kullanıcı atanmamış"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "November"
+msgstr "Kasım"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "October"
+msgstr "Ekim"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Period from startdate:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Period to enddate:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
+#, python-format
+msgid "Please define income account for product '%s'."
+msgstr "Ürün için gelir hesabı belirtiniz '%s'."
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -209,19 +669,328 @@ msgid "Pricelist"
 msgstr "FiyatListesi"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
-msgid "Create invoice from timesheet"
-msgstr "ZamanÇizelgesinde fatura oluştur"
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+msgid "Print"
+msgstr "Yazdır"
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Period to enddate"
-msgstr "Dönem tarih bitişi"
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "Yazdır ZamanÇizelgesi Kar"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
-msgid "Analytic account to close"
-msgstr "Analitik hesabı kapatmak için"
+#: field:hr.timesheet.invoice.create.final,product:0
+#: field:report.account.analytic.line.to.invoice,product_id:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,product_id:0
+msgid "Product"
+msgstr "Ürünler"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Profit"
+msgstr "Kar"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr "Proje"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr "Satış fiyatı"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "September"
+msgstr "Eylül"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Set In Progress"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "Status"
+msgstr "Durumu"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,price:0
+msgid ""
+"The cost of each work done will be displayed on the invoice. You probably "
+"don't want to check this"
+msgstr ""
+"Yapılan her işin maliyeti fatura üzerinde gösterilecektir. Muhtemelen bu "
+"kontrol etmek istemiyorsunuz"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,name:0
+msgid "The detail of each work done will be displayed on the invoice"
+msgstr "Yapılan her işin ayrıntılı fatura üzerinde gösterilecektir"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,product:0
+msgid "The product that will be used to invoice the remaining amount"
+msgstr "Fatura kalan tutarı için kullanılacak bir ürün"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,pricelist_id:0
+msgid ""
+"The product to invoice is defined on the employee form, the price will be "
+"deducted by this pricelist on the product."
+msgstr ""
+"Faturaya ürün personel formunda tanımlanan, fiyat olacaktır Ürünün bu fiyat "
+"listesine göre mahsup edlir."
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,date:0
+msgid "The real date of each work will be displayed on the invoice"
+msgstr "Her işin gerçek tarihi faturada gösterilir"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,time:0
+msgid "The time of each work done will be displayed on the invoice"
+msgstr "Yapılan her işin zamanı fatura üzerinde gösterilecektir"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Theorical"
+msgstr "Teorik"
+
+#. module: hr_timesheet_invoice
+#: field:report.timesheet.line,quantity:0
+#: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
+#: field:report_timesheet.invoice,quantity:0
+#: field:report_timesheet.user,quantity:0
+msgid "Time"
+msgstr "Zaman"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,time:0
+msgid "Time Spent"
+msgstr "Harcanan Zaman"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,time:0
+msgid "Time spent"
+msgstr "Harcanan Süre"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,to_invoice:0
+msgid "Timesheet Invoicing Ratio"
+msgstr "ZamanÇizelgesi Faturalama Oranı"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_graph
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+msgid "Timesheet Line"
+msgstr "ZamanÇizelge Satırı"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
+#: model:ir.actions.report.xml,name:hr_timesheet_invoice.action_report_analytic_profit
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
+msgid "Timesheet Profit"
+msgstr "ZamanÇizelge Karı"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
+msgid "Timesheet by Account"
+msgstr "Hesabı tarafından ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
+msgid "Timesheet by Invoice"
+msgstr "ZamanÇizelgesi Faturaya Göre"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
+msgid "Timesheet by User"
+msgstr "Kullanıcı ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_form
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_search
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
+msgid "Timesheet by account"
+msgstr "Hesap tarafında ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_form
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_graph
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_search
+msgid "Timesheet by invoice"
+msgstr "Faturalara göre ZamanÇizelgeleri"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_form
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_graph
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_tree
+msgid "Timesheet by user"
+msgstr "Kullanıcıya göre ZamanÇizegesi"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
+msgid "Timesheet by users"
+msgstr "ZamanÇizelgesi Kullanıcılara Göre"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_graph
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_tree
+msgid "Timesheet per account"
+msgstr "Hesap başına ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Günlük ZamanÇizelgesi"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr "Hesap başına zamançizelgeleri"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "Günlük zamançizelgeleri"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_tree
+msgid "Timesheets to invoice"
+msgstr "ZamanÇizelgeleri faturala"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "Bitiş"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "To Invoice"
+msgstr "Faturalama"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "To Renew"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "Fatura Adresi"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_invoiced:0
+msgid "Total invoiced"
+msgstr "Fatura Toplamı"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Totals:"
+msgstr "Toplamlar:"
+
+#. module: hr_timesheet_invoice
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_form
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_search
+msgid "Type of invoicing"
+msgstr "Faturanın türü"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+#: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
+msgid "Types of Invoicing"
+msgstr "Faturalama Türleri"
+
+#. module: hr_timesheet_invoice
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_tree
+msgid "Types of invoicing"
+msgstr "Faturalama Türleri"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "Unit of Measure"
+msgstr "Ölçü Birimi"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,unit_amount:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Units"
+msgstr "Birimler"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "User or Journal Name"
+msgstr "Kullanıcı veya Yevmiye Adı"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid ""
+"When reinvoicing costs, the amount on the invoice lines is given by the sale "
+"price of the corresponding product (if any, and if its sale price is not 0). "
+"You can use the following field to enforce the use of a single product for "
+"all the chosen lines in the future invoices."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,name:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,name:0
+#: field:report_timesheet.account,name:0
+#: field:report_timesheet.account.date,name:0
+#: field:report_timesheet.user,name:0
+msgid "Year"
+msgstr "Yıl"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor1
+msgid "Yes (100%)"
+msgstr "Evet (100%)"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
+#, python-format
+msgid "You cannot modify an invoiced analytic line!"
+msgstr "Bir fatura analitik satırı değiştiremezsiniz!"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -236,811 +1005,3 @@ msgstr ""
 "kullanmalısınız. Örnek olarak, eğer %20 oranında bir ön fatura yapıyorsanız "
 "(sabit fiyat, satış siparişlerine göre), geri kalanını zaman çizelgesine "
 "göre %80 oranında faturalamalısınız."
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Create Invoices"
-msgstr "Faturaları Oluştur"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet per account"
-msgstr "Hesap başına günlük zaman çizelgesi"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
-#: field:report.timesheet.line,account_id:0
-#: field:report_timesheet.account,account_id:0
-#: field:report_timesheet.account.date,account_id:0
-msgid "Analytic Account"
-msgstr "Analitik Hesabı"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,date_deadline:0
-msgid "Deadline"
-msgstr "ZamanSınırı"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
-#, python-format
-msgid "Configuration Error!"
-msgstr "Yapılandırma Hatası"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,partner_id:0
-msgid "Partner"
-msgstr "İş Ortağı"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,time:0
-msgid "The time of each work done will be displayed on the invoice"
-msgstr "Yapılan her işin zamanı fatura üzerinde gösterilecektir"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Cancel Contract"
-msgstr "Sözleşme İptal"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_from:0
-msgid "From"
-msgstr "Dan"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "User or Journal Name"
-msgstr "Kullanıcı veya Yevmiye Adı"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
-msgid "Costs to invoice"
-msgstr "Maliyetleri Faturala"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
-#, python-format
-msgid "Please define income account for product '%s'."
-msgstr "Ürün için gelir hesabı belirtiniz '%s'."
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,account_id:0
-#: field:report.analytic.account.close,name:0
-msgid "Analytic account"
-msgstr "Analitik Hesabı"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Yazdır"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,date:0
-msgid "Display date in the history of works"
-msgstr "Personel geçmişleri tarih bazında görüntüleme"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,price:0
-msgid ""
-"The cost of each work done will be displayed on the invoice. You probably "
-"don't want to check this"
-msgstr ""
-"Yapılan her işin maliyeti fatura üzerinde gösterilecektir. Muhtemelen bu "
-"kontrol etmek istemiyorsunuz"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Force to use a special product"
-msgstr "Özel bir ürünü kullanma için zorlama"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
-msgid "Timesheet by User"
-msgstr "Kullanıcı ZamanÇizelgesi"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-#: view:hr.analytic.timesheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
-msgid "To Invoice"
-msgstr "Faturalama"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
-#: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
-msgid "Timesheet Profit"
-msgstr "ZamanÇizelge Karı"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,product:0
-msgid "Force Product"
-msgstr "Ürüne Zorla"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Contract Finished"
-msgstr "Sözleşme Sonlandı"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "July"
-msgstr "Temmuz"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,to_invoice:0
-msgid "Invoiceable"
-msgstr "Faturalanabilir"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
-#, python-format
-msgid "Warning!"
-msgstr "Uyarı!"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
-#: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
-msgid "Types of Invoicing"
-msgstr "Faturalama Türleri"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Theorical"
-msgstr "Teorik"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
-msgid "Free of charge"
-msgstr "Ücretsiz"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
-msgid "Analytic lines to invoice report"
-msgstr "Fatura Raporu Analitik Satırları"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
-msgid "Timesheet by Invoice"
-msgstr "ZamanÇizelgesi Faturaya Göre"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
-#: view:report.analytic.account.close:0
-msgid "Expired analytic accounts"
-msgstr "Süresi Dolmuş analitik hesaplar"
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,factor:0
-msgid "Discount (%)"
-msgstr "İndirim (%)"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor1
-msgid "Yes (100%)"
-msgstr "Evet (100%)"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.user:0
-msgid "Timesheet by users"
-msgstr "ZamanÇizelgesi Kullanıcılara Göre"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:58
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
-#, python-format
-msgid "Invoices"
-msgstr "Faturalar"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "December"
-msgstr "Aralık"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Invoice contract"
-msgstr "Fatura sözleşme"
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,month:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,month:0
-#: field:report_timesheet.account,month:0
-#: field:report_timesheet.account.date,month:0
-#: field:report_timesheet.user,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Currency"
-msgstr "ParaBirimi"
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Non Assigned timesheets to users"
-msgstr "ZamanÇizelgelerine Kullanıcı atanmamış"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-#: view:hr.analytic.timesheet:0
-#: field:report.timesheet.line,invoice_id:0
-msgid "Invoiced"
-msgstr "Faturalandı"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity_max:0
-msgid "Max. Quantity"
-msgstr "Max. Miktar"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Invoice rate by user"
-msgstr "Kullanıcı tarafından Fatura oranı"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-#: view:report_timesheet.account.date:0
-msgid "Timesheet by account"
-msgstr "Hesap tarafında ZamanÇizelgesi"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr "Bekleyen"
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,amount_invoiced:0
-msgid "Total invoiced"
-msgstr "Fatura Toplamı"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,state:0
-msgid "Status"
-msgstr "Durumu"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analitik Satırlar"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
-msgid "50%"
-msgstr "50%"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,name:0
-msgid "Display detail of work in the invoice line."
-msgstr "Fatura satırında çalışma ayrıntılı görüntüle."
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
-#: view:report_timesheet.account:0
-msgid "Timesheet per account"
-msgstr "Hesap başına ZamanÇizelgesi"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
-msgid "Timesheet by Account"
-msgstr "Hesabı tarafından ZamanÇizelgesi"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
-msgid "Journal Items"
-msgstr "Yevmiye Kalemleri"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "November"
-msgstr "Kasım"
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Extended Filters..."
-msgstr "Genişletilmiş Filtreler ..."
-
-#. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr "Fatura Adresi"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Eff."
-msgstr "Eff."
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Kullanıcı"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "October"
-msgstr "Ekim"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "January"
-msgstr "Ocak"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,date:0
-#: field:hr.timesheet.invoice.create.final,date:0
-#: field:report.timesheet.line,date:0
-msgid "Date"
-msgstr "Tarih"
-
-#. module: hr_timesheet_invoice
-#: field:report.timesheet.line,quantity:0
-#: field:report_timesheet.account,quantity:0
-#: field:report_timesheet.account.date,quantity:0
-#: field:report_timesheet.invoice,quantity:0
-#: field:report_timesheet.user,quantity:0
-msgid "Time"
-msgstr "Zaman"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
-msgid "Create invoice from timesheet final"
-msgstr "ZamanÇizelgesi son faturayı oluşturma"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,balance:0
-msgid "Balance"
-msgstr "Bakiye"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity:0
-#: view:report.timesheet.line:0
-msgid "Quantity"
-msgstr "Miktar"
-
-#. module: hr_timesheet_invoice
-#: field:report.timesheet.line,general_account_id:0
-msgid "General Account"
-msgstr "Genel Hesap"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "Yazdır ZamanÇizelgesi Kar"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Totals:"
-msgstr "Toplamlar:"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "Fatura Analitik Satırlar"
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.line,to_invoice:0
-msgid ""
-"It allows to set the discount while making invoice, keep empty if the "
-"activities should not be invoiced."
-msgstr ""
-"Bu fatura yaparken, indirimli belirlenen faaliyetler fatura edilmemelidir "
-"boşsa saklamanızı sağlar."
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_max:0
-msgid "Max. Invoice Price"
-msgstr "Maks. Fatura Fiyat"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,to_invoice:0
-msgid "Timesheet Invoicing Ratio"
-msgstr "ZamanÇizelgesi Faturalama Oranı"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "September"
-msgstr "Eylül"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,invoice_id:0
-#: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
-#: view:report.timesheet.line:0
-msgid "Invoice"
-msgstr "Fatura"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Cancel"
-msgstr "iptal"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
-#: view:report.timesheet.line:0
-msgid "Timesheet Line"
-msgstr "ZamanÇizelge Satırı"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Billing Data"
-msgstr "Fatura Verileri"
-
-#. module: hr_timesheet_invoice
-#: help:hr_timesheet_invoice.factor,customer_name:0
-msgid "Label for the customer"
-msgstr "Müşteri için Etiket"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "Bitiş"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Do you want to show details of work in invoice?"
-msgstr "Faturada iş ayrıntıları göstermek istiyor musunuz?"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
-msgid "Create Invoice"
-msgstr "Fatura Oluştur"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
-msgid "Timesheets per account"
-msgstr "Hesap başına zamançizelgeleri"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,date:0
-msgid "The real date of each work will be displayed on the invoice"
-msgstr "Her işin gerçek tarihi faturada gösterilir"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr "Yeniden fatura kalemin maliyeti görüntüleme"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheets to invoice"
-msgstr "ZamanÇizelgeleri faturala"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:186
-#, python-format
-msgid ""
-"Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr "Eksik Sözleşme.Müşteri ve Fiyat Listesi alanları doldurun."
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
-msgid "Daily Timesheet by Account"
-msgstr "Hesap Günlük ZamanÇizelgesi"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,product:0
-#: field:report.account.analytic.line.to.invoice,product_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,product_id:0
-msgid "Product"
-msgstr "Ürünler"
-
-#. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Types of invoicing"
-msgstr "Faturalama Türleri"
-
-#. module: hr_timesheet_invoice
-#: view:hr.analytic.timesheet:0
-msgid "Invoicing"
-msgstr "Faturalama"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "May"
-msgstr "Mayıs"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,journal_ids:0
-msgid "Journal"
-msgstr "Yevmiye"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,product:0
-msgid "The product that will be used to invoice the remaining amount"
-msgstr "Fatura kalan tutarı için kullanılacak bir ürün"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,time:0
-msgid "Time Spent"
-msgstr "Harcanan Zaman"
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,amount_max:0
-msgid "Keep empty if this contract is not limited to a total fixed price."
-msgstr "Bu sözleşmenin toplam sabit fiyat ile sınırlı değilse boş tutun."
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Do you want to show details of each activity to your customer?"
-msgstr "Müşteri her bir faaliyetin ayrıntıları göstermek istiyor musunuz?"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheet by invoice"
-msgstr "Faturalara göre ZamanÇizelgeleri"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Period from startdate"
-msgstr "Dönem başlama tarihin'den itibaren"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "February"
-msgstr "Şubat"
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Name"
-msgstr "Adı"
-
-#. module: hr_timesheet_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines"
-msgstr "Analitik Satırları"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet by account"
-msgstr "Hesap günlük zamançizelgesi"
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,sale_price:0
-msgid "Sale price"
-msgstr "Satış fiyatı"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
-msgstr "Günlük zamançizelgeleri"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "April"
-msgstr "Nisan"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
-#, python-format
-msgid ""
-"There is no product defined. Please select one or force the product through "
-"the wizard."
-msgstr ""
-"Tanımlanan herhangi bir ürün bulunmamaktadır. Lütfen Birini seçin veya "
-"sihirbazı aracılığıylaürün seçmeye zorlama."
-
-#. module: hr_timesheet_invoice
-#: help:hr_timesheet_invoice.factor,factor:0
-msgid "Discount in percentage"
-msgstr "İndirim yüzdesi"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
-#, python-format
-msgid "Invoice is already linked to some of the analytic line(s)!"
-msgstr "Fatura zaten analitik satırı(lar) 'ın bazı ile bağlantılıdır!"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,name:0
-msgid "Description"
-msgstr "Açıklama"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-#: field:report.account.analytic.line.to.invoice,unit_amount:0
-msgid "Units"
-msgstr "Birimler"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
-#, python-format
-msgid "Error!"
-msgstr "Hata!"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
-msgid "80%"
-msgstr "80%"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-msgid "or"
-msgstr "veya"
-
-#. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,manager_id:0
-msgid "Manager"
-msgstr "Yönetici"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-#: field:hr.timesheet.invoice.create,price:0
-#: field:hr.timesheet.invoice.create.final,price:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,cost:0
-#: field:report_timesheet.user,cost:0
-msgid "Cost"
-msgstr "Maliyet"
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,name:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,name:0
-#: field:report_timesheet.account,name:0
-#: field:report_timesheet.account.date,name:0
-#: field:report_timesheet.user,name:0
-msgid "Year"
-msgstr "Yıl"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Duration"
-msgstr "Süre"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "Start of period"
-#~ msgstr "Dönem Başlangıcı"
-
-#~ msgid "Select period"
-#~ msgstr "Dönem Seç"
-
-#~ msgid "Final Invoice"
-#~ msgstr "Son Fatura"
-
-#~ msgid "Date or Code"
-#~ msgstr "Tarih veya Kod"
-
-#~ msgid "Entries to invoice"
-#~ msgstr "Faturalanacak Kayıtlar"
-
-#~ msgid "Debit"
-#~ msgstr "Borç"
-
-#~ msgid "Open Analytic Accounts"
-#~ msgstr "Analiz Hesaplarını Aç"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "Satış Fiyat Listesi"
-
-#~ msgid "Printing date"
-#~ msgstr "Yazdırma Tarihi"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "Faturalanmamış Kayıtlarım"
-
-#~ msgid "Employee or Journal Name"
-#~ msgstr "Personel veya Yevmiye Adı"
-
-#~ msgid "Uninvoiced Entries"
-#~ msgstr "Faturalanmamış Kayıtlar"
-
-#~ msgid "Create invoices"
-#~ msgstr "Faturaları Oluştur"
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "Fatura Bakiye Tutarı"
-
-#~ msgid "Period to"
-#~ msgstr "Dönem bitişi"
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Analiz Hesapları"
-
-#~ msgid "Credit"
-#~ msgstr "Alacak"
-
-#~ msgid "End of period"
-#~ msgstr "Dönem Bitişi"
-
-#~ msgid "Period from"
-#~ msgstr "Başl. Dönemi"
-
-#~ msgid "Employee"
-#~ msgstr "Personel"
-
-#~ msgid "Internal name"
-#~ msgstr "Dahili Adı"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Bekleyen Analiz Hesaplarım"
-
-#~ msgid "State"
-#~ msgstr "Durum"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "Faturalanacak Kalemler"
-
-#~ msgid "UoM"
-#~ msgstr "Birim"
-
-#~ msgid "Timesheets"
-#~ msgstr "Saat girişleri"
-
-#~ msgid "This Month"
-#~ msgstr "Bu Ay"

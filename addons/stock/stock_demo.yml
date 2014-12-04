@@ -28,7 +28,6 @@
     list_price: 100.0
     standard_price: 70.0
     uom_id: product.product_uom_kgm
-    uom_po_id: product.product_uom_kgm
     property_stock_inventory: location_inventory
     description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 -
@@ -123,7 +122,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment}:
     picking_type_id: stock.picking_type_in
-    origin: 'incomming_shipment for test'
+    origin: 'incoming_shipment for test'
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
     picking_id: stock.incomming_shipment
@@ -136,7 +135,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in
-    origin: 'incomming_shipment'
+    origin: 'incoming_shipment'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_48
@@ -148,7 +147,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment2}:
     picking_type_id: stock.picking_type_in
-    origin: 'incomming_shipment main_warehouse'
+    origin: 'incoming_shipment main_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_22
@@ -160,7 +159,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment3}:
     picking_type_id: stock.picking_type_in
-    origin: 'incomming_shipment your_company warehouse'
+    origin: 'incoming_shipment your_company warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_10
@@ -172,7 +171,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment4}:
     picking_type_id: stock.picking_type_in
-    origin: 'incomming_shipment_main_warehouse'
+    origin: 'incoming_shipment_main_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_31
@@ -186,7 +185,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse}:
     picking_type_id: chi_picking_type_in
-    origin: 'incomming_chicago_warehouse'
+    origin: 'incoming_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_9
@@ -198,7 +197,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
-    origin: 'incomming_shipment_chicago_warehouse'
+    origin: 'incoming_shipment_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_48
@@ -217,7 +216,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse2}:
     picking_type_id: chi_picking_type_in
-    origin: 'incomming_shipment chicago_warehouse'
+    origin: 'incoming_shipment chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_32

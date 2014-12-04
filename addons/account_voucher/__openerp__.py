@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name' : 'eInvoicing & Payments',
+    'name' : 'Online Billing',
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',
@@ -41,7 +41,7 @@ This module manages:
     """,
     'category': 'Accounting & Finance',
     'sequence': 4,
-    'website' : 'http://openerp.com',
+    'website' : 'https://www.odoo.com/page/billing',
     'images' : ['images/customer_payment.jpeg','images/journal_voucher.jpeg','images/sales_receipt.jpeg','images/supplier_voucher.jpeg','images/customer_invoice.jpeg','images/customer_refunds.jpeg'],
     'depends' : ['account'],
     'demo' : [],

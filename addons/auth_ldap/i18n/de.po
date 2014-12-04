@@ -1,26 +1,123 @@
 # German translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-18 06:57+0000\n"
-"Last-Translator: Ferdinand <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-15 14:04+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-16 08:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: auth_ldap
-#: field:res.company.ldap,user:0
-msgid "Template User"
-msgstr "Benutzervorlage"
+#: help:res.company.ldap,create_user:0
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"Erstelle automatisch Benutzerkonten für neue Benutzer, die sich mit LDAP "
+"anmelden"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: auth_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Erzeuge Benutzer"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_uid:0
+msgid "Created by"
+msgstr "Erstellt durch"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: auth_ldap
+#: field:res.company.ldap,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP-Konfiguration"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP Parameter"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAP Server"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "LDAP Server Port"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP base"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP Filter"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAP Passwort"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "Login-Informationen"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "Prozessparameter"
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_tls:0
@@ -34,92 +131,12 @@ msgstr ""
 "Authentifizierungsversuche fehlschlagen."
 
 #. module: auth_ldap
-#: view:res.company:0
-#: view:res.company.ldap:0
-msgid "LDAP Configuration"
-msgstr "LDAP-Konfiguration"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_binddn:0
-msgid "LDAP binddn"
-msgstr "LDAP binddn"
-
-#. module: auth_ldap
-#: field:res.company.ldap,company:0
-msgid "Company"
-msgstr "Unternehmen"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_server:0
-msgid "LDAP Server address"
-msgstr "LDAP Server"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_server_port:0
-msgid "LDAP Server port"
-msgstr "LDAP Server Port"
-
-#. module: auth_ldap
-#: help:res.company.ldap,create_user:0
-msgid ""
-"Automatically create local user accounts for new users authenticating via "
-"LDAP"
-msgstr ""
-"Erstelle automatisch Benutzerkonten für neue Benutzer, die sich mit LDAP "
-"anmelden"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_base:0
-msgid "LDAP base"
-msgstr "LDAP base"
-
-#. module: auth_ldap
-#: view:res.company.ldap:0
-msgid "User Information"
-msgstr "Benutzerinformationen"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_password:0
-msgid "LDAP password"
-msgstr "LDAP Passwort"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company
-msgid "Companies"
-msgstr "Unternehmen"
-
-#. module: auth_ldap
-#: view:res.company.ldap:0
-msgid "Process Parameter"
-msgstr "Prozessparameter"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"
-
-#. module: auth_ldap
-#: help:res.company.ldap,user:0
-msgid "User to copy when creating new users"
-msgstr "Standardbenutzerkonto, das für neue Benutzer verwendet wird"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_tls:0
-msgid "Use TLS"
-msgstr "TLS verwenden"
-
-#. module: auth_ldap
 #: field:res.company.ldap,sequence:0
 msgid "Sequence"
 msgstr "Sequenz"
 
 #. module: auth_ldap
-#: view:res.company.ldap:0
-msgid "Login Information"
-msgstr "Login-Informationen"
-
-#. module: auth_ldap
-#: view:res.company.ldap:0
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
 msgstr "Server-Informationen"
 
@@ -129,10 +146,9 @@ msgid "Setup your LDAP Server"
 msgstr "Einrichtung Ihres LDAP Servers"
 
 #. module: auth_ldap
-#: view:res.company:0
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
-msgstr "LDAP Parameter"
+#: field:res.company.ldap,user:0
+msgid "Template User"
+msgstr "Benutzervorlage"
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_password:0
@@ -151,16 +167,21 @@ msgstr ""
 "anonymen Zugang."
 
 #. module: auth_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "TLS verwenden"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "Benutzerinformationen"
+
+#. module: auth_ldap
+#: help:res.company.ldap,user:0
+msgid "User to copy when creating new users"
+msgstr "Standardbenutzerkonto, das für neue Benutzer verwendet wird"
+
+#. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Benutzer"
-
-#. module: auth_ldap
-#: field:res.company.ldap,ldap_filter:0
-msgid "LDAP filter"
-msgstr "LDAP Filter"
-
-#. module: auth_ldap
-#: field:res.company.ldap,create_user:0
-msgid "Create user"
-msgstr "Erzeuge Benutzer"

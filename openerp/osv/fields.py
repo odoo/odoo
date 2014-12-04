@@ -42,6 +42,7 @@ import logging
 import pytz
 import re
 import xmlrpclib
+from operator import itemgetter
 from psycopg2 import Binary
 
 import openerp
@@ -82,7 +83,28 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
     _deprecated = False
-    copy = True # whether the field is copied by BaseModel.copy()
+
+    copy = True                 # whether value is copied by BaseModel.copy()
+    string = None
+    help = ""
+    required = False
+    readonly = False
+    _domain = []
+    _context = {}
+    states = None
+    priority = 0
+    change_default = False
+    size = None
+    ondelete = None
+    translate = False
+    select = False
+    manual = False
+    write = False
+    read = False
+    selectable = True
+    group_operator = False
+    groups = False              # CSV list of ext IDs of groups
+    deprecated = False          # Optional deprecation warning
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
@@ -91,37 +113,47 @@ class _column(object):
         It corresponds to the 'state' column in ir_model_fields.
 
         """
-        if domain is None:
-            domain = []
-        if context is None:
-            context = {}
-        self.states = states or {}
-        self.string = string
-        self.readonly = readonly
-        self.required = required
-        self.size = size
-        self.help = args.get('help', '')
-        self.priority = priority
-        self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else None # defaults to 'set null' in ORM
-        self.translate = translate
-        self._domain = domain
-        self._context = context
-        self.write = False
-        self.read = False
-        self.select = select
-        self.manual = manual
-        self.selectable = True
-        self.group_operator = args.get('group_operator', False)
-        self.groups = False  # CSV list of ext IDs of groups that can access this field
-        self.deprecated = False # Optional deprecation warning
-        for a in args:
-            setattr(self, a, args[a])
+        args0 = {
+            'string': string,
+            'required': required,
+            'readonly': readonly,
+            '_domain': domain,
+            '_context': context,
+            'states': states,
+            'priority': priority,
+            'change_default': change_default,
+            'size': size,
+            'ondelete': ondelete.lower() if ondelete else None,
+            'translate': translate,
+            'select': select,
+            'manual': manual,
+        }
+        for key, val in args0.iteritems():
+            if val:
+                setattr(self, key, val)
 
-        # prefetch only if self._classic_write, not self.groups, and not
-        # self.deprecated
-        if not self._classic_write or self.groups or self.deprecated:
+        self._args = args
+        for key, val in args.iteritems():
+            setattr(self, key, val)
+
+        # prefetch only if _classic_write, not deprecated and not manual
+        if not self._classic_write or self.deprecated or self.manual:
             self._prefetch = False
+
+    def new(self, **args):
+        """ return a column like `self` with the given parameters """
+        # memory optimization: reuse self whenever possible; you can reduce the
+        # average memory usage per registry by 10 megabytes!
+        return self if self.same_parameters(args) else type(self)(**args)
+
+    def same_parameters(self, args):
+        dummy = object()
+        return all(
+            # either both are falsy, or they are equal
+            (not val1 and not val) or (val1 == val)
+            for key, val in args.iteritems()
+            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
+        )
 
     def to_field(self):
         """ convert column `self` to a new-style field """
@@ -130,23 +162,29 @@ class _column(object):
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
-        items = [
-            ('_origin', self),                  # field interfaces self
+        base_items = [
+            ('column', self),                   # field interfaces self
             ('copy', self.copy),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
+            ('manual', self.manual),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),
             ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
+            ('group_operator', self.group_operator),
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
-        ]
-        return dict(item for item in items if items[1])
+        ])
+        return dict(base_items + truthy_items + self._args.items())
 
     def restart(self):
         pass
@@ -186,7 +224,7 @@ class _column(object):
 class boolean(_column):
     _type = 'boolean'
     _symbol_c = '%s'
-    _symbol_f = lambda x: x and 'True' or 'False'
+    _symbol_f = bool
     _symbol_set = (_symbol_c, _symbol_f)
 
     def __init__(self, string='unknown', required=False, **args):
@@ -291,6 +329,11 @@ class html(text):
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
 
+    def to_field_args(self):
+        args = super(html, self).to_field_args()
+        args['sanitize'] = self._sanitize
+        return args
+
 import __builtin__
 
 class float(_column):
@@ -305,6 +348,10 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
+
+    def new(self, **args):
+        # float columns are database-dependent, so always recreate them
+        return type(self)(**args)
 
     def to_field_args(self):
         args = super(float, self).to_field_args()
@@ -463,17 +510,16 @@ class datetime(_column):
             registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
             user = registry['res.users'].browse(cr, SUPERUSER_ID, uid)
             tz_name = user.tz
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False) # UTC = no DST
         if tz_name:
             try:
-                utc = pytz.utc
                 context_tz = pytz.timezone(tz_name)
-                utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific timestamp, "
                               "using the UTC value",
                               exc_info=True)
-        return timestamp
+        return utc_timestamp
 
 class binary(_column):
     _type = 'binary'
@@ -590,6 +636,8 @@ class many2one(_column):
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
 
+    ondelete = 'set null'
+
     def __init__(self, obj, string='unknown', auto_join=False, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -664,25 +712,26 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        res = dict((id, []) for id in ids)
-
+        # retrieve the records in the comodel
         comodel = obj.pool[self._obj].browse(cr, user, [], context)
         inverse = self._fields_id
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
+        records = comodel.search(domain, limit=self._limit)
 
-        for record in comodel.search(domain, limit=self._limit):
-            # Note: record[inverse] can be a record or an integer!
-            assert int(record[inverse]) in res
-            res[int(record[inverse])].append(record.id)
+        result = {id: [] for id in ids}
+        # read the inverse of records without prefetching other fields on them
+        for record in records.with_context(prefetch_fields=False):
+            # record[inverse] may be a record or an integer
+            result[int(record[inverse])].append(record.id)
 
-        return res
+        return result
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['no_store_function'] = True
+        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]
@@ -697,31 +746,32 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the model has on delete cascade, just delete the row
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, [act[1]], context=context)
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # table of the field (parent_model in case of inherit)
-                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field = obj.pool[self._obj]._fields[self._fields_id]
+                field_model = field.base_field.model_name
                 field_table = obj.pool[field_model]._table
                 cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
                 domain = self._domain(obj) if callable(self._domain) else self._domain
                 extra_domain = domain or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, ids_to_unlink, context=context)
                 else:
                     obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
@@ -1236,8 +1286,14 @@ class function(_column):
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
 
+    def new(self, **args):
+        # HACK: function fields are tricky to recreate, simply return a copy
+        import copy
+        return copy.copy(self)
+
     def to_field_args(self):
         args = super(function, self).to_field_args()
+        args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self.digits_compute or self.digits
         elif self._type in ('selection', 'reference'):
@@ -1293,9 +1349,9 @@ class function(_column):
         # if we already have a value, don't recompute it.
         # This happen if case of stored many2one fields
         if values and not multi and name in values[0]:
-            result = {v['id']: v[name] for v in values}
+            result = dict((v['id'], v[name]) for v in values)
         elif values and multi and all(n in values[0] for n in name):
-            result = {v['id']: dict((n, v[n]) for n in name) for v in values}
+            result = dict((v['id'], dict((n, v[n]) for n in name)) for v in values)
         else:
             result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         if multi:
@@ -1556,11 +1612,18 @@ class property(function):
 
         res = {id: {} for id in ids}
         for prop_name in prop_names:
-            column = obj._all_columns[prop_name].column
+            field = obj._fields[prop_name]
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if column._type == 'many2one':
+            if field.type == 'many2one':
+                # name_get the non-null values as SUPERUSER_ID
+                vals = sum(set(filter(None, values.itervalues())),
+                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
+                vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
-                    res[id][prop_name] = value.name_get()[0] if value else False
+                    ng = False
+                    if value and value.id in vals_name:
+                        ng = value.id, vals_name[value.id]
+                    res[id][prop_name] = ng
             else:
                 for id, value in values.iteritems():
                     res[id][prop_name] = value
@@ -1570,12 +1633,12 @@ class property(function):
     def __init__(self, **args):
         if 'view_load' in args:
             _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
-        obj = 'relation' in args and args['relation'] or ''
+        args = dict(args)
+        args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
             fnct=self._fnct_read,
             fnct_inv=self._fnct_write,
             fnct_search=self._fnct_search,
-            obj=obj,
             multi='properties',
             **args
         )

@@ -183,14 +183,14 @@ class CompanyLDAP(osv.osv):
         """
         
         user_id = False
-        login = tools.ustr(login.lower())
+        login = tools.ustr(login.lower().strip())
         cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = cr.fetchone()
         if res:
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:
@@ -237,7 +237,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters', copy=True),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True, groups="base.group_system"),
     }
 
 
@@ -249,6 +249,10 @@ class users(osv.osv):
             return user_id
         registry = RegistryManager.get(db)
         with registry.cursor() as cr:
+            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
+            res = cr.fetchone()
+            if res:
+                return False
             ldap_obj = registry.get('res.company.ldap')
             for conf in ldap_obj.get_ldap_dicts(cr):
                 entry = ldap_obj.authenticate(conf, login, password)

@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent 91c0cc5b319e7bf240d359817b8bd044769a4f5c
+diff -r 91c0cc5b319e -r c77aa2c3341b academy/__openerp__.py
+--- a/academy/__openerp__.py	Mon Aug 11 16:49:10 2014 +0200
++++ b/academy/__openerp__.py	Mon Aug 11 16:50:01 2014 +0200
+@@ -8,6 +8,7 @@
+     'depends': ['base'],
+     # data files which are always installed
+     'data': [
++        'ir.model.access.csv',
+         'templates.xml',
+     ],
+ }
+diff -r 91c0cc5b319e -r c77aa2c3341b academy/ir.model.access.csv
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/academy/ir.model.access.csv	Mon Aug 11 16:50:01 2014 +0200
+@@ -0,0 +1,2 @@
++id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
++access_academy_teachers,access_academy_teachers,model_academy_teachers,,1,0,0,0

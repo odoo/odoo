@@ -1,79 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* product_margin
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-09-30 08:30+0000\n"
-"Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
-"<resteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
-msgid "Turnover"
-msgstr "Volum de negoci"
-
-#. module: product_margin
-#: field:product.product,expected_margin_rate:0
-msgid "Expected Margin (%)"
-msgstr "Marge previst (%)"
-
-#. module: product_margin
-#: field:product.margin,from_date:0
-msgid "From"
-msgstr "Des de"
-
-#. module: product_margin
-#: help:product.product,total_cost:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
 msgstr ""
-
-#. module: product_margin
-#: field:product.margin,to_date:0
-msgid "To"
-msgstr "Fins"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnover - Standard price"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin Rate(%)"
-msgstr ""
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Draft, Open and Paid"
-msgstr "Esborrany, obert i pagat"
-
-#. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "Marges de producte"
-
-#. module: product_margin
-#: field:product.product,purchase_avg_price:0
-#: field:product.product,sale_avg_price:0
-msgid "Avg. Unit Price"
-msgstr "Preu unitat mig"
 
 #. module: product_margin
 #: field:product.product,sale_num_invoiced:0
@@ -81,77 +28,14 @@ msgid "# Invoiced in Sale"
 msgstr ""
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Catalog Price"
-msgstr "Preu catàleg"
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Paid"
-msgstr "Pagat"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "Diferència vendes"
-
-#. module: product_margin
-#: help:product.product,sales_gap:0
-msgid "Expected Sale - Turn Over"
-msgstr "Venda prevista - Volum de negoci"
-
-#. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Venda prevista"
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Standard Price"
-msgstr "Preu estàndard"
-
-#. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Suma de quantitat en factures proveïdor"
-
-#. module: product_margin
-#: field:product.product,date_to:0
-msgid "Margin Date To"
-msgstr ""
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Criteris d'anàlisi"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,total_cost:0
-msgid "Total Cost"
-msgstr "Total cost"
-
-#. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,expected_margin:0
-msgid "Expected Margin"
-msgstr "Marge previst"
-
-#. module: product_margin
-#: view:product.product:0
+#: view:product.product:product_margin.view_product_margin_tree
 msgid "#Purchased"
 msgstr "Núm. comprats"
 
 #. module: product_margin
-#: help:product.product,expected_margin_rate:0
-msgid "Expected margin * 100 / Expected Sale"
-msgstr "Marge previst * 100 / Venda prevista"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Analysis Criteria"
+msgstr "Criteris d'anàlisi"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
@@ -164,52 +48,51 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Preu mig en factures de proveïdor "
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
-msgid "Invoice State"
-msgstr "Estat factura"
+#: field:product.product,purchase_avg_price:0
+#: field:product.product,sale_avg_price:0
+msgid "Avg. Unit Price"
+msgstr "Preu unitat mig"
 
 #. module: product_margin
-#: help:product.product,purchase_gap:0
-msgid "Normal Cost - Total Cost"
-msgstr "Cost normal - Cost total"
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Cancel"
+msgstr "Cancel·la"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Catalog Price"
+msgstr "Preu catàleg"
+
+#. module: product_margin
+#: field:product.margin,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,total_margin:0
-msgid "Total Margin"
-msgstr "Marge total"
-
-#. module: product_margin
-#: field:product.product,date_from:0
-msgid "Margin Date From"
+#: field:product.margin,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Draft, Open and Paid"
+msgstr "Esborrany, obert i pagat"
 
 #. module: product_margin
-#: field:product.product,normal_cost:0
-msgid "Normal Cost"
-msgstr "Cost normal"
+#: field:product.product,expected_margin:0
+msgid "Expected Margin"
+msgstr "Marge previst"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Purchases"
-msgstr "Compres"
+#: field:product.product,expected_margin_rate:0
+msgid "Expected Margin (%)"
+msgstr "Marge previst (%)"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-msgid "# Invoiced in Purchase"
-msgstr ""
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Venda prevista"
 
 #. module: product_margin
 #: help:product.product,expected_margin:0
@@ -217,17 +100,73 @@ msgid "Expected Sale - Normal Cost"
 msgstr "Venda prevista - Cost normal"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Properties categories"
-msgstr "Categories de propietats"
+#: help:product.product,sales_gap:0
+msgid "Expected Sale - Turn Over"
+msgstr "Venda prevista - Volum de negoci"
 
 #. module: product_margin
-#: help:product.product,total_margin_rate:0
-msgid "Total margin * 100 / Turnover"
-msgstr "Marge total * 100 / Volum de negoci"
+#: help:product.product,expected_margin_rate:0
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "Marge previst * 100 / Venda prevista"
 
 #. module: product_margin
-#: view:product.margin:0
+#: field:product.margin,from_date:0
+msgid "From"
+msgstr "Des de"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "General Information"
+msgstr "Informació general"
+
+#. module: product_margin
+#: field:product.margin,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,invoice_state:0
+#: field:product.product,invoice_state:0
+msgid "Invoice State"
+msgstr "Estat factura"
+
+#. module: product_margin
+#: field:product.margin,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_to:0
+msgid "Margin Date To"
+msgstr ""
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Margins"
+msgstr "Marges"
+
+#. module: product_margin
+#: field:product.product,normal_cost:0
+msgid "Normal Cost"
+msgstr "Cost normal"
+
+#. module: product_margin
+#: help:product.product,purchase_gap:0
+msgid "Normal Cost - Total Cost"
+msgstr "Cost normal - Cost total"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
 msgid "Open Margins"
 msgstr "Obre marges"
 
@@ -238,9 +177,10 @@ msgid "Open and Paid"
 msgstr "Obert i pagat"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Sales"
-msgstr "Vendes"
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Paid"
+msgstr "Pagat"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -248,9 +188,25 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "General Information"
-msgstr "Informació general"
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
+msgstr "Marge producte"
+
+#. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:84
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:product_margin.view_product_margin_form
+#: view:product.product:product_margin.view_product_margin_graph
+#: view:product.product:product_margin.view_product_margin_tree
+#, python-format
+msgid "Product Margins"
+msgstr "Marges de producte"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Properties categories"
+msgstr "Categories de propietats"
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -258,14 +214,48 @@ msgid "Purchase Gap"
 msgstr "Diferència compra"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Cancel"
-msgstr "Cancel·la"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Purchases"
+msgstr "Compres"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Margins"
-msgstr "Marges"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Sales"
+msgstr "Vendes"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "Diferència vendes"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Standard Price"
+msgstr "Preu estàndard"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,total_cost:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: help:product.product,sale_num_invoiced:0
@@ -273,89 +263,43 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Suma de quantitat en factures de client"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "or"
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Suma de quantitat en factures proveïdor"
+
+#. module: product_margin
+#: field:product.margin,to_date:0
+msgid "To"
+msgstr "Fins"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,total_cost:0
+msgid "Total Cost"
+msgstr "Total cost"
+
+#. module: product_margin
+#: field:product.product,total_margin:0
+msgid "Total Margin"
+msgstr "Marge total"
+
+#. module: product_margin
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_margin
-msgid "Product Margin"
-msgstr "Marge producte"
+#: help:product.product,total_margin_rate:0
+msgid "Total margin * 100 / Turnover"
+msgstr "Marge total * 100 / Volum de negoci"
 
-#~ msgid ""
-#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-#~ msgstr ""
-#~ "Suma de multiplicacions del preu del catàleg de venda i quantitat de "
-#~ "factures de client"
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,turnover:0
+msgid "Turnover"
+msgstr "Volum de negoci"
 
-#~ msgid "To Date"
-#~ msgstr "Fins data"
-
-#~ msgid "From Date"
-#~ msgstr "Des de data"
-
-#~ msgid "Reporting"
-#~ msgstr "Informe"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-#~ msgstr ""
-#~ "Suma de multiplicacions del preu de factura i quantitat de factures de "
-#~ "proveïdor "
-
-#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-#~ msgstr ""
-#~ "Suma de multiplicacions del preu de cost i quantitat de factures de proveïdor"
-
-#~ msgid "# Invoiced"
-#~ msgstr "Núm. facturats"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
-#~ msgstr ""
-#~ "Suma de multiplicacions del preu de factura i quantitat de factures de client"
-
-#~ msgid "Avg. Price in Customer Invoices)"
-#~ msgstr "Preu mig en factures de client)"
-
-#~ msgid "Select "
-#~ msgstr "Selecciona "
-
-#~ msgid "Total Margin (%)"
-#~ msgstr "Total marge (%)"
-
-#~ msgid "View Stock of Products"
-#~ msgstr "Veure estoc de productes"
-
-#~ msgid "Margins in Product"
-#~ msgstr "Marges en productes"
-
-#~ msgid "Excepted Sale - Normal Cost"
-#~ msgstr "Venda exclosa - Cost normal"
-
-#~ msgid "Turnorder - Total Cost"
-#~ msgstr "Volum - Cost total"
-
-#~ msgid "Excepted Sale - Turn Over"
-#~ msgstr "Venda exclosa - Volum de negoci"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Error: Codi EAN no vàlid"
-
-#~ msgid "Turnorder - Standard price"
-#~ msgstr "Volum de negoci - Preu estàndard"
-
-#~ msgid ""
-#~ "\n"
-#~ "Adds a reporting menu in products that computes sales, purchases, margins\n"
-#~ "and other interesting indicators based on invoices. The wizard to launch\n"
-#~ "the report has several options to help you get the data you need.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Afegeix un menú d'informes en els productes, que calcula vendes, compres,\n"
-#~ "marges i altres indicadors interessants sobre la base de les factures.\n"
-#~ "L'assistent ofereix diverses opcions per ajudar-vos a obtenir les dades que "
-#~ "necessiteu.\n"
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""

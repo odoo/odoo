@@ -1,58 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * sale_crm
-# Drazen Bosak <drazen.bosak@gmail.com>, 2010.
+# Croatian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-19 19:28+0000\n"
-"Last-Translator: Bruno Bardić <bruno.bardic@procudo.hr>\n"
-"Language-Team: Vinteh\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: hr\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Nedovoljno podataka!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
+msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Pretvori u ponudu"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Otkaži"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistike računa"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Označi kao dobiven"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Zadani prodajni tim"
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Moj(i) prodajni tim(ovi)"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Korisnici"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr ""
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -62,21 +40,25 @@ msgstr ""
 "Provjerite ovo kako bi se zatvorila prilika nakon kreiranja prodajnog naloga."
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Ponuda poslana"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Pretvori u ponudu"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Kategorije"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Kreiraj ponudu"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Ponuda"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -84,61 +66,25 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Kreiraj"
+#: field:crm.make.sale,id:0
+msgid "ID"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Napravi prodaju"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Prilika: %s"
+msgid "Insufficient Data!"
+msgstr "Nedovoljno podataka!"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "prilika je  <b>pretvorena</b> u ponudu <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Prodavaonica"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Nema definirane adrese za ovog kupca."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Prodajni nalog potvrđen"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Prodajni tim"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Kreiraj ponudu"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -146,9 +92,39 @@ msgid "Make Quotation"
 msgstr "Izradi ponudu"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Otkaži"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Napravi prodaju"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Označi kao dobiven"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "prilika je  <b>pretvorena</b> u ponudu <em>%s</em>."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Prilika: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Ponuda"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -156,184 +132,35 @@ msgid "Sales Order"
 msgstr "Prodajni nalog"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "ili"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr ""
 
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Analitika prilike"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr ""
 
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Koristi ovog partnera ako nema Partnera na ovom Slučaju"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
 
-#~ msgid "Create"
-#~ msgstr "Stvori"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
 
-#~ msgid "All at once"
-#~ msgstr "Sve od jednom"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nepravilan XML format za View Architecture!"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Prilika ide prema Ponudi"
-
-#~ msgid "Analytic account"
-#~ msgstr "Analitic account"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Pretvori Priliku u Ponudu"
-
-#~ msgid "Your action"
-#~ msgstr "Vaša radnja"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Načela Pakiranja"
-
-#~ msgid "Create Quote"
-#~ msgstr "Kreiraj Ponudu"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Ukupan iznos Ugovora (Cjenik)"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "CRM Prilika"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "sa"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Sale CRM Stuff"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Direktna isporuka"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Ponuda Prilici"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr ""
-#~ "Označite kako biste zaključili Slučaj nakon što je kreirana "
-#~ "zaključnica/narudžba"
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Opportunity convert to the Pricelist"
-
-#~ msgid "User Responsible"
-#~ msgstr "Odgovorni korisnik"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Razmotrite ugovor sa strankom"
-
-#~ msgid "Products"
-#~ msgstr "Proizvodi"
-
-#~ msgid "Close Case"
-#~ msgstr "Zaključi SLučaj"
-
-#~ msgid "Make Case"
-#~ msgstr "Kreiraj Slučaj"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "Ova CRM Prilika može dovesti do Ponude."
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Cjenik za priliku"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Cjenik za Ugovor"
-
-#~ msgid "Case Description"
-#~ msgstr "Opis Slučaja"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Analitic account"
-
-#~ msgid "Case Section"
-#~ msgstr "Grupa Slučaja"
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "Ponuda CRM prilici"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Nedovoljno podataka!"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "Prilika '%s' je pretvorena u ponudu."
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Kupac nema definiranu adresu"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Oznaka naloga mora biti jedinstvena"
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Označi ovo da bi se prilika zatvorila nakon kreiranja prodajnog naloga."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ovaj modul pruža prečicu na jednu ili više prilika u CRM-u.\n"
-#~ "Prečica omogućava generiranje prodajnih naloga na osnovi izabranog slučaja.\n"
-#~ "Ako si izabrani različiti slučajevi (lista), generira jedan prodajni nalog "
-#~ "po \n"
-#~ "slučaju.\n"
-#~ "Slučaj je tada zatvoren i povezan sa generiranim prodajnim nalogom.\n"
-#~ "\n"
-#~ "Sugeriramo instalaciju ovo modula ako ste instalirali i prodajni i CRM "
-#~ "modul.\n"
-#~ "    "
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Mjesečni obrtaj"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Zatvori priliku"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Pretvoreno u prodajnu ponudu (id: %s)."
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Kreira prodajnu ponudu iz prilike"
-
-#~ msgid "My Quotations"
-#~ msgstr "Moje ponude"
-
-#~ msgid "Quotations"
-#~ msgstr "Ponude"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Prilike po fazama"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Pretvori u ponudu"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Poveznica narudžbe mora biti jedinstvena za Organizaciju!"
-
-#~ msgid "Category"
-#~ msgstr "Kategorija"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Moje prilike"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Moji planirani prihodi po fazama"
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Kreiraj"

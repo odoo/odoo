@@ -37,37 +37,29 @@ class crm_claim_report(osv.osv):
     _description = "CRM Claim Report"
 
     _columns = {
-        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Team', oldname='section_id', readonly=True),
+        'nbr': fields.integer('# of Claims', readonly=True),  # TDE FIXME master: rename into nbr_claims
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'day': fields.char('Day', size=128, readonly=True),
+        'claim_date': fields.datetime('Claim Date', readonly=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True,domain="[('section_ids','=',section_id)]"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.claim')]", readonly=True),
+        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True,domain="[('team_ids','=',team_id)]"),
+        'categ_id': fields.many2one('crm.claim.category', 'Category',readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.date('Close Date', readonly=True, select=True),
+        'date_closed': fields.datetime('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True)
+        'email': fields.integer('# Emails', size=128, readonly=True),
+        'subject': fields.char('Claim Subject', readonly=True)
     }
 
     def init(self, cr):
 
-        """ Display Number of cases And Section Name
+        """ Display Number of cases And Team Name
         @param cr: the current row, from the database cursor,
          """
 
@@ -76,28 +68,27 @@ class crm_claim_report(osv.osv):
             create or replace view crm_claim_report as (
                 select
                     min(c.id) as id,
-                    to_char(c.date, 'YYYY') as name,
-                    to_char(c.date, 'MM') as month,
-                    to_char(c.date, 'YYYY-MM-DD') as day,
-                    to_char(c.date_closed, 'YYYY-MM-DD') as date_closed,
-                    to_char(c.date_deadline, 'YYYY-MM-DD') as date_deadline,
+                    c.date as claim_date,
+                    c.date_closed as date_closed,
+                    c.date_deadline as date_deadline,
                     c.user_id,
                     c.stage_id,
-                    c.section_id,
+                    c.team_id,
                     c.partner_id,
                     c.company_id,
                     c.categ_id,
+                    c.name as subject,
                     count(*) as nbr,
                     c.priority as priority,
                     c.type_action as type_action,
-                    date_trunc('day',c.create_date) as create_date,
+                    c.create_date as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='crm.claim' AND res_id=c.id) AS email,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c
-                group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
-                        c.user_id,c.section_id, c.stage_id,\
+                group by c.date,\
+                        c.user_id,c.team_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,
                         c.priority,c.type_action,c.date_deadline,c.date_closed,c.id
             )""")

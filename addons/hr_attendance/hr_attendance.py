@@ -61,13 +61,16 @@ class hr_attendance(osv.osv):
                     ('employee_id', '=', obj.employee_id.id),
                     ('name', '<', obj.name), ('action', '=', 'sign_in')
                 ], limit=1, order='name DESC')
-                last_signin = self.browse(cr, uid, last_signin_id, context=context)[0]
+                if last_signin_id:
+                    last_signin = self.browse(cr, uid, last_signin_id, context=context)[0]
 
-                # Compute time elapsed between sign-in and sign-out
-                last_signin_datetime = datetime.strptime(last_signin.name, '%Y-%m-%d %H:%M:%S')
-                signout_datetime = datetime.strptime(obj.name, '%Y-%m-%d %H:%M:%S')
-                workedhours_datetime = (signout_datetime - last_signin_datetime)
-                res[obj.id] = ((workedhours_datetime.seconds) / 60) / 60
+                    # Compute time elapsed between sign-in and sign-out
+                    last_signin_datetime = datetime.strptime(last_signin.name, '%Y-%m-%d %H:%M:%S')
+                    signout_datetime = datetime.strptime(obj.name, '%Y-%m-%d %H:%M:%S')
+                    workedhours_datetime = (signout_datetime - last_signin_datetime)
+                    res[obj.id] = ((workedhours_datetime.seconds) / 60) / 60.0
+                else:
+                    res[obj.id] = False
         return res
 
     _columns = {

@@ -29,6 +29,7 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     cursor: pointer;
+    z-index:500;
 }
 
 /* conversations */
@@ -46,6 +47,7 @@
     -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.3);
     width: 240px;
+    z-index:500;
 }
 .oe_im_chatview .oe_im_chatview_disconnected {
     display:none;
@@ -91,6 +93,25 @@
     float: right;
     color: gray ;
 }
+
+/* options */
+.oe_im_chatview .oe_im_chatview_option_group{
+    z-index: 10;
+}
+.oe_im_chatview .oe_im_chatview_option_list{
+    right: 0;
+    left: auto;
+}
+.oe_im_chatview .oe_im_chatview_option_list li{
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: nowrap;
+}
+
 .oe_im_chatview .oe_im_chatview_right div, .oe_im_chatview .oe_im_chatview_right button{
     cursor: pointer;
     background: transparent;

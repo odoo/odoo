@@ -7,7 +7,7 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="pivot" stacked="True">
-                 <field name="user_id" type="row"/>
+                 <field name="team_id" type="row"/>
                  <field name="date" interval="month" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
@@ -15,24 +15,28 @@
     </record>
 
     <!-- Custom reports (aka filters) -->
+    <record id="filter_sale_report_sales_funnel" model="ir.filters">
+        <field name="name">Sales Funnel</field>
+        <field name="model_id">sale.report</field>
+        <field name="domain">['&amp;', ('date','&lt;=', time.strftime('%%Y-12-31')), '&amp;', ('date','&gt;=',time.strftime('%%Y-01-01')), '|', ('state','in',('draft','sent')), ('state','not in',('draft','sent','cancel'))]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['state'], 'measures': ['price_total']}</field>
+    </record>
     <record id="filter_sale_report_salespersons" model="ir.filters">
         <field name="name">By Salespersons</field>
         <field name="model_id">sale.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
         <field name="context">{'group_by': ['date:month', 'user_id']}</field>
     </record>
     <record id="filter_sale_report_salesteam" model="ir.filters">
         <field name="name">By Salesteam</field>
         <field name="model_id">sale.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date:month', 'section_id']}</field>
+        <field name="context">{'group_by': ['date:month', 'team_id']}</field>
     </record>
     <record id="filter_isale_report_product" model="ir.filters">
         <field name="name">By Product</field>
         <field name="model_id">sale.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
         <field name="context">{'group_by': ['date:month', 'product_id']}</field>
     </record>
@@ -44,8 +48,7 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <field name="date_confirm"/>
-                <filter string="This Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                <separator/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <filter name="Quotations" domain="[('state','in',('draft','sent'))]"/>
                 <filter name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel'))]"/>
                 <separator/>
@@ -58,18 +61,14 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                    <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
-                    <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
-                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
-                    <filter string="Order Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Ordered date of the sales order"/>
-                    <filter string="Order Date (month)" icon="terp-go-today" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
-                    <filter string="Order Date (year)" icon="terp-go-today" context="{'group_by':'date:year'}" help="Ordered date of the sales order"/>
+                    <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Category of Product" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator/>
+                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
                 </group>
             </search>
         </field>
@@ -82,11 +81,10 @@
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_graph"/>
-        <field name="context">{'search_default_Sales':1, 'search_default_year': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
-    <menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager"/>
     <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="10"/>
 
 </data>

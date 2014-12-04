@@ -125,16 +125,5 @@ openerp.gamification = function(instance) {
             sidebar.appendTo($('.oe_mail_wall_aside'));
         },
     });
-
-    instance.web_kanban.KanbanRecord.include({
-        // open related goals when clicking on challenge kanban view
-        on_card_clicked: function() {
-            if (this.view.dataset.model === 'gamification.challenge') {
-                this.$('.oe_kanban_project_list a').first().click();
-            } else {
-                this._super.apply(this, arguments);
-            }
-        },
-    });
     
 };

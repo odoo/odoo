@@ -18,19 +18,5 @@
             </field>
         </record>
 
-        <!-- Update user prefrence form!-->
-        <record id="view_users_form_simple_modif_forum" model="ir.ui.view">
-            <field name="name">res.users.preferences.form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
-            <field name="arch" type="xml">
-                <group name="preferences" position="before">
-                    <div style="margin-top: 19px;">
-                        <field name="website_published" class="pull-right" widget="website_button"/>
-                    </div>
-                </group>
-            </field>
-        </record>
-
     </data>
 </openerp>

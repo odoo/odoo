@@ -1,397 +1,68 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 18:16+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:10+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr
-#: model:process.node,name:hr.process_node_openerpuser0
-msgid "Openerp user"
-msgstr "OpenERPユーザ"
+#: code:addons/hr/hr.py:158
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "Allow timesheets validation by managers"
-msgstr "マネジャーによるタイムシート検証"
-
-#. module: hr
-#: field:hr.job,requirements:0
-msgid "Requirements"
-msgstr "必要事項"
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Link the employee to information"
-msgstr "従業員を情報に連携"
-
-#. module: hr
-#: field:hr.employee,sinid:0
-msgid "SIN No"
-msgstr "社会保険番号"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard
-#: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_reporting
-#: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
-msgid "Human Resources"
-msgstr "人材"
-
-#. module: hr
-#: help:hr.employee,image_medium:0
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
-"Medium-sized photo of the employee. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new employee.\n"
+"              </p><p>\n"
+"                With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each "
+"person;\n"
+"                contact data, job position, availability, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Time Tracking"
-msgstr "時間記録"
-
-#. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-msgid "Group By..."
-msgstr "グループ化…"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "部門を作る"
-
-#. module: hr
-#: help:hr.job,no_of_employee:0
-msgid "Number of employees currently occupying this job position."
-msgstr ""
-
-#. module: hr
-#: field:hr.config.settings,module_hr_evaluation:0
-msgid "Organize employees periodic evaluation"
-msgstr ""
-
-#. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: model:ir.model,name:hr.model_hr_department
-msgid "Department"
-msgstr "部門"
-
-#. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr "勤務先Eメール"
-
-#. module: hr
-#: help:hr.employee,image:0
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
-"This field holds the image used as photo for the employee, limited to "
-"1024x1024px."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a department.\n"
+"              </p><p>\n"
+"                Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: hr
-#: help:hr.config.settings,module_hr_holidays:0
-msgid "This installs the module hr_holidays."
-msgstr "hr_holidays モジュールをインストールします。"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Jobs"
-msgstr "業務"
-
-#. module: hr
-#: view:hr.job:0
-msgid "In Recruitment"
-msgstr "採用中"
-
-#. module: hr
-#: field:hr.job,message_unread:0
-msgid "Unread Messages"
-msgstr "未読メッセージ"
-
-#. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,company_id:0
-msgid "Company"
-msgstr "会社"
-
-#. module: hr
-#: field:hr.job,no_of_recruitment:0
-msgid "Expected in Recruitment"
-msgstr "採用予定"
-
-#. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr ""
-
-#. module: hr
-#: constraint:hr.employee.category:0
-msgid "Error! You cannot create recursive Categories."
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_hr_recruitment:0
-msgid "This installs the module hr_recruitment."
-msgstr "hr_recruitment モジュールをインストールします。"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Birth"
-msgstr "出生"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Employee Tags"
-msgstr "従業員タグ"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Launch Recruitement"
-msgstr ""
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_employeeuser0
-msgid "Link a user to an employee"
-msgstr "ユーザを従業員に連携"
-
-#. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "上位の部門"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Leaves"
-msgstr "休暇"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "既婚"
-
-#. module: hr
-#: field:hr.job,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Talent Management"
-msgstr "タレント管理"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Mobile:"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Position"
-msgstr "役職"
-
-#. module: hr
-#: help:hr.job,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,color:0
-msgid "Color Index"
-msgstr "カラーインデックス"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid ""
-"The Related user field on the Employee form allows to link the OpenERP user "
-"(and her rights) to the employee."
-msgstr "従業員票のユーザ項目を使って、この従業員をOpenERPユーザとして連携することができます。"
-
-#. module: hr
-#: field:hr.employee,image_medium:0
-msgid "Medium-sized photo"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new department.\n"
+"              </p><p>\n"
+"                Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
-
-#. module: hr
-#: field:hr.employee,identification_id:0
-msgid "Identification No"
-msgstr "識別番号"
-
-#. module: hr
-#: selection:hr.employee,gender:0
-msgid "Female"
-msgstr "女"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
-msgid "Attendance"
-msgstr "勤怠"
-
-#. module: hr
-#: field:hr.employee,work_phone:0
-msgid "Work Phone"
-msgstr "勤務先電話"
-
-#. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Child Categories"
-msgstr "下位カテゴリー"
-
-#. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
-msgid "Job Description"
-msgstr "職務内容"
-
-#. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "勤務先住所"
-
-#. module: hr
-#: field:hr.job,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
-#: model:process.node,name:hr.process_node_employee0
-msgid "Employee"
-msgstr "従業員"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Other information"
-msgstr "その他の情報"
-
-#. module: hr
-#: help:hr.employee,image_small:0
-msgid ""
-"Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,birthday:0
-msgid "Date of Birth"
-msgstr "生年月日"
-
-#. module: hr
-#: help:hr.job,no_of_recruitment:0
-msgid "Number of new employees you expect to recruit."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr ""
-
-#. module: hr
-#: help:hr.job,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
-
-#. module: hr
-#: view:board.board:0
-msgid "Human Resources Dashboard"
-msgstr "人材ダッシュボード"
-
-#. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
-msgid "Job"
-msgstr "職務"
-
-#. module: hr
-#: field:hr.job,no_of_employee:0
-msgid "Current Number of Employees"
-msgstr ""
-
-#. module: hr
-#: field:hr.department,member_ids:0
-msgid "Members"
-msgstr "メンバー"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "設定"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "従業員票と構造"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_expense:0
-msgid "Manage employees expenses"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Tel:"
-msgstr ""
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Divorced"
-msgstr "離婚"
-
-#. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent Category"
-msgstr "親分類"
-
-#. module: hr
-#: view:hr.department:0
-#: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.ui.menu,name:hr.menu_hr_department_tree
-msgid "Departments"
-msgstr "部門"
-
-#. module: hr
-#: model:process.node,name:hr.process_node_employeecontact0
-msgid "Employee Contact"
-msgstr "従業員の連絡先"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -417,315 +88,14 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,gender:0
-msgid "Male"
-msgstr "男"
-
-#. module: hr
-#: view:hr.employee:0
-msgid ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_hr_evaluation:0
-msgid "This installs the module hr_evaluation."
-msgstr ""
-
-#. module: hr
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_hr_attendance:0
-msgid "This installs the module hr_attendance."
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,image_small:0
-msgid "Smal-sized photo"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee.category:0
-#: model:ir.model,name:hr.model_hr_employee_category
-msgid "Employee Category"
-msgstr "従業員の区分"
-
-#. module: hr
-#: field:hr.employee,category_ids:0
-msgid "Tags"
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_hr_contract:0
-msgid "This installs the module hr_contract."
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Related User"
-msgstr "関連ユーザ"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "or"
-msgstr "または"
-
-#. module: hr
-#: field:hr.employee.category,name:0
-msgid "Category"
-msgstr "カテゴリー"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Stop Recruitment"
-msgstr ""
-
-#. module: hr
-#: field:hr.config.settings,module_hr_attendance:0
-msgid "Install attendances feature"
-msgstr ""
-
-#. module: hr
-#: help:hr.employee,bank_account_id:0
-msgid "Employee bank salary account"
-msgstr "従業員の給与振込の銀行口座"
-
-#. module: hr
-#: field:hr.department,note:0
-msgid "Note"
-msgstr "注記"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_tree
-msgid "Employees Structure"
-msgstr "従業員体系"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Contact Information"
-msgstr "連絡先情報"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_holidays:0
-msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
-
-#. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "下位部門"
-
-#. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
-msgid "Status"
-msgstr "状態"
-
-#. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other Id"
-msgstr "その他のID"
-
-#. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract"
-msgstr "従業員契約"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Contracts"
-msgstr "契約"
-
-#. module: hr
-#: help:hr.job,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "社会保障番号"
-
-#. module: hr
-#: field:hr.job,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: hr
-#: field:hr.config.settings,module_hr_recruitment:0
-msgid "Manage the recruitment process"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
+#: view:hr.employee:hr.view_employee_form
 msgid "Active"
 msgstr "有効"
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Human Resources Management"
-msgstr "人材管理"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Install your country's payroll"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account Number"
-msgstr "銀行口座番号"
-
-#. module: hr
-#: view:hr.department:0
-msgid "Companies"
-msgstr "会社"
-
-#. module: hr
-#: field:hr.job,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid ""
-"In the Employee form, there are different kind of information like Contact "
-"information."
-msgstr "従業員票には、連絡先などのように異なる種類の情報があります。"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new employee.\n"
-"              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
-"                contact data, job position, availability, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "HR Settings"
-msgstr "HR設定"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Citizenship & Other Info"
-msgstr "国籍・その他"
-
-#. module: hr
-#: constraint:hr.department:0
-msgid "Error! You cannot create recursive departments."
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "勤務先住所"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Public Information"
-msgstr "公開情報"
-
-#. module: hr
-#: field:hr.employee,marital:0
-msgid "Marital Status"
-msgstr "婚姻区分"
-
-#. module: hr
-#: model:ir.model,name:hr.model_ir_actions_act_window
-msgid "ir.actions.act_window"
-msgstr "ir.actions.act_window"
-
-#. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,image:0
-msgid "Photo"
-msgstr "写真"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a department.\n"
-"              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
-"                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet:0
-msgid "This installs the module hr_timesheet."
-msgstr ""
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new department.\n"
-"              </p><p>\n"
-"                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Personal Information"
-msgstr "個人情報"
-
-#. module: hr
-#: field:hr.employee,city:0
-msgid "City"
-msgstr "市"
-
-#. module: hr
-#: field:hr.employee,passport_id:0
-msgid "Passport No"
-msgstr "旅券番号"
-
-#. module: hr
-#: field:hr.employee,mobile_phone:0
-msgid "Work Mobile"
-msgstr "会社の携帯"
-
-#. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitement in Progress"
-msgstr ""
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Additional Features"
+msgstr "追加機能"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
@@ -734,94 +104,214 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee.category:0
-msgid "Employees Categories"
-msgstr "従業員カテゴリー"
+#: field:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "Allow timesheets validation by managers"
+msgstr "マネジャーによるタイムシート検証"
 
 #. module: hr
-#: field:hr.employee,address_home_id:0
-msgid "Home Address"
-msgstr "自宅住所"
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Apply"
+msgstr "適用"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet:0
-msgid "Manage timesheets"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendance"
+msgstr "勤怠"
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr "銀行口座番号"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Birth"
+msgstr "出生"
+
+#. module: hr
+#: help:hr.job,state:0
+msgid ""
+"By default 'Closed', set it to 'In Recruitment' if recruitment process is "
+"going on for this job position."
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_payroll_modules
-msgid "Payroll"
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Cancel"
+msgstr "取消"
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr "下位カテゴリー"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "下位部門"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Citizenship & Other Info"
+msgstr "国籍・その他"
+
+#. module: hr
+#: field:hr.employee,city:0
+msgid "City"
+msgstr "市"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "コーチ"
+
+#. module: hr
+#: field:hr.employee,color:0
+msgid "Color Index"
+msgstr "カラーインデックス"
+
+#. module: hr
+#: view:hr.department:hr.view_department_tree
+msgid "Companies"
+msgstr "会社"
+
+#. module: hr
+#: field:hr.department,company_id:0
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "設定"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
+msgid "Configure Human Resources"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Contact Information"
+msgstr "連絡先情報"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Contracts"
+msgstr "契約"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "部門を作る"
+
+#. module: hr
+#: field:hr.config.settings,create_uid:0
+#: field:hr.department,create_uid:0
+#: field:hr.employee,create_uid:0
+#: field:hr.employee.category,create_uid:0
+#: field:hr.job,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,create_date:0
+#: field:hr.department,create_date:0
+#: field:hr.employee,create_date:0
+#: field:hr.employee.category,create_date:0
+#: field:hr.job,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "Current Number of Employees"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "生年月日"
+
+#. module: hr
+#: help:hr.employee,message_last_post:0
+#: help:hr.job,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: hr
+#: view:hr.department:hr.view_department_filter
+#: view:hr.employee:hr.view_employee_filter
+#: field:hr.employee,department_id:0
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,department_id:0
+msgid "Department"
+msgstr "部門"
+
+#. module: hr
+#: field:hr.department,name:0
+msgid "Department Name"
+msgstr "部門名"
+
+#. module: hr
+#: view:hr.department:hr.view_department_filter
+#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+msgid "Departments"
+msgstr "部門"
+
+#. module: hr
+#: field:res.users,display_employees_suggestions:0
+msgid "Display Employees Suggestions"
 msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Single"
-msgstr "独身"
+msgid "Divorced"
+msgstr "離婚"
 
 #. module: hr
-#: field:hr.job,name:0
-msgid "Job Name"
-msgstr "職務名"
-
-#. module: hr
-#: view:hr.job:0
-msgid "In Position"
-msgstr "職位"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_payroll:0
-msgid "This installs the module hr_payroll."
+#: field:hr.config.settings,module_hr_gamification:0
+msgid "Drive engagement with challenges and badges"
 msgstr ""
 
 #. module: hr
-#: field:hr.config.settings,module_hr_contract:0
-msgid "Record contracts per employee"
-msgstr "従業員毎に契約を記録"
+#: view:hr.employee:hr.view_employee_form
+#: model:ir.model,name:hr.model_hr_employee
+msgid "Employee"
+msgstr "従業員"
 
 #. module: hr
-#: view:hr.department:0
-msgid "department"
-msgstr "部門"
+#: view:hr.employee.category:hr.view_employee_category_form
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "従業員の区分"
 
 #. module: hr
-#: field:hr.employee,country_id:0
-msgid "Nationality"
-msgstr "国籍"
+#: field:hr.employee.category,name:0
+msgid "Employee Tag"
+msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Additional Features"
-msgstr "追加機能"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
+msgstr "従業員タグ"
 
 #. module: hr
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "注記"
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "従業員の給与振込の銀行口座"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Subordinate Hierarchy"
-msgstr "下位の階層構造"
-
-#. module: hr
-#: field:hr.employee,resource_id:0
-msgid "Resource"
-msgstr "リソース"
-
-#. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "氏名"
-
-#. module: hr
-#: field:hr.employee,gender:0
-msgid "Gender"
-msgstr "性別"
-
-#. module: hr
-#: view:hr.employee:0
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.employee:hr.view_employee_tree
+#: view:hr.employee:hr.view_partner_tree2
 #: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
@@ -832,45 +322,236 @@ msgid "Employees"
 msgstr "従業員"
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr "社会保険番号"
+#: view:hr.employee.category:hr.view_employee_category_list
+#: view:hr.employee.category:hr.view_employee_category_tree
+msgid "Employees Categories"
+msgstr "従業員カテゴリー"
 
 #. module: hr
-#: field:hr.department,name:0
-msgid "Department Name"
-msgstr "部門名"
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "従業員体系"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "レポート"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_payroll:0
-msgid "Manage payroll"
-msgstr "給与計算を管理"
-
-#. module: hr
-#: view:hr.config.settings:0
-#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
-msgid "Configure Human Resources"
+#: constraint:hr.employee.category:0
+msgid "Error! You cannot create recursive Categories."
 msgstr ""
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "No Recruitment"
+#: constraint:hr.department:0
+msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: help:hr.employee,ssnid:0
-msgid "Social Security Number"
-msgstr "社会保障番号"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
 
 #. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Creation of a OpenERP user"
-msgstr "OpenERPユーザ作成日"
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected New Employees"
+msgstr ""
+
+#. module: hr
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Female"
+msgstr "女"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/xml/suggestions.xml:29
+#: view:hr.employee:hr.hr_kanban_view_employees
+#, python-format
+msgid "Follow"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_follower_ids:0
+#: field:hr.job,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.hr_kanban_view_employees
+msgid "Following"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,gender:0
+msgid "Gender"
+msgstr "性別"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_job_filter
+msgid "Group By"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR設定"
+
+#. module: hr
+#: field:hr.job,no_of_hired_employee:0
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,message_summary:0
+#: help:hr.job,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
+msgstr "自宅住所"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
+#: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+msgid "Human Resources"
+msgstr "人材"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Human Resources Management"
+msgstr "人材管理"
+
+#. module: hr
+#: field:hr.config.settings,id:0
+#: field:hr.department,id:0
+#: field:hr.employee,id:0
+#: field:hr.employee.category,id:0
+#: field:hr.job,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "識別番号"
+
+#. module: hr
+#: help:hr.employee,message_unread:0
+#: help:hr.job,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: hr
+#: view:hr.job:hr.view_job_filter
+msgid "In Position"
+msgstr "職位"
+
+#. module: hr
+#: view:hr.job:hr.view_job_filter
+msgid "In Recruitment"
+msgstr "採用中"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_attendance:0
+msgid "Install attendances feature"
+msgstr ""
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Install your country's payroll"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_is_follower:0
+#: field:hr.job,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_hr_job_form
+#: view:hr.job:hr.view_hr_job_tree
+#: view:hr.job:hr.view_job_filter
+msgid "Job"
+msgstr "職務"
+
+#. module: hr
+#: field:hr.job,description:0
+msgid "Job Description"
+msgstr "職務内容"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "職務名"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Position"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job_position
+msgid "Job Positions"
+msgstr "職位"
+
+#. module: hr
+#: field:hr.employee,job_id:0
+msgid "Job Title"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,jobs_ids:0
+#: view:hr.job:hr.view_job_filter
+msgid "Jobs"
+msgstr "業務"
+
+#. module: hr
+#: field:hr.employee,message_last_post:0
+#: field:hr.job,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,write_uid:0
+#: field:hr.department,write_uid:0
+#: field:hr.employee,write_uid:0
+#: field:hr.employee.category,write_uid:0
+#: field:hr.job,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,write_date:0
+#: field:hr.department,write_date:0
+#: field:hr.employee,write_date:0
+#: field:hr.employee.category,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "Launch Recruitment"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
+msgstr "休暇"
 
 #. module: hr
 #: field:hr.employee,login:0
@@ -878,15 +559,409 @@ msgid "Login"
 msgstr "ログイン"
 
 #. module: hr
+#: selection:hr.employee,gender:0
+msgid "Male"
+msgstr "男"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_expense:0
+msgid "Manage employees expenses"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,module_hr_holidays:0
+msgid "Manage holidays, leaves and allocation requests"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,module_hr_payroll:0
+msgid "Manage payroll"
+msgstr "給与計算を管理"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_recruitment:0
+msgid "Manage the recruitment process"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,module_hr_timesheet:0
+msgid "Manage timesheets"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,manager_id:0
+#: view:hr.employee:hr.view_employee_filter
+#: field:hr.employee,parent_id:0
+msgid "Manager"
+msgstr "マネジャ"
+
+#. module: hr
+#: field:hr.employee,marital:0
+msgid "Marital Status"
+msgstr "婚姻区分"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Married"
+msgstr "既婚"
+
+#. module: hr
+#: field:hr.employee,image_medium:0
+msgid "Medium-sized photo"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,image_medium:0
+msgid ""
+"Medium-sized photo of the employee. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
+
+#. module: hr
+#: field:hr.department,member_ids:0
+msgid "Members"
+msgstr "メンバー"
+
+#. module: hr
+#: field:hr.employee,message_ids:0
+#: field:hr.job,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,message_ids:0
+#: help:hr.job,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "氏名"
+
+#. module: hr
+#: field:hr.employee,country_id:0
+msgid "Nationality"
+msgstr "国籍"
+
+#. module: hr
+#: field:hr.department,note:0
+msgid "Note"
+msgstr "注記"
+
+#. module: hr
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "注記"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid ""
+"Number of hired employee must be less than expected number of employee in "
+"recruitment."
+msgstr ""
+
+#. module: hr
+#: help:hr.job,no_of_hired_employee:0
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
+msgstr ""
+
+#. module: hr
+#: help:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "勤務先住所"
+
+#. module: hr
+#: model:ir.actions.client,name:hr.action_client_hr_menu
+msgid "Open HR Menu"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,module_hr_evaluation:0
+msgid "Organize employees periodic evaluation"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr "その他のID"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Other Information ..."
+msgstr "その他情報..."
+
+#. module: hr
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "上位の部門"
+
+#. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Employee Tag"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "旅券番号"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
+msgid "Payroll"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Personal Information"
+msgstr "個人情報"
+
+#. module: hr
+#: field:hr.employee,image:0
+msgid "Photo"
+msgstr "写真"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Position"
+msgstr "役職"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Public Information"
+msgstr "公開情報"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_contract:0
+msgid "Record contracts per employee"
+msgstr "従業員毎に契約を記録"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment Closed"
+msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment in Progress"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Related User"
+msgstr "関連ユーザ"
+
+#. module: hr
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+msgid "Reports"
+msgstr "レポート"
+
+#. module: hr
+#: field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "必要事項"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "リソース"
+
+#. module: hr
+#: field:hr.employee,sinid:0
+msgid "SIN No"
+msgstr "社会保険番号"
+
+#. module: hr
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "社会保障番号"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Single"
+msgstr "独身"
+
+#. module: hr
+#: field:hr.employee,image_small:0
+msgid "Small-sized photo"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,image_small:0
+msgid ""
+"Small-sized photo of the employee. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "社会保険番号"
+
+#. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "社会保障番号"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,state:0
+msgid "Status"
+msgstr "状態"
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "Stop Recruitment"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordinate Hierarchy"
+msgstr "下位の階層構造"
+
+#. module: hr
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "部下"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/xml/suggestions.xml:15
+#, python-format
+msgid "Suggested Employees"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_summary:0
+#: field:hr.job,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,category_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Talent Management"
+msgstr "タレント管理"
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid ""
+"The name of the job position must be unique per department in company!"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,image:0
+msgid ""
+"This field holds the image used as photo for the employee, limited to "
+"1024x1024px."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_account_analytic_analysis:0
+msgid ""
+"This installs the module account_analytic_analysis, which will install sales "
+"management too."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_attendance:0
+msgid "This installs the module hr_attendance."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_contract:0
+msgid "This installs the module hr_contract."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_evaluation:0
+msgid "This installs the module hr_evaluation."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_expense:0
+msgid "This installs the module hr_expense."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_gamification:0
+msgid "This installs the module hr_gamification."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_holidays:0
+msgid "This installs the module hr_holidays."
+msgstr "hr_holidays モジュールをインストールします。"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_payroll:0
+msgid "This installs the module hr_payroll."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_recruitment:0
+msgid "This installs the module hr_recruitment."
+msgstr "hr_recruitment モジュールをインストールします。"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet:0
+msgid "This installs the module hr_timesheet."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "This installs the module hr_timesheet_sheet."
+msgstr ""
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Time Tracking"
+msgstr "時間記録"
+
+#. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
 msgstr ""
 
 #. module: hr
-#: help:hr.job,state:0
-msgid ""
-"By default 'In position', set it to 'In Recruitment' if recruitment process "
-"is going on for this job position."
+#: view:hr.employee:hr.hr_kanban_view_employees
+msgid "Unfollow"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_unread:0
+#: field:hr.job,message_unread:0
+msgid "Unread Messages"
+msgstr "未読メッセージ"
+
+#. module: hr
+#: field:hr.job,write_date:0
+msgid "Update Date"
 msgstr ""
 
 #. module: hr
@@ -895,57 +970,10 @@ msgid "Users"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job
-msgid "Job Positions"
-msgstr "職位"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_board_hr
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Human Resources dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+#: code:addons/hr/hr.py:273
+#, python-format
+msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
 msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
-msgid "Coach"
-msgstr "コーチ"
-
-#. module: hr
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "職位名は会社ごとにユニークでなければいけません。"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_expense:0
-msgid "This installs the module hr_expense."
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
-
-#. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
-#: field:hr.employee,parent_id:0
-msgid "Manager"
-msgstr "マネジャ"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -953,162 +981,41 @@ msgid "Widower"
 msgstr "寡夫"
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
-msgstr "部下"
+#: field:hr.employee,work_email:0
+msgid "Work Email"
+msgstr "勤務先Eメール"
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Apply"
-msgstr "適用"
+#: field:hr.employee,mobile_phone:0
+msgid "Work Mobile"
+msgstr "会社の携帯"
 
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "エラー。反復する部署を作ることはできません。"
+#. module: hr
+#: field:hr.employee,work_phone:0
+msgid "Work Phone"
+msgstr "勤務先電話"
 
-#~ msgid "Mark as Old"
-#~ msgstr "古い印をつける。"
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "勤務先住所"
 
-#~ msgid ""
-#~ "Partner that is related to the current employee. Accounting transaction will "
-#~ "be written on this partner belongs to employee."
-#~ msgstr "この従業員に関係するパートナ。会計トトランザクションは従業員に関係するこのパートナについて記録されます。"
+#. module: hr
+#: view:hr.department:hr.view_department_form
+msgid "department"
+msgstr "部門"
 
-#~ msgid "HR Management"
-#~ msgstr "人材管理"
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "e.g. Part Time"
+msgstr ""
 
-#~ msgid ""
-#~ "Create employees form and link them to an OpenERP user if you want them to "
-#~ "access this instance. Categories can be set on employees to perform massive "
-#~ "operations on all the employees of the same category, i.e. allocating "
-#~ "holidays."
-#~ msgstr ""
-#~ "従業員を作成して、このインスタンスをアクセスできるようにOpenERPに連携する。従業員に区分を設定すると，同じ区分の全ての従業員と同じ処理が適用されるま"
-#~ "す。例えば、休日の割当てなど。"
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "new employee(s) expected"
+msgstr ""
 
-#~ msgid "Required number of employees in total for that job."
-#~ msgstr "この職種に必要な従業員の数"
-
-#~ msgid "In Recruitement"
-#~ msgstr "採用中"
-
-#~ msgid "Social IDs"
-#~ msgstr "社会保障番号"
-
-#~ msgid "Work E-mail"
-#~ msgstr "勤務先のEメール"
-
-#~ msgid "My Departments Employee"
-#~ msgstr "私の部門の従業員"
-
-#~ msgid "Reporting"
-#~ msgstr "レポート"
-
-#~ msgid "Expected Employees"
-#~ msgstr "従業員候補"
-
-#~ msgid "Categories"
-#~ msgstr "区分"
-
-#~ msgid "Error ! You cannot create recursive Categories."
-#~ msgstr "エラー。反復区分を作ることはできません。"
-
-#~ msgid "My Board"
-#~ msgstr "私のボード"
-
-#~ msgid "Categories of Employee"
-#~ msgstr "従業員の区分"
-
-#~ msgid "Create your Employees"
-#~ msgstr "従業員を作成する。"
-
-#~ msgid "hr.department"
-#~ msgstr "hr.department"
-
-#~ msgid "HR Manager Dashboard"
-#~ msgstr "人事マネジャのダッシュボード"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "選択した会社は、このユーザに許された会社ではありません。"
-
-#~ msgid ""
-#~ "Here you can manage your work force by creating employees and assigning them "
-#~ "specific properties in the system. Maintain all employee related information "
-#~ "and keep track of anything that needs to be recorded for them. The personal "
-#~ "information tab will help you maintain their identity data. The Categories "
-#~ "tab gives you the opportunity to assign them related employee categories "
-#~ "depending on their position and activities within the company. A category "
-#~ "can be a seniority level within the company or a department. The Timesheets "
-#~ "tab allows to assign them a specific timesheet and analytic journal where "
-#~ "they will be able to enter time through the system. In the note tab, you can "
-#~ "enter text data that should be recorded for a specific employee."
-#~ msgstr ""
-#~ "ここでは従業員を作成して、各人の特性を指定することができます。個人情報タブでは、従業員に関する必要な情報を記録・保持してください。カテゴリータブでは、従業"
-#~ "員の職位と職種に応じたカテゴリーを割り当てることができます。カテゴリーは、会社あるいは部門における年功のレベルで決まるでしょう。タイムシートタブでは、従業"
-#~ "員に分析記録のためのタイムシートを割り当てて、本人が作業時間を記録するのに使います。注記タブでは、その従業員に関する情報を追記することができます。"
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents related to "
-#~ "employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr "部門組織構造は，従業員に関する全ての文書を管理するために使われます。：経費、タイムシートの検証、休暇の管理、採用など。"
-
-#~ msgid "Number of employees with that job."
-#~ msgstr "この職種の従業員数"
-
-#~ msgid "Subordonate Hierarchy"
-#~ msgstr "下位の階層構造"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "エラー。従業員の反復した階層構造を作ることはできません。"
-
-#~ msgid "unknown"
-#~ msgstr "不明"
-
-#~ msgid "Categories structure"
-#~ msgstr "カテゴリー体系"
-
-#~ msgid "Dashboard"
-#~ msgstr "ダッシュボード"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "同一のログインに２つのユーザを指定することはできません。"
-
-#~ msgid "State"
-#~ msgstr "状態"
-
-#~ msgid "Old"
-#~ msgstr "旧"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"
-
-#~ msgid "Description"
-#~ msgstr "詳細"
-
-#~ msgid "HR Manager Board"
-#~ msgstr "人材マネジャボード"
-
-#~ msgid "Job Information"
-#~ msgstr "職務情報"
-
-#~ msgid "My Departments Jobs"
-#~ msgstr "私の部門の職種"
-
-#~ msgid "Number of Employees"
-#~ msgstr "従業員数"
-
-#~ msgid ""
-#~ "Job Positions are used to define jobs and their requirements. You can keep "
-#~ "track of the number of employees you have per job position and how many you "
-#~ "expect in the future. You can also attach a survey to a job position that "
-#~ "will be used in the recruitment process to evaluate the applicants for this "
-#~ "job position."
-#~ msgstr ""
-#~ "職種は、仕事内容とその要件を定義するのに使います。職種ごとの従業員数と将来の必要人数を記録することができます。職種への応募者を評価するための採用プロセスで"
-#~ "使う質問票を、ここに添付することができます。"
-
-#~ msgid ""
-#~ "Your Company's Department Structure is used to manage all documents related "
-#~ "to employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr "部門組織構造は、従業員に関する全てのドキュメントの管理に使われます。例えば、経費、タイムシートの検証、休暇の管理、採用など。"
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "no_of_recruitment"
+msgstr ""

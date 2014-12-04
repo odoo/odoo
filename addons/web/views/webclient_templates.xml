@@ -7,7 +7,6 @@
             <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
             <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
 
             <!-- jQuery stuff -->
@@ -23,6 +22,7 @@
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
             <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
+            <script type="text/javascript" src="/web/static/test/menu.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         </template>
@@ -41,12 +41,6 @@
         </template>
 
         <template id="web.assets_backend">
-            <!-- Datejs -->
-            <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
-            <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
-
             <!-- jQuery addons -->
             <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.autosize/jquery.autosize.js"></script>
@@ -64,15 +58,17 @@
             <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
+            <!-- Datetime Picker -->
+            <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+
             <!-- jQuery ui -->
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css"/>
 
             <t t-call="web.jqueryui_conflict">
                 <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
             </t>
-
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
@@ -103,6 +99,7 @@
             <script type="text/javascript" src="/web/static/src/js/view_list.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_pivot.js"></script>
             <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
             <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
 
@@ -123,7 +120,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP</title>
+                    <title>Odoo</title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
@@ -153,21 +150,17 @@
                 <span class="oe_logo_edit">Edit Company data</span>
                 <img src='/web/binary/company_logo'/>
             </a>
-            <div>
-                <div>
-                    <div class="oe_secondary_menus_container">
-                        <t t-foreach="menu_data['children']" t-as="menu">
-                            <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                                <t t-foreach="menu['children']" t-as="menu">
-                                    <div class="oe_secondary_menu_section">
-                                        <t t-esc="menu['name']"/>
-                                    </div>
-                                    <t t-call="web.menu_secondary_submenu"/>
-                                </t>
+            <div class="oe_secondary_menus_container">
+                <t t-foreach="menu_data['children']" t-as="menu">
+                    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                        <t t-foreach="menu['children']" t-as="menu">
+                            <div class="oe_secondary_menu_section">
+                                <t t-esc="menu['name']"/>
                             </div>
+                            <t t-call="web.menu_secondary_submenu"/>
                         </t>
                     </div>
-                </div>
+                </t>
             </div>
             <div class="oe_footer">
                 Powered by <a href="http://www.openerp.com" target="_blank"><span>Odoo</span></a>
@@ -214,7 +207,7 @@
                     </script>
                 </t>
 
-                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="icon-bar"></span>
@@ -226,17 +219,10 @@
                         <t t-call="web.menu"/>
                     </div>
                 </nav>
-                <div class="openerp openerp_webclient_container">
-                    <table class="oe_webclient">
-                        <tr>
-                            <td class="oe_leftbar" valign="top">
-                                <div>
-                                    <t t-call="web.menu_secondary"/>
-                                </div>
-                            </td>
-                            <td class="oe_application"/>
-                        </tr>
-                    </table>
+                <div class="openerp openerp_webclient_container oe_webclient">
+                    <div class="oe_leftbar" groups="base.group_user,base.group_portal">
+                        <t t-call="web.menu_secondary"/>
+                    </div><div class="oe_application"/>
                 </div>
             </t>
         </template>
@@ -250,7 +236,7 @@
                 <t t-set="body_classname" t-value="'oe_single_form'"/>
                 <div class="oe_single_form_container modal-content">
                     <div class="oe_single_form_logo">
-                        <img src="/web/binary/company_logo"/>
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
                     </div>
                     <hr/>
                     <t t-raw="0"/>
@@ -260,7 +246,7 @@
                             <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
                             <span class="oe_footer_seperator"> | </span>
                         </t>
-                        <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
                     </div>
                 </div>
             </t>
@@ -323,7 +309,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP Web Tests</title>
+                    <title>Odoo Web Tests</title>
 
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>

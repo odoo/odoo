@@ -1,40 +1,27 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_vat
+# German translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-16 12:05+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-18 12:29+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-19 08:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
 msgstr "Gültigkeit überprüfen"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"Die UID/Ust-Nummer ist ungültig.\n"
-"Das vorgegebene Format ist %s."
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "MIAS - USt-Nummern Prüfung"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -42,25 +29,10 @@ msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr "Fehler !"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Markieren Sie dieses Kästchen, wenn der Partner der Umsatzsteuer unterworfen "
-"wird. Die UID (Umsatzsteuer-Identifikationsnummer) wird in diesem Fall im "
-"Rahmen der Umsatzsteuermeldung verwendet werden."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Partner"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -72,69 +44,42 @@ msgstr ""
 "geprüft, anstelle der einfachen Prüfziffern-Prüfung"
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Umsatzsteuermeldung"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
-#~ msgstr ""
-#~ "Erlaubt die UID (Umsatzsteueridentifikationsnummer) des Partners und prüft "
-#~ "diese."
-
-#~ msgid "VAT"
-#~ msgstr "UID"
-
+#: code:addons/base_vat/base_vat.py:130
 #, python-format
-#~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something like "
-#~ "this %s"
-#~ msgstr ""
-#~ "Die UID (Umsatzsteueridentifikationsnummer) ist anscheinend nicht korrekt. "
-#~ "Sie sollten in etwa eine Eingabe vornehmen, wie %s"
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "Die importierte UStID [%s] ist ungültig!"
 
-#~ msgid "Base VAT - To check VAT number validity"
-#~ msgstr ""
-#~ "Erlaubt die UID (Umsatzsteueridentifikationsnummer) des Partners und prüft "
-#~ "diese."
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Partner"
 
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
 #, python-format
-#~ msgid "The VAT is invalid, It should begin with the country code"
-#~ msgstr ""
-#~ "Die UID (Umsatzsteueridentifikationsnummer) ist ungültig. Sie sollte immer "
-#~ "mit dem Landescode (z.B. DE ...) beginnen."
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Die UStID [%s] für den Partner [%s] ist anscheinend ungültig!\n"
+"Hinweis: Das erwartete Format ist %s"
 
-#~ msgid ""
-#~ "\n"
-#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number.\n"
-#~ "\n"
-#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
-#~ "for\n"
-#~ "    checking the validity of VAT Number assigned to partners in European "
-#~ "countries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Aktivieren Sie die UST-ID für den Partner. Prüfen Sie die Gültigkeit.\n"
-#~ "\n"
-#~ "    Dieses Modul verwendet die Logik, die unter  http://sima-pc.com/nif.php "
-#~ "beschrieben wird,\n"
-#~ "    zur Prüfung der Gültigkeit einer UST-ID, die Sie bei einem "
-#~ "Geschäftspartner aus der EU zuweisen.\n"
-#~ "    "
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"Die UStID Nummer [%s] des Partners [%s] weicht vom erwarteten Format %s ab "
+"und konnte nicht erfolgreich durch die VIES VAT Prüfung validiert werden."
 
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "MIAS - USt-Nummern Prüfung"
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Fehler! Sie können keine rekursive assoziierte Mitglieder anlegen."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Der Unternehmensname muss eindeutig sein!"
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "z.B.  BE0477472701"

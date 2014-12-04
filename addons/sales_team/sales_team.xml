@@ -4,39 +4,12 @@
         <menuitem name="Sales"
             id="base.menu_base_partner"
             groups="base.group_sale_salesman,base.group_sale_manager"/>
- <!-- Update user form !-->
-        <record model="ir.ui.view" id="res_user_form">
-            <field name="name">Users Preferences</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='tz']" position="after">
-                        <field name="default_section_id"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
 
-        <!-- Update Preferences form !-->
-        <record id="view_users_form_preferences" model="ir.ui.view">
-            <field name="name">res.users.preferences.form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='company_id']" position="before">
-                        <field name="default_section_id" readonly="0"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
+        <!-- Case Teams Salesteams kanban view -->
 
-        <!-- Case Sections Salesteams kanban view -->
-
-       <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view" >
-            <field name="name">crm.case.section.kanban</field>
-            <field name="model">crm.case.section</field>
+       <record id="crm_team_salesteams_view_kanban" model="ir.ui.view" >
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey">
                     <field name="name"/>
@@ -60,7 +33,7 @@
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                            <img class="oe_margin_top_16 img-rounded" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
                                 </div>
@@ -71,10 +44,10 @@
             </field>
         </record>
 
-        <!-- Case Sections Search view -->
-        <record id="crm_case_section_salesteams_search" model="ir.ui.view">
-            <field name="name">Case Sections - Search</field>
-            <field name="model">crm.case.section</field>
+        <!-- Cateamions Search view -->
+        <record id="crm_team_salesteams_search" model="ir.ui.view">
+            <field name="name">Case Teams - Search</field>
+            <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
                     <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
@@ -91,14 +64,14 @@
             </field>
         </record>
 
-        <!-- Case Sections Action -->
-        <record id="crm_case_section_salesteams_act" model="ir.actions.act_window">
+        <!-- Case Teams Action -->
+        <record id="crm_team_salesteams_act" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{}</field>
-            <field name="view_id" ref="crm_case_section_salesteams_search"/>
+            <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click here to define a new sales team.
@@ -110,11 +83,11 @@
             </field>
         </record>
 
-        <!-- Case Sections Form View -->
+        <!-- Case Teams Form View -->
 
-         <record id="crm_case_section_view_form" model="ir.ui.view">
-            <field name="name">crm.case.section.form</field>
-            <field name="model">crm.case.section</field>
+         <record id="crm_team_view_form" model="ir.ui.view">
+            <field name="name">crm.team.form</field>
+            <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <form string="Sales Team">
                     <sheet>
@@ -136,22 +109,10 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Team Members">
-                                <field name="member_ids" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
+                                <field name="member_ids">
+                                    <tree>
                                         <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
+                                    </tree>
                                 </field>
                             </page>
                             <page string="Notes">
@@ -167,10 +128,10 @@
             </field>
         </record>
 
-        <!-- Case Sections Tree View -->
-        <record id="crm_case_section_view_tree" model="ir.ui.view">
-            <field name="name">crm.case.section.tree</field>
-            <field name="model">crm.case.section</field>
+        <!-- Case Teams Tree View -->
+        <record id="crm_team_view_tree" model="ir.ui.view">
+            <field name="name">crm.team.tree</field>
+            <field name="model">crm.team</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Sales Team">
@@ -181,11 +142,11 @@
             </field>
         </record>
 
-        <record id="crm_case_section_act" model="ir.actions.act_window">
+        <record id="crm_team_act" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_section_view_tree"/>
+            <field name="view_id" ref="crm_team_view_tree"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click here to define a new sales team.
@@ -197,7 +158,7 @@
             </field>
         </record>
 
-        <menuitem id="sales_team.menu_sales_team_act" action="crm_case_section_salesteams_act" sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams"/>
+        <menuitem id="sales_team.menu_sales_team_act" action="crm_team_salesteams_act" sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams"/>
 
         <!-- add css / js -->
         <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
@@ -206,6 +167,8 @@
                 <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
             </xpath>
         </template>
+
+        <menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager"/>
 
     </data>
 </openerp>

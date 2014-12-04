@@ -1,50 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * analytic_user_function
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-20 14:30+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-05 08:40+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Gyűjtőkód tételsor"
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid "Invoice Price Rate per User"
-msgstr "Számlázási ár mértéke felhasználónként"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,product_id:0
-msgid "Service"
-msgstr "Szolgáltatás"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Price per User"
-msgstr "Felhasználónkénti ár"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,price:0
-msgid "Price"
-msgstr "Ár"
-
-#. module: analytic_user_function
-#: help:analytic.user.funct.grid,price:0
-msgid "Price per hour for this user."
-msgstr "Ennek a felhasználónak a óránkénti ára."
+"X-Launchpad-Export-Date: 2014-10-06 07:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -53,24 +24,22 @@ msgid "Analytic Account"
 msgstr "Gyűjtőkód"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:106
-#: code:addons/analytic_user_function/analytic_user_function.py:135
-#, python-format
-msgid "Error!"
-msgstr "Hiba!"
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Gyűjtőkód tételsor"
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "Invoicing Data"
-msgstr "Számlázási adatok"
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
 
 #. module: analytic_user_function
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr "Felhasználó/termék kapcsolat"
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
 "Define a specific service (e.g. Senior Consultant)\n"
 "                            and price for some users to use these data "
@@ -85,16 +54,82 @@ msgstr ""
 "számlázására."
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,uom_id:0
-msgid "Unit of Measure"
-msgstr "Mértékegység"
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
+msgstr "Hiba!"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:107
-#: code:addons/analytic_user_function/analytic_user_function.py:136
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr "Számlázási ár mértéke felhasználónként"
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr "Számlázási adatok"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for "
+"a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr ""
+"Odoo rendszer előkeresést végez a szülő főkönyvi számlákon \n"
+"                            annak ellenőrzésére, hogy a kiválasztott\n"
+"                            felhasználóhoz használható a meghatározott\n"
+"                            feltétel. Ez lehetővé teszi számlázási "
+"feltételek\n"
+"                            beálítását a számlákhoz egy szerződés csoportra\n"
+"                            vonatkozóan."
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr "Ár"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr "Felhasználónkénti ár"
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr "Ennek a felhasználónak a óránkénti ára."
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr "Szolgáltatás"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
 #, python-format
-msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr "%s (kód: %d) termékre nem állítottak be beszerzés főkönyvi számlát"
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+"Nem állítottak be beszerzési költségszámlát erre a termékre: \"%s\" (kód:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -102,75 +137,16 @@ msgid "Timesheet Line"
 msgstr "Munkaidő-kimutatás sora"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"OpenERP will recursively search on parent accounts\n"
-"                            to check if specific conditions are defined for "
-"a\n"
-"                            specific user. This allows to set invoicing\n"
-"                            conditions for a group of contracts."
-msgstr ""
-"OpenERP visszamenőlegesen keresi a szülő fiókokban annak\n"
-"                            ellenőrzésére, hogy sajátos körülmények vannak-"
-"e\n"
-"                            meghatározva a felhasználóhoz. Ez lehetővé "
-"teszi\n"
-"                            sajátos számlázási körülmény beállítását egy "
-"vevő csoporthoz."
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr "Mértékegység"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,user_id:0
 msgid "User"
 msgstr "Felhasználó"
 
-#~ msgid "Product"
-#~ msgstr "Termék"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
-
-#~ msgid "Relation table between users and products on a analytic account"
-#~ msgstr "A gyűjtőkód felhasználók és termékek közötti kapcsolati táblája"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódokat."
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "    This module allows you to define what is the default function of a "
-#~ "specific user on a given account. This is mostly used when a user encodes "
-#~ "his timesheet: the values are retrieved and the fields are auto-filled... "
-#~ "but the possibility to change these values is still available.\n"
-#~ "\n"
-#~ "    Obviously if no data has been recorded for the current account, the "
-#~ "default value is given as usual by the employee data so that this module is "
-#~ "perfectly compatible with older configurations.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "    Ez a modul lehetővé teszi annak meghatározását, hogy mi a felhasználó "
-#~ "alapértelmezett funkciója a gyűjtőkódon. Leginkább akkor használják, amikor "
-#~ "a felhasználó berögzíti a munkaidő-kimutatását: az értékek feljönnek és a "
-#~ "mezők automatikusan kitöltődnek... De ezeket az értékeket meg lehet "
-#~ "változtatni.\n"
-#~ "\n"
-#~ "    Nyilvánvalóan, ha az aktuális gyűjtőkódra nem vittek be adatot, az "
-#~ "alapértelmezett érték a munkavállalói adatokból kerül meghatározásra.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid "Analytic User Function"
-#~ msgstr "Felhasználó funkciója"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Hiba!"
-
-#~ msgid "User's Product for this Analytic Account"
-#~ msgstr "A gyűjtőkódhoz kapcsolódó felhasználó és termék"
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Felhasználó/termék kapcsolat"

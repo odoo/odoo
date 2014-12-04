@@ -24,6 +24,7 @@ import logging
 from openerp import tools
 
 from email.header import decode_header
+from email.utils import formataddr
 from openerp import SUPERUSER_ID, api
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
@@ -31,11 +32,6 @@ from openerp.tools.translate import _
 from HTMLParser import HTMLParser
 
 _logger = logging.getLogger(__name__)
-
-try:
-    from mako.template import Template as MakoTemplate
-except ImportError:
-    _logger.warning("payment_acquirer: mako templates not available, payment acquirer will not work!")
 
 
 """ Some tools for parsing / creating email fields """
@@ -76,7 +72,8 @@ class mail_message(osv.Model):
 
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
-        if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
+        if context and context.get('default_type') and context.get('default_type') not in [
+                val[0] for val in self._columns['type'].selection]:
             context = dict(context, default_type=None)
         return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
@@ -129,8 +126,8 @@ class mail_message(osv.Model):
             help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
         'reply_to': fields.char('Reply-To',
             help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
-        'same_thread': fields.boolean('Same thread',
-            help='Redirect answers to the same discussion thread.'),
+        'no_auto_thread': fields.boolean('No threading for answers',
+            help='Answers do not go in the original document\' discussion thread. This has an impact on the generated message-id.'),
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
@@ -174,9 +171,9 @@ class mail_message(osv.Model):
     def _get_default_from(self, cr, uid, context=None):
         this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         if this.alias_name and this.alias_domain:
-            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
+            return formataddr((this.name, '%s@%s' % (this.alias_name, this.alias_domain)))
         elif this.email:
-            return '%s <%s>' % (this.name, this.email)
+            return formataddr((this.name, this.email))
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
@@ -188,7 +185,6 @@ class mail_message(osv.Model):
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
-        'same_thread': True,
     }
 
     #------------------------------------------------------
@@ -454,8 +450,8 @@ class mail_message(osv.Model):
             exp_domain = domain + [('id', '<', min(message_unload_ids + message_ids))]
         else:
             exp_domain = domain + ['!', ('id', 'child_of', message_unload_ids + parent_tree.keys())]
-        ids = self.search(cr, uid, exp_domain, context=context, limit=1)
-        if ids:
+        more_count = self.search_count(cr, uid, exp_domain, context=context)
+        if more_count:
             # inside a thread: prepend
             if parent_id:
                 messages.insert(0, _get_expandable(exp_domain, -1, parent_id, True))
@@ -583,6 +579,16 @@ class mail_message(osv.Model):
             thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         return message_list
 
+    def get_likers_list(self, cr, uid, ids, limit=10, context=None):
+        """ Return the people list who liked this message. """
+        voter_names = []
+        message = self.browse(cr, uid, ids, context=context)
+        for voter in message.vote_user_ids[:limit]:
+            voter_names.append(voter.name)
+        if len(message.vote_user_ids) > limit:
+            voter_names.append(_("and %s others like this") % (len(message.vote_user_ids) - limit))
+        return voter_names
+
     #------------------------------------------------------
     # mail_message internals
     #------------------------------------------------------
@@ -607,7 +613,7 @@ class mail_message(osv.Model):
         return allowed_ids
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-        context=None, count=False, access_rights_uid=None):
+                context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to remove
             ids uid could not see according to our custom rules. Please refer
             to check_access_rule for more details about those rules.
@@ -620,10 +626,12 @@ class mail_message(osv.Model):
         """
         # Rules do not apply to administrator
         if uid == SUPERUSER_ID:
-            return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+            return super(mail_message, self)._search(
+                cr, uid, args, offset=offset, limit=limit, order=order,
                 context=context, count=count, access_rights_uid=access_rights_uid)
         # Perform a super with count as False, to have the ids, not a counter
-        ids = super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+        ids = super(mail_message, self)._search(
+            cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=False, access_rights_uid=access_rights_uid)
         if not ids and count:
             return 0
@@ -634,14 +642,20 @@ class mail_message(osv.Model):
         author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
-        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'notified_partner_ids'], context=context)
-        for message in messages:
-            if message.get('author_id') and message.get('author_id')[0] == pid:
-                author_ids.add(message.get('id'))
-            elif pid in message.get('notified_partner_ids'):
-                partner_ids.add(message.get('id'))
-            elif message.get('model') and message.get('res_id'):
-                model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
+        # check read access rights before checking the actual rules on the given ids
+        super(mail_message, self).check_access_rights(cr, access_rights_uid or uid, 'read')
+
+        cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, n.partner_id
+            FROM "%s" m LEFT JOIN "mail_notification" n
+            ON n.message_id=m.id AND n.partner_id = (%%s)
+            WHERE m.id = ANY (%%s)""" % self._table, (pid, ids,))
+        for id, rmod, rid, author_id, partner_id in cr.fetchall():
+            if author_id == pid:
+                author_ids.add(id)
+            elif partner_id == pid:
+                partner_ids.add(id)
+            elif rmod and rid:
+                model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
 
         allowed_ids = self._find_allowed_doc_ids(cr, uid, model_ids, context=context)
         final_ids = author_ids | partner_ids | allowed_ids
@@ -694,7 +708,7 @@ class mail_message(osv.Model):
         partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
         # Read mail_message.ids to have their values
-        message_values = dict.fromkeys(ids, {})
+        message_values = dict((res_id, {}) for res_id in ids)
         cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, author_id, parent_id in cr.fetchall():
             message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
@@ -703,20 +717,20 @@ class mail_message(osv.Model):
         author_ids = []
         if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
-                if message.get('author_id') and message.get('author_id') == partner_id]
+                          if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.iteritems()
-                if not message.get('model') and not message.get('res_id')]
+                          if not message.get('model') and not message.get('res_id')]
 
         # Parent condition, for create (check for received notifications for the created message parent)
         notified_ids = []
         if operation == 'create':
             parent_ids = [message.get('parent_id') for mid, message in message_values.iteritems()
-                if message.get('parent_id')]
+                          if message.get('parent_id')]
             not_ids = not_obj.search(cr, SUPERUSER_ID, [('message_id.id', 'in', parent_ids), ('partner_id', '=', partner_id)], context=context)
             not_parent_ids = [notif.message_id.id for notif in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
             notified_ids += [mid for mid, message in message_values.iteritems()
-                if message.get('parent_id') in not_parent_ids]
+                             if message.get('parent_id') in not_parent_ids]
 
         # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
         other_ids = set(ids).difference(set(author_ids), set(notified_ids))
@@ -733,10 +747,10 @@ class mail_message(osv.Model):
                     ('res_model', '=', doc_model),
                     ('res_id', 'in', list(doc_ids)),
                     ('partner_id', '=', partner_id),
-                    ], context=context)
+                ], context=context)
                 fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
                 notified_ids += [mid for mid, message in message_values.iteritems()
-                    if message.get('model') == doc_model and message.get('res_id') in fol_mids]
+                                 if message.get('model') == doc_model and message.get('res_id') in fol_mids]
 
         # CRUD: Access rights related to the document
         other_ids = other_ids.difference(set(notified_ids))
@@ -750,15 +764,15 @@ class mail_message(osv.Model):
             else:
                 self.pool['mail.thread'].check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
             document_related_ids += [mid for mid, message in message_values.iteritems()
-                if message.get('model') == model and message.get('res_id') in mids]
+                                     if message.get('model') == model and message.get('res_id') in mids]
 
         # Calculate remaining ids: if not void, raise an error
         other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
-                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                            (self._description, operation))
+                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
+                             (self._description, operation))
 
     def _get_record_name(self, cr, uid, values, context=None):
         """ Return the related document name, using name_get. It is done using
@@ -776,7 +790,7 @@ class mail_message(osv.Model):
         return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
-        if values.get('same_thread', True) is False:
+        if values.get('no_auto_thread', False) is True:
             message_id = tools.generate_tracking_message_id('reply_to')
         elif values.get('res_id') and values.get('model'):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
@@ -790,7 +804,7 @@ class mail_message(osv.Model):
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
-        if 'message_id' not in values:
+        if not values.get('message_id'):
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)

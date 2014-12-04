@@ -4,7 +4,7 @@
         <record id="blog_blog_1" model="blog.blog">
             <field name="name">Our News</field>
             <field name="subtitle">Sharing our evolution with passion</field>
-            <field name="description">Presentation of new OpenERP features</field>
+            <field name="description">Presentation of new Odoo features</field>
         </record>
 
         <record id="menu_news" model="website.menu">
@@ -12,6 +12,7 @@
             <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">40</field>
+            <field name="website_id" ref="website.default_website"/>
         </record>
     </data>
 
@@ -28,29 +29,13 @@
             <field name="state">open</field>
         </record>
 
-        <!-- Post-related subtypes for messaging / Chatter -->
-        <record id="mt_blog_post_new" model="mail.message.subtype">
-            <field name="name">New Post</field>
-            <field name="res_model">blog.post</field>
-            <field name="default" eval="True"/>
-            <field name="description">New Post</field>
-        </record>
-        <record id="mt_blog_post_published" model="mail.message.subtype">
-            <field name="name">Post Published</field>
-            <field name="res_model">blog.post</field>
-            <field name="default" eval="False"/>
-            <field name="description">Post Published</field>
-        </record>
-
-        <!-- Project-related subtypes for messaging / Chatter -->
-        <record id="mt_blog_blog_post_new" model="mail.message.subtype">
-            <field name="name">New Post</field>
+        <!-- Blog-related subtypes for messaging / Chatter -->
+        <record id="mt_blog_blog_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
             <field name="res_model">blog.blog</field>
             <field name="default" eval="True"/>
-            <field name="parent_id" eval="ref('mt_blog_post_new')"/>
-            <field name="relation_field">blog_id</field>
+            <field name="description">Published Post</field>
         </record>
-
 
     </data>
 </openerp>

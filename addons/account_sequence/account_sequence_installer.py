@@ -31,7 +31,7 @@ class account_sequence_installer(osv.osv_memory):
         'suffix': fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
         'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'padding' : fields.integer('Number padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {

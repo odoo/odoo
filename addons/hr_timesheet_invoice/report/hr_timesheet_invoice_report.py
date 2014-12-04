@@ -35,7 +35,7 @@ class report_timesheet_line(osv.osv):
         'cost': fields.float('Cost', readonly=True),
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'general_account_id': fields.many2one('account.account', 'General Account', readonly=True),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),

@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent f0a3629abb17ca9f4dddd8885321d9ca5de14b55
+diff -r f0a3629abb17 -r 7ae0db4c2ddf academy/controllers.py
+--- a/academy/controllers.py	Tue Aug 12 11:21:05 2014 +0200
++++ b/academy/controllers.py	Tue Aug 12 11:24:14 2014 +0200
+@@ -4,7 +4,7 @@ from openerp import http
+ class Academy(http.Controller):
+     @http.route('/academy/', auth='public')
+     def index(self):
++        Teachers = http.request.env['academy.teachers']
+         return http.request.render('academy.index', {
+-            'teachers': ["Diana Padilla", "Jody Caroll", "Lester Vaughn"],
++            'teachers': Teachers.search([]),
+         })
+-
+diff -r f0a3629abb17 -r 7ae0db4c2ddf academy/templates.xml
+--- a/academy/templates.xml	Tue Aug 12 11:21:05 2014 +0200
++++ b/academy/templates.xml	Tue Aug 12 11:24:14 2014 +0200
+@@ -2,7 +2,7 @@
+   <template id="index">
+     <title>Academy</title>
+     <t t-foreach="teachers" t-as="teacher">
+-        <p><t t-esc="teacher"/></p>
++      <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
+     </t>
+   </template>
+-</data></openerp>
+\ No newline at end of file
++</data></openerp>

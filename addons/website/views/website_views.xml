@@ -24,18 +24,19 @@
                     <div name="domain">
                         <separator string="Domain"/>
                         <group name="domain">
-                            <field name="name" class="oe_inline"/>
+                            <field name="name"/>
+                            <field name="domain"/>
                             <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
                         </group>
                     </div>
                     <div name="social_media">
                         <separator string="Social Media"/>
                         <group name="social_media">
-                            <field name="social_twitter" placeholder="https://twitter.com/openerp"/>
-                            <field name="social_facebook" placeholder="https://facebook.com/openerp"/>
-                            <field name="social_googleplus" placeholder="https://plus.google.com/+openerp"/>
-                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
-                            <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
+                            <field name="social_twitter" placeholder="https://twitter.com/odooapps"/>
+                            <field name="social_facebook" placeholder="https://facebook.com/odoo"/>
+                            <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
+                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/odoo"/>
+                            <field name="social_youtube" placeholder="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg"/>
                             <field name="social_github" placeholder="https://youraccount.github.io"/>
                         </group>
                     </div>
@@ -78,6 +79,7 @@
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
             <field name="view_mode">list</field>
+            <field name="context">{'search_default_my_websites':1}</field>
         </record>
 
         <record id="menu_tree" model="ir.ui.view">
@@ -92,6 +94,38 @@
                     <field name="parent_id"/>
                     <field name="sequence"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="menu_search" model="ir.ui.view">
+            <field name="name">website.menu.search</field>
+            <field name="model">website.menu</field>
+            <field name="arch" type="xml">
+                <search string="Search Menus">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="website_id"/>
+                    
+                    <group string="Group By">
+                        <filter string="name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_view_form_extend"> 
+            <field name="model">ir.ui.view</field>
+
+            <field name="inherit_id" ref="base.view_view_form"/>
+            <field name="arch" type="xml">
+
+                <field name="name" position="after">
+                    <field name="website_id"/>
+                    <field name="key"/>
+                </field>
+
             </field>
         </record>
 

@@ -24,7 +24,7 @@ class PaypalController(http.Controller):
         """ Extract the return URL from the data coming from paypal. """
         return_url = post.pop('return_url', '')
         if not return_url:
-            custom = json.loads(post.pop('custom', '{}'))
+            custom = json.loads(post.pop('custom', False) or '{}')
             return_url = custom.get('return_url', '/')
         return return_url
 
@@ -40,13 +40,21 @@ class PaypalController(http.Controller):
         Once data is validated, process it. """
         res = False
         new_post = dict(post, cmd='_notify-validate')
-        urequest = urllib2.Request("https://www.sandbox.paypal.com/cgi-bin/webscr", werkzeug.url_encode(new_post))
+        cr, uid, context = request.cr, request.uid, request.context
+        reference = post.get('item_number')
+        tx = None
+        if reference:
+            tx_ids = request.registry['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
+            if tx_ids:
+                tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+        paypal_urls = request.registry['payment.acquirer']._get_paypal_urls(cr, uid, tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod', context=context)
+        validate_url = paypal_urls['paypal_form_url']
+        urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
         uopen = urllib2.urlopen(urequest)
         resp = uopen.read()
         if resp == 'VERIFIED':
             _logger.info('Paypal: validated data')
-            cr, uid, context = request.cr, SUPERUSER_ID, request.context
-            res = request.registry['payment.transaction'].form_feedback(cr, uid, post, 'paypal', context=context)
+            res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'paypal', context=context)
         elif resp == 'INVALID':
             _logger.warning('Paypal: answered INVALID on data verification')
         else:

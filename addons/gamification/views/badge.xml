@@ -32,15 +32,14 @@
                 </tree>
             </field>
         </record>
-		
-		<record id="badge_form_view" model="ir.ui.view">
+
+        <record id="badge_form_view" model="ir.ui.view">
             <field name="name">Badge Form</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
                 <form string="Badge">
                     <header>
                         <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
-                        <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
@@ -76,7 +75,7 @@
                             </div>
                         </group>
                         <group string="Rewards for challenges">
-                            <field name="challenge_ids" widget="many2many_kanban" nolabel="1" />
+                            <field name="challenge_ids" widget="many2many_kanban" nolabel="1" context="{'default_reward_id': active_id}" />
                         </group>
                         <group string="Statistics">
                             <group>
@@ -114,7 +113,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
                                 <div class="oe_kanban_content">
-                                    <div class="oe_kanban_left">
+                                    <div class="pull-left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="90" height="90" /></a>
                                     </div>
                                     <div class="oe_no_overflow">
@@ -133,18 +132,18 @@
                                         <t t-if="record.remaining_sending.value == 0">
                                             <div class="oe_grey">Can not grant</div>
                                         </t>
-                                        <p>
+                                        <p class="oe_margin_top_8">
                                             <strong><t t-esc="record.stat_count.raw_value"/></strong> granted,<br/>
                                             <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                         </p>
                                     </div>
-                                    <div class="oe_kanban_badge_avatars">
+                                    <div class="oe_margin_top_16">
                                         <t t-if="record.description.value">
                                             <p><em><field name="description"/></em></p>
                                         </t>
                                         <a type="object" name="get_granted_employees">
                                             <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                                <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                                <img class="oe_kanban_badge_avatars img-rounded oe_margin_top_8" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
                                             </t>
                                         </a>
                                     </div>
@@ -173,7 +172,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click oe_kanban_badge oe_kanban_color_white">
                                 <div class="oe_kanban_content">
-                                    <div class="oe_kanban_left">
+                                    <div class="pull-left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.badge_id.raw_value)" t-att-title="record.badge_name.value" width="24" height="24" /></a>
                                     </div>
                                     <h4>
@@ -182,7 +181,7 @@
                                     <t t-if="record.comment.raw_value">
                                         <p><em><field name="comment"/></em></p>
                                     </t>
-                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="record.create_date.raw_value.toString(Date.CultureInfo.formatPatterns.shortDate)" /></p>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="moment(record.create_date.raw_value).format('L')" /></p>
                                 </div>
                             </div>
                         </t>

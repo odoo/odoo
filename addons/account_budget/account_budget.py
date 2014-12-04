@@ -19,17 +19,23 @@
 #
 ##############################################################################
 
-import datetime
+from datetime import date, datetime
 
 from openerp.osv import fields, osv
-from openerp.tools import ustr
+from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
 
+
+# ---------------------------------------------------------
+# Utils
+# ---------------------------------------------------------
 def strToDate(dt):
-        dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
-        return dt_date
+    return date(int(dt[0:4]), int(dt[5:7]), int(dt[8:10]))
+
+def strToDatetime(strdate):
+    return datetime.strptime(strdate, DEFAULT_SERVER_DATE_FORMAT)
 
 # ---------------------------------------------------------
 # Budgets
@@ -118,10 +124,6 @@ class crossovered_budget_lines(osv.osv):
                 raise osv.except_osv(_('Error!'),_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
             date_to = line.date_to
             date_from = line.date_from
-            if context.has_key('wizard_date_from'):
-                date_from = context['wizard_date_from']
-            if context.has_key('wizard_date_to'):
-                date_to = context['wizard_date_to']
             if line.analytic_account_id.id:
                 cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
@@ -139,17 +141,12 @@ class crossovered_budget_lines(osv.osv):
         return res
 
     def _theo_amt(self, cr, uid, ids, context=None):
-        res = {}
-        if context is None: 
+        if context is None:
             context = {}
+
+        res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            today = datetime.datetime.today()
-            date_to = today.strftime("%Y-%m-%d")
-            date_from = line.date_from
-            if context.has_key('wizard_date_from'):
-                date_from = context['wizard_date_from']
-            if context.has_key('wizard_date_to'):
-                date_to = context['wizard_date_to']
+            today = datetime.now()
 
             if line.paid_date:
                 if strToDate(line.date_to) <= strToDate(line.paid_date):
@@ -157,13 +154,15 @@ class crossovered_budget_lines(osv.osv):
                 else:
                     theo_amt = line.planned_amount
             else:
-                total = strToDate(line.date_to) - strToDate(line.date_from)
-                elapsed = min(strToDate(line.date_to),strToDate(date_to)) - max(strToDate(line.date_from),strToDate(date_from))
-                if strToDate(date_to) < strToDate(line.date_from):
-                    elapsed = strToDate(date_to) - strToDate(date_to)
+                line_timedelta = strToDatetime(line.date_to) - strToDatetime(line.date_from)
+                elapsed_timedelta = today - (strToDatetime(line.date_from))
 
-                if total.days:
-                    theo_amt = float((elapsed.days + 1) / float(total.days + 1)) * line.planned_amount
+                if elapsed_timedelta.days < 0:
+                    # If the budget line has not started yet, theoretical amount should be zero
+                    theo_amt = 0.00
+                elif line_timedelta.days > 0 and today < strToDatetime(line.date_to):
+                    # If today is between the budget line date_from and date_to
+                    theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
                 else:
                     theo_amt = line.planned_amount
 

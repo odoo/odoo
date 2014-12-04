@@ -1,22 +1,21 @@
 # French translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-21 20:39+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:41+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:03+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -26,7 +25,7 @@ msgstr "Délai pour fermer"
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,author_id:0
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,planned_revenue:0
@@ -39,6 +38,9 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Type de message : \"Courriel\" pour les courriers électroniques, "
+"\"Notification\" pour les messages du système, \"Commentaires\" pour les "
+"autres messages tels que les réponses des utilisateurs"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -54,7 +56,7 @@ msgstr "Regrouper par..."
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Nettoyer automatiquement les contenus HTML"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -69,7 +71,7 @@ msgstr "Géolocalisation"
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "Favori"
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
@@ -82,11 +84,13 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
 msgstr ""
+"Adresse courriel de l'expéditeur. Ce champ est défini dans les courriels "
+"entrants quand aucun partenaire ne correspond."
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:0
 msgid "Date Partnership"
-msgstr ""
+msgstr "Date du partenariat"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
@@ -112,7 +116,7 @@ msgstr "Société"
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,notification_ids:0
 msgid "Notifications"
-msgstr ""
+msgstr "Notifications"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_assign:0
@@ -124,7 +128,7 @@ msgstr "Date du partenaire"
 #: view:crm.partner.report.assign:0
 #: view:res.partner:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Vendeur"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -171,7 +175,7 @@ msgstr "Assignation géographique"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Assistant de rédaction de courriel"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,turnover:0
@@ -203,7 +207,7 @@ msgid "System notification"
 msgstr ""
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
 #, python-format
 msgid "Lead forward"
 msgstr ""
@@ -367,7 +371,7 @@ msgid "To read"
 msgstr ""
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:77
 #, python-format
 msgid "Fwd"
 msgstr "Transférer"
@@ -933,207 +937,3 @@ msgstr "Filtres"
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Partenaire"
-
-#~ msgid "Send to"
-#~ msgstr "Envoyer à"
-
-#~ msgid "HTML formatting?"
-#~ msgstr "Mettre au format HTML ?"
-
-#~ msgid "7 Days"
-#~ msgstr "7 jours"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "30 derniers jours"
-
-#, python-format
-#~ msgid ""
-#~ "Could not contact geolocation servers, please make sure you have a working "
-#~ "internet connection (%s)"
-#~ msgstr ""
-#~ "Impossible de contacter les serveurs de géolocalisation, veuillez vérifier "
-#~ "que votre connexion internet fonctionne correctement (%s)"
-
-#~ msgid "Partner Geo-Localisation"
-#~ msgstr "Géolocalisation du partenaire"
-
-#~ msgid "Set New State To"
-#~ msgstr "Changer le nouvel état à"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module used by OpenERP SA to redirect customers to his "
-#~ "partners,\n"
-#~ "based on geolocalization.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ce module est utilisé par OpenERP SA pour rediriger les clients vers ses "
-#~ "partenaires,\n"
-#~ "basé sur la localisation géographique.\n"
-#~ "    "
-
-#~ msgid "Reply-to of the Sales team defined on this case"
-#~ msgstr "Adresse de réponse de l'équipe commerciale définie sur ce cas"
-
-#~ msgid ""
-#~ "These addresses will receive a copy of this email. To modify the permanent "
-#~ "CC list, edit the global CC field of this case"
-#~ msgstr ""
-#~ "Ces adresses recevront une copie de ce courriel. Pour modifier de façon "
-#~ "permanente la liste des \"Copie à\", modifiez le champ 'Copie à' de ce cas."
-
-#~ msgid "Select this if you want to send email with HTML formatting."
-#~ msgstr ""
-#~ "Cochez cette case si vous souhaitez envoyer des courriels au format HTML."
-
-#~ msgid "State"
-#~ msgstr "État"
-
-#~ msgid "Salesman"
-#~ msgstr "Vendeur"
-
-#~ msgid "Contact"
-#~ msgstr "Contact"
-
-#~ msgid "Category"
-#~ msgstr "Catégorie"
-
-#~ msgid "Reply To"
-#~ msgstr "Répondre à"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
-
-#~ msgid "unknown"
-#~ msgstr "inconnu"
-
-#~ msgid "Send new email"
-#~ msgstr "Envoyer un nouveau courriel"
-
-#~ msgid "To"
-#~ msgstr "À"
-
-#~ msgid "Address"
-#~ msgstr "Adresse"
-
-#~ msgid "Email Address"
-#~ msgstr "Adresse de courriel"
-
-#~ msgid "crm.lead"
-#~ msgstr "crm.lead"
-
-#~ msgid "CC"
-#~ msgstr "Cc"
-
-#~ msgid "Unchanged"
-#~ msgstr "Inchangé"
-
-#~ msgid "Message Body"
-#~ msgstr "Corps du message"
-
-#~ msgid "Referred Partner"
-#~ msgstr "Partenaire visé"
-
-#~ msgid "Carbon copy message recipients"
-#~ msgstr "Destinataires en copie carbone (Cc)"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Supprimer définitivement les courriels après envoi"
-
-#~ msgid "#Partner"
-#~ msgstr "Nb de partenaires"
-
-#~ msgid "# of Partner"
-#~ msgstr "Nb de partenaires"
-
-#~ msgid "Message type"
-#~ msgstr "Type de message"
-
-#~ msgid "Message recipients"
-#~ msgstr "Destinataires du message"
-
-#~ msgid "Text contents"
-#~ msgstr "Contenu du texte"
-
-#~ msgid "Plain-text version of the message"
-#~ msgstr "Version plein texte du message"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Ajouter ici toutes les pièces jointes du document actuel que vous souhaitez "
-#~ "joindre au courriel."
-
-#~ msgid "Related Document model"
-#~ msgstr "Modèle du document associé"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Le type de message, généralement «Texte enrichi - html» ou «texte», utilisé "
-#~ "pour respectivement sélectionner un contenu qui puisse être mis en forme ou "
-#~ "un texte brut"
-
-#~ msgid "Use Template"
-#~ msgstr "Utiliser un modèle"
-
-#~ msgid "Rich-text/HTML version of the message"
-#~ msgstr "Version texte enrichi/HTML du message"
-
-#~ msgid "Auto Delete"
-#~ msgstr "Suppression Automatique"
-
-#~ msgid "Blind carbon copy message recipients"
-#~ msgstr "Destinataires en Copie Conforme Invisible (CCI)"
-
-#~ msgid "Reply-To"
-#~ msgstr "Répondre à"
-
-#~ msgid "Partner name"
-#~ msgstr "Nom du partenaire"
-
-#~ msgid "Cc"
-#~ msgstr "Cc"
-
-#~ msgid "References"
-#~ msgstr "Références"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "En-têtes complet de message, par exemple en-têtes de session SMTP "
-#~ "(généralement disponible sur les messages entrants uniquement)"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Contenu en texte enrichi"
-
-#~ msgid ""
-#~ "Message sender, taken from user preferences. If empty, this is not a mail "
-#~ "but a message."
-#~ msgstr ""
-#~ "Expéditeur du message, pris à partir des préférences utilisateur. Si le "
-#~ "champ est vide, ce n'est pas un courriel mais un message."
-
-#~ msgid "Message headers"
-#~ msgstr "En-têtes de message"
-
-#~ msgid "Bcc"
-#~ msgstr "Copie cachée à (BCC)"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr ""
-#~ "Références du message, tel que les identifiants des messages précédents"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr ""
-#~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
-
-#~ msgid "Preferred response address for the message"
-#~ msgstr "Adresse de réponse préférée pour le message"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Assistant de composition de courriels"

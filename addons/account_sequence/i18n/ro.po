@@ -1,68 +1,32 @@
 # Romanian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-03-24 12:20+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Inregistrare contabila"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Configurarea Aplicatiei Secventei Contului"
-
-#. module: account_sequence
-#: help:account.move,internal_sequence_number:0
-#: help:account.move.line,internal_sequence_number:0
-msgid "Internal Sequence Number"
-msgstr "Numar Secventa Interna"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr "Urmatorul numar al acestei secvente"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr "Urmatorul numar"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr "Majorare Numar"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr "Urmatorul numar al secventei va fi marit de acest numar"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr "Configurati Aplicatia Succesiunii Contului"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Configureaza"
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
-msgstr "Valoarea sufixului inregistrarii pentru secventa"
 
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
@@ -70,14 +34,34 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
-msgstr "Numar umplutura"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "Configureaza"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move_line
-msgid "Journal Items"
-msgstr "Elementele Jurnalului"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "Configurati Aplicatia Succesiunii Contului"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Majorare Numar"
 
 #. module: account_sequence
 #: field:account.move,internal_sequence_number:0
@@ -86,13 +70,35 @@ msgid "Internal Number"
 msgstr "Numar intern"
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid ""
-"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
-"get the required padding size."
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Secventa Interna"
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Numar Secventa Interna"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Registru"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Elementele Jurnalului"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
 msgstr ""
-"OpenERP va adauga automat '0' in partea stanga a campului 'Numarul Urmator' "
-"pentru a obtine marimea ceruta a umpluturii."
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -100,9 +106,31 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: account_sequence
-#: field:account.journal,internal_sequence_id:0
-msgid "Internal Sequence"
-msgstr "Secventa Interna"
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Urmatorul numar"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Urmatorul numar al acestei secvente"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Numar umplutura"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Prefix"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -110,24 +138,19 @@ msgid "Prefix value of the record for the sequence"
 msgstr "Valoarea prefixului inregistrarii pentru secventa"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr "Inregistrare contabila"
-
-#. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Sufix"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr "titlu"
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Valoarea sufixului inregistrarii pentru secventa"
 
 #. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr "Prefix"
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Urmatorul numar al secventei va fi marit de acest numar"
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -139,102 +162,11 @@ msgstr ""
 "inregistrarile registrului asociate acestui registru."
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "program.de.instalare.secventa.cont"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_journal
-msgid "Journal"
-msgstr "Registru"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "Puteti mari Aplicatia Secventei Contului instaland ."
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Configurare procese"
-
-#~ msgid "Image"
-#~ msgstr "Imagine"
-
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "Numerotarea succesiva a inregistrarilor"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Acest modul pastreaza numarul secventei interne pentru inregistrari "
-#~ "contabile.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "Nu puteti crea inregistrari in perioade/jurnale diferite in aceeasi miscare"
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Nu puteti crea decat o singura miscare pe perioada in jurnalul centralizat"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Nu puteti crea o linie de miscare intr-un cont inchis."
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Codul jurnalului trebuie sa fie unic per companie !"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Numele jurnalului trebuie sa fie unic per companie !"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociate."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Nu puteti crea linia miscarii in vizualizarea contului."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociata."
-
-#~ msgid ""
-#~ "You can not create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Nu puteti crea mai mult de o miscare pe perioada intr-un jurnal centralizat"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr ""
-#~ "Nu puteti crea elemente ale jurnalului intr-un cont de tipul vizualizare."
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Nu puteti crea elemente ale jurnalului intr-un cont inchis."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr ""
-#~ "Valoare gresita a creditului sau debitului in inregistrarea contabila !"
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
-#~ "schimbati data sau sa eliminati aceasta restrictie din jurnal."
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Eroare de configurare! Moneda aleasa ar trebui sa fie comuna si conturilor "
-#~ "predefinite."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
-#~ "secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
-#~ "o vizualizare multi-moneda in jurnal."
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "titlu"

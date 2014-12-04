@@ -50,10 +50,11 @@
             <t t-if="!widget.options.view_mailbox">
                 <div class="field_text oe_compact oe_compact_record">
                     <a class="oe_compose_post" t-if="widget.options.compose_placeholder"><t t-raw="widget.options.compose_placeholder"/></a>
-                    <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</a>
+                    <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox"
+                    	title="Send a message. Followers will be notified.">Send a message</a>
                     <t t-if="widget.options.display_log_button">
                        <span class="oe_grey oe_sep_word">or</span>
-                       <a class="oe_compose_log">Log an internal note</a>
+                       <a class="oe_compose_log" title="Log a note. Followers will not be notified.">Log an internal note</a>
                     </t>
                 </div>
             </t>
@@ -157,7 +158,7 @@
             </t>
         </div>
         <div t-if="widget.is_log">
-            <span>Add an internal note that will not be sent to the followers</span>
+            <span>Log an internal note which will not be sent to followers. Note that users reading the document can read internal notes.</span>
         </div>
     </t>
 
@@ -165,40 +166,25 @@
         wall main template
         Template used to display the communication history in the wall.
         -->
-    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
-        <table class="oe_view_manager_header">
-          <colgroup>
-            <col width="33%"/>
-            <col width="33%"/>
-            <col width="34%"/>
-          </colgroup>
-          <tbody>
-            <tr class="oe_header_row oe_header_row_top">
-                <td colspan="2">
-                    <h2 class="oe_view_title">
-                        <span class="oe_view_title_text">
-                            <t t-esc="widget.action.name"/>
-                        </span>
-                    </h2>
-                    <t t-if="widget.action.params.header_description">
-                        <br/>
-                        <span class="oe_view_subtitle_text">
-                            <t t-raw="widget.action.params.header_description"/>
-                        </span>
-                    </t>
-                </td>
-                <td><div class="oe_view_manager_view_search"/></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="oe_view_manager_wrapper">
-            <div>
-                <div class="oe_view_manager_body">
-                    <div class="oe_searchview_drawer_container"/>
-                    <div class="oe_mail-placeholder"></div>
-                    <aside class="oe_mail_wall_aside"></aside>
+    <div t-name="mail.wall" class="oe-view-manager oe_mail_wall oe_view_manager_current">
+        <div class="oe-view-manager-header container-fluid">
+            <div class="row">
+                <div class="col-md-6 oe-header-title">
+                    <ol class="oe-view-title breadcrumb">
+                        <li class="active"><t t-esc="widget.action.name"/></li>
+                    </ol>
+                </div>
+                <div class="oe-view-manager-search-view col-md-6" />
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="oe-search-options btn-group"/>
                 </div>
             </div>
+        </div>
+        <div class="oe-view-manager-content">
+            <div class="oe_mail-placeholder"></div>
+            <aside class="oe_mail_wall_aside"></aside>
         </div>
     </div>
 

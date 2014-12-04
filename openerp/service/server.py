@@ -9,10 +9,6 @@ import os.path
 import platform
 import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -24,10 +20,15 @@ import unittest2
 
 import werkzeug.serving
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -40,6 +41,13 @@ import openerp.tools.config as config
 from openerp.tools.misc import stripped_sys_argv, dumpstacks
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import watchdog
+    from watchdog.observers import Observer
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent
+except ImportError:
+    watchdog = None
 
 SLEEP_INTERVAL = 60     # 1 min
 
@@ -105,89 +113,36 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
 #----------------------------------------------------------
-# AutoReload watcher
+# FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
-
-class AutoReload(object):
-    def __init__(self, server):
-        self.server = server
-        self.files = {}
-        self.modules = {}
-        import pyinotify
-        class EventHandler(pyinotify.ProcessEvent):
-            def __init__(self, autoreload):
-                self.autoreload = autoreload
-
-            def process_IN_CREATE(self, event):
-                _logger.debug('File created: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-            def process_IN_MODIFY(self, event):
-                _logger.debug('File modified: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-        self.wm = pyinotify.WatchManager()
-        self.handler = EventHandler(self)
-        self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
-        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
+class FSWatcher(object):
+    def __init__(self):
+        self.observer = Observer()
         for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
-            self.wm.add_watch(path, mask, rec=True)
+            self.observer.schedule(self, path, recursive=True)
 
-    def process_data(self, files):
-        xml_files = [i for i in files if i.endswith('.xml')]
-        for i in xml_files:
-            for path in openerp.modules.module.ad_paths:
-                if i.startswith(path):
-                    # find out wich addons path the file belongs to
-                    # and extract it's module name
-                    right = i[len(path) + 1:].split('/')
-                    if len(right) < 2:
-                        continue
-                    module = right[0]
-                    self.modules[module] = 1
-        if self.modules:
-            _logger.info('autoreload: xml change detected, autoreload activated')
-            restart()
+    def dispatch(self, event):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
+            if not event.is_directory:
+                path = event.src_path
+                if path.endswith('.py'):
+                    try:
+                        source = open(path, 'rb').read() + '\n'
+                        compile(source, path, 'exec')
+                    except SyntaxError:
+                        _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
+                    else:
+                        _logger.info('autoreload: python code updated, autoreload activated')
+                        restart()
 
-    def process_python(self, files):
-        # process python changes
-        py_files = [i for i in files if i.endswith('.py')]
-        py_errors = []
-        # TODO keep python errors until they are ok
-        if py_files:
-            for i in py_files:
-                try:
-                    source = open(i, 'rb').read() + '\n'
-                    compile(source, i, 'exec')
-                except SyntaxError:
-                    py_errors.append(i)
-            if py_errors:
-                _logger.info('autoreload: python code change detected, errors found')
-                for i in py_errors:
-                    _logger.info('autoreload: SyntaxError %s', i)
-            else:
-                _logger.info('autoreload: python code updated, autoreload activated')
-                restart()
-
-    def check_thread(self):
-        # Check if some files have been touched in the addons path.
-        # If true, check if the touched file belongs to an installed module
-        # in any of the database used in the registry manager.
-        while 1:
-            while self.notifier.check_events(1000):
-                self.notifier.read_events()
-                self.notifier.process_events()
-            l = self.files.keys()
-            self.files.clear()
-            self.process_data(l)
-            self.process_python(l)
-
-    def run(self):
-        t = threading.Thread(target=self.check_thread)
-        t.setDaemon(True)
-        t.start()
+    def start(self):
+        self.observer.start()
         _logger.info('AutoReload watcher running')
+
+    def stop(self):
+        self.observer.stop()
+        self.observer.join()
 
 #----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
@@ -249,8 +204,8 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = openerp.modules.registry.RegistryManager.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                while True and registry.ready:
+            for db_name, registry in registries.iteritems():
+                while registry.ready:
                     acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     if not acquired:
                         break
@@ -392,7 +347,11 @@ class GeventServer(CommonServer):
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except:
+            _logger.exception("Evented Service (longpolling): uncaught error during main loop")
+            raise
 
     def stop(self):
         import gevent
@@ -474,6 +433,8 @@ class PreforkServer(CommonServer):
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
+        if pid == self.long_polling_pid:
+            self.long_polling_pid = None
         if pid in self.workers:
             _logger.debug("Worker (%s) unregistered", pid)
             try:
@@ -668,8 +629,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -854,7 +813,8 @@ def _reexec(updated_modules=None):
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
-    args += ["-u", ','.join(updated_modules)]
+    if updated_modules:
+        args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)
@@ -902,10 +862,11 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                if test_file.endswith('yml'):
-                    load_test_file_yml(registry, test_file)
-                elif test_file.endswith('py'):
-                    load_test_file_py(registry, test_file)
+                with openerp.api.Environment.manage():
+                    if test_file.endswith('yml'):
+                        load_test_file_yml(registry, test_file)
+                    elif test_file.endswith('py'):
+                        load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
@@ -926,18 +887,21 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if config['auto_reload']:
-        autoreload = AutoReload(server)
-        autoreload.run()
+    watcher = None
+    if config['dev_mode']:
+        if watchdog:
+            watcher = FSWatcher()
+            watcher.start()
+        else:
+            _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        modules = []
-        if config['auto_reload']:
-            modules = autoreload.modules.keys()
-        _reexec(modules)
+        if watcher:
+            watcher.stop()
+        _reexec()
 
     return rc if rc else 0
 

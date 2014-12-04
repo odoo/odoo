@@ -67,6 +67,7 @@ class mail_followers(osv.Model):
         self.invalidate_cache(cr, uid, context=context)
         return res
 
+    _sql_constraints = [('mail_followers_res_partner_res_model_id_uniq','unique(res_model,res_id,partner_id)','Error, a partner cannot follow twice the same object.')]
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
@@ -79,7 +80,7 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'is_read': fields.boolean('Read', select=1),
+        'is_read': fields.boolean('Read', select=1, oldname='read'),
         'starred': fields.boolean('Starred', select=1,
             help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',
@@ -120,7 +121,7 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
-    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None):
+    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None, user_signature=True):
         """ Format a standard footer for notification emails (such as pushed messages
             notification or invite emails).
             Format:
@@ -137,11 +138,13 @@ class mail_notification(osv.Model):
 
         # add user signature
         user = self.pool.get("res.users").browse(cr, SUPERUSER_ID, [user_id], context=context)[0]
-        if user.signature:
-            signature = user.signature
-        else:
-            signature = "--<br />%s" % user.name
-        footer = tools.append_content_to_html(footer, signature, plaintext=False)
+        if user_signature:
+            if user.signature:
+                signature = user.signature
+            else:
+                signature = "--<br />%s" % user.name
+            footer = tools.append_content_to_html(footer, signature, plaintext=False)
+
         # add company signature
         if user.company_id.website:
             website_url = ('http://%s' % user.company_id.website) if not user.company_id.website.lower().startswith(('http:', 'https:')) \
@@ -149,10 +152,11 @@ class mail_notification(osv.Model):
             company = "<a style='color:inherit' href='%s'>%s</a>" % (website_url, user.company_id.name)
         else:
             company = user.company_id.name
-        sent_by = _('Sent from %(company)s using %(openerp)s')
-        signature_company = '<small>%s</small>' % (sent_by % {
+        sent_by = _('Sent by %(company)s using %(odoo)s')
+
+        signature_company = '<br /><small>%s</small>' % (sent_by % {
             'company': company,
-            'openerp': "<a style='color:inherit' href='https://www.odoo.com/'>Odoo</a>"
+            'odoo': "<a style='color:inherit' href='https://www.odoo.com/'>Odoo</a>"
         })
         footer = tools.append_content_to_html(footer, signature_company, plaintext=False, container_tag='div')
 
@@ -185,9 +189,10 @@ class mail_notification(osv.Model):
 
         # compute email body (signature, company data)
         body_html = message.body
+        # add user signature except for mail groups, where users are usually adding their own signatures already
         user_id = message.author_id and message.author_id.user_ids and message.author_id.user_ids[0] and message.author_id.user_ids[0].id or None
-        if user_signature:
-            signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context)
+        signature_company = self.get_signature_footer(cr, uid, user_id, res_model=message.model, res_id=message.res_id, context=context, user_signature=(user_signature and message.model != 'mail.group'))
+        if signature_company:
             body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         # compute email references

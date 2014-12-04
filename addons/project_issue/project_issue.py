@@ -19,13 +19,19 @@
 #
 ##############################################################################
 
-from datetime import datetime
-
+import calendar
+from datetime import datetime,date
+from dateutil import relativedelta
+import json
+import time
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, orm
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+
 
 class project_issue_version(osv.Model):
     _name = "project.issue.version"
@@ -41,7 +47,7 @@ class project_issue_version(osv.Model):
 class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, create_date desc"
+    _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _mail_post_access = 'read'
@@ -100,20 +106,21 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve section_id from the context and write the domain
+        # retrieve team_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        else:
+            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
 
         fold = {}
         for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
@@ -128,73 +135,51 @@ class project_issue(osv.Model):
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
         """
-        cal_obj = self.pool.get('resource.calendar')
-        res_obj = self.pool.get('resource.resource')
+        Calendar = self.pool['resource.calendar']
 
-        res = {}
+        res = dict((res_id, {}) for res_id in ids)
         for issue in self.browse(cr, uid, ids, context=context):
-
+            values = {
+                'day_open': 0.0, 'day_close': 0.0,
+                'working_hours_open': 0.0, 'working_hours_close': 0.0,
+                'days_since_creation': 0.0, 'inactivity_days': 0.0,
+            }
             # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
-            if not issue.project_id or not issue.project_id.resource_calendar_id:
-                working_hours = None
+            calendar_id = None
+            if issue.project_id and issue.project_id.resource_calendar_id:
+                calendar_id = issue.project_id.resource_calendar_id.id
+
+            dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+
+            if issue.date_open:
+                dt_date_open = datetime.strptime(issue.date_open, DEFAULT_SERVER_DATETIME_FORMAT)
+                values['day_open'] = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
+                values['working_hours_open'] = Calendar._interval_hours_get(
+                    cr, uid, calendar_id, dt_create_date, dt_date_open,
+                    timezone_from_uid=issue.user_id.id or uid,
+                    exclude_leaves=False, context=context)
+
+            if issue.date_closed:
+                dt_date_closed = datetime.strptime(issue.date_closed, DEFAULT_SERVER_DATETIME_FORMAT)
+                values['day_close'] = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
+                values['working_hours_close'] = Calendar._interval_hours_get(
+                    cr, uid, calendar_id, dt_create_date, dt_date_closed,
+                    timezone_from_uid=issue.user_id.id or uid,
+                    exclude_leaves=False, context=context)
+
+            days_since_creation = datetime.today() - dt_create_date
+            values['days_since_creation'] = days_since_creation.days
+            if issue.date_action_last:
+                inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, DEFAULT_SERVER_DATETIME_FORMAT)
+            elif issue.date_last_stage_update:
+                inactive_days = datetime.today() - datetime.strptime(issue.date_last_stage_update, DEFAULT_SERVER_DATETIME_FORMAT)
             else:
-                working_hours = issue.project_id.resource_calendar_id.id
+                inactive_days = datetime.today() - datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            values['inactivity_days'] = inactive_days.days
 
-            res[issue.id] = {}
+            # filter only required values
             for field in fields:
-                duration = 0
-                ans = False
-                hours = 0
-
-                date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
-                if field in ['working_hours_open','day_open']:
-                    if issue.date_open:
-                        date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
-                        ans = date_open - date_create
-                        date_until = issue.date_open
-                        #Calculating no. of working hours to open the issue
-                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
-                                                           date_create,
-                                                           date_open,
-                                                           timezone_from_uid=issue.user_id.id or uid,
-                                                           exclude_leaves=False,
-                                                           context=context)
-                elif field in ['working_hours_close','day_close']:
-                    if issue.date_closed:
-                        date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = issue.date_closed
-                        ans = date_close - date_create
-                        #Calculating no. of working hours to close the issue
-                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
-                                                           date_create,
-                                                           date_close,
-                                                           timezone_from_uid=issue.user_id.id or uid,
-                                                           exclude_leaves=False,
-                                                           context=context)
-                elif field in ['days_since_creation']:
-                    if issue.create_date:
-                        days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
-                        res[issue.id][field] = days_since_creation.days
-                    continue
-
-                elif field in ['inactivity_days']:
-                    res[issue.id][field] = 0
-                    if issue.date_action_last:
-                        inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, '%Y-%m-%d %H:%M:%S')
-                        res[issue.id][field] = inactive_days.days
-                    continue
-                if ans:
-                    resource_id = False
-                    if issue.user_id:
-                        resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
-                        if resource_ids and len(resource_ids):
-                            resource_id = resource_ids[0]
-                    duration = float(ans.days) + float(ans.seconds)/(24*3600)
-
-                if field in ['working_hours_open','working_hours_close']:
-                    res[issue.id][field] = hours
-                elif field in ['day_open','day_close']:
-                    res[issue.id][field] = duration
+                res[issue.id][field] = values[field]
 
         return res
 
@@ -206,6 +191,13 @@ class project_issue(osv.Model):
             if issue.task_id:
                 progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
             res[issue.id] = {'progress' : progress}
+        return res
+
+    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.project_id.parent_id.type == 'contract':
+                res[issue.id] = True
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
@@ -229,16 +221,17 @@ class project_issue(osv.Model):
             if work.task_id:
                 issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
         return issues
+
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', required=True),
         'active': fields.boolean('Active', required=False),
-        'create_date': fields.datetime('Creation Date', readonly=True,select=True),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
                                                multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
@@ -253,9 +246,9 @@ class project_issue(osv.Model):
                                          required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-        'date_open': fields.datetime('Opened', readonly=True,select=True),
+        'date_open': fields.datetime('Assigned', readonly=True, select=True),
         # Project Issue fields
-        'date_closed': fields.datetime('Closed', readonly=True,select=True),
+        'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date': fields.datetime('Date'),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel': fields.char('Channel', help="Communication channel."),
@@ -268,25 +261,30 @@ class project_issue(osv.Model):
         'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='compute_day', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='compute_day', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Assign',
+                                    multi='compute_day', type="float",
+                                    store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='compute_day', type="float",
+                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility='onchange'),
-        'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
-                                multi='compute_day', type="float", store=True),
-        'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-                                multi='compute_day', type="float", store=True),
-        'inactivity_days': fields.function(_compute_day, string='Days since last action', \
-                                multi='compute_day', type="integer", help="Difference in days between last action and current date"),
+        'working_hours_open': fields.function(_compute_day, string='Working Hours to assign the Issue',
+                                              multi='compute_day', type="float",
+                                              store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'working_hours_close': fields.function(_compute_day, string='Working Hours to close the Issue',
+                                               multi='compute_day', type="float",
+                                               store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
+        'inactivity_days': fields.function(_compute_day, string='Days since last action',
+                                           multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_issue_work, ['hours'], 10),
             }),
     }
@@ -295,7 +293,7 @@ class project_issue(osv.Model):
         'active': 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': '1',
+        'priority': '0',
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
@@ -311,13 +309,16 @@ class project_issue(osv.Model):
             default = {}
         default = default.copy()
         default.update(name=_('%s (copy)') % (issue['name']))
-        return super(project_issue, self).copy(cr, uid, id, default=default,
-                context=context)
+        return super(project_issue, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, uid, vals, context=None):
         context = dict(context or {})
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        if 'stage_id' in vals:
+            vals.update(self.onchange_stage_id(cr, uid, None, vals.get('stage_id'), context=context)['value'])
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -326,12 +327,13 @@ class project_issue(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
+            vals.update(self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value'])
             vals['date_last_stage_update'] = fields.datetime.now()
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
         # user_id change: update date_start
         if vals.get('user_id'):
-            vals['date_start'] = fields.datetime.now()
+            vals['date_open'] = fields.datetime.now()
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -362,28 +364,36 @@ class project_issue(osv.Model):
     # Stage management
     # -------------------------------------------------------
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
+        if not stage_id:
+            return {'value': {}}
+        stage = self.pool['project.task.type'].browse(cr, uid, stage_id, context=context)
+        if stage.fold:
+            return {'value': {'date_closed': fields.datetime.now()}}
+        return {'value': {'date_closed': False}}
+
+    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
             - type: stage type must be the same or 'both'
-            - section_id: if set, stages must belong to this section or
+            - team_id: if set, stages must belong to this team or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all section_ids
-        section_ids = []
-        if section_id:
-            section_ids.append(section_id)
+        # collect all team_ids
+        team_ids = []
+        if team_id:
+            team_ids.append(team_id)
         for task in cases:
             if task.project_id:
-                section_ids.append(task.project_id.id)
-        # OR all section_ids and OR with case_default
+                team_ids.append(task.project_id.id)
+        # OR all team_ids and OR with case_default
         search_domain = []
-        if section_ids:
-            search_domain += [('|')] * (len(section_ids)-1)
-            for section_id in section_ids:
-                search_domain.append(('project_ids', '=', section_id))
+        if team_ids:
+            search_domain += [('|')] * (len(team_ids)-1)
+            for team_id in team_ids:
+                search_domain.append(('project_ids', '=', team_id))
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
@@ -449,6 +459,7 @@ class project_issue(osv.Model):
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
@@ -473,13 +484,25 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
+    def _get_project_issue_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool['project.issue']
+        month_begin = date.today().replace(day=1)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        res = {}
+        for id in ids:
+            created_domain = [('project_id', '=', id), ('date_closed', '>=', date_begin ), ('date_closed', '<=', date_end )]
+            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'date_closed'], 'date_closed_count', 'date_closed', context=context))
+        return res
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
-        'issue_ids': fields.one2many('project.issue', 'project_id',
-                                     domain=[('stage_id.fold', '=', False)])
+        'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
+                                     domain=[('date_closed', '!=', False)]),
+        'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
+                                             string='Project Issue By Month')
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -515,12 +538,24 @@ class account_analytic_account(osv.Model):
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_issues:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
+
 
 class project_project(osv.Model):
     _inherit = 'project.project'
 
+    _columns = {
+        'label_issues': fields.char('Use Issues as', help="Customize the issues label, for example to call them cases."),
+    }
+
     _defaults = {
-        'use_issues': True
+        'use_issues': True,
+        'label_issues': 'Issues',
     }
 
     def _check_create_write_values(self, cr, uid, vals, context=None):
@@ -536,7 +571,7 @@ class project_project(osv.Model):
         if use_tasks and not use_issues:
             values['alias_model'] = 'project.task'
         elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issues'
+            values['alias_model'] = 'project.issue'
         return {'value': values}
 
     def create(self, cr, uid, vals, context=None):

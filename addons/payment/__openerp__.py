@@ -12,6 +12,7 @@
         'views/payment_acquirer.xml',
         'views/res_config_view.xml',
         'security/ir.model.access.csv',
+        'security/payment_security.xml',
     ],
     'installable': True,
     'auto_install': True,

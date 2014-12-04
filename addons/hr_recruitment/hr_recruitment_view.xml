@@ -5,7 +5,8 @@
     <menuitem name="Recruitment"
         id="menu_hr_recruitment_recruitment"
         parent="hr.menu_hr_configuration"
-        sequence="40"/>
+        groups="base.group_hr_manager"
+        sequence="2"/>
 
     <act_window
         id="act_hr_applicant_to_meeting"
@@ -212,6 +213,7 @@
                     <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Creation Date" context="{'group_by':'create_date'}"/>
                     <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
@@ -239,7 +241,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="survey"/>
@@ -262,7 +264,7 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanaban oe_semantic_html_override">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
@@ -270,33 +272,27 @@
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
-
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div>
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                </div>
-                                <div style="padding-left: 0.5em">
                                     <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
-                                </div>
-                                <div style="width:240px"><field name="categ_ids"/></div>
+                                        <field name="categ_ids" class="oe_margin_top_4"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="priority" widget="priority"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                <div class="oe_kanban_footer_left oe_margin_top_4">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a>
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
                                 </div>
-
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -313,7 +309,7 @@
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'empty_list_help_model': 'hr.job'}</field>
         <field name="help" type="html">
               <p>
-                OpenERP helps you track applicants in the recruitment
+                Odoo helps you track applicants in the recruitment
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
                 Applicants and their attached CV are created automatically when an email is sent.
@@ -334,6 +330,23 @@
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
             </field>
         </field>
+    </record>
+
+    <!-- Action for the stat button of the no_employee -->
+    <record model="ir.actions.act_window" id="action_hr_job_no_employee">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_job_id': active_id}</field>
+        <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
     </record>
 
     <record id="hr_job_survey" model="ir.ui.view">
@@ -374,6 +387,12 @@
                         context="{'default_user_id': user_id}" 
                         type="action">
                         <field name="application_count" widget="statinfo" string="Applications"/>
+                    </button>
+                    <button class="oe_stat_button" 
+                        icon="fa-users"
+                        name="%(action_hr_job_no_employee)d"
+                        type="action">
+                        <field name="no_of_employee" widget="statinfo" string="Employees"/>
                     </button>
                     <button class="oe_stat_button"
                         icon="fa-book"
@@ -421,16 +440,16 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <t t-if="record.user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar pull-right"/>
                                     </t>
                                     <t t-if="record.user_id.raw_value === false">
-                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar pull-right"/>
                                     </t>
                                     <div class="oe_job_detail">
-                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
-                                            <field name="name"/>
+                                        <div class="text-center oe_job_font oe_kanban_ellipsis">
+                                            <strong><field name="name"/></strong>
                                         </div>
-                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                        <div class="text-center oe_job_font oe_kanban_ellipsis">
                                             <strong><field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
@@ -442,29 +461,33 @@
 
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
-                                        <div class="oe_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">
-                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
-                                            </a>
-                                            <br/>
-                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
-                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
-                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
-                                            </a>
+                                        <div class="col-md-6 oe_applications">
+                                            <div class="oe_applications oe_job_font">
+                                                <a name="%(action_hr_job_applications)d" type="action">
+                                                    <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                                </a>
+                                                <br/>
+                                                <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                    <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                    <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div class="oe_job_justgage">
-                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
-                                                style="margin-top:7px; width:160px; height: 120px;"
-                                                options="{
-                                                    'max_field': 'no_of_recruitment',
-                                                    'label': 'Hired Employees',
-                                                    'on_change': 'action_set_no_of_recruitment',
-                                                    'on_click_label': 'employee(s) to recruit',
-                                                    'force_set': False,
-                                                    'gauge_value_field': 'no_of_recruitment',
-                                                }">
-                                                Hired Employees
-                                            </field>
+                                        <div class="col-md-5">
+                                            <div class="oe_job_justgage">
+                                                <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                                    style="margin-top:7px; width:160px; height: 120px;"
+                                                    options="{
+                                                        'max_field': 'no_of_recruitment',
+                                                        'label': 'Hired Employees',
+                                                        'on_change': 'action_set_no_of_recruitment',
+                                                        'on_click_label': 'employee(s) to recruit',
+                                                        'force_set': False,
+                                                        'gauge_value_field': 'no_of_recruitment',
+                                                    }">
+                                                    Hired Employees
+                                                </field>
+                                            </div>
                                         </div>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
@@ -496,7 +519,7 @@
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job.
+                 Click here to create a new job. You can remove the "In Recruitment" filter to display all the job positions.
               </p>
               <p>
                 Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
@@ -524,21 +547,20 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <sheet>
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
                         <field name="department_id"/>
+                        <field name="sequence"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                     <group>
-                        <field name="sequence"/>
                         <field name="fold"/>
-                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                        <field name="legend_priority"/>
                     </group>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
-                </sheet>
             </form>
         </field>
     </record>
@@ -584,12 +606,10 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree">
-                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>
@@ -624,11 +644,9 @@
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
-                <sheet>
                 <group>
                     <field name="name"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>

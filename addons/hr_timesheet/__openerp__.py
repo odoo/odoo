@@ -39,7 +39,7 @@ It is completely integrated with the cost accounting module. It allows you to se
 up a management by affair.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/employees',
     'images': ['images/hr_timesheet_lines.jpeg'],
     'depends': ['account', 'hr', 'base', 'hr_attendance'],
     'data': [

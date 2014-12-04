@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 try:
     import serial
 except ImportError:
-    _logger.error('OpenERP module hw_scale depends on the pyserial python module')
+    _logger.error('Odoo module hw_scale depends on the pyserial python module')
     serial = None
 
 

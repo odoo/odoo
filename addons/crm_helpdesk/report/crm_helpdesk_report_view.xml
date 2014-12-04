@@ -10,7 +10,8 @@
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Helpdesk" type="pivot" stacked="True">
                     <field name="state" type="row"/>
-                    <field name="user_id" type="row"/>
+                    <field name="team_id" type="col"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="nbr" type="measure"/>
                 </graph>
             </field>
@@ -23,17 +24,17 @@
             <field name="model">crm.helpdesk.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="New" icon="terp-check" domain="[('state','=','draft')]" />
-                    <filter string="Open" icon="terp-camera_test" domain="[('state','=','open')]" />
-                    <filter string="Closed" icon="terp-dialog-close" domain="[('state','=','cancel')]" />
+                    <filter string="New" domain="[('state','=','draft')]" />
+                    <filter string="Open" domain="[('state','=','open')]" />
+                    <filter string="Closed" domain="[('state','=','cancel')]" />
                     <separator/>
-                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <separator/>
-                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
+                    <filter string="My Company" context="{'invisible_team': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>   
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}" groups="base.group_multi_salesteams"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
@@ -43,15 +44,13 @@
                         <field name="date_closed" string="Close Date"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
-                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
-                        <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of helpdesk requests"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of helpdesk requests"/>
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of helpdesk requests" />
+                        <filter string="Salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Status" context="{'group_by':'state'}" />
+                        <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
+                        <separator/>
+                        <filter string="Month" context="{'group_by':'date:month'}" help="Month of helpdesk requests"/>
                     </group>
                 </search>
             </field>
@@ -77,13 +76,8 @@
             <field name="act_window_id" ref="action_report_crm_helpdesk"/>
         </record>
 
-        <menuitem id="base.menu_project_report" name="Project"
-            groups="base.group_no_one"
-            parent="base.menu_reporting" sequence="30"/>
-
         <menuitem name="Helpdesk Analysis" action="action_report_crm_helpdesk"
-            id="menu_report_crm_helpdesks_tree" parent="base.menu_project_report" sequence="20"/>
+            id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" sequence="20"/>
 
     </data>
 </openerp>
-

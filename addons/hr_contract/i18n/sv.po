@@ -1,87 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_contract
+# Swedish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.14\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-11-23 09:29+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:06+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Lön"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Information"
-msgstr "Information"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr "Provanställningen börjar"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr "Företagsbil"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Group By..."
-msgstr "Gruppera efter..."
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Avdelning"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,employee_id:0
-#: model:ir.model,name:hr_contract.model_hr_employee
-msgid "Employee"
-msgstr "Anställd"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Sök avtal"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_ids:0
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-msgid "Contracts"
-msgstr "Avtal"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Antal barn"
-
-#. module: hr_contract
-#: help:hr.employee,contract_id:0
-msgid "Latest contract of the employee"
-msgstr "Senaste avtal för den anställde"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Job"
-msgstr "Jobb"
+#: model:ir.model,name:hr_contract.model_base_action_rule
+msgid "Action Rules"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,advantages:0
@@ -89,9 +28,45 @@ msgid "Advantages"
 msgstr "Förmåner"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Work Permit"
-msgstr "Arbetstillstånd"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Advantages..."
+msgstr "Fördelar..."
+
+#. module: hr_contract
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr "Grundlön för anställda"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Företagsbil"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.ui.menu,name:hr_contract.next_id_56
+msgid "Contract"
+msgstr "Avtal"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "Avtalets referensnummer"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,type_id:0
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+msgid "Contract Type"
+msgstr "Avtalstyp"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -100,9 +75,45 @@ msgid "Contract Types"
 msgstr "Avtalstyper"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Exam"
-msgstr "Medicinsk undersökning"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: view:hr.contract:hr_contract.hr_contract_view_tree
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_ids:0
+#: field:hr.employee,contracts_count:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+msgid "Contracts"
+msgstr "Avtal"
+
+#. module: hr_contract
+#: field:hr.contract,create_uid:0
+#: field:hr.contract.type,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,create_date:0
+#: field:hr.contract.type,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Avdelning"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Duration"
+msgstr "Varaktighet"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "Anställd"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -110,85 +121,14 @@ msgid "End Date"
 msgstr "Slutdatum"
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr "Grundlön för anställda"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,name:0
-msgid "Contract Reference"
-msgstr "Avtalets referensnummer"
-
-#. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
-msgid "In kilometers"
-msgstr "I kilometer"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,notes:0
-msgid "Notes"
-msgstr "Anteckningar"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
-msgstr "Arbetstillstånd nummer"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "Avtal"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:0
-#: field:hr.contract.type,name:0
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-msgid "Contract Type"
-msgstr "Avtalstyp"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Arbetsschema"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Salary and Advantages"
-msgstr "Lön och förmåner"
-
-#. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr "Befattning"
-
-#. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
 msgstr "Fel! Avtalets startdatum måste vara mindre än dess slutdatum."
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Är en chef"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Startdatum"
-
-#. module: hr_contract
-#: field:hr.contract,visa_no:0
-msgid "Visa No"
-msgstr "Visa nummer"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -196,24 +136,57 @@ msgid "Home-Work Dist."
 msgstr "Hem-arbete distans"
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Födelseort"
+#: field:hr.contract,id:0
+#: field:hr.contract.type,id:0
+msgid "ID"
+msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period Duration"
-msgstr "Provanställningstid"
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "I kilometer"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Duration"
-msgstr "Varaktighet"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Information"
+msgstr "Information"
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
-msgstr "Visa utgångsdatum"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Är en chef"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Job"
+msgstr "Jobb"
+
+#. module: hr_contract
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "Befattning"
+
+#. module: hr_contract
+#: field:hr.contract,write_uid:0
+#: field:hr.contract.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,write_date:0
+#: field:hr.contract.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Senaste avtal för den anställde"
+
+#. module: hr_contract
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+msgid "Medical Exam"
+msgstr "Medicinsk undersökning"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -221,58 +194,93 @@ msgid "Medical Examination Date"
 msgstr "Friskintygsdatum"
 
 #. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,notes:0
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Antal barn"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Födelseort"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Salary and Advantages"
+msgstr "Lön och förmåner"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "Sök avtal"
+
+#. module: hr_contract
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+msgid "Search Contract Type"
+msgstr "Sök avtalstyp"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
 msgstr "Provanställningens slut"
 
 #. module: hr_contract
-#: view:hr.contract.type:0
-msgid "Search Contract Type"
-msgstr "Sök avtalstyp"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Trial Period Duration"
+msgstr "Provanställningstid"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Provanställningen börjar"
 
-#~ msgid "Human Resources Contracts"
-#~ msgstr "Human Resources Contracts"
+#. module: hr_contract
+#: field:base.action.rule,trg_date_resource_field_id:0
+msgid "Use employee work schedule"
+msgstr ""
 
-#~ msgid "Miscellaneous"
-#~ msgstr "Övrigt"
+#. module: hr_contract
+#: help:base.action.rule,trg_date_resource_field_id:0
+msgid "Use the user's working schedule."
+msgstr ""
 
-#~ msgid "Current"
-#~ msgstr "Aktuellt"
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "Visa utgångsdatum"
 
-#~ msgid "Medical Examination"
-#~ msgstr "Medicinsk undersökning"
+#. module: hr_contract
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr "Visa nummer"
 
-#~ msgid "Trial Period"
-#~ msgstr "Provanställning"
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Lön"
 
-#~ msgid "Overpassed"
-#~ msgstr "Överpasserad"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Work Permit"
+msgstr "Arbetstillstånd"
 
-#~ msgid "Personal Info"
-#~ msgstr "Personlig information"
+#. module: hr_contract
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr "Arbetstillstånd nummer"
 
-#~ msgid "Contracts whose end date already passed"
-#~ msgstr "Avtal vars slutdatum är passerade"
-
-#~ msgid "Contracts in progress"
-#~ msgstr "Pågående avtal"
-
-#~ msgid "Home-Work Distance"
-#~ msgstr "Hem-arbetsplatsdistans"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Fel! Du kan inte skapa rekursiva hierarkier av anställda."
-
-#~ msgid "Valid for"
-#~ msgstr "Giltig för"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "Fel! avtalsstartdatum måste komma före avtalsslutdatum."
-
-#~ msgid "Job Info"
-#~ msgstr "Arbetsinformation"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Arbetsschema"

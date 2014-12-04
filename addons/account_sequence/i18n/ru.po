@@ -1,68 +1,32 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-03-14 07:15+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Проводка по счету"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Настройка нумерации по счету"
-
-#. module: account_sequence
-#: help:account.move,internal_sequence_number:0
-#: help:account.move.line,internal_sequence_number:0
-msgid "Internal Sequence Number"
-msgstr "Внутренняя нумерация"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr "Следующее число в этой нумерации"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr "Следующее число"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr "Увеличение номера"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr "Следующее число в нумерации будет увеличено на это число"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr "Настройка вашей нумерации по счету"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Настроить"
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
-msgstr "Суффикс записи для нумерации"
 
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
@@ -70,14 +34,34 @@ msgid "Company"
 msgstr "Организация"
 
 #. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
-msgstr "Выравнивание чисел"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "Настроить"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move_line
-msgid "Journal Items"
-msgstr "Элементы журнала"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "Настройка вашей нумерации по счету"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Увеличение номера"
 
 #. module: account_sequence
 #: field:account.move,internal_sequence_number:0
@@ -86,13 +70,35 @@ msgid "Internal Number"
 msgstr "Внутренний номер"
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid ""
-"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
-"get the required padding size."
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Внутренняя нумерация"
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Внутренняя нумерация"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Элементы журнала"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
 msgstr ""
-"OpenERP автоматически добавляет несколько '0' слева от 'Следующее число' для "
-" заданного выравнивания."
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -100,9 +106,31 @@ msgid "Name"
 msgstr "Название"
 
 #. module: account_sequence
-#: field:account.journal,internal_sequence_id:0
-msgid "Internal Sequence"
-msgstr "Внутренняя нумерация"
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Следующее число"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Следующее число в этой нумерации"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Выравнивание чисел"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Префикс"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -110,24 +138,19 @@ msgid "Prefix value of the record for the sequence"
 msgstr "Префикс для нумерации"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr "Проводка по счету"
-
-#. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Суффикс"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr "title"
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Суффикс записи для нумерации"
 
 #. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr "Префикс"
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Следующее число в нумерации будет увеличено на это число"
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -139,100 +162,11 @@ msgstr ""
 "журнал, связанный с этим журналом."
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "account.sequence.installer"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_journal
-msgid "Journal"
-msgstr "Журнал"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "Можно улучшить модуль нумерации счетов, установив ."
 
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Для счета и периода должна быть одна компания."
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Нельзя сделать проводку по закрытому счету."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Ошибочное значение проводки по дебету или кредиту !"
-
-#~ msgid "Image"
-#~ msgstr "Изображение"
-
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "Нумерация проводок"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Нельзя создать проводку по счету с типом Вид."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Этот модуль поддерживает внутреннюю нумерацию для проводок.\n"
-#~ "    "
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Выполнение настройки"
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "Вы не можете создавать проводки по разным периодам / журналам в одной "
-#~ "операции."
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Нельзя сделать больше одной операции за период по централизованному журналу."
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Название журнала должно быть уникальным внутри организации!"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Код журнала должен быть уникальным внутри организации!"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Выбранный счёт проводки в журнале нуждается во вторичной валюте. Вы должны "
-#~ "удалить вторичную валюту по счёту или выбрать мульти-валютный вид по журналу."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Дата проводки в журнале не в определённом периоде! Вы должны сменить дату "
-#~ "или удалить это ограничение из журнала."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Нельзя создать элемент журнала по счету с типом вид."
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Нельзя создать элемент журнала по закрытому счету ."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Для счета и периода должна быть одна компания."
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Ошибка настройки! Выбранная валюта должна соответствовать валюте счетов по "
-#~ "умолчанию."
-
-#~ msgid ""
-#~ "You can not create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Вы не можете создавать более одного движения за период по централизованному "
-#~ "журналу."
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "title"

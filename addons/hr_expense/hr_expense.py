@@ -53,7 +53,7 @@ class hr_expense_expense(osv.osv):
         return user.company_id.currency_id.id
 
     _name = "hr.expense.expense"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Expense"
     _order = "id desc"
     _track = {
@@ -69,6 +69,7 @@ class hr_expense_expense(osv.osv):
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
+        'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account"),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, copy=False,
@@ -77,7 +78,7 @@ class hr_expense_expense(osv.osv):
                                   help="Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
         'user_valid': fields.many2one('res.users', 'Validation By', readonly=True, copy=False,
                                       states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
-        'account_move_id': fields.many2one('account.move', 'Ledger Posting', copy=False),
+        'account_move_id': fields.many2one('account.move', 'Ledger Posting', copy=False, track_visibility="onchange"),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', copy=True,
                                     readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
@@ -126,15 +127,20 @@ class hr_expense_expense(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         emp_obj = self.pool.get('hr.employee')
         department_id = False
+        employee_payable_account_id = False
         company_id = False
         if employee_id:
             employee = emp_obj.browse(cr, uid, employee_id, context=context)
             department_id = employee.department_id.id
             company_id = employee.company_id.id
-        return {'value': {'department_id': department_id, 'company_id': company_id}}
+            if employee.address_home_id and employee.address_home_id.property_account_payable:
+                employee_payable_account_id = employee.address_home_id.property_account_payable.id
+        return {'value': {'department_id': department_id, 'company_id': company_id, 'employee_payable_account_id': employee_payable_account_id}}
 
     def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
+            if not expense.line_ids:
+                raise osv.except_osv(_('Error!'), _('You cannot submit expense which has no expense line.'))
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)
@@ -226,22 +232,22 @@ class hr_expense_expense(osv.osv):
         '''
         move_obj = self.pool.get('account.move')
         for exp in self.browse(cr, uid, ids, context=context):
-            if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
-            if not exp.employee_id.address_home_id.property_account_payable.id:
-                raise osv.except_osv(_('Error!'), _('The employee must have a payable account set on his home address.'))
+            if not exp.employee_payable_account_id:
+                raise osv.except_osv(_('Error!'), _('No employee account payable found for the expense '))
+
             company_currency = exp.company_id.currency_id.id
-            diff_currency_p = exp.currency_id.id <> company_currency
-            
+            diff_currency_p = exp.currency_id.id != company_currency
+
             #create the move that will contain the accounting entries
             move_id = move_obj.create(cr, uid, self.account_move_get(cr, uid, exp.id, context=context), context=context)
-        
+
             #one account.move.line per expense line (+taxes..)
             eml = self.move_line_get(cr, uid, exp.id, context=context)
-            
+
             #create one more move line, a counterline for the total on payable account
             total, total_currency, eml = self.compute_expense_totals(cr, uid, exp, company_currency, exp.name, eml, context=context)
-            acc = exp.employee_id.address_home_id.property_account_payable.id
+
+            acc = exp.employee_payable_account_id.id or False
             eml.append({
                     'type': 'dest',
                     'name': '/',
@@ -254,7 +260,7 @@ class hr_expense_expense(osv.osv):
                     })
 
             #convert eml into an osv-valid format
-            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)), eml)
+            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.company_id.partner_id, exp.date_confirm, context=context)), eml)
             journal_id = move_obj.browse(cr, uid, move_id, context).journal_id
             # post the journal entry if 'Skip 'Draft' State for Manual Entries' is checked
             if journal_id.entry_posted:
@@ -277,7 +283,6 @@ class hr_expense_expense(osv.osv):
             if not mres:
                 continue
             res.append(mres)
-            tax_code_found= False
             
             #Calculate tax according to default tax on product
             taxes = []
@@ -295,32 +300,29 @@ class hr_expense_expense(osv.osv):
                         a = product.categ_id.property_account_expense_categ.id
                     a = fpos_obj.map_account(cr, uid, fpos, a)
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
-                tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
             if not taxes:
                 continue
+            tax_l = []
+            base_tax_amount = line.total_amount
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
                     line.unit_quantity, line.product_id,
                     exp.user_id.partner_id)['taxes']:
                 tax_code_id = tax['base_code_id']
-                tax_amount = line.total_amount * tax['base_sign']
-                if tax_code_found:
-                    if not tax_code_id:
-                        continue
-                    res.append(self.move_line_get_item(cr, uid, line, context))
-                    res[-1]['price'] = 0.0
-                    res[-1]['account_analytic_id'] = False
-                elif not tax_code_id:
+                if not tax_code_id:
                     continue
-                tax_code_found = True
                 res[-1]['tax_code_id'] = tax_code_id
-                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
                 ## 
                 is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
                 if is_price_include:
                     ## We need to deduce the price for the tax
                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
+                    # tax amount countains base amount without the tax
+                    base_tax_amount = (base_tax_amount - tax['amount']) * tax['base_sign']
+                else:
+                    base_tax_amount = base_tax_amount * tax['base_sign']
+
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
@@ -331,7 +333,10 @@ class hr_expense_expense(osv.osv):
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
-                res.append(assoc_tax)
+                tax_l.append(assoc_tax)
+
+            res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
+            res += tax_l
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):

@@ -24,8 +24,8 @@ from openerp import tools
 from openerp.osv import fields, osv
 
 
-class crm_case_section(osv.osv):
-    _name = "crm.case.section"
+class crm_team(osv.Model):
+    _name = "crm.team"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Teams"
     _order = "complete_name"
@@ -44,14 +44,14 @@ class crm_case_section(osv.osv):
             :param str value_field: the field used to compute the value of the bar slice
             :param str groupby_field: the fields used to group
 
-            :return list section_result: a list of dicts: [
+            :return list team_result: a list of dicts: [
                                                 {   'value': (int) bar_column_value,
                                                     'tootip': (str) bar_column_tooltip,
                                                 }
                                             ]
         """
         month_begin = date.today().replace(day=1)
-        section_result = [{
+        team_result = [{
                           'value': 0,
                           'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
                           } for i in range(self._period_number - 1, -1, -1)]
@@ -60,21 +60,21 @@ class crm_case_section(osv.osv):
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
-        return section_result
+            team_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
+        return team_result
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
-        'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
+        'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True, string="Full Name"),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
-        'member_ids': fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
-        'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
+        'member_ids': fields.many2many('res.users', 'sale_member_rel', 'team_id', 'member_id', 'Team Members'),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales team"),
+        'parent_id': fields.many2one('crm.team', 'Parent Team'),
+        'child_ids': fields.one2many('crm.team', 'parent_id', 'Child Teams'),
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'color': fields.integer('Color Index'),
@@ -112,19 +112,5 @@ class crm_case_section(osv.osv):
 class res_partner(osv.Model):
     _inherit = 'res.partner'
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
     }
-
-
-class res_users(osv.Model):
-    _inherit = 'res.users'
-    _columns = {
-        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
-    }
-
-    def __init__(self, pool, cr):
-        init_res = super(res_users, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
-        return init_res

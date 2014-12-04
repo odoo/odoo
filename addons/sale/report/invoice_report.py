@@ -23,19 +23,19 @@ from openerp.osv import fields,osv
 class account_invoice_report(osv.osv):
     _inherit = 'account.invoice.report'
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
     }
     _depends = {
-        'account.invoice': ['section_id'],
+        'account.invoice': ['team_id'],
     }
 
     def _select(self):
-        return  super(account_invoice_report, self)._select() + ", sub.section_id as section_id"
+        return  super(account_invoice_report, self)._select() + ", sub.team_id as team_id"
 
     def _sub_select(self):
-        return  super(account_invoice_report, self)._sub_select() + ", ai.section_id as section_id"
+        return  super(account_invoice_report, self)._sub_select() + ", ai.team_id as team_id"
 
     def _group_by(self):
-        return super(account_invoice_report, self)._group_by() + ", ai.section_id"
+        return super(account_invoice_report, self)._group_by() + ", ai.team_id"
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

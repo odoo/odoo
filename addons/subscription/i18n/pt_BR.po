@@ -1,57 +1,49 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* subscription
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-18 17:24+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-06 23:15+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@zupy.com.br>\n"
-"Language-Team: \n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-07 07:48+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: subscription
-#: field:subscription.subscription,doc_source:0
-#: field:subscription.subscription.history,document_id:0
-msgid "Source Document"
-msgstr "Documento de Origem"
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "Ativo"
 
 #. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr "Objeto"
+#: field:subscription.document,create_uid:0
+#: field:subscription.document.fields,create_uid:0
+#: field:subscription.subscription,create_uid:0
+#: field:subscription.subscription.history,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Search Subscription"
-msgstr "Procurar Inscrição"
+#: field:subscription.document,create_date:0
+#: field:subscription.document.fields,create_date:0
+#: field:subscription.subscription,create_date:0
+#: field:subscription.subscription.history,create_date:0
+msgid "Created on"
+msgstr "Criado em"
 
 #. module: subscription
-#: field:subscription.subscription,date_init:0
-msgid "First Date"
-msgstr "Primeira Data"
-
-#. module: subscription
-#: field:subscription.document.fields,field:0
-msgid "Field"
-msgstr "Campo"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription_history
-msgid "Subscription history"
-msgstr "Histórico de inscrição"
-
-#. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Draft"
-msgstr "Provisório"
+#: field:subscription.subscription,cron_id:0
+msgid "Cron Job"
+msgstr "Trabalho Cron"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -59,75 +51,86 @@ msgid "Current Date"
 msgstr "Data Atual"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Weeks"
-msgstr "Semanas"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "Status"
-msgstr "Situação"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "Eventos Recorrentes"
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_subscription_form
-#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr "Assinaturas"
-
-#. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr "Numero de Intervalo"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Stop"
-msgstr "Parar"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Set to Draft"
-msgstr "Definir como Provisório"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: selection:subscription.subscription,state:0
-msgid "Running"
-msgstr "Em execução"
-
-#. module: subscription
-#: view:subscription.subscription.history:0
-msgid "Subscription History"
-msgstr "Histórico de Subscrições"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
-msgid "User"
-msgstr "Usuário"
-
-#. module: subscription
-#: field:subscription.subscription,interval_type:0
-msgid "Interval Unit"
-msgstr "Unidade de Intervalo"
-
-#. module: subscription
 #: field:subscription.subscription.history,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: subscription
-#: field:subscription.subscription,exec_init:0
-msgid "Number of documents"
-msgstr "Número de Chamadas"
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "Dias"
+
+#. module: subscription
+#: field:subscription.document.fields,value:0
+msgid "Default Value"
+msgstr "Valor Padrão"
+
+#. module: subscription
+#: help:subscription.document.fields,value:0
+msgid "Default value is considered for field when new document is generated."
+msgstr ""
+"O valor Padrão é considerado para o campo quando um novo documento for "
+"gerado."
+
+#. module: subscription
+#: help:subscription.subscription,note:0
+msgid "Description or Summary of Subscription"
+msgstr "Descrição ou Resumo da Inscrição"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,doc_lines:0
+msgid "Documents created"
+msgstr "Documentos Criados"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Done"
+msgstr "Concluído"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Draft"
+msgstr "Provisório"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:145
+#, python-format
+msgid "Error!"
+msgstr "Erro!"
+
+#. module: subscription
+#: selection:subscription.document.fields,value:0
+msgid "False"
+msgstr "Falso"
+
+#. module: subscription
+#: field:subscription.document.fields,field:0
+msgid "Field"
+msgstr "Campo"
+
+#. module: subscription
+#: field:subscription.document,field_ids:0
+msgid "Fields"
+msgstr "Campos"
+
+#. module: subscription
+#: field:subscription.subscription,date_init:0
+msgid "First Date"
+msgstr "Primeira Data"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: subscription
+#: field:subscription.document,id:0
+#: field:subscription.document.fields,id:0
+#: field:subscription.subscription,id:0
+#: field:subscription.subscription.history,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: subscription
 #: help:subscription.document,active:0
@@ -139,86 +142,6 @@ msgstr ""
 "documento de inscrição sem removê-lo."
 
 #. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Você não pode excluir uma inscrição ativa!"
-
-#. module: subscription
-#: field:subscription.document,field_ids:0
-msgid "Fields"
-msgstr "Campos"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
-#: field:subscription.subscription,notes:0
-msgid "Notes"
-msgstr "Notas"
-
-#. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Months"
-msgstr "Meses"
-
-#. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Days"
-msgstr "Dias"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "Error!"
-msgstr "Erro!"
-
-#. module: subscription
-#: field:subscription.subscription,cron_id:0
-msgid "Cron Job"
-msgstr "Trabalho Cron"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription.history,subscription_id:0
-msgid "Subscription"
-msgstr "Inscrição"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,partner_id:0
-msgid "Partner"
-msgstr "Parceiro"
-
-#. module: subscription
-#: help:subscription.subscription,cron_id:0
-msgid "Scheduler which runs on subscription"
-msgstr "Agendamento que é executado na inscrição"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Data da Inscrição"
-
-#. module: subscription
-#: help:subscription.subscription,note:0
-msgid "Description or Summary of Subscription"
-msgstr "Descrição ou Resumo da Inscrição"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-#: view:subscription.document:0
-#: field:subscription.document.fields,document_id:0
-msgid "Subscription Document"
-msgstr "Documento de Inscrição"
-
-#. module: subscription
 #: help:subscription.subscription,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -228,26 +151,185 @@ msgstr ""
 "removê-la."
 
 #. module: subscription
-#: help:subscription.document.fields,value:0
-msgid "Default value is considered for field when new document is generated."
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,notes:0
+msgid "Internal Notes"
+msgstr "Anotações Internas"
+
+#. module: subscription
+#: field:subscription.subscription,interval_number:0
+msgid "Interval Qty"
+msgstr "Numero de Intervalo"
+
+#. module: subscription
+#: field:subscription.subscription,interval_type:0
+msgid "Interval Unit"
+msgstr "Unidade de Intervalo"
+
+#. module: subscription
+#: field:subscription.document,write_uid:0
+#: field:subscription.document.fields,write_uid:0
+#: field:subscription.subscription,write_uid:0
+#: field:subscription.subscription.history,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: subscription
+#: field:subscription.document,write_date:0
+#: field:subscription.document.fields,write_date:0
+#: field:subscription.subscription,write_date:0
+#: field:subscription.subscription.history,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Months"
+msgstr "Meses"
+
+#. module: subscription
+#: field:subscription.document,name:0
+#: field:subscription.subscription,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,note:0
+msgid "Notes"
+msgstr "Notas"
+
+#. module: subscription
+#: field:subscription.subscription,exec_init:0
+msgid "Number of documents"
+msgstr "Número de Chamadas"
+
+#. module: subscription
+#: field:subscription.document,model:0
+msgid "Object"
+msgstr "Objeto"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,partner_id:0
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:118
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
 msgstr ""
-"O valor Padrão é considerado para o campo quando um novo documento for "
-"gerado."
+"Por favor, forneça um outro documento de origem. \n"
+"Este não existe!"
 
 #. module: subscription
-#: selection:subscription.document.fields,value:0
-msgid "False"
-msgstr "Falso"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Group By..."
-msgstr "Agrupar Por..."
-
-#. module: subscription
-#: view:subscription.subscription:0
+#: view:subscription.subscription:subscription.view_subscription_form
 msgid "Process"
 msgstr "Processo"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_subscription_form
+#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
+msgid "Recurring Documents"
+msgstr "Documentos Recorrentes"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_document_form
+#: model:ir.ui.menu,name:subscription.menu_action_document_form
+msgid "Recurring Types"
+msgstr "Tipo de Recorrência"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: selection:subscription.subscription,state:0
+msgid "Running"
+msgstr "Em execução"
+
+#. module: subscription
+#: help:subscription.subscription,cron_id:0
+msgid "Scheduler which runs on subscription"
+msgstr "Agendamento que é executado na inscrição"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+msgid "Search Subscription"
+msgstr "Procurar Inscrição"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Set to Draft"
+msgstr "Definir como Provisório"
+
+#. module: subscription
+#: field:subscription.subscription,doc_source:0
+#: field:subscription.subscription.history,document_id:0
+msgid "Source Document"
+msgstr "Documento de Origem"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,state:0
+msgid "Status"
+msgstr "Situação"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Stop"
+msgstr "Parar"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription.history,subscription_id:0
+msgid "Subscription"
+msgstr "Inscrição"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+#: view:subscription.document:subscription.document_form
+#: view:subscription.document:subscription.document_tree
+#: view:subscription.document:subscription.view_subscription_document_filter
+#: field:subscription.document.fields,document_id:0
+msgid "Subscription Document"
+msgstr "Documento de Inscrição"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document_fields
+#: view:subscription.document.fields:subscription.document_fields_form
+#: view:subscription.document.fields:subscription.document_fields_tree
+msgid "Subscription Document Fields"
+msgstr "Campos de Documento de Inscrição"
+
+#. module: subscription
+#: view:subscription.subscription.history:subscription.subscription_subscription_history_form
+#: view:subscription.subscription.history:subscription.subscription_subscription_history_tree
+msgid "Subscription History"
+msgstr "Histórico de Subscrições"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "Histórico de inscrição"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: view:subscription.subscription:subscription.view_subscription_tree
+msgid "Subscriptions"
+msgstr "Assinaturas"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Subsription Data"
+msgstr "Data da Inscrição"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,user_id:0
+msgid "User"
+msgstr "Usuário"
 
 #. module: subscription
 #: help:subscription.subscription,doc_source:0
@@ -257,98 +339,18 @@ msgstr ""
 "O Usuário pode escolher o documento origem deseja usar para criar documentos"
 
 #. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_document_form
-#: model:ir.ui.menu,name:subscription.menu_action_document_form
-msgid "Document Types"
-msgstr "Tipos de Documento"
+#: selection:subscription.subscription,interval_type:0
+msgid "Weeks"
+msgstr "Semanas"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
+#: code:addons/subscription/subscription.py:118
 #, python-format
-msgid "Wrong Source Document !"
-msgstr "Documento Origem Errado !"
+msgid "Wrong Source Document!"
+msgstr "Documento de Origem Errado!"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document_fields
-#: view:subscription.document.fields:0
-msgid "Subscription Document Fields"
-msgstr "Campos de Documento de Inscrição"
-
-#. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Done"
-msgstr "Concluído"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
+#: code:addons/subscription/subscription.py:145
 #, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Por favor forneça outro documento origem.\n"
-"Este não existe !"
-
-#. module: subscription
-#: field:subscription.document.fields,value:0
-msgid "Default Value"
-msgstr "Valor Padrão"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,doc_lines:0
-msgid "Documents created"
-msgstr "Documentos Criados"
-
-#. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "Ativo"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuração"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalido XML para Arquitetura da View"
-
-#~ msgid "Sale Order"
-#~ msgstr "Pedido de Venda"
-
-#~ msgid "Invoice"
-#~ msgstr "Fatura"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Erro !"
-
-#~ msgid "Today"
-#~ msgstr "Hoje"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "This Week"
-#~ msgstr "Esta Semana"
-
-#~ msgid ""
-#~ "Module allows to create new documents and add subscription on that document."
-#~ msgstr ""
-#~ "O módulo permite criar novos documentos e adicionar inscrição neste documento"
-
-#~ msgid "Subscription and recurring operations"
-#~ msgstr "Inscrição e operações recorrentes"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot modify the Object linked to the Document Type!\n"
-#~ "Create another Document instead !"
-#~ msgstr ""
-#~ "Você não pode modificar o Objeto relacionado ao Tipo de Documento!\n"
-#~ "Crie outro Documento em vez disso !"
+msgid "You cannot delete an active subscription!"
+msgstr "Você não pode excluir uma inscrição ativa!"

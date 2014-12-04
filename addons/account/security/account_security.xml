@@ -62,13 +62,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="analytic_journal_comp_rule" model="ir.rule">
-        <field name="name">Analytic journal multi-company</field>
-        <field name="model_id" ref="model_account_analytic_journal"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <record id="period_comp_rule" model="ir.rule">
         <field name="name">Period multi-company</field>
         <field name="model_id" ref="model_account_period"/>
@@ -125,6 +118,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="analytic_entry_analysis_comp_rule" model="ir.rule">
+        <field name="name">Analytic Entries Analysis multi-company</field>
+        <field name="model_id" ref="model_analytic_entries_report"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <record id="account_fiscal_position_comp_rule" model="ir.rule">
         <field name="name">Account fiscal Mapping company rule</field>
         <field name="model_id" ref="model_account_fiscal_position"/>
@@ -163,6 +163,13 @@
     <record model="ir.rule" id="account_bank_statement_line_comp_rule">
         <field name="name">Account bank statement line company rule</field>
         <field name="model_id" ref="model_account_bank_statement_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="account_statement_operation_template_comp_rule">
+        <field name="name">Account statement operation template company rule</field>
+        <field name="model_id" ref="model_account_statement_operation_template"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>

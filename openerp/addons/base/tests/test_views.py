@@ -544,9 +544,9 @@ class TestTemplating(ViewCase):
                         'data-oe-id': str(id2),
                         'data-oe-field': 'arch',
                         'data-oe-xpath': '/xpath/item/content[1]',
+                        'data-oe-source-id': str(id)
                     }), {
                         'order': '2',
-                        'data-oe-source-id': str(id)
                     }),
                 E.item({
                     'order': '1',
@@ -612,7 +612,7 @@ class TestTemplating(ViewCase):
                     {'t-ignore': 'true', 'order': '1'},
                     E.t({'t-esc': 'foo'}),
                     E.item(
-                        {'order': '2', 'data-oe-source-id': str(id)},
+                        {'order': '2'},
                         E.content(
                             {'t-att-href': 'foo'},
                             "bar")
@@ -642,7 +642,7 @@ class test_views(ViewCase):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
-        kw.setdefault('application', 'always')
+        kw.setdefault('active', True)
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -663,7 +663,7 @@ class test_views(ViewCase):
             name='base view',
             model=model,
             priority=1,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <tree string="view">
                           <field name="url"/>
                         </tree>
@@ -677,7 +677,7 @@ class test_views(ViewCase):
             model=model,
             priority=1,
             inherit_id=vid,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <xpath expr="//field[@name='url']" position="before">
                           <field name="name"/>
                         </xpath>
@@ -1095,21 +1095,21 @@ class TestOptionalViews(ViewCase):
         self.v1 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'always',
+            'active': True,
             'priority': 10,
             'arch': '<xpath expr="//base" position="after"><v1/></xpath>',
         })
         self.v2 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'enabled',
+            'active': True,
             'priority': 9,
             'arch': '<xpath expr="//base" position="after"><v2/></xpath>',
         })
         self.v3 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'disabled',
+            'active': False,
             'priority': 8,
             'arch': '<xpath expr="//base" position="after"><v3/></xpath>'
         })
@@ -1128,10 +1128,10 @@ class TestOptionalViews(ViewCase):
         )
 
     def test_applied_state_toggle(self):
-        """ Change application states of v2 and v3, check that the results
+        """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.browse(self.v2).write({'application': 'disabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1141,7 +1141,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v3).write({'application': 'enabled'})
+        self.browse(self.v3).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1152,7 +1152,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v2).write({'application': 'enabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),

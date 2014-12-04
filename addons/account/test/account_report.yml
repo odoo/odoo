@@ -135,47 +135,47 @@
 -
   !python {model: account.analytic.account}: |
     ctx={}
-    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('analytic.analytic_root')]})
     data_dict = {}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_balance',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'analytic.action_account_analytic_balance',wiz_data=data_dict, context=ctx, our_module='account')
 
 -
  Print the Cost Ledger Report through the wizard
 -
   !python {model: account.analytic.account}: |
     ctx={}
-    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('analytic.analytic_root'),ref('analytic.analytic_absences'),ref('analytic.analytic_internal'),ref('analytic.analytic_our_super_product')]})
     data_dict = {}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'analytic.action_account_analytic_cost',wiz_data=data_dict, context=ctx, our_module='account')
 
 -
  Print the Cost Ledger(Only Quantities) Report through the wizard
 -
   !python {model: account.analytic.account}: |
     ctx={}
-    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('analytic.analytic_root'),ref('analytic.analytic_absences'),ref('analytic.analytic_internal'),ref('analytic.analytic_our_super_product')]})
     data_dict = {}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost_ledger_journal',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'analytic.action_account_analytic_cost_ledger_journal',wiz_data=data_dict, context=ctx, our_module='account')
 
 -
  Print the Analytic Journal Report through the wizard
 -
   !python {model: account.analytic.journal}: |
     ctx={}
-    ctx.update({'model': 'account.analytic.journal','active_ids': [ref('account.cose_journal_sale'), ref('account.exp'), ref('account.sit')]})
+    ctx.update({'model': 'account.analytic.journal','active_ids': [ref('analytic.cose_journal_sale'), ref('account.exp'), ref('analytic.sit')]})
     data_dict = {}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_journal',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'analytic.action_account_analytic_journal',wiz_data=data_dict, context=ctx, our_module='account')
 
 -
  Print the Inverted Analytic Balance Report through the wizard
 -
   !python {model: account.analytic.account}: |
     ctx={}
-    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('analytic.analytic_root')]})
     data_dict = {}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'analytic.action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')

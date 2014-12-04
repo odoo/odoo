@@ -21,7 +21,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//page[@string='Public Information']" position="before">
+                <xpath expr="//page[@string='Public Information']" position="after">
                     <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
                         <field name="has_badges" invisible="1"/>
                         <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
@@ -34,8 +34,6 @@
                         </div>
                         <field name="badge_ids" widget="many2many_kanban" />
                     </page>
-                </xpath>
-                <xpath expr="//page[@string='Public Information']" position="after">
                     <page string="Goals">
                         <field name="goal_ids" widget="many2many_kanban" />
                     </page>

@@ -10,7 +10,7 @@
 
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Contacts" sequence="4" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -47,7 +47,7 @@
         -->
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Titles</field>
+            <field name="name">Company Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -107,15 +107,15 @@
                             placeholder="Company"
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                             attrs="{'invisible': [('is_company','=', True)]}"/>
-                        <group>
-                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
-                            <field name="function" placeholder="e.g. Sales Director"/>
-                            <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="phone"/>
-                            <field name="mobile"/>
-                        </group>
                     </div>
+                    <group>
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
+                        <field name="user_ids" invisible="1"/>
+                        <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -147,8 +147,8 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
                                 <field class="oe_inline"
                                     name="type"/>
                             </div>
@@ -172,7 +172,7 @@
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                             </div>
-                            <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
@@ -182,8 +182,7 @@
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]"
-                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
+                            <field name="title" options='{"no_open": True}'/>
                         </group>
                     </group>
 
@@ -214,7 +213,7 @@
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
-                                                <a type="open">
+                                                <a type="open" class="col-md-2">
                                                     <t t-if="record.has_image.raw_value === true">
                                                         <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                     </t>
@@ -232,10 +231,9 @@
                                                 </a>
                                                     <div class="oe_module_desc">
                                                         <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
-                                                            <table class="oe_kanban_table">
-                                                                <tr>
-                                                                    <td class="oe_kanban_title1" align="left" valign="middle">
-                                                                        <h4><a type="open"><field name="name"/></a></h4>
+                                                              <div class="col-md-12">
+                                                                 <div>
+                                                                     <h4><a type="open"><field name="name"/></a></h4>
                                                                         <i><div t-if="record.function.raw_value">
                                                                             <field name="function"/></div></i>
                                                                         <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
@@ -244,9 +242,8 @@
                                                                         <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
                                                                         <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
                                                                         <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
+                                                                  </div>
+                                                               </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -267,13 +264,14 @@
                                             <field name="email"/>
                                             <field name="phone"/>
                                             <field name="mobile"/>
+                                            <field name="title"/>
                                         </group>
                                         <div>
                                             <field name="use_parent_address"/><label for="use_parent_address"/>
                                         </div>
                                         <group>
-                                            <label for="type"/>
-                                            <div name="div_type">
+                                            <label for="type" groups="base.group_no_one"/>
+                                            <div name="contact_div_type" groups="base.group_no_one">
                                                 <field class="oe_inline" name="type"/>
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
@@ -298,24 +296,29 @@
                             <field name="comment" placeholder="Put an internal note..."/>
                         </page>
                         <page name='sales_purchases' string="Sales &amp; Purchases">
-                            <group>
-                                <group>
-                                    <field name="user_id" 
-                                        context="{'default_groups_ref': ['base.group_partner_manager']}"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                </group>
-                                <group>
-                                    <field name="customer"/>
-                                    <field name="supplier"/>
-                                </group>
+                            <group name="container_row_1">
                                 <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
-                                    <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="active"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="active"/>                                    
                                 </group>
+                            </group>
+                            <group name="container_row_2">
+                                <group string="Sale" name="sale">
+                                    <field name="customer"/>
+                                    <field name="user_id" 
+                                        context="{'default_groups_ref': ['base.group_partner_manager']}"/>
+                                </group>
+                                <group string="Purchase" name="purchase">
+                                    <field name="supplier"/>
+                                </group>
+                            </group>
+                            <group name="container_row_3">
+                                <group name="container_left"/>
+                                <group name="container_right"/>
                             </group>
                         </page>
                     </notebook>
@@ -424,7 +427,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer; discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -456,14 +459,14 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('customer','=',1)]</field>
+            <field name="domain">[]</field>
             <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a customer: discussions, history of business opportunities,
                 documents, etc.
               </p>
@@ -483,7 +486,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a contact in your address book.
               </p><p>
-                OpenERP helps you easily track all activities related to
+                Odoo helps you easily track all activities related to
                 a supplier: discussions, history of purchases,
                 documents, etc.
               </p>
@@ -588,7 +591,7 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>

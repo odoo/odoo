@@ -86,7 +86,8 @@ openerp_mail_followers = function(session, mail) {
             // event: click on 'edit_subtype(pencil)' button to edit subscription
             this.$el.on('click', '.oe_edit_subtype', self.on_edit_subtype);
             this.$el.on('click', '.oe_remove_follower', self.on_remove_follower);
-            this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
+            this.$el.on('click', '.oe_show_more', self.on_show_more_followers);
+            this.$el.on('click', 'a[data-partner]', self.on_follower_clicked);
         },
 
         on_edit_subtype: function(event) {
@@ -116,6 +117,7 @@ openerp_mail_followers = function(session, mail) {
                 view_mode: 'form',
                 view_type: 'form',
                 views: [[false, 'form']],
+                name: _t('Invite Follower'),
                 target: 'new',
                 context: {
                     'default_res_model': this.view.dataset.model,
@@ -142,6 +144,26 @@ openerp_mail_followers = function(session, mail) {
                 return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], [partner_id], context])
                     .then(this.proxy('read_value'));
             }
+        },
+
+        on_follower_clicked: function  (event) {
+            event.preventDefault();
+            var partner_id = $(event.target).data('partner');
+            var state = {
+                'model': 'res.partner',
+                'id': partner_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            var action = {
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: 'res.partner',
+                views: [[false, 'form']],
+                res_id: partner_id,
+            }
+            this.do_action(action);
         },
 
         read_value: function () {

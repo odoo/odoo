@@ -1,42 +1,27 @@
 # Dutch translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-25 13:07+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 19:31+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:46+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "Reden:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "Het document is succesvol geïmporteerd."
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "Sorry, het document kon niet worden geïmporteerd."
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' is een ongeldige externe ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,34 +35,26 @@ msgstr "Valuta"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "Document import melding"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "Ontbrekende programma"
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "EDI Subsysteem"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
-msgstr ""
-"Het document dat u probeert te importeren vereist de OpenERP `% s` "
-"applicatie. U kunt het installeren door in te loggen als administrator en "
-"het openen van de configuratie-assistent."
+#: field:edi.edi,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' is een ongeldige externe ID"
+msgid "Missing Application."
+msgstr "Ontbrekende applicatie"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -85,228 +62,34 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "EDI Subsysteem"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "De valutacode moet uniek zijn per bedrijf!"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "De naam van het bedrijf moet uniek zijn!"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "Relatieadressen"
-
-#~ msgid "EDI token"
-#~ msgstr "EDI code"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr ""
-#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "Unieke code voor het ophalen van een EDI-document."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "EDI code moet uniek zijn!"
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "Importeer in een bestaande OpenERP instantie"
-
-#~ msgid "Import this document"
-#~ msgstr "Importeer dit document"
-
-#~ msgid "View/Print"
-#~ msgstr "Bekijk/Afdrukken"
-
-#~ msgid "Document"
-#~ msgstr "Document"
-
-#~ msgid "EDI document content"
-#~ msgstr "EDI document inhoud"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI Document"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "Ontbrekende applicatie"
+msgid "Reason:"
+msgstr "Reden:"
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "Maak mijn nieuwe OpenERP instantie"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "Sorry, het document kon niet worden geïmporteerd."
 
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "Importeer in een nieuwe OpenERP Online instantie"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "Het document is succesvol geïmporteerd."
 
-#~ msgid "Import into another application"
-#~ msgstr "Importeer in een andere applicatie"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERP documentatie"
-
-#~ msgid "Description"
-#~ msgstr "Omschrijving"
-
-#~ msgid "Invoice"
-#~ msgstr "Factuur"
-
-#~ msgid "Your Reference"
-#~ msgstr "Uw referentie"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Product Description"
-#~ msgstr "Productomschrijving"
-
-#~ msgid "Powered by"
-#~ msgstr "Powered by"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "U kan hier het rauwe EDI document downloaden:"
-
-#~ msgid "Download"
-#~ msgstr "Download"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Amount"
-#~ msgstr "Bedrag"
-
-#~ msgid "Quantity"
-#~ msgstr "Hoeveelheid"
-
-#~ msgid "Discount"
-#~ msgstr "Korting"
-
-#~ msgid "Net Total:"
-#~ msgstr "Netto totaal:"
-
-#~ msgid "Total:"
-#~ msgstr "Totaal:"
-
-#~ msgid "Taxes:"
-#~ msgstr "Belastingen:"
-
-#~ msgid "Tax"
-#~ msgstr "Belastingen"
-
-#~ msgid "Base Amount"
-#~ msgstr "Grondslag"
-
-#~ msgid "Order"
-#~ msgstr "Order"
-
-#~ msgid "to"
-#~ msgstr "aan"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "Bank overschrijving"
-
-#~ msgid "Pay Online"
-#~ msgstr "Betaal online"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Notes:"
-#~ msgstr "Opmerkingen:"
-
-#~ msgid "Salesman"
-#~ msgstr "Verkoper"
-
-#~ msgid "Discount(%)"
-#~ msgstr "Korting (%)"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr "U kan direct online betalen via Paypal."
-
-#~ msgid "Payment terms"
-#~ msgstr "Betaalcondities"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "Het OpenERP instantie adres:"
-
-#~ msgid ""
-#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
-#~ "language\n"
-#~ "                            independent"
-#~ msgstr ""
-#~ "OpenERP's Electronic Data Interchange documenten zijn generiek en taal \n"
-#~ "                            onafhankelijk"
-
-#~ msgid ""
-#~ "(postal address on the order header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the document\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(postadres op de orderkop)\n"
-#~ "                     gebruikmakend van één van de volgende bankrekeningen. "
-#~ "Let op dat u de factuur referentie \n"
-#~ "                     vermeld"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr "U kan deze factuur direct online betalen via Paypal."
-
-#~ msgid ""
-#~ "serialization of the document's attribute.\n"
-#~ "                            It is usually very quick and straightforward to "
-#~ "create a small plug-in for your preferred\n"
-#~ "                            application that will be capable of importing "
-#~ "any OpenERP EDI document.\n"
-#~ "                            You can find out more details about how to do "
-#~ "this and what the content of OpenERP EDI documents\n"
-#~ "                            is like in the"
-#~ msgstr ""
-#~ "serialisatie van attribuut van het document.\n"
-#~ "                             Het is meestal zeer snel en eenvoudig een "
-#~ "kleine pulg-in te maken, een voor uw favoriete\n"
-#~ "                             applicatie, die in staat zal zijn om ieder "
-#~ "OpenERP EDI-document te importeren.\n"
-#~ "                             U vindt meer informatie over hoe u dit moet "
-#~ "doen en wat de inhoud van OpenERP EDI berichten\n"
-#~ "                             is zoals in de"
-
-#~ msgid "Please transfer"
-#~ msgstr "A.u.b. overmaken"
-
-#~ msgid "Import"
-#~ msgstr "Importeren"
-
-#~ msgid "on the transfer:"
-#~ msgstr "wanneer u het bedrag overmaakt:"
-
-#~ msgid ""
-#~ "(postal address on the invoice header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the invoice\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(postadres op de factuurkop)\n"
-#~ "                     gebruikmakend van één van de volgende bankrekeningen. "
-#~ "Let op dat u de factuurreferentie \n"
-#~ "                     vermeld"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "Om direct aan de slag te gaan,"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr ""
-#~ "is dit het enige wat u nodig heeft om dit EDI document te gebruiken in Python"
-
-#~ msgid "Unit Price"
-#~ msgstr "Prijs"
-
-#~ msgid "Price"
-#~ msgstr "Bedrag"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""
+"Het document wat u probeert te importeren vereist de Odoo '%s' applicatie. U "
+"kunt deze installeren door in te loggen als administrator en de configuratie "
+"wizard te openen."

@@ -17,6 +17,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
@@ -47,6 +48,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
@@ -76,7 +78,8 @@
             <field name="tag">mail.wall</field>
             <field name="context">{
               'default_model': 'res.users',
-              'default_res_id': uid
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [

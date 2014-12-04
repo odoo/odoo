@@ -173,7 +173,7 @@ class hr_analytic_timesheet(osv.osv):
         if ids:
             new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
-                warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
+                warning = {'title':_('User Alert!'),'message':_('Changing the date will let this entry appear in the timesheet of the new date.')}
                 return {'value':{},'warning':warning}
         return {'value':{}}
 
@@ -207,14 +207,26 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets", deprecated=True),
+        'invoice_on_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
-            res['value']['use_timesheets'] = template.use_timesheets
+            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
         return res
+
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        result = {}
+        if not invoice_on_timesheets:
+            return {'value': {'to_invoice': False}}
+        try:
+            to_invoice = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'hr_timesheet_invoice.timesheet_invoice_factor1')
+            result['to_invoice'] = to_invoice
+        except ValueError:
+            pass
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

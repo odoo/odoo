@@ -10,10 +10,18 @@
             <field name="arch" type="xml">
                 <graph string="Claims" type="pivot" stacked="True">
                     <field name="stage_id" type="row"/>
-                    <field name="user_id" type="col"/>
+                    <field name="team_id" type="col"/>
                     <field name="nbr" type="measure"/>
                 </graph>
             </field>
+        </record>
+
+<!-- CRM Claim Report Custom reports (aka filters) -->
+        <record id="filter_report_crm_claim_workload" model="ir.filters">
+            <field name="name">Workload</field>
+            <field name="model_id">crm.claim.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['subject'], 'measures': ['email', 'delay_close']}</field>
         </record>
 
 <!-- CRM Claim Report Search View -->
@@ -23,21 +31,19 @@
             <field name="model">crm.claim.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
+                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <!-- A 'My Company' filter makes no sense regarding record rules, and is not possible to do (uid is not a company): remove me in 8.0 -->
-                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[]" help="My company"
-                        invisible="1"/>
+                    <filter string="My Company" context="{'invisible_team': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
                     <separator/>
-                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <group  expand="0" string="Extended Filters...">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
-                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                        <field name="stage_id" domain="[('team_ids', '=', 'team_id')]"/>
+                        <field name="categ_id"/>
                         <field name="priority"/>
                         <field name="type_action"/>
                         <field name="create_date" />
@@ -45,17 +51,14 @@
                         <field name="date_deadline" />
                     </group>
                     <group  expand="1" string="Group By">
-                        <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Partner" name="partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_action'}" help="Action Type"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of claim"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of claim"/>
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of claim"/>
+                        <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}" />
+                        <filter string="Category" context="{'group_by':'categ_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Claim Month" context="{'group_by':'claim_date:month'}" help="Month of claim"/>
                     </group>
                 </search>
             </field>
@@ -81,13 +84,8 @@
             <field name="act_window_id" ref="action_report_crm_claim"/>
         </record>
 
-        <menuitem id="base.menu_project_report" name="Project"
-            groups="base.group_no_one"
-            parent="base.menu_reporting" sequence="30"/>
-
         <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
-            action="action_report_crm_claim" parent="base.menu_project_report" sequence="15"/>
-
+            action="action_report_crm_claim" parent="base.next_id_64" sequence="15"/>
 
     </data>
 </openerp>

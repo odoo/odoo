@@ -1,4 +1,9 @@
-$(document).ready(function () {
+(function () {
+'use strict';
+var website = openerp.website;
+
+website.if_dom_contains('div.o_website_quote', function () {
+
     $('a.js_update_line_json').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
@@ -61,32 +66,36 @@ $(document).ready(function () {
             $('#modelaccept').modal('hide');
             window.location.href = '/quote/'+order_id[1]+'/'+token+'?message=3';
         });
-        return false
+        return false;
     });
 
     // automatically generate a menu from h1 and h2 tag in content
-    var ul = $('[data-id="quote_sidebar"]');
+    var $container = $('body[data-target=".navspy"]');
+    var ul = $('[data-id="quote_sidebar"]', $container);
     var sub_li = null;
     var sub_ul = null;
-    $("section h1, section h2").each(function() {
+    $("[id^=quote_header_], [id^=quote_]", $container).attr("id", "");
+    $("h1, h2", $container).each(function() {
+        var id;
         switch (this.tagName.toLowerCase()) {
             case "h1":
-                id = _.uniqueId('quote_header_')
+                id = _.uniqueId('quote_header_');
                 $(this.parentNode).attr('id',id);
                 sub_li = $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(ul);
                 sub_ul = null;
                 break;
             case "h2":
-                id = _.uniqueId('quote_')
+                id = _.uniqueId('quote_');
                 if (sub_li) {
                     if (!sub_ul) {
                         sub_ul = $("<ul class='nav'>").appendTo(sub_li);
                     }
-                    $(this.parentNode).attr('id',id)
+                    $(this.parentNode).attr('id',id);
                     $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(sub_ul);
                 }
                 break;
             }
     });
-
 });
+
+}());

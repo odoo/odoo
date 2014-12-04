@@ -12,6 +12,9 @@
             <field name="arch" type="xml">
                 <tree string="Forums">
                     <field name="name"/>
+                    <field name="allow_question"/>
+                    <field name="allow_link"/>
+                    <field name="allow_discussion"/>
                 </tree>
             </field>
         </record>
@@ -22,30 +25,67 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
-                        <group>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
                             <field name="name"/>
-                            <field name="karma_ask"/>
-                            <field name="karma_edit_own"/>
-                            <field name="karma_edit_all"/>
-                            <field name="karma_close_own"/>
-                            <field name="karma_close_all"/>
-                            <field name="karma_unlink_own"/>
-                            <field name="karma_unlink_all"/>
-                        </group>
-                        <group>
-                            <field name="karma_upvote"/>
-                            <field name="karma_downvote"/>
-                            <field name="karma_answer_accept_own"/>
-                            <field name="karma_answer_accept_all"/>
-                            <field name="karma_editor_link_files"/>
-                            <field name="karma_editor_clickable_link"/>
-                            <field name="karma_comment_own"/>
-                            <field name="karma_comment_all"/>
-                            <field name="karma_comment_convert_own"/>
-                            <field name="karma_comment_convert_all"/>
-                            <field name="karma_comment_unlink_own"/>
-                            <field name="karma_comment_unlink_all"/>
-                        </group>
+                        </h1>
+                        <notebook>
+                            <page string="Options">
+                              <group string="Post Types">
+                                <field name="allow_question"/>
+                                <field name="allow_link"/>
+                                <field name="allow_discussion"/>
+                                <field name="default_post_type"/>
+                              </group>
+                              <group string="Orders">
+                                <field name="default_order"/>
+                                <label for="relevancy_post_vote" string="Relevancy Computation"/>
+                                <div>
+                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
+                                </div>
+                              </group>
+                            </page>
+                            <page string='Karma Gains'>
+                                <group>
+                                    <field name="karma_gen_question_new"/>
+                                    <field name="karma_gen_question_upvote"/>
+                                    <field name="karma_gen_question_downvote"/>
+                                    <field name="karma_gen_answer_upvote"/>
+                                    <field name="karma_gen_answer_downvote"/>
+                                    <field name="karma_gen_answer_accept"/>
+                                    <field name="karma_gen_answer_accepted"/>
+                                    <field name="karma_gen_answer_flagged"/>
+                                </group>
+                            </page>
+                            <page string='Karma Related Rights'>
+                                <group>
+                                    <group>
+                                        <field name="karma_ask"/>
+                                        <field name="karma_upvote"/>
+                                        <field name="karma_downvote"/>
+                                        <field name="karma_edit_own"/>
+                                        <field name="karma_edit_all"/>
+                                        <field name="karma_close_own"/>
+                                        <field name="karma_close_all"/>
+                                        <field name="karma_unlink_own"/>
+                                        <field name="karma_unlink_all"/>
+                                        <field name="karma_dofollow"/>
+                                    </group>
+                                    <group>
+                                        <field name="karma_answer_accept_own"/>
+                                        <field name="karma_answer_accept_all"/>
+                                        <field name="karma_editor_link_files"/>
+                                        <field name="karma_editor_clickable_link"/>
+                                        <field name="karma_comment_own"/>
+                                        <field name="karma_comment_all"/>
+                                        <field name="karma_comment_convert_own"/>
+                                        <field name="karma_comment_convert_all"/>
+                                        <field name="karma_comment_unlink_own"/>
+                                        <field name="karma_comment_unlink_all"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -107,6 +147,7 @@
                                 <field name="vote_count"/>
                                 <field name="favourite_count"/>
                                 <field name="child_count"/>
+                                <field name="relevancy"/>
                             </group>
                         </group>
                     </sheet>
@@ -126,6 +167,11 @@
                     <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
                     <field name="create_uid"/>
                     <field name="forum_id"/>
+                    <field name="tag_ids" string="Tag"/>
+                    <filter string="Question" domain="[('parent_id', '=', False)]" />
+                    <filter string="Answers" domain="[('parent_id', '!=', False)]" />
+                    <filter string="Accepted Answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
+                    <filter string="Answered Questions" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
                     <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
@@ -134,11 +180,22 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_forum_post_graph">
+            <field name="name">forum.post.graph</field>
+            <field name="model">forum.post</field>
+            <field name="arch" type="xml">
+                <graph string="Graph of Posts" type="pivot">
+                    <field name="write_date" interval="month" type="col" />
+                    <field name="forum_id" type="row" />
+                </graph>
+            </field>
+        </record>
+
         <record id="action_forum_post" model="ir.actions.act_window">
             <field name="name">Forum Posts</field>
             <field name="res_model">forum.post</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_forum_post_list"/>
             <field name="search_view_id" ref="view_forum_post_search"/>
         </record>

@@ -164,8 +164,8 @@ class stock_quant(osv.osv):
         :returns: journal_id, source account, destination account, valuation account
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
-        product_obj = self.pool.get('product.product')
-        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
+        product_obj = self.pool.get('product.template')
+        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
         if move.location_id.valuation_out_account_id:
             acc_src = move.location_id.valuation_out_account_id.id
         else:
@@ -191,7 +191,10 @@ class stock_quant(osv.osv):
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
-            valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
+            if move.product_id.cost_method == 'average':
+                valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
+            else:
+                valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
@@ -257,13 +260,13 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
+        return res
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
@@ -278,17 +281,25 @@ class stock_move(osv.osv):
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
+        tmpl_dict = {}
         for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                product_avail = product.qty_available
-                if product.qty_available <= 0:
+                prod_tmpl_id = move.product_id.product_tmpl_id.id
+                qty_available = move.product_id.product_tmpl_id.qty_available
+                if tmpl_dict.get(prod_tmpl_id):
+                    product_avail = qty_available + tmpl_dict[prod_tmpl_id]
+                else:
+                    tmpl_dict[prod_tmpl_id] = 0
+                    product_avail = qty_available
+                if product_avail <= 0:
                     new_std_price = move.price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                tmpl_dict[prod_tmpl_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
 

@@ -1,87 +1,55 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-18 13:49+0000\n"
-"Last-Translator: Pekka Pylvänäinen <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:35+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:03+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_claim
-#: help:crm.claim.stage,fold:0
-msgid ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
+#: field:res.partner,claim_count:0
+msgid "# Claims"
 msgstr ""
-"Tämä vaihe ei ole näkyvä, esim. tila tai kanban näytöllä, jos vaiheella ei "
-"ole näytettäviä tietoja."
+
+#. module: crm_claim
+#: field:crm.claim.report,email:0
+msgid "# Emails"
+msgstr "Sähköpostien määrä"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
-msgid "# of Cases"
-msgstr "Tapausten määrä"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
-msgid "Group By..."
-msgstr "Ryhmittele"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Responsibilities"
-msgstr "Vastuut"
-
-#. module: crm_claim
-#: help:sale.config.settings,fetchmail_claim:0
-msgid ""
-"Allows you to configure your incoming mail server, and create claims from "
-"incoming emails."
+msgid "# of Claims"
 msgstr ""
-"Salli saapuvien sähköpostien palvelimen konfigurointi ja palautteiden luonti "
-"saapuvista sähköposteista."
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_crm_claim_stage
-msgid "Claim stages"
-msgstr "Palautteen vaiheet"
+#: code:addons/crm_claim/crm_claim.py:167
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "March"
-msgstr "Maaliskuu"
-
-#. module: crm_claim
-#: field:crm.claim.report,delay_close:0
-msgid "Delay to close"
-msgstr "Viive sulkemiseen"
-
-#. module: crm_claim
-#: field:crm.claim,message_unread:0
-msgid "Unread Messages"
-msgstr "Lukemattomat viestit"
-
-#. module: crm_claim
-#: field:crm.claim,resolution:0
-msgid "Resolution"
-msgstr "Ratkaisu"
-
-#. module: crm_claim
-#: field:crm.claim,company_id:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,company_id:0
-msgid "Company"
-msgstr "Yritys"
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Record and track your customers' claims. Claims may be "
+"linked to a sales order or a lot.You can send emails with attachments and "
+"keep the full history for a claim (emails sent, intervention type and so "
+"on).Claims may automatically be linked to an email address using the mail "
+"gateway module.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
@@ -104,477 +72,6 @@ msgstr ""
 "Korjaavat toimenpiteet.\n"
 "              </p>\n"
 "            "
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "#Claim"
-msgstr "Palauteen numero"
-
-#. module: crm_claim
-#: field:crm.claim.stage,name:0
-msgid "Stage Name"
-msgstr "Vaiheen nimi"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Salesperson"
-msgstr "Myyjä"
-
-#. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Highest"
-msgstr "Korkein"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,day:0
-msgid "Day"
-msgstr "Päivä"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Claim Description"
-msgstr "Palautteen kuvaus"
-
-#. module: crm_claim
-#: field:crm.claim,message_ids:0
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim1
-msgid "Factual Claims"
-msgstr "Asiaperusteinen vaatimus"
-
-#. module: crm_claim
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-#: selection:crm.claim.stage,state:0
-msgid "Cancelled"
-msgstr "Peruttu"
-
-#. module: crm_claim
-#: model:crm.case.resource.type,name:crm_claim.type_claim2
-msgid "Preventive"
-msgstr "Ennaltaehkäisevä"
-
-#. module: crm_claim
-#: help:crm.claim,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: crm_claim
-#: field:crm.claim.report,date_closed:0
-msgid "Close Date"
-msgstr "Päättymispäivä"
-
-#. module: crm_claim
-#: view:res.partner:0
-msgid "False"
-msgstr "Epätosi"
-
-#. module: crm_claim
-#: field:crm.claim,ref:0
-msgid "Reference"
-msgstr "Viite"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Date of claim"
-msgstr "Palautteen päivämäärä"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "# Mails"
-msgstr "Sähköpostien määrä"
-
-#. module: crm_claim
-#: help:crm.claim,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
-"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date_deadline:0
-#: field:crm.claim.report,date_deadline:0
-msgid "Deadline"
-msgstr "Määräaika"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,partner_id:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,partner_id:0
-#: model:ir.model,name:crm_claim.model_res_partner
-msgid "Partner"
-msgstr "Kumppani"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "Seuranta"
-
-#. module: crm_claim
-#: selection:crm.claim,type_action:0
-#: selection:crm.claim.report,type_action:0
-msgid "Preventive Action"
-msgstr "Ennaltaehkäisevä toimenpide"
-
-#. module: crm_claim
-#: field:crm.claim.report,section_id:0
-msgid "Section"
-msgstr "Osa"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Root Causes"
-msgstr "Juurisyyt"
-
-#. module: crm_claim
-#: field:crm.claim,user_fault:0
-msgid "Trouble Responsible"
-msgstr "Ratkaisusta vastaa"
-
-#. module: crm_claim
-#: field:crm.claim,priority:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,priority:0
-msgid "Priority"
-msgstr "Prioriteetti"
-
-#. module: crm_claim
-#: field:crm.claim.stage,fold:0
-msgid "Hide in Views when Empty"
-msgstr "Piilotetaan näkymistä jos on tyhjä"
-
-#. module: crm_claim
-#: field:crm.claim,message_follower_ids:0
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
-#: model:crm.claim.stage,name:crm_claim.stage_claim1
-#: selection:crm.claim.stage,state:0
-msgid "New"
-msgstr "Uusi"
-
-#. module: crm_claim
-#: field:crm.claim.stage,section_ids:0
-msgid "Sections"
-msgstr "Osiot"
-
-#. module: crm_claim
-#: field:crm.claim,email_from:0
-msgid "Email"
-msgstr "Sähköposti"
-
-#. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Lowest"
-msgstr "Alin"
-
-#. module: crm_claim
-#: field:crm.claim,action_next:0
-msgid "Next Action"
-msgstr "Seuraava Toimenpide"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "My Sales Team(s)"
-msgstr "Oma myyntitiimi"
-
-#. module: crm_claim
-#: field:crm.claim,create_date:0
-msgid "Creation Date"
-msgstr "Luontipäivä"
-
-#. module: crm_claim
-#: field:crm.claim,name:0
-msgid "Claim Subject"
-msgstr "Palautteen otsikko"
-
-#. module: crm_claim
-#: model:crm.claim.stage,name:crm_claim.stage_claim3
-msgid "Rejected"
-msgstr "Hylätty"
-
-#. module: crm_claim
-#: field:crm.claim,date_action_next:0
-msgid "Next Action Date"
-msgstr "Seuraava toimenpidepäivä"
-
-#. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
-msgid ""
-"Have a general overview of all claims processed in the system by sorting "
-"them with specific criteria."
-msgstr ""
-"Näytä yleisnäkymä kaikista järjestelmässä käsitellyistä palautteista "
-"järjestelemällä ne tiettyjen kriteerien mukaan."
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "July"
-msgstr "Heinäkuu"
-
-#. module: crm_claim
-#: view:crm.claim.stage:0
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
-msgid "Claim Stages"
-msgstr "Palautteen vaiheet"
-
-#. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
-msgid "Categories"
-msgstr "Ryhmät"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,stage_id:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,stage_id:0
-msgid "Stage"
-msgstr "Vaihe"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Dates"
-msgstr "Päivämäärät"
-
-#. module: crm_claim
-#: help:crm.claim,email_from:0
-msgid "Destination email for email gateway."
-msgstr "Sähköpostin välityspalvelimelle kohteen sähköpostiosoite."
-
-#. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:194
-#, python-format
-msgid "No Subject"
-msgstr "Ei aihetta"
-
-#. module: crm_claim
-#: help:crm.claim.stage,state:0
-msgid ""
-"The related status for the stage. The status of your document will "
-"automatically change regarding the selected stage. For example, if a stage "
-"is related to the status 'Close', when your document reaches this stage, it "
-"will be automatically have the 'closed' status."
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Settle"
-msgstr "Ratkaisu"
-
-#. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
-msgid "Stages"
-msgstr "Vaiheet"
-
-#. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
-msgid "Claims Analysis"
-msgstr "Palauteanalyysi"
-
-#. module: crm_claim
-#: help:crm.claim.report,delay_close:0
-msgid "Number of Days to close the case"
-msgstr "Päivien määrä tapauksen sulkemiseen"
-
-#. module: crm_claim
-#: model:ir.model,name:crm_claim.model_crm_claim_report
-msgid "CRM Claim Report"
-msgstr "CRM Palauteraportti"
-
-#. module: crm_claim
-#: view:sale.config.settings:0
-msgid "Configure"
-msgstr "Konfiguroi"
-
-#. module: crm_claim
-#: model:crm.case.resource.type,name:crm_claim.type_claim1
-msgid "Corrective"
-msgstr "Korjaava"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "September"
-msgstr "Syyskuu"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
-msgstr "Joulukuu"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,month:0
-msgid "Month"
-msgstr "Kuukausi"
-
-#. module: crm_claim
-#: field:crm.claim,type_action:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,type_action:0
-msgid "Action Type"
-msgstr "Toimenpiteen tyyppi"
-
-#. module: crm_claim
-#: field:crm.claim,write_date:0
-msgid "Update Date"
-msgstr "Viimeisin päivitys"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Year of claim"
-msgstr "Palautteen vuosi"
-
-#. module: crm_claim
-#: help:crm.claim.stage,case_default:0
-msgid ""
-"If you check this field, this stage will be proposed by default on each "
-"sales team. It will not assign this stage to existing teams."
-msgstr ""
-"Jos valitset tämän kentän, niin tämä myyntivaihe toimii oletuksena kaikille "
-"myyntitiimeille. Ei kuitenkaan aseta tätä vaihetta jo olemassa oleville "
-"tiimeille."
-
-#. module: crm_claim
-#: field:crm.claim,categ_id:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,categ_id:0
-msgid "Category"
-msgstr "Ryhmä"
-
-#. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim2
-msgid "Value Claims"
-msgstr "Mielipidepalaute"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Responsible User"
-msgstr "Vastuukäyttäjä"
-
-#. module: crm_claim
-#: field:crm.claim,email_cc:0
-msgid "Watchers Emails"
-msgstr "Seuraajien Sähköpostit"
-
-#. module: crm_claim
-#: help:crm.claim,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr ""
-"Nämä sähköpostiosoitteet lisätään cc (kopio viestistä) kenttään tähän "
-"tietueeseen liittyvien sähköpostien osalta. Erota useammat osoitteet "
-"pilkulla."
-
-#. module: crm_claim
-#: selection:crm.claim.report,state:0
-msgid "Draft"
-msgstr "Luonnos"
-
-#. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Low"
-msgstr "Matala"
-
-#. module: crm_claim
-#: field:crm.claim,date_closed:0
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-#: selection:crm.claim.stage,state:0
-msgid "Closed"
-msgstr "Suljettu"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Reject"
-msgstr "Hylkää"
-
-#. module: crm_claim
-#: view:res.partner:0
-msgid "Partners Claim"
-msgstr "Kumppanien palautteet"
-
-#. module: crm_claim
-#: view:crm.claim.stage:0
-msgid "Claim Stage"
-msgstr "Palautteen vaihe"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
-#: selection:crm.claim.report,state:0
-#: selection:crm.claim.stage,state:0
-msgid "Pending"
-msgstr "Odottava"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,state:0
-#: view:crm.claim.report:0
-#: field:crm.claim.report,state:0
-#: field:crm.claim.stage,state:0
-msgid "Status"
-msgstr "Tilanne"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "August"
-msgstr "Elokuu"
-
-#. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Normal"
-msgstr "Normaali"
-
-#. module: crm_claim
-#: help:crm.claim.stage,sequence:0
-msgid "Used to order stages. Lower is better."
-msgstr ""
-"Käytetään myyntiprosessin vaiheiden järjestämiseen. Pienempi on parempi."
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "June"
-msgstr "Kesäkuu"
-
-#. module: crm_claim
-#: field:crm.claim,id:0
-msgid "ID"
-msgstr "Tunniste (ID)"
-
-#. module: crm_claim
-#: field:crm.claim,partner_phone:0
-msgid "Phone"
-msgstr "Puh."
-
-#. module: crm_claim
-#: field:crm.claim,message_is_follower:0
-msgid "Is a Follower"
-msgstr "on seuraaja"
-
-#. module: crm_claim
-#: field:crm.claim.report,user_id:0
-msgid "User"
-msgstr "Käyttäjä"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
@@ -601,17 +98,20 @@ msgstr ""
 "            "
 
 #. module: crm_claim
-#: help:crm.claim,state:0
-msgid ""
-"The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Action Description..."
 msgstr ""
-"Asetettu tila on \"Ehdotus\", kun asia on luotu. Kun asian käsitelly alkaa, "
-"sen tila on \"Avoin\". Kun asia on ratkaistu, niin tilaksi muuttuu "
-"\"Valmis\". Jos asiaa pitää katselmoida, niin tila on \"Odottava\"."
+
+#. module: crm_claim
+#: field:crm.claim,type_action:0
+#: field:crm.claim.report,type_action:0
+msgid "Action Type"
+msgstr "Toimenpiteen tyyppi"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Actions"
+msgstr "Toimenpiteet"
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -619,49 +119,28 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "November"
-msgstr "Marraskuu"
+#: model:ir.model,name:crm_claim.model_crm_claim_report
+msgid "CRM Claim Report"
+msgstr "CRM Palauteraportti"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Extended Filters..."
-msgstr "Laajennetut Suotimet..."
+#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
+msgid "Categories"
+msgstr "Ryhmät"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Closure"
-msgstr "Sulkeminen"
+#: field:crm.claim,categ_id:0
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: field:crm.claim.report,categ_id:0
+msgid "Category"
+msgstr "Ryhmä"
 
 #. module: crm_claim
-#: help:crm.claim,section_id:0
-msgid ""
-"Responsible sales team. Define Responsible user and Email account for mail "
-"gateway."
-msgstr ""
-"Vastuullinen myyntitiimi. Määritä vastuukäyttäjä ja sähköpostiosoite "
-"välityspalvelimelle."
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "October"
-msgstr "Lokakuu"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "January"
-msgstr "Tammikuu"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date:0
-msgid "Claim Date"
-msgstr "Palautteen päiväys"
-
-#. module: crm_claim
-#: field:crm.claim,message_summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: model:ir.model,name:crm_claim.model_crm_claim
+#: model:ir.ui.menu,name:crm_claim.menu_config_claim
+msgid "Claim"
+msgstr "Palaute"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -669,20 +148,108 @@ msgid "Claim Categories"
 msgstr "Palauteryhmät"
 
 #. module: crm_claim
+#: field:crm.claim,date:0
+#: field:crm.claim.report,claim_date:0
+msgid "Claim Date"
+msgstr "Palautteen päiväys"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Claim Date by Month"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Claim Description"
+msgstr "Palautteen kuvaus"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Claim Month"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Claim Reporter"
+msgstr "Palautteen tekijä"
+
+#. module: crm_claim
+#: view:crm.claim.stage:crm_claim.crm_claim_stage_form
+msgid "Claim Stage"
+msgstr "Palautteen vaihe"
+
+#. module: crm_claim
+#: view:crm.claim.stage:crm_claim.crm_claim_stage_tree
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
+msgid "Claim Stages"
+msgstr "Palautteen vaiheet"
+
+#. module: crm_claim
+#: field:crm.claim,name:0
+#: field:crm.claim.report,subject:0
+msgid "Claim Subject"
+msgstr "Palautteen otsikko"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_crm_claim_stage
+msgid "Claim stages"
+msgstr "Palautteen vaiheet"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Claim/Action Description"
+msgstr "Palaute-/Toimenpidekuvaus"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_calendar_view
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: view:crm.claim:crm_claim.crm_case_claims_tree_view
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_graph
+#: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
+#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:crm_claim.view_claim_res_partner_info_form
+msgid "Claims"
+msgstr "Palautteet"
+
+#. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
+#: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
+msgid "Claims Analysis"
+msgstr "Palauteanalyysi"
+
+#. module: crm_claim
+#: field:crm.claim.report,date_closed:0
+msgid "Close Date"
+msgstr "Päättymispäivä"
+
+#. module: crm_claim
+#: field:crm.claim,date_closed:0
+msgid "Closed"
+msgstr "Suljettu"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Closure"
+msgstr "Sulkeminen"
+
+#. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
 msgstr "Yhteinen kaikille tiimeille"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
-#: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
-#: view:res.partner:0
-#: field:res.partner,claims_ids:0
-msgid "Claims"
-msgstr "Palautteet"
+#: field:crm.claim,company_id:0
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: field:crm.claim.report,company_id:0
+msgid "Company"
+msgstr "Yritys"
+
+#. module: crm_claim
+#: model:crm.tracking.campaign,name:crm_claim.claim_source1
+msgid "Corrective"
+msgstr "Korjaava"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -691,91 +258,52 @@ msgid "Corrective Action"
 msgstr "Korjaava toimenpide"
 
 #. module: crm_claim
-#: model:crm.case.categ,name:crm_claim.categ_claim3
-msgid "Policy Claims"
-msgstr "Takuuvaatimus"
+#: field:crm.claim.report,create_date:0
+msgid "Create Date"
+msgstr "Luontipäivä"
 
 #. module: crm_claim
-#: view:crm.claim:0
+#: field:crm.claim,create_uid:0
+#: field:crm.claim.stage,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.stage,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,create_date:0
+msgid "Creation Date"
+msgstr "Luontipäivä"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Date Closed"
 msgstr "Sulkemispäivä"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: model:ir.model,name:crm_claim.model_crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_config_claim
-msgid "Claim"
-msgstr "Palaute"
+#: help:crm.claim,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "My Company"
-msgstr "Oma yritykseni"
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Dates"
+msgstr "Päivämäärät"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Done"
-msgstr "Valmis"
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: field:crm.claim,date_deadline:0
+#: field:crm.claim.report,date_deadline:0
+msgid "Deadline"
+msgstr "Määräaika"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Claim Reporter"
-msgstr "Palautteen tekijä"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-#: selection:crm.claim.report,state:0
-msgid "Open"
-msgstr "Avoin"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "New Claims"
-msgstr "Uudet palautteet"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: model:crm.claim.stage,name:crm_claim.stage_claim5
-#: selection:crm.claim.stage,state:0
-msgid "In Progress"
-msgstr "Käynnissä"
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,user_id:0
-msgid "Responsible"
-msgstr "Vastuuhenkilö"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Search"
-msgstr "Etsi"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Unassigned Claims"
-msgstr "Kohdistamattomat palautteet"
-
-#. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Ylitetty aikaraja"
-
-#. module: crm_claim
-#: field:crm.claim,cause:0
-msgid "Root Cause"
-msgstr "Juurisyy"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Claim/Action Description"
-msgstr "Palaute-/Toimenpidekuvaus"
+#: field:crm.claim.report,delay_close:0
+msgid "Delay to close"
+msgstr "Viive sulkemiseen"
 
 #. module: crm_claim
 #: field:crm.claim,description:0
@@ -783,105 +311,49 @@ msgid "Description"
 msgstr "Kuvaus"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Search Claims"
-msgstr "Hae palautteita"
+#: help:crm.claim,email_from:0
+msgid "Destination email for email gateway."
+msgstr "Sähköpostin välityspalvelimelle kohteen sähköpostiosoite."
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "May"
-msgstr "Toukokuu"
+#: field:crm.claim,email_from:0
+msgid "Email"
+msgstr "Sähköposti"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: view:crm.claim.report:0
-msgid "Type"
-msgstr "Tyyppi"
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Extended Filters..."
+msgstr "Laajennetut Suotimet..."
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Resolution Actions"
-msgstr "Ratkaisun toimenpiteet"
+#: model:crm.case.categ,name:crm_claim.categ_claim1
+msgid "Factual Claims"
+msgstr "Asiaperusteinen vaatimus"
 
 #. module: crm_claim
-#: field:crm.claim.stage,case_refused:0
-msgid "Refused stage"
-msgstr "Hylätty-tila"
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Follow Up"
+msgstr "Seuranta"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims may be linked to a sales "
-"order or a lot. You can send emails with attachments and keep the full "
-"history for a claim (emails sent, intervention type and so on). Claims may "
-"automatically be linked to an email address using the mail gateway module."
+#: field:crm.claim,message_follower_ids:0
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Group By"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim.report,email:0
-msgid "# Emails"
-msgstr "Sähköpostien määrä"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr "Palautteen kuukausi"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "February"
-msgstr "Helmikuu"
-
-#. module: crm_claim
-#: model:ir.model,name:crm_claim.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,name:0
-msgid "Year"
-msgstr "Vuosi"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "My company"
-msgstr "Oma yritys"
-
-#. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "April"
-msgstr "Huhtikuu"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "My Case(s)"
-msgstr "Omat tapaukset"
-
-#. module: crm_claim
-#: model:crm.claim.stage,name:crm_claim.stage_claim2
-msgid "Settled"
-msgstr "Ratkaistu"
-
-#. module: crm_claim
-#: help:crm.claim,message_ids:0
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
-
-#. module: crm_claim
-#: field:sale.config.settings,fetchmail_claim:0
-msgid "Create claims from incoming mails"
-msgstr "Luo palaute saapuvasta sähköpostista"
-
-#. module: crm_claim
-#: field:crm.claim.stage,sequence:0
-msgid "Sequence"
-msgstr "Järjestys"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Actions"
-msgstr "Toimenpiteet"
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
+msgstr ""
+"Näytä yleisnäkymä kaikista järjestelmässä käsitellyistä palautteista "
+"järjestelemällä ne tiettyjen kriteerien mukaan."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -890,20 +362,61 @@ msgid "High"
 msgstr "Korkea"
 
 #. module: crm_claim
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
-msgid "Sales Team"
-msgstr "Myyntitiimi"
+#: help:crm.claim,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
+"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: crm_claim
-#: field:crm.claim.report,create_date:0
-msgid "Create Date"
-msgstr "Luontipäivä"
+#: field:crm.claim,id:0
+#: field:crm.claim.report,id:0
+#: field:crm.claim.stage,id:0
+msgid "ID"
+msgstr "Tunniste (ID)"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "In Progress Claims"
-msgstr "Käsittelyssä olevat palautteet"
+#: help:crm.claim,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#. module: crm_claim
+#: help:crm.claim.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr ""
+"Jos valitset tämän kentän, niin tämä myyntivaihe toimii oletuksena kaikille "
+"myyntitiimeille. Ei kuitenkaan aseta tätä vaihetta jo olemassa oleville "
+"tiimeille."
+
+#. module: crm_claim
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+msgid "In Progress"
+msgstr "Käynnissä"
+
+#. module: crm_claim
+#: field:crm.claim,message_is_follower:0
+msgid "Is a Follower"
+msgstr "on seuraaja"
+
+#. module: crm_claim
+#: field:crm.claim,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,write_uid:0
+#: field:crm.claim.stage,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.stage,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
@@ -915,132 +428,309 @@ msgstr ""
 "nykyvaiheen valituille myyntitiimeille."
 
 #. module: crm_claim
-#: help:crm.claim.stage,case_refused:0
-msgid "Refused stages are specific stages for done."
-msgstr "Hylätty-vaihe on erikoistapaus Valmis-vaiheesta."
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Low"
+msgstr "Matala"
 
-#~ msgid "Add Internal Note"
-#~ msgstr "Lisää sisäinen huomautus"
+#. module: crm_claim
+#: field:crm.claim,message_ids:0
+msgid "Messages"
+msgstr "Viestit"
 
-#~ msgid "Reset to Draft"
-#~ msgstr "Palauta luonnokseksi"
+#. module: crm_claim
+#: help:crm.claim,message_ids:0
+msgid "Messages and communication history"
+msgstr "Viesti- ja kommunikointihistoria"
 
-#~ msgid "Send New Email"
-#~ msgstr "Lähetä uusi sähköposti"
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Month of claim"
+msgstr "Palautteen kuukausi"
 
-#~ msgid "Salesman"
-#~ msgstr "Myyjä"
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "My Case(s)"
+msgstr "Omat tapaukset"
 
-#~ msgid "Attachments"
-#~ msgstr "Liitteet"
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "My Company"
+msgstr "Oma yritykseni"
 
-#~ msgid ""
-#~ "You can create claim stages to categorize the status of every claim entered "
-#~ "in the system. The stages define all the steps required for the resolution "
-#~ "of a claim."
-#~ msgstr ""
-#~ "Voit luoda reklamaation tasoja kategorioidaksesi järjestelmään syötettyjen "
-#~ "reklamaatioiden tilaa. Vaiheet määrittelevät kaikki vaiheet joita vaaditaan "
-#~ "reklamaation hoitamiseksi."
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "My Sales Team(s)"
+msgstr "Oma myyntitiimi"
 
-#~ msgid "Probability"
-#~ msgstr "Todennäköisyys"
+#. module: crm_claim
+#: model:crm.claim.stage,name:crm_claim.stage_claim1
+msgid "New"
+msgstr "Uusi"
 
-#~ msgid "Partner Contact"
-#~ msgstr "Kumppanin Yhteystiedot"
+#. module: crm_claim
+#: field:crm.claim,action_next:0
+msgid "Next Action"
+msgstr "Seuraava Toimenpide"
 
-#~ msgid ""
-#~ "Sales team to which Case belongs to.Define Responsible user and Email "
-#~ "account for mail gateway."
-#~ msgstr ""
-#~ "Myyntitiimi, johon tapaus kuuluu. Määrittele vastuuhenkilö ja "
-#~ "sähköpostiosoite postinvälityspalvelimelle"
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr "Seuraava toimenpidepäivä"
 
-#~ msgid "   Month   "
-#~ msgstr "   Kuukausi   "
-
-#~ msgid "History Information"
-#~ msgstr "Historiatiedot"
-
-#~ msgid "Contact"
-#~ msgstr "Yhteyshenkilö"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Kuukausi-1    "
-
-#~ msgid "  Year  "
-#~ msgstr "  Vuosi  "
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Vastaanotettu reklamaationa"
-
-#~ msgid "Customer & Supplier Relationship Management"
-#~ msgstr "Asiakas & Toimittaja Hallinta"
-
-#~ msgid "Communication & History"
-#~ msgstr "Kommunikaatio ja historia"
-
-#~ msgid "Stage of case"
-#~ msgstr "Tapahtuman vaihe"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Nämä henkilöt vastaanottavat sähköpostin."
-
-#~ msgid "History"
-#~ msgstr "Historia"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "Details"
-#~ msgstr "Yksityiskohdat"
-
-#~ msgid "Current"
-#~ msgstr "Nykyinen"
-
-#~ msgid "Reply"
-#~ msgstr "Vastaa"
-
-#~ msgid "Close"
-#~ msgstr "Sulje"
-
-#~ msgid "Report a Claim"
-#~ msgstr "Raportoi reklamaatio"
-
-#~ msgid "Won't fix"
-#~ msgstr "Ei korjaa"
-
-#~ msgid "Actions Defined"
-#~ msgstr "Määritellyt toimenpiteet"
-
-#~ msgid "Actions Done"
-#~ msgstr "Tehdyt toimenpiteet"
-
-#~ msgid ""
-#~ "Create claim categories to better manage and classify your claims. Some "
-#~ "example of claims can be: preventive action, corrective action."
-#~ msgstr ""
-#~ "Luo reklamaatiokategoriat halitaksesi paremmin reklamaatiosi. Joitain "
-#~ "esimerkkejä voivat olla ennaltahekäisevät ja korjaavat toimenpiteet"
-
-#~ msgid "All pending Claims"
-#~ msgstr "Kaikki odottavat reklamaatiot"
-
-#~ msgid "Month-1"
-#~ msgstr "Edellinen kuukausi"
-
+#. module: crm_claim
+#: code:addons/crm_claim/crm_claim.py:183
 #, python-format
-#~ msgid "The claim '%s' has been opened."
-#~ msgstr "Reklamaatio '%s' on avattu."
+msgid "No Subject"
+msgstr "Ei aihetta"
 
-#~ msgid "Claims created in current year"
-#~ msgstr "Reklamaatiot jotka on luotu kuluvana vuonna"
+#. module: crm_claim
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Normal"
+msgstr "Normaali"
 
-#~ msgid "Claims created in current month"
-#~ msgstr "Reklamaatiot jotka on luotu kuluvan kuukauden aikana"
+#. module: crm_claim
+#: help:crm.claim.report,delay_close:0
+msgid "Number of Days to close the case"
+msgstr "Päivien määrä tapauksen sulkemiseen"
 
-#~ msgid "Claims created in last month"
-#~ msgstr "Reklamaatiot jotka on luotu edellisen kuukauden aikana"
+#. module: crm_claim
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Ylitetty aikaraja"
 
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: field:crm.claim,partner_id:0
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: field:crm.claim.report,partner_id:0
+#: model:ir.model,name:crm_claim.model_res_partner
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: crm_claim
+#: field:crm.claim,partner_phone:0
+msgid "Phone"
+msgstr "Puh."
+
+#. module: crm_claim
+#: model:crm.case.categ,name:crm_claim.categ_claim3
+msgid "Policy Claims"
+msgstr "Takuuvaatimus"
+
+#. module: crm_claim
+#: model:crm.tracking.campaign,name:crm_claim.claim_source2
+msgid "Preventive"
+msgstr "Ennaltaehkäisevä"
+
+#. module: crm_claim
+#: selection:crm.claim,type_action:0
+#: selection:crm.claim.report,type_action:0
+msgid "Preventive Action"
+msgstr "Ennaltaehkäisevä toimenpide"
+
+#. module: crm_claim
+#: field:crm.claim,priority:0
+#: field:crm.claim.report,priority:0
+msgid "Priority"
+msgstr "Prioriteetti"
+
+#. module: crm_claim
+#: field:crm.claim,ref:0
+msgid "Reference"
+msgstr "Viite"
+
+#. module: crm_claim
+#: model:crm.claim.stage,name:crm_claim.stage_claim3
+msgid "Rejected"
+msgstr "Hylätty"
+
+#. module: crm_claim
+#: field:crm.claim,resolution:0
+msgid "Resolution"
+msgstr "Ratkaisu"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Resolution Actions"
+msgstr "Ratkaisun toimenpiteet"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Responsibilities"
+msgstr "Vastuut"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: field:crm.claim,user_id:0
+msgid "Responsible"
+msgstr "Vastuuhenkilö"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Responsible User"
+msgstr "Vastuukäyttäjä"
+
+#. module: crm_claim
+#: help:crm.claim,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
+"Vastuullinen myyntitiimi. Määritä vastuukäyttäjä ja sähköpostiosoite "
+"välityspalvelimelle."
+
+#. module: crm_claim
+#: field:crm.claim,cause:0
+msgid "Root Cause"
+msgstr "Juurisyy"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_form_view
+msgid "Root Causes"
+msgstr "Juurisyyt"
+
+#. module: crm_claim
+#: field:crm.claim,section_id:0
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Sales Team"
+msgstr "Myyntitiimi"
+
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Salesperson"
+msgstr "Myyjä"
+
+#. module: crm_claim
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+msgid "Search"
+msgstr "Etsi"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Search Claims"
+msgstr "Hae palautteita"
+
+#. module: crm_claim
+#: field:crm.claim.report,section_id:0
+msgid "Section"
+msgstr "Osa"
+
+#. module: crm_claim
+#: field:crm.claim.stage,section_ids:0
+msgid "Sections"
+msgstr "Osiot"
+
+#. module: crm_claim
+#: field:crm.claim.stage,sequence:0
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: crm_claim
+#: model:crm.claim.stage,name:crm_claim.stage_claim2
+msgid "Settled"
+msgstr "Ratkaistu"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: field:crm.claim,stage_id:0
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
+#: field:crm.claim.report,stage_id:0
+msgid "Stage"
+msgstr "Vaihe"
+
+#. module: crm_claim
+#: field:crm.claim.stage,name:0
+msgid "Stage Name"
+msgstr "Vaiheen nimi"
+
+#. module: crm_claim
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
+msgid "Stages"
+msgstr "Vaiheet"
+
+#. module: crm_claim
+#: field:crm.claim,message_summary:0
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#. module: crm_claim
+#: help:crm.claim,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr ""
+"Nämä sähköpostiosoitteet lisätään cc (kopio viestistä) kenttään tähän "
+"tietueeseen liittyvien sähköpostien osalta. Erota useammat osoitteet "
+"pilkulla."
+
+#. module: crm_claim
+#: field:crm.claim,user_fault:0
+msgid "Trouble Responsible"
+msgstr "Ratkaisusta vastaa"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.crm_case_claims_tree_view
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: crm_claim
+#: view:crm.claim:crm_claim.view_crm_case_claims_filter
+msgid "Unassigned Claims"
+msgstr "Kohdistamattomat palautteet"
+
+#. module: crm_claim
+#: field:crm.claim,message_unread:0
+msgid "Unread Messages"
+msgstr "Lukemattomat viestit"
+
+#. module: crm_claim
+#: field:crm.claim,write_date:0
+msgid "Update Date"
+msgstr "Viimeisin päivitys"
+
+#. module: crm_claim
+#: help:crm.claim.stage,sequence:0
+msgid "Used to order stages. Lower is better."
+msgstr ""
+"Käytetään myyntiprosessin vaiheiden järjestämiseen. Pienempi on parempi."
+
+#. module: crm_claim
+#: field:crm.claim.report,user_id:0
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: crm_claim
+#: model:crm.case.categ,name:crm_claim.categ_claim2
+msgid "Value Claims"
+msgstr "Mielipidepalaute"
+
+#. module: crm_claim
+#: field:crm.claim,email_cc:0
+msgid "Watchers Emails"
+msgstr "Seuraajien Sähköpostit"
+
+#. module: crm_claim
+#: field:crm.claim,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
+
+#. module: crm_claim
+#: help:crm.claim,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
+msgstr ""
+
+#~ msgid "# of Cases"
+#~ msgstr "Tapausten määrä"
+
+#~ msgid "My company"
+#~ msgstr "Oma yritys"

@@ -1,62 +1,25 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-03-01 14:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-21 12:23+0000\n"
+"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-22 06:41+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: warning
-#: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.product,purchase_line_warn:0
-msgid "Purchase Order Line"
-msgstr "Ставка на налогот за набавка"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Влезни пратки"
-
-#. module: warning
-#: field:product.product,purchase_line_warn_msg:0
-msgid "Message for Purchase Order Line"
-msgstr "Порака за ставка на налог за набавка"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Листа за требување"
-
-#. module: warning
-#: view:product.product:0
-msgid "Warning when Purchasing this Product"
-msgstr "Внимание кога го набавувате овој производ"
-
-#. module: warning
-#: model:ir.model,name:warning.model_product_product
-msgid "Product"
-msgstr "Производ"
-
-#. module: warning
-#: view:product.product:0
-#: view:res.partner:0
-msgid "Warnings"
-msgstr "Предупредувања"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -65,13 +28,44 @@ msgid "Blocking Message"
 msgstr "Блокирање на порака"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Invoice"
-msgstr "Предупредување на фактура"
+#: model:ir.model,name:warning.model_account_invoice
+#: field:res.partner,invoice_warn:0
+msgid "Invoice"
+msgstr "Фактура"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Порака за фактура"
+
+#. module: warning
+#: field:res.partner,purchase_warn_msg:0
+msgid "Message for Purchase Order"
+msgstr "Порака за налог за набавка"
+
+#. module: warning
+#: field:product.template,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr "Порака за ставка на налог за набавка"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Порака за налог за продажба"
+
+#. module: warning
+#: field:product.template,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Порака за ставка на налог за продажба"
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -80,20 +74,19 @@ msgid "No Message"
 msgstr "Нема порака"
 
 #. module: warning
-#: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
-msgid "Invoice"
-msgstr "Фактура"
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
 
 #. module: warning
-#: view:product.product:0
-msgid "Warning when Selling this Product"
-msgstr "Внимание кога го продавате овој производ"
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Листа за требување"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr ""
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr "Урнек на производ"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -102,14 +95,27 @@ msgid "Purchase Order"
 msgstr "Налог за набавка"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
-msgid "Message for Purchase Order"
-msgstr "Порака за налог за набавка"
+#: model:ir.model,name:warning.model_purchase_order_line
+#: field:product.template,purchase_line_warn:0
+msgid "Purchase Order Line"
+msgstr "Ставка на налогот за набавка"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
+#: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
+msgid "Sales Order"
+msgstr "Налог за продажба"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: field:product.template,sale_line_warn:0
+msgid "Sales Order Line"
+msgstr "Ставка од налог за продажба"
+
+#. module: warning
+#: code:addons/warning/warning.py:31
+#: help:product.template,purchase_line_warn:0
+#: help:product.template,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
@@ -125,64 +131,13 @@ msgstr ""
 "ќе го блокира текот. Пораката треба да биде напишана во наредното поле."
 
 #. module: warning
-#: code:addons/warning/warning.py:67
-#: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
-#, python-format
-msgid "Alert for %s !"
-msgstr "Аларм за %s !"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr ""
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sales Order"
-msgstr "Предупредување на налози за продажба"
-
-#. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Порака за фактура"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sales Order"
-msgstr "Порака за налог за продажба"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Picking"
-msgstr "Предупредување на требување"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Purchase Order"
-msgstr "Предупредување на налог за набавка"
-
-#. module: warning
-#: code:addons/warning/warning.py:68
-#: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:193
-#: code:addons/warning/warning.py:219
-#: code:addons/warning/warning.py:267
-#: code:addons/warning/warning.py:300
-#, python-format
-msgid "Warning for %s"
-msgstr "Предупредување за %s"
-
-#. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sales Order Line"
-msgstr "Порака за ставка на налог за продажба"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -191,28 +146,48 @@ msgid "Warning"
 msgstr "Внимание"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
-msgid "Message for Stock Picking"
-msgstr ""
+#: code:addons/warning/warning.py:64
+#: code:addons/warning/warning.py:92
+#: code:addons/warning/warning.py:128
+#: code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:209
+#: code:addons/warning/warning.py:241
+#, python-format
+msgid "Warning for %s"
+msgstr "Предупредување за %s"
 
 #. module: warning
-#: model:ir.model,name:warning.model_res_partner
-msgid "Partner"
-msgstr "Партнер"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "Предупредување на фактура"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
-msgid "Sales Order"
-msgstr "Налог за продажба"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "Предупредување на требување"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Испратници"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "Предупредување на налог за набавка"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
-#: field:product.product,sale_line_warn:0
-msgid "Sales Order Line"
-msgstr "Ставка од налог за продажба"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "Предупредување на налози за продажба"
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "Внимание кога го набавувате овој производ"
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "Внимание кога го продавате овој производ"
+
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "Предупредувања"

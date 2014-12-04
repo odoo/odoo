@@ -1,51 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Arabic translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "ملاحظة"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "نشط"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "نوع الفاتورة"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "المبيعات و المشتريات"
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "الفواتير"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "الشحنات الواردة"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "مجمع"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr ""
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -56,19 +56,15 @@ msgstr ""
 "اذا كان وضع الحقل النشط غلط, سيسمح لك بإخفاء نوع الفاتورة بدون إزالتها."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "ملاحظات"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "طريقة انشاء الفاتورة"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "قائمة الالتقاط"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "نوع الفاتورة"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -76,16 +72,6 @@ msgstr "قائمة الالتقاط"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "انواع الفاتورة"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "غير مجمعه"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "مجمع"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -99,28 +85,44 @@ msgstr ""
 "الخاص بك: يوميا، كل يوم أربعاء، شهرية، الخ."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr ""
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "الفواتير"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr "نوع الفاتورة"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "نشط"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "طريقة انشاء الفاتورة"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "غير مجمعه"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "ملاحظة"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "ملاحظات"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -128,89 +130,22 @@ msgid "Partner"
 msgstr "شريك"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "قائمة الالتقاط"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "المبيعات و المشتريات"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "أمر المبيعات"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "أوامر التوصيل"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "إدارة المبيعات والتسليمات باليومية"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "طريقة انشاء الفاتورة"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "يستخدم طريقة اليومية للمبيعات والإختيار."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    تسمح لك وحدات يومية المبيعات بتصنيف خاص\n"
-#~ "لمبيعاتك وخدمات التوصيل و(اختيار القوائم) بين اليوميات المختلفة.\n"
-#~ "هذه الوحدة هي مفيدة جدا لاكبر الشركات التي\n"
-#~ "تعمل بالادارات..\n"
-#~ "\n"
-#~ "يمكنك استخدام اليومية لأغراض مختلفة، بعض الأمثلة:\n"
-#~ "* عزل المبيعات من مختلف الإدارات\n"
-#~ "* اليوميات لتسليم بواسطة شاحنة أو عن طريق شركة يو بي إس\n"
-#~ "\n"
-#~ "اليوميات لديها مسؤولية وتتطور بين الحالات المختلفة:\n"
-#~ "* مشروع، مفتوحة، إلغاء، والقيام به.\n"
-#~ "\n"
-#~ "يمكن معالجة العمليات دفعة على يوميات مختلفة ل\n"
-#~ "التأكد من جميع مبيعات في آن واحد، للتحقق من صحة الفاتورة أو التعبئة، ...\n"
-#~ "\n"
-#~ "كما أنها تدعم أساليب الفواتير دفعة والتي يمكن تهيئتها من قبل\n"
-#~ "شركاء وأوامر البيع والأمثلة على ذلك:\n"
-#~ "* الفواتير اليومية،\n"
-#~ "* الفواتير الشهرية، ...\n"
-#~ "\n"
-#~ "وتقدم بعض الإحصاءات من قبل اليوميات.\n"
-#~ "    "
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
-
-#~ msgid ""
-#~ "This invoicing type will be used, by default, for invoicing the current "
-#~ "partner."
-#~ msgstr "سيتم إستخدام النوع الإفتراضي للفاتورة مع الشريك."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""

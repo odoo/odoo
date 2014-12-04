@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -e
+
+ODOO_CONFIGURATION_FILE=/etc/odoo/openerp-server.conf
+ODOO_GROUP="odoo"
+ODOO_DATA_DIR=/var/lib/odoo
+ODOO_LOG_DIR=/var/log/odoo
+ODOO_USER="odoo"
+
+case "${1}" in
+    configure)
+        if ! getent passwd | grep -q "^odoo:"; then
+            adduser --system --home $ODOO_DATA_DIR --quiet --group $ODOO_USER
+        fi
+        # Register "$ODOO_USER" as a postgres superuser
+        su - postgres -c "createuser -s $ODOO_USER" 2> /dev/null || true
+        # Configuration file
+        chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
+        chmod 0640 $ODOO_CONFIGURATION_FILE
+        # Log
+        mkdir -p $ODOO_LOG_DIR
+        chown $ODOO_USER:$ODOO_GROUP $ODOO_LOG_DIR
+        chmod 0750 $ODOO_LOG_DIR
+        # Data dir
+        chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
+        # update-python-modules NOW otherwise invoke-rc.d openerp start will fail
+        update-python-modules
+        ;;
+    *)
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

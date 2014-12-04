@@ -99,7 +99,7 @@ header
         margin-right: 0 !important
 
 .css_non_editable_mode_hidden
-    display: none
+    display: none !important
 
 /* ----- BOOTSTRAP FIX ----- */
 
@@ -137,7 +137,7 @@ footer
     background: rgb(239, 248, 248)
     background: rgba(200, 200, 200, 0.1)
 
-#footer_container
+#footer_container, #footer
     padding-top: 24px
     padding-bottom: 12px
 
@@ -146,6 +146,10 @@ footer
 .col-md-12
     float: left
     width: 100%
+
+@-moz-document url-prefix()
+    .table .img-responsive
+        width: 100%
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -191,9 +195,6 @@ footer
 
 .nav-hierarchy
     padding-left: 16px
-
-#themes-list .well
-    padding: 0 0 20px 0
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
@@ -288,6 +289,144 @@ ul.nav-stacked > li > a
 .hr
     padding: 4px 0
 
+
+.o_image_floating
+    width: 40%
+    margin: 4px
+    div.o_container
+        position: relative
+        mark
+            display: block
+            position: absolute
+            bottom: 0
+            width: 100%
+            background-color: rgba(86,61,124,.25)
+            a
+                color: white
+    &.o_hide_link div.o_container mark
+        display: none
+    &.o_margin_s
+        margin-bottom: 4px
+        &.pull-right
+            margin-left: 8px
+        &.pull-left
+            margin-right: 8px
+    &.o_margin_m
+        margin-bottom: 8px
+        &.pull-right
+            margin-left: 12px
+        &.pull-left
+            margin-right: 12px
+    &.o_margin_l
+        margin-bottom: 12px
+        &.pull-right
+            margin-left: 16px
+        &.pull-left
+            margin-right: 16px
+    &.o_margin_xl
+        margin-bottom: 24px
+        &.pull-right
+            margin-left: 32px
+        &.pull-left
+            margin-right: 32px
+
+
+/* gallery */
+
+.o_gallery
+    &.o_grid, &.o_masonry
+        &.o_spc-none
+            div.row
+                margin: 0
+            div.row > *
+                padding: 0
+        &.o_spc-small
+            div.row
+                margin: 5px 0
+            div.row > *
+                padding: 0 5px
+        &.o_spc-medium
+            div.row
+                margin: 10px 0
+            div.row > *
+                padding: 0 10px
+        &.o_spc-big
+            div.row
+                margin: 15px 0
+            div.row > *
+                padding: 0 15px
+        .img
+            width: 100%
+    &.o_grid
+        &.size-auto .row
+            height: auto
+        &.size-small .row
+            height: 100px
+        &.size-medium .row
+            height: 250px
+        &.size-big .row
+            height: 400px
+        &.size-small, &.size-medium, &.size-big
+            .img
+                height: 100%
+    &.o_nomode
+        &.o_spc-none
+            .img
+                padding: 0
+        &.o_spc-small
+            .img
+                padding: 5px
+        &.o_spc-medium
+            .img
+                padding: 10px
+        &.o_spc-big
+            .img
+                padding: 15px
+
+    &.o_slideshow .carousel ul.carousel-indicators li
+        border: 1px solid #aaa
+    .carousel-inner .item img
+        max-width: none
+
+.o_gallery.o_slideshow > .container
+    height: 100%
+
+.o_gallery.o_slideshow .carousel, .modal-body.o_slideshow .carousel
+    height: 100%
+    img
+        max-height: 100%
+        max-width: 100%
+        margin: auto
+        position: relative
+        top: 50%
+        -webkit-transform: translateY(-50%)
+        -ms-transform: translateY(-50%)
+        transform: translateY(-50%)
+    ul.carousel-indicators
+        display: block
+        height: auto
+        padding: 0
+        border-width: 0
+        position: absolute
+        bottom: 0
+        li
+            list-style-image: none
+            display: inline-block
+            width: 35px
+            height: 35px
+            margin: 0 0px 5px 5px
+            padding: 0
+            border: 1px solid #aaa
+            text-indent: initial
+            background-size: cover
+            opacity: 0.5
+            background-color: #000
+        li.active
+            opacity: 1
+    .carousel-control.left, .carousel-control.right
+        background-image: none
+        background-color: transparent
+
 /* Parallax Theme */
 
 div.carousel
@@ -317,7 +456,7 @@ div.carousel
             vertical-align: middle
             padding: 32px 0
 
-/* Background */
+/* Background (kept for 8.0 compatibility) */
 
 .oe_dark
     background: #eff8f8
@@ -414,6 +553,11 @@ span[data-oe-type="monetary"]
     overflow:hidden
     text-overflow:ellipsis
 
+.oe_website_spinner
+    width: 121px
+    input
+        text-align: center
+
 div.media_iframe_video
     height: 0
     margin: 0 auto
@@ -424,11 +568,14 @@ div.media_iframe_video
     iframe
         width: 100%
         height: 100%
-    div
+        position: absolute
+        margin-left: -50%
+    .css_editable_mode_display
         position: absolute
         width: 100%
         height: 100%
         display: none
+        z-index: 2
 
 /* Mobile view */
 
@@ -439,3 +586,62 @@ div.media_iframe_video
         -ms-transform: none !important
         -o-transform: none !important
         transform: none !important
+
+
+/* Fix: backward compatibility saas-3 */
+
+div.carousel
+    .container
+        > .carousel-caption
+            position: absolute
+            right: 50%
+            left: 50%
+            bottom: 20px
+            > div
+                position: absolute
+                text-align: left
+                padding: 20px
+                background: rgba(0, 0, 0, 0.4)
+                bottom: 20px
+        > .carousel-image
+            top: 5%
+            bottom: 5%
+            position: absolute
+            max-height: 90%
+            margin: 0 auto
+    .item.text_image
+        .container
+            > .carousel-caption
+                left: 10%
+                > div
+                    right: 50%
+                    margin-right: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 10%
+                left: 50%
+    .item.image_text
+        .container
+            > .carousel-caption
+                right: 10%
+                > div
+                    left: 50%
+                    margin-left: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 50%
+                left: 10%
+    .item.text_only
+        .container
+            > .carousel-caption
+                left: 10%
+                right: 10%
+                top: 10%
+                bottom: auto
+                > div
+                    text-align: center
+                    background: transparent
+                    bottom: auto
+                    width: 100%
+            > .carousel-image
+                display: none !important

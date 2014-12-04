@@ -5,7 +5,7 @@
 <template id="user_navbar" inherit_id="website.layout" groups="base.group_user">
 <xpath expr="//body/div['id=wrawrap']" position="before">
 <t t-if="website and menu_data">
-    <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+    <nav id="oe_main_menu_navbar" class="navbar navbar-inverse hidden-xs" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe_applications">
                 <span class="icon-bar"></span>
@@ -25,8 +25,8 @@
             </li>
         </ul>
 
-        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px;" groups="base.group_website_publisher">
-            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs" style="display: none;">Edit</button></li>
+        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px; display: none;" groups="base.group_website_publisher">
+            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs">Edit</button></li>
         </ul>
 
         <ul id="oe_systray" class="nav navbar-nav navbar-right pull-right hidden-xs">
@@ -62,9 +62,9 @@
                     Customize <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
-                    <li><a href="/page/website.themes">Change Theme</a></li>
-                    <li><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
+                    <li id="html_editor"><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
+                    <li id="theme_customize"><a href="#">Customize Theme</a></li>
+                    <li id="install_apps"><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
                     <li class="divider"></li>
                 </ul>
             </li>

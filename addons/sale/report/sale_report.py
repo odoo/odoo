@@ -29,7 +29,7 @@ class sale_report(osv.osv):
     _rec_name = 'date'
 
     _columns = {
-        'date': fields.datetime('Date Order', readonly=True),
+        'date': fields.datetime('Date Order', readonly=True),  # TDE FIXME master: rename into date_order
         'date_confirm': fields.date('Date Confirm', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
@@ -41,7 +41,7 @@ class sale_report(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
-        'nbr': fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -53,7 +53,7 @@ class sale_report(osv.osv):
             ], 'Order Status', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
     }
     _order = 'date desc'
 
@@ -75,14 +75,14 @@ class sale_report(osv.osv):
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id,
-                    s.section_id as section_id
+                    s.team_id as team_id
         """
         return select_str
 
     def _from(self):
         from_str = """
                 sale_order_line l
-                      join sale_order s on (l.order_id=s.id) 
+                      join sale_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
@@ -104,7 +104,7 @@ class sale_report(osv.osv):
                     s.state,
                     s.pricelist_id,
                     s.project_id,
-                    s.section_id
+                    s.team_id
         """
         return group_by_str
 

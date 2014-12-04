@@ -20,12 +20,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.model = model;
         this.domain = domain;
         this.mode = options.mode || 'pivot';  // pivot, bar, pie, line
-        this.heatmap_mode = options.heatmap_mode || 'none';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
         this.title = options.title || 'Data';
+        this.$buttons = options.$buttons;
     },
 
     start: function() {
@@ -33,8 +33,28 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.table = $('<table>');
         this.$('.graph_main_content').append(this.table);
 
+        this.$buttons.find('.oe-pivot-mode').click(function () {
+            self.set_mode.bind(self)('pivot');
+        });
+        this.$measure_list = this.$buttons.find('.oe-measure-list');
+
+        this.$buttons.find('.oe-bar-mode').click(function () {
+            self.set_mode.bind(self)('bar');
+        });
+        this.$buttons.find('.oe-line-mode').click(function () {
+            self.set_mode.bind(self)('line');
+        });
+        this.$buttons.find('.oe-pie-mode').click(function () {
+            self.set_mode.bind(self)('pie');
+        });
+        this.$buttons.find('.fa-expand').click(this.swap_axis.bind(this));
+        this.$buttons.find('.fa-arrows-alt').click(function () {
+            self.pivot.expand_all().then(self.proxy('display_data'));
+        });
+        this.$buttons.find('.fa-download').click(this.export_xls.bind(this));
+
         var indexes = {'pivot': 0, 'bar': 1, 'line': 2, 'chart': 3};
-        this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('active');
+        this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('selected');
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
@@ -42,7 +62,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
-
         // get search view
         var parent = this.getParent();
         while (!(parent instanceof openerp.web.ViewManager)) {
@@ -54,15 +73,19 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             self.$('.graph_options_selection label').last().toggle(result);
         });
 
-        return this.model.call('fields_get', []).then(function (f) {
+        this.$buttons.find('button').tooltip();
+        
+        return this.model.call('fields_get', {
+                    context: this.graph_view.dataset.context
+                }).then(function (f) {
             self.fields = f;
-            self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
-            self.important_fields = self.get_search_fields();
+            self.fields.__count = {field:'__count', type: 'integer', string:_t('Count')};
+            self.groupby_fields = self.get_groupby_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
             self.pivot_options.col_groupby = self.create_field_values(self.pivot_options.col_groupby || []);
-            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Quantity'}]);
+            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Count'}]);
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
             self.pivot.update_data().then(function () {
                 self.display_data();
@@ -81,9 +104,33 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         });
     },
 
+    get_groupby_fields: function () {
+        var search_fields = this.get_search_fields(),
+            search_field_names = _.pluck(search_fields, 'field'),
+            other_fields = [],
+            groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+
+        _.each(this.fields, function (val, key) {
+            if (!_.contains(search_field_names, key) && 
+                _.contains(groupable_types, val.type) && 
+                val.store === true) {
+                other_fields.push({
+                    field: key,
+                    string: val.string,
+                });
+            }
+        });
+        return search_fields.concat(other_fields);
+    },
+
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
+        // this method is disabled for now.  This requires extensive changes because the
+        // search view works quite differently:  But the graph view is going to be split 
+        // soon in pivot view and graph view.  The pivot view will then properly handle 
+        // groupbys.  
+        return [];  
         var self = this;
 
         var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {
@@ -123,52 +170,61 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     add_measures_to_options: function() {
-        this.$('.graph_measure_selection').append(
+        this.$measure_list.append(
         _.map(this.measure_list, function (measure) {
             return $('<li>').append($('<a>').attr('data-choice', measure.field)
                                      .attr('href', '#')
                                      .text(measure.string));
         }));
+        this.$measure_list.find('li').click(this.measure_selection.bind(this));
     },
 
     // ----------------------------------------------------------------------
     // Configuration methods
     // ----------------------------------------------------------------------
-    set: function (domain, row_groupby, col_groupby) {
+    set: function (domain, row_groupby, col_groupby, measures_groupby) {
         if (!this.pivot) {
             this.pivot_options.domain = domain;
             this.pivot_options.row_groupby = row_groupby;
             this.pivot_options.col_groupby = col_groupby;
+            this.pivot_options.measures_groupby = measures_groupby;
             return;
         }
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
+            measures_gbs = this.create_field_values(measures_groupby),
             dom_changed = !_.isEqual(this.pivot.domain, domain),
             row_gb_changed = !_.isEqual(row_gbs, this.pivot.rows.groupby),
             col_gb_changed = !_.isEqual(col_gbs, this.pivot.cols.groupby),
+            measures_gb_changed = !_.isEqual(measures_gbs, this.pivot.measures),
             row_reduced = is_strict_beginning_of(row_gbs, this.pivot.rows.groupby),
-            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby);
+            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby),
+            measures_reduced = is_strict_beginning_of(measures_gbs, this.pivot.measures);
 
-        if (!dom_changed && row_reduced && !col_gb_changed) {
+        if (!dom_changed && row_reduced && !col_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.display_data();
             return;
         }
-        if (!dom_changed && col_reduced && !row_gb_changed) {
+        if (!dom_changed && col_reduced && !row_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (!dom_changed && col_reduced && row_reduced) {
+        if (!dom_changed && col_reduced && row_reduced && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (dom_changed || row_gb_changed || col_gb_changed) {
-            this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
+        if (dom_changed || row_gb_changed || col_gb_changed || measures_gb_changed) {
+            this.pivot.set(domain, row_gbs, col_gbs, measures_gbs).then(this.proxy('display_data'));
+        }
+
+        if (measures_gb_changed) {
+            this.put_measure_checkmarks();
         }
     },
 
@@ -185,18 +241,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.display_data();
     },
 
-    set_heatmap_mode: function (mode) { // none, row, col, all
-        this.heatmap_mode = mode;
-        if (mode === 'none') {
-            this.$('.graph_heatmap label').removeClass('disabled');
-            this.$('.graph_heatmap label').removeClass('active');
-        }
-        this.display_data();
-    },
-
     create_field_value: function (f) {
         var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
-            groupby_field = _.findWhere(this.important_fields, {field:field}),
+            groupby_field = _.findWhere(this.groupby_fields, {field:field}),
             string = groupby_field ? groupby_field.string : this.fields[field].string,
             result =  {field: f, string: string, type: this.fields[field].type };
 
@@ -214,6 +261,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     get_col_groupbys: function () {
         return _.pluck(this.pivot.cols.groupby, 'field');
+    },
+
+    get_current_measures: function () {
+        return _.pluck(this.pivot.measures, 'field');
     },
 
     // ----------------------------------------------------------------------
@@ -250,11 +301,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     put_measure_checkmarks: function () {
         var self = this,
-            measures_li = this.$('.graph_measure_selection a');
-        measures_li.removeClass('oe_selected');
+            measures_li = this.$measure_list.find('li');
+        measures_li.removeClass('selected');
         _.each(this.measure_list, function (measure, index) {
             if (_.findWhere(self.pivot.measures, measure)) {
-                measures_li.eq(index).addClass('oe_selected');
+                measures_li.eq(index).addClass('selected');
             }
         });
 
@@ -278,17 +329,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
     },
 
-    heatmap_mode_selection: function (event) {
-        event.preventDefault();
-        var mode = event.currentTarget.getAttribute('data-mode');
-        if (this.heatmap_mode === mode) {
-            event.stopPropagation();
-            this.set_heatmap_mode('none');
-        } else {
-            this.set_heatmap_mode(mode);
-        }
-    },
-
     header_cell_clicked: function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -309,11 +349,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             this.expand(id);
             return;
         }
-        if (!this.important_fields.length) {
+        if (!this.groupby_fields.length) {
             return;
         }
 
-        var fields = _.map(this.important_fields, function (field) {
+        var fields = _.map(this.groupby_fields, function (field) {
                 return {id: field.field, value: field.string, type:self.fields[field.field.split(':')[0]].type};
         });
         if (this.dropdown) {
@@ -321,12 +361,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
         this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
         $(event.target).after(this.dropdown);
-        this.dropdown.css({position:'absolute',
-                           left:event.originalEvent.layerX,
-                           top:event.originalEvent.layerY});
-        this.$('.field-selection').next('.dropdown-menu').toggle();
-        
-        
+        this.dropdown.css({
+            position:'absolute',
+            left:event.originalEvent.layerX,
+        });
+        this.$('.field-selection').next('.dropdown-menu').first().toggle();        
     },
 
     field_selection: function (event) {
@@ -359,7 +398,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 var rows = self.build_rows(header.children);
                 var doc_fragment = $(document.createDocumentFragment());
                 rows.map(function (row) {
-                    doc_fragment.append(self.draw_row(row));
+                    doc_fragment.append(self.draw_row(row, 0));
                 });
                 self.$row_clicked.after(doc_fragment);
             } else {
@@ -423,23 +462,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     build_headers: function () {
         var pivot = this.pivot,
             nbr_measures = pivot.measures.length,
-            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
+            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})) + 1,
             rows = [];
 
         _.each(pivot.cols.headers, function (col) {
-            if (col.path.length === 0) { return;}
             var cell_width = nbr_measures * (col.expanded ? pivot.get_ancestor_leaves(col).length : 1),
-                cell_height = col.expanded ? 1 : height - col.path.length + 1,
+                cell_height = col.expanded ? 1 : height - col.path.length,
                 cell = {width: cell_width, height: cell_height, title: col.title, id: col.id, expanded: col.expanded};
-            if (rows[col.path.length - 1]) {
-                rows[col.path.length - 1].push(cell);
+            if (rows[col.path.length]) {
+                rows[col.path.length].push(cell);
             } else {
-                rows[col.path.length - 1] = [cell];
+                rows[col.path.length] = [cell];
             }
         });
 
         if (pivot.get_cols_leaves().length > 1) {
-            rows[0].push({width: nbr_measures, height: height, title: _t('Total'), id: pivot.main_col().id });
+            rows[0].push({width: nbr_measures, height: height, title: ' ', id: pivot.main_col().id });
         }
         if (pivot.cols.headers.length === 1) {
             rows = [[{width: nbr_measures, height: 1, title: _t('Total'), id: pivot.main_col().id, expanded: false}]];
@@ -468,14 +506,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
             cell = {value:formatted_value};
 
-        if (this.heatmap_mode === 'none') { return cell; }
-        var total = (this.heatmap_mode === 'both') ? this.pivot.get_total()[index]
-                  : (this.heatmap_mode === 'row')  ? this.pivot.get_total(row)[index]
-                  : this.pivot.get_total(col)[index];
-        var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
-        if (color < 255) {
-            cell.color = color;
-        }
         return cell;
     },
 
@@ -541,7 +571,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
-        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none');
         this.$('.graph_options_selection label').last().toggleClass('disabled', this.pivot.no_data);
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
@@ -565,41 +594,52 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
+        var custom_gbs = this.graph_view.get_custom_filter_groupbys(),
+            frozen_rows = custom_gbs.groupby.length,
+            frozen_cols = custom_gbs.col_groupby.length;
+
         var table = this.build_table();
         var doc_fragment = $(document.createDocumentFragment());
-        this.draw_headers(table.headers, doc_fragment);
+        this.draw_headers(table.headers, doc_fragment, frozen_cols);
         this.draw_measure_row(table.measure_row, doc_fragment);
-        this.draw_rows(table.rows, doc_fragment);
+        this.draw_rows(table.rows, doc_fragment, frozen_rows);
         this.table.append(doc_fragment);
     },
 
-    make_header_cell: function (header) {
+    make_header_cell: function (header, frozen) {
         var cell = (_.has(header, 'cells') ? $('<td>') : $('<th>'))
                         .addClass('graph_border')
                         .attr('rowspan', header.height)
                         .attr('colspan', header.width);
-        var $content = $('<span>').addClass('web_graph_click')
-                                 .attr('href','#')
+        var $content = $('<span>').attr('href','#')
                                  .text(' ' + (header.title || _t('Undefined')))
                                  .css('margin-left', header.indent*30 + 'px')
                                  .attr('data-id', header.id);
         if (_.has(header, 'expanded')) {
-            $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+            if (('indent' in header) && header.indent >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
+            if (!('indent' in header) && header.lvl >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
         } else {
             $content.css('font-weight', 'bold');
         }
         return cell.append($content);
     },
 
-    draw_headers: function (headers, doc_fragment) {
+    draw_headers: function (headers, doc_fragment, frozen_cols) {
         var make_cell = this.make_header_cell,
             $empty_cell = $('<th>').attr('rowspan', headers.length),
             $thead = $('<thead>');
 
-        _.each(headers, function (row) {
+        _.each(headers, function (row, lvl) {
             var $row = $('<tr>');
             _.each(row, function (header) {
-                $row.append(make_cell(header));
+                header.lvl = lvl;
+                $row.append(make_cell(header, frozen_cols));
             });
             $thead.append($row);
         });
@@ -609,7 +649,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
     
     draw_measure_row: function (measure_row) {
-        if (this.pivot.measures.length === 1) { return; }
         var $row = $('<tr>').append('<th>');
         _.each(measure_row, function (cell) {
             var $cell = $('<th>').addClass('measure_row').text(cell.text);
@@ -619,10 +658,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$thead.append($row);
     },
     
-    draw_row: function (row) {
+    draw_row: function (row, frozen_rows) {
         var $row = $('<tr>')
             .attr('data-indent', row.indent)
-            .append(this.make_header_cell(row));
+            .append(this.make_header_cell(row, frozen_rows));
         
         var cells_length = row.cells.length;
         var cells_list = [];
@@ -643,13 +682,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return $row.append(cells_list.join(''));
     },
 
-    draw_rows: function (rows, doc_fragment) {
+    draw_rows: function (rows, doc_fragment, frozen_rows) {
         var rows_length = rows.length,
             $tbody = $('<tbody>');
 
         doc_fragment.append($tbody);
         for (var i = 0; i < rows_length; i++) {
-            $tbody.append(this.draw_row(rows[i]));
+            $tbody.append(this.draw_row(rows[i], frozen_rows));
         }
     },
 

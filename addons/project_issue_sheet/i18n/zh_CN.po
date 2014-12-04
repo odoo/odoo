@@ -1,47 +1,21 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-28 13:52+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:35+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: project_issue_sheet
-#: code:addons/project_issue_sheet/project_issue_sheet.py:57
-#, python-format
-msgid "The Analytic Account is pending !"
-msgstr "这个辅助核算项 被挂起的"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "辅助核算明细"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_project_issue
-msgid "Project Issue"
-msgstr "缺陷"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "计工单明细"
-
-#. module: project_issue_sheet
-#: view:project.issue:0
-msgid "on_change_project(project_id)"
-msgstr "on_change_project(project_id)"
+"X-Launchpad-Export-Date: 2014-08-15 07:42+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_issue_sheet
 #: code:addons/project_issue_sheet/project_issue_sheet.py:57
@@ -51,48 +25,43 @@ msgid "Analytic Account"
 msgstr "辅助核算项"
 
 #. module: project_issue_sheet
-#: view:project.issue:0
-msgid "Worklogs"
-msgstr "工作记录"
-
-#. module: project_issue_sheet
-#: field:account.analytic.line,create_date:0
-msgid "Create Date"
-msgstr "创建日期"
-
-#. module: project_issue_sheet
-#: view:project.issue:0
-#: field:project.issue,timesheet_ids:0
-msgid "Timesheets"
-msgstr "计工单"
+#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "辅助核算明细"
 
 #. module: project_issue_sheet
 #: field:hr.analytic.timesheet,issue_id:0
 msgid "Issue"
 msgstr "缺陷"
 
-#~ msgid "Add the Timesheet support for Issue Management in Project Management"
-#~ msgstr "对缺陷管理增加了计工单支持"
+#. module: project_issue_sheet
+#: model:ir.model,name:project_issue_sheet.model_project_issue
+msgid "Project Issue"
+msgstr "缺陷"
 
-#~ msgid "Timesheet"
-#~ msgstr "计工单"
-
-#~ msgid ""
-#~ "\n"
-#~ "                    This module adds the Timesheet support for the "
-#~ "Issues/Bugs Management in Project\n"
-#~ "                "
-#~ msgstr ""
-#~ "\n"
-#~ "                    此模块把缺陷管理和计工单集成在一起了\n"
-#~ "                "
-
+#. module: project_issue_sheet
+#: code:addons/project_issue_sheet/project_issue_sheet.py:57
 #, python-format
-#~ msgid "The Analytic Account is in pending !"
-#~ msgstr "成本科目已暂停"
+msgid "The Analytic Account is pending !"
+msgstr "这个辅助核算项 被挂起的"
 
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "无法在视图类型的科目上创建分析凭证行"
+#. module: project_issue_sheet
+#: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "计工单明细"
 
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "已经确认和完成的计工单行不能修改！"
+#. module: project_issue_sheet
+#: view:project.issue:project_issue_sheet.project_issue_form_view
+#: field:project.issue,timesheet_ids:0
+msgid "Timesheets"
+msgstr "计工单"
+
+#. module: project_issue_sheet
+#: view:project.issue:project_issue_sheet.project_issue_form_view
+msgid "Worklogs"
+msgstr "工作记录"
+
+#. module: project_issue_sheet
+#: view:project.issue:project_issue_sheet.project_issue_form_view
+msgid "on_change_project(project_id)"
+msgstr "on_change_project(project_id)"

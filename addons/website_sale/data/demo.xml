@@ -2,9 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="product.product_product_consultant" model="product.product">
-            <field name="image" type="base64" file="website/static/description/website_edit.png"/>
-        </record>
 
         <record id="product.product_attribute_2" model="product.attribute">
             <field name="type">color</field>
@@ -17,7 +14,7 @@
             <field name="website_sequence">5</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
             <field name="website_description" type="html">
-                <section data-snippet-id="text-image" class="mt16 mb16 oe_dark">
+                <section class="mt16 mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt64">
@@ -37,7 +34,7 @@
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16">
+                <section class="mt16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1">
@@ -60,12 +57,12 @@
             </field>
         </record>
 
-        <record id="product.product_product_5" model="product.product">
+        <record id="product.product_product_5b" model="product.product">
             <field name="website_published" eval="True"/>
             <field name="website_size_x">2</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_promo')])]"/>
             <field name="website_description" type="html">
-                <section data-snippet-id="text-image" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt32">
@@ -77,7 +74,7 @@
                                     experience music just about anywhere.
                                 </p>
 
-                                <div class="panel panel-default mt48" data-snippet-id="panel">
+                                <div class="panel panel-default mt48">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Characteristics</h3>
                                     </div>
@@ -101,7 +98,7 @@
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mt16 mb16 oe_dark">
+                <section class="mt16 mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt16">
@@ -135,7 +132,7 @@
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt32 mb16">
@@ -179,7 +176,7 @@ Ultrafast wireless
 iOS7
             </field>
             <field name="website_description" type="html">
-                <section data-snippet-id="text-image" class="mb16 oe_dark">
+                <section class="mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt64">
@@ -198,7 +195,7 @@ iOS7
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16">
+                <section class="mt16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1">
@@ -217,7 +214,7 @@ iOS7
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mb16 oe_dark">
+                <section class="mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt32">
@@ -236,7 +233,7 @@ iOS7
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1">
@@ -255,7 +252,7 @@ iOS7
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mt16 mb16 oe_dark">
+                <section class="mt16 mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt64">
@@ -290,7 +287,7 @@ Cable length: 1065 mm
 Weight: 0.4 ounce
             </field>
             <field name="website_description" type="html">
-                <section data-snippet-id="text-image" class="mt32">
+                <section class="mt32">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center">
@@ -346,7 +343,7 @@ Weight: 0.4 ounce
                 Intel Iris Pro graphics
             </field>
             <field name="website_description" type="html">
-                <section data-snippet-id="image-text">
+                <section>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 mt32 col-md-offset-1">
@@ -362,7 +359,7 @@ Weight: 0.4 ounce
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mb16 oe_dark">
+                <section class="mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="text-center col-md-8 col-md-offset-2 mt16">
@@ -378,7 +375,7 @@ Weight: 0.4 ounce
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt64">
@@ -418,7 +415,7 @@ Weight: 0.4 ounce
             </field>
             <field name="website_description" type="html">
                 <hr/>
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1 mt32 mb32">
@@ -445,7 +442,7 @@ Width:  1.56 inches
 Depth:  0.21 inch
 Weight: 1.1 ounces</field>
             <field name="website_description" type="html">
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-9 col-md-offset-1 mb16">
@@ -454,7 +451,7 @@ Weight: 1.1 ounces</field>
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="text-image" class="mt16 mb16 oe_dark">
+                <section class="mt16 mb16 oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1 mt64">
@@ -475,7 +472,7 @@ Weight: 1.1 ounces</field>
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
@@ -505,7 +502,7 @@ Weight: 1.1 ounces</field>
                         </div>
                     </div>
                 </section>
-                <section data-snippet-id="image-text" class="mt16 mb16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 text-center mb16">
@@ -552,18 +549,13 @@ Weight: 1.1 ounces</field>
             <field name="sequence">1</field>
         </record>
         
-        <record model="crm.case.section" id="website.salesteam_website_sales">
+        <record model="crm.team" id="website.salesteam_website_sales">
             <field name="member_ids" eval="[(4, ref('base.user_root'), ref('base.user_demo'))]"/>
         </record>
 
     <!-- product.public.category -->
-
-        <record id="product.computers" model="product.public.category">
-          <field name="name">Computers</field>
-        </record>
         
         <record id="product.Components" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Components</field>
         </record>
 
@@ -597,7 +589,6 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.devices" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Devices</field>
         </record>
 
@@ -635,12 +626,10 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.laptops" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Laptops</field>
         </record>
 
         <record id="product.sub_computers" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Computers</field>
         </record>
 
@@ -654,7 +643,6 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.network" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Network</field>
         </record>
 
@@ -672,7 +660,6 @@ Weight: 1.1 ounces</field>
         </record>
         
         <record id="product.services" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Services</field>
         </record>
 
@@ -688,7 +675,7 @@ Weight: 1.1 ounces</field>
         <record id="product.product_product_4_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
         </record>
-        <record id="product.product_product_5_product_template" model="product.template">
+        <record id="product.product_product_5b_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
         </record>
         <record id="product.product_product_6_product_template" model="product.template">

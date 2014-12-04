@@ -233,8 +233,9 @@ class res_partner(osv.Model, format_address):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
+        'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Contact Reference', select=1),
+        'ref': fields.char('Internal Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -251,8 +252,8 @@ class res_partner(osv.Model, format_address):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
@@ -291,7 +292,7 @@ class res_partner(osv.Model, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'has_image': fields.function(_has_image, type="boolean"),
+        'has_image': fields.function(_has_image, string="Has image", type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -357,8 +358,7 @@ class res_partner(osv.Model, format_address):
 
     @api.multi
     def onchange_type(self, is_company):
-        value = {}
-        value['title'] = False
+        value = {'title': False}
         if is_company:
             value['use_parent_address'] = False
             domain = {'title': [('domain', '=', 'partner')]}
@@ -416,16 +416,16 @@ class res_partner(osv.Model, format_address):
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
-        for field in fields:
-            column = self._all_columns[field].column
-            if column._type == 'one2many':
+        for fname in fields:
+            field = self._fields[fname]
+            if field.type == 'one2many':
                 raise AssertionError('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`')
-            if column._type == 'many2one':
-                values[field] = partner[field].id if partner[field] else False
-            elif column._type == 'many2many':
-                values[field] = [(6,0,[r.id for r in partner[field] or []])]
+            if field.type == 'many2one':
+                values[fname] = partner[fname].id if partner[fname] else False
+            elif field.type == 'many2many':
+                values[fname] = [(6,0,[r.id for r in partner[fname] or []])]
             else:
-                values[field] = partner[field]
+                values[fname] = partner[fname]
         return values
 
     def _address_fields(self, cr, uid, context=None):
@@ -450,17 +450,31 @@ class res_partner(osv.Model, format_address):
     def _commercial_sync_from_company(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
-        if partner.commercial_partner_id != partner:
+        commercial_partner = partner.commercial_partner_id
+        if not commercial_partner:
+            # On child partner creation of a parent partner,
+            # the commercial_partner_id is not yet computed
+            commercial_partner_id = self._commercial_partner_compute(
+                cr, uid, [partner.id], 'commercial_partner_id', [], context=context)[partner.id]
+            commercial_partner = self.browse(cr, uid, commercial_partner_id, context=context)
+        if commercial_partner != partner:
             commercial_fields = self._commercial_fields(cr, uid, context=context)
-            sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
-                                                        commercial_fields, context=context)
+            sync_vals = self._update_fields_values(cr, uid, commercial_partner,
+                                                   commercial_fields, context=context)
             partner.write(sync_vals)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
         commercial_fields = self._commercial_fields(cr, uid, context=context)
-        sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
-                                                   commercial_fields, context=context)
+        commercial_partner = partner.commercial_partner_id
+        if not commercial_partner:
+            # On child partner creation of a parent partner,
+            # the commercial_partner_id is not yet computed
+            commercial_partner_id = self._commercial_partner_compute(
+                cr, uid, [partner.id], 'commercial_partner_id', [], context=context)[partner.id]
+            commercial_partner = self.browse(cr, uid, commercial_partner_id, context=context)
+        sync_vals = self._update_fields_values(cr, uid, commercial_partner,
+                                               commercial_fields, context=context)
         sync_children = [c for c in partner.child_ids if not c.is_company]
         for child in sync_children:
             self._commercial_sync_to_children(cr, uid, child, context=context)
@@ -509,6 +523,14 @@ class res_partner(osv.Model, format_address):
             parent.update_address(addr_vals)
             if not parent.is_company:
                 parent.write({'is_company': True})
+
+    def unlink(self, cr, uid, ids, context=None):
+        orphan_contact_ids = self.search(cr, uid,
+            [('parent_id', 'in', ids), ('id', 'not in', ids), ('use_parent_address', '=', True)], context=context)
+        if orphan_contact_ids:
+            # no longer have a parent address
+            self.write(cr, uid, orphan_contact_ids, {'use_parent_address': False}, context=context)
+        return super(res_partner, self).unlink(cr, uid, ids, context=context)
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -578,7 +600,7 @@ class res_partner(osv.Model, format_address):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if record.parent_id and not record.is_company:
-                name =  "%s, %s" % (record.parent_id.name, name)
+                name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
@@ -778,7 +800,7 @@ class res_partner(osv.Model, format_address):
             'state_name': address.state_id.name or '',
             'country_code': address.country_id.code or '',
             'country_name': address.country_id.name or '',
-            'company_name': address.parent_id.name or '',
+            'company_name': address.parent_name or '',
         }
         for field in self._address_fields(cr, uid, context=context):
             args[field] = getattr(address, field) or ''

@@ -1,0 +1,21 @@
+# HG changeset patch
+# Parent 4814709fe1c52515f5108623c2c8f0bce57ffac0
+diff -r 4814709fe1c5 -r 216904cc7636 academy/models.py
+--- a/academy/models.py	Tue Aug 12 17:18:59 2014 +0200
++++ b/academy/models.py	Tue Aug 12 17:24:44 2014 +0200
+@@ -5,3 +5,4 @@ class Teachers(models.Model):
+     _name = 'academy.teachers'
+ 
+     name = fields.Char()
++    biography = fields.Html()
+diff -r 4814709fe1c5 -r 216904cc7636 academy/templates.xml
+--- a/academy/templates.xml	Tue Aug 12 17:18:59 2014 +0200
++++ b/academy/templates.xml	Tue Aug 12 17:24:44 2014 +0200
+@@ -21,6 +21,7 @@
+       <div class="oe_structure">
+         <div class="container">
+           <h3><t t-esc="person.name"/></h3>
++          <div><t t-esc="person.biography"/></div>
+         </div>
+       </div>
+       <div class="oe_structure"/>

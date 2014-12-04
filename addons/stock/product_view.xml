@@ -10,27 +10,44 @@
                 <tree position="attributes">
                     <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
                 </tree>
-                <tree position="inside">
-                    <field name="virtual_available" invisible="1"/>
-                </tree>
+                <field name="price" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
             </field>
         </record>
 
+        <record id="view_stock_product_template_tree" model="ir.ui.view">
+            <field name="name">product.template.stock.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
+                </tree>
+                <field name="uom_id" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
+            </field>
+        </record>
+
+
         <record id="action_receive_move" model="ir.actions.act_window">
-            <field name="name">Receptions</field>
+            <field name="name">Receipts</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="view_id" ref="view_move_tree_receipt_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a reception for this product.
+                Click to register a receipt for this product.
               </p><p>
-                Here you will find the history of all receptions related to
-                this product, as well as all future receptions you are waiting
+                Here you will find the history of all receipts related to
+                this product, as well as all future receipts you are waiting
                 from your suppliers.
               </p>
             </field>
@@ -42,7 +59,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="view_id" ref="view_move_tree_receipt_picking"/>
             <field name="domain" eval="[('picking_type_id.code','=','outgoing'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal')]"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="help" type="html">
@@ -67,8 +84,10 @@
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
-                    <filter name="virtual_stock_negative" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
+                    <filter name="virtual_stock_exhausted" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
+                    <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
                 </field>
                 <filter name="consumable" position="before">
                    <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
@@ -111,19 +130,23 @@
                         <field name="loc_case"/>
                     </group>
                 </group>
+                <group name="status" position="before">
+                    <group name="lot" groups="stock.group_production_lot" string="Lots" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="track_all" groups="stock.group_production_lot"/>
+                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                    </group>
+                </group>
                 <group name="weight" position="before">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
                     </group>
                 </group>
                 <field name="product_manager" position="attributes">
                     <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
                 </field>
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs"/>
-                </xpath>
                 <group name="procurement_uom" position="after" >
                    <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
                        <field name="route_ids" widget="many2many_checkboxes"/>
@@ -131,6 +154,8 @@
                 </group>
             </field>
         </record>
+
+
 
         <record model="ir.ui.view" id="product_template_kanban_stock_view">
             <field name="name">Product Template Kanban Stock</field>
@@ -172,10 +197,10 @@
                 </field>
                 <xpath expr="//div[@name='tags']" position="inside">
                     <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value&gt;1">
-                        <t t-esc="record.reception_count.value"/> Receptions
+                        <t t-esc="record.reception_count.value"/> Receipts
                     </a>
                     <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value==1">
-                        <t t-esc="record.reception_count.value"/> Reception
+                        <t t-esc="record.reception_count.value"/> Receipt
                     </a>
                     <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value&gt;1">
                         <t t-esc="record.delivery_count.value"/> Deliveries
@@ -192,23 +217,37 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="before">
-                    <group name="lot" groups="stock.group_production_lot" string="Lots">
-                        <field name="track_all" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                    </group>
-                </group>
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_stat_button"
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                    <div><field name="qty_available_text"/></div>
+                        <field name="qty_available2" widget="statinfo"/>
                     </button>
                    <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product_template_form_view_procurement_button">
+            <field name="name">product.template_procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_stat_button"
+                           name="action_open_quants"
+                           icon="fa-building-o"
+                           type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                        <field name="qty_available2" widget="statinfo"/>
+                   </button>
+                   <button class="oe_inline oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_orderpoints" type="object" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
                 </xpath>
             </field>
         </record>

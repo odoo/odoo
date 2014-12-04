@@ -1,26 +1,28 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-03-02 13:30+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-28 14:33+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:52+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:52+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "here:"
-msgstr "овде:"
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
+#, python-format
+msgid "\" is not your account,"
+msgstr "\" не е ваш налог,"
 
 #. module: web_linkedin
 #: field:sale.config.settings,api_key:0
@@ -28,8 +30,100 @@ msgid "API Key"
 msgstr "API клуч"
 
 #. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "API key"
+msgstr "API клуч"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Add a new application and fill the form:"
+msgstr "Додади нова апликација и пополни го формуларот:"
+
+#. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:331
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:16
+#, python-format
+msgid "Companies"
+msgstr "Компании"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Copy the"
+msgstr "Копирај го"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Go to this URL:"
+msgstr "Оди на оваа URL:"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
+#, python-format
+msgid "If \""
+msgstr "ако \""
+
+#. module: web_linkedin
+#: field:res.partner,linkedin_id:0
+msgid "LinkedIn ID"
+msgstr "LinkedIn ID"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:34
+#, python-format
+msgid "LinkedIn access was not enabled on this server."
+msgstr "Пристап до LinkedIn не е овозможен на овој сервер."
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:435
+#, python-format
+msgid "LinkedIn error"
+msgstr "LinkedIn грешка"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:60
+#, python-format
+msgid "LinkedIn is not enabled"
+msgstr "Linkedin не е достапен"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:435
+#, python-format
+msgid "LinkedIn is temporary down for the searches by url."
+msgstr "LinkedIn привремено не функционира за пребарување по адреса."
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:360
+#, python-format
+msgid "LinkedIn search"
+msgstr "Linkedin пребарување"
+
+#. module: web_linkedin
+#: field:res.partner,linkedin_public_url:0
+#: field:res.partner,linkedin_url:0
+msgid "LinkedIn url"
+msgstr "LinkedIn адреса"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:36
+#, python-format
+msgid "LinkedIn:"
+msgstr "LinkedIn:"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Log into LinkedIn."
+msgstr "Логирај се на Linkedin."
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:499
 #, python-format
 msgid "No results found"
 msgstr "Нема пронајдени резултати"
@@ -42,71 +136,58 @@ msgid "Ok"
 msgstr "Во ред"
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Log into LinkedIn."
-msgstr "Логирај се на Linkedin."
+#: model:ir.model,name:web_linkedin.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
 
 #. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:13
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:14
 #, python-format
 msgid "People"
 msgstr "Луѓе"
 
 #. module: web_linkedin
-#: model:ir.model,name:web_linkedin.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: web_linkedin
-#: field:sale.config.settings,server_domain:0
-msgid "unknown"
-msgstr "непознато"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "https://www.linkedin.com/secure/developer"
-msgstr "https://www.linkedin.com/secure/developer"
-
-#. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:15
-#, python-format
-msgid "Companies"
-msgstr "Компании"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "API key"
-msgstr "API клуч"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Copy the"
-msgstr "Копирај го"
-
-#. module: web_linkedin
-#. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:263
-#, python-format
-msgid "LinkedIn search"
-msgstr "Linkedin пребарување"
-
-#. module: web_linkedin
-#. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:31
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:35
 #, python-format
 msgid ""
-"LinkedIn access was not enabled on this server.\n"
-"            Please ask your administrator to configure it in Settings > "
-"Configuration > Sales > Social Network Integration."
+"Please ask your administrator to configure it in Settings > Configuration > "
+"Sales > Social Network Integration."
 msgstr ""
-"LinkedIn пристапот не е достапен на овој сервер.\n"
-"Побарајте вашиот администратор да го конфигурира во Подесувања > "
-"Конфигурација> Продажби> Интеграција на социјални мрежи."
+"Ве молиме замолете го вашиот администратор да го конфигурира во Подесувања > "
+"Конфигурација > Продажба > Интеграција на социјална мрежа."
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:45
+#, python-format
+msgid "Search"
+msgstr "Барај"
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:44
+#, python-format
+msgid "Search by url or keywords :"
+msgstr "Пребарувај според адреса или клучни зборови :"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "The programming tool is Javascript"
+msgstr "Алатката за програмирање е Javascript"
+
+#. module: web_linkedin
+#: help:res.partner,linkedin_public_url:0
+msgid ""
+"This url is set automatically when you join the partner with a LinkedIn "
+"account."
+msgstr ""
+"Оваа адреса се поставува автоматски кога ќе му се придружите на партнерот со "
+"LinkedIn налог."
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
 msgid ""
 "To use the LinkedIn module with this database, an API Key is required. "
 "Please follow this procedure:"
@@ -115,28 +196,33 @@ msgstr ""
 "Следете ја процедурата:"
 
 #. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Website URL inside \"JavaScript API Domains\" field"
+msgstr "Вебсајт адреса во \"JavaScript API Domains\" полето"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Website URL:"
+msgstr "Адреса на вебсајт:"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "here:"
+msgstr "овде:"
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "https://www.linkedin.com/secure/developer"
+msgstr "https://www.linkedin.com/secure/developer"
+
+#. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:60
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
 #, python-format
-msgid "LinkedIn is not enabled"
-msgstr "Linkedin не е достапен"
+msgid "please click here to logout"
+msgstr "ве молиме кликнете овде за да се одјавите"
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Add a new application and fill the form:"
-msgstr "Додади нова апликација и пополни го формуларот:"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Go to this URL:"
-msgstr "Оди на оваа URL:"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "The programming tool is Javascript"
-msgstr "Алатката за програмирање е Javascript"
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "JavaScript API Domain:"
-msgstr "JavaScript API Домен:"
+#: field:sale.config.settings,server_domain:0
+msgid "unknown"
+msgstr "непознато"

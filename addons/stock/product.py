@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
+from openerp.tools.float_utils import float_round
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -114,8 +115,8 @@ class product_product(osv.osv):
 
         domain_products = [('product_id', 'in', ids)]
         domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
-        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
-        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel'))] + domain_products
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_products
         domain_quant += domain_products
         if context.get('lot_id') or context.get('owner_id') or context.get('package_id'):
             if context.get('lot_id'):
@@ -136,14 +137,18 @@ class product_product(osv.osv):
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
         res = {}
-        for id in ids:
+        for product in self.browse(cr, uid, ids, context=context):
+            id = product.id
+            qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            outgoing_qty = float_round(moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
+            virtual_available = float_round(quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0), precision_rounding=product.uom_id.rounding)
             res[id] = {
-                'qty_available': quants.get(id, 0.0),
-                'incoming_qty': moves_in.get(id, 0.0),
-                'outgoing_qty': moves_out.get(id, 0.0),
-                'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
+                'qty_available': qty_available,
+                'incoming_qty': incoming_qty,
+                'outgoing_qty': outgoing_qty,
+                'virtual_available': virtual_available,
             }
-
         return res
 
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
@@ -151,7 +156,7 @@ class product_product(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':
@@ -175,9 +180,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'reception_count': fields.function(_stock_move_count, string="Receipt", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
-        'qty_available_text': fields.function(_product_available_text, type='char'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
@@ -192,6 +196,7 @@ class product_product(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.product", string="On Hand"),
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Forecast Quantity',
@@ -244,7 +249,7 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receipts')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
@@ -306,7 +311,7 @@ class product_template(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':
@@ -323,8 +328,18 @@ class product_template(osv.osv):
             res.append(('product_variant_ids', 'in', ids))
         return res
 
+
+    def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = str(product.qty_available) +  _(" On Hand")
+        return res
+
+
+
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'qty_available2': fields.related('qty_available', type="float", relation="product.template", string="On Hand"),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -382,11 +397,63 @@ class product_template(osv.osv):
             product_route_ids |= set([r.id for r in product.route_ids])
             product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
         route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = mod_obj.xmlid_to_res_id(cr, uid, 'stock.action_routes_form', raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
+
+
+    def _get_products(self, cr, uid, ids, context=None):
+        products = []
+        for prodtmpl in self.browse(cr, uid, ids, context=None):
+            products += [x.id for x in prodtmpl.product_variant_ids]
+        return products
+    
+    def _get_act_window_dict(self, cr, uid, name, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.xmlid_to_res_id(cr, uid, name, raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
+        return result
+    
+    def action_open_quants(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
+        return result
+    
+    def action_view_orderpoints(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
+        if len(ids) == 1 and len(products) == 1:
+            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{}"
+        return result
+
+
+    def action_view_stock_moves(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
+        if len(ids) == 1 and len(products) == 1:
+            ctx = "{'tree_view_ref':'stock.view_move_tree', \
+                  'default_product_id': %s, 'search_default_product_id': %s}" \
+                  % (products[0], products[0])
+            result['context'] = ctx
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
+        return result
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'uom_po_id' in vals:
+            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+            if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
+                raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product.") % ())
+        return super(product_template, self).write(cr, uid, ids, vals, context=context)
+
 
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'

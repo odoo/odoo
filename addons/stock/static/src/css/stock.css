@@ -1,115 +1,14 @@
-.oe_product_vignette {
-    padding: 8px 0;
-    min-height: 100px;
-}
-
-.oe_product_img, .oe_product_desc {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.oe_product_img {
-    width: 80px;
-    height: 80px;
-    text-align: center;
-    overflow: hidden;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px;
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-    -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-.oe_product_photo {
-    width: 80px;
-    height: auto;
-    clip: rect(5px, 70px, 75px, 0px);
-}
-
-.oe_product_photo_wide {
-    height: 80px;
-    width: auto;
-    clip: rect(0px, 80px, 70px, 10px);
-}
-
-.oe_product_desc {
-    width: 220px;
-    font-size: 13px;
-    padding: 2px 5px;
-    color: #4c4c4c;
-    min-height: 120px;
-}
-
-.oe_product_desc h4 {
-    margin: 0;
-    font-size: 13px;
-}
-
-.oe_product_desc h4 a {
-    color: #4c4c4c;
-}
-
-.oe_product_desc h4 a:hover {
-    text-decoration: underline;
-}
-
-.oe_product_desc ul {
-    margin: 3px 0 5px;
-    padding: 0;
-    list-style: none;
-}
-
-.oe_product_desc li {
-    margin: 2px 0;
-}
-
 .openerp .oe_kanban_view .oe_kanban_stock_picking_type {
     width: 345px;
     cursor: default;
     min-height: 245px !important;
 }
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list {
-    position: relative;
-    margin: 10px;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div {
-    width: 160px;
-    height: 22px;
-    margin: 0 !important;
-    position: relative;
-    display: inline-block;
-    float: left;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list a:hover {
-    text-decoration: underline !important;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div a:nth-child(2n) {
-    position: absolute;
-    left: 150px;
-    top: 0;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_items_list div:nth-child(2n) a:nth-child(2n) {
-    left: 150px;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_sparkline_bar {
-    height: 20px;
-    width: 66px !important;
-}
-.openerp .oe_kanban_view .oe_kanban_stock_picking_type .oe_picking_type_gauge {
-    position: absolute;
-    left: 10px;
-    top: 100px;
-}
 .openerp .oe_stock_scan_image {
    opacity: 0.2;
-   margin: 0 5px 0; 
+   margin: 0 5px 0;
 }
 .openerp .oe_stock_scan_image:hover {
-   opacity: 1 
+   opacity: 1
 }
 .oe_gauge_labels {
    width: 100%;
@@ -119,4 +18,16 @@
    text-align: center;
    display: inline-block;
    margin: -7px;
+}
+
+.oe_stock_scan_image_btn {
+   /*height : 42px;*/
+}
+.oe_stock_scan_button {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+.openerp .oe_stock_kanban_content {
+  margin-right: 16px;
 }

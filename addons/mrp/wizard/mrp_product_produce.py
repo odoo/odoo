@@ -28,11 +28,11 @@ class mrp_product_produce_line(osv.osv_memory):
     _description = "Product Produce Consume lines"
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', string='Product'),
         'product_qty': fields.float('Quantity (in default UoM)'),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
-        'produce_id': fields.many2one('mrp.product.produce'),
-        'track_production': fields.related('product_id', 'track_production', type='boolean'),
+        'lot_id': fields.many2one('stock.production.lot', string='Lot'),
+        'produce_id': fields.many2one('mrp.product.produce', string="Produce"),
+        'track_production': fields.related('product_id', 'track_production', type='boolean', string="Track Production"),
     }
 
 class mrp_product_produce(osv.osv_memory):
@@ -61,11 +61,13 @@ class mrp_product_produce(osv.osv_memory):
             which the user can still adapt
         """
         prod_obj = self.pool.get("mrp.production")
+        uom_obj = self.pool.get("product.uom")
         production = prod_obj.browse(cr, uid, context['active_id'], context=context)
         consume_lines = []
         new_consume_lines = []
         if product_qty > 0.0:
-            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty=product_qty, context=context)
+            product_uom_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, product_qty, production.product_id.uom_id.id)
+            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty=product_uom_qty, context=context)
         
         for consume in consume_lines:
             new_consume_lines.append([0, False, consume])
@@ -88,8 +90,8 @@ class mrp_product_produce(osv.osv_memory):
         for move in prod.move_created_ids2:
             if move.product_id == prod.product_id:
                 if not move.scrapped:
-                    done += move.product_qty
-        return (prod.product_qty - done) or prod.product_qty
+                    done += move.product_uom_qty # As uom of produced products and production order should correspond
+        return prod.product_qty - done
 
     def _get_product_id(self, cr, uid, context=None):
         """ To obtain product id

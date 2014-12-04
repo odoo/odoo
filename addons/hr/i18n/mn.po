@@ -1,418 +1,78 @@
-# #-#-#-#-#  mn2.po (OpenERP Server 6.0.0-rc1)  #-#-#-#-#
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr
-#
-# #-#-#-#-#  hr_i18n_hr-mn.po (openobject-addons)  #-#-#-#-#
 # Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:41+0000\n"
-"Last-Translator: Unurjargal <unuruu25@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:10+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr
-#: model:process.node,name:hr.process_node_openerpuser0
-msgid "Openerp user"
-msgstr "Openerp хэрэглэгч"
+#: code:addons/hr/hr.py:158
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "Allow timesheets validation by managers"
-msgstr "Менежер цагийн хуваарийг баталгаажуулж зөвшөөрөх"
-
-#. module: hr
-#: field:hr.job,requirements:0
-msgid "Requirements"
-msgstr "Шаардлагууд"
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Link the employee to information"
-msgstr "Ажилтны мэдээлэл руу шилжих"
-
-#. module: hr
-#: field:hr.employee,sinid:0
-msgid "SIN No"
-msgstr "Даатгалын дугаар"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard
-#: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_reporting
-#: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
-msgid "Human Resources"
-msgstr "Хүний нөөц"
-
-#. module: hr
-#: help:hr.employee,image_medium:0
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
-"Medium-sized photo of the employee. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new employee.\n"
+"              </p><p>\n"
+"                With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each "
+"person;\n"
+"                contact data, job position, availability, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Ажилчны дунд хэмжээт зураг. Энэ нь автоматаар 128x128px хэмжээтэй болно, "
-"гэхдээ харьцаа нь хадгалагдана. Энэ талбарыг форм харагдац болон канбан "
-"харагдацад харагдана."
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Time Tracking"
-msgstr "Ирц, цагийн хяналт"
-
-#. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-msgid "Group By..."
-msgstr "Бүлэглэх..."
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Алба, хэлтсүүдээ үүсгэх"
-
-#. module: hr
-#: help:hr.job,no_of_employee:0
-msgid "Number of employees currently occupying this job position."
-msgstr "Ажлын байран дахь ажилчдын тоо."
-
-#. module: hr
-#: field:hr.config.settings,module_hr_evaluation:0
-msgid "Organize employees periodic evaluation"
-msgstr "Тогтмол хугацаат ажилчны үнэлгээг зохион байгуулах"
-
-#. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: model:ir.model,name:hr.model_hr_department
-msgid "Department"
-msgstr "Хэлтэс"
-
-#. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr "Ажлын и-мэйл"
-
-#. module: hr
-#: help:hr.employee,image:0
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
-"This field holds the image used as photo for the employee, limited to "
-"1024x1024px."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a department.\n"
+"              </p><p>\n"
+"                Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Энэ талбар нь ажилчны зурагийг хадгалахад хэрэглэгддэг бөгөөд хэмжээ нь "
-"1024x1024px-р хязгаарлагдана."
 
 #. module: hr
-#: help:hr.config.settings,module_hr_holidays:0
-msgid "This installs the module hr_holidays."
-msgstr "hr_holidays модулийг суулгах."
-
-#. module: hr
-#: view:hr.job:0
-msgid "Jobs"
-msgstr "Ажлын байр"
-
-#. module: hr
-#: view:hr.job:0
-msgid "In Recruitment"
-msgstr "Хүний нөөцийн бүрдүүлэлтэд"
-
-#. module: hr
-#: field:hr.job,message_unread:0
-msgid "Unread Messages"
-msgstr "Уншаагүй зурвасууд"
-
-#. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,company_id:0
-msgid "Company"
-msgstr "Компани"
-
-#. module: hr
-#: field:hr.job,no_of_recruitment:0
-msgid "Expected in Recruitment"
-msgstr "Хүний нөөцийн бүрдүүлэлтээр хүлээгдсэн"
-
-#. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr "Холбоотой ажилчид"
-
-#. module: hr
-#: constraint:hr.employee.category:0
-msgid "Error! You cannot create recursive Categories."
-msgstr "Алдаа! Та рекурс ангилал үүсгэж чадахгүй."
-
-#. module: hr
-#: help:hr.config.settings,module_hr_recruitment:0
-msgid "This installs the module hr_recruitment."
-msgstr "hr_recruitment модулийг суулгах."
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Birth"
-msgstr "Төрсөн"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Employee Tags"
-msgstr "Ажилтны Пайзууд"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Launch Recruitement"
-msgstr "Ажил авалтыг эхлүүлэх"
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_employeeuser0
-msgid "Link a user to an employee"
-msgstr "Хэрэглэгчид ажилтныг харгалзуул"
-
-#. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "Толгой хэлтэс"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Leaves"
-msgstr "Амралт, чөлөө"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "Гэрлэсэн"
-
-#. module: hr
-#: field:hr.job,message_ids:0
-msgid "Messages"
-msgstr "Зурвасууд"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Talent Management"
-msgstr "Авъяасын менежмент"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "This installs the module hr_timesheet_sheet."
-msgstr "hr_timesheet_sheet модулийг суулгах."
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Mobile:"
-msgstr "Гар утас:"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Position"
-msgstr "Албан тушаал"
-
-#. module: hr
-#: help:hr.job,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr
-#: field:hr.employee,color:0
-msgid "Color Index"
-msgstr "Өнгөний Индекс"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid ""
-"The Related user field on the Employee form allows to link the OpenERP user "
-"(and her rights) to the employee."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new department.\n"
+"              </p><p>\n"
+"                Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Ажилтан маягтын холбоотой хэрэглэх талбар нь OpenERP хэрэглэгчийн ажилтантай "
-"холбодог"
-
-#. module: hr
-#: field:hr.employee,image_medium:0
-msgid "Medium-sized photo"
-msgstr "Дунд хэмжээт фото"
-
-#. module: hr
-#: field:hr.employee,identification_id:0
-msgid "Identification No"
-msgstr "Ялгах дугаар"
-
-#. module: hr
-#: selection:hr.employee,gender:0
-msgid "Female"
-msgstr "Эмэгтэй"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
-msgid "Attendance"
-msgstr "Ирц"
-
-#. module: hr
-#: field:hr.employee,work_phone:0
-msgid "Work Phone"
-msgstr "Ажлын утас"
-
-#. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Child Categories"
-msgstr "Хүү зэрэглэл"
-
-#. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
-msgid "Job Description"
-msgstr "Ажлын байрны тодорхойлолт"
-
-#. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "Ажлын байршил"
-
-#. module: hr
-#: field:hr.job,message_follower_ids:0
-msgid "Followers"
-msgstr "Дагагчид"
-
-#. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
-#: model:process.node,name:hr.process_node_employee0
-msgid "Employee"
-msgstr "Ажилтан"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Other information"
-msgstr "Бусад мэдээлэл"
-
-#. module: hr
-#: help:hr.employee,image_small:0
-msgid ""
-"Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Ажилчны жижиг хэмжээт зураг. Энэ нь автоматаар 64x64px хэмжээтэй болох "
-"бөгөөд харьцаа нь хадгалагдана. Жижиг хэмжээтэй зураг хэрэг болсон хаана ч "
-"хамаагүй үүнийг хэрэглэж болно."
-
-#. module: hr
-#: field:hr.employee,birthday:0
-msgid "Date of Birth"
-msgstr "Төрсөн огноо"
-
-#. module: hr
-#: help:hr.job,no_of_recruitment:0
-msgid "Number of new employees you expect to recruit."
-msgstr "Ажилд авахаар таамагласан шинэ ажилчдын тоо."
-
-#. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr "Хүний Нөөц Менюг Нээх"
-
-#. module: hr
-#: help:hr.job,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
-"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
-
-#. module: hr
-#: help:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
-"Энэ нь account_analytic_analysis модулийг суулгана. Энэ нь sales модулийг "
-"мөн суулгана."
-
-#. module: hr
-#: view:board.board:0
-msgid "Human Resources Dashboard"
-msgstr "Хүний нөөцийн хянах самбар"
-
-#. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
-msgid "Job"
-msgstr "Ажлын байр"
-
-#. module: hr
-#: field:hr.job,no_of_employee:0
-msgid "Current Number of Employees"
-msgstr "Ажилчдын одоогийн тоо"
-
-#. module: hr
-#: field:hr.department,member_ids:0
-msgid "Members"
-msgstr "Гишүүд"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "Тохиргоо"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "Ажилтны маягт, бүтэц"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_expense:0
-msgid "Manage employees expenses"
-msgstr "Ажилчдын зардлын удирдлага"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Tel:"
-msgstr "Утас:"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Divorced"
-msgstr "Салсан"
-
-#. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent Category"
-msgstr "Харьяалагдах зэрэглэл"
-
-#. module: hr
-#: view:hr.department:0
-#: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.ui.menu,name:hr.menu_hr_department_tree
-msgid "Departments"
-msgstr "Хэлтсүүд"
-
-#. module: hr
-#: model:process.node,name:hr.process_node_employeecontact0
-msgid "Employee Contact"
-msgstr "Ажилтны хөдөлмөрийн гэрээ"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ хэлтэс үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Хэлтсийн бүтэц нь ажилтанд хамаарах бүх баримтын "
+"менежментийг \n"
+"                хэлтсээр гүйцэтгэхэд хэрэглэгдэн: зардал, цагийн хуудас, "
+"амралт \n"
+"                чөлөө, ажилтан авах, гм.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -450,349 +110,14 @@ msgstr ""
 "            "
 
 #. module: hr
-#: selection:hr.employee,gender:0
-msgid "Male"
-msgstr "Эрэгтэй"
-
-#. module: hr
-#: view:hr.employee:0
-msgid ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_evaluation:0
-msgid "This installs the module hr_evaluation."
-msgstr "hr_evalution модулийг суулгах."
-
-#. module: hr
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Алдаа! Тойрог хамааралтай ажилчдыг үүсгэх боломжгүй."
-
-#. module: hr
-#: help:hr.config.settings,module_hr_attendance:0
-msgid "This installs the module hr_attendance."
-msgstr "hr_attendance модулийг суулгах."
-
-#. module: hr
-#: field:hr.employee,image_small:0
-msgid "Smal-sized photo"
-msgstr "Жижиг хэмжээт фото"
-
-#. module: hr
-#: view:hr.employee.category:0
-#: model:ir.model,name:hr.model_hr_employee_category
-msgid "Employee Category"
-msgstr "Ажилтны зэрэглэл"
-
-#. module: hr
-#: field:hr.employee,category_ids:0
-msgid "Tags"
-msgstr "Пайзууд"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_contract:0
-msgid "This installs the module hr_contract."
-msgstr "hr_contract модулийг суулгах."
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Related User"
-msgstr "Холбоотой хэрэглэгч"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "or"
-msgstr "эсвэл"
-
-#. module: hr
-#: field:hr.employee.category,name:0
-msgid "Category"
-msgstr "Зэрэглэл"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Stop Recruitment"
-msgstr "Ажилтан авах ажлыг зогсоох"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_attendance:0
-msgid "Install attendances feature"
-msgstr "Ирцийн боломжийг суулгах"
-
-#. module: hr
-#: help:hr.employee,bank_account_id:0
-msgid "Employee bank salary account"
-msgstr "банк дах ажилтны цалингийн данс"
-
-#. module: hr
-#: field:hr.department,note:0
-msgid "Note"
-msgstr "Тэмдэглэл"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_tree
-msgid "Employees Structure"
-msgstr "Ажилчдын бүтэц"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Contact Information"
-msgstr "Холбоо барих мэдээлэл"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_holidays:0
-msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
-"Амралт, чөлөөний хүсэлт, амралт, чөлөө хуваарилах хүсэлтийг менежмент хийх"
-
-#. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Хүү хэлтэсүүд"
-
-#. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
-msgid "Status"
-msgstr "Төлөв"
-
-#. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other Id"
-msgstr "Бусад дугаар"
-
-#. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract"
-msgstr "Ажилтны хөдөлмөрийн гэрээ"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Contracts"
-msgstr "Гэрээнүүд"
-
-#. module: hr
-#: help:hr.job,message_ids:0
-msgid "Messages and communication history"
-msgstr "Зурвас болон харилцсан түүх"
-
-#. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "Регистр"
-
-#. module: hr
-#: field:hr.job,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Дагагч эсэх"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_recruitment:0
-msgid "Manage the recruitment process"
-msgstr "Ажилтан авах процессыг менежмент хийх"
-
-#. module: hr
-#: view:hr.employee:0
+#: view:hr.employee:hr.view_employee_form
 msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Human Resources Management"
-msgstr "Хүний нөөцийн менежмент"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Install your country's payroll"
-msgstr "Өөрийн улсын цалинг суулгах"
-
-#. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account Number"
-msgstr "Банкны дансны дугаар"
-
-#. module: hr
-#: view:hr.department:0
-msgid "Companies"
-msgstr "Компаниуд"
-
-#. module: hr
-#: field:hr.job,message_summary:0
-msgid "Summary"
-msgstr "Хураангуй"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid ""
-"In the Employee form, there are different kind of information like Contact "
-"information."
-msgstr "Ажилтны маягт дээр холбоо барих хаяг шиг янз бүрийн мэдээлэл бий."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new employee.\n"
-"              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
-"                contact data, job position, availability, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Шинэ ажилтан нэмэхдээ дарна.\n"
-"              </p><p>\n"
-"                Товчхондоо бол OpenERP-н ажилтны дэлгэцээс ажилтны талаарх "
-"бүх \n"
-"                шаардлагатай мэдээллийг хүн бүрээр олж харах боломжийг өгнө; "
-"\n"
-"                холбогдох хаяг, ажлын байр, бэлэн байдал, гм.\n"
-"              </p>\n"
-"            "
-
-#. module: hr
-#: view:hr.employee:0
-msgid "HR Settings"
-msgstr "HR тохиргоонууд"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Citizenship & Other Info"
-msgstr "Иргэний харьяалал & Бусад мэдээлэл"
-
-#. module: hr
-#: constraint:hr.department:0
-msgid "Error! You cannot create recursive departments."
-msgstr "Алдаа! Та рекурс хэлтэсүүд үүсгэж чадахгүй."
-
-#. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Ажлын хаяг"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Public Information"
-msgstr "Бүх мэдээлэл"
-
-#. module: hr
-#: field:hr.employee,marital:0
-msgid "Marital Status"
-msgstr "Гэрлэлтийн байдал"
-
-#. module: hr
-#: model:ir.model,name:hr.model_ir_actions_act_window
-msgid "ir.actions.act_window"
-msgstr "ir.actions.act_window"
-
-#. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
-msgstr "Сүүлийн холболт"
-
-#. module: hr
-#: field:hr.employee,image:0
-msgid "Photo"
-msgstr "Зураг"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a department.\n"
-"              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
-"                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Хэлтэс үүсгэхдээ дарна.\n"
-"              </p><p>\n"
-"                OpenERP-н хэлтсийн бүтэц нь ажилтанд холбогдох бүх баримтыг "
-"\n"
-"                менежмент хийхэд хэрэглэгдэнэ: зардал, цагийн хуудас, \n"
-"                амралт-чөлөө, ажилтан авах, гм\n"
-"              </p>\n"
-"            "
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet:0
-msgid "This installs the module hr_timesheet."
-msgstr "hr_timesheet модулийг суулгах"
-
-#. module: hr
-#: help:hr.job,expected_employees:0
-msgid ""
-"Expected number of employees for this job position after new recruitment."
-msgstr ""
-"Шинэ ажилтан авах ажил явагдсан дараах энэ ажлын байр дахь таамаглаж байгаа "
-"ажилтны тоо."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new department.\n"
-"              </p><p>\n"
-"                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Шинэ хэлтэс үүсгэхдээ дарна.\n"
-"              </p><p>\n"
-"                Хэлтсийн бүтэц нь ажилтанд хамаарах бүх баримтын "
-"менежментийг \n"
-"                хэлтсээр гүйцэтгэхэд хэрэглэгдэн: зардал, цагийн хуудас, "
-"амралт \n"
-"                чөлөө, ажилтан авах, гм.\n"
-"              </p>\n"
-"            "
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Personal Information"
-msgstr "Хувийн мэдээлэл"
-
-#. module: hr
-#: field:hr.employee,city:0
-msgid "City"
-msgstr "Хот"
-
-#. module: hr
-#: field:hr.employee,passport_id:0
-msgid "Passport No"
-msgstr "Пасспортын дугаар"
-
-#. module: hr
-#: field:hr.employee,mobile_phone:0
-msgid "Work Mobile"
-msgstr "Ажлын гар утас"
-
-#. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitement in Progress"
-msgstr "Явагдаж байгаа ажилтан авах процесс"
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Additional Features"
+msgstr "Нэмэлт боломжууд"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
@@ -803,94 +128,214 @@ msgstr ""
 "болно)"
 
 #. module: hr
-#: view:hr.employee.category:0
-msgid "Employees Categories"
-msgstr "Ажилчдын зэрэглэл"
+#: field:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "Allow timesheets validation by managers"
+msgstr "Менежер цагийн хуваарийг баталгаажуулж зөвшөөрөх"
 
 #. module: hr
-#: field:hr.employee,address_home_id:0
-msgid "Home Address"
-msgstr "Гэрийн хаяг"
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Apply"
+msgstr "Ашиглах"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet:0
-msgid "Manage timesheets"
-msgstr "Цагийн хуудсын менежмент"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendance"
+msgstr "Ирц"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_payroll_modules
-msgid "Payroll"
-msgstr "Цалингийн цэс"
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr "Банкны дансны дугаар"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Single"
-msgstr "Ганц бие"
+#: view:hr.employee:hr.view_employee_form
+msgid "Birth"
+msgstr "Төрсөн"
 
 #. module: hr
-#: field:hr.job,name:0
-msgid "Job Name"
-msgstr "Ажлын байрны нэр"
+#: help:hr.job,state:0
+msgid ""
+"By default 'Closed', set it to 'In Recruitment' if recruitment process is "
+"going on for this job position."
+msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-msgid "In Position"
-msgstr "Нээлттэй"
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Cancel"
+msgstr "Цуцлах"
 
 #. module: hr
-#: help:hr.config.settings,module_hr_payroll:0
-msgid "This installs the module hr_payroll."
-msgstr "hr_payroll модулийг суулгах"
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr "Хүү зэрэглэл"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_contract:0
-msgid "Record contracts per employee"
-msgstr "Ажилтнуудын гэрээний баримт"
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Хүү хэлтэсүүд"
 
 #. module: hr
-#: view:hr.department:0
-msgid "department"
+#: view:hr.employee:hr.view_employee_form
+msgid "Citizenship & Other Info"
+msgstr "Иргэний харьяалал & Бусад мэдээлэл"
+
+#. module: hr
+#: field:hr.employee,city:0
+msgid "City"
+msgstr "Хот"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "Дадлагажуулагч"
+
+#. module: hr
+#: field:hr.employee,color:0
+msgid "Color Index"
+msgstr "Өнгөний Индекс"
+
+#. module: hr
+#: view:hr.department:hr.view_department_tree
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: hr
+#: field:hr.department,company_id:0
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,company_id:0
+msgid "Company"
+msgstr "Компани"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Тохиргоо"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
+msgid "Configure Human Resources"
+msgstr "Хүний нөөцийн тохиргоо"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Contact Information"
+msgstr "Холбоо барих мэдээлэл"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Contracts"
+msgstr "Гэрээнүүд"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "Алба, хэлтсүүдээ үүсгэх"
+
+#. module: hr
+#: field:hr.config.settings,create_uid:0
+#: field:hr.department,create_uid:0
+#: field:hr.employee,create_uid:0
+#: field:hr.employee.category,create_uid:0
+#: field:hr.job,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,create_date:0
+#: field:hr.department,create_date:0
+#: field:hr.employee,create_date:0
+#: field:hr.employee.category,create_date:0
+#: field:hr.job,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "Current Number of Employees"
+msgstr "Ажилчдын одоогийн тоо"
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "Төрсөн огноо"
+
+#. module: hr
+#: help:hr.employee,message_last_post:0
+#: help:hr.job,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: hr
+#: view:hr.department:hr.view_department_filter
+#: view:hr.employee:hr.view_employee_filter
+#: field:hr.employee,department_id:0
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,department_id:0
+msgid "Department"
 msgstr "Хэлтэс"
 
 #. module: hr
-#: field:hr.employee,country_id:0
-msgid "Nationality"
-msgstr "Үндэстэн"
+#: field:hr.department,name:0
+msgid "Department Name"
+msgstr "Хэлтэсийн нэр"
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Additional Features"
-msgstr "Нэмэлт боломжууд"
+#: view:hr.department:hr.view_department_filter
+#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+msgid "Departments"
+msgstr "Хэлтсүүд"
 
 #. module: hr
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "Тэмдэглэл"
+#: field:res.users,display_employees_suggestions:0
+msgid "Display Employees Suggestions"
+msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Subordinate Hierarchy"
-msgstr "Удирдах Мөчир"
+#: selection:hr.employee,marital:0
+msgid "Divorced"
+msgstr "Салсан"
 
 #. module: hr
-#: field:hr.employee,resource_id:0
-msgid "Resource"
-msgstr "Нөөц"
+#: field:hr.config.settings,module_hr_gamification:0
+msgid "Drive engagement with challenges and badges"
+msgstr ""
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Нэр"
+#: view:hr.employee:hr.view_employee_form
+#: model:ir.model,name:hr.model_hr_employee
+msgid "Employee"
+msgstr "Ажилтан"
 
 #. module: hr
-#: field:hr.employee,gender:0
-msgid "Gender"
-msgstr "Хүйс"
+#: view:hr.employee.category:hr.view_employee_category_form
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "Ажилтны зэрэглэл"
 
 #. module: hr
-#: view:hr.employee:0
+#: field:hr.employee.category,name:0
+msgid "Employee Tag"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
+msgstr "Ажилтны Пайзууд"
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "банк дах ажилтны цалингийн данс"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.employee:hr.view_employee_tree
+#: view:hr.employee:hr.view_partner_tree2
 #: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
@@ -901,45 +346,241 @@ msgid "Employees"
 msgstr "Ажилчид"
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr "Нийгмийн даатгалын дугаар"
+#: view:hr.employee.category:hr.view_employee_category_list
+#: view:hr.employee.category:hr.view_employee_category_tree
+msgid "Employees Categories"
+msgstr "Ажилчдын зэрэглэл"
 
 #. module: hr
-#: field:hr.department,name:0
-msgid "Department Name"
-msgstr "Хэлтэсийн нэр"
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "Ажилчдын бүтэц"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "Тайлан"
+#: constraint:hr.employee.category:0
+msgid "Error! You cannot create recursive Categories."
+msgstr "Алдаа! Та рекурс ангилал үүсгэж чадахгүй."
 
 #. module: hr
-#: field:hr.config.settings,module_hr_payroll:0
-msgid "Manage payroll"
-msgstr "Цалингийн менежмент"
+#: constraint:hr.department:0
+msgid "Error! You cannot create recursive departments."
+msgstr "Алдаа! Та рекурс хэлтэсүүд үүсгэж чадахгүй."
 
 #. module: hr
-#: view:hr.config.settings:0
-#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
-msgid "Configure Human Resources"
-msgstr "Хүний нөөцийн тохиргоо"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "Алдаа! Тойрог хамааралтай ажилчдыг үүсгэх боломжгүй."
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "No Recruitment"
-msgstr "Ажилтан авах процесс алга"
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected New Employees"
+msgstr ""
 
 #. module: hr
-#: help:hr.employee,ssnid:0
-msgid "Social Security Number"
-msgstr "Регистрийн дугаар"
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
+"Шинэ ажилтан авах ажил явагдсан дараах энэ ажлын байр дахь таамаглаж байгаа "
+"ажилтны тоо."
 
 #. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Creation of a OpenERP user"
-msgstr "OpenERP хэрэглэгчийг үүсгэх"
+#: selection:hr.employee,gender:0
+msgid "Female"
+msgstr "Эмэгтэй"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/xml/suggestions.xml:29
+#: view:hr.employee:hr.hr_kanban_view_employees
+#, python-format
+msgid "Follow"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_follower_ids:0
+#: field:hr.job,message_follower_ids:0
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: hr
+#: view:hr.employee:hr.hr_kanban_view_employees
+msgid "Following"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,gender:0
+msgid "Gender"
+msgstr "Хүйс"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_job_filter
+msgid "Group By"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR тохиргоонууд"
+
+#. module: hr
+#: field:hr.job,no_of_hired_employee:0
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,message_summary:0
+#: help:hr.job,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+
+#. module: hr
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
+msgstr "Гэрийн хаяг"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
+#: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+msgid "Human Resources"
+msgstr "Хүний нөөц"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Human Resources Management"
+msgstr "Хүний нөөцийн менежмент"
+
+#. module: hr
+#: field:hr.config.settings,id:0
+#: field:hr.department,id:0
+#: field:hr.employee,id:0
+#: field:hr.employee.category,id:0
+#: field:hr.job,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "Ялгах дугаар"
+
+#. module: hr
+#: help:hr.employee,message_unread:0
+#: help:hr.job,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: hr
+#: view:hr.job:hr.view_job_filter
+msgid "In Position"
+msgstr "Нээлттэй"
+
+#. module: hr
+#: view:hr.job:hr.view_job_filter
+msgid "In Recruitment"
+msgstr "Хүний нөөцийн бүрдүүлэлтэд"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_attendance:0
+msgid "Install attendances feature"
+msgstr "Ирцийн боломжийг суулгах"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Install your country's payroll"
+msgstr "Өөрийн улсын цалинг суулгах"
+
+#. module: hr
+#: field:hr.employee,message_is_follower:0
+#: field:hr.job,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Дагагч эсэх"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_filter
+#: view:hr.job:hr.view_hr_job_form
+#: view:hr.job:hr.view_hr_job_tree
+#: view:hr.job:hr.view_job_filter
+msgid "Job"
+msgstr "Ажлын байр"
+
+#. module: hr
+#: field:hr.job,description:0
+msgid "Job Description"
+msgstr "Ажлын байрны тодорхойлолт"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "Ажлын байрны нэр"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Position"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job_position
+msgid "Job Positions"
+msgstr "Ажлын байрууд"
+
+#. module: hr
+#: field:hr.employee,job_id:0
+msgid "Job Title"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,jobs_ids:0
+#: view:hr.job:hr.view_job_filter
+msgid "Jobs"
+msgstr "Ажлын байр"
+
+#. module: hr
+#: field:hr.employee,message_last_post:0
+#: field:hr.job,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,write_uid:0
+#: field:hr.department,write_uid:0
+#: field:hr.employee,write_uid:0
+#: field:hr.employee.category,write_uid:0
+#: field:hr.job,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr
+#: field:hr.config.settings,write_date:0
+#: field:hr.department,write_date:0
+#: field:hr.employee,write_date:0
+#: field:hr.employee.category,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr "Сүүлийн холболт"
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "Launch Recruitment"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
+msgstr "Амралт, чөлөө"
 
 #. module: hr
 #: field:hr.employee,login:0
@@ -947,96 +588,293 @@ msgid "Login"
 msgstr "Нэвтрэх"
 
 #. module: hr
-#: field:hr.job,expected_employees:0
-msgid "Total Forecasted Employees"
-msgstr "Таамаглагдсан нийт ажилтан"
+#: selection:hr.employee,gender:0
+msgid "Male"
+msgstr "Эрэгтэй"
 
 #. module: hr
-#: help:hr.job,state:0
-msgid ""
-"By default 'In position', set it to 'In Recruitment' if recruitment process "
-"is going on for this job position."
+#: field:hr.config.settings,module_hr_expense:0
+msgid "Manage employees expenses"
+msgstr "Ажилчдын зардлын удирдлага"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_holidays:0
+msgid "Manage holidays, leaves and allocation requests"
 msgstr ""
-"Анхныхаар 'Байрандаа', Хэрэв ажилтан авах ажил энэ ажлын байранд явагдаж "
-"байгаа бол 'Ажилтан авч буй' болгож тааруулна."
+"Амралт, чөлөөний хүсэлт, амралт, чөлөө хуваарилах хүсэлтийг менежмент хийх"
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_users
-msgid "Users"
-msgstr "Хэрэглэгчид"
+#: field:hr.config.settings,module_hr_payroll:0
+msgid "Manage payroll"
+msgstr "Цалингийн менежмент"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job
-msgid "Job Positions"
-msgstr "Ажлын байрууд"
+#: field:hr.config.settings,module_hr_recruitment:0
+msgid "Manage the recruitment process"
+msgstr "Ажилтан авах процессыг менежмент хийх"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_board_hr
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Human Resources dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Хүнийн Нөөцийн хянах самбар хоосон байна.</b>\n"
-"                  </p><p>\n"
-"                    Хянах самбарт ямарваа тайлан нэмэхдээ альч хамаагүй "
-"жагсаалт, \n"
-"                    график гэх мэт дэлгэцрүү ороод <i>'Хянах самбарт "
-"нэмэх'</i>-г \n"
-"                    өргөтгөсөн хайлтаас дарна.\n"
-"                  </p><p>\n"
-"                    Хянах самбарт нэмэхээсээ өмнө бүлэглэх, хайх "
-"сонголтуудыг хийж болно.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-
-#. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
-msgid "Coach"
-msgstr "Дадлагажуулагч"
-
-#. module: hr
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "Нэг компаний ажлын байруудын нэр давхцаж болохгүй!"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_expense:0
-msgid "This installs the module hr_expense."
-msgstr "hr_expense модулийг суулгах"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.settings"
+#: field:hr.config.settings,module_hr_timesheet:0
+msgid "Manage timesheets"
+msgstr "Цагийн хуудсын менежмент"
 
 #. module: hr
 #: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: view:hr.employee:hr.view_employee_filter
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Менежер"
 
 #. module: hr
+#: field:hr.employee,marital:0
+msgid "Marital Status"
+msgstr "Гэрлэлтийн байдал"
+
+#. module: hr
 #: selection:hr.employee,marital:0
-msgid "Widower"
-msgstr "Бэлэвсэн"
+msgid "Married"
+msgstr "Гэрлэсэн"
+
+#. module: hr
+#: field:hr.employee,image_medium:0
+msgid "Medium-sized photo"
+msgstr "Дунд хэмжээт фото"
+
+#. module: hr
+#: help:hr.employee,image_medium:0
+msgid ""
+"Medium-sized photo of the employee. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
+"Ажилчны дунд хэмжээт зураг. Энэ нь автоматаар 128x128px хэмжээтэй болно, "
+"гэхдээ харьцаа нь хадгалагдана. Энэ талбарыг форм харагдац болон канбан "
+"харагдацад харагдана."
+
+#. module: hr
+#: field:hr.department,member_ids:0
+msgid "Members"
+msgstr "Гишүүд"
+
+#. module: hr
+#: field:hr.employee,message_ids:0
+#: field:hr.job,message_ids:0
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: hr
+#: help:hr.employee,message_ids:0
+#: help:hr.job,message_ids:0
+msgid "Messages and communication history"
+msgstr "Зурвас болон харилцсан түүх"
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Нэр"
+
+#. module: hr
+#: field:hr.employee,country_id:0
+msgid "Nationality"
+msgstr "Үндэстэн"
+
+#. module: hr
+#: field:hr.department,note:0
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: hr
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Тэмдэглэл"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees currently occupying this job position."
+msgstr "Ажлын байран дахь ажилчдын тоо."
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid ""
+"Number of hired employee must be less than expected number of employee in "
+"recruitment."
+msgstr ""
+
+#. module: hr
+#: help:hr.job,no_of_hired_employee:0
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
+msgstr ""
+
+#. module: hr
+#: help:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr "Ажилд авахаар таамагласан шинэ ажилчдын тоо."
+
+#. module: hr
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "Ажлын байршил"
+
+#. module: hr
+#: model:ir.actions.client,name:hr.action_client_hr_menu
+msgid "Open HR Menu"
+msgstr "Хүний Нөөц Менюг Нээх"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_evaluation:0
+msgid "Organize employees periodic evaluation"
+msgstr "Тогтмол хугацаат ажилчны үнэлгээг зохион байгуулах"
+
+#. module: hr
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr "Бусад дугаар"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Other Information ..."
+msgstr "Бусад Мэдээлэл ..."
+
+#. module: hr
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "Толгой хэлтэс"
+
+#. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Employee Tag"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "Пасспортын дугаар"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
+msgid "Payroll"
+msgstr "Цалингийн цэс"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Personal Information"
+msgstr "Хувийн мэдээлэл"
+
+#. module: hr
+#: field:hr.employee,image:0
+msgid "Photo"
+msgstr "Зураг"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Position"
+msgstr "Албан тушаал"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Public Information"
+msgstr "Бүх мэдээлэл"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_contract:0
+msgid "Record contracts per employee"
+msgstr "Ажилтнуудын гэрээний баримт"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment Closed"
+msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment in Progress"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Related User"
+msgstr "Холбоотой хэрэглэгч"
+
+#. module: hr
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr "Холбоотой ажилчид"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+msgid "Reports"
+msgstr "Тайлан"
+
+#. module: hr
+#: field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "Шаардлагууд"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "Нөөц"
+
+#. module: hr
+#: field:hr.employee,sinid:0
+msgid "SIN No"
+msgstr "Даатгалын дугаар"
+
+#. module: hr
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "Регистр"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Single"
+msgstr "Ганц бие"
+
+#. module: hr
+#: field:hr.employee,image_small:0
+msgid "Small-sized photo"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,image_small:0
+msgid ""
+"Small-sized photo of the employee. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Ажилчны жижиг хэмжээт зураг. Энэ нь автоматаар 64x64px хэмжээтэй болох "
+"бөгөөд харьцаа нь хадгалагдана. Жижиг хэмжээтэй зураг хэрэг болсон хаана ч "
+"хамаагүй үүнийг хэрэглэж болно."
+
+#. module: hr
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "Нийгмийн даатгалын дугаар"
+
+#. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "Регистрийн дугаар"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+#: view:hr.job:hr.view_job_filter
+#: field:hr.job,state:0
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "Stop Recruitment"
+msgstr "Ажилтан авах ажлыг зогсоох"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordinate Hierarchy"
+msgstr "Удирдах Мөчир"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -1044,432 +882,180 @@ msgid "Subordinates"
 msgstr "Харьяалагдсан"
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Apply"
-msgstr "Ашиглах"
-
-#~ msgid "Sunday"
-#~ msgstr "Ням"
-
-#~ msgid "Friday"
-#~ msgstr "Баасан"
-
-#~ msgid "Reporting"
-#~ msgstr "Тайлан"
-
-#~ msgid "Tuesday"
-#~ msgstr "Мягмар"
-
-#~ msgid "Create OpenERP User"
-#~ msgstr "OpenERP хэрэглэгч үүсгэх"
-
-#~ msgid "Birthday"
-#~ msgstr "Төрсөн өдөр"
-
-#~ msgid "Monday"
-#~ msgstr "Даваа"
-
-#~ msgid "Wednesday"
-#~ msgstr "Лхагва"
-
-#~ msgid "Starting date"
-#~ msgstr "Эхлэл огноо"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-#~ "болохгүй!"
-
-#~ msgid "Thursday"
-#~ msgstr "Пүрэв"
-
-#~ msgid "Other"
-#~ msgstr "Бусад"
-
-#~ msgid "New Employee"
-#~ msgstr "Шинэ ажилтан"
-
-#~ msgid "Saturday"
-#~ msgstr "Бямба"
-
-#~ msgid "Maried"
-#~ msgstr "Гэрлэсэн"
-
-#~ msgid "Parents"
-#~ msgstr "Эцэг эх"
-
-#~ msgid "Contact  of employee"
-#~ msgstr "Ажилтны гэрээ"
-
-#~ msgid "Group name"
-#~ msgstr "Группын нэр"
-
-#~ msgid "Work from"
-#~ msgstr "Ажлаасаа"
-
-#~ msgid "Unmaried"
-#~ msgstr "Гэрлээгүй"
-
-#~ msgid "Create openerp user"
-#~ msgstr "Openerp хэрэглэгч үүсгэх"
-
-#~ msgid "Categories structure"
-#~ msgstr "Зэрэглэлийн бүтэц"
-
-#~ msgid "Day of week"
-#~ msgstr "7 хоногийн өдөр"
-
-#~ msgid "Employee Contract Process"
-#~ msgstr "Ажилтны гэрээний үйл явц"
-
-#~ msgid "Categories of Employee"
-#~ msgstr "Ажилчдын зэрэглэл"
-
-#~ msgid "Parent Users"
-#~ msgstr "Эцэг хэрэглэгчид"
-
-#~ msgid "Timesheet Line"
-#~ msgstr "Цагийн хуваарийн шугам"
-
-#~ msgid "Working Time"
-#~ msgstr "Ажлын цаг"
-
-#~ msgid "Other ID"
-#~ msgstr "Бусад дугаар"
-
-#~ msgid "Job Information"
-#~ msgstr "Ажлын мэдээлэл"
-
-#~ msgid "All Employees"
-#~ msgstr "Бүх ажилчид"
-
-#~ msgid "Working Time Categories"
-#~ msgstr "Ажиллах цагийн зэрэглэл"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Моделийн нэр алдаатай тодорхойлсон байна."
-
-#~ msgid "Employee Hierarchy"
-#~ msgstr "Ажилтныг шатлан захирах"
-
-#~ msgid "Working Time Category"
-#~ msgstr "Ажиллах цагийн зэрэглэл"
-
-#~ msgid "Workgroup manager"
-#~ msgstr "Ажлын хэсгийн менежер"
-
-#~ msgid "Fill up contact information"
-#~ msgstr "Гэрээний мэдээлэл бөглөх"
-
-#~ msgid "Employee's timesheet group"
-#~ msgstr "Ажилчдын цаг бүртгэлийн груп"
-
-#~ msgid "Employee Complete Form"
-#~ msgstr "Ажилтны анкет бүрдүүлэх"
-
-#~ msgid "Work to"
-#~ msgstr "Ажилруугаа"
-
-#~ msgid "Fill up employee's contact information"
-#~ msgstr "Ажилтны гэрээний мэдээллийг бөглөх"
-
-#~ msgid "Work E-mail"
-#~ msgstr "Ажлын Э-мэйл"
-
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "Алдаа! Рекурс хэлтсүүдийг үүсгэж болохгүй"
-
-#~ msgid "Holidays"
-#~ msgstr "Амралт, чөлөө"
-
-#~ msgid "title"
-#~ msgstr "гарчиг"
-
-#~ msgid "Mark as Old"
-#~ msgstr "Хуучин болгон тэмдэглэх"
-
-#~ msgid "Simplifies the management of employee's attendances."
-#~ msgstr "Ажилтны ирц хөтлөлтийг хялбарчилж өгдөг"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Ажилчдын гэрлэлтийн байдал"
-
-#~ msgid "Tracks employee leaves, allocation requests and planning."
-#~ msgstr "Ажилтны амралт, чөлөө, түүний хуваарилалтын хүсэлтийг хянах"
-
-#~ msgid "My Departments Employee"
-#~ msgstr "Манай хэлтсийн ажилчид"
-
-#~ msgid "Employee Passport Information"
-#~ msgstr "Ажилтны пасспортын мэдээлэл"
-
-#~ msgid "Generic Payroll system."
-#~ msgstr "Цалингийн үндсэн систем"
-
-#~ msgid "Employee's Contracts"
-#~ msgstr "Ажилчдын хөдөлмөрийн гэрээ"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Алдаа! Ажилтан нь менежер байх хэлтсийг сонгож болохгүй."
-
-#~ msgid ""
-#~ "Partner that is related to the current employee. Accounting transaction will "
-#~ "be written on this partner belongs to employee."
-#~ msgstr ""
-#~ "Одоогийн ажилтантай холбоотой харилцагч. Санхүү бүртгэлийн транзакц тухайн "
-#~ "ажилтанд хамаарах харилцагчид хийгдэх болно."
-
-#~ msgid "Social IDs"
-#~ msgstr "Бүртгэлийн дугаарууд"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Ажилчдыг ирц ба цаг бүртгэлийг бүртгэж, батламжлах үйлдлийг зохицуулна"
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Үечилсэн үнэлгээ"
-
-#~ msgid "Timesheets"
-#~ msgstr "Цаг бүртгэл"
-
-#~ msgid "Number of employee with that job."
-#~ msgstr "Энэ албан тушаал дах ажилтны тоо"
-
-#~ msgid "In Recruitement"
-#~ msgstr "Хүний нөөцийн бүрдүүлэлтэд"
-
-#~ msgid "No of Employee"
-#~ msgstr "Ажилтны тоо"
-
-#~ msgid "Human Resources Application Configuration"
-#~ msgstr "Хүний нөөцийн модулийн тохиргоо"
-
-#~ msgid "Expected Employees"
-#~ msgstr "Нийт орон тоо"
-
-#~ msgid "Categories"
-#~ msgstr "Зэрэглэл"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Харагдацын архитектурын xml алдаатай !"
-
-#~ msgid "Image"
-#~ msgstr "Зураг"
-
-#~ msgid "My Board"
-#~ msgstr "Өөрийн хянах самбар"
-
-#~ msgid "Error ! You cannot create recursive Categories."
-#~ msgstr "Алдаа ! Рекурс зэрэглэлийг үүсгэж болохгүй."
-
-#~ msgid "Recruitment Process"
-#~ msgstr "Нөөцийн бүрдүүлэлтийн үйл ажиллагаа"
-
-#~ msgid "It is linked with manager of Department"
-#~ msgstr "Энэ нь хэлтсийн менежертэй холбоотой байна"
-
-#~ msgid ""
-#~ "Lets you create and manage the periodic evaluation and performance review of "
-#~ "employees."
-#~ msgstr ""
-#~ "Ажилтны бүтээмжийн стандарт, үечилсэн үнэлгээг хөтлөх, үүсгэх боломжийг "
-#~ "олгоно."
-
-#~ msgid "HR Manager Dashboard"
-#~ msgstr "Хүний нөөцийн менежерийн хянах самбар"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Алдаа! Ажилтны рекурс мод үүсгэж болохгүй"
-
-#~ msgid "unknown"
-#~ msgstr "Үл мэдэгдэх"
-
-#~ msgid "Holidays / Leaves Management"
-#~ msgstr "Амралт, чөлөө / Амралт, чөлөөний удирдлага"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Тохиргооны явц"
-
-#~ msgid "State"
-#~ msgstr "Төлөв"
-
-#~ msgid "Old"
-#~ msgstr "Хуучин"
-
-#~ msgid "Status Description"
-#~ msgstr "Гэрлэлтийн байдлын тайлбар"
-
-#~ msgid "Required number of Employees in total for that job."
-#~ msgstr "Энэ ажлын байрт харгалзах нийт ажилтны тоо шаардагдаж байна"
-
-#~ msgid "Helps you manage and streamline your recruitment process."
-#~ msgstr "Хүний нөөцийн бүрдүүлэлтийн үйл ажиллагааг удирдахад тусална"
-
-#~ msgid "Payroll Accounting"
-#~ msgstr "Цалингийн санхүү бүртгэл"
-
-#~ msgid "res.users"
-#~ msgstr "Хэрэглэгч"
-
-#~ msgid "Attendances"
-#~ msgstr "Ирцүүд"
-
-#~ msgid "Description"
-#~ msgstr "Тайлбар"
-
-#~ msgid ""
-#~ "Tracks and manages employee expenses, and can automatically re-invoice "
-#~ "clients if the expenses are project-related."
-#~ msgstr ""
-#~ "Зардал нь төсөлтэй холбоотой бол ажилтны зардалыг зохицуулах, хянаж "
-#~ "үйлчлүүлэгчид автоматаар мэдэгдэх боломжтой"
-
-#~ msgid "Current Activity"
-#~ msgstr "Одоогийн ажилбар"
-
-#~ msgid "hr.installer"
-#~ msgstr "ХН-ийн модулийг суулгах"
-
-#~ msgid "HR Manager Board"
-#~ msgstr "Хүний нөөцийн менежерийн самбар"
-
-#~ msgid "Extends employee profiles to help manage their contracts."
-#~ msgstr ""
-#~ "Хөдөлмөрийн гэрээг зохицуулах зорилгоор ажилтны мэдээллийг өргөтгөдөг"
-
-#~ msgid "Expenses"
-#~ msgstr "Зардал"
-
-#~ msgid "Generic Payroll system Integrated with Accountings."
-#~ msgstr "Санхүү бүртгэлтэй нэгдмэл цалингийн ерөнхий систем"
-
-#~ msgid "hr.department"
-#~ msgstr "Хэлтэс"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for human resource management. You can manage:\n"
-#~ "    * Employees and hierarchies : You can define your employee with User and "
-#~ "display hierarchies\n"
-#~ "    * HR Departments\n"
-#~ "    * HR Jobs\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Module for human resource management. You can manage:\n"
-#~ "    * Employees and hierarchies : You can define your employee with User and "
-#~ "display hierarchies\n"
-#~ "    * HR Departments\n"
-#~ "    * HR Jobs\n"
-#~ "    "
-
-#~ msgid "Current"
-#~ msgstr "Одоогийн"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr ""
-#~ "Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
-
-#~ msgid "Configure"
-#~ msgstr "Тохируулах"
-
-#~ msgid ""
-#~ "You can enhance the base HR Application by installing few HR-related "
-#~ "functionalities."
-#~ msgstr ""
-#~ "ХН-н аппликешн баазыг хэдэн ХН-тэй холбоотой функцууд суулган өргөтгөх "
-#~ "боломжтой."
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
-
-#~ msgid "Configure Your Human Resources Application"
-#~ msgstr "Хүний Нөөцийн Аппликэшныг Тохируулах"
-
-#~ msgid ""
-#~ "Here you can manage your work force by creating employees and assigning them "
-#~ "specific properties in the system. Maintain all employee related information "
-#~ "and keep track of anything that needs to be recorded for them. The personal "
-#~ "information tab will help you maintain their identity data. The Categories "
-#~ "tab gives you the opportunity to assign them related employee categories "
-#~ "depending on their position and activities within the company. A category "
-#~ "can be a seniority level within the company or a department. The Timesheets "
-#~ "tab allows to assign them a specific timesheet and analytic journal where "
-#~ "they will be able to enter time through the system. In the note tab, you can "
-#~ "enter text data that should be recorded for a specific employee."
-#~ msgstr ""
-#~ "Энд та ажилтнуудаа үүсгэн тэднийг системдэх тодорхойm төлөв байдалд руу "
-#~ "оруулан өөрийн ажиллах хүчнээ удирдах боломжтой. Ажилтнуудтай холбоотой бүх "
-#~ "мэдээлэл болон ажилтнуудад зориулсан бүх бичлэгүүдийг хадгална уу. Хувийн "
-#~ "мэдээллийн таб нь хувь хүн бүрийн мэдээллийг хадгалахад туслана. Категориуд "
-#~ "таб нь ажилтнуудыг албан тушаал, үйл ажиллагаа дээр нь тулгуурлан холбогдох "
-#~ "категорид хамруулна. Категори нь компани дотор эсвэл хэлтэс дотор ахлах "
-#~ "түвшин болох юм. Цаг бүртгэл таб нь ажилтнуудыг тодорхой цагийн бүртгэлд "
-#~ "болон шинжилгээний бүртгэлд системийн туршид хамруулна."
-
-#~ msgid "Create your Employees"
-#~ msgstr "Ажилчдаа бүртгэх"
-
-#~ msgid "Number of employees with that job."
-#~ msgstr "Ийм албан тушаалтай ажиллагсдын тоо"
-
-#~ msgid "HR Management"
-#~ msgstr "Хүний нөөцийн менежмент"
-
-#~ msgid "Required number of employees in total for that job."
-#~ msgstr "Тус албан тушаалд шаардлагатай нийт ажиллагсдын тоо"
-
-#~ msgid "Number of Employees"
-#~ msgstr "Ажиллагсдын тоо"
-
-#~ msgid "My Departments Jobs"
-#~ msgstr "Миний алба, хэлтсийн ажлын байрууд"
-
-#~ msgid "Dashboard"
-#~ msgstr "Хянах самбар"
-
-#~ msgid ""
-#~ "Job Positions are used to define jobs and their requirements. You can keep "
-#~ "track of the number of employees you have per job position and how many you "
-#~ "expect in the future. You can also attach a survey to a job position that "
-#~ "will be used in the recruitment process to evaluate the applicants for this "
-#~ "job position."
-#~ msgstr ""
-#~ "Албан Тушаал нь ажлын байр болон шаардлагыг тодорхойлдог. Ажлын байруудад "
-#~ "хэдэн ажилтан байгаа, ирээдүйд хэдэн ажилтантай болох гэх мэтийг хянаж "
-#~ "хөтлөх боломжтой. Түүнчлэн ажлын байранд ажилтан авах үед өргөдөл гаргагчийг "
-#~ "үнэлэхтэй холбоотой ярилцлагын асуулт зэрэгийг хавсаргах боломжтой."
-
-#~ msgid "Subordonate Hierarchy"
-#~ msgstr "Мөчирийг Удирдах"
-
-#~ msgid ""
-#~ "Your Company's Department Structure is used to manage all documents related "
-#~ "to employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr ""
-#~ "Танай компаний хэлтсийн бүтэц нь ажилчидтай холбоотой бүх баримтыг хэлтсээр "
-#~ "ангилан зохион байгуулахад хэрэглэгддэг: зардал болон цагийн хуваарь, амралт "
-#~ "болон чөлөө, ажилтан авалт, гм."
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents related to "
-#~ "employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr ""
-#~ "Танай хэлтсийн бүтэц нь ажилчидтай холбоотой бүх баримтыг хэлтсээр ангилан "
-#~ "зохион байгуулахад хэрэглэгддэг: зардал болон цагийн хуваарь, амралт болон "
-#~ "чөлөө, ажилтан авалт, гм."
-
-#~ msgid ""
-#~ "Create employees form and link them to an OpenERP user if you want them to "
-#~ "access this instance. Categories can be set on employees to perform massive "
-#~ "operations on all the employees of the same category, i.e. allocating "
-#~ "holidays."
-#~ msgstr ""
-#~ "Энэ тохиолдол руу хандуулахыг хүсж байгаа бол ажилчны форм болон холбоосыг "
-#~ "үүсгэдэг. Ангилал нь нэг ангилалын ажилчид дээр масс үйлдэл хийх боломжийг "
-#~ "олгодог. Жишээлбэл: амралт хуваарилах"
+#. openerp-web
+#: code:addons/hr/static/src/xml/suggestions.xml:15
+#, python-format
+msgid "Suggested Employees"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_summary:0
+#: field:hr.job,message_summary:0
+msgid "Summary"
+msgstr "Хураангуй"
+
+#. module: hr
+#: field:hr.employee,category_ids:0
+msgid "Tags"
+msgstr "Пайзууд"
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Talent Management"
+msgstr "Авъяасын менежмент"
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid ""
+"The name of the job position must be unique per department in company!"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,image:0
+msgid ""
+"This field holds the image used as photo for the employee, limited to "
+"1024x1024px."
+msgstr ""
+"Энэ талбар нь ажилчны зурагийг хадгалахад хэрэглэгддэг бөгөөд хэмжээ нь "
+"1024x1024px-р хязгаарлагдана."
+
+#. module: hr
+#: help:hr.config.settings,module_account_analytic_analysis:0
+msgid ""
+"This installs the module account_analytic_analysis, which will install sales "
+"management too."
+msgstr ""
+"Энэ нь account_analytic_analysis модулийг суулгана. Энэ нь sales модулийг "
+"мөн суулгана."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_attendance:0
+msgid "This installs the module hr_attendance."
+msgstr "hr_attendance модулийг суулгах."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_contract:0
+msgid "This installs the module hr_contract."
+msgstr "hr_contract модулийг суулгах."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_evaluation:0
+msgid "This installs the module hr_evaluation."
+msgstr "hr_evalution модулийг суулгах."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_expense:0
+msgid "This installs the module hr_expense."
+msgstr "hr_expense модулийг суулгах"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_gamification:0
+msgid "This installs the module hr_gamification."
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_holidays:0
+msgid "This installs the module hr_holidays."
+msgstr "hr_holidays модулийг суулгах."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_payroll:0
+msgid "This installs the module hr_payroll."
+msgstr "hr_payroll модулийг суулгах"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_recruitment:0
+msgid "This installs the module hr_recruitment."
+msgstr "hr_recruitment модулийг суулгах."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet:0
+msgid "This installs the module hr_timesheet."
+msgstr "hr_timesheet модулийг суулгах"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "This installs the module hr_timesheet_sheet."
+msgstr "hr_timesheet_sheet модулийг суулгах."
+
+#. module: hr
+#: view:hr.config.settings:hr.view_human_resources_configuration
+msgid "Time Tracking"
+msgstr "Ирц, цагийн хяналт"
+
+#. module: hr
+#: field:hr.job,expected_employees:0
+msgid "Total Forecasted Employees"
+msgstr "Таамаглагдсан нийт ажилтан"
+
+#. module: hr
+#: view:hr.employee:hr.hr_kanban_view_employees
+msgid "Unfollow"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,message_unread:0
+#: field:hr.job,message_unread:0
+msgid "Unread Messages"
+msgstr "Уншаагүй зурвасууд"
+
+#. module: hr
+#: field:hr.job,write_date:0
+msgid "Update Date"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "Users"
+msgstr "Хэрэглэгчид"
+
+#. module: hr
+#: code:addons/hr/hr.py:273
+#, python-format
+msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Widower"
+msgstr "Бэлэвсэн"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work Email"
+msgstr "Ажлын и-мэйл"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Work Mobile"
+msgstr "Ажлын гар утас"
+
+#. module: hr
+#: field:hr.employee,work_phone:0
+msgid "Work Phone"
+msgstr "Ажлын утас"
+
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Ажлын хаяг"
+
+#. module: hr
+#: view:hr.department:hr.view_department_form
+msgid "department"
+msgstr "Хэлтэс"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "e.g. Part Time"
+msgstr "ж. Хагас Цаг"
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "new employee(s) expected"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:hr.view_hr_job_form
+msgid "no_of_recruitment"
+msgstr ""

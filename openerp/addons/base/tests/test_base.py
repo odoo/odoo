@@ -250,20 +250,24 @@ class test_base(common.TransactionCase):
                                                                        'parent_id': p1.id}))
         p2 = self.res_partner.browse(cr, uid, self.res_partner.search(cr, uid,
                                                                       [('email', '=', 'agr@sunhelm.com')])[0])
+        self.res_partner.write(cr, uid, sunhelm.id, {'child_ids': [(0, 0, {'name': 'Ulrik Greenthorn',
+                                                                           'email': 'ugr@sunhelm.com'})]})
+        p3 = self.res_partner.browse(cr, uid, self.res_partner.search(cr, uid,
+                                                                      [('email', '=', 'ugr@sunhelm.com')])[0])
 
-        for p in (p0, p1, p11, p2):
+        for p in (p0, p1, p11, p2, p3):
             p.refresh()
             self.assertEquals(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
             self.assertEquals(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
         sunhelmvat = 'BE0123456789'
         sunhelm.write({'vat': sunhelmvat})
-        for p in (p0, p1, p11, p2):
+        for p in (p0, p1, p11, p2, p3):
             p.refresh()
             self.assertEquals(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
 
         p1vat = 'BE0987654321'
         p1.write({'vat': p1vat})
-        for p in (sunhelm, p0, p11, p2):
+        for p in (sunhelm, p0, p11, p2, p3):
             p.refresh()
             self.assertEquals(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
 

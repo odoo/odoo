@@ -1,79 +1,26 @@
-# Serbian latin translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Serbian Latin translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-12-23 15:24+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
-"Language-Team: Serbian latin <sr@latin@li.org>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:16+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
-msgid "Turnover"
-msgstr "Obrt"
-
-#. module: product_margin
-#: field:product.product,expected_margin_rate:0
-msgid "Expected Margin (%)"
-msgstr "Očekivana marža (%)"
-
-#. module: product_margin
-#: field:product.margin,from_date:0
-msgid "From"
-msgstr "Od"
-
-#. module: product_margin
-#: help:product.product,total_cost:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
 msgstr ""
-
-#. module: product_margin
-#: field:product.margin,to_date:0
-msgid "To"
-msgstr "Do"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnover - Standard price"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin Rate(%)"
-msgstr ""
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Draft, Open and Paid"
-msgstr "Pripremljeno, Otvoreno i Plaćeno"
-
-#. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "Marže proizvoda"
-
-#. module: product_margin
-#: field:product.product,purchase_avg_price:0
-#: field:product.product,sale_avg_price:0
-msgid "Avg. Unit Price"
-msgstr "Srednja jedinična cijena"
 
 #. module: product_margin
 #: field:product.product,sale_num_invoiced:0
@@ -81,77 +28,14 @@ msgid "# Invoiced in Sale"
 msgstr ""
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Catalog Price"
-msgstr "Kataloška cena"
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Paid"
-msgstr "Plaćeno"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "Razmak u prodaji"
-
-#. module: product_margin
-#: help:product.product,sales_gap:0
-msgid "Expected Sale - Turn Over"
-msgstr "Ocekivana Prodaja  - Obrt"
-
-#. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Očekivana prodaja"
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Standard Price"
-msgstr "Standardna cena"
-
-#. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Suma količina na dobavljačevim fakturama"
-
-#. module: product_margin
-#: field:product.product,date_to:0
-msgid "Margin Date To"
-msgstr ""
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Kriterijum Analize"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,total_cost:0
-msgid "Total Cost"
-msgstr "Ukupni trošak"
-
-#. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,expected_margin:0
-msgid "Expected Margin"
-msgstr "Očekivana marža"
-
-#. module: product_margin
-#: view:product.product:0
+#: view:product.product:product_margin.view_product_margin_tree
 msgid "#Purchased"
 msgstr "# Kupljeno"
 
 #. module: product_margin
-#: help:product.product,expected_margin_rate:0
-msgid "Expected margin * 100 / Expected Sale"
-msgstr "Očekivana marža * 100 / Očekivana prodaja"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Analysis Criteria"
+msgstr "Kriterijum Analize"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
@@ -164,52 +48,51 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Srednja cena u fakturama dobavljača "
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
-msgid "Invoice State"
-msgstr "Stanje fakture"
+#: field:product.product,purchase_avg_price:0
+#: field:product.product,sale_avg_price:0
+msgid "Avg. Unit Price"
+msgstr "Srednja jedinična cijena"
 
 #. module: product_margin
-#: help:product.product,purchase_gap:0
-msgid "Normal Cost - Total Cost"
-msgstr "Normalni trošak - Ukupni trošak"
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Cancel"
+msgstr "Otkaži"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Catalog Price"
+msgstr "Kataloška cena"
+
+#. module: product_margin
+#: field:product.margin,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,total_margin:0
-msgid "Total Margin"
-msgstr "Ukupna marža"
-
-#. module: product_margin
-#: field:product.product,date_from:0
-msgid "Margin Date From"
+#: field:product.margin,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Draft, Open and Paid"
+msgstr "Pripremljeno, Otvoreno i Plaćeno"
 
 #. module: product_margin
-#: field:product.product,normal_cost:0
-msgid "Normal Cost"
-msgstr "Normalna cijena"
+#: field:product.product,expected_margin:0
+msgid "Expected Margin"
+msgstr "Očekivana marža"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Purchases"
-msgstr "Nabavke"
+#: field:product.product,expected_margin_rate:0
+msgid "Expected Margin (%)"
+msgstr "Očekivana marža (%)"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-msgid "# Invoiced in Purchase"
-msgstr ""
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Očekivana prodaja"
 
 #. module: product_margin
 #: help:product.product,expected_margin:0
@@ -217,17 +100,73 @@ msgid "Expected Sale - Normal Cost"
 msgstr "Ocekivana Prodaja - Normalni Troskovi"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Properties categories"
-msgstr "Kategorije Osobina"
+#: help:product.product,sales_gap:0
+msgid "Expected Sale - Turn Over"
+msgstr "Ocekivana Prodaja  - Obrt"
 
 #. module: product_margin
-#: help:product.product,total_margin_rate:0
-msgid "Total margin * 100 / Turnover"
-msgstr "Ukupna marža * 100 / Zarada"
+#: help:product.product,expected_margin_rate:0
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "Očekivana marža * 100 / Očekivana prodaja"
 
 #. module: product_margin
-#: view:product.margin:0
+#: field:product.margin,from_date:0
+msgid "From"
+msgstr "Od"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "General Information"
+msgstr "Generalne Informacije"
+
+#. module: product_margin
+#: field:product.margin,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,invoice_state:0
+#: field:product.product,invoice_state:0
+msgid "Invoice State"
+msgstr "Stanje fakture"
+
+#. module: product_margin
+#: field:product.margin,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_to:0
+msgid "Margin Date To"
+msgstr ""
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Margins"
+msgstr "Marže"
+
+#. module: product_margin
+#: field:product.product,normal_cost:0
+msgid "Normal Cost"
+msgstr "Normalna cijena"
+
+#. module: product_margin
+#: help:product.product,purchase_gap:0
+msgid "Normal Cost - Total Cost"
+msgstr "Normalni trošak - Ukupni trošak"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
 msgid "Open Margins"
 msgstr "Otvorene marže"
 
@@ -238,9 +177,10 @@ msgid "Open and Paid"
 msgstr "Otvoreno i plaćeno"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Sales"
-msgstr "Prodaje"
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Paid"
+msgstr "Plaćeno"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -248,9 +188,25 @@ msgid "Product"
 msgstr "Proizvod"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "General Information"
-msgstr "Generalne Informacije"
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
+msgstr "Marza Proizvoda"
+
+#. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:84
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:product_margin.view_product_margin_form
+#: view:product.product:product_margin.view_product_margin_graph
+#: view:product.product:product_margin.view_product_margin_tree
+#, python-format
+msgid "Product Margins"
+msgstr "Marže proizvoda"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Properties categories"
+msgstr "Kategorije Osobina"
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -258,14 +214,48 @@ msgid "Purchase Gap"
 msgstr "Razmak u kupovini"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Cancel"
-msgstr "Otkaži"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Purchases"
+msgstr "Nabavke"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Margins"
-msgstr "Marže"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Sales"
+msgstr "Prodaje"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "Razmak u prodaji"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Standard Price"
+msgstr "Standardna cena"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,total_cost:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: help:product.product,sale_num_invoiced:0
@@ -273,70 +263,43 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Suma količina na fakturama kupca"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "or"
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Suma količina na dobavljačevim fakturama"
+
+#. module: product_margin
+#: field:product.margin,to_date:0
+msgid "To"
+msgstr "Do"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,total_cost:0
+msgid "Total Cost"
+msgstr "Ukupni trošak"
+
+#. module: product_margin
+#: field:product.product,total_margin:0
+msgid "Total Margin"
+msgstr "Ukupna marža"
+
+#. module: product_margin
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_margin
-msgid "Product Margin"
-msgstr "Marza Proizvoda"
+#: help:product.product,total_margin_rate:0
+msgid "Total margin * 100 / Turnover"
+msgstr "Ukupna marža * 100 / Zarada"
 
-#~ msgid "To Date"
-#~ msgstr "Do datuma"
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,turnover:0
+msgid "Turnover"
+msgstr "Obrt"
 
-#~ msgid "Turnorder - Standard price"
-#~ msgstr "ObrtniZahtev -Standardna cena"
-
-#~ msgid "From Date"
-#~ msgstr "Od datuma"
-
-#~ msgid ""
-#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-#~ msgstr ""
-#~ "Suma mnozenja kataloške cene proizvoda sa količinama proizvoda na fakturama "
-#~ "kupca"
-
-#~ msgid "Margins in Product"
-#~ msgstr "Marže proizvoda"
-
-#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-#~ msgstr "Suma mnozenja nabavne cene i količine na dobavljačevim fakturama"
-
-#~ msgid "# Invoiced"
-#~ msgstr "# Fakturisano"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
-#~ msgstr "Suma mnozenja fakturne cijene i količine na fakturama kupca"
-
-#~ msgid "Avg. Price in Customer Invoices)"
-#~ msgstr "Srednja cena na fakturama kupca"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-#~ msgstr "Suma mnozenja fakturne cijene i količine na dobavljačevim fakturama "
-
-#~ msgid "Total Margin (%)"
-#~ msgstr "Ukupna marža (%)"
-
-#~ msgid "Reporting"
-#~ msgstr "Izveštavanje"
-
-#~ msgid "Excepted Sale - Turn Over"
-#~ msgstr "Očekivana prodaja - Zarada"
-
-#~ msgid "Excepted Sale - Normal Cost"
-#~ msgstr "Očekivana prodaja - Normalan trošak"
-
-#~ msgid "Select "
-#~ msgstr "Selektuj "
-
-#~ msgid "Turnorder - Total Cost"
-#~ msgstr "Zarada-Ukupni trošak"
-
-#~ msgid "View Stock of Products"
-#~ msgstr "Pogledaj zalihu proizvoda"
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""

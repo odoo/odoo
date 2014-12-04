@@ -51,14 +51,15 @@
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
                     <field name="action"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
                     <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                     <separator/>
-                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <filter string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <field name="employee_id"/>
                     <group expand="0" string="Group By">
-                        <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter name="name" string="Date" icon="terp-personal" domain="[]" context="{'group_by':'name'}"/>
+                        <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                        <separator/>
+                        <filter name="name" string="Month" context="{'group_by':'name'}"/>
                     </group>
                 </search>
             </field>
@@ -83,7 +84,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="view_hr_attendance_filter" />
-            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using OpenERP's web service features.</field>
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using Odoo's web service features.</field>
         </record>
 
         <record id="action_hr_attendance_graph" model="ir.actions.act_window">
@@ -140,9 +141,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem
-            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance" name="Attendance"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_hr_attendance"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_hr_configuration_timesheets_attendances" groups="base.group_hr_attendance" sequence="1"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>
@@ -152,7 +151,7 @@
                 <field name="active" position="before">
                     <label for="state" groups="base.group_hr_attendance"/>
                     <div groups="base.group_hr_attendance">
-                        <field name="state" class="oe_inline"/> - 
+                        <field name="state" class="oe_inline"/> -
                         <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
                         <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </div>
@@ -162,5 +161,3 @@
 
     </data>
 </openerp>
-
-

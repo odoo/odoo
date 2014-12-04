@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_payment
+# Russian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-01 10:35+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -30,53 +31,14 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,currency:0
-msgid "Partner Currency"
-msgstr "Валюта контрагента"
+#: model:ir.model,name:account_payment.model_account_payment_populate_statement
+msgid "Account Payment Populate Statement"
+msgstr "Заполнение платежного поручения"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Set to draft"
-msgstr "Установить в \"Черновик\""
-
-#. module: account_payment
-#: help:payment.order,mode:0
-msgid "Select the Payment Mode to be applied."
-msgstr "Выберите способ оплаты для применения"
-
-#. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
-msgid "Group By..."
-msgstr "Группировать по ..."
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Позиции платежа"
-
-#. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
-msgid "Owner Account"
-msgstr "Владелец счета"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
-msgstr ""
-"Сумма, которую надо заплатить на текущую дату\n"
-"минус сумма, указанная в платежном поручении"
-
-#. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
-#: field:payment.order,company_id:0
-msgid "Company"
-msgstr "Компания"
+#: model:ir.model,name:account_payment.model_account_payment_make_payment
+msgid "Account make payment"
+msgstr "Счет оплат"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -84,170 +46,83 @@ msgid "Accounting / Payments"
 msgstr "Учет / платежи"
 
 #. module: account_payment
-#: selection:payment.line,state:0
-msgid "Free"
-msgstr "Свободно"
+#: help:payment.line,info_owner:0
+msgid "Address of the Main Partner"
+msgstr "Адрес основного контрагента"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
-msgid "Entries"
-msgstr "Проводки"
+#: help:payment.line,info_partner:0
+msgid "Address of the Ordering Customer."
+msgstr "Адрес заказчика"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Used Account"
-msgstr "Используемый счет"
-
-#. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
-msgid "Due Date"
-msgstr "Дата исполнения"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "_Add to payment order"
-msgstr "Добавить к платежному поручению"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
-#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
-msgid "Payment Populate statement"
-msgstr "Заполнение заявления на оплату"
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#, python-format
-msgid ""
-"You cannot cancel an invoice which has already been imported in a payment "
-"order. Remove it from the following payment order : %s."
-msgstr ""
-"Нельзя отменить счет который уже импортирован в платежное распоряжение. "
-"Удалите его из платежного распоряжения: %s"
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error!"
-msgstr "Ошибка!"
-
-#. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:website:account_payment.report_paymentorder
 msgid "Amount"
 msgstr "Сумма"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Total in Company Currency"
-msgstr "Всего в валюте компании"
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Amount Total"
+msgstr "Итоговая сумма"
+
+#. module: account_payment
+#: field:payment.line,amount:0
+msgid "Amount in Company Currency"
+msgstr "Сумма в валюте компании"
+
+#. module: account_payment
+#: field:payment.line,amount_currency:0
+msgid "Amount in Partner Currency"
+msgstr "Сумма в валюте партнера"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Are you sure you want to make payment?"
+msgstr "Вы уверены, что хотите сделать платеж ?"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Bank Account"
+msgstr "Банковский счет"
+
+#. module: account_payment
+#: help:payment.mode,bank_id:0
+msgid "Bank Account for the Payment Mode"
+msgstr "Банковский счет для способа оплаты"
+
+#. module: account_payment
+#: field:payment.mode,bank_id:0
+msgid "Bank account"
+msgstr "Банковский счёт"
+
+#. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr "Банковский или кассовый журнал для способа оплаты"
+
+#. module: account_payment
+#: field:payment.line,bank_statement_line_id:0
+msgid "Bank statement line"
+msgstr "Позиция банковской выписки"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Cancel Payments"
+msgstr "Отмена платежей"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
 msgstr "Отменено"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
-msgid "New Payment Order"
-msgstr "Новое платежное поручение"
-
-#. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
-msgid "Reference"
-msgstr "Обозначение"
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
-msgstr "Название платежа должно быть уникальным !"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
-msgid "Payment Orders"
-msgstr "Платежные поручения"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Directly"
-msgstr "Немедленно"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr "Позиция платежа"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Amount Total"
-msgstr "Итоговая сумма"
-
-#. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the status is 'Draft'.\n"
-" Once the bank is confirmed the status is set to 'Confirmed'.\n"
-" Then the order is paid the status is 'Done'."
-msgstr ""
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Confirmed"
-msgstr "Подтверждено"
-
-#. module: account_payment
-#: help:payment.line,ml_date_created:0
-msgid "Invoice Effective Date"
-msgstr "Счет действителен до"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Execution Type"
-msgstr "Тип исполнения"
-
-#. module: account_payment
-#: selection:payment.line,state:0
-msgid "Structured"
-msgstr "Структурировано"
-
-#. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import Payment Lines"
-msgstr "Импорт платежей"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Transaction Information"
-msgstr "Информация транзакции"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
-#: model:ir.model,name:account_payment.model_payment_mode
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
-msgid "Payment Mode"
-msgstr "Способ оплаты"
-
-#. module: account_payment
-#: field:payment.line,ml_date_created:0
-msgid "Effective Date"
-msgstr "Дата вступления в силу"
-
-#. module: account_payment
-#: field:payment.line,ml_inv_ref:0
-msgid "Invoice Ref."
-msgstr "Ссылка на счет"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -261,55 +136,14 @@ msgstr ""
 "определенную дату."
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation Date"
-msgstr "Дата создания"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Назначение"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "Банковский или кассовый журнал для способа оплаты"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Fixed date"
-msgstr "Заданная дата"
-
-#. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
-msgid "Destination Account"
-msgstr "Р/с получателя"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Desitination Account"
-msgstr "Р/с получателя"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Search Payment Orders"
-msgstr "Искать платежные поручения"
-
-#. module: account_payment
-#: field:payment.line,create_date:0
-msgid "Created"
-msgstr "Создано"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Выбрать счета для оплаты"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Currency Amount Total"
-msgstr "Итоговая сумма в валюте"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Make Payments"
-msgstr "Произвести платежи"
+#: field:payment.line,communication2:0
+msgid "Communication 2"
+msgstr "Назначение 2"
 
 #. module: account_payment
 #: field:payment.line,state:0
@@ -317,16 +151,110 @@ msgid "Communication Type"
 msgstr "Тип назначения платежа"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Контрагент"
+#: field:payment.line,company_id:0
+#: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
+msgid "Company"
+msgstr "Компания"
 
 #. module: account_payment
-#: field:payment.line,bank_statement_line_id:0
-msgid "Bank statement line"
-msgstr "Позиция банковской выписки"
+#: field:payment.line,company_currency:0
+msgid "Company Currency"
+msgstr "Валюта компании"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Company Currency:"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Confirm Payments"
+msgstr "Подтвердить платежи"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: account_payment
+#: field:payment.line,create_date:0
+msgid "Created"
+msgstr "Создано"
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_uid:0
+#: field:account.payment.populate.statement,create_uid:0
+#: field:payment.line,create_uid:0
+#: field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0
+#: field:payment.order.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_date:0
+#: field:account.payment.populate.statement,create_date:0
+#: field:payment.mode,create_date:0
+#: field:payment.order,create_date:0
+#: field:payment.order.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr "Дата создания"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Currency Amount Total"
+msgstr "Итоговая сумма в валюте"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+msgid "Desitination Account"
+msgstr "Р/с получателя"
+
+#. module: account_payment
+#: field:payment.line,info_partner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Destination Account"
+msgstr "Р/с получателя"
+
+#. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr "Банковский счет назначения"
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Directly"
+msgstr "Немедленно"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Done"
+msgstr "Сделано"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: account_payment
+#: field:payment.line,ml_maturity_date:0
+#: field:payment.order.create,duedate:0
+msgid "Due Date"
+msgstr "Дата исполнения"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -334,24 +262,82 @@ msgid "Due date"
 msgstr "Дата исполнения"
 
 #. module: account_payment
-#: field:account.invoice,amount_to_pay:0
-msgid "Amount to be paid"
-msgstr "Сумма к оплате"
+#: field:payment.line,ml_date_created:0
+msgid "Effective Date"
+msgstr "Дата вступления в силу"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Currency"
-msgstr "Валюта"
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: field:payment.order.create,entries:0
+msgid "Entries"
+msgstr "Проводки"
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Yes"
-msgstr "Да"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Entry Information"
+msgstr "Информация записи"
 
 #. module: account_payment
-#: help:payment.line,info_owner:0
-msgid "Address of the Main Partner"
-msgstr "Адрес основного контрагента"
+#: code:addons/account_payment/wizard/account_payment_order.py:113
+#, python-format
+msgid "Entry Lines"
+msgstr "Позиции проводок"
+
+#. module: account_payment
+#: field:payment.line,move_line_id:0
+msgid "Entry line"
+msgstr "Проводка"
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:42
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "Error!"
+msgstr "Ошибка!"
+
+#. module: account_payment
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr "Дата выполнения"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Execution:"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Fixed date"
+msgstr "Заданная дата"
+
+#. module: account_payment
+#: selection:payment.line,state:0
+msgid "Free"
+msgstr "Свободно"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "General Information"
+msgstr "Общая информация"
+
+#. module: account_payment
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,id:0
+#: field:account.payment.populate.statement,id:0
+#: field:payment.line,id:0
+#: field:payment.mode,id:0
+#: field:payment.order,id:0
+#: field:payment.order.create,id:0
+#: field:report.account_payment.report_paymentorder,id:0
+msgid "ID"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -361,15 +347,87 @@ msgid ""
 msgstr "Если дата платежа не задана, банк сразу обработает платеж"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_populate_statement
-msgid "Account Payment Populate Statement"
-msgstr "Заполнение платежного поручения"
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Lines"
+msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "There is no partner defined on the entry line."
-msgstr "Нео пределен партнер в проводке."
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Payment Lines"
+msgstr "Импорт платежей"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Information"
+msgstr "Информация"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Счет"
+
+#. module: account_payment
+#: help:payment.line,ml_date_created:0
+msgid "Invoice Effective Date"
+msgstr "Счет действителен до"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Invoice Ref"
+msgstr "Ссылка на счет"
+
+#. module: account_payment
+#: field:payment.line,ml_inv_ref:0
+msgid "Invoice Ref."
+msgstr "Ссылка на счет"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Invoices"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move_line
+msgid "Journal Items"
+msgstr "Элементы журнала"
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_uid:0
+#: field:account.payment.populate.statement,write_uid:0
+#: field:payment.line,write_uid:0
+#: field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0
+#: field:payment.order.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_date:0
+#: field:account.payment.populate.statement,write_date:0
+#: field:payment.line,write_date:0
+#: field:payment.mode,write_date:0
+#: field:payment.order,write_date:0
+#: field:payment.order.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
+msgid "Make Payment"
+msgstr "Оплатить"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Make Payments"
+msgstr "Произвести платежи"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -377,51 +435,59 @@ msgid "Mode of Payment"
 msgstr "Способ оплаты"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Value Date"
-msgstr "Дата зачисления"
+#: field:payment.mode,name:0
+msgid "Name"
+msgstr "Название"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Payment Type"
-msgstr "Способ оплаты"
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
+msgid "New Payment Order"
+msgstr "Новое платежное поручение"
 
 #. module: account_payment
-#: help:payment.line,amount_currency:0
-msgid "Payment amount in the partner currency"
-msgstr "Сумма платежа в валюте партнера"
+#: field:payment.line,order_id:0
+msgid "Order"
+msgstr "Распоряжение"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Черновик"
+#: view:payment.line:account_payment.view_payment_line_form
+#: field:payment.line,info_owner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Owner Account"
+msgstr "Владелец счета"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "Status"
-msgstr "Статус"
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: view:website:account_payment.report_paymentorder
+msgid "Partner"
+msgstr "Контрагент"
 
 #. module: account_payment
-#: help:payment.line,communication2:0
-msgid "The successor message of Communication."
-msgstr "Продолжение назначения платежа"
+#: field:payment.line,currency:0
+msgid "Partner Currency"
+msgstr "Валюта контрагента"
 
 #. module: account_payment
-#: help:payment.line,info_partner:0
-msgid "Address of the Ordering Customer."
-msgstr "Адрес заказчика"
+#: model:ir.ui.menu,name:account_payment.menu_main_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment"
+msgstr "Платеж"
 
 #. module: account_payment
-#: view:account.payment.populate.statement:0
-msgid "Populate Statement:"
-msgstr "Заполнить заявление:"
+#: field:payment.line,date:0
+msgid "Payment Date"
+msgstr "Дата платежа"
 
 #. module: account_payment
-#: help:payment.order,date_scheduled:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Выберите дату, если вы выбрали предпочтительную дату как Заданную."
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment Line"
+msgstr "Позиция платежа"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -429,9 +495,161 @@ msgid "Payment Lines"
 msgstr "Позиции платежа"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_move_line
-msgid "Journal Items"
-msgstr "Элементы журнала"
+#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
+#: model:ir.model,name:account_payment.model_payment_mode
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.mode:account_payment.view_payment_mode_tree
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,mode:0
+msgid "Payment Mode"
+msgstr "Способ оплаты"
+
+#. module: account_payment
+#: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Payment Order"
+msgstr "Платежное поручение"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Order / Payment"
+msgstr "Платежное поручение / Платеж"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
+msgid "Payment Orders"
+msgstr "Платежные поручения"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
+#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
+msgid "Payment Populate statement"
+msgstr "Заполнение заявления на оплату"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Type:"
+msgstr ""
+
+#. module: account_payment
+#: help:payment.line,amount:0
+msgid "Payment amount in the company currency"
+msgstr "Сумма платежа в валюте компании"
+
+#. module: account_payment
+#: help:payment.line,amount_currency:0
+msgid "Payment amount in the partner currency"
+msgstr "Сумма платежа в валюте партнера"
+
+#. module: account_payment
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Позиции платежа"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_tree
+msgid "Payment order"
+msgstr "Платежное поручение"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Заполнить платежку"
+
+#. module: account_payment
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+msgid "Populate Statement:"
+msgstr "Заполнить заявление:"
+
+#. module: account_payment
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr "Предпочтительная дата"
+
+#. module: account_payment
+#: field:payment.order,reference:0
+#: view:website:account_payment.report_paymentorder
+msgid "Reference"
+msgstr "Обозначение"
+
+#. module: account_payment
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr "Ответственный"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr "Запланированная дата"
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+msgid "Search"
+msgstr "Искать"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Search Payment Orders"
+msgstr "Искать платежные поручения"
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Search Payment lines"
+msgstr "Поиск платежей"
+
+#. module: account_payment
+#: help:payment.order,date_scheduled:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Выберите дату, если вы выбрали предпочтительную дату как Заданную."
+
+#. module: account_payment
+#: help:payment.order,mode:0
+msgid "Select the Payment Mode to be applied."
+msgstr "Выберите способ оплаты для применения"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Set to draft"
+msgstr "Установить в \"Черновик\""
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: account_payment
+#: selection:payment.line,state:0
+msgid "Structured"
+msgstr "Структурировано"
+
+#. module: account_payment
+#: help:payment.line,partner_id:0
+msgid "The Ordering Customer"
+msgstr "Плательщик"
+
+#. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "Название платежа должно быть уникальным !"
+
+#. module: account_payment
+#: help:payment.line,communication2:0
+msgid "The successor message of Communication."
+msgstr "Продолжение назначения платежа"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr "Нео пределен партнер в проводке."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -441,190 +659,31 @@ msgid ""
 msgstr "Эта проводка будет использована для информации о заказчике."
 
 #. module: account_payment
-#: view:payment.order.create:0
-msgid "Search"
-msgstr "Искать"
+#: field:payment.order,total:0
+#: view:website:account_payment.report_paymentorder
+msgid "Total"
+msgstr "Всего"
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "Responsible"
-msgstr "Ответственный"
+#: view:website:account_payment.report_paymentorder
+msgid "Total (Currency)"
+msgstr ""
 
 #. module: account_payment
-#: field:payment.line,date:0
-msgid "Payment Date"
-msgstr "Дата платежа"
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Total in Company Currency"
+msgstr "Всего в валюте компании"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Total:"
-msgstr "Всего:"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Transaction Information"
+msgstr "Информация транзакции"
 
 #. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution Date"
-msgstr "Дата выполнения"
-
-#. module: account_payment
-#: view:account.payment.populate.statement:0
-msgid "ADD"
-msgstr "Добавить"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "Заполнить платежку"
-
-#. module: account_payment
-#: field:account.move.line,amount_to_pay:0
-msgid "Amount to pay"
-msgstr "Сумма к оплате"
-
-#. module: account_payment
-#: field:payment.line,amount:0
-msgid "Amount in Company Currency"
-msgstr "Сумма в валюте компании"
-
-#. module: account_payment
-#: help:payment.line,partner_id:0
-msgid "The Ordering Customer"
-msgstr "Плательщик"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_make_payment
-msgid "Account make payment"
-msgstr "Счет оплат"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Invoice Ref"
-msgstr "Ссылка на счет"
-
-#. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
-msgstr "Ссылка"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Payment order"
-msgstr "Платежное поручение"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "General Information"
-msgstr "Общая информация"
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Done"
-msgstr "Сделано"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_invoice
-msgid "Invoice"
-msgstr "Счет"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Назначение"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "Cancel"
-msgstr "Отменить"
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank Account"
-msgstr "Банковский счет назначения"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Information"
-msgstr "Информация"
-
-#. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-#: view:payment.order:0
-msgid "Payment Order"
-msgstr "Платежное поручение"
-
-#. module: account_payment
-#: help:payment.line,amount:0
-msgid "Payment amount in the company currency"
-msgstr "Сумма платежа в валюте компании"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "Search Payment lines"
-msgstr "Поиск платежей"
-
-#. module: account_payment
-#: field:payment.line,amount_currency:0
-msgid "Amount in Partner Currency"
-msgstr "Сумма в валюте партнера"
-
-#. module: account_payment
-#: field:payment.line,communication2:0
-msgid "Communication 2"
-msgstr "Назначение 2"
-
-#. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled Date"
-msgstr "Запланированная дата"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Are you sure you want to make payment?"
-msgstr "Вы уверены, что хотите сделать платеж ?"
-
-#. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Журнал"
-
-#. module: account_payment
-#: field:payment.mode,bank_id:0
-msgid "Bank account"
-msgstr "Банковский счёт"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Confirm Payments"
-msgstr "Подтвердить платежи"
-
-#. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
-msgid "Company Currency"
-msgstr "Валюта компании"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment"
-msgstr "Платеж"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Payment Order / Payment"
-msgstr "Платежное поручение / Платеж"
-
-#. module: account_payment
-#: field:payment.line,move_line_id:0
-msgid "Entry line"
-msgstr "Проводка"
+#: view:website:account_payment.report_paymentorder
+msgid "Used Account:"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -636,218 +695,39 @@ msgstr ""
 "Обозначает \"Что вы хотите сказать получателю в этом распоряжении ?'"
 
 #. module: account_payment
-#: field:payment.mode,name:0
-msgid "Name"
-msgstr "Название"
+#: view:website:account_payment.report_paymentorder
+msgid "Value Date"
+msgstr "Дата зачисления"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Bank Account"
-msgstr "Банковский счет"
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
 
 #. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Entry Information"
-msgstr "Информация записи"
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Yes"
+msgstr "Да"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_order_create
-msgid "payment.order.create"
-msgstr "payment.order.create"
-
-#. module: account_payment
-#: field:payment.line,order_id:0
-msgid "Order"
-msgstr "Распоряжение"
-
-#. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Всего"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
-msgid "Make Payment"
-msgstr "Оплатить"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred Date"
-msgstr "Предпочтительная дата"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "or"
-msgstr "или"
-
-#. module: account_payment
-#: help:payment.mode,bank_id:0
-msgid "Bank Account for the Payment Mode"
-msgstr "Банковский счет для способа оплаты"
-
-#~ msgid "Scheduled date if fixed"
-#~ msgstr "Дата по плану, если задана"
-
-#~ msgid "Account Entry Line"
-#~ msgstr "Проводка по счету"
-
-#~ msgid "Execution date:"
-#~ msgstr "Дата исполнения:"
-
-#~ msgid "Suitable bank types"
-#~ msgstr "Пригодные типы банков"
-
-#~ msgid "State"
-#~ msgstr "Состояние"
-
-#~ msgid "Total debit"
-#~ msgstr "Всего по дебету"
-
-#~ msgid "Execution date"
-#~ msgstr "Дата исполнения"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "_Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "Total credit"
-#~ msgstr "Всего кредит"
-
-#~ msgid "Populate payment"
-#~ msgstr "Заполнить платеж"
-
-#~ msgid "User"
-#~ msgstr "Пользователь"
-
-#~ msgid "Date"
-#~ msgstr "Дата"
-
-#~ msgid "Reference:"
-#~ msgstr "Ссылка:"
-
-#~ msgid "Creation date"
-#~ msgstr "Дата создания"
-
-#~ msgid "Maturity Date"
-#~ msgstr "Срок платежа"
-
-#~ msgid "Import payment lines"
-#~ msgstr "Импорт позиций платежа"
-
-#~ msgid "Code"
-#~ msgstr "Код"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "Pay"
-#~ msgstr "Заплатить"
-
-#~ msgid "_Search"
-#~ msgstr "Поиск"
-
-#~ msgid "Populate Statement with Payment lines"
-#~ msgstr "Заполнить выписку позициями платежа"
-
-#~ msgid "Payment type"
-#~ msgstr "Тип платежа"
-
-#~ msgid "_Add"
-#~ msgstr "Добавить"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Preferred date"
-#~ msgstr "Предпочтительная дата"
-
-#~ msgid "Payment Management"
-#~ msgstr "Управление платежами"
-
-#~ msgid "Specify the Code for Payment Type"
-#~ msgstr "Укажите код типа платежа"
-
-#~ msgid "Draft Payment Order"
-#~ msgstr "Черновик платежного поручения"
-
-#~ msgid "Payment Orders to Validate"
-#~ msgstr "Платежные поручения для утверждения"
-
-#~ msgid "Select the Payment Type for the Payment Mode."
-#~ msgstr "Выберите вид платежа для режима платежа"
-
-#~ msgid "Cash Journal for the Payment Mode"
-#~ msgstr "Кассовая книга для режима платежа"
-
+#: code:addons/account_payment/account_invoice.py:42
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Ошибка !"
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+"Нельзя отменить счет который уже импортирован в платежное распоряжение. "
+"Удалите его из платежного распоряжения: %s"
 
-#, python-format
-#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-#~ msgstr ""
-#~ "Партнер '+ line.partner_id.name+ ' не имеет существующего банковского счета"
+#. module: account_payment
+#: field:payment.line,name:0
+msgid "Your Reference"
+msgstr "Ссылка"
 
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Нельзя сделать проводку по закрытому счету."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Ошибочное значение проводки по дебету или кредиту !"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Нельзя создать проводку по счету с типом Вид."
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Для счета и периода должна быть одна компания."
-
-#~ msgid "Payment mode"
-#~ msgstr "Способ оплаты"
-
-#~ msgid ""
-#~ "A payment order is a payment request from your company to pay a supplier "
-#~ "invoice or a customer credit note. Here you can register all payment orders "
-#~ "that should be done, keep track of all payment orders and mention the "
-#~ "invoice reference and the partner the payment should be done for."
-#~ msgstr ""
-#~ "Платежное поручение это платежное требование от вашей компании на оплату "
-#~ "счета поставщика. Здесь вы заносите все платежные поручения которые должны "
-#~ "быть исполнены, отслеживаете все платежные поручения, ссылки на счета и "
-#~ "партнеров по которым должны быть сделаны платежи."
-
-#~ msgid ""
-#~ "When an order is placed the state is 'Draft'.\n"
-#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
-#~ " Then the order is paid the state is 'Done'."
-#~ msgstr ""
-#~ "При вводе распоряжения, его состояние - \"Черновик\".\n"
-#~ " После подтверждения банком, состояние \"Подтверждено\".\n"
-#~ " После оплаты, состояние \"Готово\""
-
-#~ msgid ""
-#~ "\n"
-#~ "This module provides :\n"
-#~ "* a more efficient way to manage invoice payment.\n"
-#~ "* a basic mechanism to easily plug various automated payment.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Этот модуль обеспечивает :\n"
-#~ "* более эффективный способ управления оплатой счетов.\n"
-#~ "* простой механизм для разных автоматических платежей.\n"
-#~ "    "
-
-#, python-format
-#~ msgid "No partner defined on entry line"
-#~ msgstr "Не определен контрагент в проводке"
-
-#~ msgid "Destination Bank account"
-#~ msgstr "Р/с получателя"
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "_Add to payment order"
+msgstr "Добавить к платежному поручению"

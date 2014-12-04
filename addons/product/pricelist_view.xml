@@ -5,7 +5,7 @@
         <menuitem id="base.menu_sale_config_sales" name="Sales"
             parent="base.menu_base_config" sequence="0"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" 
-            parent="base.menu_base_config" groups="product.group_sale_pricelist" sequence="70"/>
+            parent="base.menu_base_config" groups="product.group_sale_pricelist" sequence="3"/>
 
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
@@ -98,7 +98,11 @@
                         <field name="min_quantity"/>
                         <field name="sequence"/>
                     </group>
-                    <group col="4" string="Price Computation">
+                    <separator string="Price Computation"/>
+                    <div class="oe_grey" groups="product.group_uom">
+                        <p>The computed price is expressed in the default Unit of Measure of the product.</p>
+                    </div>
+                    <group col="4">
                         <field name="base"/>
                         <field name="base_pricelist_id" attrs="{'invisible':[('base', '!=', -1)],'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
                     </group>

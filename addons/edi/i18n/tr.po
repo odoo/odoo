@@ -1,42 +1,27 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-27 22:29+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-28 09:58+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:47+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "Neden:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "öküman başarılı bir şekilde içeri alındı!"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "Üzgünüm, Döküman içeri alınamadı."
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' geçersiz bir dış ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,33 +35,26 @@ msgstr "Döviz"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "Döküman içeri alma Uyarısı"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "Kayıp Uygulama"
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "EDI altsistemi"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
-msgstr ""
-"İçeri aktarmaya çalıştığınız  döküman OpenERP  `%s` uygulamasını "
-"gerektiriyor. Uygulamayı sisteme admin olarak bağlanıp kurabilirsiniz."
+#: field:edi.edi,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' geçersiz bir dış ID"
+msgid "Missing Application."
+msgstr "Eksik Uygulama."
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -84,229 +62,34 @@ msgid "Partner"
 msgstr "Cari"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "EDI altsistemi"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "Döviz kodu her şirket için tekil olmalı!"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Şirket adı tekil olmalı !"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "Cari Adresleri"
-
-#~ msgid "EDI token"
-#~ msgstr "EDI jetonu"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "EDI jetonları tekil olmalı!"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "EDI dökümanını çekebilmek için gerekli tekil tanımlayıcı"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Hata! özyinelemeli şirketler oluşturamazsınız."
-
-#~ msgid "Import this document"
-#~ msgstr "Dökümanı içeri Al"
-
-#~ msgid "View/Print"
-#~ msgstr "Göster/Yazdır"
-
-#~ msgid "Document"
-#~ msgstr "Döküman"
-
-#~ msgid "EDI document content"
-#~ msgstr "EDI döküman içeriği"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI dökümanı"
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "Kendi OpenERP kurulumunuza aktarın"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "Bulunamayan Uygulama"
+msgid "Reason:"
+msgstr "Neden:"
 
-#~ msgid ""
-#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
-#~ "language\n"
-#~ "                            independent"
-#~ msgstr ""
-#~ "OpenERP nin Elektronik Veri Değişimi dökümanları genel geçerdir ve dilden "
-#~ "bağımsızdır"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "Üzgünüm, Döküman içeri alınamadı."
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "Benim için yeni bir OpenERP kurulumu Oluştur"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "öküman başarılı bir şekilde içeri alındı!"
 
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "Yeni oluşturulacak bir OpenERP Online Kurulumuna Aktar"
-
-#~ msgid "Import"
-#~ msgstr "İçe Aktar"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "OpenERP kurulumunuzun  adresi:"
-
-#~ msgid "Import into another application"
-#~ msgstr "Başka bir uygulamaya aktar"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERP Dökümantasyonu"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "Hemen Başlamak için,"
-
-#~ msgid "Description"
-#~ msgstr "Açıklama"
-
-#~ msgid "Invoice"
-#~ msgstr "Fatura"
-
-#~ msgid "Your Reference"
-#~ msgstr "Referansınız"
-
-#~ msgid "Date"
-#~ msgstr "Tarih"
-
-#~ msgid "Product Description"
-#~ msgstr "Ürün Açıklaması"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "EDI Dökümanınızın ham halini buradan indirebilirsiniz:"
-
-#~ msgid "Download"
-#~ msgstr "Indir"
-
-#~ msgid "Powered by"
-#~ msgstr "Geliştiren"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Quantity"
-#~ msgstr "Miktar"
-
-#~ msgid "Discount"
-#~ msgstr "İndirim"
-
-#~ msgid "Unit Price"
-#~ msgstr "Birim Fiyatı"
-
-#~ msgid "Net Total:"
-#~ msgstr "Net Toplam:"
-
-#~ msgid "Total:"
-#~ msgstr "Toplam:"
-
-#~ msgid "Taxes:"
-#~ msgstr "KDV:"
-
-#~ msgid "Tax"
-#~ msgstr "KDV"
-
-#~ msgid "Amount"
-#~ msgstr "Tutar"
-
-#~ msgid "Base Amount"
-#~ msgstr "Temel Tutar"
-
-#~ msgid "Price"
-#~ msgstr "Fiyat"
-
-#~ msgid "Please transfer"
-#~ msgstr "Lütfen havale edin"
-
-#~ msgid "to"
-#~ msgstr "->"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Bu faturayı Paypal'ın güvenli ödeme sayfası ile online ödeyebilirsiniz:"
-
-#~ msgid "Pay Online"
-#~ msgstr "Online Ödeme Yap"
-
-#~ msgid "Order"
-#~ msgstr "Sırala"
-
-#~ msgid "Notes:"
-#~ msgstr "Notlar:"
-
-#~ msgid "on the transfer:"
-#~ msgstr "transferde:"
-
-#~ msgid ""
-#~ "(postal address on the invoice header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the invoice\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(fatura başlığındaki posta adresi)\n"
-#~ "                     aşağıdaki banka hesaplarını kullanarak. Fatura "
-#~ "numarasını yazmayı unutmayın"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "Banka Havalesi"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Salesman"
-#~ msgstr "Satış Temsilcisi"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Bu siparişinizi Paypal güvenli ödeme sayfasını kullanarak hemen "
-#~ "ödeyebilirsiniz:"
-
-#~ msgid "Discount(%)"
-#~ msgstr "İndirim(%)"
-
-#~ msgid "Payment terms"
-#~ msgstr "Ödeme Şartları"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr "Bu EDI dökümanını Pythonda kullanmanız için tek gereken see"
-
-#~ msgid ""
-#~ "serialization of the document's attribute.\n"
-#~ "                            It is usually very quick and straightforward to "
-#~ "create a small plug-in for your preferred\n"
-#~ "                            application that will be capable of importing "
-#~ "any OpenERP EDI document.\n"
-#~ "                            You can find out more details about how to do "
-#~ "this and what the content of OpenERP EDI documents\n"
-#~ "                            is like in the"
-#~ msgstr ""
-#~ "belge özniteliklerinin serileştirilmesi.\n"
-#~ "                            Herhangi  bir OpenERP EDI belgesini "
-#~ "içeaktarabilecek tercih ettiğiniz uygulamanız\n"
-#~ "                            için küçük bir eklenti oluşturmak genellikle "
-#~ "çabuk ve açıktır.\n"
-#~ "                            Bunun nasıl yapılacağı ile ilgili ve OpenERP EDI "
-#~ "belgelerinin içeriğinin ne olduğu ile ilgili daha çok ayrıntı "
-#~ "bulabilirsiniz\n"
-#~ "                            bunda olduğu gibi"
-
-#~ msgid ""
-#~ "(postal address on the order header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the document\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(sipariş başlığında posta adresi)\n"
-#~ "                     aşağıdaki banka hesaplarından birini kullanarak. "
-#~ "Anıldığına emin olmanız gereken şey belge\n"
-#~ "                     ilgisidir"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""
+"İçeaktarmaya çalıştığınız belge Odoo '%s' uygulamasını gerektiriyor. "
+"Yönetici olarak bağlanarak onu kurabilir ve yapılandırma yöneticisini "
+"açabilirsiniz."

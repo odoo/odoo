@@ -98,17 +98,8 @@ class res_font(osv.Model):
                 font = ttfonts.TTFontFile(font_path)
                 _logger.debug("Found font %s at %s", font.name, font_path)
                 found_fonts.append((font.familyName, font.name, font_path, font.styleName))
-            except KeyError, ex:
-                if ex.args and ex.args[0] == 'head':
-                    # Sometimes, the system can have a lot of Bitmap fonts, and
-                    # in this case, Reportlab can't load the 'head' table from
-                    # the structure of the TTF file (ex: NISC18030.ttf)
-                    # In this case, we have to bypass the loading of this font!
-                    _logger.warning("Could not register Fond %s (Old Bitmap font)", font_path)
-                else:
-                    raise
-            except ttfonts.TTFError:
-                _logger.warning("Could not register Font %s", font_path)
+            except Exception, ex:
+                _logger.warning("Could not register Font %s: %s", font_path, ex)
 
         for family, name, path, mode in found_fonts:
             if not self.search(cr, uid, [('family', '=', family), ('name', '=', name)], context=context):

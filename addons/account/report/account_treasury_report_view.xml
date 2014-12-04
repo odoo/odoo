@@ -38,6 +38,9 @@
                 <field name="fiscalyear_id"/>
                 <field name="period_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By">
+                    <filter string="Month" context="{'group_by':'date:month'}"/>
+                </group>
             </search>
         </field>
     </record>

@@ -1,112 +1,41 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-07-28 21:52+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Emails Integration"
-msgstr "Eメールの統合"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "ゲスト"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Contacts"
-msgstr "連絡先"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "(reload fonts)"
 msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "外部認証プロバイダを使用、GoogleやFacebookでサインイン、…"
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer portal"
+msgstr "顧客ポータルを活性化"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid ""
-"OpenERP allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically "
-"synchronize emails with OpenERP\n"
-"                            using regular POP/IMAP accounts, using a direct "
-"email integration script for your\n"
-"                            email server, or by manually pushing emails to "
-"OpenERP using specific\n"
-"                            plugins for your preferred email application."
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
 msgstr ""
 
 #. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
+#: field:base.config.settings,module_google_calendar:0
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "メンバー"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Portal access"
-msgstr "ポータルアクセス"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Authentication"
-msgstr "認証"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Quotations and Sales Orders"
-msgstr "見積りと販売受注"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
-msgid "General Settings"
-msgstr "一般設定"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "提供者"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Email"
-msgstr "Eメール"
-
-#. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "お待ちください。"
 
 #. module: base_setup
 #: field:base.config.settings,module_base_import:0
@@ -114,18 +43,107 @@ msgid "Allow users to import data from CSV files"
 msgstr "CSVファイルからデータをインポート"
 
 #. module: base_setup
-#: field:base.config.settings,module_multi_company:0
-msgid "Manage multiple companies"
-msgstr "複数の会社を管理"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Apply"
 msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "--db-filter=YOUR_DATABAE"
+#: field:base.config.settings,module_google_drive:0
+msgid "Attach Google documents to any record"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Authentication"
+msgstr "認証"
+
+#. module: base_setup
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Cancel"
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "顧客"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure outgoing email servers"
+msgstr "送信メールサーバを設定"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure your company data"
+msgstr "会社のデータを設定"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Contacts"
+msgstr "連絡先"
+
+#. module: base_setup
+#: field:base.config.settings,create_uid:0
+#: field:base.setup.terminology,create_uid:0
+#: field:sale.config.settings,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,create_date:0
+#: field:base.setup.terminology,create_date:0
+#: field:sale.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "顧客"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Customer Features"
+msgstr "顧客の特徴"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "提供者"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Email"
+msgstr "Eメール"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Emails Integration"
+msgstr "Eメールの統合"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr "一般設定"
+
+#. module: base_setup
+#: help:sale.config.settings,module_mass_mailing:0
+msgid "Get access to statistics with your mass mailing, manage campaigns."
 msgstr ""
 
 #. module: base_setup
@@ -134,46 +152,137 @@ msgid "Get contacts automatically from linkedIn"
 msgstr "LinkedInから自動で連絡先を取得"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_thunderbird:0
-msgid "Enable Thunderbird plug-in"
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "顧客に文書へのアクセスを与えます。"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Calendar"
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.terminology:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Customer Features"
-msgstr "顧客の特徴"
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "ゲスト"
 
 #. module: base_setup
-#: view:base.config.settings:0
+#: field:base.setup.terminology,partner:0
+msgid "How do you call a Customer"
+msgstr "どのように顧客を呼びますか"
+
+#. module: base_setup
+#: field:base.config.settings,id:0
+#: field:base.setup.terminology,id:0
+#: field:sale.config.settings,id:0
+msgid "ID"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid "Import / Export"
 msgstr "インポート / エクスポート"
 
 #. module: base_setup
-#: view:sale.config.settings:0
+#: field:base.config.settings,write_uid:0
+#: field:base.setup.terminology,write_uid:0
+#: field:sale.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,write_date:0
+#: field:base.setup.terminology,write_date:0
+#: field:sale.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_mass_mailing:0
+msgid "Manage mass mailing campaigns"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr "複数の会社を管理"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "メンバー"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid ""
+"Odoo allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with Odoo\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"Odoo using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Options"
+msgstr "オプション"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "お待ちください。"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Portal access"
+msgstr "ポータルアクセス"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Quotations and Sales Orders"
+msgstr "見積りと販売受注"
+
+#. module: base_setup
+#: field:base.config.settings,font:0
+msgid "Report Font"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
 msgid "Sale Features"
 msgstr "販売の機能"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_outlook:0
-msgid "Enable Outlook plug-in"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.terminology:0
+#: help:base.config.settings,font:0
 msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "アプリケーション全体の顧客の用語を変更するには、このウィザードを使用することができます。"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "テナント"
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr ""
 
 #. module: base_setup
 #: help:base.config.settings,module_share:0
@@ -181,9 +290,40 @@ msgid "Share or embbed any screen of openerp."
 msgstr ""
 
 #. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Social Network Integration"
+msgstr "ソーシャルネットワークの統合"
+
+#. module: base_setup
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "用語の定義"
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "顧客"
+msgid "Tenant"
+msgstr "テナント"
+
+#. module: base_setup
+#: help:base.config.settings,module_google_calendar:0
+msgid "This installs the module google_calendar."
+msgstr ""
+
+#. module: base_setup
+#: help:base.config.settings,module_google_drive:0
+msgid "This installs the module google_docs."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "\"顧客\"を言い表す他の言葉を使用してください。"
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr "外部認証プロバイダを使用、GoogleやFacebookでサインイン、…"
 
 #. module: base_setup
 #: help:sale.config.settings,module_web_linkedin:0
@@ -193,40 +333,7 @@ msgid ""
 msgstr "新しい連絡先(個人または会社)を作成すると、LinkedInからすべてのデータ(写真、住所など)を読み込むことができるようになります。"
 
 #. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies.\n"
-"                This installs the module multi_company."
-msgstr "企業間の適切なセキュリティアクセスにより複数の企業環境で動作します。"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"The public portal is accessible only if you are in a single database mode. "
-"You can\n"
-"                                    launch the OpenERP Server with the option"
-msgstr ""
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr "会社の詳細にはヘッダとフッタのアドレス、遅延支払いのテキストなどより多くのオプションがあります。"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
-
-#. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "どのように顧客を呼びますか"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
 "                                    (quotation, invoice), your customer will "
@@ -239,260 +346,28 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "顧客"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal_anonymous:0
-msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr "OpenERPの公開部分を有効にすると、OpenERPは公開ウェブサイトになります。"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_thunderbird:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"The plugin allows you archive email and its attachments to the selected\n"
-"                OpenERP objects. You can select a partner, or a lead and\n"
-"                attach the selected mail as a .eml file in\n"
-"                the attachment of a selected record. You can create "
-"documents for CRM Lead,\n"
-"                Partner from the selected emails.\n"
-"                This installs the module plugin_thunderbird."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"-This installs the module multi_company."
 msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "パートナ"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "\"顧客\"を言い表す他の言葉を使用してください。"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:0
-msgid "Configure Sales"
-msgstr ""
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_outlook:0
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
 msgid ""
-"The Outlook plugin allows you to select an object that you would like to "
-"add\n"
-"                to your email and its attachments from MS Outlook. You can "
-"select a partner,\n"
-"                or a lead object and archive a selected\n"
-"                email into an OpenERP mail message with attachments.\n"
-"                This installs the module plugin_outlook."
-msgstr ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr "アプリケーション全体の顧客の用語を変更するには、このウィザードを使用することができます。"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Options"
-msgstr "オプション"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "顧客ポータルを活性化"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
-"to do so.\n"
-"                                    Once activated, the login page will be "
-"replaced by the public website."
-msgstr ""
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
+msgstr "会社の詳細にはヘッダとフッタのアドレス、遅延支払いのテキストなどより多くのオプションがあります。"
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr ""
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "(company news, jobs, contact form, etc.)"
-msgstr "(会社のニュース、求人、連絡先フォームなど)"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal_anonymous:0
-msgid "Activate the public portal"
-msgstr "公共ポータルを活性化"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure outgoing email servers"
-msgstr "送信メールサーバを設定"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Social Network Integration"
-msgstr "ソーシャルネットワークの統合"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "顧客に文書へのアクセスを与えます。"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Cancel"
-msgstr ""
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Apply"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "Specify Your Terminology"
-msgstr "用語の定義"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "or"
-msgstr ""
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure your company data"
-msgstr "会社のデータを設定"
-
-#~ msgid "Create"
-#~ msgstr "作成"
-
-#~ msgid "product.installer"
-#~ msgstr "product.installer"
-
-#~ msgid "Extended"
-#~ msgstr "拡張"
-
-#~ msgid "Customers"
-#~ msgstr "顧客"
-
-#~ msgid "migrade.application.installer.modules"
-#~ msgstr "migrade.application.installer.modules"
-
-#~ msgid "Language"
-#~ msgstr "言語"
-
-#~ msgid "user.preferences.config"
-#~ msgstr "user.preferences.config"
-
-#~ msgid "Image"
-#~ msgstr "画像"
-
-#~ msgid "Timezone"
-#~ msgstr "タイムゾーン"
-
-#~ msgid "Simplified"
-#~ msgstr "簡易化"
-
-#~ msgid "Define Users's Preferences"
-#~ msgstr "ユーザのプリファレンスを定義します。"
-
-#~ msgid ""
-#~ "Check out this box if you want to always display tips on each menu action"
-#~ msgstr "常にそれぞれのメニューアクションのヒントを表示する場合は、このボックスをチェックして下さい。"
-
-#~ msgid "For Import Saleforce"
-#~ msgstr "Salesforceのインポート"
-
-#~ msgid ""
-#~ "Set default for new user's timezone, used to perform timezone conversions "
-#~ "between the server and the client."
-#~ msgstr "新規ユーザのタイムゾーンのデフォルト設定のために、サーバとクライアント間のタイムゾーンの変換をします。"
-
-#~ msgid "For Quickbooks Ippids"
-#~ msgstr "Quickbooksのlppidsの為に"
-
-#~ msgid "Create Additional Users"
-#~ msgstr "追加ユーザの作成"
-
-#~ msgid "Quickbooks Ippids"
-#~ msgstr "QuickBooksのIPP / IDS"
-
-#~ msgid "Import Saleforce"
-#~ msgstr "Salesforceのインポート"
-
-#~ msgid "Import or create customers"
-#~ msgstr "顧客の作成 / インポート"
-
-#~ msgid "Import Sugarcrm"
-#~ msgstr "SugarCRMのインポート"
-
-#~ msgid "Create or Import Customers"
-#~ msgstr "顧客の作成 / インポート"
-
-#~ msgid ""
-#~ "Create or Import Customers  and their contacts manually from this form or "
-#~ "you can import your existing partners by CSV spreadsheet from \"Import "
-#~ "Data\" wizard"
-#~ msgstr ""
-#~ "このフォームから手動で顧客とその連絡先を作成またはインポート或いは "
-#~ "\"データのインポート\"ウィザードからCSVスプレッドシートで、既存のパートナをインポートすることができます。"
-
-#~ msgid "Interface"
-#~ msgstr "インタフェース"
-
-#~ msgid ""
-#~ "This will set the default preferences for new users and update all existing "
-#~ "ones. Afterwards, users are free to change those values on their own user "
-#~ "preference form."
-#~ msgstr ""
-#~ "これは新規ユーザのデフォルトのプリファレンスを設定し、既存のすべてのものを更新します。　その後に、ユーザはユーザ設定フォームで自由に設定変更ができます。"
-
-#~ msgid ""
-#~ "Sets default language for the all user interface, when UI translations are "
-#~ "available. If you want to Add new Language, you can add it from 'Load an "
-#~ "Official Translation' wizard  from 'Administration' menu."
-#~ msgstr ""
-#~ "UI翻訳が利用可能な時は、既定の言語を全てのユーザインタフェースに設定します。新しい言語を追加する場合は、\"管理\" "
-#~ "メニューのウィザード\"オフィシャル翻訳のロード\"から追加することができます。"
-
-#~ msgid ""
-#~ "If you use OpenERP for the first time we strongly advise you to select the "
-#~ "simplified interface, which has less features but is easier. You can always "
-#~ "switch later from the user preferences."
-#~ msgstr ""
-#~ "初めてopenERPを利用する場合は、簡素化されたインタフェースを選択されることをお勧めします。設定後いつでもユーザプリファレンスから切り替えができます。"
-
-#~ msgid "Set Company Header and Footer"
-#~ msgstr "会社ヘッダーとフッターの設定"
-
-#~ msgid "Display Tips"
-#~ msgstr "ヒントの表示"
-
-#~ msgid "Import"
-#~ msgstr "インポート"
-
-#~ msgid "Sync Google Contact"
-#~ msgstr "Googleコンタクトの同期"
-
-#~ msgid "Define default users preferences"
-#~ msgstr "デフォルトのユーザプリファレンスの設定"
-
-#~ msgid ""
-#~ "Fill in your company data (address, logo, bank accounts) so that it's "
-#~ "printed on your reports. You can click on the button 'Preview Header' in "
-#~ "order to check the header/footer of PDF documents."
-#~ msgstr ""
-#~ "レポートに印刷される会社のデータ（アドレス、ロゴ、銀行口座）を記入して下さい。PDF "
-#~ "ドキュメントのヘッダー/フッターを確認するには、ヘッダープレビューをクリックします。"
-
-#~ msgid "For Import Sugarcrm"
-#~ msgstr "SugarCRMのインポートのため"
-
-#~ msgid "For Sync Google Contact"
-#~ msgstr "Googleコンタクトとの同期のため"
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "res_config_contents"
+msgstr "res_config_contents"

@@ -39,6 +39,7 @@ import openerp.release as release
 from openerp.tools.safe_eval import safe_eval as eval
 
 MANIFEST = '__openerp__.py'
+README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
 
@@ -154,7 +155,7 @@ def get_module_filetree(module, dir='.'):
 
     return tree
 
-def get_module_resource(module, *args):
+def get_resource_path(module, *args):
     """Return the full path of a resource of the given module.
 
     :param module: module name
@@ -163,7 +164,6 @@ def get_module_resource(module, *args):
     :rtype: str
     :return: absolute path to the resource
 
-    TODO name it get_resource_path
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
@@ -174,6 +174,33 @@ def get_module_resource(module, *args):
         if os.path.exists(resource_path):
             return resource_path
     return False
+
+# backwards compatibility
+get_module_resource = get_resource_path
+
+def get_resource_from_path(path):
+    """Tries to extract the module name and the resource's relative path
+    out of an absolute resource path.
+
+    If operation is successfull, returns a tuple containing the module name, the relative path
+    to the resource using '/' as filesystem seperator[1] and the same relative path using
+    os.path.sep seperators.
+
+    [1] same convention as the resource path declaration in manifests
+
+    :param path: absolute resource path
+
+    :rtype: tuple
+    :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
+    """
+    resource = [path.replace(adpath, '') for adpath in ad_paths if path.startswith(adpath)]
+    if resource:
+        relative = resource[0].split(os.path.sep)
+        if not relative[0]:
+            relative.pop(0)
+        module = relative.pop(0)
+        return (module, '/'.join(relative), os.path.sep.join(relative))
+    return None
 
 def get_module_icon(module):
     iconpath = ['static', 'description', 'icon.png']
@@ -231,7 +258,6 @@ def load_information_from_description_file(module, mod_path=None):
                 'icon': get_module_icon(module),
                 'installable': True,
                 'license': 'AGPL-3',
-                'name': False,
                 'post_load': None,
                 'version': '1.0',
                 'web': False,
@@ -248,6 +274,13 @@ def load_information_from_description_file(module, mod_path=None):
                 info.update(eval(f.read()))
             finally:
                 f.close()
+
+            if not info.get('description'):
+                readme_path = [opj(mod_path, x) for x in README
+                               if os.path.isfile(opj(mod_path, x))]
+                if readme_path:
+                    readme_text = tools.file_open(readme_path[0]).read()
+                    info['description'] = readme_text
 
             if 'active' in info:
                 # 'active' has been renamed 'auto_install'

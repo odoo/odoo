@@ -2,288 +2,215 @@
 <openerp>
 <data>
 
+
 <!--
-     Theme Selector
+    Customize Themes
+
+    Use INPUT type 'checkbox' or 'radio' or use OPTION in select box
+    'data-xmlid' (optional) xml id of the template to add if the input is checked.
+        You can set a list of xml id separate by comma (all template is enable or
+        disable in same time)
+    'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
+    'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
+    'data-reload="/"' (optional) force the reloading of the page if the url match with
+        the string ( = regexp).
+        Otherwise, only the '/web/css/website.assets_frontend' is reloaded
+
+    For the sets (data-enable and/or data-disable without data-xmlid), the set is
+    automatically checked if:
+    - all related fields are enabled for data-enable
+    - all related fields are disabled for data-disable
+    else unchecked
+
+    HTML apply classes:
+    - 'checked': on the parent label when input is checked
+    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together
+       out is added)
+    - 'out': on the container 1 second before removed from ths DOM
+    - 'loading': on the container/modal when the new css is loading
 -->
 
-    <template id="website.themes" name="Themes">
-        <t t-call="website.layout">
-          <div id="wrap" groups="base.group_website_publisher">
-            <div class="container">
-    
-            <div class="alert alert-info mt32" t-if="theme_changed">
-                <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
-                <p>
-                    <h4>Theme Changed!</h4>
-                    Have a look at <a href="/">your homepage</a> or try another theme below.
-                </p>
-            </div>
-            <h1 class="text-center">Try a New Theme</h1>
-            <h3 class="text-center text-muted">You'll be able to change the theme at anytime</h3>
-    
-            <div class="row mt32" id="themes-list">
-    
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img src="/website/static/src/img/bootswatch_default_thumbnail.png" class="img-responsive" alt="Default Theme"/>
-                  </div>
-                  <div class="options">
-                    <h3>Default</h3>
-                    <p>Pure Bootstrap</p>
-                    <a class="btn btn-info" href="/website/theme_change">Apply</a>
-                  </div>
-                </div>
-              </div>
+<template id="website.theme_customize" name="Theme Modal for Customization">
+  <div id="theme_customize_modal" class="modal fade">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <input id="less" data-xmlid="website.option_bootstrap_less" style="display: none;"/>
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/amelia/thumbnail.png" alt="Amelia"/>
-                  </div>
-                  <div class="options">
-                    <h3>Amelia</h3>
-                    <p>Sweet and cheery</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_amelia">Apply</a>
-                  </div>
-                </div>
+              <div class="loading_backdrop"></div>
+              <div class="modal-header text-center">
+                  <button type="button" class="close">×</button>
+                  <a class="btn btn-primary" href="/web#return_label=Website&amp;action=website.action_module_theme">Click here to change theme</a>
+                  <hr style="margin: 20px -10px 10px -10px;"/>
+                  <h4 class="modal-title">Customize this default theme</h4>
               </div>
+              <div class="modal-body">
+                  <h5 class="modal-h5">LAYOUT</h5>
+                  <table name="layout">
+                      <tr>
+                          <td class=" text-center" width="50%">
+                              <label class=" center-block">
+                                  <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
+                                  <input name="layoutvar" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td class=" text-center">
+                              <label class=" center-block">
+                                 <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
+                                  <input name="layoutvar" type="radio" data-xmlid="website.option_layout_boxed" data-enable="less"/>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
 
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cerulean/thumbnail.png" alt="Cerulean"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cerulean</h3>
-                    <p>A calm blue sky</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cerulean">Apply</a>
-                  </div>
-                </div>
+                  <h5 class="modal-h5">MAIN COLOR</h5>
+                  <table name="color">
+                      <tr>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="" data-disable="less"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_emerald" data-enable="less"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_cobalt" data-enable="less"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_amethyst" data-enable="less"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_ruby" data-enable="less"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/website/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="website.option_color_gold" data-enable="less"/>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <h5 class="modal-h5">FONTS COMBINATIONS</h5>
+                  <table name="font">
+                      <tr>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">Helvetica</span>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >/ Georgia</span>
+                                  </div>
+                                  <input name="theme" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
+                                    <input name="theme" type="radio" data-xmlid="website.option_font" data-enable="less"/>
+                                  </div>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
               </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cosmo/thumbnail.png" alt="Cosmo"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cosmo</h3>
-                    <p>An ode to Metro</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cosmo">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/cyborg/thumbnail.png" alt="Cyborg"/>
-                  </div>
-                  <div class="options">
-                    <h3>Cyborg</h3>
-                    <p>Jet black and electric blue</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_cyborg">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/flatly/thumbnail.png" alt="Flatly"/>
-                  </div>
-                  <div class="options">
-                    <h3>Flatly</h3>
-                    <p>Flat and modern</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_flatly">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/journal/thumbnail.png" alt="Journal"/>
-                  </div>
-                  <div class="options">
-                    <h3>Journal</h3>
-                    <p>Crisp like a new sheet of paper.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_journal">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/readable/thumbnail.png" alt="Readable"/>
-                  </div>
-                  <div class="options">
-                    <h3>Readable</h3>
-                    <p>Optimized for legibility</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_readable">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/simplex/thumbnail.png" alt="Simplex"/>
-                  </div>
-                  <div class="options">
-                    <h3>Simplex</h3>
-                    <p>Mini and minimalist.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_simplex">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/slate/thumbnail.png" alt="Slate"/>
-                  </div>
-                  <div class="options">
-                    <h3>Slate</h3>
-                    <p>Shades of gunmetal gray</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_slate">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/spacelab/thumbnail.png" alt="Spacelab"/>
-                  </div>
-                  <div class="options">
-                    <h3>Spacelab</h3>
-                    <p>Silvery and sleek.</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_spacelab">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/united/thumbnail.png" alt="United"/>
-                  </div>
-                  <div class="options">
-                    <h3>United</h3>
-                    <p>Ubuntu orange and unique font</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_united">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="well text-center">
-                  <div class="image">
-                    <img class="img-responsive" src="http://bootswatch.com/yeti/thumbnail.png" alt="Yeti"/>
-                  </div>
-                  <div class="options">
-                    <h3>Yeti</h3>
-                    <p>A friendly foundation</p>
-                    <a class="btn btn-info" href="/website/theme_change?theme_id=website.theme_yeti">Apply</a>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            </div>
           </div>
-        </t>
-    </template>
+      </div>
+  </div>
+</template>
 
+<!-- color-picker -->
+<!-- HTML class to hide option for one mode : only-text, only-bg -->
+
+<template id="website.colorpicker" name="Color-Picker">
+    <table class="colorpicker">
+        <tr>
+            <td><button class="automatic-color" title="Automatic Color"/></td>
+            <td><button class="bg-primary" title="Primary Color"/></td>
+            <td><button class="bg-success" title="Success Color"/></td>
+            <td><button class="bg-info" title="Info Color"/></td>
+            <td><button class="bg-warning" title="Warning Color"/></td>
+            <td><button class="bg-danger" title="Danger Color"/></td>
+        </tr>
+        <tr><td colspan="8"><hr style="width: 100%; height: 1px;"/></td></tr>
+        <tr>
+            <td><button class="bg-blue"/></td>
+            <td><button class="bg-turquoise"/></td>
+            <td><button class="bg-green"/></td>
+            <td><button class="bg-yellow"/></td>
+            <td><button class="bg-red"/></td>
+            <td><button class="bg-pink"/></td>
+            <td><button class="bg-purple"/></td>
+            <td><button class="bg-brown"/></td>
+        </tr>
+    </table>
+</template>
 
 <!--
-     All Default Themes
+     Theme
 -->
 
-    <template id="website.theme_amelia" name="Amelia" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/amelia.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/amelia.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="website.theme" name="Theme">
+    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+    <!-- Boostrap Fallback if server can't compute less files -->
+    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+</template>
 
-    <template id="website.theme_cerulean" name="Cerulean" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cerulean.min.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<!-- Bootstrap Less File layout -->
 
-    <template id="website.theme_cosmo" name="Cosmo" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cosmo.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cosmo.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[@id='bootstrap_css']" position="replace">
+        <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
+        <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
+    </xpath>
+</template>
 
-    <template id="website.theme_cyborg" name="Cyborg" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cyborg.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/cyborg.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<!-- Option layout -->
 
-    <template id="website.theme_flatly" name="Flatly" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/flatly.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/flatly.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after">
+        <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
+    </xpath>
+</template>
 
-    <template id="website.theme_journal" name="Journal" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/journal.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/journal.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<!-- Option color -->
 
-    <template id="website.theme_readable" name="Readable" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/readable.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/readable.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
 
-    <template id="website.theme_simplex" name="Simplex" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/simplex.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/simplex.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_slate" name="Slate" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/slate.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/slate.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_spacelab" name="Spacelab" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/spacelab.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/spacelab.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_united" name="United" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/united.min.css' t-ignore="true"/>
-        </xpath>
-    </template>
-
-    <template id="website.theme_yeti" name="Yeti" inherit_id="website.theme" optional="disabled">
-        <xpath expr="//link[@id='bootstrap_css']" position="replace">
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.min.css' t-ignore="true"/>
-            <link rel='stylesheet' href='/website/static/src/css/bootswatch/yeti.fix.css' t-ignore="true"/>
-        </xpath>
-    </template>
+<template id="option_font" name="option_font" inherit_id="website.theme" active="False" customize_show="False">
+    <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
+</template>
 
 </data>
 </openerp>

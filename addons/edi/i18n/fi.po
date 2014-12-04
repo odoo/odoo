@@ -1,42 +1,27 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-02-09 10:00+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "Syy:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "Dokumentin tuonti onnistui!"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "Dokumenttia ei voida tuoda."
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' on virheellinen ulkoinen ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,34 +35,26 @@ msgstr "Valuutta"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "Dokumentin tuonti-ilmoitus"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "Sovellus puuttuu."
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "EDI Alijärjestelmä"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
+#: field:edi.edi,id:0
+msgid "ID"
 msgstr ""
-"Dokumentti, jota yrität tuoda, vaatii OpenERP `%s` sovelluksen. Voit asentaa "
-"puuttuvan sovelluksen, jos olet kirjautunut administraattorina, käyttämällä "
-"konfigurointi assistenttia."
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' on virheellinen ulkoinen ID"
+msgid "Missing Application."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -85,165 +62,31 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "EDI Alijärjestelmä"
-
-#~ msgid "Description"
-#~ msgstr "Kuvaus"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "Valuuttakoodin pitää olla uniikki yrityskohtaisesti!"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Yrityksen nimen pitää olla uniikki!"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "Kumppanien osoitteet"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "EDI tunnisteiden tulee olla uniikkeja!"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "Uniikki tunniste EDI dokumentin noutamiseksi."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "Tuo olemassaolevaan OpenERP instassiin"
-
-#~ msgid "Import this document"
-#~ msgstr "Tuo tämä dokumentti"
-
-#~ msgid "View/Print"
-#~ msgstr "Katso/Tulosta"
-
-#~ msgid "Document"
-#~ msgstr "Dokumentti"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "OpenERP instanssin osoite:"
-
-#~ msgid "EDI document content"
-#~ msgstr "EDI dokumentin sisältö"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI dokumentti"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "Puuttuva applikaatio"
+msgid "Reason:"
+msgstr "Syy:"
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "Luo oma uusi OpenERP instanssi"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "Dokumenttia ei voida tuoda."
 
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "Tuo uuteen OpenERP Online instassiin"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "Dokumentin tuonti onnistui!"
 
-#~ msgid "Import"
-#~ msgstr "Tuo"
-
-#~ msgid "Import into another application"
-#~ msgstr "Tuo toiseen ohjelmistoon"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr "katso itä vaaditaan tämän dokumentin käsittelyyn Pythonissa"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERP dokumentaatio"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "Aloittaaksesi heti"
-
-#~ msgid "Invoice"
-#~ msgstr "Lasku"
-
-#~ msgid "Date"
-#~ msgstr "Päivämäärä"
-
-#~ msgid "Quantity"
-#~ msgstr "Määrä"
-
-#~ msgid "Product Description"
-#~ msgstr "Tuotteen kuvaus"
-
-#~ msgid "Unit Price"
-#~ msgstr "Yksikköhinta"
-
-#~ msgid "Your Reference"
-#~ msgstr "Viitteenne"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "Voit ladata raakamuotoisen EDI dokumentin täältä:"
-
-#~ msgid "Download"
-#~ msgstr "Lataa"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Pay Online"
-#~ msgstr "Maksa verkossa"
-
-#~ msgid "Discount"
-#~ msgstr "Alennus"
-
-#~ msgid "Net Total:"
-#~ msgstr "Yhteensä netto:"
-
-#~ msgid "Taxes:"
-#~ msgstr "Verot:"
-
-#~ msgid "Amount"
-#~ msgstr "Määrä"
-
-#~ msgid "Notes:"
-#~ msgstr "Muistiinpanot:"
-
-#~ msgid "Tax"
-#~ msgstr "Vero"
-
-#~ msgid "Total:"
-#~ msgstr "Yhteensä:"
-
-#~ msgid "Order"
-#~ msgstr "Tilaus"
-
-#~ msgid "Salesman"
-#~ msgstr "Myyjä"
-
-#~ msgid "on the transfer:"
-#~ msgstr "siirrossa:"
-
-#~ msgid "Payment terms"
-#~ msgstr "Maksuehdot"
-
-#~ msgid "Please transfer"
-#~ msgstr "Ole hyvä ja siirrä"
-
-#~ msgid "to"
-#~ msgstr "vastaanottaja"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Voit maksaa tämän laskun suoraan PayPal'in turvallisessa verkkomaksussa:"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "Pankkisiirto"
-
-#~ msgid "Paypal"
-#~ msgstr "PayPal"
-
-#~ msgid "Price"
-#~ msgstr "Hinta"
-
-#~ msgid "Discount(%)"
-#~ msgstr "Alennus (%)"
-
-#~ msgid "Base Amount"
-#~ msgstr "Alkuperäinen määrä"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

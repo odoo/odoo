@@ -258,24 +258,24 @@ openerp.ParentedMixin = {
                               current object is destroyed.
     */
     alive: function(promise, reject) {
-        var def = $.Deferred();
         var self = this;
-        promise.done(function() {
-            if (! self.isDestroyed()) {
-                if (! reject)
+        return $.Deferred(function (def) {
+            promise.then(function () {
+                if (!self.isDestroyed()) {
                     def.resolve.apply(def, arguments);
-                else
-                    def.reject();
-            }
-        }).fail(function() {
-            if (! self.isDestroyed()) {
-                if (! reject)
+                }
+            }, function () {
+                if (!self.isDestroyed()) {
                     def.reject.apply(def, arguments);
-                else
+                }
+            }).always(function () {
+                if (reject) {
+                    // noop if def already resolved or rejected
                     def.reject();
-            }
-        });
-        return def.promise();
+                }
+                // otherwise leave promise in limbo
+            });
+        }).promise();
     },
     /**
      * Inform the object it should destroy itself, releasing any
@@ -287,7 +287,17 @@ openerp.ParentedMixin = {
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
-    }
+    },
+    /**
+     * Find the closest ancestor matching predicate
+     */
+    findAncestor: function (predicate) {
+        var ancestor = this;
+        while (!(predicate(ancestor)) && ancestor && ancestor.getParent) {
+            ancestor = ancestor.getParent();
+        }
+        return ancestor;
+    },
 };
 
 /**
@@ -774,6 +784,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
             return this.$el;
         return this.$el.find(selector);
     },
+    do_show: function () {
+        this.$el.show();
+    },
+    do_hide: function () {
+        this.$el.hide();
+    },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
      * method invocations.
@@ -1058,11 +1074,11 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
     },
     check_session_id: function() {
         var self = this;
-        if (this.avoid_recursion || self.use_cors)
+        if (this.avoid_recursion)
             return $.when();
         if (this.session_id)
             return $.when(); // we already have the session id
-        if (this.override_session || ! this.origin_server) {
+        if (!this.use_cors && (this.override_session || ! this.origin_server)) {
             // If we don't use the origin server we consider we should always create a new session.
             // Even if some browsers could support cookies when using jsonp that behavior is
             // not consistent and the browser creators are tending to removing that feature.

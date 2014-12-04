@@ -1,15 +1,20 @@
-.box
-  padding-left: 8px
-  padding-right: 8px
-  margin-left: 4px
-  margin-right: 4px
-  border-radius: 4px
-  min-width: 80px
-  span
-    font-size: 200%
+.vote
+  min-width: 38px
+  margin-right: 12px
+  .vote_count
+    font-size: 160%
     font-weight: bold
-  div.subtitle
-    margin-top: -4px
+    line-height: 12px
+  .vote_up,.vote_down
+    font-size: 130%
+
+.author-box
+  min-width: 200px
+  padding: 4px
+  background-color: #f5f5f5
+
+.question-block
+  margin-left: 50px
 
 .question
   .question-name
@@ -29,9 +34,8 @@
     height: auto !important
 
 img.img-avatar
-  max-width: 50px
+  max-height: 40px
   margin-right: 10px
-
 
 .oe_grey
   background-color: #eeeeee
@@ -57,9 +61,6 @@ img.img-avatar
 .forum_favourite_question
   color: #ffcc00 !important
 
-.load_tags
-  width: 845px !important
-
 a.no-decoration
   cursor: pointer
   text-decoration: none !important
@@ -71,6 +72,8 @@ a.no-decoration
 .oe_comment_grey
   background-color: #f5f5f5
   padding: 4px
+.close.comment_delete
+  font-size: 16px
 
 .country_flag
   max-height: 16px
@@ -90,6 +93,13 @@ a.no-decoration
   margin-left: 90px
   width: 300px
   z-index: 9999
+
+.oe_forum_email_required
+  position: absolute
+  margin-top: 155px
+  margin-left: 500px
+  margin-right: 100px
+  z-index: 5
 
 button.btn-link.text-muted
   color: #999

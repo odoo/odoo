@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools.float_utils import float_compare
 
 class purchase_order(osv.osv):
 
@@ -149,7 +150,15 @@ class purchase_order(osv.osv):
 
     def _get_picking_in(self, cr, uid, context=None):
         obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
+        type_obj = self.pool.get('stock.picking.type')
+        user_obj = self.pool.get('res.users')
+        company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
+        types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)], context=context)
+        if not types:
+            types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
+            if not types:
+                raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+        return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
@@ -232,7 +241,7 @@ class purchase_order(osv.osv):
                                        "to 'Confirmed'. Then the supplier must confirm the order to change "
                                        "the status to 'Approved'. When the purchase order is paid and "
                                        "received, the status becomes 'Done'. If a cancel action occurs in "
-                                       "the invoice or in the reception of goods, the status becomes "
+                                       "the invoice or in the receipt of goods, the status becomes "
                                        "in exception.",
                                   select=True, copy=False),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines',
@@ -244,7 +253,7 @@ class purchase_order(osv.osv):
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id',
                                         'invoice_id', 'Invoices', copy=False,
                                         help="Invoices generated for a purchase order"),
-        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of reception operations that have been generated for this purchase order."),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of receipts that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, copy=False,
                                  help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received Ratio', type='float'),
@@ -252,10 +261,10 @@ class purchase_order(osv.osv):
                                     help="It indicates that an invoice has been validated"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
-            readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
+            readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)],'bid':[('readonly',False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Based on incoming shipments: let you create an invoice when receptions are validated."
+                "Based on incoming shipments: let you create an invoice when receipts are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -312,7 +321,7 @@ class purchase_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'purchase.order') or '/'
         context = dict(context or {}, mail_create_nolog=True)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
@@ -672,15 +681,19 @@ class purchase_order(osv.osv):
                     return True
         return False
 
+    def wkf_action_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
+
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Unable to cancel the purchase order %s.') % (purchase.name),
-                        _('First cancel all receptions related to this purchase order.'))
-            self.pool.get('stock.picking') \
-                .signal_workflow(cr, uid, map(attrgetter('id'), purchase.picking_ids), 'button_cancel')
+                for move in pick.move_lines:
+                    if pick.state == 'done':
+                        raise osv.except_osv(
+                            _('Unable to cancel the purchase order %s.') % (purchase.name),
+                            _('You have already received some goods for it.  '))
+            self.pool.get('stock.picking').action_cancel(cr, uid, [x.id for x in purchase.picking_ids if x.state != 'cancel'], context=context)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise osv.except_osv(
@@ -688,10 +701,6 @@ class purchase_order(osv.osv):
                         _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_workflow(cr, uid, map(attrgetter('id'), purchase.invoice_ids), 'invoice_cancel')
-            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
-                    {'state': 'cancel'})
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         self.signal_workflow(cr, uid, ids, 'purchase_cancel')
         return True
 
@@ -700,7 +709,7 @@ class purchase_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
-            price_unit *= order_line.product_uom.factor
+            price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
@@ -727,7 +736,7 @@ class purchase_order(osv.osv):
             'origin': order.name,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id':order.picking_type_id.warehouse_id.id,
-            'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none'
+            'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none',
         }
 
         diff_quantity = order_line.product_qty
@@ -740,7 +749,8 @@ class purchase_order(osv.osv):
                 'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
                 'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
                 'procurement_id': procurement.id,
-                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state) or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='picking' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                'propagate': procurement.rule_id.propagate,
             })
             diff_quantity -= min(procurement_qty, diff_quantity)
             res.append(tmp)
@@ -818,7 +828,13 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
+            picking_vals = {
+                'picking_type_id': order.picking_type_id.id,
+                'partner_id': order.dest_address_id.id or order.partner_id.id,
+                'date': max([l.date_planned for l in order.order_line]),
+                'origin': order.name
+            }
+            picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
@@ -1105,13 +1121,14 @@ class purchase_order_line(osv.osv):
 
 
         supplierinfo = False
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
         for supplier in product.seller_ids:
             if partner_id and (supplier.name.id == partner_id):
                 supplierinfo = supplier
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-                if (qty or 0.0) < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
+                if float_compare(min_qty , qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
                     if qty:
                         res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
@@ -1122,7 +1139,7 @@ class purchase_order_line(osv.osv):
             res['value'].update({'product_qty': qty})
 
         price = price_unit
-        if state not in ('sent','bid'):
+        if price_unit is False or price_unit is None:
             # - determine price_unit and taxes_id
             if pricelist_id:
                 date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -1144,6 +1161,7 @@ class purchase_order_line(osv.osv):
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
+
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
@@ -1276,7 +1294,7 @@ class procurement_order(osv.osv):
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
         taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-        name = product.partner_ref
+        name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
 
@@ -1335,7 +1353,7 @@ class procurement_order(osv.osv):
                         po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
-                    name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+                    name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
                         'origin': procurement.origin,
@@ -1343,6 +1361,7 @@ class procurement_order(osv.osv):
                         'location_id': procurement.location_id.id,
                         'picking_type_id': procurement.rule_id.picking_type_id.id,
                         'pricelist_id': partner.property_product_pricelist_purchase.id,
+                        'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
@@ -1391,14 +1410,22 @@ class product_template(osv.Model):
         for template in self.browse(cr, uid, ids, context=context):
             res[template.id] = sum([p.purchase_count for p in template.product_variant_ids])
         return res
+
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
+
     _defaults = {
         'purchase_ok': 1,
         'route_ids': _get_buy_route,
     }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        products = self._get_products(cr, uid, ids, context=context)
+        result = self._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+        return result
 
 class product_product(osv.Model):
     _name = 'product.product'
@@ -1430,7 +1457,7 @@ class mail_compose_message(osv.Model):
 
 class account_invoice(osv.Model):
     """ Override account_invoice to add Chatter messages on the related purchase
-        orders, logging the invoice reception or payment. """
+        orders, logging the invoice receipt or payment. """
     _inherit = 'account.invoice'
 
     def invoice_validate(self, cr, uid, ids, context=None):
@@ -1474,10 +1501,6 @@ class account_invoice_line(osv.Model):
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
     }
-
-class product_template(osv.osv):
-    _inherit = "product.template"
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -66,9 +66,9 @@ class mail_alias(osv.Model):
 
     _columns = {
         'alias_name': fields.char('Alias Name',
-            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.my.openerp.com>",),
+            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
-                                          help="The model (OpenERP Document Kind) to which this alias "
+                                          help="The model (Odoo Document Kind) to which this alias "
                                                "corresponds. Any incoming email that does not reply to an "
                                                "existing record will cause the creation of a new record "
                                                "of this model (e.g. a Project Task)",
@@ -132,7 +132,7 @@ class mail_alias(osv.Model):
     def name_get(self, cr, uid, ids, context=None):
         """Return the mail alias display alias_name, including the implicit
            mail catchall domain if exists from config otherwise "New Alias".
-           e.g. `jobs@openerp.my.openerp.com` or `jobs` or 'New Alias'
+           e.g. `jobs@mail.odoo.com` or `jobs` or 'New Alias'
         """
         res = []
         for record in self.browse(cr, uid, ids, context=context):
@@ -144,7 +144,7 @@ class mail_alias(osv.Model):
                 res.append((record['id'], _("Inactive Alias")))
         return res
 
-    def _find_unique(self, cr, uid, name, context=None):
+    def _find_unique(self, cr, uid, name, alias_id=False, context=None):
         """Find a unique alias name similar to ``name``. If ``name`` is
            already taken, make a variant by adding an integer suffix until
            an unused alias is found.
@@ -152,16 +152,19 @@ class mail_alias(osv.Model):
         sequence = None
         while True:
             new_name = "%s%s" % (name, sequence) if sequence is not None else name
-            if not self.search(cr, uid, [('alias_name', '=', new_name)]):
+            domain = [('alias_name', '=', new_name)]
+            if alias_id:
+                domain += [('id', '!=', alias_id)]
+            if not self.search(cr, uid, domain):
                 break
             sequence = (sequence + 1) if sequence else 2
         return new_name
 
-    def _clean_and_make_unique(self, cr, uid, name, context=None):
+    def _clean_and_make_unique(self, cr, uid, name, alias_id=False, context=None):
         # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
-        return self._find_unique(cr, uid, name, context=context)
+        return self._find_unique(cr, uid, name, alias_id=alias_id, context=context)
 
     def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
         alias_model_name, alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={},
@@ -246,9 +249,10 @@ class mail_alias(osv.Model):
         return super(mail_alias, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        """"give uniqe alias name if given alias name is allready assigned"""
-        if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_make_unique(cr, uid, vals.get('alias_name'), context=context)
+        """"give a unique alias name if given alias name is already assigned"""
+        ids = ids if isinstance(ids, (tuple, list)) else [ids]
+        if vals.get('alias_name') and ids:
+            vals['alias_name'] = self._clean_and_make_unique(cr, uid, vals.get('alias_name'), alias_id=ids[0], context=context)
         return super(mail_alias, self).write(cr, uid, ids, vals, context=context)
 
     def open_document(self, cr, uid, ids, context=None):

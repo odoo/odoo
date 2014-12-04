@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Quote frontend assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
+      <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
+      <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
+    </xpath>
+  </template>
+
   <template id="pricing" name="Price">
-      <section data-snippet-id="title">
+      <section>
           <h1 class="page-header">Pricing</h1>
       </section>
       <section id="quote">
@@ -92,9 +101,9 @@
       </section>
   </template>
 
-  <template id="change_quantity" inherit_id="website_quote.pricing" optional="disabled" name="Change Quantity">
+  <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
-          <div class="input-group">
+          <div class="input-group oe_website_spinner">
               <span class="input-group-addon hidden-print">
                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                       <span class="fa fa-minus"/>
@@ -116,7 +125,7 @@
           <t t-foreach="quotation.message_ids" t-as="message">
               <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
                   <div class="media-body">
-                      <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                      <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                       <div class="media-body">
                           <h5 class="media-heading">
                               <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
@@ -130,11 +139,11 @@
   </template>
 
   <!-- Options:Quotation Chatter: user can reply -->
-  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" optional="enabled" inherit_id="website_quote.chatter">
+  <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" customize_show="True" inherit_id="website_quote.chatter">
       <xpath expr="//h1" position="after">
           <section class="mb32 css_editable_mode_hidden hidden-print">
               <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
-                  <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                  <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                   <div class="pull-left mb32" style="width: 75%%">
                       <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
                       <button type="submit" class="btn btn-primary mt8">Send</button>
@@ -161,14 +170,8 @@
 
   <template id="so_quotation" name="Product Quotation">
       <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
-        <body data-spy="scroll" data-target=".navspy">
-            <div class="container">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
+            <div class="container o_website_quote">
               <div class="row mt16">
                   <div class="col-md-3">
                       <div class="bs-sidebar">
@@ -208,14 +211,27 @@
                               </div>
 
 
-                              <div class="text-center mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_total">
+                              <div class="text-center mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_untaxed">
                                   <p class="text-muted mb8">Your advantage:</p>
-                                  <strong t-field="quotation.amount_total" 
-                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
-                                  <strong t-field="quotation.amount_undiscounted"
-                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
-                                        style="text-decoration: line-through"
-                                        class="text-danger"/>
+                                  <t t-if="quotation.amount_untaxed == quotation.amount_total">
+                                      <strong t-field="quotation.amount_total"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                      <strong t-field="quotation.amount_undiscounted"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                          style="text-decoration: line-through"
+                                          class="text-danger"/>
+                                  </t>
+                                  <t t-if="quotation.amount_untaxed != quotation.amount_total">
+                                      <strong t-field="quotation.amount_untaxed"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                      <strong t-field="quotation.amount_undiscounted"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                          style="text-decoration: line-through"
+                                          class="text-danger"/>
+                                      <br />
+                                      (<span t-field="quotation.amount_total"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/> Incl. tax)
+                                  </t>
                               </div>
                          </div>
                       </div>
@@ -242,7 +258,7 @@
                           <em t-esc="quotation.name"/>
                           <small t-field="quotation.state"/>
                           <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden">
-                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (quotation._name, quotation.id)">Update Quote</a>
+                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Update Quote</a>
                           </div>
                       </h1>
 
@@ -355,11 +371,11 @@
                       </div>
 
                       <a id="offer"/>
-                      <div t-field="quotation.website_description"/>
+                      <div t-field="quotation.website_description" class="oe_no_empty"/>
 
                       <t t-foreach="quotation.order_line" t-as="line">
                           <a t-att-id="line.id"/>
-                          <div t-field="line.website_description"/>
+                          <div t-field="line.website_description" class="oe_no_empty"/>
                       </t>
     
                       <div class="oe_structure"/>
@@ -388,7 +404,7 @@
   </template>
 
   <!-- Options:Quotation Signature -->
-  <template id="opt_quotation_signature" name="Ask Signature" optional="enabled" inherit_id="website_quote.so_quotation">
+  <template id="opt_quotation_signature" name="Ask Signature" customize_show="True" inherit_id="website_quote.so_quotation">
       <xpath expr="//div[@id='sign-dialog']" position="inside">
         <div class="panel panel-default mt16 mb0" id="drawsign">
             <div class="panel-heading">
@@ -404,7 +420,7 @@
 
   <template id="optional_products">
     <div class="container mt32" t-if="option">
-        <section data-snippet-id="title">
+        <section>
             <h1 class="page-header">Options</h1>
         </section>
         <section id="options">
@@ -457,13 +473,8 @@
 
   <template id="so_template" name="SO Template">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
-        <body data-spy="scroll" data-target=".navspy">
-            <div class="container">
+        <body data-spy="scroll" data-target=".navspy" data-offset="50">
+            <div class="container o_website_quote">
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">
@@ -486,7 +497,7 @@
                                 table of content automatically.
                             </p>
                         </div>
-                        <div id="template_introduction" t-field="template.website_description"/>
+                        <div id="template_introduction" t-field="template.website_description" class="oe_no_empty"/>
                         <t t-foreach="template.quote_line" t-as="line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -494,7 +505,7 @@
                                 this content will appear on the quotation only if this
                                 product is put on the quote.
                             </div>
-                            <div t-field="line.website_description"/>
+                            <div t-field="line.website_description" class="oe_no_empty"/>
                         </t>
                         <t t-foreach="template.options" t-as="option_line">
                             <div class="alert alert-info alert-dismissable" t-ignore="True">
@@ -503,7 +514,7 @@
                                 this content will appear on the quotation only if this
                                 product is used in the quote.
                             </div>
-                            <div t-field="option_line.website_description"/>
+                            <div t-field="option_line.website_description" class="oe_no_empty"/>
                         </t>
                         <section id="terms" class="container" t-if="template.note">
                             <h1 class="page-header" t-ignore="True">Terms &amp; Conditions</h1>
@@ -515,6 +526,21 @@
         </body>
         </t>
   </template>
+
+  <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+      <xpath expr="//footer" position="inside">
+          <div class="container mt16 mb8">
+              <div class="pull-right" t-ignore="true" t-if="not editable">
+                  Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+                  an awesome <a href="http://www.odoo.com/page/crm">Open Source CRM</a>.
+              </div>
+              <div class="pull-left text-muted">
+                  Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+              </div>
+          </div>
+      </xpath>
+  </template>
+
 
 </data>
 </openerp>

@@ -33,7 +33,7 @@ Installer for knowledge-based Hidden.
 Makes the Knowledge Application Configuration available from where you can install
 document and Wiki based Hidden.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'data': [
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',

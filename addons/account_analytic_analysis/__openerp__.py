@@ -30,8 +30,8 @@ This module is for modifying account analytic view to show important data to pro
 
 Adds menu to show relevant information to each manager.You can also view the report of account analytic summary user-wise as well as month-wise.
 """,
-    'author': 'Camptocamp',
-    'website': 'http://www.camptocamp.com/',
+    'author': 'Camptocamp / Odoo',
+    'website': 'https://www.odoo.com/page/billing',
     'images': ['images/bill_tasks_works.jpeg','images/overpassed_accounts.jpeg'],
     'depends': ['hr_timesheet_invoice', 'sale'], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
     'data': [
@@ -41,6 +41,7 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'account_analytic_analysis_cron.xml',
         'res_config_view.xml',
         'views/account_analytic_analysis.xml',
+        'product_template_view.xml',
     ],
     'demo': ['analytic_account_demo.xml'],
     'test': ['test/account_analytic_analysis.yml'],

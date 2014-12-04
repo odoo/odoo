@@ -115,8 +115,7 @@
                                 <field name="decimal_precision" class="oe_inline"/>
                             </div>
                             <div>
-                                <label for="tax_calculation_rounding_method"/>
-                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
+                                <field name="tax_calculation_rounding_method" class="oe_inline" />
                             </div>
                         </div>
                         <label for="id" string="Features"/>
@@ -124,6 +123,14 @@
                             <div name="group_multi_currency">
                                 <field name="group_multi_currency" class="oe_inline" on_change="onchange_multi_currency(group_multi_currency)"/>
                                 <label for="group_multi_currency"/>
+                                <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
+                                    <group>
+                                        <field name="income_currency_exchange_account_id"/>
+                                        <field name="expense_currency_exchange_account_id"/>
+                                    </group>
+                                    <group>
+                                    </group>
+                                </group>
                             </div>
                             <div>
                                 <field name="module_account_accountant" class="oe_inline"/>
@@ -243,7 +250,18 @@
                             </div>
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
-                                <field name="paypal_account" placeholder="e.g. sales@openerp.com" class="oe_inline"/>
+                                <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Bank Statements"/>
+                        <div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_qif"/>
                             </div>
                         </div>
                     </group>

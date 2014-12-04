@@ -35,7 +35,7 @@
 
 
     <record id="action_bank_tree" model="ir.actions.act_window">
-        <field name="name">Setup your Bank Accounts</field>
+        <field name="name">Bank Accounts</field>
         <field name="res_model">res.partner.bank</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -47,14 +47,14 @@
             Configure your company's bank account and select those that must
             appear on the report footer.
           </p><p>
-            If you use the accounting application of OpenERP, journals and
+            If you use the accounting application of Odoo, journals and
             accounts will be created automatically based on these data.
           </p>
         </field>
     </record>
     <menuitem
-        sequence="0"
-        parent="account.account_account_menu"
+        sequence="99"
+        parent="account.menu_journals"
         id="menu_action_bank_tree"
         action="action_bank_tree"/>
 

@@ -13,6 +13,7 @@ For website built with Odoo CMS, this module include a chat button on your Websi
     'installable': True,
     'data': [
         'views/website_livechat.xml',
-        'views/res_config.xml'
+        'views/res_config.xml',
+        'website_livechat_data.xml'
     ],
 }

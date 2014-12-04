@@ -29,7 +29,7 @@ The module adds google user in res user.
 ========================================
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['base_setup'],
     'data': [
         'google_account_data.xml',

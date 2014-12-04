@@ -22,7 +22,7 @@
 import base64
 import time
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import tools
 
@@ -30,35 +30,19 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class account_coda_import(osv.osv_memory):
-    _name = 'account.coda.import'
-    _description = 'Import CODA File'
-    _columns = {
-        'coda_data': fields.binary('CODA File', required=True),
-        'coda_fname': fields.char('CODA Filename', required=True),
-        'note': fields.text('Log'),
-    }
+from openerp.addons.account_bank_statement_import import account_bank_statement_import as coda_ibs
 
-    _defaults = {
-        'coda_fname': lambda *a: '',
-    }
+coda_ibs.add_file_type(('coda', 'CODA'))
 
-    def coda_parsing(self, cr, uid, ids, context=None, batch=False, codafile=None, codafilename=None):
+class account_bank_statement_import(osv.TransientModel):
+    _inherit = "account.bank.statement.import"
+
+    def process_coda(self, cr, uid, codafile=None, journal_id=False, context=None):
         if context is None:
             context = {}
-        if batch:
-            codafile = str(codafile)
-            codafilename = codafilename
-        else:
-            data = self.browse(cr, uid, ids)[0]
-            try:
-                codafile = data.coda_data
-                codafilename = data.coda_fname
-            except:
-                raise osv.except_osv(_('Error'), _('Wizard in incorrect state. Please hit the Cancel button'))
-                return {}
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
         statements = []
+        globalisation_comm = {}
         for line in recordlist:
             if not line:
                 pass
@@ -69,7 +53,6 @@ class account_coda_import(osv.osv_memory):
                 statement['version'] = line[127]
                 if statement['version'] not in ['1', '2']:
                     raise osv.except_osv(_('Error') + ' R001', _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
-                statement['globalisation_stack'] = []
                 statement['lines'] = []
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
@@ -119,7 +102,7 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
-                if line[42] == '1':    #1 = Debit, the starting balance is negative
+                if line[42] == '1':  # 1 = Debit, the starting balance is negative
                     statement['balance_start'] = - statement['balance_start']
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))
                 statement['accountHolder'] = rmspaces(line[64:90])
@@ -154,26 +137,21 @@ class account_coda_import(osv.osv_memory):
                     statementLine['entryDate'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[115:121]), '%d%m%y'))
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
-                    if len(statement['globalisation_stack']) > 0 and statementLine['communication'] != '':
-                        statementLine['communication'] = "\n".join([statement['globalisation_stack'][-1]['communication'], statementLine['communication']])
                     if statementLine['globalisation'] > 0:
-                        if len(statement['globalisation_stack']) > 0 and statement['globalisation_stack'][-1]['globalisation'] == statementLine['globalisation']:
-                            # Destack
-                            statement['globalisation_stack'].pop()
-                        else:
-                            #Stack
-                            statementLine['type'] = 'globalisation'
-                            statement['globalisation_stack'].append(statementLine)
+                        statementLine['type'] = 'globalisation'
+                        globalisation_comm[statementLine['ref_move']] = statementLine['communication']
+                    if not statementLine.get('communication'):
+                        statementLine['communication'] = globalisation_comm.get(statementLine['ref_move'], '')
                     statement['lines'].append(statementLine)
                 elif line[1] == '2':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R2004', _('CODA parsing error on movement data record 2.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:63])
                     statement['lines'][-1]['payment_reference'] = rmspaces(line[63:98])
                     statement['lines'][-1]['counterparty_bic'] = rmspaces(line[98:109])
                 elif line[1] == '3':
                     if statement['lines'][-1]['ref'][0:4] != line[2:6]:
-                        raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R2005', _('CODA parsing error on movement data record 2.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     if statement['version'] == '1':
                         statement['lines'][-1]['counterpartyNumber'] = rmspaces(line[10:22])
                         statement['lines'][-1]['counterpartyName'] = rmspaces(line[47:73])
@@ -206,11 +184,11 @@ class account_coda_import(osv.osv_memory):
                     statement['lines'].append(infoLine)
                 elif line[1] == '2':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R3004', _('CODA parsing error on information data record 3.2, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
                 elif line[1] == '3':
                     if infoLine['ref'] != rmspaces(line[2:10]):
-                        raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your OpenERP support channel.') % line[2:10])
+                        raise osv.except_osv(_('Error') + 'R3005', _('CODA parsing error on information data record 3.3, seq nr %s! Please report this issue via your Odoo support channel.') % line[2:10])
                     statement['lines'][-1]['communication'] += rmspaces(line[10:100])
             elif line[0] == '4':
                     comm_line = {}
@@ -241,6 +219,7 @@ class account_coda_import(osv.osv_memory):
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
+            statement_line = []
             balance_start_check_date = (len(statement['lines']) > 0 and statement['lines'][0]['entryDate']) or statement['date']
             cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
@@ -248,7 +227,7 @@ class account_coda_import(osv.osv_memory):
                 ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'].id, balance_start_check_date))
             res = cr.fetchone()
             balance_start_check = res and res[0]
-            if balance_start_check == None:
+            if balance_start_check is None:
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
                     balance_start_check = statement['journal_id'].default_debit_account_id.balance
                 else:
@@ -257,7 +236,7 @@ class account_coda_import(osv.osv_memory):
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
             if not(statement.get('period_id')):
                 raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
-            data = {
+            statement_data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
                 'journal_id': statement['journal_id'].id,
@@ -265,7 +244,6 @@ class account_coda_import(osv.osv_memory):
                 'balance_start': statement['balance_start'],
                 'balance_end_real': statement['balance_end_real'],
             }
-            statement['id'] = self.pool.get('account.bank.statement').create(cr, uid, data, context=context)
             for line in statement['lines']:
                 if line['type'] == 'information':
                     statement['coda_note'] = "\n".join([statement['coda_note'], line['type'].title() + ' with Ref. ' + str(line['ref']), 'Date: ' + str(line['entryDate']), 'Communication: ' + line['communication'], ''])
@@ -290,57 +268,31 @@ class account_coda_import(osv.osv_memory):
 
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
-                    line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-                    partner_id = None
-                    structured_com = ""
-                    bank_account_id = False
+                    structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
+                    bank_account_id = False
+                    partner_id = False
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
-                        if ids:
-                            bank_account_id = ids[0]
-                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
-                        else:
-                            #create the bank account, not linked to any partner. The reconciliation will link the partner manually
-                            #chosen at the bank statement final confirmation time.
-                            try:
-                                type_model, type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'bank_normal')
-                                type_id = self.pool.get('res.partner.bank.type').browse(cr, uid, type_id, context=context)
-                                bank_code = type_id.code
-                            except ValueError:
-                                bank_code = 'bank'
-                            bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, {'acc_number': str(line['counterpartyNumber']), 'state': bank_code}, context=context)
-                    if 'communication' in line and line['communication'] != '':
+                        bank_account_id, partner_id = self._detect_partner(cr, uid, str(line['counterpartyNumber']), identifying_field='acc_number', context=context)
+                    if line.get('communication', ''):
                         note.append(_('Communication') + ': ' + line['communication'])
-                    data = {
-                        'name': line['name'],
+                    line_data = {
+                        'name': structured_com or (line.get('communication', '') != '' and line['communication'] or '/'),
                         'note': "\n".join(note),
                         'date': line['entryDate'],
                         'amount': line['amount'],
                         'partner_id': partner_id,
-                        'statement_id': statement['id'],
-                        'ref': structured_com,
+                        'partner_name': line['counterpartyName'],
+                        'ref': line['ref'],
                         'sequence': line['sequence'],
                         'bank_account_id': bank_account_id,
                     }
-                    self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
+                    statement_line.append((0, 0, line_data))
             if statement['coda_note'] != '':
-                self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool[model].browse(cr, uid, action_id, context=context)
-        return {
-            'name': action.name,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'res_model': action.res_model,
-            'domain': action.domain,
-            'context': action.context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': action.search_view_id.id,
-            'views': [(v.view_id.id, v.view_mode) for v in action.view_ids]
-        }
-
+                statement_data.update({'coda_note': statement['coda_note']})
+            statement_data.update({'journal_id': journal_id, 'line_ids': statement_line})
+        return [statement_data]
 
 def rmspaces(s):
     return " ".join(s.split())

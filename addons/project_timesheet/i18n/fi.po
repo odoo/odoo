@@ -1,86 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-01-18 14:08+0000\n"
-"Last-Translator: Pekka Pylvänäinen <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr "Tehtävät käyttäjittäin"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by year of date"
-msgstr "Ryhmittele vuoden päivän mukaan"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "Kesäkuu"
-
-#. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
-msgstr "Liittyvän aikajanan id"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid ""
-"You cannot delete a partner which is assigned to project, but you can "
-"uncheck the active box."
-msgstr ""
-"Et voi poistaa projektille annettua kumppania, mutta voit poistaa merkinnän "
-"aktiivinen -laatikosta."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
-msgstr "Projektille tehtävät työt"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Et voi valita abalyyttistä tiliä, joka on tilassa suljettu tai peruutettu."
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group By..."
-msgstr "Ryhmittely..."
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
-msgstr "Lokakuu"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
-#: view:project.project:0
-#, python-format
-msgid "Timesheets"
-msgstr "Tuntikortit"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable"
-msgstr "Laskutettavissa"
+"X-Launchpad-Export-Date: 2014-08-15 07:42+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -95,125 +30,14 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic Account/Project"
-msgstr "Analyyttinen tili/projekti"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic account/project"
-msgstr "Analyyttinen tili/projekti"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
-msgid "Customer Projects"
-msgstr "Asiakasprojektit"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:89
+#: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the HR Settings tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analyyttinen rivi"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "August"
-msgstr "Elokuu"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
-msgid "Task invoice"
-msgstr "Tehtävän laskutus"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_taskwork0
-msgid "Task Work"
-msgstr "Tehtävän työt"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "May"
-msgstr "Toukokuu"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:93
-#, python-format
-msgid ""
-"Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Määrittele ao. työntekijälle päiväkirja.\n"
-"Täytä työntekijälomakkeen välilehti: tuntikortti."
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Kirjaudu sisään/ulos projektista"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable Project"
-msgstr "Laskutettava projekti"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
-msgid "Contracts to Renew"
-msgstr "Uusittavat sopimukset"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Hours"
-msgstr "Tunnit"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by month of date"
-msgstr "Ryhmittele kuukauden mukaan"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr "Tehtävä"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
-msgstr "Käyttäjä"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
-msgstr "Päiväys"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "July"
-msgstr "Heinäkuu"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_timesheettask0
-msgid "Complete Your Timesheet."
-msgstr "Tee tuntiikorttisi valmiiksi."
-
-#. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Tehtävän tunnit"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "Helmikuu"
+"<p class=\"oe_view_nocontent_create\">Kirjaa tuntikorttisi projectile "
+"\"%s\".</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -228,113 +52,7 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Tuntikortin tehtävä"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskencoding0
-msgid "Task encoding"
-msgstr "Tehtävän kirjaus"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
-msgid "Task summary is comes into the timesheet line"
-msgstr "Tehtävän yhteenvedosta tulee tuntikortin rivi"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "January"
-msgstr "Tammikuu"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger Invoice"
-msgstr "Liipaise laskutus"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "Marraskuu"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Maaliskuu"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_project
-msgid "Project"
-msgstr "Projekti"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
-msgstr "Huhtikuu"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "report.timesheet.task.user"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Syötä tehtävään käyttämäsi tuntimäärä"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:85
-#, python-format
-msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Määrittele käyttäjälle \"%s\" työntekijätiedot. Oltava vähintään yksi."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_res_partner
-msgid "Partner"
-msgstr "Kumppani"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Virheellinen analyyttinen tili !"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Tuntikortti ja tehtävän tunnit -raportti kuukausittain"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Virheellinen konfiguraatio !"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
-msgid "Invoicing"
-msgstr "Laskutus"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sales order lines"
-msgstr "Liipaise laskut myyntitilausten riveiltä."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:100
-#, python-format
-msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:60
+#: code:addons/project_timesheet/project_timesheet.py:59
 #, python-format
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
@@ -344,9 +62,107 @@ msgstr ""
 "asiakkaalta \"%s\".</p>"
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Tehtävälle tehty työ"
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+msgid "Analytic Account/Project"
+msgstr "Analyyttinen tili/projekti"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analyyttinen rivi"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+msgid "Analytic account/project"
+msgstr "Analyyttinen tili/projekti"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "Huhtikuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "August"
+msgstr "Elokuu"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:82
+#: code:addons/project_timesheet/project_timesheet.py:86
+#: code:addons/project_timesheet/project_timesheet.py:90
+#: code:addons/project_timesheet/project_timesheet.py:97
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.project_invoice_search
+msgid "Billable"
+msgstr "Laskutettavissa"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr "Uusittavat sopimukset"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
+msgstr "Asiakasprojektit"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "Päiväys"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "December"
+msgstr "Joulukuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "Helmikuu"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group By"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by month of date"
+msgstr "Ryhmittele kuukauden mukaan"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by year of date"
+msgstr "Ryhmittele vuoden päivän mukaan"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.view_project_kanban_inherited
+msgid "Hours"
+msgstr "Tunnit"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:264
+#, python-format
+msgid "Invalid Action!"
+msgstr "Virheellinen toiminto!"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
+#, python-format
+msgid "Invalid Analytic Account!"
+msgstr ""
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
@@ -355,11 +171,105 @@ msgid "Invoice Tasks"
 msgstr "Laskuta tehtävät"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Tehtävän tunnit kuukausittain"
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
+msgid "Invoicing"
+msgstr "Laskutus"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "January"
+msgstr "Tammikuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "July"
+msgstr "Heinäkuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Kesäkuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Maaliskuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "May"
+msgstr "Toukokuu"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "Kuukausi"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "Marraskuu"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "October"
+msgstr "Lokakuu"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_res_partner
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:83
+#, python-format
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+"Määrittele käyttäjälle \"%s\" työntekijätiedot. Oltava vähintään yksi."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:91
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Määrittele ao. työntekijälle päiväkirja.\n"
+"Täytä työntekijälomakkeen välilehti: tuntikortti."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:98
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "Projekti"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "Projektille tehtävät työt"
+
+#. module: project_timesheet
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "Liittyvän aikajanan id"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -367,36 +277,31 @@ msgid "September"
 msgstr "Syyskuu"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "December"
-msgstr "Joulukuu"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
-msgid "After task is completed, Create its invoice."
-msgstr "Kun tehtävä on valmis, tee sille lasku."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid "Invalid Action!"
-msgstr "Virheellinen toiminto!"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr "Kuukausi"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
-#, python-format
-msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by Project"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">Kirjaa tuntikorttisi projectile "
-"\"%s\".</p>"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "Tehtävä"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Tehtävän tunnit"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
+msgid "Task Hours Per Month"
+msgstr "Tehtävän tunnit kuukausittain"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Tasks by User"
+msgstr "Tehtävät käyttäjittäin"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -404,110 +309,38 @@ msgid "Timesheet Hours"
 msgstr "Tuntikortin tunnit"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
+#: code:addons/project_timesheet/project_timesheet.py:67
+#: view:project.project:project_timesheet.project_invoice_form
+#, python-format
+msgid "Timesheets"
+msgstr "Tuntikortit"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Vuosi"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
-msgid "Fill Timesheet"
-msgstr "Täytä tuntikortti"
-
+#: code:addons/project_timesheet/project_timesheet.py:264
 #, python-format
-#~ msgid "No employee defined for user \"%s\". You must create one."
-#~ msgstr "Käyttäjälle \"%s\" ei ole määritetty työntekijää. Tee määritys."
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
+"Et voi poistaa projektille annettua kumppania, mutta voit poistaa merkinnän "
+"aktiivinen -laatikosta."
 
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
 #, python-format
-#~ msgid "Cannot delete Partner which is Assigned to project  !"
-#~ msgstr "Kumppania, joka on kiinnitetty projektiin, ei voi poistaa !"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
-
-#~ msgid "Customer"
-#~ msgstr "Asiakas"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Laskutustiedot"
-
-#~ msgid ""
-#~ "This lists show you every task work you can invoice to the customer. Select "
-#~ "the lines in order to generate the invoices automatically."
-#~ msgstr ""
-#~ "Tämä lista näyttää kaikki tehtävät, jotka voidaan laskuttaa asiakkaalta. "
-#~ "Valitse rivit joista muodostetaan lasku automaattisesti."
-
-#~ msgid "Project Timesheet"
-#~ msgstr "Projektin tuntilista"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr ""
-#~ "Virhe! Tehtävän lopetuspäivän tulee olla myöhäisempi kuin aloituspäivä"
-
-#~ msgid "Working Hours"
-#~ msgstr "Työtunnit"
-
-#~ msgid "Invoice Tasks Work"
-#~ msgstr "Laskuta tehtävän työt"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Virheellinen toiminto!"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Virhe! Et voi asettaa eskalointia samalle projektille!"
-
-#~ msgid " Year "
-#~ msgstr " Vuosi "
-
-#~ msgid "Invoiceable"
-#~ msgstr "Laskutettavissa"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Veloita tehtävän työt"
-
-#~ msgid "Invoice Task Work"
-#~ msgstr "Laskuta tehtävän työt"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Oma tuntilista"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Liipaise laskutus myyntitilausriveistä"
-
-#~ msgid " Month-1 "
-#~ msgstr " Kuukausi-1 "
-
-#~ msgid " Month "
-#~ msgstr " Kuukausi "
-
-#~ msgid "Task Hours in current month"
-#~ msgstr "Tehtävän tunnit kuluvana kuukautena"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Tuntilistan rivit"
-
-#~ msgid "Task hours of last month"
-#~ msgstr "Tehtävän tunnit edellisenä kuukautena"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot select a Analytic Account which is in Close or Cancelled state"
-#~ msgstr ""
-#~ "Et voi valita analyyttistä tiliä joka on suljettu tai peruutettu tilassa"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Et voi luoda analyyttistä riviä näkymätilille"
-
-#~ msgid "Task Hours in current year"
-#~ msgstr "Tehtävän tunnit kuluvana vuonna"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Et voi valita abalyyttistä tiliä, joka on tilassa suljettu tai peruutettu."

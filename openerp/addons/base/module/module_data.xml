@@ -99,7 +99,7 @@
 
         <record model="ir.module.category" id="module_category_report_designer">
             <field name="name">Advanced Reporting</field>
-            <field name="description">Lets you install various tools to simplify and enhance OpenERP's report creation.</field>
+            <field name="description">Lets you install various tools to simplify and enhance Odoo's report creation.</field>
             <field name="sequence">14</field>
         </record>
 
@@ -111,6 +111,11 @@
         <record model="ir.module.category" id="module_category_website">
             <field name="name">Website</field>
             <field name="sequence">16</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_theme">
+            <field name="name">Theme</field>
+            <field name="sequence">17</field>
         </record>
 
         <record model="ir.module.category" id="module_category_administration">
@@ -140,7 +145,7 @@
         </record>
 
         <record model="res.groups" id="group_multi_currency">
-            <field name="category_id" ref="module_category_hidden"/>
+            <field name="category_id" ref="module_category_usability"/>
         </record>
 
         <record model="res.groups" id="group_no_one">

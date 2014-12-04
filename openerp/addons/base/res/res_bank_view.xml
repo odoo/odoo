@@ -7,7 +7,6 @@
             <field name="model">res.bank</field>
             <field name="arch" type="xml">
                 <form string="Bank">
-                  <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="bic"/>
@@ -33,7 +32,6 @@
                             <field name="active"/>
                         </group>
                     </group>
-                  </sheet>
                 </form>
             </field>
         </record>
@@ -61,7 +59,14 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_res_bank_form" id="menu_action_res_bank_form" parent="base.menu_config_address_book" sequence="11" groups="base.group_no_one"/>
+
+        <menuitem  id="menu_config_bank_accounts"
+                    name="Bank Accounts"
+                    parent="base.menu_config_address_book"
+                    sequence="6"
+                    groups="base.group_no_one"/>
+
+        <menuitem action="action_res_bank_form" id="menu_action_res_bank_form" parent="base.menu_config_bank_accounts" sequence="1" groups="base.group_no_one"/>
 
 
         <record id="view_partner_bank_type_form" model="ir.ui.view">
@@ -167,15 +172,15 @@
                 You can reorder bank accounts from the list view.
               </p>
               <p>
-                If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.
+                If you use the accounting application of Odoo, journals and accounts will be created automatically based on these data.
               </p>  
             </field>
         </record>
         <menuitem action="action_res_partner_bank_account_form"
             id="menu_action_res_partner_bank_form"
-            parent="base.menu_config_address_book"
+            parent="base.menu_config_bank_accounts"
             groups="base.group_no_one"
-            sequence="9"/>
+            sequence="2"/>
 
 
         <record id="action_res_partner_bank_type_form" model="ir.actions.act_window">
@@ -186,9 +191,9 @@
         </record>
         <menuitem action="action_res_partner_bank_type_form"
             id="menu_action_res_partner_bank_typeform"
-            parent="base.menu_config_address_book"
+            parent="base.menu_config_bank_accounts"
             groups="base.group_no_one"
-            sequence="15"/>
+            sequence="3"/>
 
 
 

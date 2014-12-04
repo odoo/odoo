@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* project_mrp
+#	* sale_service
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-23 16:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,131 +15,76 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_procuretasktask0
-msgid "For each product, on type service and on order"
+#. module: sale_service
+#: field:project.task.type,closed:0
+msgid "Close"
 msgstr ""
 
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
+#. module: sale_service
+#: field:product.template,auto_create_task:0
+msgid "Create Task Automatically"
 msgstr ""
 
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:92
-#, python-format
-msgid "Task created"
+#. module: sale_service
+#: view:project.task:sale_service.view_sale_service_inherit_form2
+msgid "Order Line"
 msgstr ""
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sales order"
-msgstr ""
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr ""
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sales Order Task"
-msgstr ""
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr ""
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_ordertask0
-msgid "Order Task"
-msgstr ""
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
-msgstr ""
-
-#. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr ""
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr ""
-
-#. module: project_mrp
-#: view:product.product:0
-msgid "will be \n"
-"                        created to follow up the job to do. This task will appear\n"
-"                        in the project related to the contract of the sales order."
-msgstr ""
-
-#. module: project_mrp
-#: view:product.product:0
-msgid "When you sell this service to a customer,"
-msgstr ""
-
-#. module: project_mrp
-#: field:product.product,project_id:0
-msgid "Project"
-msgstr ""
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_procurement_order
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
 msgstr ""
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "False"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_product
+msgid "Product"
 msgstr ""
 
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:86
-#, python-format
-msgid "Task created."
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_template
+msgid "Product Template"
 msgstr ""
 
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procurement method is Make to order and supply method is produce"
+#. module: sale_service
+#: field:product.template,project_id:0
+msgid "Project"
 msgstr ""
 
-#. module: project_mrp
+#. module: sale_service
+#: view:product.template:sale_service.view_product_task_form
+msgid "Project Management Information"
+msgstr ""
+
+#. module: sale_service
 #: field:project.task,sale_line_id:0
 msgid "Sales Order Line"
 msgstr ""
 
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_createtask0
-msgid "Create Task"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task
+#: field:procurement.order,task_id:0
+msgid "Task"
 msgstr ""
 
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_sale_order
-msgid "Sales Order"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task_type
+msgid "Task Stage"
 msgstr ""
 
-#. module: project_mrp
-#: view:project.task:0
-msgid "Order Line"
+#. module: sale_service
+#: code:addons/sale_service/models/sale_service.py:96
+#, python-format
+msgid "Task created"
 msgstr ""
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "a task"
+#. module: sale_service
+#: help:project.task.type,closed:0
+msgid "Tasks in this stage are considered as closed."
+msgstr ""
+
+#. module: sale_service
+#: help:product.template,auto_create_task:0
+msgid "Thick this option if you want to create a task automatically each time this product is sold"
 msgstr ""
 

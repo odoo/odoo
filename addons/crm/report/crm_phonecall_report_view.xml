@@ -2,73 +2,92 @@
 <openerp>
     <data>
 
-<!-- Phone calls by user and section Graph View -->
+<!-- Phone calls by user and team Graph View -->
 
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
             <field name="name">crm.phonecall.report.graph</field>
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Phone calls" type="pivot" stacked="True">
-                    <field name="user_id" type="row"/>
-                    <!-- <field name="state" type="col"/> -->
+                    <field name="team_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
                     <field name="nbr" type="measure"/>
                     <field name="duration" type="measure"/>
                 </graph>
             </field>
         </record>
 
-<!-- Phone calls by user and section Search View -->
+<!-- Custom reports (aka filters) -->
+        <record id="filter_crm_phonecall_sales_team" model="ir.filters">
+            <field name="name">By Sales Team</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['categ_id'], 'measures': ['nbr', 'duration']}</field>
+        </record>
+        <record id="filter_crm_phonecall_delay_to_close" model="ir.filters">
+            <field name="name">Delay To Close</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['categ_id'], 'measures': ['delay_close']}</field>
+        </record>
+        <record id="filter_crm_phonecall_phone_call_to_do" model="ir.filters">
+            <field name="name">Phone Calls To Do</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','in',('draft','open'))]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['team_id'], 'measures': ['nbr']}</field>
+        </record>
+
+
+<!-- Phone calls by user and team Search View -->
 
     <record id="view_report_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">crm.phonecall.report.select</field>
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter icon="terp-gtk-go-back-rtl" string="Todo" domain="[('state','in',('draft','open'))]"
+                    <filter string="Todo" name="todo" domain="[('state','in',('draft','open'))]"
                         help="Phone calls which are in draft and open state"/>
-                    <filter icon="terp-camera_test" string="Held" domain="[('state','=','done')]"
+                    <filter string="Held" name="held" domain="[('state','=','done')]"
                         help="Phone calls which are in closed state"/>
-                    <filter icon="gtk-media-pause" string="Not Held" domain="[('state','=','pending')]"
+                    <filter string="Not Held" domain="[('state','=','pending')]"
                         help="Phone calls which are in pending state"/>
                     <separator/>
-                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                    <filter string="My Sales Team(s)" context="{'invisibteamion': False}" domain="[('team_id.user_id','=',uid)]"
                             help="Phone calls that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <filter icon="terp-personal" string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                    <filter string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="creation_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
-                        <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'create_date:day'}" help="Date of call"/>
-                        <filter string="Creation Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'create_date:month'}" help="Month of call"/>
-                        <filter string="Creation Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'create_date:name'}" help="Year of call"/>
+                        <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Customer" context="{'group_by':'partner_id'}" />
+                        <filter string="Status" context="{'group_by':'state'}" />
+                        <separator/>
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" help="Month of call"/>
                     </group>
                 </search>
             </field>
         </record>
 
-<!-- Phone calls by user and section Action -->
+<!-- Phone calls by user and team Action -->
 
         <record id="action_report_crm_phonecall" model="ir.actions.act_window">
             <field name="name">Phone Calls Analysis</field>
             <field name="res_model">crm.phonecall.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
-            <field name="context">{"search_default_year":1,"search_default_Salesperson":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_phonecall_graph"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
             <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>

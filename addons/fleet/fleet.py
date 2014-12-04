@@ -53,15 +53,6 @@ class fleet_vehicle_cost(osv.Model):
         odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
         return self.write(cr, uid, id, {'odometer_id': odometer_id}, context=context)
 
-    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.date):
-                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
-            else:
-                res[record.id] = _('Unknown')
-        return res
-
     _columns = {
         'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
@@ -76,7 +67,6 @@ class fleet_vehicle_cost(osv.Model):
         'date' :fields.date('Date',help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
         'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
-        'year': fields.function(_year_get_fnc, type="char", string='Year', store=True),
     }
 
     _defaults ={
@@ -436,8 +426,10 @@ class fleet_vehicle_odometer(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
-            if record.date:
-                name = name+ ' / '+ str(record.date)
+            if not name:
+                name = record.date
+            elif record.date:
+                name += ' / '+ record.date
             res[record.id] = name
         return res
 
@@ -761,7 +753,7 @@ class fleet_vehicle_log_contract(osv.Model):
     def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
         totalsum = 0.0
         for element in cost_ids:
-            if element and len(element) == 3 and element[2] is not False:
+            if element and len(element) == 3 and isinstance(element[2], dict):
                 totalsum += element[2].get('amount', 0.0)
         return {
             'value': {

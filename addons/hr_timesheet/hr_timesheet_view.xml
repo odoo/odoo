@@ -11,7 +11,7 @@
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'
                         context="{'default_groups_ref': ['base.group_user']}"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
+                    <field domain="[('type','=','normal'),('invoice_on_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
@@ -92,7 +92,7 @@
               <p>
                 No activity yet on this contract.
               </p><p>
-                In OpenERP, contracts and projects are implemented using
+                In Odoo, contracts and projects are implemented using
                 analytic account. So, you can track costs and revenues to analyse
                 your margins easily.
               </p><p>
@@ -114,8 +114,8 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_timesheets"/>
-                    <label for="use_timesheets"/>
+                    <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
+                    <label for="invoice_on_timesheets"/>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
                     <button class="oe_inline oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d" 
@@ -130,11 +130,11 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('use_timesheets','=', True)]</field>
-            <field name="context">{'default_use_timesheets':1}</field>
+            <field name="domain">[('invoice_on_timesheets','=', True)]</field>
+            <field name="context">{'invoice_on_timesheets':1}</field>
         </record>
 
-        <menuitem parent="hr.menu_hr_configuration" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="7" groups="base.group_hr_manager"/>
+        <menuitem parent="hr.menu_hr_configuration_timesheets_attendances" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="2" groups="base.group_hr_manager"/>
         
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
             <field name="name">Timesheet Activities</field>

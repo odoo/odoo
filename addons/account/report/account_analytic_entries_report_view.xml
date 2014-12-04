@@ -7,22 +7,18 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
                 <field name="date"/>
-                <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
+                <filter string="My Entries" domain="[('user_id','=',uid)]" help="My Entries"/>
                 <field name="account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="product_id" />
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
-                    <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
-                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Product Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Date (day)" icon="terp-go-today" context="{'group_by':'date:day'}"/>
-                    <filter string="Date (month)" name="Month" icon="terp-go-month" context="{'group_by':'date:month'}"/>
-                    <filter string="Date (year)" icon="terp-go-year" context="{'group_by':'date:year'}"/>
+                    <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Analytic Account" name="Account" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Month" name="Month" context="{'group_by':'date:month'}"/>
                 </group>
             </search>
         </field>
@@ -32,7 +28,8 @@
          <field name="model">analytic.entries.report</field>
          <field name="arch" type="xml">
              <graph string="Analytic Entries Analysis" type="pivot">
-                <field name="user_id" type="row"/>
+                <field name="account_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
                 <field name="nbr" type="measure"/>
                 <field name="unit_amount" type="measure"/>
                 <field name="amount" type="measure"/>
@@ -44,8 +41,8 @@
         <field name="res_model">analytic.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
-        <field name="context">{'search_default_year':1,'search_default_month':1, 'group_by_no_leaf':1, 'search_default_Account':1, 'search_default_Month':1, 'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+        <field name="context">{'group_by_no_leaf':1, 'search_default_Account':1, 'group_by':[]}</field>
         <field name="help">From this view, have an analysis of your different analytic entries following the analytic account you defined matching your business need. Use the tool search to analyse information about analytic entries generated in the system.</field>
     </record>
 

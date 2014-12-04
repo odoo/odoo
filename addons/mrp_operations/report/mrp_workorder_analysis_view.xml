@@ -9,13 +9,35 @@
             <field name="model">mrp.workorder</field>
             <field name="arch" type="xml">
                 <graph string="Work Orders" type="pivot">
-                    <field name="state" type="row"/>
+                    <field name="workcenter_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="product_qty" type="measure"/>
-                    <field name="nbr" type="measure"/>
                     <field name="total_hours" type="measure"/>
                     <field name="total_cycles" type="measure"/>
                 </graph>
             </field>
+        </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_mrp_workorder_workload" model="ir.filters">
+            <field name="name">Workload</field>
+            <field name="model_id">mrp.workorder</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['workcenter_id'], 'col_group_by': ['date:month'], 'measures': ['total_hours', 'total_cycles']}</field>
+        </record>
+        <record id="filter_mrp_workorder_quantity_produced" model="ir.filters">
+            <field name="name">Quantity Produced</field>
+            <field name="model_id">mrp.workorder</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['workcenter_id'], 'col_group_by': ['date:month'], 'measures': ['total_hours', 'total_cycles']}</field>
+        </record>
+        <record id="filter_mrp_workorder_current_production" model="ir.filters">
+            <field name="name">Current Production</field>
+            <field name="model_id">mrp.workorder</field>
+            <field name="domain">[('state','=','startworking')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['workcenter_id'], 'col_group_by': ['product_id'], 'measures': ['product_qty', 'total_hours']}</field>
         </record>
 
         <record id="view_report_mrp_workorder_filter" model="ir.ui.view">
@@ -24,19 +46,18 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="date"/>
-                    <filter string="Current" icon="terp-check" domain="[('state','not in',('draft','cancel','done'))]"/>
-                    <filter icon="terp-check" string="Started" domain="[('state','=','startworking')]"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
+                    <filter string="Current" domain="[('state','not in',('draft','cancel','done'))]"/>
+                    <filter string="Started" name="started" domain="[('state','=','startworking')]"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
                     <field name="product_id" />
                     <field name="workcenter_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Product" name="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" />
-                        <filter string="Work Center" name="Workcenter" icon="terp-go-home" context="{'group_by':'workcenter_id'}" />
-                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <filter string="Date Planned (day)" icon="terp-go-today" context="{'group_by':'date:day'}" help="Planned Day"/>
-                        <filter string="Date Planned (month)" name="terp-go-month" icon="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
-                        <filter string="Date Planned (year)" icon="terp-go-year" context="{'group_by':'date:year'}" help="Planned Year"/>
+                        <filter string="Work Center" name="Workcenter" context="{'group_by':'workcenter_id'}" />
+                        <filter string="Production" context="{'group_by':'production_id'}"/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Product" name="Product" context="{'group_by':'product_id'}" />
+                        <separator/>
+                        <filter string="Month Planned" name="terp-go-month" context="{'group_by':'date:month'}" help="Planned Month"/>
                     </group>
                 </search>
             </field>

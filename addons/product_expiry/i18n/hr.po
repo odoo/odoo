@@ -1,96 +1,31 @@
 # Croatian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-10 07:04+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Šunka"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Datum alarma"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Kravlje mlijeko"
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "Serijski broj"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Datum uklanjanja"
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Najbolje prije"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -98,7 +33,13 @@ msgid "Bread"
 msgstr "Kruh"
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Kravlje mlijeko"
+
+#. module: product_expiry
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "Datumi"
 
@@ -108,32 +49,61 @@ msgid "End of Life Date"
 msgstr "Istek roka trajanja"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "Najbolje prije"
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Francuski sir Camembert"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+msgid "French cheese Camembert"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Datum alarma"
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Šunka"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "Datum uklanjanja"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
 msgid ""
-"This is the date on which the goods with this Serial Number start "
-"deteriorating, without being dangerous yet."
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
 msgstr ""
 
 #. module: product_expiry
@@ -144,82 +114,43 @@ msgid ""
 msgstr ""
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
+#: help:stock.production.lot,removal_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
 msgstr ""
 
-#~ msgid "Product lifetime"
-#~ msgstr "Trajnost proizvoda"
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
 
-#~ msgid "Products date of expiry"
-#~ msgstr "Datum isteka roka trajanja"
+#. module: product_expiry
+#: help:product.template,alert_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
 
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Pogreška: Predefinirana JM i prodajna JM moraju pripadati istoj kategoriji."
+#. module: product_expiry
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neispravan XML za arhitekturu View-a"
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
 
-#~ msgid "The date the lot may become dangerous and should not be consumed."
-#~ msgstr ""
-#~ "Datum kada serija proizvoda postaje opasna i ne smije se konzumirati."
-
-#~ msgid ""
-#~ "Track different dates on products and production lots:\n"
-#~ " - end of life\n"
-#~ " - best before date\n"
-#~ " - removal date\n"
-#~ " - alert date\n"
-#~ "Used, for example, in food industries."
-#~ msgstr ""
-#~ "Pratite različite datume proizvoda i grupa proizvoda:\n"
-#~ " - rok trajanja\n"
-#~ " - najbolje prije datuma\n"
-#~ " - datum uklanjanja\n"
-#~ " - datum alarma\n"
-#~ "Primjer korištenja je u industriji prehrane."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Pogreška: UOS mora biti u različitoj kategoriji od JM"
-
-#~ msgid "The date the lot starts deteriorating without becoming dangerous."
-#~ msgstr ""
-#~ "Datum kada serija proizvoda počinje propadati, a da nije opasna po zdravlje."
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr ""
-#~ "Broj dana prije  nego što bi trebalo maknuti produkcijsku seriju proizvoda."
-
-#~ msgid "Product usetime"
-#~ msgstr "Trajanje proizvoda"
-
-#~ msgid "Product removal time"
-#~ msgstr "Vrijeme uklanjanja proizvoda"
-
-#~ msgid ""
-#~ "The number of days before a production lot starts deteriorating without "
-#~ "becoming dangerous."
-#~ msgstr ""
-#~ "Broj dana prije nego proizvodna serija počne propadati, a da nije opasna po "
-#~ "zdravlje."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Pogreška: Nevažeći EAN kod"
-
-#~ msgid ""
-#~ "The number of days before a production lot may become dangerous and should "
-#~ "not be consumed."
-#~ msgstr ""
-#~ "Broj dana prije nego proizvodna serija postane opasna i ne smije se "
-#~ "konzumirati."
-
-#~ msgid "The date the lot should be removed."
-#~ msgstr "Datum kada bi trebalo maknuti seriju proizvoda."
-
-#~ msgid "Product alert time"
-#~ msgstr "Vrijeme alarma proizvoda"
-
-#~ msgid "LTR"
-#~ msgstr "LTR"
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""

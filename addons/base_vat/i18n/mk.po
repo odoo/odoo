@@ -1,41 +1,26 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-21 13:28+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-24 12:00+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-25 07:02+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
 msgstr "Провери валидност"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"Овој ДДВ број не е валиден.\n"
-"Забелешка: Форматот треба да биде %s"
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES ДДВ проверка"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -43,24 +28,10 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Штиклирајте доколку партнерот е ДДВ обврзник. Тоа ќе биде искористено за ДДВ "
-"пријавата."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Партнер"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -70,6 +41,40 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "ДДВ пријава"
+#: code:addons/base_vat/base_vat.py:130
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "ДДВ бројот за увоз [%s] не е валиден !"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Даночниот број [%s] за партнер [%s] изгледа не е валиден. \n"
+"Забелешка: очекуваниот формат е %s"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES ДДВ проверка"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "на пр. BE0477472701"

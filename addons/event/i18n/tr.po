@@ -1,744 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* event
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-07 01:28+0000\n"
-"Last-Translator: oguzhan <tazmanyacanawari@hotmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:12+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
-msgid "My Events"
-msgstr "Etkinliklerim"
-
-#. module: event
-#: field:event.registration,nb_register:0
-msgid "Number of Participants"
-msgstr "Katılımcı Sayısı"
-
-#. module: event
-#: field:event.event,register_attended:0
-msgid "# of Participations"
-msgstr "Katılımcı Sayısı"
-
-#. module: event
-#: field:event.event,main_speaker_id:0
-msgid "Main Speaker"
-msgstr "Ana Konuşmacı"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:report.event.registration:0
-msgid "Group By..."
-msgstr "Gruplandır..."
-
-#. module: event
-#: field:event.event,register_min:0
-msgid "Minimum Registrations"
-msgstr "Enaz Kayıt"
-
-#. module: event
-#: help:event.event,register_min:0
-msgid ""
-"You can for each event define a minimum registration level. If you do not "
-"enough registrations you are not able to confirm your event. (put 0 to "
-"ignore this rule )"
-msgstr ""
-"Her olay için bir tane enaz kayıt seviyesi tanımlayabilirsiniz. Eğer yeterli "
-"kayıt yapmazsanız etkinliklerinizi onaylamanız mümkün olmayacaktır. (bu "
-"kuralı gözardı etmek için 0 koyun)"
-
-#. module: event
-#: field:event.registration,date_open:0
-msgid "Registration Date"
-msgstr "Kayıt Tarihi"
-
-#. module: event
-#: field:event.event,type:0
-msgid "Type of Event"
-msgstr "Etkinlik Türü"
-
-#. module: event
-#: model:event.event,name:event.event_0
-msgid "Concert of Bon Jovi"
-msgstr "Bon Jovi Konseri"
-
-#. module: event
-#: view:event.registration:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Attended"
-msgstr "Katıldı"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "March"
-msgstr "Mart"
-
-#. module: event
-#: view:event.registration:0
-msgid "Send Email"
-msgstr "Eposta Gönder"
-
-#. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,company_id:0
-msgid "Company"
-msgstr "Şirket"
-
-#. module: event
-#: field:event.event,email_confirmation_id:0
-#: field:event.type,default_email_event:0
-msgid "Event Confirmation Email"
-msgstr "Etkinlik Onay Epostası"
-
-#. module: event
-#: field:event.type,default_registration_max:0
-msgid "Default Maximum Registration"
-msgstr "Varsayılan Ençok Kayıt"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Display"
-msgstr "Göster"
-
-#. module: event
-#: field:event.event,register_avail:0
-msgid "Available Registrations"
-msgstr "Mevcut Kayıtlar"
-
-#. module: event
-#: view:event.registration:0
-#: model:ir.model,name:event.model_event_registration
-msgid "Event Registration"
-msgstr "Etkinlik Kaydı"
-
-#. module: event
-#: model:ir.module.category,description:event.module_category_event_management
-msgid "Helps you manage your Events."
-msgstr "Etkinliklerinizi yönetmenize yardım eder."
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Day"
-msgstr "Gün"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Event on Registration"
-msgstr "Kayıttaki Etkinlik"
-
-#. module: event
-#: view:event.event:0
-msgid "Confirmed events"
-msgstr "Onaylı etkinlikler"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Event Beginning Date"
-msgstr "Etkinlik Başlama Tarihi"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_report_event_registration
-#: model:ir.model,name:event.model_report_event_registration
-#: model:ir.ui.menu,name:event.menu_report_event_registration
-#: view:report.event.registration:0
-msgid "Events Analysis"
-msgstr "Etkinlik Analizi"
-
-#. module: event
-#: help:event.type,default_registration_max:0
-msgid "It will select this default maximum value when you choose this event"
-msgstr "Bu etkinliği seçtiğinizde bu varsayılan ençok değeri seçecektir"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id_registration:0
-msgid "Register"
-msgstr "Kayıt"
-
-#. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
-msgid "Registrations"
-msgstr "Kayıtlar"
-
-#. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
-#: code:addons/event/event.py:355
-#, python-format
-msgid "Error!"
-msgstr "Hata!"
-
-#. module: event
-#: view:event.event:0
-msgid "Confirm Event"
-msgstr "Etkinlik Onayla"
-
-#. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
-msgid "Next Events"
-msgstr "Sonraki Etkinlikler"
-
-#. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Cancelled"
-msgstr "İptal edildi"
-
-#. module: event
-#: view:event.event:0
-msgid "ticket"
-msgstr "bilet"
-
-#. module: event
-#: model:event.event,name:event.event_1
-msgid "Opera of Verdi"
-msgstr "Verdi Operası"
-
-#. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni mesajlar ilginizi gerektirir."
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,registration_state:0
-msgid "Registration State"
-msgstr "Kayıt Durumu"
-
-#. module: event
-#: view:event.event:0
-msgid "tickets"
-msgstr "biletler"
-
-#. module: event
-#: view:res.partner:0
-msgid "False"
-msgstr "Yanlış"
-
-#. module: event
-#: field:event.registration,event_end_date:0
-msgid "Event End Date"
-msgstr "Etkinlik Bitiş Tarihi"
-
-#. module: event
-#: help:event.event,message_summary:0
-#: help:event.registration,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet, kanban ekranlarına "
-"eklenebilmesi için html biçimindedir."
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registrations in confirmed or done state"
-msgstr "Onaylandı ya da yapıldı durumundaki kayıtlar"
-
-#. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
-#, python-format
-msgid "Warning!"
-msgstr "Uyarı!"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Registration"
-msgstr "Kayıt"
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
-#: model:ir.model,name:event.model_res_partner
-msgid "Partner"
-msgstr "İş Ortağı"
-
-#. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr "Bu etkinliği seçtiğinizde bu varsayılan enaz değeri seçilecektir"
-
-#. module: event
-#: model:ir.model,name:event.model_event_type
-msgid " Event Type "
-msgstr " Etkinlik Türü "
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
-#: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
-#: view:res.partner:0
-msgid "Event"
-msgstr "Etkinlik"
-
-#. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Confirmed"
-msgstr "Onaylandı"
-
-#. module: event
-#: view:event.registration:0
-msgid "Participant"
-msgstr "Katılımcı"
-
-#. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
-msgid "Confirm"
-msgstr "Onayla"
-
-#. module: event
-#: view:event.event:0
-msgid "Organized by"
-msgstr "Düzenleyen"
-
-#. module: event
-#: view:event.event:0
-msgid "Register with this event"
-msgstr "Bu etkinliğe kayıt"
-
-#. module: event
-#: help:event.type,default_email_registration:0
-msgid ""
-"It will select this default confirmation registration mail value when you "
-"choose this event"
-msgstr ""
-"Bu etkinliği seçtiğinizde, bu varsayılan onay epostası değerini seçecektir"
-
-#. module: event
-#: view:event.event:0
-msgid "Only"
-msgstr "Yalnız"
-
-#. module: event
-#: field:event.event,message_follower_ids:0
-#: field:event.registration,message_follower_ids:0
-msgid "Followers"
-msgstr "İzleyiciler"
-
-#. module: event
-#: view:event.event:0
-msgid "Location"
-msgstr "Konum"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
-msgid "Unread Messages"
-msgstr "Okunmamış Mesajlar"
-
-#. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
-msgid "New"
-msgstr "Yeni"
-
-#. module: event
-#: field:event.event,register_current:0
-msgid "Confirmed Registrations"
-msgstr "Onaylanan Kayıtlar"
-
-#. module: event
-#: field:event.registration,email:0
-msgid "Email"
-msgstr "Eposta"
-
-#. module: event
-#: code:addons/event/event.py:329
-#, python-format
-msgid "New registration confirmed: %s."
-msgstr "Yeni kayıt onaylandı: %s."
-
-#. module: event
-#: view:event.event:0
-msgid "Upcoming"
-msgstr "Yaklaşan"
-
-#. module: event
-#: field:event.registration,create_date:0
-msgid "Creation Date"
-msgstr "Oluşturma Tarihi"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
-msgid "Event Responsible"
-msgstr "Etkinlik Sorumlusu"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "Cancel Registration"
-msgstr "Kaydı İptal et"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "July"
-msgstr "Temmuz"
-
-#. module: event
-#: field:event.event,reply_to:0
-msgid "Reply-To Email"
-msgstr "Yanıtlama epostası"
-
-#. module: event
-#: view:event.registration:0
-msgid "Confirmed registrations"
-msgstr "Onaylanan kayıtlar"
-
-#. module: event
-#: view:event.event:0
-msgid "Starting Date"
-msgstr "Başlama Tarihi"
-
-#. module: event
-#: view:event.event:0
-msgid "Event Organization"
-msgstr "Etkinlik Organizasyonu"
-
-#. module: event
-#: view:event.confirm:0
-msgid "Confirm Anyway"
-msgstr "Yine de Onayla"
-
-#. module: event
-#: field:report.event.registration,nbevent:0
-msgid "Number Of Events"
-msgstr "Etkinlik Sayısı"
-
-#. module: event
-#: help:event.event,main_speaker_id:0
-msgid "Speaker who will be giving speech at the event."
-msgstr "Bu etkinlikte konuşmayı yapacak konuşmacı."
-
-#. module: event
-#: view:event.event:0
-msgid "Cancel Event"
-msgstr "Etkinlik İptal et"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.act_event_reg
-#: view:report.event.registration:0
-msgid "Events Filling Status"
-msgstr "Etkinlik Doluluk Durumu"
-
-#. module: event
-#: view:event.event:0
-msgid "Event Category"
-msgstr "Etkinlik Kategorisi"
-
-#. module: event
-#: field:event.event,register_prospect:0
-msgid "Unconfirmed Registrations"
-msgstr "Onaylanmamış Kayıtlar"
-
-#. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "Etkinlik Menüsünü Aç"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_state:0
-msgid "Event State"
-msgstr "Etkinlik Durumu"
-
-#. module: event
-#: field:event.registration,log_ids:0
-msgid "Logs"
-msgstr "Kayıtlar"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
-msgid "State"
-msgstr "Durum"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "September"
-msgstr "Eylül"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "December"
-msgstr "Aralık"
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Reference of the sales order which created the registration"
-msgstr "Kayıtı oluşturan satış siparişi referansı"
-
-#. module: event
-#: field:report.event.registration,draft_state:0
-msgid " # No of Draft Registrations"
-msgstr " Taslak Kayıt Sayısı"
-
-#. module: event
-#: field:event.event,email_registration_id:0
-#: field:event.type,default_email_registration:0
-msgid "Registration Confirmation Email"
-msgstr "Kayıt Onayı Epostası"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: event
-#: field:event.registration,date_closed:0
-msgid "Attended Date"
-msgstr "Katılınan Tarih"
-
-#. module: event
-#: view:event.event:0
-msgid "Finish Event"
-msgstr "Etkinlik Bitir"
-
-#. module: event
-#: view:event.registration:0
-msgid "Registrations in unconfirmed state"
-msgstr "Onaylanmamış durumdaki kayıtlar"
-
-#. module: event
-#: view:event.event:0
-msgid "Event Description"
-msgstr "Etkinlik Açıklaması"
-
-#. module: event
-#: field:event.event,date_begin:0
-msgid "Start Date"
-msgstr "Başlama Tarihi"
-
-#. module: event
-#: view:event.confirm:0
-msgid "or"
-msgstr "ya da"
-
-#. module: event
-#: help:res.partner,speaker:0
-msgid "Check this box if this contact is a speaker."
-msgstr "Bu kişi bir konuşmacı ise, bu kutuyu işaretleyin."
-
-#. module: event
-#: code:addons/event/event.py:108
-#, python-format
-msgid "No Tickets Available!"
-msgstr "Hiç bilet yok!"
-
-#. module: event
-#: help:event.event,state:0
-msgid ""
-"If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
-"'Cancelled'."
-msgstr ""
-"Etkinlik oluşturulursa, durumu 'Taslak' tır. Etkinlik belirli tarihler için "
-"onaylanırsa durumu 'Onaylı' olarak ayarlanır. Etkinlik, bitmişse durumu "
-"'Yapıldı' olarak ayarlanır. Etkinlik iptal edilirse durumu 'İptal edildi' "
-"olarak ayarlanır"
-
-#. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Click to add a new event.\n"
-"             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
-"               sell tickets, etc.\n"
-"             </p>\n"
-"           "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Yeni bir etkinlik eklemek için tıklayın.\n"
-"             </p><p>\n"
-"               OpenERP etkinliğinizi planlamanıza ve verimli olarak "
-"düzenlemenize yardımcı olur:\n"
-"               abonelik ve katılımların izlenmesi, onay e-postası "
-"otomatikleştirmesi ,\n"
-"               bilet satışları vb.\n"
-"             </p>\n"
-"           "
-
-#. module: event
-#: help:event.event,register_max:0
-msgid ""
-"You can for each event define a maximum registration level. If you have too "
-"much registrations you are not able to confirm your event. (put 0 to ignore "
-"this rule )"
-msgstr ""
-"Her olay için bir tane ençok kayıt seviyesi tanımlayabilirsiniz. Eğer çok "
-"fazla kayıtınız varsa etkinliğinizi onaylamanız mümkün değildir. (bu kuralı "
-"gözardı etmek için 0 koyun)"
-
-#. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Sorumlu Kullanıcı"
-
-#. module: event
-#: code:addons/event/event.py:100
-#, python-format
-msgid ""
-"The total of confirmed registration for the event '%s' does not meet the "
-"expected minimum/maximum. Please reconsider those limits before going "
-"further."
-msgstr ""
-"'% s' Etkinliği için onaylanmış kayıtların toplamı umulan enaz/ençok "
-"sayısını karşılamıyor. Lütfen devam etmeden önce bu sınırları yeniden gözden "
-"geçirin."
-
-#. module: event
-#: help:event.event,email_confirmation_id:0
-msgid ""
-"If you set an email template, each participant will receive this email "
-"announcing the confirmation of the event."
-msgstr ""
-"Eğer bir eposta şablonu ayarlarsanız, her katılımcıya etkinliğin "
-"onaylandığını bildiren bu eposta gidecektir."
-
-#. module: event
-#: view:board.board:0
-msgid "Events Filling By Status"
-msgstr "Duruma före Etkinlik Doluluğu"
-
-#. module: event
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Draft"
-msgstr "Taslak"
-
-#. module: event
-#: view:event.event:0
-msgid "Events in New state"
-msgstr "Yeni durumdaki Etkinlikler"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events which are in New state"
-msgstr "Yeni durumundaki Etkinlikler"
-
-#. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.actions.act_window,name:event.open_board_associations_manager
-#: model:ir.module.category,name:event.module_category_event_management
-#: model:ir.ui.menu,name:event.event_main_menu
-#: model:ir.ui.menu,name:event.menu_board_associations_manager
-#: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
-msgid "Events"
-msgstr "Etkinlikler"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-msgid "Status"
-msgstr "Durumu"
-
-#. module: event
-#: field:event.event,city:0
-msgid "city"
-msgstr "il"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: event
-#: field:event.event,zip:0
-msgid "zip"
-msgstr "pkodu"
-
-#. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
-msgid "unknown"
-msgstr "bilinmeyen"
-
-#. module: event
-#: field:event.event,street2:0
-msgid "Street2"
-msgstr "Cadde2"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: event
-#: help:event.type,default_reply_to:0
-msgid ""
-"The email address of the organizer which is put in the 'Reply-To' of all "
-"emails sent automatically at event or registrations confirmation. You can "
-"also put your email address of your mail gateway if you use one."
-msgstr ""
-"Etkinliğin ya da kayıtların onaylanmasından sonra kendiliğinden gönderilen "
-"epostaların 'Yanıtlanan' kısmına konulacak organizatör eposta adresi. Eğer "
-"posta ağ geçidi kullanıyorsanız eposta adresinizi de koyabilirsiniz."
-
-#. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
-msgid "Messages and communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
-
-#. module: event
-#: field:event.registration,phone:0
-msgid "Phone"
-msgstr "Telefon"
+"X-Launchpad-Export-Date: 2014-09-24 09:06+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_event
@@ -746,378 +23,14 @@ msgid ""
 "\n"
 "        <p>Hello ${object.name},</p>\n"
 "        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
+"confirmed and will be held from "
+"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
+"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
 "        For any further information please contact our event "
 "department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
-"\n"
-"        <p>Merhaba ${object.name},</p>\n"
-"        <p> Kayıt yaptırmış olduğunuz ${object.event_id.name} etkinliği "
-"onaylanmış olup\n"
-"${object.event_id.date_begin} tarihinden ${object.event_id.date_end} "
-"tarihine kadar yapılacaktır.\n"
-"        Herhangi bir ayrıntı için lütfen etkinlik bölümümüzle iletişim "
-"kurun.</p>\n"
-"        <p>Katılımınız için teşekkür ederiz!</p>\n"
-"        <p>Saygılarımızla</p>"
-
-#. module: event
-#: field:event.event,message_is_follower:0
-#: field:event.registration,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Bir İzleyicidir"
-
-#. module: event
-#: field:event.registration,user_id:0
-#: model:res.groups,name:event.group_event_user
-msgid "User"
-msgstr "Kullanıcı"
-
-#. module: event
-#: view:event.confirm:0
-msgid ""
-"Warning: This Event has not reached its Minimum Registration Limit. Are you "
-"sure you want to confirm it?"
-msgstr ""
-"Uyarı: Bu Etkinlik Enaz Kayıt Sınırına erişmemiştir. Bunu onaylamak "
-"istediğinizden emin misiniz?"
-
-#. module: event
-#: view:event.event:0
-msgid "(confirmed:"
-msgstr "(onaylandı:"
-
-#. module: event
-#: view:event.registration:0
-msgid "My Registrations"
-msgstr "Kayıtlarım"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr "Kasım"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Extended Filters..."
-msgstr "Genişletilmiş Süzgeçler..."
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "October"
-msgstr "Ekim"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr "Ocak"
-
-#. module: event
-#: view:event.event:0
-msgid "Set To Draft"
-msgstr "Taslağa Ayarla"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "Confirm Registration"
-msgstr "Kaydı Onayla"
-
-#. module: event
-#: code:addons/event/event.py:89
-#, python-format
-msgid ""
-"You have already set a registration for this event as 'Attended'. Please "
-"reset it to draft if you want to cancel this event."
-msgstr ""
-"'Katıldı' olarak zaten bu etkinlik için bir kayıt belirlediniz. Bu etkinliği "
-"iptal etmek istiyorsanız lütfen taslağı sıfırlayın."
-
-#. module: event
-#: view:res.partner:0
-msgid "Date"
-msgstr "Tarih"
-
-#. module: event
-#: view:event.event:0
-msgid "Email Configuration"
-msgstr "Eposta Yapılandırma"
-
-#. module: event
-#: field:event.type,default_registration_min:0
-msgid "Default Minimum Registration"
-msgstr "Varsayılan Enaz Kayıt"
-
-#. module: event
-#: field:event.event,address_id:0
-msgid "Location Address"
-msgstr "Konum Adresi"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-#: model:ir.ui.menu,name:event.menu_event_type
-msgid "Types of Events"
-msgstr "Etkinlik Türleri"
-
-#. module: event
-#: help:event.event,email_registration_id:0
-msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-"Bu alan, bu etkinlik için her kayıt onaylandığında kendiliğinden gönderilen "
-"eposta şablonunu içerir."
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Attended the Event"
-msgstr "Etkinliğe Katıldı"
-
-#. module: event
-#: constraint:event.event:0
-msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr "Hata ! Kapanış Tarihi, Başlama Tarihinden önceye ayarlanamaz."
-
-#. module: event
-#: code:addons/event/event.py:355
-#, python-format
-msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
-"Bu işlemi yapmak için etkinlik başlangıç ​​gününü beklemeniz gerekir."
-
-#. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,event_state:0
-msgid "Done"
-msgstr "Yapıldı"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Show Confirmed Registrations"
-msgstr "Onaylı Kayıtları Göster"
-
-#. module: event
-#: view:event.confirm:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: event
-#: field:event.registration,reply_to:0
-msgid "Reply-to Email"
-msgstr "Yanıtlanan Epostası"
-
-#. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
-msgstr "Sadece %d Koltuk Mevcuttur!"
-
-#. module: event
-#: model:email.template,subject:event.confirmation_event
-#: model:email.template,subject:event.confirmation_registration
-msgid "Your registration at ${object.event_id.name}"
-msgstr "Buna Kaydınız ${object.event_id.name}"
-
-#. module: event
-#: view:event.registration:0
-msgid "Set To Unconfirmed"
-msgstr "Onaylanmamışa Ayarla"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
-msgid "Subscribed"
-msgstr "Abone"
-
-#. module: event
-#: view:event.event:0
-msgid "Unsubscribe"
-msgstr "Abonelik iptali"
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Responsible"
-msgstr "Sorumlu"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registration contact"
-msgstr "Kişi Kaydı"
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
-msgid "Speaker"
-msgstr "Konuşmacı"
-
-#. module: event
-#: view:event.event:0
-msgid "Upcoming events from today"
-msgstr "Bugün yaklaşan etkinlikler"
-
-#. module: event
-#: model:event.event,name:event.event_2
-msgid "Conference on ERP Business"
-msgstr "ERP İş Konferansı"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.act_event_view_registration
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registration"
-msgstr "Yeni Kayıt"
-
-#. module: event
-#: field:event.event,note:0
-msgid "Description"
-msgstr "Açıklama"
-
-#. module: event
-#: field:report.event.registration,confirm_state:0
-msgid " # No of Confirmed Registrations"
-msgstr " Onaylanmış Kayıt Sayısı"
-
-#. module: event
-#: field:report.event.registration,name_registration:0
-msgid "Participant / Contact Name"
-msgstr "Katılımcı / İlgili Adı"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr "Mayıs"
-
-#. module: event
-#: view:res.partner:0
-msgid "Events Registration"
-msgstr "Etkinlik Kaydı"
-
-#. module: event
-#: view:event.event:0
-msgid "No ticket available."
-msgstr "Hiç bilet yok."
-
-#. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Ençok Kayıt"
-
-#. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
-msgid "Unconfirmed"
-msgstr "Onaysız"
-
-#. module: event
-#: field:event.event,date_end:0
-msgid "End Date"
-msgstr "Bitiş Tarihi"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "February"
-msgstr "Şubat"
-
-#. module: event
-#: view:board.board:0
-msgid "Association Dashboard"
-msgstr "Dernek Kontrol Paneli"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
-msgid "Name"
-msgstr "Adı"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
-msgid "Country"
-msgstr "Ülke"
-
-#. module: event
-#: view:res.partner:0
-msgid "Close Registration"
-msgstr "Kaydı Kapat"
-
-#. module: event
-#: field:event.registration,origin:0
-msgid "Source Document"
-msgstr "Kaynak Belge"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "April"
-msgstr "Nisan"
-
-#. module: event
-#: help:event.type,default_email_event:0
-msgid ""
-"It will select this default confirmation event mail value when you choose "
-"this event"
-msgstr ""
-"Bu etkinliği seçtiğinizde bu varsayılan etkinlik onayı postası değeri "
-"seçecektir"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events which are in confirm state"
-msgstr "Onaylı durumundaki Etkinlikler"
-
-#. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
-#: view:report.event.registration:0
-#: field:report.event.registration,event_type:0
-msgid "Event Type"
-msgstr "Etkinlik Türü"
-
-#. module: event
-#: field:event.event,message_summary:0
-#: field:event.registration,message_summary:0
-msgid "Summary"
-msgstr "Özet"
-
-#. module: event
-#: field:event.registration,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: event
-#: field:event.type,default_reply_to:0
-msgid "Default Reply-To"
-msgstr "Varsayılan Yanıtlanan"
-
-#. module: event
-#: view:event.event:0
-msgid "available."
-msgstr "uygun."
-
-#. module: event
-#: field:event.registration,event_begin_date:0
-#: field:report.event.registration,event_date:0
-msgid "Event Start Date"
-msgstr "Etkinlik Başlama Tarihi"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Participant / Contact"
-msgstr "Katılımcı / İlgili"
-
-#. module: event
-#: view:event.event:0
-msgid "Current Registrations"
-msgstr "Mevcut Kayıtlar"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -1142,6 +55,1348 @@ msgstr ""
 "        <p>Saygılarımızla</p>"
 
 #. module: event
+#: field:report.event.registration,confirm_state:0
+msgid " # No of Confirmed Registrations"
+msgstr " Onaylanmış Kayıt Sayısı"
+
+#. module: event
+#: field:report.event.registration,draft_state:0
+msgid " # No of Draft Registrations"
+msgstr " Taslak Kayıt Sayısı"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "(confirmed:"
+msgstr "(onaylandı:"
+
+#. module: event
+#: model:event.event,description:event.event_3
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
+"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"<div class=\"carousel-inner\">\n"
+"<div class=\"item active image_text\"><img height=\"100%\" "
+"src=\"/website/static/src/img/banner/orange_red.jpg\" width=\"100%\"><div "
+"class=\"container\">\n"
+"<div class=\"carousel-caption content\">\n"
+"<h2>5 Intensive Days</h2>\n"
+"\n"
+"<h4>to learn .JS development</h4>\n"
+"</div>\n"
+"\n"
+"<img class=\"carousel-image hidden-xs\" alt=\"Banner Odoo Image\" "
+"src=\"/website/static/src/img/banner/banner_picture.png\">\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical "
+"aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
+"compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
+"JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page "
+"interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application "
+"with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able "
+"to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A "
+"basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software "
+"(see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
+"Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this "
+"course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can "
+"develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly "
+"worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-"
+"snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"<div class=\"carousel-inner\">\n"
+"<div class=\"item active image_text\"><img height=\"100%\" "
+"src=\"/website/static/src/img/banner/orange_red.jpg\" width=\"100%\"><div "
+"class=\"container\">\n"
+"<div class=\"carousel-caption content\">\n"
+"<h2>5 Intensive Days</h2>\n"
+"\n"
+"<h4>to learn .JS development</h4>\n"
+"</div>\n"
+"<img class=\"carousel-image hidden-xs\" alt=\"Banner Odoo Image\" "
+"src=\"/website/static/src/img/banner/banner_picture.png\">\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical "
+"aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic "
+"compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to "
+"JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page "
+"interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application "
+"with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able "
+"to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A "
+"basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software "
+"(see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo "
+"Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this "
+"course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can "
+"develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly "
+"worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid ""
+"<div class=\"oe_structure\">\n"
+"    <center><strong>Conference on Business Applications</strong></center>\n"
+"    <p> </p>\n"
+"    <p> During this conference, our team will give a detailed overview of "
+"our business applications. You’ll know all the benefits of using it.</p>\n"
+"    <p> </p>\n"
+"    <p><strong>Objectives:</strong></p>\n"
+"    <p>Having attended this conference, participants should be able to:</p>\n"
+"    <ul>\n"
+"    <li>Understand the various modules;</li>\n"
+"    <li>Functional flow of the main applications;</li>\n"
+"    </ul>\n"
+"    <p> </p>\n"
+"    <p><strong>Program:</strong></p>\n"
+"    <ul>\n"
+"    <li>Introduction, CRM, Sales Management</li>\n"
+"    <li>Purchase, Sales &amp; Purchase management, Financial "
+"accounting.</li>\n"
+"    <li>Project management, Human resources, Contract management.</li>\n"
+"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, "
+"Import/Export.</li>\n"
+"    <li>Point of Sale (POS), Introduction to report customization.</li>\n"
+"    </ul>\n"
+"    <p> </p>\n"
+"    <p><strong>Where to find us:</strong></p>\n"
+"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United "
+"States)</p>\n"
+"    <p>For any additional information, please contact us at <a "
+"href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
+"    <p> </p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Luigi Roni, Senior Event Manager</p>\n"
+"    <p> </p>\n"
+"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-"
+"name or re-locate<br>the event or change the dates on which it is "
+"held.)</em></p>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,badge_innerright:event.event_1
+msgid ""
+"<div>\n"
+"                <h2>Exhibition Hall</h2>\n"
+"            </div>\n"
+"            <div>\n"
+"                Picture of the exhibition hall\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: event
+#: model:event.event,badge_innerleft:event.event_1
+msgid ""
+"<h2>Premium Tickets</h2>\n"
+"            <table class=\"text-center\">\n"
+"                <tr>\n"
+"                    <td width=\"10%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; "
+"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
+"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
+"center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; "
+"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
+"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
+"center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; "
+"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
+"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
+"center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> "
+"Dinner</div></td>\n"
+"                    <td width=\"10%\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 15px;\">\n"
+"                    <td colspan=\"7\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 35px;\">\n"
+"                    <td></td>\n"
+"                    <td>Every Day</td>\n"
+"                    <td colspan=\"3\">June 4th</td>\n"
+"                    <td>June 5th</td>\n"
+"                    <td></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br><br>\n"
+"            <h2>Free Tickets</h2>\n"
+"            <table class=\"text-center\">\n"
+"                <tr>\n"
+"                    <td width=\"10%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; "
+"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
+"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
+"center; padding-top: 10px;\"><div>Drinks</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; "
+"border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-"
+"border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-"
+"center; padding-top: "
+"10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
+"                    <td width=\"25%\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 15px;\">\n"
+"                    <td colspan=\"5\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 35px;\">\n"
+"                    <td></td>\n"
+"                    <td>Every Day</td>\n"
+"                    <td></td>\n"
+"                    <td>60 €/day<div>30 €/Friday</div></td>\n"
+"                    <td></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        "
+msgstr ""
+
+#. module: event
+#: model:event.event,badge_back:event.event_1
+msgid ""
+"<h2>Program</h2>\n"
+"            <div><strong>Registrations</strong><small> are from 8:30 am, "
+"except on Friday from 9:00 am</small></div>\n"
+"            <div>\n"
+"                <strong>Lunch</strong><small> is served between 1:00 pm and "
+"2:00 pm.</small>\n"
+"            </div>\n"
+"            <h2>Special Events</h2>\n"
+"            <table style=\"border: 1px solid black;\">\n"
+"                <tr style=\"border: 1px solid black;\">\n"
+"                    <td class=\"text-center\" "
+"width=\"15%\"><strong>4/6</strong></td>\n"
+"                    <td class=\"text-center\" "
+"width=\"25%\"><strong>19h00</strong></td>\n"
+"                    <td><small>Barbecue Beer Event</small></td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td class=\"text-center\"><strong>5/6</strong></td>\n"
+"                    <td class=\"text-center\"><strong>18h30</strong></td>\n"
+"                    <td><small>Odoo Awards Ceremony</small></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br>\n"
+"            <div class=\"row\">\n"
+"                <div class=\"col-xs-5\">\n"
+"                <p>\n"
+"                    <i class=\"fa fa-twitter\"></i> #OpenDays\n"
+"                </p>\n"
+"                </div>\n"
+"                <div class=\"col-xs-6\">\n"
+"                <div class=\"small\">Wifi network: opendays</div>\n"
+"                <div class=\"small\">Wifi password: odoo2014</div>\n"
+"                </div>\n"
+"            </div>\n"
+"            <div class=\"row\">\n"
+"                <small class=\"col-xs-3\" style=\"float: left; padding-"
+"right: 0px; padding-left: 0px;\">sponsored by</small>\n"
+"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-"
+"left: 0px;\">\n"
+"                <span>\n"
+"                    <img class=\"img img-responsive\" "
+"src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
+"                </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Click to add a new event.\n"
+"             </p><p>\n"
+"               Odoo helps you schedule and efficiently organize your "
+"events:\n"
+"               track subscriptions and participations, automate the "
+"confirmation emails,\n"
+"               sell tickets, etc.\n"
+"             </p>\n"
+"           "
+msgstr ""
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+#: selection:event.registration,state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Attended"
+msgstr "Katıldı"
+
+#. module: event
+#: field:event.registration,date_closed:0
+msgid "Attended Date"
+msgstr "Katılınan Tarih"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Attended the Event"
+msgstr "Etkinliğe Katıldı"
+
+#. module: event
+#: field:event.event,seats_available:0
+msgid "Available Seats"
+msgstr ""
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Cancel Event"
+msgstr "Etkinlik İptal et"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Cancel Registration"
+msgstr "Kaydı İptal et"
+
+#. module: event
+#: selection:event.event,state:0
+#: selection:event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Cancelled"
+msgstr "İptal edildi"
+
+#. module: event
+#: help:res.partner,speaker:0
+msgid "Check this box if this contact is a speaker."
+msgstr "Bu kişi bir konuşmacı ise, bu kutuyu işaretleyin."
+
+#. module: event
+#: code:addons/event/event.py:212
+#, python-format
+msgid "Closing Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: event
+#: field:event.event,company_id:0
+#: field:event.registration,company_id:0
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,company_id:0
+msgid "Company"
+msgstr "Şirket"
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on Business Applications"
+msgstr ""
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Confirm"
+msgstr "Onayla"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "Confirm Anyway"
+msgstr "Yine de Onayla"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Confirm Event"
+msgstr "Etkinlik Onayla"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Confirm Registration"
+msgstr "Kaydı Onayla"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: selection:event.event,state:0
+#: view:event.registration:event.view_registration_search
+#: selection:event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Confirmed"
+msgstr "Onaylandı"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Confirmed events"
+msgstr "Onaylı etkinlikler"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Confirmed registrations"
+msgstr "Onaylanan kayıtlar"
+
+#. module: event
+#: field:event.event,country_id:0
+msgid "Country"
+msgstr "Ülke"
+
+#. module: event
+#: field:event.confirm,create_uid:0
+#: field:event.event,create_uid:0
+#: field:event.registration,create_uid:0
+#: field:event.type,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: event
+#: field:event.confirm,create_date:0
+#: field:event.event,create_date:0
+#: field:event.registration,create_date:0
+#: field:event.type,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Current Registrations"
+msgstr "Mevcut Kayıtlar"
+
+#. module: event
+#: help:event.event,message_last_post:0
+#: help:event.registration,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: event
+#: field:event.type,default_registration_max:0
+msgid "Default Maximum Registration"
+msgstr "Varsayılan Ençok Kayıt"
+
+#. module: event
+#: field:event.type,default_registration_min:0
+msgid "Default Minimum Registration"
+msgstr "Varsayılan Enaz Kayıt"
+
+#. module: event
+#: field:event.type,default_reply_to:0
+msgid "Default Reply-To"
+msgstr "Varsayılan Yanıtlanan"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: field:event.event,description:0
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Display"
+msgstr "Göster"
+
+#. module: event
+#: selection:event.event,state:0
+#: selection:report.event.registration,event_state:0
+msgid "Done"
+msgstr "Yapıldı"
+
+#. module: event
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: event
+#: field:event.registration,email:0
+msgid "Email"
+msgstr "Eposta"
+
+#. module: event
+#: model:ir.model,name:event.model_event_event
+msgid "Email Thread"
+msgstr ""
+
+#. module: event
+#: field:event.event,date_end:0
+msgid "End Date"
+msgstr "Bitiş Tarihi"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,event_id:0
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_id:0
+msgid "Event"
+msgstr "Etkinlik"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Beginning Date"
+msgstr "Etkinlik Başlama Tarihi"
+
+#. module: event
+#: view:event.event:event.view_event_tree
+msgid "Event Category"
+msgstr "Etkinlik Kategorisi"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+#: model:ir.actions.act_window,name:event.action_event_confirm
+msgid "Event Confirmation"
+msgstr "Etkinlik Onaylama"
+
+#. module: event
+#: field:event.event,email_confirmation_id:0
+#: field:event.type,default_email_event:0
+msgid "Event Confirmation Email"
+msgstr "Etkinlik Onay Epostası"
+
+#. module: event
+#: field:report.event.registration,event_date:0
+msgid "Event Date"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Event Description..."
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Event Details"
+msgstr "Etkinlik Ayrıntıları"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Month"
+msgstr ""
+
+#. module: event
+#: field:event.event,name:0
+msgid "Event Name"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_calendar
+msgid "Event Organization"
+msgstr "Etkinlik Organizasyonu"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_calendar
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_registration_search
+#: model:ir.model,name:event.model_event_registration
+msgid "Event Registration"
+msgstr "Etkinlik Kaydı"
+
+#. module: event
+#: code:addons/event/event.py:341
+#, python-format
+msgid "Event Registration confirmed."
+msgstr ""
+
+#. module: event
+#: field:report.event.registration,user_id:0
+msgid "Event Responsible"
+msgstr "Etkinlik Sorumlusu"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_state:0
+msgid "Event State"
+msgstr "Etkinlik Durumu"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.type:event.view_event_type_form
+#: view:event.type:event.view_event_type_tree
+#: field:event.type,name:0
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_type:0
+msgid "Event Type"
+msgstr "Etkinlik Türü"
+
+#. module: event
+#: view:report.event.registration:event.report_event_registration_graph
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event on Registration"
+msgstr "Kayıttaki Etkinlik"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.event:event.view_event_search
+#: view:event.event:event.view_event_tree
+#: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_configuration
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_event_event
+#: model:ir.ui.menu,name:event.menu_reporting_events
+msgid "Events"
+msgstr "Etkinlikler"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_report_event_registration
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+msgid "Events Analysis"
+msgstr "Etkinlik Analizi"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Events in New state"
+msgstr "Yeni durumdaki Etkinlikler"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Events which are in New state"
+msgstr "Yeni durumundaki Etkinlikler"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Events which are in confirm state"
+msgstr "Onaylı durumundaki Etkinlikler"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Extended Filters..."
+msgstr "Genişletilmiş Süzgeçler..."
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Finish Event"
+msgstr "Etkinlik Bitir"
+
+#. module: event
+#: field:event.event,message_follower_ids:0
+#: field:event.registration,message_follower_ids:0
+msgid "Followers"
+msgstr "İzleyiciler"
+
+#. module: event
+#: model:event.event,name:event.event_1
+msgid "Functional Webinar"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Group By"
+msgstr ""
+
+#. module: event
+#: model:ir.module.category,description:event.module_category_event_management
+msgid "Helps you manage your Events."
+msgstr "Etkinliklerinizi yönetmenize yardım eder."
+
+#. module: event
+#: help:event.event,message_summary:0
+#: help:event.registration,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet, kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
+
+#. module: event
+#: field:event.confirm,id:0
+#: field:event.event,id:0
+#: field:event.registration,id:0
+#: field:event.type,id:0
+#: field:report.event.registration,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: event
+#: help:event.event,message_unread:0
+#: help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni mesajlar ilginizi gerektirir."
+
+#. module: event
+#: help:event.event,state:0
+msgid ""
+"If event is created, the status is 'Draft'. If event is confirmed for the "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
+"'Cancelled'."
+msgstr ""
+
+#. module: event
+#: help:event.event,email_confirmation_id:0
+msgid ""
+"If you set an email template, each participant will receive this email "
+"announcing the confirmation of the event."
+msgstr ""
+"Eğer bir eposta şablonu ayarlarsanız, her katılımcıya etkinliğin "
+"onaylandığını bildiren bu eposta gidecektir."
+
+#. module: event
+#: field:event.event,message_is_follower:0
+#: field:event.registration,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Bir İzleyicidir"
+
+#. module: event
+#: help:event.type,default_email_event:0
+msgid ""
+"It will select this default confirmation event mail value when you choose "
+"this event"
+msgstr ""
+"Bu etkinliği seçtiğinizde bu varsayılan etkinlik onayı postası değeri "
+"seçecektir"
+
+#. module: event
+#: help:event.type,default_email_registration:0
+msgid ""
+"It will select this default confirmation registration mail value when you "
+"choose this event"
+msgstr ""
+"Bu etkinliği seçtiğinizde, bu varsayılan onay epostası değerini seçecektir"
+
+#. module: event
+#: help:event.type,default_registration_max:0
+msgid "It will select this default maximum value when you choose this event"
+msgstr "Bu etkinliği seçtiğinizde bu varsayılan ençok değeri seçecektir"
+
+#. module: event
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
+msgstr "Bu etkinliği seçtiğinizde bu varsayılan enaz değeri seçilecektir"
+
+#. module: event
+#: field:event.event,message_last_post:0
+#: field:event.registration,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: event
+#: field:event.confirm,write_uid:0
+#: field:event.event,write_uid:0
+#: field:event.registration,write_uid:0
+#: field:event.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: event
+#: field:event.confirm,write_date:0
+#: field:event.event,write_date:0
+#: field:event.registration,write_date:0
+#: field:event.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: event
+#: field:event.event,address_id:0
+msgid "Location"
+msgstr "Konum"
+
+#. module: event
+#: field:event.registration,log_ids:0
+msgid "Logs"
+msgstr "Kayıtlar"
+
+#. module: event
+#: model:res.groups,name:event.group_event_manager
+msgid "Manager"
+msgstr "Yönetici"
+
+#. module: event
+#: field:report.event.registration,seats_max:0
+msgid "Max Seats"
+msgstr ""
+
+#. module: event
+#: field:event.event,seats_max:0
+msgid "Maximum Available Seats"
+msgstr ""
+
+#. module: event
+#: field:event.event,message_ids:0
+#: field:event.registration,message_ids:0
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: event
+#: help:event.event,message_ids:0
+#: help:event.registration,message_ids:0
+msgid "Messages and communication history"
+msgstr "Mesajlar ve iletişim geçmişi"
+
+#. module: event
+#: field:event.event,seats_min:0
+msgid "Minimum Reserved Seats"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "My Events"
+msgstr "Etkinliklerim"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "My Registrations"
+msgstr "Kayıtlarım"
+
+#. module: event
+#: view:event.event:event.view_event_tree
+#: field:event.registration,name:0
+msgid "Name"
+msgstr "Adı"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "New"
+msgstr "Yeni"
+
+#. module: event
+#: model:mail.message.subtype,name:event.mt_event_registration
+msgid "New Registration"
+msgstr "Yeni Kayıt"
+
+#. module: event
+#: code:addons/event/event.py:339
+#, python-format
+msgid "New registration confirmed: %s."
+msgstr "Yeni kayıt onaylandı: %s."
+
+#. module: event
+#: code:addons/event/event.py:206
+#: code:addons/event/event.py:330
+#, python-format
+msgid "No more available seats."
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "No ticket available."
+msgstr "Hiç bilet yok."
+
+#. module: event
+#: field:report.event.registration,nbevent:0
+msgid "Number of Events"
+msgstr ""
+
+#. module: event
+#: field:event.registration,nb_register:0
+msgid "Number of Participants"
+msgstr "Katılımcı Sayısı"
+
+#. module: event
+#: field:event.event,seats_used:0
+msgid "Number of Participations"
+msgstr ""
+
+#. module: event
+#: field:report.event.registration,nbregistration:0
+msgid "Number of Registrations"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Only"
+msgstr "Yalnız"
+
+#. module: event
+#: model:event.event,name:event.event_0
+msgid "Open Days in Los Angeles"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.client,name:event.action_client_event_menu
+msgid "Open Event Menu"
+msgstr "Etkinlik Menüsünü Aç"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Organized by"
+msgstr "Düzenleyen"
+
+#. module: event
+#: field:event.event,organizer_id:0
+msgid "Organizer"
+msgstr ""
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Participant"
+msgstr "Katılımcı"
+
+#. module: event
+#: field:report.event.registration,name_registration:0
+msgid "Participant / Contact Name"
+msgstr "Katılımcı / İlgili Adı"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,partner_id:0
+#: model:ir.model,name:event.model_res_partner
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: event
+#: field:event.registration,phone:0
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr "Kayıtı oluşturan satış siparişi referansı"
+
+#. module: event
+#: field:report.event.registration,user_id_registration:0
+msgid "Register"
+msgstr "Kayıt"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Register with this event"
+msgstr "Bu etkinliğe kayıt"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_event_registration_graph
+#: view:event.registration:event.view_event_registration_tree
+msgid "Registration"
+msgstr "Kayıt"
+
+#. module: event
+#: field:event.event,email_registration_id:0
+#: field:event.type,default_email_registration:0
+msgid "Registration Confirmation Email"
+msgstr "Kayıt Onayı Epostası"
+
+#. module: event
+#: field:event.registration,date_open:0
+msgid "Registration Date"
+msgstr "Kayıt Tarihi"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registration Day"
+msgstr ""
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registration Month"
+msgstr ""
+
+#. module: event
+#: field:report.event.registration,registration_state:0
+msgid "Registration State"
+msgstr "Kayıt Durumu"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Registration contact"
+msgstr "Kişi Kaydı"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.ui.menu,name:event.menu_action_registration
+msgid "Registrations"
+msgstr "Kayıtlar"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Registrations in confirmed or done state"
+msgstr "Onaylandı ya da yapıldı durumundaki kayıtlar"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registrations in unconfirmed state"
+msgstr "Onaylanmamış durumdaki kayıtlar"
+
+#. module: event
+#: field:event.event,reply_to:0
+msgid "Reply-To Email"
+msgstr "Yanıtlama epostası"
+
+#. module: event
+#: field:event.event,seats_reserved:0
+msgid "Reserved Seats"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.registration:event.view_registration_search
+msgid "Responsible"
+msgstr "Sorumlu"
+
+#. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+msgid "Send Email"
+msgstr "Eposta Gönder"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Set To Draft"
+msgstr "Taslağa Ayarla"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+msgid "Set To Unconfirmed"
+msgstr "Onaylanmamışa Ayarla"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Show Confirmed Registrations"
+msgstr "Onaylı Kayıtları Göster"
+
+#. module: event
+#: field:event.registration,origin:0
+msgid "Source Document"
+msgstr "Kaynak Belge"
+
+#. module: event
+#: field:res.partner,speaker:0
+msgid "Speaker"
+msgstr "Konuşmacı"
+
+#. module: event
+#: field:event.event,date_begin:0
+msgid "Start Date"
+msgstr "Başlama Tarihi"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Start Month"
+msgstr ""
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: field:event.event,state:0
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,state:0
+msgid "Status"
+msgstr "Durumu"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Abone ol"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Subscribed"
+msgstr "Abone"
+
+#. module: event
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
+msgid "Summary"
+msgstr "Özet"
+
+#. module: event
+#: model:event.event,name:event.event_3
+msgid "Technical Training"
+msgstr ""
+
+#. module: event
 #: help:event.event,reply_to:0
 msgid ""
 "The email address of the organizer is likely to be put here, with the effect "
@@ -1155,695 +1410,147 @@ msgstr ""
 "koyabilirsiniz."
 
 #. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Abone ol"
+#: help:event.type,default_reply_to:0
+msgid ""
+"The email address of the organizer which is put in the 'Reply-To' of all "
+"emails sent automatically at event or registrations confirmation. You can "
+"also put your email address of your mail gateway if you use one."
+msgstr ""
+"Etkinliğin ya da kayıtların onaylanmasından sonra kendiliğinden gönderilen "
+"epostaların 'Yanıtlanan' kısmına konulacak organizatör eposta adresi. Eğer "
+"posta ağ geçidi kullanıyorsanız eposta adresinizi de koyabilirsiniz."
 
 #. module: event
-#: model:res.groups,name:event.group_event_manager
-msgid "Manager"
-msgstr "Yönetici"
+#: help:event.event,seats_max:0
+msgid ""
+"The maximum registration level is equal to the sum of the maximum "
+"registration of event ticket. If you have too much registrations you are not "
+"able to confirm your event. (0 to ignore this rule )"
+msgstr ""
 
 #. module: event
-#: field:event.event,street:0
-msgid "Street"
-msgstr "Cadde"
+#: help:event.event,email_registration_id:0
+msgid ""
+"This field contains the template of the mail that will be automatically sent "
+"each time a registration for this event is confirmed."
+msgstr ""
+"Bu alan, bu etkinlik için her kayıt onaylandığında kendiliğinden gönderilen "
+"eposta şablonunu içerir."
 
 #. module: event
-#: view:event.confirm:0
-#: model:ir.actions.act_window,name:event.action_event_confirm
-#: model:ir.model,name:event.model_event_confirm
-msgid "Event Confirmation"
-msgstr "Etkinlik Onaylama"
+#: field:event.event,date_tz:0
+msgid "Timezone"
+msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
-msgstr "Yıl"
+#: field:event.event,type:0
+msgid "Type of Event"
+msgstr "Etkinlik Türü"
 
 #. module: event
-#: field:event.event,speaker_confirmed:0
-msgid "Speaker Confirmed"
-msgstr "Konuşmacı Onaylandı"
+#: model:ir.actions.act_window,name:event.action_event_type
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Types of Events"
+msgstr "Etkinlik Türleri"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+#. module: event
+#: view:event.event:event.view_event_search
+#: selection:event.event,state:0
+#: selection:event.registration,state:0
+msgid "Unconfirmed"
+msgstr "Onaysız"
 
-#~ msgid "Configuration"
-#~ msgstr "Ayarlar"
+#. module: event
+#: field:event.event,seats_unconfirmed:0
+msgid "Unconfirmed Seat Reservations"
+msgstr ""
 
-#~ msgid "Ending date"
-#~ msgstr "Bitiş Tarihi"
+#. module: event
+#: view:event.event:event.view_event_search
+#: field:event.event,message_unread:0
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,message_unread:0
+msgid "Unread Messages"
+msgstr "Okunmamış Mesajlar"
 
-#~ msgid "Create Invoices"
-#~ msgstr "Faturaları Oluştur"
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Unsubscribe"
+msgstr "Abonelik iptali"
 
-#~ msgid "Case section"
-#~ msgstr "Servis Talep Bölümü"
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Upcoming"
+msgstr "Yaklaşan"
 
-#~ msgid "To be Invoiced"
-#~ msgstr "Faturalanacak"
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Upcoming events from today"
+msgstr "Bugün yaklaşan etkinlikler"
 
-#~ msgid "All Events"
-#~ msgstr "Tüm Etkinlikler"
+#. module: event
+#: field:event.registration,user_id:0
+#: model:res.groups,name:event.group_event_user
+msgid "User"
+msgstr "Kullanıcı"
 
-#~ msgid "Reporting"
-#~ msgstr "Raporlama"
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid ""
+"Warning: This Event has not reached its Minimum Registration Limit. Are you "
+"sure you want to confirm it?"
+msgstr ""
+"Uyarı: Bu Etkinlik Enaz Kayıt Sınırına erişmemiştir. Bunu onaylamak "
+"istediğinizden emin misiniz?"
 
-#~ msgid "Events by Categories"
-#~ msgstr "Gruba göre Etkinlikler"
+#. module: event
+#: help:event.event,seats_min:0
+msgid ""
+"You can for each event define a minimum registration level. If you do not "
+"enough registrations you are not able to confirm your event. (put 0 to "
+"ignore this rule )"
+msgstr ""
+"Her olay için bir tane enaz kayıt seviyesi tanımlayabilirsiniz. Eğer yeterli "
+"kayıt yapmazsanız etkinliklerinizi onaylamanız mümkün olmayacaktır. (bu "
+"kuralı gözardı etmek için 0 koyun)"
 
-#~ msgid "References"
-#~ msgstr "Referanslar"
-
-#~ msgid "Parent Category"
-#~ msgstr "Ana Kategori"
-
-#~ msgid "Communication history"
-#~ msgstr "İletişim Geçmişi"
-
-#~ msgid "Canceled"
-#~ msgstr "İptal Edildi"
-
-#~ msgid "Events On Registrations"
-#~ msgstr "Etkinlik Kayıtları"
-
-#~ msgid "Events by section"
-#~ msgstr "Bölüme göre Etkinlikler"
-
-#~ msgid "History"
-#~ msgstr "Geçmiş Bilgisi"
-
-#~ msgid "General"
-#~ msgstr "Genel"
-
-#~ msgid "Send Reminder"
-#~ msgstr "Hatırlatıcı Gönder"
-
-#~ msgid "Beginning date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Invoice"
-#~ msgstr "Fatura"
-
+#. module: event
+#: code:addons/event/event.py:222
 #, python-format
-#~ msgid "Open"
-#~ msgstr "Açık"
+msgid ""
+"You have already set a registration for this event as 'Attended'. Please "
+"reset it to draft if you want to cancel this event."
+msgstr ""
+"'Katıldı' olarak zaten bu etkinlik için bir kayıt belirlediniz. Bu etkinliği "
+"iptal etmek istiyorsanız lütfen taslağı sıfırlayın."
 
-#~ msgid "Unit Price"
-#~ msgstr "Birim Fiyat"
-
-#~ msgid "Confirmed Events"
-#~ msgstr "Onaylanan Etkinlikler"
-
-#~ msgid "Case"
-#~ msgstr "Servis Talebi"
-
-#~ msgid "Product"
-#~ msgstr "Ürün"
-
-#~ msgid "Payments"
-#~ msgstr "Ödemeler"
-
-#~ msgid "Draft Events"
-#~ msgstr "Taslak olan Etkinlikler"
-
-#~ msgid "Events Organisation"
-#~ msgstr "Etkinlik Organizasyon Yönetimi"
-
-#~ msgid "Actions"
-#~ msgstr "İşlemler"
-
-#~ msgid "Ok"
-#~ msgstr "Tamam"
-
-#~ msgid "Confirmation Email"
-#~ msgstr "Onay E-Postası"
-
-#~ msgid "Registration Email"
-#~ msgstr "Kayıt E-Postası"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "Hata ! Önyinelemeli bölümler oluşturamazsınız."
-
-#~ msgid "Make Invoice"
-#~ msgstr "Fatura Oluştur"
-
-#~ msgid "Draft Registrations"
-#~ msgstr "Taslak Kayıtları"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "Posta Otomatik Onayı"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Eylem tanımlamasında geçersiz model adı."
-
-#~ msgid "Draft Registration"
-#~ msgstr "Olay Kaydı"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "Kayıt Onaylama"
-
-#~ msgid "Confirm Registrations"
-#~ msgstr "Kaydı Onayla"
-
+#. module: event
+#: code:addons/event/event.py:357
 #, python-format
-#~ msgid ""
-#~ "You must define a reply-to address in order to mail the participant. You can "
-#~ "do this in the Mailing tab of your event. Note that this is also the place "
-#~ "where you can configure your event to not send emails automaticly while "
-#~ "registering"
-#~ msgstr ""
-#~ "Katılımcı posta için düzgün bir cevap adresi tanımlamalısınız. Bunu "
-#~ "etkinliğinizin Postalama sekmesinde yapabilirsiniz. Bunun kayıt sırasında "
-#~ "otomatik e-postalar gönderilmemesi için yapılandırma yapabileceğiniz yer "
-#~ "olduğunu da unutmayın."
-
-#~ msgid "Badge"
-#~ msgstr "Rozet"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Hata: UOS, UOM'dan farklı bir kategoride olmalı."
-
-#~ msgid "Registration Invoiced"
-#~ msgstr "Kayıt Faturalandı."
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Konser için Bilet"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
-
-#~ msgid "Event Done"
-#~ msgstr "Etkinlik Bitti"
-
-#~ msgid "Badge Name"
-#~ msgstr "Rozet Adı"
-
-#~ msgid "Mailing"
-#~ msgstr "Postalama"
-
-#~ msgid "Error Messages"
-#~ msgstr "Hata İletileri"
-
-#~ msgid "Invoice Created"
-#~ msgstr "Fatura Düzenlendi"
-
-#~ msgid "Event description"
-#~ msgstr "Etkinlik Tanımlama"
-
-#~ msgid "Statistics"
-#~ msgstr "İstatistikler"
-
-#~ msgid "Event type on registration"
-#~ msgstr "Kayıttaki Etkinlik türü"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Nesne adı x_ ile başlamalı ve özel karakter içermemelidir!"
-
-#~ msgid "Event Related"
-#~ msgstr "Etkinlikle İlgili"
-
-#~ msgid "Number of Registration"
-#~ msgstr "Kayıt Numarası"
-
-#~ msgid "All Registrations"
-#~ msgstr "Tüm Kayıtlar"
-
-#~ msgid ""
-#~ "Check this box if you want to use the automatic mailing for new registration"
-#~ msgstr ""
-#~ "Yeni kayıt için otomatik postalamayı kullanmak istiyorsanız bu kutuyu "
-#~ "işaretleyin"
-
-#~ msgid "Badge Partner"
-#~ msgstr "Rozet Partneri"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "Otomatik Onay E-Postası"
-
-#~ msgid "Events on registrations"
-#~ msgstr "Kayıtlardaki Etkinlikler"
-
-#~ msgid "New event"
-#~ msgstr "Yeni etkinlik"
-
-#~ msgid "Badge Title"
-#~ msgstr "Rozet Başlığı"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Konferans için Bilet"
-
-#~ msgid "Label Invoice"
-#~ msgstr "Etiket Faturası"
-
-#~ msgid "Invoice Rejected"
-#~ msgstr "Fatura Reddedildi"
-
-#~ msgid ""
-#~ "Check this box if you want ot use the automatic confirmation emailing or the "
-#~ "reminder"
-#~ msgstr ""
-#~ "Otomatik Postalama ya da Hatırlatma onayını kullanmak istiyorsanız bu kuyu "
-#~ "işaretleyin"
-
-#~ msgid "List Register Partners"
-#~ msgstr "Kayıt Ortaklarını Listele"
-
-#~ msgid "Auto Registration Email"
-#~ msgstr "Otomatik Kayıt E-Postası"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Hata: Geçersiz ean kodu"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "Posta Otomatik Kaydı"
-
-#~ msgid "Registration By Event Types"
-#~ msgstr "Etkinlik Türleri Kaydı"
-
-#~ msgid "The event limit is reached. What do you want to do?"
-#~ msgstr "Etkinlik sınıra ulaştı. Ne yapmak istersiniz ?"
-
-#~ msgid ""
-#~ "Organization and management of events.\n"
-#~ "\n"
-#~ "    This module allow you\n"
-#~ "        * to manage your events and their registrations\n"
-#~ "        * to use emails to automatically confirm and send acknowledgements "
-#~ "for any registration to an event\n"
-#~ "        * ...\n"
-#~ "\n"
-#~ "    Note that:\n"
-#~ "    - You can define new types of events in\n"
-#~ "                Events / Configuration / Types of Events\n"
-#~ "    - You can access predefined reports about number of registration per "
-#~ "event or per event category in :\n"
-#~ "                Events / Reporting\n"
-#~ msgstr ""
-#~ "Etkinliklerin Organizasyonu ve Yönetimi.\n"
-#~ "\n"
-#~ "    Bu modül size\n"
-#~ "        * etkinliklerinizi ve onların kayıtlarını yönetmek için\n"
-#~ "        * bir etkinliğe her bir kayıt için teşekkür göndermek ve otomatik "
-#~ "olarak onaylamak için e-postaları kullanmanıza izin verir\n"
-#~ "        * ...\n"
-#~ "\n"
-#~ "    Unutmayın ki:\n"
-#~ "    -Etkinlikler / Biçim / Etkinlik Türleri'nde\n"
-#~ "                yeni etkinlik türleri tanımlayabilirsiniz\n"
-#~ "    -Etkinlikler / Raporlama'da etkinlik başına ya da etkinlik kategorisi "
-#~ "başına kayıt sayısı hakkındaki önceden hazırlanmış\n"
-#~ "                raporlara ulaşabilirsiniz.\n"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confimed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "Bu e-posta etkinlik onaylandığında ya da birisi onaylı bir etkinliğe abone "
-#~ "olduğunda gönderilecektir. Bu aynı zamanda etkinliği birisine hatırlatmak "
-#~ "için gönderilen e-postadır."
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ERP Business'da Konferans"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Opera İçin Bilet"
-
-#~ msgid "Partner Invoiced"
-#~ msgstr "Faturalanan Ortak"
-
-#~ msgid "Provide Maximun Number of Registrations"
-#~ msgstr "Enfazla Kayıt Sayısını Belirtin"
-
-#~ msgid "Invoice Information"
-#~ msgstr "Fatura Bilgileri"
-
-#~ msgid "Make Invoices"
-#~ msgstr "Faturaları hazırla"
-
-#~ msgid "Title"
-#~ msgstr "Unvan"
-
-#, python-format
-#~ msgid "Registration doesn't have any partner to invoice."
-#~ msgstr "Kayıtta faturalandırılacak paydaş yok."
-
-#~ msgid "Speaker who are giving speech on event."
-#~ msgstr "Olayda konuşacak Konuşmacı"
-
-#~ msgid "_Close"
-#~ msgstr "_Kapat"
-
-#~ msgid "Invoice Date"
-#~ msgstr "Fatura Tarihi"
-
-#~ msgid "Parent Event"
-#~ msgstr "Ana Etkinlik"
-
-#~ msgid "Last 7 Days"
-#~ msgstr "Son 7 Gün"
-
-#~ msgid "Current Events"
-#~ msgstr "Güncel Etkinlikler"
-
-#~ msgid "Subtotal"
-#~ msgstr "Ara Toplam"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "İç Not Ekle"
-
-#~ msgid "Reply-To"
-#~ msgstr "Yanıtla"
-
-#~ msgid "Pricelist"
-#~ msgstr "Fiyat Listesi"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Paydaş İlgilisi"
-
-#, python-format
-#~ msgid "Customer Invoices"
-#~ msgstr "Müşteri Faturaları"
-
-#~ msgid "Event type"
-#~ msgstr "Etkinlik Türü"
-
-#~ msgid "Badges"
-#~ msgstr "İsimlikler"
-
-#~ msgid "Extra Info"
-#~ msgstr "Ek Bilgi"
-
-#~ msgid "Reference"
-#~ msgstr "Referans"
-
-#~ msgid "Closing Date of Event"
-#~ msgstr "Etkinlik Kapanış Tarihi"
-
-#~ msgid "Emails"
-#~ msgstr "Epostalar"
-
-#~ msgid "Send New Email"
-#~ msgstr "Yeni Eposta gönder"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Uyarı !"
-
-#~ msgid "Number of Registrations or Tickets"
-#~ msgstr "Kayıt ya da Bilet Sayısı"
-
-#~ msgid "Event Make Invoice"
-#~ msgstr "Etkinlik Faturası Hazırla"
-
-#~ msgid "Other Speakers"
-#~ msgstr "Diğer Konuşmacılar"
-
-#~ msgid "Misc"
-#~ msgstr "Çeşitli"
-
-#~ msgid "Pricelist version for current event."
-#~ msgstr "Güncel Etkinlik Fiyat Listesi Sürümü"
-
-#~ msgid "Type"
-#~ msgstr "Tür"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Hata !"
-
-#~ msgid "Reply"
-#~ msgstr "Yanıtla"
-
-#~ msgid "Dates"
-#~ msgstr "Tarihler"
-
-#~ msgid "History Information"
-#~ msgstr "Geçmiş Bilgisi"
-
-#~ msgid "Quantity"
-#~ msgstr "Miktar"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Son 30 Gün"
-
-#~ msgid "Contact"
-#~ msgstr "İlgili"
-
-#~ msgid "Group the invoices"
-#~ msgstr "Faturaları Gruplandır"
-
-#~ msgid "Invoiced Registrations only"
-#~ msgstr "Yalnızca Faturalı Kayıtlar"
-
-#~ msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
-#~ msgstr ""
-#~ "OpenERP tarafından gönderilen tüm epostaların 'Bunu Yanıtla'ya konan eposta "
-#~ "adresi"
-
-#~ msgid "Provide Minimum Number of Registrations"
-#~ msgstr "Enaz Sayıda Kayıt Sağlayın"
-
-#~ msgid "Total of Prospect Registrations"
-#~ msgstr "Toplam Umutlar Kayıtları"
-
-#~ msgid ""
-#~ "Check this box if you want to use automatic confirmation emailing or "
-#~ "reminder."
-#~ msgstr ""
-#~ "Otomatik eposta ve anımsatma onaylama kullanımı için bu kutuyu işaretle."
-
-#~ msgid "My Sales Team(s)"
-#~ msgstr "Satış Takım(lar)ım"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Ay-1    "
-
-#~ msgid "Provide Maximum Number of Registrations"
-#~ msgstr "Ençok Sayıda Kayıt Sağlayın"
-
-#, python-format
-#~ msgid "Registered partner doesn't have an address to make the invoice."
-#~ msgstr "Fatura oluşturmak için kayıtlı paydaşın adresi yok."
-
-#~ msgid "Total of Open and Done Registrations"
-#~ msgstr "Toplam Açık ve Biten Kayıtlar"
-
-#~ msgid "Invoice Name"
-#~ msgstr "Fatura Adı"
-
-#~ msgid "Message"
-#~ msgstr "İleti"
-
-#~ msgid "Create invoices"
-#~ msgstr "Fatura oluştur"
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
-
-#~ msgid "Reference 2"
-#~ msgstr "Referans 2"
-
-#, python-format
-#~ msgid "Invoiced"
-#~ msgstr "Faturalandı"
-
-#~ msgid "Beginning Date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Closed"
-#~ msgstr "Kapalı"
-
-#~ msgid "Speakers"
-#~ msgstr "Konuşmacılar"
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple email "
-#~ "addresses with a comma"
-#~ msgstr ""
-#~ "Bu e-posta adresleri gönderilmeden önce bütün gelen ve giden e-postaların CC "
-#~ "satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
-
-#~ msgid ""
-#~ "The invoices of this event registration will be created with this Product. "
-#~ "Thus it allows you to set the default label and the accounting info you want "
-#~ "by default on these invoices."
-#~ msgstr ""
-#~ "Bu etkinlik kaydının faturaları bu ürünle birlikte oluşturulacaktır. "
-#~ "Böylece, bu faturalarda varsayılan olarak istediğiniz öntanımlı etiket ve "
-#~ "muhasebe bilgileri ayarlamanıza izin verir."
-
-#~ msgid "Write Date"
-#~ msgstr "Yazım Tarihi"
-
-#~ msgid "Active"
-#~ msgstr "Etkin"
-
-#~ msgid "Child Events"
-#~ msgstr "Alt Etkinlikler"
-
-#~ msgid "Language"
-#~ msgstr "Dil"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "These people will receive email."
-#~ msgstr "Bu kişilere e-posta alacaktır"
-
-#~ msgid "Start date"
-#~ msgstr "Başlama Tarihi"
-
-#~ msgid "Confirmation Email Body"
-#~ msgstr "Onaylı Eposta Gövdesi"
-
-#~ msgid "Event by Registration"
-#~ msgstr "Kayıta göre Etkinlik"
-
-#~ msgid "Registration Email Body"
-#~ msgstr "Kayıt Epostası Gövdesi"
-
-#~ msgid "Close"
-#~ msgstr "Kapat"
-
-#, python-format
-#~ msgid "Event related doesn't have any product defined"
-#~ msgstr "İlgili Etkinliğe tanımlı herhangi bir ürün yoktur"
-
-#~ msgid "Closing date"
-#~ msgstr "Kapanış tarihi"
-
-#~ msgid "Events created in current month"
-#~ msgstr "Geçerli ayda oluşturulan Etkinlikler"
-
-#~ msgid ""
-#~ "Check this box if you want to use automatic emailing for new registration."
-#~ msgstr ""
-#~ "Yeni kayıtlar için otomatik epostalama kullanmak istiyorsanız bu kutuyu "
-#~ "işaretleyin."
-
-#~ msgid "Registration Cost"
-#~ msgstr "Kayıt Ücreti"
-
-#, python-format
-#~ msgid "Auto Confirmation: [%s] %s"
-#~ msgstr "Oto Onaylama:[%s] %s"
-
-#~ msgid "Beginning Date of Event"
-#~ msgstr "Etkinliğin Başlama Tarihi"
-
-#, python-format
-#~ msgid "Auto Registration: [%s] %s"
-#~ msgstr "Oto Kayıt: [%s] %s"
-
-#~ msgid "Address"
-#~ msgstr "Adres"
-
-#~ msgid "_Subcribe"
-#~ msgstr "_Abone ol"
-
-#~ msgid ""
-#~ "This will be the default price used as registration cost when invoicing this "
-#~ "event. Note that you can specify a specific amount for each registration."
-#~ msgstr ""
-#~ "Bu fiyat, etkinliğin faturalandırılması sırasında varsayılan kayıt ücreti "
-#~ "olarak kullanılacaktır. Her kayıt için özel bir tutar belirleyebileceğinizi "
-#~ "unutmayın."
-
-#~ msgid "Sale Team"
-#~ msgstr "Satış Takımı"
-
-#, python-format
-#~ msgid "Registration is set as Cannot be invoiced"
-#~ msgstr "Kayıt Faturalandırılamaz olarak ayarlı"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Hata ! Özyinelemeli ilişkili üyeler oluşturamazsınız."
-
-#~ msgid "Event For Registration"
-#~ msgstr "Kayıt için Etkinlik"
-
-#, python-format
-#~ msgid "Invoice cannot be created if the registration is in %s state."
-#~ msgstr "Kayıt %s durumunda ise fatura oluşturulamaz."
-
-#~ msgid "Total"
-#~ msgstr "Toplam"
-
-#~ msgid ""
-#~ "Event is the low level object used by meeting and others documents that "
-#~ "should be synchronized with mobile devices or calendar applications through "
-#~ "caldav. Most of the users should work in the Calendar menu, and not in the "
-#~ "list of events."
-#~ msgstr ""
-#~ "Etkinlik, mobil aygıtlarla ya da caldav yoluyla takvim uygulamaları "
-#~ "eşitlenecek toplantılar ve diğer belgeler tarafından kullanılan düşük "
-#~ "seviyeli nesnelerdir. Kullanıcıların çoğu Takvim menüsünden çalışmalıdır, "
-#~ "etkinlik listesinden değil."
-
-#~ msgid "Error ! You cannot create recursive event."
-#~ msgstr "Hata ! Özyinelemeli etkinlik oluşturmazsınız."
-
-#~ msgid "Confirmation for Event Registration"
-#~ msgstr "Etkinlik Kaydı Onaylama"
-
-#~ msgid "event.registration.badge"
-#~ msgstr "etkinlik.kayıt.rozet"
-
-#~ msgid "Event Details"
-#~ msgstr "Etkinlik Ayrıntıları"
-
-#~ msgid ""
-#~ "This email will be sent when the event gets confirmed or when someone "
-#~ "subscribes to a confirmed event. This is also the email sent to remind "
-#~ "someone about the event."
-#~ msgstr ""
-#~ "Bu eposta etkinlik onaylandığında ya da biri onaylanmış bir etkinliğe abone "
-#~ "olduğunda gönderilmiş olacaktır. Bu aynı zamanda etkinlik hakkında birine "
-#~ "anımsatma için gönderilen epostadır."
-
-#~ msgid "Events created in last month"
-#~ msgstr "Son ayda oluşturulan Etkinlikler"
-
-#~ msgid "Event Dashboard"
-#~ msgstr "Etkinlik Kontrol Paneli"
-
-#~ msgid ""
-#~ "If event is created, the state is 'Draft'.If event is confirmed for the "
-#~ "particular dates the state is set to 'Confirmed'. If the event is over, the "
-#~ "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
-#~ msgstr ""
-#~ "Eğer etkinlik oluşturulmuşsa, durumu 'Taslak'tır. Etkinlik belirli tarihler "
-#~ "için onaylanmışsa durumu 'Onaylı'ya ayarlanır. Etkinlik bitmişse, durum "
-#~ "'Bitti'ye ayarlanır. Etkinlik iptal edildiyse durum 'İptal edildi'ye "
-#~ "ayarlanır."
-
-#~ msgid "Events States"
-#~ msgstr "Etkinliklerin Durumları"
-
-#~ msgid "Events created in current year"
-#~ msgstr "Geçerli ayda oluşturulan Etkinlikler"
-
-#, python-format
-#~ msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-#~ msgstr "Uyarı: Etkinlik '%s' Ençok Sınırına (%s) ulaşmıştır."
-
-#~ msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-#~ msgstr "Etkinlik Türü; Seminer, Sergi, Konferans, Eğitim gibi."
-
-#~ msgid "Events Type"
-#~ msgstr "Etkinliklerin Türü"
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "Birisi Etkinliğe abone olduğunda bu e-posta gönderilmiş olacaktır."
-
-#~ msgid "  event Registration "
-#~ msgstr "  etkinlik Kaydı "
+msgid "You must wait for the starting day of the event to do this action."
+msgstr ""
+"Bu işlemi yapmak için etkinlik başlangıç ​​gününü beklemeniz gerekir."
+
+#. module: event
+#: model:email.template,subject:event.confirmation_event
+#: model:email.template,subject:event.confirmation_registration
+msgid "Your registration at ${object.event_id.name}"
+msgstr "Buna Kaydınız ${object.event_id.name}"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "available."
+msgstr "uygun."
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "ticket"
+msgstr "bilet"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "tickets"
+msgstr "biletler"
+
+#~ msgid "Participant / Contact"
+#~ msgstr "Katılımcı / İlgili"

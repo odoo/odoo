@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -39,7 +38,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
+
+        <menuitem  action="project_issue_version_action" id="menu_project_confi" name="Issues Versions" parent="base.menu_definitions" sequence="2"/>
 
 
         <record model="ir.ui.view" id="project_issue_form_view">
@@ -52,26 +52,31 @@
                         options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
-                    <div class="oe_right"> 
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
-                    </div>
                     <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
+                    <div class="row">
+                        <h1 class="col-xs-11">
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <div class="col-xs-1 text-right">
+                            <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"
+                                options='{
+                                "states_legend_field": "stage_id",
+                                "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
+                        </div>
+                    </div>
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                     <group>
                         <group>
-                            <field name="user_id" 
+                            <field name="user_id"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <field name="email_from"/>
                             <label for="project_id"/>
                             <div>
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
-                                <button name="case_escalate" string="⇒ Escalate" type="object" class="oe_link"
-                                        groups="base.group_user"/>
+                                <field name="can_escalate" invisible="1"/>
+                                <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible':[('can_escalate','=',False)]}" groups="base.group_user"/>
                             </div>
                         </group>
                         <group>
@@ -90,16 +95,18 @@
                             <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
                         </page>
                         <page string="Extra Info" groups="project.group_project_manager,project.group_project_user">
-                            <group string="Statistics">
-                                <field name="day_open"/>
-                                <field name="day_close"/>
-                                <field name="working_hours_open" widget="float_time"/>
-                                <field name="working_hours_close" widget="float_time"/>
-                                <field name="inactivity_days"/>
-                                <field name="days_since_creation"/>
-                            </group>
-                            <group string="Status" groups="base.group_no_one">
-                                <field name="active"/>
+                            <group>
+                                <group string="Statistics">
+                                    <field name="day_open"/>
+                                    <field name="day_close"/>
+                                    <field name="working_hours_open" widget="float_time"/>
+                                    <field name="working_hours_close" widget="float_time"/>
+                                    <field name="inactivity_days"/>
+                                    <field name="days_since_creation"/>
+                                </group>
+                                <group string="Status" groups="base.group_no_one">
+                                    <field name="active"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -153,12 +160,15 @@
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" >
-                        <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Creation Month" name="group_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}" />
+                        <filter string="Task" context="{'group_by':'task_id'}"/>
+                        <filter string="Priority" context="{'group_by':'priority'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
+                        <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
             </field>
@@ -184,13 +194,12 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="stage_id"/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
-                    <field name="kanban_state"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-tooltip">
@@ -218,7 +227,8 @@
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="kanban_state" widget="kanban_state_selection"
+                                                options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                                             <field name="priority" widget="priority"/>
                                         </div>
                                     </div>
@@ -232,6 +242,17 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_issue_graph_view">
+            <field name="name">Project Issue Tracker Graph</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <graph string="Project Issues" type="bar">
+                    <field name="project_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                </graph>
             </field>
         </record>
 
@@ -260,13 +281,13 @@
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{
-                    'search_default_project_id': [active_id], 
+                    'search_default_project_id': [active_id],
                     'default_project_id': active_id,
                 }
             </field>
             <field name="help" type="html">
                 <p>
-                    The OpenERP issues tacker allows you to efficiantly manage things
+                    The Odoo issues tacker allows you to efficiently manage things
                     like internal requests, software development bugs, customer
                     complaints, project troubles, material breakdowns, etc.
                 </p>
@@ -279,15 +300,20 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <xpath expr='//div[@name="options_active"]' position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
-                    <field name="use_issues" class="oe_inline"
-                            on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                    <label for="use_issues"/>
+                    <div>
+                        <field name="use_issues" class="oe_inline" string="Use Issues"
+                                on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
+                        <label for="use_issues" class="oe_inline"/> as <field name="label_issues" class="oe_inline"/>
+                    </div>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', 0)]}" 
+                    <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', False)]}"
                         name="%(act_project_project_2_project_issue_all)d" icon="fa-bug">
-                        <field string="Issues" name="issue_count" widget="statinfo"/>
+                        <field string="Issues" name="issue_count" widget="statinfo" options="{'label_field': 'label_issues'}"/>
                     </button>
                 </xpath>
                 <xpath expr='//page[@name="project_stages"]' position="attributes">
@@ -311,11 +337,20 @@
                     <field name="use_issues"/>
                     <field name="issue_ids" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
+                    <a t-if="record.use_issues.raw_value" style="margin-right: 20px" class="pull-right"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <t t-raw="record.issue_ids.raw_value.length"/> Issues
+                        <t t-raw="record.issue_ids.raw_value.length"/> <field name="label_issues"/>
+                        <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
+                            Closed Issues
+                        </field>
                     </a>
+                </xpath>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div" position="replace">
+                     <div t-if="!(record.use_tasks.raw_value and record.task_count.raw_value gt 0) and !(record.use_issues.raw_value and record.issue_ids.raw_value.length gt 0)" style="margin-top: 6px;margin-left:20px;">
+                         <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
+                         <span>No activity yet, click to enter in the project.</span>
+                     </div>
                 </xpath>
             </field>
         </record>
@@ -340,7 +375,7 @@
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
                 <p>
-                    The OpenERP issues tacker allows you to efficiantly manage things
+                    The Odoo issues tacker allows you to efficiently manage things
                     like internal requests, software development bugs, customer
                     complaints, project troubles, material breakdowns, etc.
                 </p>
@@ -355,14 +390,14 @@
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" type="action" name="%(action_view_issues)d" 
+                    <button class="oe_inline oe_stat_button" type="action" name="%(action_view_issues)d"
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
                         attrs="{'invisible': [('customer', '=', False)]}"
                         icon="fa-bug" groups="project.group_project_user">
                         <field  string="Issues" name="issue_count" widget="statinfo"/>
-                    </button>  
-                        
-                        
+                    </button>
+
+
                 </xpath>
             </field>
         </record>

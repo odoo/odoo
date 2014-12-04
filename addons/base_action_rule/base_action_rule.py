@@ -88,14 +88,16 @@ class base_action_rule(osv.osv):
         'server_action_ids': fields.many2many('ir.actions.server', string='Server Actions',
             domain="[('model_id', '=', model_id)]",
             help="Examples: email reminders, call object service, etc."),
-        'filter_pre_id': fields.many2one('ir.filters', string='Before Update Filter',
-            ondelete='restrict',
-            domain="[('model_id', '=', model_id.model)]",
+        'filter_pre_id': fields.many2one(
+            'ir.filters', string='Before Update Filter',
+            ondelete='restrict', domain="[('model_id', '=', model_id.model)]",
             help="If present, this condition must be satisfied before the update of the record."),
-        'filter_id': fields.many2one('ir.filters', string='Filter',
-            ondelete='restrict',
-            domain="[('model_id', '=', model_id.model)]",
+        'filter_pre_domain': fields.char(string='Before Update Domain', help="If present, this condition must be satisfied before the update of the record."),
+        'filter_id': fields.many2one(
+            'ir.filters', string='Filter',
+            ondelete='restrict', domain="[('model_id', '=', model_id.model)]",
             help="If present, this condition must be satisfied before executing the action rule."),
+        'filter_domain': fields.char(string='Domain', help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1, copy=False),
     }
 
@@ -114,26 +116,36 @@ class base_action_rule(osv.osv):
             clear_fields = ['filter_pre_id']
         return {'value': dict.fromkeys(clear_fields, False)}
 
-    def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
-        """ filter the list record_ids that satisfy the action filter """
-        if record_ids and action_filter:
-            assert action.model == action_filter.model_id, "Filter model different from action rule model"
-            model = self.pool[action_filter.model_id]
-            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
-            ctx = dict(context or {})
-            ctx.update(eval(action_filter.context))
-            record_ids = model.search(cr, uid, domain, context=ctx)
+    def onchange_filter_pre_id(self, cr, uid, ids, filter_pre_id, context=None):
+        ir_filter = self.pool['ir.filters'].browse(cr, uid, filter_pre_id, context=context)
+        return {'value': {'filter_pre_domain': ir_filter.domain}}
+
+    def onchange_filter_id(self, cr, uid, ids, filter_id, context=None):
+        ir_filter = self.pool['ir.filters'].browse(cr, uid, filter_id, context=context)
+        return {'value': {'filter_domain': ir_filter.domain}}
+
+    def _filter(self, cr, uid, action, action_filter, record_ids, domain=False, context=None):
+        """ Filter the list record_ids that satisfy the domain or the action filter. """
+        if record_ids and (domain is not False or action_filter):
+            if domain is not False:
+                new_domain = [('id', 'in', record_ids)] + eval(domain)
+                ctx = context
+            elif action_filter:
+                assert action.model == action_filter.model_id, "Filter model different from action rule model"
+                new_domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
+                ctx = dict(context or {})
+                ctx.update(eval(action_filter.context))
+            record_ids = self.pool[action.model].search(cr, uid, new_domain, context=ctx)
         return record_ids
 
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
         model = self.pool[action.model_id.model]
-
         # modify records
         values = {}
-        if 'date_action_last' in model._all_columns:
+        if 'date_action_last' in model._fields:
             values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if action.act_user_id and 'user_id' in model._all_columns:
+        if action.act_user_id and 'user_id' in model._fields:
             values['user_id'] = action.act_user_id.id
         if values:
             model.write(cr, uid, record_ids, values, context=context)
@@ -156,78 +168,104 @@ class base_action_rule(osv.osv):
         """ Wrap the methods `create` and `write` of the models specified by
             the rules given by `ids` (or all existing rules if `ids` is `None`.)
         """
+        #
+        # Note: the patched methods create and write must be defined inside
+        # another function, otherwise their closure may be wrong. For instance,
+        # the function create refers to the outer variable 'create', which you
+        # expect to be bound to create itself. But that expectation is wrong if
+        # create is defined inside a loop; in that case, the variable 'create'
+        # is bound to the last function defined by the loop.
+        #
+
+        def make_create():
+            """ instanciate a create method that processes action rules """
+            def create(self, cr, uid, vals, context=None, **kwargs):
+                # avoid loops or cascading actions
+                if context and context.get('action'):
+                    return create.origin(self, cr, uid, vals, context=context)
+
+                # call original method with a modified context
+                context = dict(context or {}, action=True)
+                new_id = create.origin(self, cr, uid, vals, context=context, **kwargs)
+
+                # as it is a new record, we do not consider the actions that have a prefilter
+                action_model = self.pool.get('base.action.rule')
+                action_dom = [('model', '=', self._name),
+                              ('kind', 'in', ['on_create', 'on_create_or_write'])]
+                action_ids = action_model.search(cr, uid, action_dom, context=context)
+
+                # check postconditions, and execute actions on the records that satisfy them
+                for action in action_model.browse(cr, uid, action_ids, context=context):
+                    if action_model._filter(cr, uid, action, action.filter_id, [new_id], domain=action.filter_domain, context=context):
+                        action_model._process(cr, uid, action, [new_id], context=context)
+                return new_id
+
+            return create
+
+        def make_write():
+            """ instanciate a write method that processes action rules """
+            def write(self, cr, uid, ids, vals, context=None, **kwargs):
+                # avoid loops or cascading actions
+                if context and context.get('action'):
+                    return write.origin(self, cr, uid, ids, vals, context=context)
+
+                # modify context
+                context = dict(context or {}, action=True)
+                ids = [ids] if isinstance(ids, (int, long, str)) else ids
+
+                # retrieve the action rules to possibly execute
+                action_model = self.pool.get('base.action.rule')
+                action_dom = [('model', '=', self._name),
+                              ('kind', 'in', ['on_write', 'on_create_or_write'])]
+                action_ids = action_model.search(cr, uid, action_dom, context=context)
+                actions = action_model.browse(cr, uid, action_ids, context=context)
+
+                # check preconditions
+                pre_ids = {}
+                for action in actions:
+                    pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, domain=action.filter_pre_domain, context=context)
+
+                # call original method
+                write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
+
+                # check postconditions, and execute actions on the records that satisfy them
+                for action in actions:
+                    post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], domain=action.filter_domain, context=context)
+                    if post_ids:
+                        action_model._process(cr, uid, action, post_ids, context=context)
+                return True
+
+            return write
+
         updated = False
         if ids is None:
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            model_obj = self.pool[model]
-            if not hasattr(model_obj, 'base_action_ruled'):
+            model_obj = self.pool.get(model)
+            if model_obj and not hasattr(model_obj, 'base_action_ruled'):
                 # monkey-patch methods create and write
-
-                def create(self, cr, uid, vals, context=None, **kwargs):
-                    # avoid loops or cascading actions
-                    if context and context.get('action'):
-                        return create.origin(self, cr, uid, vals, context=context)
-
-                    # call original method with a modified context
-                    context = dict(context or {}, action=True)
-                    new_id = create.origin(self, cr, uid, vals, context=context, **kwargs)
-
-                    # as it is a new record, we do not consider the actions that have a prefilter
-                    action_model = self.pool.get('base.action.rule')
-                    action_dom = [('model', '=', self._name),
-                                  ('kind', 'in', ['on_create', 'on_create_or_write'])]
-                    action_ids = action_model.search(cr, uid, action_dom, context=context)
-
-                    # check postconditions, and execute actions on the records that satisfy them
-                    for action in action_model.browse(cr, uid, action_ids, context=context):
-                        if action_model._filter(cr, uid, action, action.filter_id, [new_id], context=context):
-                            action_model._process(cr, uid, action, [new_id], context=context)
-                    return new_id
-
-                def write(self, cr, uid, ids, vals, context=None, **kwargs):
-                    # avoid loops or cascading actions
-                    if context and context.get('action'):
-                        return write.origin(self, cr, uid, ids, vals, context=context)
-
-                    # modify context
-                    context = dict(context or {}, action=True)
-                    ids = [ids] if isinstance(ids, (int, long, str)) else ids
-
-                    # retrieve the action rules to possibly execute
-                    action_model = self.pool.get('base.action.rule')
-                    action_dom = [('model', '=', self._name),
-                                  ('kind', 'in', ['on_write', 'on_create_or_write'])]
-                    action_ids = action_model.search(cr, uid, action_dom, context=context)
-                    actions = action_model.browse(cr, uid, action_ids, context=context)
-
-                    # check preconditions
-                    pre_ids = {}
-                    for action in actions:
-                        pre_ids[action] = action_model._filter(cr, uid, action, action.filter_pre_id, ids, context=context)
-
-                    # call original method
-                    write.origin(self, cr, uid, ids, vals, context=context, **kwargs)
-
-                    # check postconditions, and execute actions on the records that satisfy them
-                    for action in actions:
-                        post_ids = action_model._filter(cr, uid, action, action.filter_id, pre_ids[action], context=context)
-                        if post_ids:
-                            action_model._process(cr, uid, action, post_ids, context=context)
-                    return True
-
-                model_obj._patch_method('create', create)
-                model_obj._patch_method('write', write)
+                model_obj._patch_method('create', make_create())
+                model_obj._patch_method('write', make_write())
                 model_obj.base_action_ruled = True
                 updated = True
 
         return updated
 
+    def _update_cron(self, cr, uid, context=None):
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, uid, 'base_action_rule', 'ir_cron_crm_action', context=context)
+        except ValueError:
+            return False
+
+        return cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         if self._register_hook(cr, [res_id]):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        self._update_cron(cr, uid, context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -236,7 +274,13 @@ class base_action_rule(osv.osv):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         if self._register_hook(cr, ids):
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        self._update_cron(cr, uid, context=context)
         return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(base_action_rule, self).unlink(cr, uid, ids, context=context)
+        self._update_cron(cr, uid, context=context)
+        return res
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
@@ -269,12 +313,13 @@ class base_action_rule(osv.osv):
                 last_run = get_datetime(action.last_run)
             else:
                 last_run = datetime.utcfromtimestamp(0)
-
             # retrieve all the records that satisfy the action's condition
             model = self.pool[action.model_id.model]
             domain = []
             ctx = dict(context)
-            if action.filter_id:
+            if action.filter_domain is not False:
+                domain = eval(action.filter_domain)
+            elif action.filter_id:
                 domain = eval(action.filter_id.domain)
                 ctx.update(eval(action.filter_id.context))
                 if 'lang' not in ctx:
@@ -288,7 +333,7 @@ class base_action_rule(osv.osv):
 
             # determine when action should occur for the records
             date_field = action.trg_date_id.name
-            if date_field == 'date_action_last' and 'create_date' in model._all_columns:
+            if date_field == 'date_action_last' and 'create_date' in model._fields:
                 get_record_dt = lambda record: record[date_field] or record.create_date
             else:
                 get_record_dt = lambda record: record[date_field]

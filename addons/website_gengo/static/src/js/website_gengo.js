@@ -89,7 +89,6 @@
         },
         translation_gengo_info: function () {
             var repr =  $(document.documentElement).data('mainObject');
-            var view_id = repr.match(/.+\((.+), (\d+)\)/)[2];
             var translated_ids = [];
             $('.oe_translatable_text').not(".oe_translatable_inprogress").each(function(){
                 translated_ids.push($(this).attr('data-oe-translation-id'));

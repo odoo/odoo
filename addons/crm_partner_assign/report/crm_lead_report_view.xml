@@ -8,36 +8,29 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" context="{'invisible_team': False}" groups="base.group_multi_salesteams"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
                     <field name="partner_assigned_id"/>
                     <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
                       <separator/>
-                      <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
+                      <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]"/>
                       <separator />
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <field name="creation_date"/>
                       <field name="opening_date"/>
                       <field name="date_closed"/>
                     </group>
                     <group  expand="1" string="Group By">
-                        <filter string="Salesperson" name="user" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
-                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                                domain="[]"
-                                context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
-                                domain="[]" context="{'group_by':'grade_id'}" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" />
-                        <filter string="Assign Date (day)" icon="terp-go-today" domain="[]" context="{'group_by':'date_assign:day'}"/>
-                        <filter string="Assign Date (month)" icon="terp-go-month" domain="[]" context="{'group_by':'date_assign:month'}"/>
-                        <filter string="Assign Date (year)" icon="terp-go-year" domain="[]" context="{'group_by':'date_assign:year'}"/>
+                        <filter string="Salesperson" name="user"
+                            context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"
+                                groups="base.group_multi_salesteams"/>
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" />
+                        <separator/>
+                        <filter string="Assign Month" context="{'group_by':'date_assign:month'}"/>
                     </group>
                 </search>
             </field>
@@ -50,15 +43,15 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <graph string="Lead Assign" type="pivot" stacked="True">
-                    <field name="grade_id" type="row"/>
-                    <field name="date_assign" interval="month" type="row"/>
-                    <field name="nbr" type="measure"/>
-                    <field name="probable_revenue" type="measure"/>
+                    <field name="stage_id" type="row"/>
+                    <field name="date_assign" interval="month" type="col"/>
+                    <field name="delay_open" type="measure"/>
+                    <field name="probability" type="measure"/>
                 </graph>
             </field>
         </record>
 
-       <!-- Leads by user and section Action -->
+       <!-- Leads by user and Team Action -->
 
        <record id="action_report_crm_opportunity_assign" model="ir.actions.act_window">
             <field name="name">Opp. Assignment Analysis</field>

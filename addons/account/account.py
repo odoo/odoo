@@ -55,6 +55,19 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+    }
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
@@ -81,7 +94,7 @@ class account_payment_term(osv.osv):
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
             elif line.value == 'procent':
-                amt = round(value * line.value_amount, prec)
+                amt = round(value * (line.value_amount/100.0), prec)
             elif line.value == 'balance':
                 amt = round(amount, prec)
             if amt:
@@ -109,7 +122,7 @@ class account_payment_term_line(osv.osv):
                                    ('fixed', 'Fixed Amount')], 'Computation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
-        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
+        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100%."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
@@ -124,12 +137,12 @@ class account_payment_term_line(osv.osv):
 
     def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
-        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
+        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 100.0):
             return False
         return True
 
     _constraints = [
-        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
+        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 100.', ['value_amount']),
     ]
 
 
@@ -669,7 +682,7 @@ class account_account(osv.osv):
 
     # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
     # the code of an account if journal entries have been already posted on this account. This cannot be simply 
-    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
@@ -738,6 +751,7 @@ class account_journal(osv.osv):
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
 
     _defaults = {
@@ -798,7 +812,8 @@ class account_journal(osv.osv):
             'implementation':'no_gap',
             'prefix': prefix + "/%(year)s/",
             'padding': 4,
-            'number_increment': 1
+            'number_increment': 1,
+            'use_date_range': True,
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
@@ -930,8 +945,8 @@ class account_fiscalyear(osv.osv):
         if not ids:
             if exception:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
-                msg = _('There is no period defined for this date: %s.\nPlease go to Configuration/Periods and configure a fiscal year.') % dt
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                msg = _('No accounting period is covering this date: %s.') % dt
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _(' Configure Fiscal Year Now'))
             else:
                 return []
         return ids
@@ -1023,8 +1038,8 @@ class account_period(osv.osv):
             result = self.search(cr, uid, args, context=context)
         if not result:
             model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_period')
-            msg = _('There is no period defined for this date: %s.\nPlease go to Configuration/Periods.') % dt
-            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+            msg = _('No accounting period is covering this date: %s.') % dt
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Configure Periods Now'))
         return result
 
     def action_draft(self, cr, uid, ids, context=None):
@@ -1139,6 +1154,19 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            WHERE       state = 'valid'
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
 
     def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
         '''
@@ -1604,7 +1632,7 @@ class account_move_reconcile(osv.osv):
         'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
+        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').next_by_code(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
     
     # You cannot unlink a reconciliation if it is a opening_reconciliation one,
@@ -1633,7 +1661,7 @@ class account_move_reconcile(osv.osv):
         return True
 
     _constraints = [
-        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id', 'line_partial_ids']),
     ]
     
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
@@ -1647,7 +1675,8 @@ class account_move_reconcile(osv.osv):
         if not total:
             self.pool.get('account.move.line').write(cr, uid,
                 map(lambda x: x.id, rec.line_partial_ids),
-                {'reconcile_id': rec.id }
+                {'reconcile_id': rec.id },
+                context=context
             )
         return True
 
@@ -2008,7 +2037,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
@@ -2488,7 +2517,7 @@ class account_account_template(osv.osv):
             ('other','Regular'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
@@ -3390,9 +3419,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
         if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)

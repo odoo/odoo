@@ -35,7 +35,7 @@ We suggest you to install this module, if you installed both the sale and the cr
 modules.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
     'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [

@@ -7,10 +7,10 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">1</field>
             <field name="state">draft</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-04 11:10:36')"/>
-            <field name="name">Download old version of OpenERP? </field>
-            <field eval="&quot;Is there any link to download old versions of OpenERP?&quot;" name="description"/>
+            <field name="name">Download old version of Odoo? </field>
+            <field eval="&quot;Is there any link to download old versions of Odoo?&quot;" name="description"/>
         </record>
 
         <record id="crm_helpdesk_2" model="crm.helpdesk">
@@ -19,7 +19,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">1</field>
             <field name="state">draft</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-12 11:12:09')"/>
             <field name="name">Can not able to connect to Server</field>
             <field eval="&quot;I am not able to connect Server, Can anyone help?&quot;" name="description"/>
@@ -31,7 +31,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="state">draft</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-12 11:13:10')"/>
             <field name="name">Documentation for CRM?</field>
             <field eval="&quot;Can anyone give link of document for CRM&quot;" name="description"/>
@@ -46,7 +46,7 @@
             <field name="state">draft</field>
             <field name="date" eval="time.strftime('%Y-%m-12 11:15:17')"/>
             <field name="name">How to create a new module</field>
-            <field eval="&quot;How can I create new module in OpenERP?&quot;" name="description"/>
+            <field eval="&quot;How can I create new module in Odoo?&quot;" name="description"/>
         </record>
     </data>
 </openerp>

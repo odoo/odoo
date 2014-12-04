@@ -27,6 +27,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
 
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
+    }
+
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -148,26 +154,24 @@ class sale_order(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id
 
-    def _get_default_section_id(self, cr, uid, context=None):
-        """ Gives default section by checking if present in the context """
-        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
-        if not section_id:
-            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
-        return section_id
+    def _get_default_team_id(self, cr, uid, context=None):
+        """ Gives default team by checking if present in the context """
+        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
+        return team_id
 
-    def _resolve_section_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of section based on the value of 'section_id'
+    def _resolve_team_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of team based on the value of 'team_id'
             context key, or None if it cannot be resolved to a single
             Sales Team.
         """
         if context is None:
             context = {}
-        if type(context.get('default_section_id')) in (int, long):
-            return context.get('default_section_id')
-        if isinstance(context.get('default_section_id'), basestring):
-            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
-            if len(section_ids) == 1:
-                return int(section_ids[0][0])
+        if type(context.get('default_team_id')) in (int, long):
+            return context.get('default_team_id')
+        if isinstance(context.get('default_team_id'), basestring):
+            team_ids = self.pool.get('crm.team').name_search(cr, uid, name=context['default_team_id'], context=context)
+            if len(team_ids) == 1:
+                return int(team_ids[0][0])
         return None
 
     _columns = {
@@ -190,6 +194,7 @@ class sale_order(osv.osv):
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.datetime('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False),
+        'validity_date': fields.date('Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed.", copy=False),
         'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
@@ -235,10 +240,11 @@ class sale_order(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id', change_default=True),
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
-
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product'),
     }
+
     _defaults = {
         'date_order': fields.datetime.now,
         'order_policy': 'manual',
@@ -249,7 +255,7 @@ class sale_order(osv.osv):
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
         'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, c),
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -269,7 +275,7 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy_quotation(self, cr, uid, ids, context=None):
-        id = self.copy(cr, uid, ids[0], context=None)
+        id = self.copy(cr, uid, ids[0], context=context)
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = view_ref and view_ref[1] or False,
         return {
@@ -291,7 +297,7 @@ class sale_order(osv.osv):
         value = {
             'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id
         }
-        if not order_lines:
+        if not order_lines or order_lines == [(6, 0, [])]:
             return {'value': value}
         warning = {
             'title': _('Pricelist Warning!'),
@@ -343,7 +349,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'sale.order') or '/'
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
             if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
@@ -398,7 +404,7 @@ class sale_order(osv.osv):
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False,
-            'section_id' : order.section_id.id
+            'team_id' : order.team_id.id
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
@@ -589,22 +595,8 @@ class sale_order(osv.osv):
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.signal_workflow(cr, uid, ids, 'order_confirm')
-
-        # redisplay the record as a sales order
-        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
-        view_id = view_ref and view_ref[1] or False,
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
-            'res_model': 'sale.order',
-            'res_id': ids[0],
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': view_id,
-            'target': 'current',
-            'nodestroy': True,
-        }
-
+        return True
+        
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
@@ -632,7 +624,7 @@ class sale_order(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False 
-        ctx = dict(context)
+        ctx = dict()
         ctx.update({
             'default_model': 'sale.order',
             'default_res_id': ids[0],
@@ -709,7 +701,7 @@ class sale_order(osv.osv):
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
             if not order.procurement_group_id:
                 group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
-                order.write({'procurement_group_id': group_id}, context=context)
+                order.write({'procurement_group_id': group_id})
 
             for line in order.order_line:
                 #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
@@ -718,11 +710,12 @@ class sale_order(osv.osv):
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
                     line.refresh()
                     #run again procurement that are in exception in order to trigger another move
-                    proc_ids += [x.id for x in line.procurement_ids if x.state == 'exception']
+                    proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
+                    procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
-                    vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+                    vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=order.procurement_group_id.id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
@@ -741,49 +734,7 @@ class sale_order(osv.osv):
                 order.write(val)
         return True
 
-    # if mode == 'finished':
-    #   returns True if all lines are done, False otherwise
-    # if mode == 'canceled':
-    #   returns True if there is at least one canceled line, False otherwise
-    def test_state(self, cr, uid, ids, mode, *args):
-        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
-        finished = True
-        canceled = False
-        write_done_ids = []
-        write_cancel_ids = []
-        for order in self.browse(cr, uid, ids, context={}):
 
-            #TODO: Need to rethink what happens when cancelling
-            for line in order.order_line:
-                states =  [x.state for x in line.procurement_ids]
-                cancel = states and all([x == 'cancel' for x in states])
-                doneorcancel = all([x in ('done', 'cancel') for x in states])
-                if cancel:
-                    canceled = True
-                    if line.state != 'exception':
-                            write_cancel_ids.append(line.id)
-                if not doneorcancel:
-                    finished = False 
-                if doneorcancel and not cancel:
-                    write_done_ids.append(line.id)
-
-        if write_done_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
-        if write_cancel_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-            
-        if mode == 'finished':
-            return finished
-        elif mode == 'canceled':
-            return canceled
-
-
-    def procurement_lines_get(self, cr, uid, ids, *args):
-        res = []
-        for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                res += [x.id for x in line.procurement_ids]
-        return res
 
     def onchange_fiscal_position(self, cr, uid, ids, fiscal_position, order_lines, context=None):
         '''Update taxes of order lines for each line where a product is defined
@@ -828,6 +779,20 @@ class sale_order(osv.osv):
                 order_line.append(line)
         return {'value': {'order_line': order_line}}
 
+    def test_procurements_done(self, cr, uid, ids, context=None):
+        for sale in self.browse(cr, uid, ids, context=context):
+            for line in sale.order_line:
+                if not all([x.state == 'done' for x in line.procurement_ids]):
+                    return False
+        return True
+
+    def test_procurements_except(self, cr, uid, ids, context=None):
+        for sale in self.browse(cr, uid, ids, context=context):
+            for line in sale.order_line:
+                if any([x.state == 'cancel' for x in line.procurement_ids]):
+                    return True
+        return False
+
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
@@ -837,6 +802,10 @@ class sale_order_line(osv.osv):
     def need_procurement(self, cr, uid, ids, context=None):
         #when sale is installed only, there is no need to create procurements, that's only
         #further installed modules (sale_service, sale_stock) that will change this.
+        prod_obj = self.pool.get('product.product')
+        for line in self.browse(cr, uid, ids, context=context):
+            if prod_obj.need_procurement(cr, uid, [line.product_id.id], context=context):
+                return True
         return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
@@ -874,6 +843,11 @@ class sale_order_line(osv.osv):
                                     WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
         return [i[0] for i in cr.fetchall()]
 
+    def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0.0)
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.price_subtotal / line.product_uom_qty
+        return res
 
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
@@ -890,6 +864,7 @@ class sale_order_line(osv.osv):
             }),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_reduce': fields.function(_get_price_reduce, type='float', string='Price Reduce', digits_compute=dp.get_precision('Product Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner',help="A partner to whom the particular product needs to be allotted."),
         'product_uom_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -923,6 +898,8 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
         'delay': 0.0,
     }
+
+
 
     def _get_line_qty(self, cr, uid, line, context=None):
         if line.product_uos:
@@ -1056,44 +1033,46 @@ class sale_order_line(osv.osv):
                 flag=False,  # Force name update
                 context=context
             )['value']
+            if defaults.get('tax_id'):
+                defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
             values = dict(defaults, **values)
         return super(sale_order_line, self).create(cr, uid, values, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        context = context or {}
-        lang = lang or context.get('lang', False)
-        if not partner_id:
-            raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
-        warning = False
-        product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
-        product_obj = self.pool.get('product.product')
-        context = {'lang': lang, 'partner_id': partner_id}
-        partner = partner_obj.browse(cr, uid, partner_id)
-        lang = partner.lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+        if context is None:
+            context = {}
+        Partner = self.pool['res.partner']
+        ProductUom = self.pool['product.uom']
+        Product = self.pool['product.product']
+        ctx_product = dict(context)
+        partner = False
+        if partner_id:
+            partner = Partner.browse(cr, uid, partner_id, context=context)
+            ctx_product['lang'] = partner.lang
+            ctx_product['partner_id'] = partner_id
+        elif lang:
+            ctx_product['lang'] = lang
 
         if not product:
             return {'value': {'th_weight': 0,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                   'product_uos': []}}
+                    'product_uos_qty': qty}, 'domain': {'product_uom': [],
+                    'product_uos': []}}
         if not date_order:
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
-        warning_msgs = ''
-        product_obj = product_obj.browse(cr, uid, product, context=context_partner)
+        product_obj = Product.browse(cr, uid, product, context=ctx_product)
 
         uom2 = False
         if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
+            uom2 = ProductUom.browse(cr, uid, uom, context=context)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
                 uom = False
         if uos:
             if product_obj.uos_id:
-                uos2 = product_uom_obj.browse(cr, uid, uos)
+                uos2 = ProductUom.browse(cr, uid, uos, context=context)
                 if product_obj.uos_id.category_id.id != uos2.category_id.id:
                     uos = False
             else:
@@ -1101,14 +1080,14 @@ class sale_order_line(osv.osv):
 
         fpos = False
         if not fiscal_position:
-            fpos = partner.property_account_position or False
+            fpos = partner and partner.property_account_position or False
         else:
-            fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
-        if update_tax: #The quantity only have changed
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
+            fpos = self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position)
+        if update_tax:  # The quantity only have changed
+            result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, product_obj.taxes_id)
 
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            result['name'] = Product.name_get(cr, uid, [product_obj.id], context=ctx_product)[0][1]
             if product_obj.description_sale:
                 result['name'] += '\n'+product_obj.description_sale
         domain = {}
@@ -1127,13 +1106,13 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
-        elif uos and not uom: # only happens if uom is False
+        elif uos and not uom:  # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
-        elif uom: # whether uos is set or not
+        elif uom:  # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
-            q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
+            q = ProductUom._compute_qty(cr, uid, uom, qty, default_uom)
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
                 result['product_uos_qty'] = qty * product_obj.uos_coeff
@@ -1144,31 +1123,17 @@ class sale_order_line(osv.osv):
 
         if not uom2:
             uom2 = product_obj.uom_id
-        # get unit price
 
-        if not pricelist:
-            warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
-                    'Please set one before choosing a product.')
-            warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
-        else:
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+        if pricelist and partner_id:
+            price = self.pool['product.pricelist'].price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
                         'uom': uom or result.get('product_uom'),
                         'date': date_order,
                         })[pricelist]
-            if price is False:
-                warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist.")
-
-                warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
-            else:
-                result.update({'price_unit': price})
-        if warning_msgs:
-            warning = {
-                       'title': _('Configuration Error!'),
-                       'message' : warning_msgs
-                    }
-        return {'value': result, 'domain': domain, 'warning': warning}
+        else:
+            price = Product.price_get(cr, uid, [product], ptype='list_price', context=ctx_product)[product] or False
+        result.update({'price_unit': price})
+        return {'value': result, 'domain': domain}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -1191,12 +1156,6 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
-class res_company(osv.Model):
-    _inherit = "res.company"
-    _columns = {
-        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
-    }
-
 
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
@@ -1212,34 +1171,32 @@ class mail_compose_message(osv.Model):
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
-    def _get_default_section_id(self, cr, uid, context=None):
-        """ Gives default section by checking if present in the context """
-        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
-        if not section_id:
-            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
-        return section_id
+    def _get_default_team_id(self, cr, uid, context=None):
+        """ Gives default team by checking if present in the context """
+        team_id = self._resolve_team_id_from_context(cr, uid, context=context) or False
+        return team_id
 
-    def _resolve_section_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of section based on the value of 'section_id'
+    def _resolve_team_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of team based on the value of 'team_id'
             context key, or None if it cannot be resolved to a single
             Sales Team.
         """
         if context is None:
             context = {}
-        if type(context.get('default_section_id')) in (int, long):
-            return context.get('default_section_id')
-        if isinstance(context.get('default_section_id'), basestring):
-            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
-            if len(section_ids) == 1:
-                return int(section_ids[0][0])
+        if type(context.get('default_team_id')) in (int, long):
+            return context.get('default_team_id')
+        if isinstance(context.get('default_team_id'), basestring):
+            team_ids = self.pool.get('crm.team').name_search(cr, uid, name=context['default_team_id'], context=context)
+            if len(team_ids) == 1:
+                return int(team_ids[0][0])
         return None
 
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
     }
 
     _defaults = {
-        'section_id': lambda self, cr, uid, c=None: self._get_default_section_id(cr, uid, context=c)
+        'team_id': lambda self, cr, uid, c=None: self._get_default_team_id(cr, uid, context=c)
     }
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -1268,6 +1225,20 @@ class procurement_order(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(procurement_order, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
+        if vals.get('state') in ['done', 'cancel', 'exception']:
+            for proc in self.browse(cr, uid, ids, context=context):
+                if proc.sale_line_id and proc.sale_line_id.order_id:
+                    order_id = proc.sale_line_id.order_id.id
+                    if self.pool.get('sale.order').test_procurements_done(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'sale.order', order_id, 'ship_end', cr)
+                    if self.pool.get('sale.order').test_procurements_except(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'sale.order', order_id, 'ship_except', cr)
+        return res
 
 class product_product(osv.Model):
     _inherit = 'product.product'
@@ -1278,10 +1249,36 @@ class product_product(osv.Model):
             product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
             for product_id in ids
         }
+
     _columns = {
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
 
+class product_template(osv.Model):
+    _inherit = 'product.template'
+
+    def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for template in self.browse(cr, uid, ids, context=context):
+            res[template.id] = sum([p.sales_count for p in template.product_variant_ids])
+        return res
+    
+    def action_view_sales(self, cr, uid, ids, context=None):
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_ids = []
+        for template in self.browse(cr, uid, ids, context=context):
+            product_ids += [x.id for x in template.product_variant_ids]
+        result = mod_obj.xmlid_to_res_id(cr, uid, 'sale.action_order_line_product_tree',raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, product_ids)) + "])]"
+        return result
+    
+    
+    _columns = {
+        'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
+
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

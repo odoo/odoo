@@ -46,15 +46,16 @@ class stock_move(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
+        default = default or {}
+        context = context or {}
         if not default.get('split_from'):
             #we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        if move.purchase_line_id:
+            invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
@@ -69,8 +70,15 @@ class stock_move(osv.osv):
     def _get_master_data(self, cr, uid, move, company, context=None):
         if move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
-            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.pricelist_id.currency_id.id
+            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
+        else:
+            partner = move.picking_id and move.picking_id.partner_id or False
+            code = self.get_code_from_locs(cr, uid, move, context=context)
+            if partner and partner.property_product_pricelist_purchase and code == 'incoming':
+                currency = partner.property_product_pricelist_purchase.currency_id.id
+                return partner, uid, currency
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
@@ -80,9 +88,32 @@ class stock_move(osv.osv):
             res['price_unit'] = purchase_line.price_unit
         return res
 
+
+    def attribute_price(self, cr, uid, move, context=None):
+        """
+            Attribute price to move, important in inter-company moves or receipts with only one partner
+        """
+        code = self.get_code_from_locs(cr, uid, move, context=context)
+        if not move.purchase_line_id and code == 'incoming' and not move.price_unit:
+            partner = move.picking_id and move.picking_id.partner_id or False
+            price = False
+            # If partner given, search price in its purchase pricelist
+            if partner and partner.property_product_pricelist_purchase:
+                pricelist_obj = self.pool.get("product.pricelist")
+                pricelist = partner.property_product_pricelist_purchase.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist],
+                                    move.product_id.id, move.product_uom_qty, partner, {
+                                                                                'uom': move.product_uom.id,
+                                                                                'date': move.date,
+                                                                                })[pricelist]
+                if price:
+                    return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
+        super(stock_move, self).attribute_price(cr, uid, move, context=context)
+
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-
+    
     def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
         res = {}
         for picking in self.browse(cr, uid, ids, context=context):
@@ -102,11 +133,30 @@ class stock_picking(osv.osv):
 
     _columns = {
         'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
-               help='Does the picking contains some moves related to a purchase order invoiceable on the reception?',
+               help='Does the picking contains some moves related to a purchase order invoiceable on the receipt?',
                store={
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
                }),
     }
+
+    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+        purchase_obj = self.pool.get("purchase.order")
+        purchase_line_obj = self.pool.get('purchase.order.line')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
+        if picking.move_lines and picking.move_lines[0].purchase_line_id:
+            purchase_id = picking.move_lines[0].purchase_line_id.order_id.id
+            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', '=', purchase_id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
+            if purchase_line_ids:
+                inv_lines = []
+                for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
+                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
+                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                    inv_line_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
+                    inv_lines.append(inv_line_id)
+                    po_line.write({'invoice_lines': [(4, inv_line_id)]})
+                invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
+        return invoice_id
 
 
 class stock_warehouse(osv.osv):
@@ -124,7 +174,7 @@ class stock_warehouse(osv.osv):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
-            buy_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_buy')[1]
+            buy_route_id = data_obj.get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
         except:
             buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
             buy_route_id = buy_route_id and buy_route_id[0] or False
@@ -137,7 +187,6 @@ class stock_warehouse(osv.osv):
             'route_id': buy_route_id,
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
-            'propagate': False, 
             'warehouse_id': warehouse.id,
         }
 

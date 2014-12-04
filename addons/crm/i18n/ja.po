@@ -1,364 +1,34 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-07-09 05:13+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-11-12 11:50+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:21+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-13 07:23+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: crm
-#: view:crm.lead.report:0
-msgid "# Leads"
-msgstr "リード数"
-
-#. module: crm
-#: help:sale.config.settings,fetchmail_lead:0
-msgid ""
-"Allows you to configure your incoming mail server, and create leads from "
-"incoming emails."
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:897
-#: selection:crm.case.stage,type:0
-#: view:crm.lead:0
-#: selection:crm.lead,type:0
-#: view:crm.lead.report:0
-#: selection:crm.lead.report,type:0
-#, python-format
-msgid "Lead"
-msgstr "リード"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,title:0
-msgid "Title"
-msgstr "役職"
-
-#. module: crm
-#: model:ir.actions.server,message:crm.action_email_reminder_lead
-msgid ""
-"Warning unprocessed incoming lead is more than 5 day old.\n"
-"Name: [[object.name ]]\n"
-"ID: [[object.id ]]\n"
-"Description: [[object.description]]\n"
-"            "
-msgstr ""
-
-#. module: crm
-#: field:crm.opportunity2phonecall,action:0
-#: field:crm.phonecall2phonecall,action:0
-msgid "Action"
-msgstr "アクション"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Select Opportunities"
-msgstr "商談を選択"
-
-#. module: crm
-#: model:res.groups,name:crm.group_fund_raising
-#: field:sale.config.settings,group_fund_raising:0
-msgid "Manage Fund Raising"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead.report:0
-#: field:crm.phonecall.report,delay_close:0
-msgid "Delay to close"
-msgstr "締めを延期する"
-
-#. module: crm
-#: view:crm.case.stage:0
-#: field:crm.case.stage,name:0
-msgid "Stage Name"
-msgstr "ステージ名"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,user_id:0
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-msgid "Salesperson"
-msgstr "販売担当者"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead_report
-msgid "CRM Lead Analysis"
-msgstr "CRMリード分析"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,day:0
-msgid "Day"
-msgstr "日"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Company Name"
-msgstr "会社名"
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor6
-msgid "Training"
-msgstr "トレーニング"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_lead_categ_action
-#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
-msgid "Sales Tags"
-msgstr "販売タグ"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Exp. Closing"
-msgstr "見込完了"
-
-#. module: crm
-#: help:crm.case.section,message_unread:0
-#: help:crm.lead,message_unread:0
-#: help:crm.phonecall,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: crm
-#: help:crm.lead.report,creation_day:0
-msgid "Creation day"
-msgstr "作成日"
-
-#. module: crm
-#: field:crm.segmentation.line,name:0
-msgid "Rule Name"
-msgstr "ルール名"
-
-#. module: crm
-#: code:addons/crm/crm_phonecall.py:282
-#, python-format
-msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
-
-#. module: crm
-#: view:crm.case.resource.type:0
-#: view:crm.lead:0
-#: field:crm.lead,type_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,type_id:0
-#: model:ir.model,name:crm.model_crm_case_resource_type
-msgid "Campaign"
-msgstr "キャンペーン"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Search Opportunities"
-msgstr "商談を検索"
-
-#. module: crm
-#: help:crm.lead.report,deadline_month:0
-msgid "Expected closing month"
-msgstr "見込完了月"
-
-#. module: crm
-#: help:crm.case.section,message_summary:0
-#: help:crm.lead,message_summary:0
-#: help:crm.phonecall,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:637
-#: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,partner_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,partner_id:0
-#: field:crm.opportunity2phonecall,partner_id:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,partner_id:0
-#: field:crm.phonecall2phonecall,partner_id:0
-#: model:ir.model,name:crm.model_res_partner
-#: model:process.node,name:crm.process_node_partner0
-msgid "Partner"
-msgstr "パートナ"
-
-#. module: crm
-#: view:crm.phonecall:0
-#: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
-msgid "Schedule Other Call"
-msgstr "他の電話をスケジュール"
-
-#. module: crm
-#: code:addons/crm/crm_phonecall.py:211
-#: view:crm.phonecall:0
-#, python-format
-msgid "Phone Call"
-msgstr "通話"
-
-#. module: crm
-#: field:crm.lead,opt_out:0
-msgid "Opt-Out"
-msgstr "オプトアウト"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,state_id:0
-msgid "State"
-msgstr "状態"
-
-#. module: crm
+#: field:crm.lead,meeting_count:0
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr ""
-
-#. module: crm
-#: field:crm.segmentation,segmentation_line:0
-msgid "Criteria"
-msgstr "基準"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Excluded Answers :"
-msgstr "回答を除く"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_merge_opportunity
-msgid "Merge opportunities"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_lead
-#: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
-msgid "Leads Analysis"
-msgstr "リード分析"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:1010
-#, python-format
-msgid "<b>%s a call</b> for the <em>%s</em>."
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
-#: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
-msgid "Campaigns"
-msgstr "キャンペーン"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,categ_ids:0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
-msgid "Categories"
-msgstr "分類"
-
-#. module: crm
-#: help:crm.lead,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
-msgstr "オプトアウトをチェックした場合、この連絡先はEメールの受信を拒否するか、またはキャンペーンには未参加となります。"
-
-#. module: crm
-#: model:process.transition,name:crm.process_transition_leadpartner0
-msgid "Prospect Partner"
-msgstr "予想パートナ"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:1018
-#, python-format
-msgid "No Subject"
-msgstr "無題"
-
-#. module: crm
-#: field:crm.lead,contact_name:0
-msgid "Contact Name"
-msgstr "連絡先名"
-
-#. module: crm
-#: help:crm.segmentation,categ_id:0
-msgid ""
-"The partner category that will be added to partners that match the "
-"segmentation criterions after computation."
-msgstr "パートナの分類は、計算後に分類基準に一致するパートナに追加されます。"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_segmentation_tree-act
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new customer segmentation.\n"
-"              </p><p>\n"
-"                Create specific categories which you can assign to your\n"
-"                contacts to better manage your interactions with them. The\n"
-"                segmentation tool is able to assign categories to contacts\n"
-"                according to criteria you set.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: crm
-#: field:crm.opportunity2phonecall,contact_name:0
-#: field:crm.phonecall,partner_id:0
-#: field:crm.phonecall2phonecall,contact_name:0
-msgid "Contact"
-msgstr "連絡先"
-
-#. module: crm
-#: help:crm.case.section,change_responsible:0
-msgid ""
-"When escalating to this team override the salesman with the team leader."
-msgstr ""
-
-#. module: crm
-#: model:process.transition,name:crm.process_transition_opportunitymeeting0
-msgid "Opportunity Meeting"
-msgstr "商談ミーティング"
-
-#. module: crm
-#: help:crm.lead.report,delay_close:0
-#: help:crm.phonecall.report,delay_close:0
-msgid "Number of Days to close the case"
-msgstr "案件を閉じるための日数"
-
-#. module: crm
-#: model:process.node,note:crm.process_node_opportunities0
-msgid "When a real project/opportunity is detected"
-msgstr "実プロジェクト / 商談が見つかった時に"
-
-#. module: crm
-#: field:res.partner,opportunity_ids:0
-msgid "Leads and Opportunities"
-msgstr "リードと商談"
+#: field:crm.lead.report,nbr_cases:0
+#: field:crm.opportunity.report,nbr_cases:0
+#: field:crm.phonecall.report,nbr:0
+msgid "# of Cases"
+msgstr "案件の数"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -379,2137 +49,34 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead7
-#: view:crm.lead:0
-msgid "Dead"
-msgstr "期限切れ"
-
-#. module: crm
-#: field:crm.case.section,message_unread:0
-#: view:crm.lead:0
-#: field:crm.lead,message_unread:0
-#: field:crm.phonecall,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: crm
-#: field:crm.segmentation.line,segmentation_id:0
-#: model:ir.actions.act_window,name:crm.crm_segmentation-act
-msgid "Segmentation"
-msgstr "分類"
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
-#: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.partner.binding,action:0
-msgid "Link to an existing customer"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,write_date:0
-msgid "Update Date"
-msgstr "更新日"
-
-#. module: crm
-#: field:crm.case.section,user_id:0
-msgid "Team Leader"
-msgstr "チームリーダー"
-
-#. module: crm
-#: help:crm.case.stage,probability:0
-msgid ""
-"This percentage depicts the default/average probability of the Case for this "
-"stage to be a success"
-msgstr "この割合は、成功のための、この段階の案件のデフォルト/ 平均確率を示します。"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.opportunity2phonecall,categ_id:0
-#: field:crm.phonecall,categ_id:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,categ_id:0
-#: field:crm.phonecall2phonecall,categ_id:0
-msgid "Category"
-msgstr "分類"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "#Opportunities"
-msgstr "商談の数"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:637
-#, python-format
-msgid ""
-"Please select more than one element (lead or opportunity) from the list view."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads that are assigned to one of the sale teams I manage, or to me"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,partner_address_email:0
-msgid "Partner Contact Email"
-msgstr "パートナの連絡先Eメール"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_section_act
+#: model:ir.actions.act_window,help:crm.crm_tracking_medium_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new sales team.\n"
+"                Click to define a new channel.\n"
 "              </p><p>\n"
-"                Use sales team to organize your different salespersons or\n"
-"                departments into separate teams. Each team will work in\n"
-"                its own list of opportunities.\n"
+"                Use channels to track the type of source of your leads and "
+"opportunities. Channels\n"
+"                are mostly used in reporting to analyse sales performance\n"
+"                related to marketing efforts.\n"
+"              </p><p>\n"
+"                Some examples of channels: company website, phone call\n"
+"                campaign, reseller, banner, etc.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: crm
-#: model:process.transition,note:crm.process_transition_opportunitymeeting0
-msgid "Normal or phone meeting for opportunity"
-msgstr "商談のための通常または電話ミーティング"
-
-#. module: crm
-#: field:crm.lead,state:0
-#: field:crm.lead.report,state:0
-#: field:crm.phonecall,state:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,state:0
-msgid "Status"
-msgstr "ステータス"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner:0
-msgid "Create Opportunity"
-msgstr "商談作成"
-
-#. module: crm
-#: view:sale.config.settings:0
-msgid "Configure"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Escalate"
-msgstr "拡大"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Mailings"
-msgstr "郵便物"
-
-#. module: crm
-#: model:mail.message.subtype,description:crm.mt_lead_stage
-msgid "Stage changed"
-msgstr ""
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "June"
-msgstr "6月"
-
-#. module: crm
-#: selection:crm.segmentation,state:0
-msgid "Not Running"
-msgstr "停止中"
-
-#. module: crm
-#: field:crm.lead.report,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "計画売上高"
-
-#. module: crm
-#: field:crm.lead,planned_revenue:0
-msgid "Expected Revenue"
-msgstr "見込売上"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "October"
-msgstr "10月"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Included Answers :"
-msgstr "回答を含む："
-
-#. module: crm
-#: help:crm.phonecall,state:0
-msgid ""
-"The status is set to 'Todo', when a case is created.                         "
-"       If the case is in progress the status is set to 'Open'.               "
-"                 When the call is over, the status is set to 'Held'.         "
-"                       If the call needs to be done then the status is set "
-"to 'Not Held'."
-msgstr ""
-
-#. module: crm
-#: field:crm.case.section,message_summary:0
-#: field:crm.lead,message_summary:0
-#: field:crm.phonecall,message_summary:0
-msgid "Summary"
-msgstr "要約"
-
-#. module: crm
-#: view:crm.merge.opportunity:0
-msgid "Merge"
-msgstr ""
-
-#. module: crm
-#: model:email.template,subject:crm.email_template_opportunity_mail
-msgid "Opportunity ${object.name | h})"
-msgstr ""
-
-#. module: crm
-#: view:crm.case.categ:0
-msgid "Case Category"
-msgstr "案件分類"
-
-#. module: crm
-#: field:crm.lead,partner_address_name:0
-msgid "Partner Contact Name"
-msgstr "パートナの担当者名"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
-msgid ""
-"Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
-"+object.partner_id.name or '']]"
-msgstr ""
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling Options"
-msgstr "プロファイリングオプション"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "#Phone calls"
-msgstr "通話番号"
-
-#. module: crm
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr "営業チームのコードは固有である必要があります。"
-
-#. module: crm
-#: help:crm.lead,email_from:0
-msgid "Email address of the contact"
-msgstr "連絡先のメールアドレス"
-
-#. module: crm
-#: selection:crm.case.stage,state:0
-#: view:crm.lead:0
-#: selection:crm.lead,state:0
-msgid "In Progress"
-msgstr "進行中"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
+#: model:ir.actions.act_window,help:crm.crm_segmentation_tree-act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Click to add a new category.\n"
-"          </p><p>\n"
-"            Create specific phone call categories to better define the type "
-"of\n"
-"            calls tracked in the system.\n"
-"          </p>\n"
-"        "
-msgstr ""
-
-#. module: crm
-#: help:crm.case.section,reply_to:0
-msgid ""
-"The email address put in the 'Reply-To' of all emails sent by OpenERP about "
-"cases in this sales team"
-msgstr "Eメールアドレスはこの営業チームの中の案件についてOpenERPにより送信された全てのEメールのReply-Toに置かれます。"
-
-#. module: crm
-#: field:crm.lead.report,creation_month:0
-msgid "Creation Month"
-msgstr "作成月"
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-#: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
-msgid "Working Time"
-msgstr "作業時間"
-
-#. module: crm
-#: view:crm.segmentation.line:0
-msgid "Partner Segmentation Lines"
-msgstr "パートナ分類行"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
-#: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
-msgid "Phone Calls Analysis"
-msgstr "通話分析"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads Form"
-msgstr "リードフォーム"
-
-#. module: crm
-#: view:crm.segmentation:0
-#: model:ir.model,name:crm.model_crm_segmentation
-msgid "Partner Segmentation"
-msgstr "パートナの分類"
-
-#. module: crm
-#: field:crm.lead,company_currency:0
-msgid "Currency"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,probable_revenue:0
-msgid "Probable Revenue"
-msgstr "見込売上"
-
-#. module: crm
-#: help:crm.lead.report,creation_month:0
-msgid "Creation month"
-msgstr "作成月"
-
-#. module: crm
-#: help:crm.segmentation,name:0
-msgid "The name of the segmentation."
-msgstr "分類の名前"
-
-#. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "確率(%)"
-
-#. module: crm
-#: sql_constraint:crm.lead:0
-msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads Generation"
-msgstr "リード生成"
-
-#. module: crm
-#: view:board.board:0
-msgid "Statistics Dashboard"
-msgstr "統計ダッシュボード"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:877
-#: model:crm.case.stage,name:crm.stage_lead2
-#: selection:crm.case.stage,type:0
-#: view:crm.lead:0
-#: selection:crm.lead,type:0
-#: view:crm.lead.report:0
-#: selection:crm.lead.report,type:0
-#: field:crm.meeting,opportunity_id:0
-#: field:res.partner,opportunity_count:0
-#, python-format
-msgid "Opportunity"
-msgstr "商談"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead7
-msgid "Television"
-msgstr "テレビ"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
-msgid "Convert to opportunities"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Stop Process"
-msgstr "処理の中止"
-
-#. module: crm
-#: field:crm.case.section,alias_id:0
-msgid "Alias"
-msgstr ""
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Search Phonecalls"
-msgstr "通話の検索"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid ""
-"Leads/Opportunities that are assigned to one of the sale teams I manage"
-msgstr ""
-
-#. module: crm
-#: field:calendar.attendee,categ_id:0
-msgid "Event Type"
-msgstr "イベントタイプ"
-
-#. module: crm
-#: field:crm.segmentation,exclusif:0
-msgid "Exclusive"
-msgstr "排他"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:597
-#, python-format
-msgid "From %s : %s"
-msgstr "%s から：%s"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Convert to Opportunities"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2opportunity.partner.mass:0
-#: view:crm.merge.opportunity:0
-#: view:crm.opportunity2phonecall:0
-#: view:crm.phonecall2phonecall:0
-msgid "or"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,create_date:0
-#: field:crm.phonecall.report,create_date:0
-msgid "Create Date"
-msgstr "作成日"
-
-#. module: crm
-#: field:crm.lead,ref2:0
-msgid "Reference 2"
-msgstr "参照2"
-
-#. module: crm
-#: help:crm.case.stage,section_ids:0
-msgid ""
-"Link between stages and sales teams. When set, this limitate the current "
-"stage to the selected sales teams."
-msgstr ""
-
-#. module: crm
-#: view:crm.case.stage:0
-#: field:crm.case.stage,requirements:0
-msgid "Requirements"
-msgstr "必要事項"
-
-#. module: crm
-#: field:crm.lead,zip:0
-msgid "Zip"
-msgstr "郵便番号"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Unassigned Phonecalls"
-msgstr "未割当の通話"
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.lead2opportunity.partner:0
-#: field:crm.lead2opportunity.partner,opportunity_ids:0
-#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
-#: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
-#: model:ir.actions.act_window,name:crm.relate_partner_opportunities
-#: model:ir.ui.menu,name:crm.menu_crm_opportunities
-#: model:process.node,name:crm.process_node_opportunities0
-#: view:res.partner:0
-msgid "Opportunities"
-msgstr "商談"
-
-#. module: crm
-#: field:crm.segmentation,categ_id:0
-msgid "Partner Category"
-msgstr "パートナ分類"
-
-#. module: crm
-#: field:crm.lead,probability:0
-msgid "Success Rate (%)"
-msgstr ""
-
-#. module: crm
-#: field:crm.segmentation,sales_purchase_active:0
-msgid "Use The Sales Purchase Rules"
-msgstr "売買ルールを使用"
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_phone2
-msgid "Outbound"
-msgstr "アウトバウンド"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Mark Won"
-msgstr "受注とマーク"
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Mark Lost"
-msgstr "失注とマーク"
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr ""
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "March"
-msgstr "3月"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Send Email"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
-#, python-format
-msgid "Warning !"
-msgstr "警告"
-
-#. module: crm
-#: field:crm.lead,day_open:0
-msgid "Days to Open"
-msgstr "開始日"
-
-#. module: crm
-#: field:crm.lead,mobile:0
-#: field:crm.phonecall,partner_mobile:0
-msgid "Mobile"
-msgstr "携帯電話"
-
-#. module: crm
-#: field:crm.lead,ref:0
-msgid "Reference"
-msgstr "参照"
-
-#. module: crm
-#: view:crm.lead:0
-msgid ""
-"Opportunities that are assigned to either me or one of the sale teams I "
-"manage"
-msgstr ""
-
-#. module: crm
-#: help:crm.case.section,resource_calendar_id:0
-msgid "Used to compute open days"
-msgstr "開始日数を計算するために使用"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
-#: model:ir.actions.act_window,name:crm.crm_meeting_partner
-#: view:res.partner:0
-#: field:res.partner,meeting_ids:0
-msgid "Meetings"
-msgstr "ミーティング"
-
-#. module: crm
-#: field:crm.lead,date_action_next:0
-#: field:crm.lead,title_action:0
-#: field:crm.phonecall,date_action_next:0
-msgid "Next Action"
-msgstr "次のアクション"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:777
-#, python-format
-msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
-
-#. module: crm
-#: selection:crm.lead.report,state:0
-#: selection:crm.phonecall,state:0
-#: selection:crm.phonecall.report,state:0
-msgid "Draft"
-msgstr "ドラフト"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "パートナの分類"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Show only opportunity"
-msgstr "商談のみ表示"
-
-#. module: crm
-#: field:crm.lead,name:0
-msgid "Subject"
-msgstr "標題"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "New Leads"
-msgstr "新規リード"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Show Sales Team"
-msgstr "営業チームを表示"
-
-#. module: crm
-#: help:sale.config.settings,module_crm_claim:0
-msgid ""
-"Allows you to track your customers/suppliers claims and grievances.\n"
-"                    This installs the module crm_claim."
-msgstr ""
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead6
-#: view:crm.lead:0
-msgid "Won"
-msgstr "受注"
-
-#. module: crm
-#: field:crm.lead.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "締切超過"
-
-#. module: crm
-#: model:crm.case.section,name:crm.section_sales_department
-msgid "Sales Department"
-msgstr "営業部"
-
-#. module: crm
-#: field:crm.case.stage,type:0
-#: field:crm.lead,type:0
-#: field:crm.lead.report,type:0
-#: view:crm.opportunity2phonecall:0
-msgid "Type"
-msgstr "タイプ"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Compute Segmentation"
-msgstr "分類の計算"
-
-#. module: crm
-#: selection:crm.lead,priority:0
-#: selection:crm.lead.report,priority:0
-#: selection:crm.phonecall,priority:0
-#: selection:crm.phonecall.report,priority:0
-msgid "Lowest"
-msgstr "最低"
-
-#. module: crm
-#: field:crm.lead,create_date:0
-#: view:crm.phonecall:0
-#: field:crm.phonecall,create_date:0
-#: field:crm.phonecall.report,creation_date:0
-msgid "Creation Date"
-msgstr "作成日"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:712
-#, python-format
-msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
-
-#. module: crm
-#: selection:crm.segmentation.line,expr_name:0
-msgid "Purchase Amount"
-msgstr "仕入高"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Year of call"
-msgstr "通話年"
-
-#. module: crm
-#: view:crm.case.stage:0
-#: view:crm.lead:0
-#: field:crm.lead,stage_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,stage_id:0
-msgid "Stage"
-msgstr "ステージ"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Phone Calls that are assigned to me"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,user_login:0
-msgid "User Login"
-msgstr "ユーザログイン"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Phone calls which are in pending state"
-msgstr "保留中状態の通話"
-
-#. module: crm
-#: view:crm.case.section:0
-#: field:crm.case.section,stage_ids:0
-#: view:crm.case.stage:0
-#: model:ir.actions.act_window,name:crm.crm_case_stage_act
-#: model:ir.actions.act_window,name:crm.crm_lead_stage_act
-#: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
-msgid "Stages"
-msgstr "ステージ"
-
-#. module: crm
-#: help:sale.config.settings,module_crm_helpdesk:0
-msgid ""
-"Allows you to communicate with Customer,  process Customer query, and "
-"provide better help and support. This installs the module crm_helpdesk."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Delete"
-msgstr ""
-
-#. module: crm
-#: model:mail.message.subtype,description:crm.mt_lead_create
-msgid "Opportunity created"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "í"
-msgstr ""
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "September"
-msgstr "9月"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"          Click to create a new opportunity.\n"
-"          </p><p>\n"
-"          OpenERP helps you keep track of your sales pipeline to follow\n"
-"          up potential sales and better forecast your future revenues.\n"
-"          </p><p>\n"
-"          You will be able to plan meetings and phone calls from\n"
-"          opportunities, convert them into quotations, attach related\n"
-"          documents, track all discussions, and much more.\n"
-"          </p>\n"
-"        "
-msgstr ""
-
-#. module: crm
-#: field:crm.segmentation,partner_id:0
-msgid "Max Partner ID processed"
-msgstr "パートナIDが処理される最大"
-
-#. module: crm
-#: help:crm.case.stage,on_change:0
-msgid ""
-"Setting this stage will change the probability automatically on the "
-"opportunity."
-msgstr "この段階の設定は商談により自動的に確率が変更されます。"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "oe_kanban_text_red"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
-msgid "Payment Modes"
-msgstr "支払モード"
-
-#. module: crm
-#: field:crm.lead.report,opening_date:0
-#: field:crm.phonecall.report,opening_date:0
-msgid "Opening Date"
-msgstr "開始日"
-
-#. module: crm
-#: help:crm.phonecall,duration:0
-msgid "Duration in Minutes"
-msgstr "分による期間"
-
-#. module: crm
-#: field:crm.case.channel,name:0
-msgid "Channel Name"
-msgstr "チャネル名"
-
-#. module: crm
-#: help:crm.lead.report,deadline_day:0
-msgid "Expected closing day"
-msgstr "見込完了日"
-
-#. module: crm
-#: help:crm.case.section,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the sales team "
-"without removing it."
-msgstr "アクティブ項目がTrueに設定されると、営業チームを削除することなく非表示にできます。"
-
-#. module: crm
-#: help:crm.case.stage,case_default:0
-msgid ""
-"If you check this field, this stage will be proposed by default on each "
-"sales team. It will not assign this stage to existing teams."
-msgstr "この項目をチェックした場合、この段階が各営業チームにデフォルトで提案されます。既存のチームにはこの段階を割り当てることはありません。"
-
-#. module: crm
-#: help:crm.case.stage,type:0
-msgid ""
-"This field is used to distinguish stages related to Leads from stages "
-"related to Opportunities, or to specify stages available for both types."
-msgstr "このフィールドは商談とリードの区別、あるいは両方を指定するために使用します。"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_lead_create
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead
-msgid "Lead Created"
-msgstr ""
-
-#. module: crm
-#: help:crm.segmentation,sales_purchase_active:0
-msgid ""
-"Check if you want to use this tab as part of the segmentation rule. If not "
-"checked, the criteria beneath will be ignored"
-msgstr "分類ルールの部分としてのこのタブを使うことを望む場合はチェックします。チェックしない場合、以下の基準は無視されます。"
-
-#. module: crm
-#: field:crm.segmentation,state:0
-msgid "Execution Status"
-msgstr "実行ステータス"
-
-#. module: crm
-#: view:crm.opportunity2phonecall:0
-msgid "Log call"
-msgstr "通話ログ"
-
-#. module: crm
-#: field:crm.lead,day_close:0
-msgid "Days to Close"
-msgstr "終了日"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:1075
-#: field:crm.case.section,complete_name:0
-#, python-format
-msgid "unknown"
-msgstr "不明"
-
-#. module: crm
-#: field:crm.case.section,message_is_follower:0
-#: field:crm.lead,message_is_follower:0
-#: field:crm.phonecall,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: crm
-#: field:crm.opportunity2phonecall,date:0
-#: view:crm.phonecall:0
-#: field:crm.phonecall,date:0
-#: field:crm.phonecall2phonecall,date:0
-msgid "Date"
-msgstr "日付"
-
-#. module: crm
-#: model:crm.case.section,name:crm.crm_case_section_4
-msgid "Online Support"
-msgstr "オンラインサポート"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-msgid "Extended Filters..."
-msgstr "拡張フィルタ…"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Phone calls which are in closed state"
-msgstr "クローズ状態の通話"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Search"
-msgstr "検索"
-
-#. module: crm
-#: help:crm.lead,state:0
-msgid ""
-"The Status is set to 'Draft', when a case is created. If the case is in "
-"progress the Status is set to 'Open'. When the case is over, the Status is "
-"set to 'Done'. If the case needs to be reviewed then the Status is  set to "
-"'Pending'."
-msgstr ""
-"作成された状態は「ドラフト」です。進行中は「オープン」になります。終了すると「完了」に設定されます。レビューが必要な場合は「保留中」に設定されます。"
-
-#. module: crm
-#: model:crm.case.section,name:crm.crm_case_section_1
-msgid "Sales Marketing Department"
-msgstr "営業マーケティング部"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Date of call"
-msgstr "通話日"
-
-#. module: crm
-#: help:crm.lead,section_id:0
-msgid ""
-"When sending mails, the default email address is taken from the sales team."
-msgstr "メールを送信する時、デフォルトEメールアドレスは営業チームのものが使われます。"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid ""
-"Phone Calls Assigned to the current user or with a team having the current "
-"user as team leader"
-msgstr ""
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Description"
-msgstr "分類の説明"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Lead Description"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:578
-#, python-format
-msgid "Merged opportunities"
-msgstr "統合された商談"
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor7
-msgid "Consulting"
-msgstr "コンサルティング"
-
-#. module: crm
-#: field:crm.case.section,code:0
-msgid "Code"
-msgstr "コード"
-
-#. module: crm
-#: view:sale.config.settings:0
-msgid "Features"
-msgstr "特徴"
-
-#. module: crm
-#: field:crm.case.section,child_ids:0
-msgid "Child Teams"
-msgstr "子のチーム"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Phone calls which are in draft and open state"
-msgstr "ドラフトで開いた状態の通話"
-
-#. module: crm
-#: field:crm.lead2opportunity.partner.mass,user_ids:0
-msgid "Salesmen"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "References"
-msgstr "参照"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2opportunity.partner.mass:0
-#: view:crm.merge.opportunity:0
-#: view:crm.opportunity2phonecall:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall2phonecall:0
-msgid "Cancel"
-msgstr "キャンセル"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Opportunities Assigned to Me or My Team(s)"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor4
-msgid "Information"
-msgstr "情報"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Leads/Opportunities which are in pending state"
-msgstr "リード / 商談は保留中状態です。"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "To Do"
-msgstr "ToDo"
-
-#. module: crm
-#: model:mail.message.subtype,description:crm.mt_lead_lost
-msgid "Opportunity lost"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead2opportunity.partner,action:0
-#: field:crm.lead2opportunity.partner.mass,action:0
-#: field:crm.partner.binding,action:0
-msgid "Related Customer"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor8
-msgid "Other"
-msgstr "その他"
-
-#. module: crm
-#: field:crm.phonecall,opportunity_id:0
-#: model:ir.model,name:crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "リード / 商談"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.action_merge_opportunities
-#: model:ir.actions.act_window,name:crm.merge_opportunity_act
-msgid "Merge leads/opportunities"
-msgstr ""
-
-#. module: crm
-#: help:crm.case.stage,sequence:0
-msgid "Used to order stages. Lower is better."
-msgstr "ステージの順位に使用します。 低いほど良好です。"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
-msgid "Phonecall Categories"
-msgstr "通話分類"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Leads/Opportunities which are in open state"
-msgstr "リード / 商談は開いています。"
-
-#. module: crm
-#: model:ir.model,name:crm.model_res_users
-msgid "Users"
-msgstr ""
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_lead_stage
-msgid "Stage Changed"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.stage,section_ids:0
-msgid "Sections"
-msgstr "セクション"
-
-#. module: crm
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "エラー。再帰的な関係の営業チームは作成できません。"
-
-#. module: crm
-#: selection:crm.opportunity2phonecall,action:0
-#: selection:crm.phonecall2phonecall,action:0
-msgid "Log a call"
-msgstr "通話のログ"
-
-#. module: crm
-#: selection:crm.segmentation.line,expr_name:0
-msgid "Sale Amount"
-msgstr "販売金額"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-#: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
-msgid "Phone calls"
-msgstr "通話"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
-msgid ""
-"Opportunities Analysis gives you an instant access to your opportunities "
-"with information such as the expected revenue, planned cost, missed "
-"deadlines or the number of interactions per opportunity. This report is "
-"mainly used by the sales manager in order to do the periodic review with the "
-"teams of the sales pipeline."
-msgstr ""
-"商談分析は予想売上高、計画コスト、締切超過、または商談毎の相互作用の数といった情報とともに、即座にあなたの商談にアクセスすることができます。このレポートは"
-"営業パイプラインのチームと周期的なレビューを行うために営業マネジャにより主に使用されます。"
-
-#. module: crm
-#: field:crm.case.categ,name:0
-#: field:crm.payment.mode,name:0
-#: field:crm.segmentation,name:0
-msgid "Name"
-msgstr "名称"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Leads/Opportunities that are assigned to me"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,date_closed:0
-#: field:crm.phonecall.report,date_closed:0
-msgid "Close Date"
-msgstr "契約日"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "My Case(s)"
-msgstr "私の案件"
-
-#. module: crm
-#: help:crm.case.section,message_ids:0
-#: help:crm.lead,message_ids:0
-#: help:crm.phonecall,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Show Countries"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.phonecall:0
-msgid "Creation"
-msgstr "作成"
-
-#. module: crm
-#: selection:crm.lead,priority:0
-#: selection:crm.lead.report,priority:0
-#: selection:crm.phonecall,priority:0
-#: selection:crm.phonecall.report,priority:0
-msgid "High"
-msgstr "高い"
-
-#. module: crm
-#: model:process.node,note:crm.process_node_partner0
-msgid "Convert to prospect to business partner"
-msgstr "ビジネスパートナとして見込み客に変換"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_payment_mode
-msgid "CRM Payment Mode"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Leads/Opportunities which are in done state"
-msgstr "リード / 商談は完了状態です。"
-
-#. module: crm
-#: field:crm.lead.report,delay_close:0
-msgid "Delay to Close"
-msgstr "締めを延期する"
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.lead.report:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall.report:0
-msgid "Group By..."
-msgstr "グループ化…"
-
-#. module: crm
-#: view:crm.merge.opportunity:0
-msgid "Merge Leads/Opportunities"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.section,parent_id:0
-msgid "Parent Team"
-msgstr "親チーム"
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
-#: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.partner.binding,action:0
-msgid "Do not link to a customer"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,date_action:0
-msgid "Next Action Date"
-msgstr "次のアクションの日付"
-
-#. module: crm
-#: help:crm.case.stage,state:0
-msgid ""
-"The status of your document will automatically change regarding the selected "
-"stage. For example, if a stage is related to the status 'Close', when your "
-"document reaches this stage, it is automatically closed."
-msgstr ""
-"選択されたステージに関する文書のステータスは自動で変更されます。例えば、ステージが「閉じる」に関連する場合、このステージに到達すると文書は自動で閉じられま"
-"す。"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Assign opportunities to"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_phone1
-msgid "Inbound"
-msgstr "インバウンド"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Month of call"
-msgstr "通話の月"
-
-#. module: crm
-#: code:addons/crm/crm_phonecall.py:292
-#, python-format
-msgid "Partner has been <b>created</b>."
-msgstr ""
-
-#. module: crm
-#: field:sale.config.settings,module_crm_claim:0
-msgid "Manage Customer Claims"
-msgstr "顧客クレーム管理"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_lead
-msgid ""
-"Leads Analysis allows you to check different CRM related information like "
-"the treatment delays or number of leads per state. You can sort out your "
-"leads analysis by different groups to get accurate grained analysis."
-msgstr ""
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor3
-msgid "Services"
-msgstr "サービス"
-
-#. module: crm
-#: selection:crm.lead,priority:0
-#: selection:crm.lead.report,priority:0
-#: selection:crm.phonecall,priority:0
-#: selection:crm.phonecall.report,priority:0
-msgid "Highest"
-msgstr "最高"
-
-#. module: crm
-#: help:crm.lead.report,creation_year:0
-msgid "Creation year"
-msgstr "作成年"
-
-#. module: crm
-#: view:crm.case.section:0
-#: field:crm.lead,description:0
-msgid "Notes"
-msgstr "注記"
-
-#. module: crm
-#: field:crm.segmentation.line,expr_value:0
-msgid "Value"
-msgstr "値"
-
-#. module: crm
-#: field:crm.lead,partner_name:0
-msgid "Customer Name"
-msgstr "顧客名"
-
-#. module: crm
-#: field:crm.case.section,reply_to:0
-msgid "Reply-To"
-msgstr "返信先"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Display"
-msgstr ""
-
-#. module: crm
-#: view:board.board:0
-msgid "Opportunities by Stage"
-msgstr "ステージ別商談"
-
-#. module: crm
-#: model:process.transition,note:crm.process_transition_leadpartner0
-msgid "Prospect is converting to business partner"
-msgstr "見込みはビジネスパートナに変換されています。"
-
-#. module: crm
-#: view:crm.case.channel:0
-#: model:ir.actions.act_window,name:crm.crm_case_channel_action
-#: model:ir.model,name:crm.model_crm_case_channel
-#: model:ir.ui.menu,name:crm.menu_crm_case_channel
-msgid "Channels"
-msgstr "チャネル"
-
-#. module: crm
-#: view:crm.phonecall:0
-#: selection:crm.phonecall,state:0
-#: view:crm.phonecall.report:0
-#: selection:crm.phonecall.report,state:0
-msgid "Held"
-msgstr "保留"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Extra Info"
-msgstr "追加情報"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Fund Raising"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Edit..."
-msgstr ""
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead5
-msgid "Google Adwords"
-msgstr "Google AdWords"
-
-#. module: crm
-#: view:crm.case.section:0
-msgid "Select Stages for this Sales Team"
-msgstr "この営業チームの段階を選択"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,priority:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,priority:0
-#: field:crm.phonecall,priority:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,priority:0
-msgid "Priority"
-msgstr "優先度"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
-msgid "Lead To Opportunity Partner"
-msgstr "リードからパートナの商談へ"
-
-#. module: crm
-#: help:crm.lead,partner_id:0
-msgid "Linked partner (optional). Usually created when converting the lead."
-msgstr "リンクされた取引先(オプション)。通常は見込み客となった場合に作成されます。"
-
-#. module: crm
-#: field:crm.lead,payment_mode:0
-#: view:crm.payment.mode:0
-#: model:ir.actions.act_window,name:crm.action_crm_payment_mode
-msgid "Payment Mode"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
-msgid "Mass Lead To Opportunity Partner"
-msgstr "大量のリードからパートナの商談へ"
-
-#. module: crm
-#: view:sale.config.settings:0
-msgid "On Mail Server"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.open_board_statistical_dash
-#: model:ir.ui.menu,name:crm.menu_board_statistics_dash
-msgid "CRM"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
-#: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
-msgid "Contacts Segmentation"
-msgstr "連絡先区分化"
-
-#. module: crm
-#: model:process.node,note:crm.process_node_meeting0
-msgid "Schedule a normal or phone meeting"
-msgstr "通常または電話ミーティングのスケジュール"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead1
-msgid "Telesales"
-msgstr "電話セールス"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads Assigned to Me or My Team(s)"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_segmentation_line
-msgid "Segmentation line"
-msgstr "分類行"
-
-#. module: crm
-#: view:crm.opportunity2phonecall:0
-#: view:crm.phonecall2phonecall:0
-msgid "Planned Date"
-msgstr "予定日"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Expected Revenues"
-msgstr "見込売上"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Referrer"
-msgstr "参照元"
-
-#. module: crm
-#: help:crm.lead,type:0
-#: help:crm.lead.report,type:0
-msgid "Type is used to separate Leads and Opportunities"
-msgstr "リードと商談を区別するためにタイプを使います。"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "July"
-msgstr "7月"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Lead / Customer"
-msgstr "リード / 顧客"
-
-#. module: crm
-#: model:crm.case.section,name:crm.crm_case_section_2
-msgid "Support Department"
-msgstr "サポート部門"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Show only lead"
-msgstr "リードのみ表示"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_act
-#: model:ir.model,name:crm.model_crm_case_section
-#: model:ir.ui.menu,name:crm.menu_crm_case_section_act
-msgid "Sales Teams"
-msgstr "営業チーム"
-
-#. module: crm
-#: field:crm.case.stage,case_default:0
-msgid "Default to New Sales Team"
-msgstr "新営業チームにデフォルト提案"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Team"
-msgstr "チーム"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Leads/Opportunities which are in New state"
-msgstr "新規状態にあるリード / 商談"
-
-#. module: crm
-#: selection:crm.phonecall,state:0
-#: view:crm.phonecall.report:0
-msgid "Not Held"
-msgstr "未保留"
-
-#. module: crm
-#: field:crm.lead.report,probability:0
-msgid "Probability"
-msgstr "確信度"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,month:0
-msgid "Month"
-msgstr "月"
-
-#. module: crm
-#: view:crm.lead:0
-#: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
-#: model:ir.ui.menu,name:crm.menu_crm_leads
-#: model:process.node,name:crm.process_node_leads0
-msgid "Leads"
-msgstr "リード"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:576
-#, python-format
-msgid "Merged leads"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor5
-msgid "Design"
-msgstr "デザイン"
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,name:0
-#: selection:crm.lead2opportunity.partner.mass,name:0
-msgid "Merge with existing opportunities"
-msgstr ""
-
-#. module: crm
-#: view:crm.phonecall.report:0
-#: selection:crm.phonecall.report,state:0
-msgid "Todo"
-msgstr "ToDo"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
-msgid "Lead to Opportunity"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,user_email:0
-msgid "User Email"
-msgstr "ユーザのEメール"
-
-#. module: crm
-#: help:crm.lead,partner_name:0
-msgid ""
-"The name of the future partner company that will be created while converting "
-"the lead into opportunity"
-msgstr "見込みから営業案件となった、将来の取引先企業の名前。"
-
-#. module: crm
-#: field:crm.opportunity2phonecall,note:0
-#: field:crm.phonecall2phonecall,note:0
-msgid "Note"
-msgstr "注記"
-
-#. module: crm
-#: selection:crm.lead,priority:0
-#: selection:crm.lead.report,priority:0
-#: selection:crm.phonecall,priority:0
-#: selection:crm.phonecall.report,priority:0
-msgid "Low"
-msgstr "低い"
-
-#. module: crm
-#: selection:crm.case.stage,state:0
-#: field:crm.lead,date_closed:0
-#: selection:crm.lead,state:0
-#: view:crm.lead.report:0
-#: selection:crm.lead.report,state:0
-#: field:crm.phonecall,date_closed:0
-msgid "Closed"
-msgstr "閉じた"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Open Opportunities"
-msgstr "商談を開く"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead2
-msgid "Email Campaign - Services"
-msgstr "Eメールキャンペーン - サービス"
-
-#. module: crm
-#: selection:crm.case.stage,state:0
-#: selection:crm.lead,state:0
-#: view:crm.lead.report:0
-#: selection:crm.lead.report,state:0
-#: selection:crm.phonecall.report,state:0
-msgid "Pending"
-msgstr "保留中"
-
-#. module: crm
-#: model:process.transition,name:crm.process_transition_leadopportunity0
-msgid "Prospect Opportunity"
-msgstr "商談の見込み"
-
-#. module: crm
-#: field:crm.lead,email_cc:0
-msgid "Global CC"
-msgstr "グローバルCC"
-
-#. module: crm
-#: view:crm.phonecall:0
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone
-#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
-msgid "Phone Calls"
-msgstr "通話"
-
-#. module: crm
-#: view:crm.case.stage:0
-msgid "Stage Search"
-msgstr "ステージ検索"
-
-#. module: crm
-#: help:crm.lead.report,delay_open:0
-#: help:crm.phonecall.report,delay_open:0
-msgid "Number of Days to open the case"
-msgstr "当件を開くまでの日数"
-
-#. module: crm
-#: field:crm.lead,phone:0
-#: field:crm.opportunity2phonecall,phone:0
-#: view:crm.phonecall:0
-#: field:crm.phonecall,partner_phone:0
-#: field:crm.phonecall2phonecall,phone:0
-msgid "Phone"
-msgstr "電話"
-
-#. module: crm
-#: field:crm.case.channel,active:0
-#: field:crm.case.section,active:0
-#: field:crm.lead,active:0
-#: field:crm.phonecall,active:0
-msgid "Active"
-msgstr "有効"
-
-#. module: crm
-#: selection:crm.segmentation.line,operator:0
-msgid "Mandatory Expression"
-msgstr "必須の表現"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Send Mail"
-msgstr ""
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
-#: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.partner.binding,action:0
-msgid "Create a new customer"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,deadline_day:0
-msgid "Exp. Closing Day"
-msgstr "見込完了日"
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor2
-msgid "Software"
-msgstr "ソフトウェア"
-
-#. module: crm
-#: field:crm.case.section,change_responsible:0
-msgid "Reassign Escalated"
-msgstr "拡大の再割当"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
-msgstr "商談分析"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Misc"
-msgstr "その他"
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.lead.report:0
-#: selection:crm.lead.report,state:0
-msgid "Open"
-msgstr "開く"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,city:0
-msgid "City"
-msgstr "市"
-
-#. module: crm
-#: selection:crm.case.stage,type:0
-msgid "Both"
-msgstr "リード・商談"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Call Done"
-msgstr "通話完了"
-
-#. module: crm
-#: view:crm.phonecall:0
-#: field:crm.phonecall,user_id:0
-msgid "Responsible"
-msgstr "担当"
-
-#. module: crm
-#: model:crm.case.section,name:crm.crm_case_section_3
-msgid "Direct Marketing"
-msgstr "ダイレクトマーケティング"
-
-#. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor1
-msgid "Product"
-msgstr "製品"
-
-#. module: crm
-#: field:crm.lead.report,creation_year:0
-msgid "Creation Year"
-msgstr "作成年"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Conversion Options"
-msgstr ""
-
-#. module: crm
-#: view:crm.case.section:0
-msgid ""
-"Follow this salesteam to automatically track the events associated to users "
-"of this team."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Address"
-msgstr "住所"
-
-#. module: crm
-#: help:crm.case.section,alias_id:0
-msgid ""
-"The email address associated with this team. New emails received will "
-"automatically create new leads assigned to the team."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Opportunities"
-msgstr "未割当の商談"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Search Leads"
-msgstr "リードの検索"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,delay_open:0
-msgid "Delay to open"
-msgstr "開始を延期する"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
-msgid "Scheduled Calls"
-msgstr "予定された電話"
-
-#. module: crm
-#: field:crm.lead,id:0
-msgid "ID"
-msgstr ""
-
-#. module: crm
-#: help:crm.lead,type_id:0
-msgid ""
-"From which campaign (seminar, marketing campaign, mass mailing, ...) did "
-"this contact come from?"
-msgstr "この連絡先はどのキャンペーン（セミナー、マーケティングキャンペーン、大量のメールなど）から来ましたか？"
-
-#. module: crm
-#: model:ir.model,name:crm.model_calendar_attendee
-msgid "Attendee information"
-msgstr "出席者情報"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Test"
-msgstr "分類のテスト"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Continue Process"
-msgstr "処理の継続"
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,name:0
-#: selection:crm.lead2opportunity.partner.mass,name:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
-msgid "Convert to opportunity"
-msgstr ""
-
-#. module: crm
-#: field:crm.opportunity2phonecall,user_id:0
-#: field:crm.phonecall2phonecall,user_id:0
-msgid "Assign To"
-msgstr "割当先"
-
-#. module: crm
-#: field:crm.lead,date_action_last:0
-#: field:crm.phonecall,date_action_last:0
-msgid "Last Action"
-msgstr "最終アクション"
-
-#. module: crm
-#: field:crm.phonecall,duration:0
-#: field:crm.phonecall.report,duration:0
-msgid "Duration"
-msgstr "期間"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to schedule a call \n"
-"          </p><p>\n"
-"            OpenERP allows you to easily define all the calls to be done\n"
-"            by your sales team and follow up based on their summary.\n"
-"          </p><p>  \n"
-"            You can use the import feature to massively import a new list "
-"of\n"
-"            prospects to qualify.\n"
-"          </p>\n"
-"        "
-msgstr ""
-
-#. module: crm
-#: help:crm.case.stage,fold:0
-msgid ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
-msgstr "ステータスバーやかんばんビューで表示すべきレコードが存在しない場合、このステージは表示されません。"
-
-#. module: crm
-#: field:crm.lead.report,nbr:0
-#: field:crm.phonecall.report,nbr:0
-msgid "# of Cases"
-msgstr "案件の数"
-
-#. module: crm
-#: help:crm.phonecall,section_id:0
-msgid "Sales team to which Case belongs to."
-msgstr "案件が属する営業チーム"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead6
-msgid "Banner Ads"
-msgstr "バナー広告"
-
-#. module: crm
-#: field:crm.merge.opportunity,opportunity_ids:0
-msgid "Leads/Opportunities"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,fax:0
-msgid "Fax"
-msgstr "FAX"
-
-#. module: crm
-#: field:crm.lead,company_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,company_id:0
-#: field:crm.phonecall,company_id:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,company_id:0
-msgid "Company"
-msgstr "会社"
-
-#. module: crm
-#: selection:crm.segmentation,state:0
-msgid "Running"
-msgstr "実行中"
-
-#. module: crm
-#: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
-msgid "Lead converted into an opportunity"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Leads"
-msgstr "見割当リード"
-
-#. module: crm
-#: model:mail.message.subtype,description:crm.mt_lead_won
-msgid "Opportunity won"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.categ,object_id:0
-msgid "Object Name"
-msgstr "オブジェクト名"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Phone Calls Assigned to Me or My Team(s)"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Reset"
-msgstr ""
-
-#. module: crm
-#: view:sale.config.settings:0
-msgid "After-Sale Services"
-msgstr "アフターサービス"
-
-#. module: crm
-#: field:crm.case.section,message_ids:0
-#: field:crm.lead,message_ids:0
-#: field:crm.phonecall,message_ids:0
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: crm
-#: help:crm.lead,channel_id:0
-msgid "Communication channel (mail, direct, phone, ...)"
-msgstr "通信チャネル（メール、直接、電話など）"
-
-#. module: crm
-#: field:crm.opportunity2phonecall,name:0
-#: field:crm.phonecall2phonecall,name:0
-msgid "Call summary"
-msgstr "通話の概要"
-
-#. module: crm
-#: selection:crm.case.stage,state:0
-#: selection:crm.lead,state:0
-#: selection:crm.lead.report,state:0
-#: selection:crm.phonecall,state:0
-#: selection:crm.phonecall.report,state:0
-msgid "Cancelled"
-msgstr "キャンセル済"
-
-#. module: crm
-#: field:crm.lead,color:0
-msgid "Color Index"
-msgstr "カラーインデックス"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
-msgid ""
-"From this report, you can analyse the performance of your sales team, based "
-"on their phone calls. You can group or filter the information according to "
-"several criteria and drill down the information, by adding more groups in "
-"the report."
-msgstr ""
-"このレポートから、通話を基準としたあなたの営業チームの成績の分析ができます。より多くのグループをレポートに追加することで、幾つかの基準と情報のドリルダウン"
-"による情報のクループ化やフィルタができます。"
-
-#. module: crm
-#: field:crm.case.stage,fold:0
-msgid "Fold by Default"
-msgstr "デフォルト折畳"
-
-#. module: crm
-#: field:crm.case.stage,state:0
-msgid "Related Status"
-msgstr "関連ステータス"
-
-#. module: crm
-#: field:crm.phonecall,name:0
-msgid "Call Summary"
-msgstr "通話の概要"
-
-#. module: crm
-#: field:crm.segmentation.line,expr_operator:0
-msgid "Operator"
-msgstr "演算子"
-
-#. module: crm
-#: view:crm.lead:0
-#: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
-msgid "Schedule/Log Call"
-msgstr "電話のスケジュール / ログ"
-
-#. module: crm
-#: view:crm.merge.opportunity:0
-msgid "Select Leads/Opportunities"
-msgstr ""
-
-#. module: crm
-#: selection:crm.phonecall,state:0
-msgid "Confirmed"
-msgstr "確認済"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_partner_binding
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.act_oppor_stage_user
-msgid "Planned Revenue By User and Stage"
-msgstr "ユーザ・ステージ別計画売上高"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Confirm"
-msgstr "確認"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unread messages"
-msgstr ""
-
-#. module: crm
-#: field:crm.phonecall.report,section_id:0
-msgid "Section"
-msgstr "セクション"
-
-#. module: crm
-#: selection:crm.segmentation.line,operator:0
-msgid "Optional Expression"
-msgstr "オプションの式"
-
-#. module: crm
-#: field:crm.case.section,message_follower_ids:0
-#: field:crm.lead,message_follower_ids:0
-#: field:crm.phonecall,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to create an unqualified lead.\n"
-"          </p><p>\n"
-"            Use leads if you need a qualification step before creating an\n"
-"            opportunity or a customer. It can be a business card you "
-"received,\n"
-"            a contact form filled in your website, or a file of unqualified\n"
-"            prospects you import, etc.\n"
-"          </p><p>\n"
-"            Once qualified, the lead can be converted into a business\n"
-"            opportunity and/or a new customer in your address book.\n"
-"          </p>\n"
-"        "
-msgstr ""
-
-#. module: crm
-#: field:sale.config.settings,fetchmail_lead:0
-msgid "Create leads from incoming mails"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,email_from:0
-#: field:crm.phonecall,email_from:0
-msgid "Email"
-msgstr "Eメール"
-
-#. module: crm
-#: view:crm.case.channel:0
-#: view:crm.lead:0
-#: field:crm.lead,channel_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,channel_id:0
-msgid "Channel"
-msgstr "チャネル"
-
-#. module: crm
-#: view:crm.opportunity2phonecall:0
-#: view:crm.phonecall2phonecall:0
-msgid "Schedule Call"
-msgstr "電話のスケジュール"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-msgid "My Sales Team(s)"
-msgstr "私の営業チーム"
-
-#. module: crm
-#: help:crm.segmentation,exclusif:0
-msgid ""
-"Check if the category is limited to partners that match the segmentation "
-"criterions.                        \n"
-"If checked, remove the category from partners that doesn't match "
-"segmentation criterions"
-msgstr ""
-"分類が分類基準に一致するパートナに限定される場合はチェックします。\n"
-"チェックした場合、分類l基準一致しないパートナからはその分類が削除されます。"
-
-#. module: crm
-#: model:process.transition,note:crm.process_transition_leadopportunity0
-msgid "Creating business opportunities from Leads"
-msgstr "リードからビジネス商談の作成"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead3
-msgid "Email Campaign - Products"
-msgstr "Eメールキャンペーン - 製品"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to log the summary of a phone call. \n"
-"          </p><p>\n"
-"            OpenERP allows you to log inbound calls on the fly to track the\n"
-"            history of the communication with a customer or to inform "
-"another\n"
-"            team member.\n"
-"          </p><p>\n"
-"            In order to follow up on the call, you can trigger a request "
-"for\n"
-"            another call, a meeting or an opportunity.\n"
-"          </p>\n"
-"        "
-msgstr ""
-
-#. module: crm
-#: model:process.node,note:crm.process_node_leads0
-msgid "Very first contact with new prospect"
-msgstr "新規見込み客との最初の接触"
-
-#. module: crm
-#: view:res.partner:0
-msgid "Calls"
-msgstr "通話"
-
-#. module: crm
-#: field:crm.case.stage,on_change:0
-msgid "Change Probability Automatically"
-msgstr "確率自動変更"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "My Phone Calls"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead3
-msgid "Qualification"
-msgstr "資格"
-
-#. module: crm
-#: field:crm.lead2opportunity.partner,name:0
-#: field:crm.lead2opportunity.partner.mass,name:0
-msgid "Conversion Action"
+"                Click to define a new customer segmentation.\n"
+"              </p><p>\n"
+"                Create specific categories which you can assign to your\n"
+"                contacts to better manage your interactions with them. The\n"
+"                segmentation tool is able to assign categories to contacts\n"
+"                according to criteria you set.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: crm
@@ -2528,486 +95,20 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "August"
-msgstr "8月"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_lead_lost
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
-msgid "Opportunity Lost"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,deadline_month:0
-msgid "Exp. Closing Month"
-msgstr "見込完了月"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "December"
-msgstr "12月"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Date of Call"
-msgstr "通話日"
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,date_deadline:0
-msgid "Expected Closing"
-msgstr "見込完了"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_opportunity2phonecall
-msgid "Opportunity to Phonecall"
-msgstr "商談から通話へ"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Sales Purchase"
-msgstr "売買"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Schedule Meeting"
-msgstr "ミーティングのスケジュール"
-
-#. module: crm
-#: field:crm.lead.report,deadline_year:0
-msgid "Ex. Closing Year"
-msgstr "見込完了年"
-
-#. module: crm
-#: model:ir.actions.client,name:crm.action_client_crm_menu
-msgid "Open Sale Menu"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead,date_open:0
-#: field:crm.phonecall,date_open:0
-msgid "Opened"
-msgstr "開始済"
-
-#. module: crm
-#: view:crm.case.section:0
-#: field:crm.case.section,member_ids:0
-msgid "Team Members"
-msgstr "チームメンバー"
-
-#. module: crm
-#: view:crm.opportunity2phonecall:0
-#: view:crm.phonecall2phonecall:0
-msgid "Schedule/Log a Call"
-msgstr "スケジュール / 通話記録"
-
-#. module: crm
-#: field:crm.lead,planned_cost:0
-msgid "Planned Costs"
-msgstr ""
-
-#. module: crm
-#: help:crm.lead,date_deadline:0
-msgid "Estimate of the date on which the opportunity will be won."
-msgstr "案件を獲得できる推定日"
-
-#. module: crm
-#: help:crm.lead,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメールアドレスの間をコンマで区切って下さい。"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
-msgid "Logged Calls"
-msgstr "ログ対象通話"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_lead_won
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
-msgid "Opportunity Won"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
-msgid "Cases by Sales Team"
-msgstr "営業チーム毎の案件"
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.phonecall:0
-#: model:ir.model,name:crm.model_crm_meeting
-#: model:process.node,name:crm.process_node_meeting0
-msgid "Meeting"
-msgstr "ミーティング"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_case_categ
-msgid "Category of Case"
-msgstr "案件の分類"
-
-#. module: crm
-#: view:board.board:0
-msgid "Planned Revenue by Stage and User"
-msgstr "ステージ・ユーザ別計画売上高"
-
-#. module: crm
-#: selection:crm.lead,priority:0
-#: selection:crm.lead.report,priority:0
-#: selection:crm.phonecall,priority:0
-#: selection:crm.phonecall.report,priority:0
-msgid "Normal"
-msgstr "標準"
-
-#. module: crm
-#: field:crm.lead,street2:0
-msgid "Street2"
-msgstr "番地"
-
-#. module: crm
-#: field:sale.config.settings,module_crm_helpdesk:0
-msgid "Manage Helpdesk and Support"
-msgstr "ヘルプデスクおよびサポート管理"
-
-#. module: crm
-#: field:crm.lead.report,delay_open:0
-msgid "Delay to Open"
-msgstr "開始を延期する"
-
-#. module: crm
-#: field:crm.lead.report,user_id:0
-#: field:crm.phonecall.report,user_id:0
-msgid "User"
-msgstr "ユーザ"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "November"
-msgstr "11月"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.act_opportunity_stage
-msgid "Opportunities By Stage"
-msgstr "ステージ別商談"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "January"
-msgstr "1月"
-
-#. module: crm
-#: model:process.process,name:crm.process_process_contractprocess0
-msgid "Contract"
-msgstr "契約"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead4
-msgid "Twitter Ads"
-msgstr "Twitter広告"
-
-#. module: crm
-#: field:crm.lead.report,creation_day:0
-msgid "Creation Day"
-msgstr "作成日"
-
-#. module: crm
-#: view:crm.lead.report:0
-msgid "Planned Revenues"
-msgstr "計画売上高"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Exp.Closing"
-msgstr "見込完了"
-
-#. module: crm
-#: help:crm.lead.report,deadline_year:0
-msgid "Expected closing year"
-msgstr "見込完了年"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_case_stage
-msgid "Stage of case"
-msgstr "案件ステージ"
-
-#. module: crm
-#: selection:crm.opportunity2phonecall,action:0
-#: selection:crm.phonecall2phonecall,action:0
-msgid "Schedule a call"
-msgstr "電話のスケジュール"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Categorization"
-msgstr "分類化"
-
-#. module: crm
-#: view:crm.phonecall2phonecall:0
-msgid "Log Call"
-msgstr "通話ログ"
-
-#. module: crm
-#: help:sale.config.settings,group_fund_raising:0
-msgid "Allows you to trace and manage your activities for fund raising."
-msgstr ""
-
-#. module: crm
-#: field:crm.meeting,phonecall_id:0
-#: model:ir.model,name:crm.model_crm_phonecall
-msgid "Phonecall"
-msgstr "通話"
-
-#. module: crm
-#: view:crm.phonecall.report:0
-msgid "Phone calls that are assigned to one of the sale teams I manage"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Create date"
-msgstr "作成日"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "at"
-msgstr ""
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead1
-#: selection:crm.case.stage,state:0
-#: view:crm.lead:0
-#: selection:crm.lead,state:0
-#: view:crm.lead.report:0
-msgid "New"
-msgstr "新規"
-
-#. module: crm
-#: field:crm.lead,function:0
-msgid "Function"
-msgstr "機能"
-
-#. module: crm
-#: field:crm.case.section,note:0
-#: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
-#: field:crm.segmentation,description:0
-msgid "Description"
-msgstr "詳細"
-
-#. module: crm
-#: field:crm.case.categ,section_id:0
-#: field:crm.case.resource.type,section_id:0
-#: view:crm.case.section:0
-#: field:crm.case.section,name:0
-#: field:crm.lead,section_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,section_id:0
-#: field:crm.lead2opportunity.partner.mass,section_id:0
-#: field:crm.opportunity2phonecall,section_id:0
-#: field:crm.payment.mode,section_id:0
-#: view:crm.phonecall:0
-#: field:crm.phonecall,section_id:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall2phonecall,section_id:0
-#: field:res.partner,section_id:0
-msgid "Sales Team"
-msgstr "営業チーム"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "May"
-msgstr "5月"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_channel_action
+#: model:ir.actions.act_window,help:crm.crm_tracking_source_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new channel.\n"
+"                Click to define a new source.\n"
 "              </p><p>\n"
-"                Use channels to track the soure of your leads and "
+"                Use channels to track the source of your leads and "
 "opportunities. Channels\n"
 "                are mostly used in reporting to analyse sales performance\n"
 "                related to marketing efforts.\n"
 "              </p><p>\n"
-"                Some examples of channels: company website, phone call\n"
-"                campaign, reseller, etc.\n"
+"                Some examples of channels: partner's website, google.com, \n"
+"                email list name, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Internal Notes"
-msgstr "内部メモ"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "New Opportunities"
-msgstr "新規商談"
-
-#. module: crm
-#: field:crm.segmentation.line,operator:0
-msgid "Mandatory / Optional"
-msgstr "必須 / オプション"
-
-#. module: crm
-#: field:crm.lead,street:0
-msgid "Street"
-msgstr "通り"
-
-#. module: crm
-#: field:crm.lead,referred:0
-msgid "Referred By"
-msgstr "紹介者"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "ToDoにリセット"
-
-#. module: crm
-#: field:crm.case.section,working_hours:0
-msgid "Working Hours"
-msgstr "労働時間"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:1002
-#: view:crm.lead:0
-#: field:crm.lead2opportunity.partner,partner_id:0
-#: field:crm.lead2opportunity.partner.mass,partner_id:0
-#: field:crm.partner.binding,partner_id:0
-#, python-format
-msgid "Customer"
-msgstr "顧客"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "February"
-msgstr "2月"
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Schedule a Meeting"
-msgstr "ミーティングのスケジュール"
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead8
-#: view:crm.lead:0
-msgid "Lost"
-msgstr "失注"
-
-#. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
-#, python-format
-msgid "Closed/Cancelled leads cannot be converted into opportunities."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-#: field:crm.lead,country_id:0
-#: view:crm.lead.report:0
-#: field:crm.lead.report,country_id:0
-msgid "Country"
-msgstr "国"
-
-#. module: crm
-#: view:crm.lead:0
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2opportunity.partner.mass:0
-#: view:crm.phonecall:0
-msgid "Convert to Opportunity"
-msgstr "商談に変換"
-
-#. module: crm
-#: help:crm.phonecall,email_from:0
-msgid "These people will receive email."
-msgstr "これらの人がEメールを受け取ります。"
-
-#. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "April"
-msgstr "4月"
-
-#. module: crm
-#: field:crm.case.resource.type,name:0
-msgid "Campaign Name"
-msgstr "キャンペーン名"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling"
-msgstr "プロファイリング"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall_report
-msgid "Phone calls by user and section"
-msgstr "ユーザとセクション別通話"
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead5
-msgid "Negotiation"
-msgstr "交渉"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr "通話から通話へ"
-
-#. module: crm
-#: field:crm.case.stage,sequence:0
-msgid "Sequence"
-msgstr "順序"
-
-#. module: crm
-#: field:crm.segmentation.line,expr_name:0
-msgid "Control Variable"
-msgstr "制御変数"
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead4
-msgid "Proposition"
-msgstr "案件"
-
-#. module: crm
-#: view:crm.phonecall:0
-#: field:res.partner,phonecall_ids:0
-msgid "Phonecalls"
-msgstr "通話"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: view:crm.phonecall.report:0
-#: field:crm.phonecall.report,name:0
-msgid "Year"
-msgstr "年"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead8
-msgid "Newsletter"
-msgstr "ニュースレター"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
-msgid "Opportunity Stage Changed"
 msgstr ""
 
 #. module: crm
@@ -3023,1073 +124,3137 @@ msgid ""
 "            "
 msgstr ""
 
-#~ msgid "Today"
-#~ msgstr "本日"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new category.\n"
+"          </p><p>\n"
+"            Create specific phone call categories to better define the type "
+"of\n"
+"            calls tracked in the system.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
-#~ msgid "Date of month"
-#~ msgstr "日付"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to log the summary of a phone call. \n"
+"          </p><p>\n"
+"            Odoo allows you to log inbound calls on the fly to track the\n"
+"            history of the communication with a customer or to inform "
+"another\n"
+"            team member.\n"
+"          </p><p>\n"
+"            In order to follow up on the call, you can trigger a request "
+"for\n"
+"            another call, a meeting or an opportunity.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
-#~ msgid "Need Services"
-#~ msgstr "必要なサービス"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to schedule a call \n"
+"          </p><p>\n"
+"            Odoo allows you to easily define all the calls to be done\n"
+"            by your sales team and follow up based on their summary.\n"
+"          </p><p>  \n"
+"            You can use the import feature to massively import a new list "
+"of\n"
+"            prospects to qualify.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
-#~ msgid "Accept"
-#~ msgstr "同意"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+msgid ""
+"<p>\n"
+"                    Odoo helps you keep track of your sales pipeline to "
+"follow\n"
+"                    up potential sales and better forecast your future "
+"revenues.\n"
+"                </p><p>\n"
+"                    You will be able to plan meetings and phone calls from\n"
+"                    opportunities, convert them into quotations, attach "
+"related\n"
+"                    documents, track all discussions, and much more.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
-#~ msgid "Option"
-#~ msgstr "オプション"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+msgid ""
+"<p>\n"
+"                    Use leads if you need a qualification step before "
+"creating an\n"
+"                    opportunity or a customer. It can be a business card you "
+"received,\n"
+"                    a contact form filled in your website, or a file of "
+"unqualified\n"
+"                    prospects you import, etc.\n"
+"                </p><p>\n"
+"                    Once qualified, the lead can be converted into a "
+"business\n"
+"                    opportunity and/or a new customer in your address book.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
-#~ msgid "Second"
-#~ msgstr "秒"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
+msgid ""
+"<p>\n"
+"                Odoo helps you keep track of your sales pipeline to follow\n"
+"                up potential sales and better forecast your future "
+"revenues.\n"
+"            </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"            </p>\n"
+"        "
+msgstr ""
 
-#~ msgid "="
-#~ msgstr "="
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
+msgid ""
+"<p>\n"
+"                Use leads if you need a qualification step before creating "
+"an\n"
+"                opportunity or a customer. It can be a business card you "
+"received,\n"
+"                a contact form filled in your website, or a file of "
+"unqualified\n"
+"                prospects you import, etc.\n"
+"            </p><p>\n"
+"                Once qualified, the lead can be converted into a business\n"
+"                opportunity and/or a new customer in your address book.\n"
+"            </p>\n"
+"        "
+msgstr ""
 
-#~ msgid "Google Adwords 2"
-#~ msgstr "Google アドワーズ ２"
+#. module: crm
+#: model:email.template,body_html:crm.email_template_opportunity_reminder_mail
+msgid ""
+"<p>This opportunity did not have any activity since at least 5 days. Here "
+"are some details:</p>\n"
+"<ul>\n"
+"<li>Name: ${object.name}</li>\n"
+"<li>ID: ${object.id}</li>\n"
+"<li>Description: ${object.description}</field></li>\n"
+"</ul>"
+msgstr ""
 
-#~ msgid "Privacy"
-#~ msgstr "プライバシー"
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "A Meeting"
+msgstr ""
 
-#~ msgid "Location of Event"
-#~ msgstr "イベント場所"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_contact:0
+msgid "A user associated to the contact"
+msgstr "連絡先に関連付けたユーザー"
 
-#~ msgid "Opportunity Analysis"
-#~ msgstr "商談分析"
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Accept Emails From"
+msgstr ""
 
-#~ msgid "End date"
-#~ msgstr "終了日"
+#. module: crm
+#: field:crm.phonecall2phonecall,action:0
+msgid "Action"
+msgstr "アクション"
 
-#~ msgid "Details"
-#~ msgstr "詳細"
+#. module: crm
+#: field:crm.lead,active:0
+#: field:crm.phonecall,active:0
+#: field:crm.tracking.medium,active:0
+msgid "Active"
+msgstr "有効"
 
-#~ msgid "Continue"
-#~ msgstr "続行"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Address"
+msgstr "住所"
 
-#~ msgid "Supplier"
-#~ msgstr "仕入先"
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "After-Sale Services"
+msgstr "アフターサービス"
 
-#~ msgid "My Meetings"
-#~ msgstr "私のミーティング"
+#. module: crm
+#: field:crm.case.section,alias_id:0
+msgid "Alias"
+msgstr ""
 
-#~ msgid "<"
-#~ msgstr "<"
+#. module: crm
+#: field:sale.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr ""
 
-#~ msgid "Change Color"
-#~ msgstr "色の変更"
-
-#~ msgid "Previous"
-#~ msgstr "前へ"
-
-#~ msgid "From"
-#~ msgstr "差出人"
-
-#~ msgid "Next"
-#~ msgstr "次へ"
-
-#~ msgid "My Opportunities"
-#~ msgstr "私の商談"
-
-#~ msgid "History Information"
-#~ msgstr "履歴情報"
-
-#~ msgid "Opportunity Name"
-#~ msgstr "商談名"
-
-#~ msgid "Write Date"
-#~ msgstr "記入日"
-
-#~ msgid "Monday"
-#~ msgstr "月曜日"
-
-#~ msgid "Create a Partner"
-#~ msgstr "パートナを作成"
-
-#~ msgid "Schedule a Call"
-#~ msgstr "通話予定"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "エラーです。再帰的な関係となる会員を作ることはできません。"
-
-#~ msgid "Visibility"
-#~ msgstr "表示"
-
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:304
 #, python-format
-#~ msgid "Can not add note!"
-#~ msgstr "注記を追加することは出来ません。"
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr ""
 
-#~ msgid " "
-#~ msgstr " "
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid ""
+"All emails sent to this address and processed by the mailgateway\n"
+"                                will create a new lead."
+msgstr ""
 
-#~ msgid "Show as"
-#~ msgstr "として表示"
+#. module: crm
+#: help:sale.config.settings,module_crm_helpdesk:0
+msgid ""
+"Allows you to communicate with Customer, process Customer query, and provide "
+"better help and support.\n"
+"-This installs the module crm_helpdesk."
+msgstr ""
 
-#~ msgid "Organizer"
-#~ msgstr "主催者"
+#. module: crm
+#: help:sale.config.settings,group_fund_raising:0
+msgid "Allows you to trace and manage your activities for fund raising."
+msgstr ""
 
-#~ msgid "Configuration"
-#~ msgstr "設定"
+#. module: crm
+#: help:sale.config.settings,module_crm_claim:0
+msgid ""
+"Allows you to track your customers/suppliers claims and grievances.\n"
+"-This installs the module crm_claim."
+msgstr ""
 
-#~ msgid "Public"
-#~ msgstr "公開"
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Apply deduplication"
+msgstr ""
 
-#~ msgid "Dates"
-#~ msgstr "日付"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Are you sure to execute the automatic merge of your contacts ?"
+msgstr ""
 
-#~ msgid "Delegate"
-#~ msgstr "委任"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Are you sure to execute the list of automatic merges of your contacts ?"
+msgstr ""
 
-#~ msgid "Tuesday"
-#~ msgstr "火曜日"
+#. module: crm
+#: field:crm.phonecall2phonecall,user_id:0
+msgid "Assign To"
+msgstr "割当先"
 
-#~ msgid "Select Action"
-#~ msgstr "アクションを選択"
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Assign opportunities to"
+msgstr ""
 
-#~ msgid "Communication"
-#~ msgstr "コミュニケーション"
+#. module: crm
+#: field:crm.lead.report,opening_date:0
+#: field:crm.opportunity.report,opening_date:0
+msgid "Assignation Date"
+msgstr ""
 
-#~ msgid "Phonecalls during last 7 days"
-#~ msgstr "過去7日間の通話"
+#. module: crm
+#: field:crm.lead,date_open:0
+msgid "Assigned"
+msgstr ""
 
-#~ msgid "Company Currency"
-#~ msgstr "会社の通貨"
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_partner_merge
+msgid "Automatic Merge"
+msgstr ""
 
-#~ msgid "Monthly"
-#~ msgstr "月次"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Automatic Merge Wizard"
+msgstr ""
 
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Both"
+msgstr "リード・商談"
+
+#. module: crm
+#: field:crm.lead,message_bounce:0
+msgid "Bounce"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_country
+#: model:ir.filters,name:crm.filter_opportunity_country
+msgid "By Country"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_sales_team
+msgid "By Sales Team"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_salesperson
+#: model:ir.filters,name:crm.filter_opportunity_salesperson
+msgid "By Salespersons"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead_report
+msgid "CRM Lead Analysis"
+msgstr "CRMリード分析"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_opportunity_report
+msgid "CRM Opportunity Analysis"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_payment_mode
+msgid "CRM Payment Mode"
+msgstr ""
+
+#. module: crm
+#: field:crm.phonecall,name:0
+msgid "Call Summary"
+msgstr "通話の概要"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,name:0
+msgid "Call summary"
+msgstr "通話の概要"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Calls"
+msgstr "通話"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Calls Date by Month"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,campaign_id:0
+#: field:crm.lead.report,campaign_id:0
+#: field:crm.opportunity.report,campaign_id:0
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_form
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_tree
+#: field:crm.tracking.mixin,campaign_id:0
+#: model:ir.model,name:crm.model_crm_tracking_campaign
+msgid "Campaign"
+msgstr "キャンペーン"
+
+#. module: crm
+#: field:crm.tracking.campaign,name:0
+msgid "Campaign Name"
+msgstr "キャンペーン名"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_tracking_campaign_act
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_campaign_act
+msgid "Campaigns"
+msgstr "キャンペーン"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+#: selection:crm.phonecall.report,state:0
+msgid "Cancelled"
+msgstr "キャンセル済"
+
+#. module: crm
+#: view:crm.case.categ:crm.crm_case_categ-view
+#: view:crm.case.categ:crm.crm_case_categ_tree-view
+msgid "Case Category"
+msgstr "案件分類"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
+msgid "Cases by Sales Team"
+msgstr "営業チーム毎の案件"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
+msgid "Categories"
+msgstr "分類"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Categorization"
+msgstr "分類化"
+
+#. module: crm
+#: field:crm.phonecall,categ_id:0
+#: field:crm.phonecall.report,categ_id:0
+#: field:crm.phonecall2phonecall,categ_id:0
+msgid "Category"
+msgstr "分類"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_categ
+msgid "Category of Case"
+msgstr "案件の分類"
+
+#. module: crm
+#: field:crm.case.stage,on_change:0
+msgid "Change Probability Automatically"
+msgstr "確率自動変更"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,medium_id:0
+#: field:crm.lead.report,medium_id:0
+#: field:crm.opportunity.report,medium_id:0
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_form
+#: field:crm.tracking.mixin,medium_id:0
+#: view:crm.tracking.source:crm.crm_tracking_source_view_form
+msgid "Channel"
+msgstr "チャネル"
+
+#. module: crm
+#: field:crm.tracking.medium,name:0
+msgid "Channel Name"
+msgstr "チャネル名"
+
+#. module: crm
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_tree
+#: view:crm.tracking.source:crm.crm_tracking_source_view_tree
+#: model:ir.actions.act_window,name:crm.crm_tracking_medium_action
+#: model:ir.model,name:crm.model_crm_tracking_medium
+msgid "Channels"
+msgstr "チャネル"
+
+#. module: crm
+#: help:crm.segmentation,exclusif:0
+msgid ""
+"Check if the category is limited to partners that match the segmentation "
+"criterions.                        \n"
+"If checked, remove the category from partners that doesn't match "
+"segmentation criterions"
+msgstr ""
+"分類が分類基準に一致するパートナに限定される場合はチェックします。\n"
+"チェックした場合、分類l基準一致しないパートナからはその分類が削除されます。"
+
+#. module: crm
+#: help:crm.segmentation,sales_purchase_active:0
+msgid ""
+"Check if you want to use this tab as part of the segmentation rule. If not "
+"checked, the criteria beneath will be ignored"
+msgstr "分類ルールの部分としてのこのタブを使うことを望む場合はチェックします。チェックしない場合、以下の基準は無視されます。"
+
+#. module: crm
+#: help:crm.case.section,use_opportunities:0
+msgid "Check this box to manage opportunities in this sales team."
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: field:crm.lead,city:0
+msgid "City"
+msgstr "市"
+
+#. module: crm
+#: help:crm.lead,categ_ids:0
+msgid ""
+"Classify and analyze your lead/opportunity categories like: Training, Service"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of leads."
+msgstr ""
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of opportunities."
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Close"
+msgstr "閉じる"
+
+#. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.opportunity.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "契約日"
+
+#. module: crm
+#: field:crm.lead,date_closed:0
+#: field:crm.phonecall,date_closed:0
+msgid "Closed"
+msgstr "閉じた"
+
+#. module: crm
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
 #, python-format
-#~ msgid "The lead '%s' has been closed."
-#~ msgstr "リード %s は閉じられました。"
+msgid "Closed/Dead leads cannot be converted into opportunities."
+msgstr ""
 
-#~ msgid "Yearly"
-#~ msgstr "年次"
+#. module: crm
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "カラーインデックス"
 
-#~ msgid "Send New Email"
-#~ msgstr "新規Eメール送信"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,company_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,company_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,company_id:0
+#: field:crm.phonecall,company_id:0
+#: field:crm.phonecall.report,company_id:0
+msgid "Company"
+msgstr "会社"
 
-#~ msgid ""
-#~ "Leads Analysis allows you to check different CRM related information. Check "
-#~ "for treatment delays, number of responses given and emails sent. You can "
-#~ "sort out your leads analysis by different groups to get accurate grained "
-#~ "analysis."
-#~ msgstr ""
-#~ "リード分析は異なるCRMの関連情報を確認することができます。取り扱いの遅延、与えられた回答の番号、送信されたEメールをチェックします。正確な粒度の分析を得"
-#~ "るために、異なったグループによるリード分析を並べ変えることができます。"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Company Name"
+msgstr "会社名"
 
-#~ msgid "Recurrence termination"
-#~ msgstr "定期の終了"
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Compute Segmentation"
+msgstr "分類の計算"
 
-#~ msgid "_Merge"
-#~ msgstr "統合"
+#. module: crm
+#: selection:crm.phonecall,state:0
+msgid "Confirmed"
+msgstr "確認済"
 
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "コンサルティング"
+
+#. module: crm
+#: field:crm.phonecall,partner_id:0
+#: field:crm.phonecall2phonecall,contact_name:0
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: crm
+#: field:crm.lead,contact_name:0
+msgid "Contact Name"
+msgstr "連絡先名"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,partner_ids:0
+msgid "Contacts"
+msgstr "コンタクト"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
+#: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
+msgid "Contacts Segmentation"
+msgstr "連絡先区分化"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Continue Process"
+msgstr "処理の継続"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_name:0
+msgid "Control Variable"
+msgstr "制御変数"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
+msgid "Conversion Action"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Conversion Options"
+msgstr "変換オプション"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To Opportunity"
+msgstr "商談に変換"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Convert to Opportunities"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Convert to Opportunity"
+msgstr "商談に変換"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
+msgid "Convert to opportunities"
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
+msgid "Convert to opportunity"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,country_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,country_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,country_id:0
+msgid "Country"
+msgstr "国"
+
+#. module: crm
+#: field:crm.phonecall.report,create_date:0
+msgid "Create Date"
+msgstr "作成日"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+msgid "Create Opportunity"
+msgstr "商談作成"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Create a new customer"
+msgstr ""
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_uid:0
+#: field:base.partner.merge.line,create_uid:0
+#: field:crm.case.categ,create_uid:0
+#: field:crm.case.stage,create_uid:0
+#: field:crm.lead,create_uid:0
+#: field:crm.lead2opportunity.partner,create_uid:0
+#: field:crm.lead2opportunity.partner.mass,create_uid:0
+#: field:crm.merge.opportunity,create_uid:0
+#: field:crm.partner.binding,create_uid:0
+#: field:crm.payment.mode,create_uid:0
+#: field:crm.phonecall,create_uid:0
+#: field:crm.phonecall2phonecall,create_uid:0
+#: field:crm.segmentation,create_uid:0
+#: field:crm.segmentation.line,create_uid:0
+#: field:crm.tracking.campaign,create_uid:0
+#: field:crm.tracking.medium,create_uid:0
+#: field:crm.tracking.source,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_date:0
+#: field:base.partner.merge.line,create_date:0
+#: field:crm.case.categ,create_date:0
+#: field:crm.case.stage,create_date:0
+#: field:crm.lead2opportunity.partner,create_date:0
+#: field:crm.lead2opportunity.partner.mass,create_date:0
+#: field:crm.merge.opportunity,create_date:0
+#: field:crm.partner.binding,create_date:0
+#: field:crm.payment.mode,create_date:0
+#: field:crm.phonecall2phonecall,create_date:0
+#: field:crm.segmentation,create_date:0
+#: field:crm.segmentation.line,create_date:0
+#: field:crm.tracking.campaign,create_date:0
+#: field:crm.tracking.medium,create_date:0
+#: field:crm.tracking.source,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Creation"
+msgstr "作成"
+
+#. module: crm
+#: field:crm.lead,create_date:0
+#: field:crm.lead.report,create_date:0
+#: field:crm.opportunity.report,create_date:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,create_date:0
+msgid "Creation Date"
+msgstr "作成日"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Creation Month"
+msgstr "作成月"
+
+#. module: crm
+#: field:crm.segmentation,segmentation_line:0
+msgid "Criteria"
+msgstr "基準"
+
+#. module: crm
+#: field:crm.lead,company_currency:0
+msgid "Currency"
+msgstr ""
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,current_line_id:0
+msgid "Current Line"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:989
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
+#: field:crm.partner.binding,partner_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #, python-format
-#~ msgid "The lead '%s' has been opened."
-#~ msgstr "%s のリードが開かれました。"
+msgid "Customer"
+msgstr "顧客"
 
-#~ msgid "Link to an existing partner"
-#~ msgstr "既存パートナにリンク"
-
-#~ msgid "Regular Expression on Case History"
-#~ msgstr "案件の履歴の正規表現"
-
-#~ msgid "Mail Gateway"
-#~ msgstr "メールゲートウェイ"
-
-#~ msgid "Recurrent Rule"
-#~ msgstr "定期ルール"
-
-#~ msgid "E-Mail"
-#~ msgstr "Eメール"
-
-#~ msgid "State of Mind Computation"
-#~ msgstr "精神状態の計算"
-
-#~ msgid ""
-#~ "Default state of mind for period preceeding the 'Max Interval' computation. "
-#~ "This is the starting state of mind by default if the partner has no event."
-#~ msgstr "最大間隔の計算前の期間のためのデフォルトの精神状態。パートナがイベントを持たない場合、これがデフォルトによる開始時の精神状態です。"
-
-#~ msgid "Error: The mail is not well formated"
-#~ msgstr "エラー：メールが上手くフォーマットされていません。"
-
+#. module: crm
+#: code:addons/crm/crm_lead.py:991
 #, python-format
-#~ msgid "The meeting '%s' has been confirmed."
-#~ msgstr "ミーティング %s は確認されました。"
+msgid "Customer Email"
+msgstr ""
 
-#~ msgid ""
-#~ "Defines a rule or repeating pattern of time to exclude from the recurring "
-#~ "rule."
-#~ msgstr "ルールまたは反復ルールから除外する時間の繰り返しパターンを定義します。"
+#. module: crm
+#: field:crm.lead,partner_name:0
+msgid "Customer Name"
+msgstr "顧客名"
 
-#~ msgid "Salesmans"
-#~ msgstr "販売員"
+#. module: crm
+#: field:crm.phonecall,date:0
+#: field:crm.phonecall2phonecall,date:0
+msgid "Date"
+msgstr "日付"
 
-#~ msgid "Previous Stage"
-#~ msgstr "前の段階"
+#. module: crm
+#: help:crm.lead,message_last_post:0
+#: help:crm.phonecall,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
 
-#~ msgid "Next Stage"
-#~ msgstr "次の段階"
+#. module: crm
+#: field:crm.lead,day_open:0
+msgid "Days to Assign"
+msgstr ""
 
-#~ msgid "Stage:"
-#~ msgstr "段階："
+#. module: crm
+#: field:crm.lead,day_close:0
+msgid "Days to Close"
+msgstr "終了日"
 
-#~ msgid "Month-1"
-#~ msgstr "月-1"
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead2
+msgid "Dead"
+msgstr "期限切れ"
 
+#. module: crm
+#: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
+#: model:ir.ui.menu,name:crm.partner_merge_automatic_menu
+msgid "Deduplicate Contacts"
+msgstr "コンタクトの重複排除"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Deduplicate the other Contacts"
+msgstr ""
+
+#. module: crm
+#: field:sale.config.settings,alias_prefix:0
+msgid "Default Alias Name for Leads"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.stage,case_default:0
+msgid "Default to New Sales Team"
+msgstr "新営業チームにデフォルト提案"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_delay_to_close
+msgid "Delay To Close"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,delay_open:0
+#: field:crm.opportunity.report,delay_open:0
+msgid "Delay to Assign"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,delay_close:0
+#: field:crm.opportunity.report,delay_close:0
+msgid "Delay to Close"
+msgstr "締めを延期する"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_close:0
+msgid "Delay to close"
+msgstr "締めを延期する"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_open:0
+msgid "Delay to open"
+msgstr "開始を延期する"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Delete"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Describe the lead..."
+msgstr "リードを記述してください..."
+
+#. module: crm
+#: field:crm.phonecall,description:0
+#: field:crm.segmentation,description:0
+msgid "Description"
+msgstr "詳細"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Description..."
+msgstr ""
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor5
+msgid "Design"
+msgstr "デザイン"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,dst_partner_id:0
+msgid "Destination Contact"
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Do not link to a customer"
+msgstr ""
+
+#. module: crm
+#: selection:crm.phonecall.report,state:0
+msgid "Draft"
+msgstr "ドラフト"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr ""
+
+#. module: crm
+#: field:crm.phonecall,duration:0
+#: field:crm.phonecall.report,duration:0
+msgid "Duration"
+msgstr "期間"
+
+#. module: crm
+#: help:crm.phonecall,duration:0
+msgid "Duration in minutes and seconds."
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Edit..."
+msgstr ""
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_email:0
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: field:crm.lead,email_from:0
+#: field:crm.phonecall,email_from:0
+msgid "Email"
+msgstr "Eメール"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Email Alias"
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,email_from:0
+msgid "Email address of the contact"
+msgstr "連絡先のメールアドレス"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
+#: code:addons/crm/base_partner_merge.py:304
+#: code:addons/crm/base_partner_merge.py:316
+#: code:addons/crm/base_partner_merge.py:445
 #, python-format
-#~ msgid "Changed Stage to: %s"
-#~ msgstr "段階を変更： %s"
+msgid "Error"
+msgstr "エラー"
 
+#. module: crm
+#: code:addons/crm/crm_lead.py:430
 #, python-format
-#~ msgid "The stage of lead '%s' has been changed to '%s'."
-#~ msgstr "リード %s の段階は %s に変更されました。"
+msgid "Error!"
+msgstr "エラー"
 
-#~ msgid "Used to order stages."
-#~ msgstr "オーダー段階で使用されます。"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Escalate"
+msgstr "拡大"
 
-#~ msgid "Planned Revenue By Stage"
-#~ msgstr "段階別計画売上高"
+#. module: crm
+#: help:crm.lead,date_deadline:0
+msgid "Estimate of the date on which the opportunity will be won."
+msgstr "案件を獲得できる推定日"
 
-#~ msgid "Review Sales Stages"
-#~ msgstr "営業段階のレビュー"
+#. module: crm
+#: model:ir.model,name:crm.model_calendar_event
+msgid "Event"
+msgstr ""
 
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "段階別私の計画売上高"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Exclude contacts having"
+msgstr "除外するコンタクト"
 
-#~ msgid "By day"
-#~ msgstr "日別"
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Excluded Answers :"
+msgstr "回答を除く"
 
-#~ msgid "Set Team to"
-#~ msgstr "チーム設定先"
+#. module: crm
+#: field:crm.segmentation,exclusif:0
+msgid "Exclusive"
+msgstr "排他"
 
+#. module: crm
+#: field:crm.segmentation,state:0
+msgid "Execution Status"
+msgstr "実行ステータス"
+
+#. module: crm
+#: field:crm.lead.report,date_deadline:0
+#: field:crm.opportunity.report,date_deadline:0
+msgid "Exp. Closing"
+msgstr "見込完了"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,date_deadline:0
+#: help:crm.lead.report,date_deadline:0
+#: help:crm.opportunity.report,date_deadline:0
+msgid "Expected Closing"
+msgstr "見込完了"
+
+#. module: crm
+#: field:crm.lead,planned_revenue:0
+#: field:crm.lead.report,probable_revenue:0
+#: field:crm.opportunity.report,expected_revenue:0
+msgid "Expected Revenue"
+msgstr "見込売上"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+msgid "Expected Revenues"
+msgstr "見込売上"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing"
+msgstr ""
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing Month"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Extended Filters"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Extended Filters..."
+msgstr "拡張フィルタ…"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Extra Info"
+msgstr "追加情報"
+
+#. module: crm
+#: field:crm.lead,fax:0
+msgid "Fax"
+msgstr "FAX"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Finished"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.stage,fold:0
+msgid "Folded in Kanban View"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,message_follower_ids:0
+#: field:crm.phonecall,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
 #, python-format
-#~ msgid ""
-#~ "You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. You "
-#~ "should better cancel it, instead of deleting it."
-#~ msgstr "リード %s は削除できません；削除するためにはドラフト状態である必要があります。削除の代わりにキャンセルする必要があります。"
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr ""
 
-#~ msgid ""
-#~ "This property defines the list of date/time exceptions for a recurring "
-#~ "calendar component."
-#~ msgstr "このプロパティは定期的なカレンダーコンポーネントのために日付 / 時刻の例外のリストを定義します。"
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid "Force assignation"
+msgstr ""
 
-#~ msgid "Add Note"
-#~ msgstr "メモの追加"
-
-#~ msgid "Recurrent Meeting"
-#~ msgstr "定期ミーティング"
-
-#~ msgid ""
-#~ "Create specific phone call categories to better define the type of calls "
-#~ "tracked in the system."
-#~ msgstr "システム内の通話追跡をより良くするタイプの定義として、特定の通話分類を作成します。"
-
-#~ msgid "Phone calls made in last month"
-#~ msgstr "先月になされた通話"
-
-#~ msgid "Phone calls made in current month"
-#~ msgstr "今月なされた通話"
-
-#~ msgid "Todays's Phonecalls"
-#~ msgstr "本日の通話"
-
-#~ msgid "Scheduled Phonecalls"
-#~ msgstr "スケジュール済通話"
-
-#~ msgid "Are you sure you want to create a partner based on this Phonecall ?"
-#~ msgstr "この通話を元に、本当にパートナを作成したいのですか？"
-
-#~ msgid "Phonecall to Partner"
-#~ msgstr "通話からパートナへ"
-
-#~ msgid "Recurrent"
-#~ msgstr "定期"
-
-#~ msgid "Recurrent ID"
-#~ msgstr "定期ID"
-
-#~ msgid "Phone calls made in current year"
-#~ msgstr "今年になされた通話"
-
-#~ msgid "Recurrent ID date"
-#~ msgstr "定期ID日付"
-
-#~ msgid "Create Partner"
-#~ msgstr "パートナの作成"
-
-#~ msgid "Opt-In"
-#~ msgstr "オプトイン"
-
-#~ msgid ""
-#~ "If the active field is set to          true, it will allow you to hide the "
-#~ "event alarm information without removing it."
-#~ msgstr "アクティブ項目をTrueに設定した場合，イベントアラーム情報を削除することなく，非表示にできます。"
-
-#~ msgid "Repeat Until"
-#~ msgstr "繰り返し（まで）"
-
-#~ msgid "Statistics"
-#~ msgstr "統計"
-
-#~ msgid "Deadline"
-#~ msgstr "締切"
-
-#~ msgid ""
-#~ "Deadline Date is automatically                         computed from Start "
-#~ "Date + Duration"
-#~ msgstr "締切日は 開始日 + 期間 から自動的に計算されます。"
-
-#~ msgid "State of Mind"
-#~ msgstr "精神の状態"
-
-#~ msgid "Tue"
-#~ msgstr "火"
-
-#~ msgid "Need a Website Design"
-#~ msgstr "Webサイトデザインが必要"
-
-#~ msgid "Call Details"
-#~ msgstr "通話詳細"
-
-#~ msgid "Let the event automatically repeat at that interval"
-#~ msgstr "イベントをその間隔で自動的に繰り返します。"
-
-#~ msgid "Mail to Partner"
-#~ msgstr "パートナへ送付"
-
-#~ msgid "Condition Case Fields"
-#~ msgstr "案件項目の状態"
-
-#~ msgid "Mark as"
-#~ msgstr "マーク"
-
-#~ msgid "Sunday"
-#~ msgstr "日曜"
-
-#~ msgid "Sun"
-#~ msgstr "日"
-
-#~ msgid "Choose day in the month where repeat the meeting"
-#~ msgstr "ミーティングを定期的に行う場合は月の日を選択します。"
-
-#~ msgid "Mon"
-#~ msgstr "月"
-
-#~ msgid "Repeat every (Days/Week/Month/Year)"
-#~ msgstr "反復間隔（日 / 週 / 月 / 年）"
-
-#~ msgid "Day of month"
-#~ msgstr "月の日"
-
-#~ msgid "Common to All Teams"
-#~ msgstr "全てのチームに共通"
-
-#~ msgid "Wed"
-#~ msgstr "水"
-
-#~ msgid "Wednesday"
-#~ msgstr "水曜"
-
-#~ msgid "Thursday"
-#~ msgstr "木曜"
-
-#~ msgid "Thu"
-#~ msgstr "木"
-
-#~ msgid "Fri"
-#~ msgstr "金"
-
-#~ msgid "Friday"
-#~ msgstr "金曜"
-
-#~ msgid "Saturday"
-#~ msgstr "土曜"
-
-#~ msgid "Sat"
-#~ msgstr "土"
-
-#~ msgid "Reminder"
-#~ msgstr "通知"
-
-#~ msgid "Set an alarm at this time, before the event occurs"
-#~ msgstr "イベントが発生する前に今回アラームを設定します。"
-
-#~ msgid ""
-#~ "The state is set to 'Todo', when a case is created.                          "
-#~ "        \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the call is over, the state is set to 'Held'.                           "
-#~ "       \n"
-#~ "If the call needs to be done then the state is set to 'Not Held'."
-#~ msgstr ""
-#~ "案件が作成された時に、状態はToDoにセットされます。\n"
-#~ "案件が進行中の時に、状態は開くにセットされます。\n"
-#~ "通話が終了した時に、状態は保留にセットされます。\n"
-#~ "通話が行われる必要がある場合は、状態は未保留にセットされます。"
-
+#. module: crm
+#: code:addons/crm/crm_lead.py:562
 #, python-format
-#~ msgid "The case '%s' has been closed."
-#~ msgstr "案件は %s は閉じられました。"
+msgid "From %s : %s"
+msgstr "%s から：%s"
 
-#~ msgid "Define Sales Team"
-#~ msgstr "営業チームの定義"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
+msgid ""
+"From this report, you can analyse the performance of your sales team, based "
+"on their phone calls. You can group or filter the information according to "
+"several criteria and drill down the information, by adding more groups in "
+"the report."
+msgstr ""
+"このレポートから、通話を基準としたあなたの営業チームの成績の分析ができます。より多くのグループをレポートに追加することで、幾つかの基準と情報のドリルダウン"
+"による情報のクループ化やフィルタができます。"
 
-#~ msgid ""
-#~ "Create specific partner categories which you can assign to your partners to "
-#~ "better manage your interactions with them. The segmentation tool is able to "
-#~ "assign categories to partners according to criteria you set."
-#~ msgstr ""
-#~ "パートナとの間のより良い相互作用を管理するために、特別のパートナ分類の作成をして、それをパートナに割り当てることができます。分類ツールはあなたが設定した基"
-#~ "準にしたがってパートナに分類を割り当てることができます。"
+#. module: crm
+#: field:crm.lead,function:0
+msgid "Function"
+msgstr "機能"
 
-#~ msgid "Exception Rule"
-#~ msgstr "例外ルール"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Fund Raising"
+msgstr ""
 
-#~ msgid "Check this if you want the rule to send an email to the partner."
-#~ msgstr "パートナにEメールを送信するルールを望む場合は、これをチェックします。"
+#. module: crm
+#: field:crm.lead,email_cc:0
+msgid "Global CC"
+msgstr "グローバルCC"
 
-#~ msgid "Mail"
-#~ msgstr "手紙"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Group By"
+msgstr ""
 
-#~ msgid "Do not link to a partner"
-#~ msgstr "パートナとリンクしない"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,number_group:0
+msgid "Group of Contacts"
+msgstr ""
 
-#~ msgid "Choose day where repeat the meeting"
-#~ msgstr "定例ミーティングの日を選択します。"
+#. module: crm
+#: model:ir.model,name:crm.model_ir_http
+msgid "HTTP routing"
+msgstr ""
 
-#~ msgid "Search Meetings"
-#~ msgstr "ミーティングの検索"
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Handle partner binding or generation in CRM wizards."
+msgstr ""
 
-#~ msgid "Alarm"
-#~ msgstr "アラーム"
+#. module: crm
+#: selection:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Held"
+msgstr "保留"
 
-#~ msgid "Unconfirmed"
-#~ msgstr "未確定"
+#. module: crm
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "High"
+msgstr "高い"
 
-#~ msgid "_Convert"
-#~ msgstr "変換"
+#. module: crm
+#: help:crm.lead,message_summary:0
+#: help:crm.phonecall,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
-#~ msgid "The"
-#~ msgstr "・"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,id:0
+#: field:base.partner.merge.line,id:0
+#: field:crm.case.categ,id:0
+#: field:crm.case.stage,id:0
+#: field:crm.lead,id:0
+#: field:crm.lead.report,id:0
+#: field:crm.lead2opportunity.partner,id:0
+#: field:crm.lead2opportunity.partner.mass,id:0
+#: field:crm.merge.opportunity,id:0
+#: field:crm.opportunity.report,id:0
+#: field:crm.partner.binding,id:0
+#: field:crm.payment.mode,id:0
+#: field:crm.phonecall,id:0
+#: field:crm.phonecall.report,id:0
+#: field:crm.phonecall2phonecall,id:0
+#: field:crm.segmentation,id:0
+#: field:crm.segmentation.line,id:0
+#: field:crm.tracking.campaign,id:0
+#: field:crm.tracking.medium,id:0
+#: field:crm.tracking.mixin,id:0
+#: field:crm.tracking.source,id:0
+msgid "ID"
+msgstr ""
 
-#~ msgid "Birthdate"
-#~ msgstr "生年月日"
+#. module: crm
+#: field:base.partner.merge.line,aggr_ids:0
+msgid "Ids"
+msgstr ""
 
-#~ msgid "Meeting / Partner"
-#~ msgstr "ミーティング / パートナ"
+#. module: crm
+#: help:crm.lead,message_unread:0
+#: help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
-#~ msgid "Total of Planned Revenue"
-#~ msgstr "計画売上高合計"
+#. module: crm
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
+"オプトアウトをチェックすると、大量メールとマーケティングキャンペーンのためのメールは受信が拒絶されます。'Available for Mass "
+"Mailing'フィルタは大量メールを実行する際に見込み客を選別できます。"
 
-#~ msgid "Fifth"
-#~ msgstr "第５"
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid ""
+"If unchecked, this will leave the salesman of duplicated opportunities"
+msgstr ""
 
-#~ msgid "Potential Reseller"
-#~ msgstr "リセラーの候補"
+#. module: crm
+#: help:crm.case.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr "この項目をチェックした場合、この段階が各営業チームにデフォルトで提案されます。既存のチームにはこの段階を割り当てることはありません。"
 
-#~ msgid ""
-#~ "When escalating to this team override the saleman with the team leader."
-#~ msgstr "このチームに拡大する時、チームリーダとともに販売員を置き換えます。"
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone1
+msgid "Inbound"
+msgstr "インバウンド"
 
-#~ msgid ""
-#~ "With Meeting Invitations you can create and manage the meeting invitations "
-#~ "sent/to be sent to your colleagues/partners. You can not only invite OpenERP "
-#~ "users, but also external parties, such as a customer."
-#~ msgstr ""
-#~ "ミーティング招待は同僚やパートナにミーティングの招待を送信する / "
-#~ "されるための作成と管理ができます。OpenERPユーザのみならず、顧客といった外部の関係者を招待することができます。"
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Included Answers :"
+msgstr "回答を含む："
 
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor4
+msgid "Information"
+msgstr "情報"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Internal Notes"
+msgstr "内部メモ"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_is_company:0
+msgid "Is Company"
+msgstr "会社"
+
+#. module: crm
+#: field:crm.lead,message_is_follower:0
+#: field:crm.phonecall,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:291
 #, python-format
-#~ msgid "The case '%s' has been opened."
-#~ msgstr "案件 %s は開いています。"
+msgid "It's only possible to convert one phonecall at a time."
+msgstr ""
 
-#~ msgid "Invitation details"
-#~ msgstr "招待詳細"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
+msgid "Journal Items associated to the contact"
+msgstr "連絡先に関連付けた仕訳項目"
 
-#~ msgid "Optional linked partner, usually after conversion of the lead"
-#~ msgstr "通常はリードの変換後のオプションのリンクされたパートナ"
+#. module: crm
+#: field:crm.lead,date_action_last:0
+#: field:crm.phonecall,date_action_last:0
+msgid "Last Action"
+msgstr "最終アクション"
 
-#~ msgid "Campaign 1"
-#~ msgstr "キャンペーン1"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Last Message"
+msgstr ""
 
-#~ msgid "Campaign 2"
-#~ msgstr "キャンペーン2"
+#. module: crm
+#: field:crm.lead,message_last_post:0
+#: field:crm.phonecall,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
 
-#~ msgid "Leads/Opportunities created in last month"
-#~ msgstr "先月作成されたリード / 商談"
+#. module: crm
+#: field:crm.lead,date_last_stage_update:0
+#: field:crm.lead.report,date_last_stage_update:0
+#: field:crm.opportunity.report,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr ""
 
-#~ msgid "Opportunity / Customer"
-#~ msgstr "商談 / 顧客"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_uid:0
+#: field:base.partner.merge.line,write_uid:0
+#: field:crm.case.categ,write_uid:0
+#: field:crm.case.stage,write_uid:0
+#: field:crm.lead,write_uid:0
+#: field:crm.lead2opportunity.partner,write_uid:0
+#: field:crm.lead2opportunity.partner.mass,write_uid:0
+#: field:crm.merge.opportunity,write_uid:0
+#: field:crm.partner.binding,write_uid:0
+#: field:crm.payment.mode,write_uid:0
+#: field:crm.phonecall,write_uid:0
+#: field:crm.phonecall2phonecall,write_uid:0
+#: field:crm.segmentation,write_uid:0
+#: field:crm.segmentation.line,write_uid:0
+#: field:crm.tracking.campaign,write_uid:0
+#: field:crm.tracking.medium,write_uid:0
+#: field:crm.tracking.source,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_date:0
+#: field:base.partner.merge.line,write_date:0
+#: field:crm.case.categ,write_date:0
+#: field:crm.case.stage,write_date:0
+#: field:crm.lead2opportunity.partner,write_date:0
+#: field:crm.lead2opportunity.partner.mass,write_date:0
+#: field:crm.merge.opportunity,write_date:0
+#: field:crm.partner.binding,write_date:0
+#: field:crm.payment.mode,write_date:0
+#: field:crm.phonecall,write_date:0
+#: field:crm.phonecall2phonecall,write_date:0
+#: field:crm.segmentation,write_date:0
+#: field:crm.segmentation.line,write_date:0
+#: field:crm.tracking.campaign,write_date:0
+#: field:crm.tracking.medium,write_date:0
+#: field:crm.tracking.source,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:884
+#: selection:crm.case.stage,type:0
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
 #, python-format
-#~ msgid "The opportunity '%s' has been marked as lost."
-#~ msgstr "商談 %s は失注としてマークされています。"
+msgid "Lead"
+msgstr "リード"
 
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Lead / Customer"
+msgstr "リード / 顧客"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
+msgid "Lead Created"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
+msgid "Lead To Opportunity Partner"
+msgstr "リードからパートナの商談へ"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_create
+msgid "Lead created"
+msgstr ""
+
+#. module: crm
+#: field:crm.phonecall,opportunity_id:0
+#: model:ir.model,name:crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "リード / 商談"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_lead_mass_mail
+msgid "Lead/Opportunity Mass Mail"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,use_leads:0
+#: view:crm.lead:crm.crm_case_tree_view_leads
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
+#: model:ir.ui.menu,name:crm.menu_crm_leads
+msgid "Leads"
+msgstr "リード"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:84
 #, python-format
-#~ msgid "Lead '%s' has been converted to an opportunity."
-#~ msgstr "リード %s は商談に変換されました。"
+msgid "Leads / Opportunities"
+msgstr ""
 
-#~ msgid "Convert To Opportunity "
-#~ msgstr "商談に変換 "
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_graph
+#: view:crm.lead.report:crm.view_report_crm_lead_graph_two
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_graph
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
+msgid "Leads Analysis"
+msgstr "リード分析"
 
-#~ msgid ""
-#~ "Stages will allow salesmen to easily track how a specific opportunity is "
-#~ "positioned in the sales cycle. In order to efficiently manage your sales "
-#~ "pipeline, it's important to define conditions to go to the next step. "
-#~ "Example: to set an opportunity as 'Qualified', you must set the \"Expected "
-#~ "Revenue\" and the \"Expected Closing Date.\" You should also have a look at "
-#~ "the tooltip of the field \"Change Probability Automatically\"."
-#~ msgstr ""
-#~ "ステージは販売員が簡単にどのように特定の商談が販売サイクルの中に位置づけられるのかを追跡できます。効率的に販売パイプラインを管理するために、次のステップに"
-#~ "行くための条件を定義することは重要です。例：資格ありとして商談はセットされます。予想売上と予想終了日を設定する必要があります。同じく自動可能性変更の項目の"
-#~ "ヒントを見るべきです。"
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
+msgid ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
+msgstr ""
 
-#~ msgid ""
-#~ "The meeting calendar is shared between the sales teams and fully integrated "
-#~ "with other applications such as the employee holidays or the business "
-#~ "opportunities. You can also synchronize meetings with your mobile phone "
-#~ "using the caldav interface.\n"
-#~ "        "
-#~ msgstr ""
-#~ "ミーティングカレンダは営業チーム間で共有され、従業員休暇やビジネス商談のような他のアプリケーションに完全に統合されています。ミーティングはCalDAVイン"
-#~ "タフェースを使って、携帯電話と同期させることもできます。\n"
-#~ "        "
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Leads Email Alias"
+msgstr ""
 
-#~ msgid "Partner To Opportunity"
-#~ msgstr "パートナから商談へ"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Leads Form"
+msgstr "リードフォーム"
 
-#~ msgid "Merge two Opportunities"
-#~ msgstr "２つの商談を統合"
+#. module: crm
+#: view:crm.lead:crm.crm_case_calendar_view_leads
+msgid "Leads Generation"
+msgstr "リード生成"
 
-#~ msgid "Opportunities by Categories"
-#~ msgstr "分類別商談"
+#. module: crm
+#: field:res.partner,opportunity_ids:0
+msgid "Leads and Opportunities"
+msgstr "リードと商談"
 
-#~ msgid "Convert into Opportunities"
-#~ msgstr "商談に変換"
+#. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
 
-#~ msgid "Opportunity by Categories"
-#~ msgstr "分類別商談"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that are assigned to me"
+msgstr ""
 
-#~ msgid ""
-#~ "Add specific stages to leads and opportunities allowing your sales to better "
-#~ "organise their sales pipeline. Stages will allow them to easily track how a "
-#~ "specific lead or opportunity is positioned in the sales cycle."
-#~ msgstr ""
-#~ "リードと商談に特定の段階を追加することは、営業のために営業パイプラインのより良い組織化を実現します。段階は営業サイクルの中にどのように特定のリードと商談を"
-#~ "配置されるのかを簡単に追跡することができます。"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
-#~ msgid "Opportunities By Categories"
-#~ msgstr "分類別商談"
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid ""
+"Leads that you selected that have duplicates. If the list is empty, it means "
+"that no duplicates were found"
+msgstr ""
 
-#~ msgid ""
-#~ "The name of the future partner that will be created while converting the "
-#~ "lead into opportunity"
-#~ msgstr "将来のパートナの名前はリードから商談に変換する間に作成されます。"
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Leads with existing duplicates (for information)"
+msgstr ""
 
-#~ msgid "Convert opportunities"
-#~ msgstr "商談の変換"
+#. module: crm
+#: field:crm.merge.opportunity,opportunity_ids:0
+msgid "Leads/Opportunities"
+msgstr ""
 
-#~ msgid "Phonecall To Opportunity"
-#~ msgstr "通話から商談へ"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,line_ids:0
+msgid "Lines"
+msgstr ""
 
-#~ msgid "Convert To Opportunity"
-#~ msgstr "商談に変換"
+#. module: crm
+#: help:crm.case.stage,section_ids:0
+msgid ""
+"Link between stages and sales teams. When set, this limitate the current "
+"stage to the selected sales teams."
+msgstr ""
 
-#~ msgid "Merge Opportunities"
-#~ msgstr "商談の統合"
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Link to an existing customer"
+msgstr ""
 
+#. module: crm
+#: help:crm.lead,partner_id:0
+msgid "Linked partner (optional). Usually created when converting the lead."
+msgstr "リンクされた取引先(オプション)。通常は見込み客となった場合に作成されます。"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Log Call"
+msgstr "通話ログ"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Log a call"
+msgstr "通話のログ"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
+msgid "Logged Calls"
+msgstr "ログ対象通話"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1049
 #, python-format
-#~ msgid "The opportunity '%s' has been opened."
-#~ msgstr "商談 %s は開かれました。"
+msgid "Logged a call for %(date)s. %(description)s"
+msgstr ""
 
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_long_term_revenue
+msgid "Long Term Revenue"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Lost"
+msgstr "失注"
+
+#. module: crm
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Low"
+msgstr "低い"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_mailing
+msgid "Mailing Partner"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mailings"
+msgstr "郵便物"
+
+#. module: crm
+#: field:sale.config.settings,module_crm_claim:0
+msgid "Manage Customer Claims"
+msgstr "顧客クレーム管理"
+
+#. module: crm
+#: model:res.groups,name:crm.group_fund_raising
+#: field:sale.config.settings,group_fund_raising:0
+msgid "Manage Fund Raising"
+msgstr ""
+
+#. module: crm
+#: field:sale.config.settings,module_crm_helpdesk:0
+msgid "Manage Helpdesk and Support"
+msgstr "ヘルプデスクおよびサポート管理"
+
+#. module: crm
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "必須 / オプション"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Mandatory Expression"
+msgstr "必須の表現"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_as_lost
+msgid "Mark As Lost"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Lost"
+msgstr "失注とマーク"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Won"
+msgstr "受注とマーク"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
+msgid "Mass Lead To Opportunity Partner"
+msgstr "大量のリードからパートナの商談へ"
+
+#. module: crm
+#: field:crm.segmentation,partner_id:0
+msgid "Max Partner ID processed"
+msgstr "パートナIDが処理される最大"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,maximum_group:0
+msgid "Maximum of Group of Contacts"
+msgstr "連絡先グループの最大値"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Meeting"
+msgstr "ミーティング"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1063
 #, python-format
-#~ msgid "The stage of opportunity '%s' has been changed to '%s'."
-#~ msgstr "商談 %s の段階は %s に変更されました。"
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr ""
 
-#~ msgid "Leads/Opportunities created in current month"
-#~ msgstr "今月作成されたリード / 商談"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
+#: model:ir.actions.act_window,name:crm.calendar_event_partner
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+#: field:res.partner,meeting_ids:0
+msgid "Meetings"
+msgstr "ミーティング"
 
-#~ msgid "My Open Opportunities"
-#~ msgstr "私の開いている商談"
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge"
+msgstr ""
 
-#~ msgid "Leads/Opportunities created in current year"
-#~ msgstr "今年作成されたリード / 商談"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically"
+msgstr "自動的にマージ"
 
-#~ msgid "Opportunities by User and Team"
-#~ msgstr "ユーザとチーム別の商談"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically all process"
+msgstr "すべてのプロセスを自動的にマージ"
 
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge Leads/Opportunities"
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Selection"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_merge_opportunities
+#: model:ir.actions.act_window,name:crm.merge_opportunity_act
+msgid "Merge leads/opportunities"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge opportunities"
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge the following contacts"
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge with Manual Check"
+msgstr "手動チェックでマージ"
+
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Merge with existing leads/opportunities of each partner"
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+msgid "Merge with existing opportunities"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:547
 #, python-format
-#~ msgid "Closed/Cancelled Leads can not be converted into Opportunity"
-#~ msgstr "閉じた / キャンセル済リードは商談に変換することはできません。"
+msgid "Merged lead"
+msgstr ""
 
+#. module: crm
+#: code:addons/crm/crm_lead.py:541
 #, python-format
-#~ msgid "The opportunity '%s' has been been won."
-#~ msgstr "商談 %s は受注されています。"
+msgid "Merged leads"
+msgstr ""
 
-#~ msgid ""
-#~ "This tool allows you to log your inbound calls on the fly. Each call you get "
-#~ "will appear on the partner form to trace every contact you have with a "
-#~ "partner. From the phone call form, you can trigger a request for another "
-#~ "call, a meeting or an opportunity."
-#~ msgstr ""
-#~ "このツールはその場であなたの着信通話をログに記録することができます。各通話はあなたとパートナが行った全てのコンタクトを追加するためにパートナフォーム上に表"
-#~ "示されます。通話フォームから、他の通話、ミーティング、商談の要求を起動できます。"
-
-#~ msgid ""
-#~ "Track from where is coming your leads and opportunities by creating specific "
-#~ "channels that will be maintained at the creation of a document in the "
-#~ "system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
-#~ msgstr ""
-#~ "システム内のドキュメント作成において、維持管理される特定のチャネルの作成によって、リードと商談がどこから来るのかを追跡します。幾つかのチャネルの例：Web"
-#~ "サイト、通話、リセラーなど。"
-
-#~ msgid "Merge with existing Opportunity"
-#~ msgstr "既存の商談の統合"
-
-#~ msgid "Allow Delete"
-#~ msgstr "削除を許可"
-
-#~ msgid "Free"
-#~ msgstr "空き"
-
-#~ msgid "Recurrency Option"
-#~ msgstr "定期のオプション"
-
-#~ msgid "Mail Campaign 2"
-#~ msgstr "メールキャンペーン2"
-
-#~ msgid "Mail Campaign 1"
-#~ msgstr "メールキャンペーン1"
-
-#~ msgid "Reset to Draft"
-#~ msgstr "ドラフトに再設定"
-
-#~ msgid "Create"
-#~ msgstr "作成"
-
-#~ msgid ""
-#~ "Create different meeting categories to better organize and classify your "
-#~ "meetings."
-#~ msgstr "ミーティングをより良く構成したり分類するための異なるミーティング分類を作成します。"
-
-#~ msgid "Reply"
-#~ msgstr "返信"
-
+#. module: crm
+#: code:addons/crm/crm_lead.py:543
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "エラー"
+msgid "Merged opportunities"
+msgstr "統合された商談"
 
-#~ msgid "Location"
-#~ msgstr "場所"
-
-#~ msgid "Caldav URL"
-#~ msgstr "CalDAVのURL"
-
-#~ msgid "Leads creating during last 7 days"
-#~ msgstr "過去7日間で作成されたリード"
-
-#~ msgid ""
-#~ "Define a Sales Team to organize your different salesmen or sales departments "
-#~ "into separate teams. Each team will work in its own list of opportunities, "
-#~ "sales orders, etc. Each user can set a default team in his user preferences. "
-#~ "The opportunities and sales order displayed, will automatically be filtered "
-#~ "according to his team."
-#~ msgstr ""
-#~ "独立したチームに異なる販売員や営業部門を組織化するための営業チームを定義します。各チームは独自の商談、受注オーダーなどのリストにより活動します。各ユーザは"
-#~ "そのユーザ設定の中にデフォルトのチームを設定することができます。表示された商談と受注オーダーはそのチームにしたがって自動的にフィルタされます。"
-
-#~ msgid "Repeat x times"
-#~ msgstr "ｘ回繰り返し"
-
-#~ msgid "Pending Opportunities"
-#~ msgstr "保留中商談"
-
+#. module: crm
+#: code:addons/crm/crm_lead.py:547
 #, python-format
-#~ msgid "Please select more than one opportunity from the list view."
-#~ msgstr "リストビューから１つ以上の商談を選択して下さい。"
+msgid "Merged opportunity"
+msgstr ""
 
-#~ msgid "Lead to Partner"
-#~ msgstr "リードからパートナへ"
-
-#~ msgid "Reset to Unconfirmed"
-#~ msgstr "未確認にリセット"
-
-#~ msgid "Create a new partner"
-#~ msgstr "新規パートナの作成"
-
-#~ msgid "Start Date"
-#~ msgstr "開始日"
-
-#~ msgid "If opt-in is checked, this contact has accepted to receive emails."
-#~ msgstr "オプトインをチェックした場合、この連絡先はEメールの受信を許諾します。"
-
-#~ msgid "Decline"
-#~ msgstr "拒否"
-
-#~ msgid "Internal Meeting"
-#~ msgstr "内部ミーティング"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "選択した会社は、このユーザに許された会社ではありません。"
-
-#~ msgid "Customer Meeting"
-#~ msgstr "顧客ミーティング"
-
-#~ msgid "Uncertain"
-#~ msgstr "不確実"
-
-#~ msgid "Number of repetitions"
-#~ msgstr "繰り返し数"
-
-#~ msgid "Weekly"
-#~ msgstr "週次"
-
-#~ msgid "Sales"
-#~ msgstr "受注"
-
-#~ msgid "Decrease (0>1)"
-#~ msgstr "減少（0>1）"
-
-#~ msgid "History"
-#~ msgstr "履歴"
-
-#~ msgid "Busy"
-#~ msgstr "割当済"
-
-#~ msgid "Max Interval"
-#~ msgstr "最大間隔"
-
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:326
 #, python-format
-#~ msgid ""
-#~ "You can not escalate, you are already at the top level regarding your sales-"
-#~ "team category."
-#~ msgstr "あなたは拡大できません。既にあなたの営業チームの分類は最高位にあります。"
+msgid "Merged with the following partners:"
+msgstr ""
 
-#~ msgid "Done"
-#~ msgstr "完了"
+#. module: crm
+#: field:crm.lead,message_ids:0
+#: field:crm.phonecall,message_ids:0
+msgid "Messages"
+msgstr "メッセージ"
 
-#~ msgid "Repeat every"
-#~ msgstr "反復（間隔）"
+#. module: crm
+#: help:crm.lead,message_ids:0
+#: help:crm.phonecall,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
-#~ msgid "Third"
-#~ msgstr "第３"
+#. module: crm
+#: field:base.partner.merge.line,min_id:0
+msgid "MinID"
+msgstr ""
 
-#~ msgid "End Date"
-#~ msgstr "終了日"
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Misc"
+msgstr "その他"
 
-#~ msgid "Weekday"
-#~ msgstr "平日"
+#. module: crm
+#: field:crm.lead,mobile:0
+#: field:crm.phonecall,partner_mobile:0
+msgid "Mobile"
+msgstr "携帯電話"
 
-#~ msgid "Recurrency period"
-#~ msgstr "定期の期間"
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Month"
+msgstr "月"
 
-#~ msgid ""
-#~ "The computation is made on all events that occured during this interval, the "
-#~ "past X periods."
-#~ msgstr "計算はこの期間と過去x期間の中で発生した全てのイベントで行われます。"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Month of call"
+msgstr "通話の月"
 
-#~ msgid "# of Emails"
-#~ msgstr "Eメール数"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr ""
 
-#~ msgid "Set New State To"
-#~ msgstr "新規状態の設定先"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "My Opportunities"
+msgstr "私の商談"
 
-#~ msgid "Sales Dashboard"
-#~ msgstr "受注ダッシュボード"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Phone Calls"
+msgstr ""
 
-#~ msgid "Unchanged"
-#~ msgstr "未変更"
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Phonecalls"
+msgstr ""
 
-#~ msgid "Fourth"
-#~ msgstr "第４"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Sales Team(s)"
+msgstr "私の営業チーム"
 
-#~ msgid "Select Salesman"
-#~ msgstr "販売員の選択"
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Team"
+msgstr ""
 
-#~ msgid "Show countries"
-#~ msgstr "国を表示"
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_name:0
+#: field:crm.case.categ,name:0
+#: field:crm.payment.mode,name:0
+#: field:crm.segmentation,name:0
+msgid "Name"
+msgstr "名称"
 
-#~ msgid "Partners Segmentation"
-#~ msgstr "パートナ分類"
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead5
+msgid "Negotiation"
+msgstr "交渉"
 
-#~ msgid "Subject of Email"
-#~ msgstr "Eメールの標題"
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead1
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "New"
+msgstr "新規"
 
-#~ msgid "Assignment"
-#~ msgstr "割当"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "New Mail"
+msgstr ""
 
-#~ msgid "All Day"
-#~ msgstr "終日"
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_newsletter
+msgid "Newsletter"
+msgstr "ニュースレター"
 
-#~ msgid "E-mail address of the contact"
-#~ msgstr "連絡先のEメールアドレス"
+#. module: crm
+#: field:crm.lead,date_action_next:0
+#: field:crm.lead,title_action:0
+#: field:crm.phonecall,date_action_next:0
+msgid "Next Action"
+msgstr "次のアクション"
 
+#. module: crm
+#: field:crm.lead,date_action:0
+msgid "Next Action Date"
+msgstr "次のアクションの日付"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
-#~ msgid "Error!"
-#~ msgstr "エラー"
+msgid "No Subject"
+msgstr "無題"
 
-#~ msgid "Last"
-#~ msgstr "最後"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "内部注記を追加"
-
-#~ msgid ""
-#~ "Leads allow you to manage and keep track of all initial contacts with a "
-#~ "prospect or partner showing interest in your products or services. A lead is "
-#~ "usually the first step in your sales cycle. Once qualified, a lead may be "
-#~ "converted into a business opportunity, while creating the related partner "
-#~ "for further detailed tracking of any linked activities. You can import a "
-#~ "database of prospects, keep track of your business cards or integrate your "
-#~ "website's contact form with the OpenERP Leads. Leads can be connected to the "
-#~ "email gateway: new emails may create leads, each of them automatically gets "
-#~ "the history of the conversation with the prospect."
-#~ msgstr ""
-#~ "リードは製品やサービスに興味を見せる見込み客やパートナに対して全ての初期接触の管理と追跡を続けることを許します。リードは通常、営業サイクルの最初のステップ"
-#~ "です。一度、資格を認められると、リードはビジネスの商談に変換することができます。と同時に、全てのリンクする活動をそれ以上詳細の追跡のために、関連するパート"
-#~ "ナを作成します。見込みのデータベースのインポート、名刺の継続追跡、またはIpenERPリードとあなたのWebサイトの連絡先フォームの統合ができます。リード"
-#~ "はEメールゲートウェイとの接続も可能です：新規Eメールはリードを作成し、それらの各々は自動的に見込みとともに会話の履歴を取得します。"
-
-#~ msgid ""
-#~ "With opportunities you can manage and keep track of your sales pipeline by "
-#~ "creating specific customer- or prospect-related sales documents to follow up "
-#~ "potential sales. Information such as expected revenue, opportunity stage, "
-#~ "expected closing date, communication history and much more can be stored. "
-#~ "Opportunities can be connected to the email gateway: new emails may create "
-#~ "opportunities, each of them automatically gets the history of the "
-#~ "conversation with the customer.\n"
-#~ "\n"
-#~ "You and your team(s) will be able to plan meetings and phone calls from "
-#~ "opportunities, convert them into quotations, manage related documents, track "
-#~ "all customer related activities, and much more."
-#~ msgstr ""
-#~ "商談とともに見込み営業を継続するために特定の顧客または見込みに関係する営業ドキュメントを作成することで営業パイプラインの管理と追跡の継続が可能です。予想売"
-#~ "上、商談の段階、予想終了日、通信履歴などの情報を保存することができます。商談はEメールゲートウェイと接続しています：新規Eメールは商談を作成し、それらの各"
-#~ "々は顧客の通信履歴を自動的に取得します。\n"
-#~ "\n"
-#~ "あなたとあなたのチームは、商談からミーティングや電話の計画を行い、それらを見積りに変換し、関係ドキュメントを管理し、全ての顧客に関連する活動を追跡すること"
-#~ "などが可能です。"
-
-#~ msgid ""
-#~ "Create specific categories that fit your company's activities to better "
-#~ "classify and analyse your leads and opportunities. Such categories could for "
-#~ "instance reflect your product structure or the different types of sales you "
-#~ "do."
-#~ msgstr ""
-#~ "より良い分類とリードや商談を分析するために、会社の活動に適合する特定の分類を作成します。それらの分類は、例えば商品構造やあなたの行う異なったタイプの営業を"
-#~ "反映します。"
-
-#~ msgid "Note Body"
-#~ msgstr "注記本文"
-
-#~ msgid "Links"
-#~ msgstr "リンク"
-
-#~ msgid "Todays' Leads"
-#~ msgstr "本日のリード"
-
-#~ msgid ""
-#~ "Scheduled calls list all the calls to be done by your sales team. A salesman "
-#~ "can record the information about the call in the form view. This information "
-#~ "will be stored in the partner form to trace every contact you have with a "
-#~ "customer. You can also import a .CSV file with a list of calls to be done by "
-#~ "your sales team."
-#~ msgstr ""
-#~ "スケジュールされた通話はあなたの営業チームにより行われた全ての通話をリストします。販売員はフォームビューの中の通話についての情報を記録できます。この情報は"
-#~ "あなたと顧客とが行った全てのコンタクトを追跡するため、パートナフォームの中に保存することができます。あなたの営業チームにより行われた通話のリストのCSVフ"
-#~ "ァイルをインポートすることもできます。"
-
-#~ msgid "Exception Date/Times"
-#~ msgstr "例外の日付 / 時間"
-
-#~ msgid "Set Category to"
-#~ msgstr "分類の設定先"
-
-#~ msgid "Need Information"
-#~ msgstr "情報が必要"
-
-#~ msgid "Fed. State"
-#~ msgstr "都道府県"
-
-#~ msgid "_Cancel"
-#~ msgstr "キャンセル"
-
-#~ msgid "Mail To"
-#~ msgstr "メール宛先"
-
-#~ msgid "CRM Dashboard"
-#~ msgstr "CRMダッシュボード"
-
-#~ msgid "# Mails"
-#~ msgstr "メールの数"
-
-#~ msgid ""
-#~ "Define sales teams to structure your sales organization and assign users to "
-#~ "each team. You should also define the sales stage to each team. As an "
-#~ "example, if you use Solutions Selling techniques to track your "
-#~ "opportunities, you can assign the following stage to the team: Territory, "
-#~ "Qualified, Qualified Sponsors, Proposition, Negociaton, Won/Lost."
-#~ msgstr ""
-#~ "営業組織を構築するために営業チームを定義し、ユーザを各チームに割り当てます。各チームに営業段階を定義する必要があります。例として、あなたが商談を追跡するた"
-#~ "めに提案型営業技法を使用する場合、チームに次の段階を割り当てることができます：関心、資格、資格スポンサー、提案、交渉、受注 / 失注。"
-
-#~ msgid "Condition on Communication History"
-#~ msgstr "通信履歴の条件"
-
-#~ msgid "Daily"
-#~ msgstr "日次"
-
+#. module: crm
+#: code:addons/crm/crm_lead.py:761
 #, python-format
-#~ msgid "A partner is already defined."
-#~ msgstr "パートナは既に定義済です。"
+msgid ""
+"No customer name defined. Please fill one of the following fields: Company "
+"Name, Contact Name or Email (\"Name <email@address>\")"
+msgstr ""
 
-#~ msgid "First"
-#~ msgstr "第１"
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "No salesperson"
+msgstr ""
 
-#~ msgid ""
-#~ "If the partner has not purchased (or bought) during a period, decrease the "
-#~ "state of mind by this factor. It's a multiplication"
-#~ msgstr "パートナは期間中に仕入れや購入しなかった場合は、この要因により、精神状態が低下します。それは乗算されます。"
+#. module: crm
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Normal"
+msgstr "標準"
 
-#~ msgid "Allows to delete non draft cases"
-#~ msgstr "非ドラフト案件の削除を許可"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Not Held"
+msgstr "未保留"
 
-#~ msgid "Repeat"
-#~ msgstr "繰り返し"
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Not Running"
+msgstr "停止中"
 
-#~ msgid "Timezone"
-#~ msgstr "タイムゾーン"
+#. module: crm
+#: field:crm.phonecall2phonecall,note:0
+msgid "Note"
+msgstr "注記"
 
-#~ msgid ""
-#~ "A period is the average number of days between two cycle of sale or purchase "
-#~ "for this segmentation.                 \n"
-#~ "It's mainly used to detect if a partner has not purchased or buy for a too "
-#~ "long time,                  \n"
-#~ "so we suppose that his state of mind has decreased because he probably "
-#~ "bought goods to another supplier.                  \n"
-#~ "Use this functionality for recurring businesses."
-#~ msgstr ""
-#~ "期間はこの分類のための販売または購入の２つの周期の間の平均日数です。\n"
-#~ "これは主に、パートナが長期間にわたり仕入れや購入しなかったことを検出するのに使用されます。\n"
-#~ "それは、彼は他の仕入先から製品の購入をしているため、精神状態は低下しているものと考えられます。\n"
-#~ "定期的なビジネスのためにこの機能を使用します。"
+#. module: crm
+#: field:crm.lead,description:0
+msgid "Notes"
+msgstr "注記"
 
-#~ msgid "Partner Name"
-#~ msgstr "パートナ名"
+#. module: crm
+#: help:crm.lead.report,delay_close:0
+#: help:crm.opportunity.report,delay_close:0
+#: help:crm.phonecall.report,delay_close:0
+msgid "Number of Days to close the case"
+msgstr "案件を閉じるための日数"
 
-#~ msgid "Salesman"
-#~ msgstr "販売員"
+#. module: crm
+#: help:crm.lead.report,delay_open:0
+#: help:crm.opportunity.report,delay_open:0
+#: help:crm.phonecall.report,delay_open:0
+msgid "Number of Days to open the case"
+msgstr "当件を開くまでの日数"
 
-#~ msgid "Invitation Detail"
-#~ msgstr "招待の詳細"
+#. module: crm
+#: field:crm.case.categ,object_id:0
+msgid "Object Name"
+msgstr "オブジェクト名"
 
-#~ msgid "Interest in Computer"
-#~ msgstr "コンピュータへの関心"
-
-#~ msgid "Contacts"
-#~ msgstr "コンタクト"
-
-#~ msgid "Default (0=None)"
-#~ msgstr "デフォルト（0=なし）"
-
-#~ msgid "Success Probability"
-#~ msgstr "成功確率"
-
-#~ msgid "7 Days"
-#~ msgstr "7日間"
-
-#~ msgid "Attendees"
-#~ msgstr "出席者"
-
-#~ msgid "Communication & History"
-#~ msgstr "通信と履歴"
-
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:316
 #, python-format
-#~ msgid "The case '%s' has been cancelled."
-#~ msgstr "案件 %s はキャンセル済です。"
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please "
+"ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr ""
 
-#~ msgid "Meeting Categories"
-#~ msgstr "ミーティングの分類"
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_open_leads:0
+msgid "Open Leads per Month"
+msgstr ""
 
-#~ msgid "You may have to verify that this partner does not exist already."
-#~ msgstr "このパートナが既に存在しないことを確認する必要があります。"
+#. module: crm
+#: model:ir.actions.client,name:crm.action_client_crm_menu
+msgid "Open Sale Menu"
+msgstr ""
 
-#~ msgid "Error ! You can not create recursive profiles."
-#~ msgstr "エラー。再帰的なプロファイルの作成はできません。"
+#. module: crm
+#: field:crm.phonecall,date_open:0
+msgid "Opened"
+msgstr "開始済"
 
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "同じログインでは２つのユーザを持てません。"
+#. module: crm
+#: field:crm.phonecall.report,opening_date:0
+msgid "Opening Date"
+msgstr "開始日"
 
+#. module: crm
+#: field:crm.segmentation.line,expr_operator:0
+msgid "Operator"
+msgstr "演算子"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,use_opportunities:0
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_graph_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
+#: model:ir.actions.act_window,name:crm.relate_partner_opportunities
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Opportunities"
+msgstr "商談"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "商談分析"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
+msgid ""
+"Opportunities Analysis gives you an instant access to your opportunities "
+"with information such as the expected revenue, planned cost, missed "
+"deadlines or the number of interactions per opportunity. This report is "
+"mainly used by the sales manager in order to do the periodic review with the "
+"teams of the sales pipeline."
+msgstr ""
+"商談分析は予想売上高、計画コスト、締切超過、または商談毎の相互作用の数といった情報とともに、即座にあなたの商談にアクセスすることができます。このレポートは"
+"営業パイプラインのチームと周期的なレビューを行うために営業マネジャにより主に使用されます。"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
+msgid "Opportunities Cohort"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
+msgid "Opportunities Won Per Team"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Opportunities that are assigned to me"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:864
+#: field:calendar.event,opportunity_id:0
+#: selection:crm.case.stage,type:0
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:res.partner,opportunity_count:0
 #, python-format
-#~ msgid "Error"
-#~ msgstr "エラー"
+msgid "Opportunity"
+msgstr "商談"
 
-#~ msgid "Need Consulting"
-#~ msgstr "コンサルティングが必要"
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_lost
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
+msgid "Opportunity Lost"
+msgstr ""
 
-#~ msgid "Partner Contact"
-#~ msgstr "パートナ連絡先"
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
+msgid "Opportunity Stage Changed"
+msgstr ""
 
-#~ msgid "Action Rules"
-#~ msgstr "アクションルール"
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_won
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
+msgid "Opportunity Won"
+msgstr ""
 
-#~ msgid "Recurrency"
-#~ msgstr "定期的"
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_lost
+msgid "Opportunity lost"
+msgstr ""
 
-#~ msgid "To"
-#~ msgstr "宛先"
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_won
+msgid "Opportunity won"
+msgstr ""
 
+#. module: crm
+#: field:crm.lead,opt_out:0
+msgid "Opt-Out"
+msgstr "オプトアウト"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Option"
+msgstr "オプション"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Optional Expression"
+msgstr "オプションの式"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Options"
+msgstr "オプション"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor8
+msgid "Other"
+msgstr "その他"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Other Call"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone2
+msgid "Outbound"
+msgstr "アウトバウンド"
+
+#. module: crm
+#: field:crm.lead.report,delay_expected:0
+#: field:crm.opportunity.report,delay_expected:0
+#: model:ir.filters,name:crm.filter_leads_overpassed_deadline
+msgid "Overpassed Deadline"
+msgstr "締切超過"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
+msgid "Parent Company"
+msgstr "親会社"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: field:crm.lead,partner_id:0
+#: field:crm.lead.report,partner_id:0
+#: field:crm.opportunity.report,partner_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall.report,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
+#: model:ir.model,name:crm.model_res_partner
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: crm
+#: field:crm.segmentation,categ_id:0
+msgid "Partner Category"
+msgstr "パートナ分類"
+
+#. module: crm
+#: field:crm.lead,partner_address_email:0
+msgid "Partner Contact Email"
+msgstr "パートナの連絡先Eメール"
+
+#. module: crm
+#: field:crm.lead,partner_address_name:0
+msgid "Partner Contact Name"
+msgstr "パートナの担当者名"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: model:ir.model,name:crm.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "パートナの分類"
+
+#. module: crm
+#: view:crm.segmentation.line:crm.crm_segmentation_line-view
+#: view:crm.segmentation.line:crm.crm_segmentation_line_tree-view
+msgid "Partner Segmentation Lines"
+msgstr "パートナ分類行"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation_tree-view
+msgid "Partner Segmentations"
+msgstr "パートナの分類"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:301
 #, python-format
-#~ msgid "Close"
-#~ msgstr "閉じる"
+msgid "Partner has been <b>created</b>."
+msgstr ""
 
-#~ msgid "_Add"
-#~ msgstr "追加"
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Partners"
+msgstr ""
 
+#. module: crm
+#: field:crm.lead,payment_mode:0
+#: view:crm.payment.mode:crm.view_crm_payment_mode_form
+#: view:crm.payment.mode:crm.view_crm_payment_mode_tree
+#: model:ir.actions.act_window,name:crm.action_crm_payment_mode
+msgid "Payment Mode"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
+msgid "Payment Modes"
+msgstr "支払モード"
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+#: selection:crm.phonecall.report,state:0
+msgid "Pending"
+msgstr "保留中"
+
+#. module: crm
+#: field:crm.lead,phone:0
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:crm.phonecall,partner_phone:0
+#: field:crm.phonecall2phonecall,phone:0
+msgid "Phone"
+msgstr "電話"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:219
+#: view:crm.phonecall:crm.crm_case_phone_form_view
 #, python-format
-#~ msgid "No E-Mail Found for your Company address!"
-#~ msgstr "会社の住所にEメールがありません。"
+msgid "Phone Call"
+msgstr "通話"
 
-#~ msgid "Interest in Accessories"
-#~ msgstr "アクセサリーへの関心"
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_calendar_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone
+#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
+msgid "Phone Calls"
+msgstr "通話"
 
-#~ msgid "Public for Employees"
-#~ msgstr "従業員の一般"
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
+#: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
+msgid "Phone Calls Analysis"
+msgstr "通話分析"
 
-#~ msgid "Private"
-#~ msgstr "非公開"
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_phone_call_to_do
+msgid "Phone Calls To Do"
+msgstr ""
 
-#~ msgid "Edit"
-#~ msgstr "編集"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone Calls that are assigned to me"
+msgstr ""
 
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Eメール作成ウィザード"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_graph
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
+msgid "Phone calls"
+msgstr "通話"
 
-#~ msgid "Invite People"
-#~ msgstr "人を招待"
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall_report
+msgid "Phone calls by user and section"
+msgstr "ユーザとセクション別通話"
 
-#~ msgid "Meeting Type"
-#~ msgstr "ミーティングタイプ"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls that are assigned to one of the sale teams I manage"
+msgstr ""
 
-#~ msgid "Meeting Invitations"
-#~ msgstr "会議への招待"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in closed state"
+msgstr "クローズ状態の通話"
 
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "案件が作成されると、状態はドラフトにセットされます。\n"
-#~ "案件が進行中になると、状態は開くにセットされます。\n"
-#~ "案件が終了すると、状態は完了にセットされます。\n"
-#~ "案件のレビューが必要な場合、状態は保留中にセットされます。"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in draft and open state"
+msgstr "ドラフトで開いた状態の通話"
 
-#~ msgid "# Emails"
-#~ msgstr "Eメールの数"
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in pending state"
+msgstr "保留中状態の通話"
 
-#~ msgid "Maximum Communication History"
-#~ msgstr "通信履歴の最大"
+#. module: crm
+#: field:calendar.event,phonecall_id:0
+#: model:ir.model,name:crm.model_crm_phonecall
+msgid "Phonecall"
+msgstr "通話"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
+msgid "Phonecall Categories"
+msgstr "通話分類"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "通話から通話へ"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:res.partner,phonecall_count:0
+#: field:res.partner,phonecall_ids:0
+msgid "Phonecalls"
+msgstr "通話"
+
+#. module: crm
+#: field:crm.lead,planned_cost:0
+msgid "Planned Costs"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Planned Date"
+msgstr "予定日"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_planned_revenue:0
+msgid "Planned Revenue per Month"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:633
+#, python-format
+msgid ""
+"Please select more than one element (lead or opportunity) from the list view."
+msgstr ""
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Pre-Sale Services"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,priority:0
+#: field:crm.lead.report,priority:0
+#: field:crm.opportunity.report,priority:0
+#: field:crm.phonecall,priority:0
+#: field:crm.phonecall.report,priority:0
+msgid "Priority"
+msgstr "優先度"
+
+#. module: crm
+#: field:crm.lead.report,probability:0
+#: field:crm.opportunity.report,probability:0
+msgid "Probability"
+msgstr "確信度"
+
+#. module: crm
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "確率(%)"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor1
+msgid "Product"
+msgstr "製品"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling"
+msgstr "プロファイリング"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling Options"
+msgstr "プロファイリングオプション"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead4
+msgid "Proposition"
+msgstr "案件"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr "仕入高"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead3
+msgid "Qualification"
+msgstr "資格"
+
+#. module: crm
+#: field:crm.lead,ref:0
+msgid "Reference"
+msgstr "参照"
+
+#. module: crm
+#: field:crm.lead,ref2:0
+msgid "Reference 2"
+msgstr "参照2"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "References"
+msgstr "参照"
+
+#. module: crm
+#: field:crm.lead,referred:0
+msgid "Referred By"
+msgstr "紹介者"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
+#: field:crm.partner.binding,action:0
+msgid "Related Customer"
+msgstr ""
+
+#. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_reminder_mail
+msgid ""
+"Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: field:crm.case.stage,requirements:0
+msgid "Requirements"
+msgstr "必要事項"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,user_id:0
+msgid "Responsible"
+msgstr "担当"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_revenue_per_lead
+msgid "Revenue Per Lead"
+msgstr ""
+
+#. module: crm
+#: field:crm.segmentation.line,name:0
+msgid "Rule Name"
+msgstr "ルール名"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Running"
+msgstr "実行中"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Sale Amount"
+msgstr "販売金額"
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Sale Services"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Sales Purchase"
+msgstr "売買"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_categ_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+msgid "Sales Tags"
+msgstr "販売タグ"
+
+#. module: crm
+#: field:crm.case.categ,section_id:0
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,section_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
+#: field:crm.merge.opportunity,section_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,section_id:0
+#: field:crm.payment.mode,section_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,section_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall2phonecall,section_id:0
+#: field:crm.tracking.campaign,section_id:0
+msgid "Sales Team"
+msgstr "営業チーム"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_section
+msgid "Sales Teams"
+msgstr "営業チーム"
+
+#. module: crm
+#: help:crm.phonecall,section_id:0
+msgid "Sales team to which Case belongs to."
+msgstr "案件が属する営業チーム"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,user_ids:0
+msgid "Salesmen"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,user_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead2opportunity.partner,user_id:0
+#: field:crm.lead2opportunity.partner.mass,user_id:0
+#: field:crm.merge.opportunity,user_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Salesperson"
+msgstr "販売担当者"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Schedule"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule Call"
+msgstr "電話のスケジュール"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Schedule Meeting"
+msgstr "ミーティングのスケジュール"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
+msgid "Schedule Other Call"
+msgstr "他の電話をスケジュール"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Schedule a call"
+msgstr "電話のスケジュール"
+
+#. module: crm
+#: field:sale.config.settings,group_scheduled_calls:0
+msgid "Schedule calls to manage call center"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Schedule/Log"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule/Log a Call"
+msgstr "スケジュール / 通話記録"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
+msgid "Scheduled Calls"
+msgstr "予定された電話"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1051
+#, python-format
+msgid "Scheduled a call for %(date)s. %(description)s"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Search"
+msgstr "検索"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Search Leads"
+msgstr "リードの検索"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Search Opportunities"
+msgstr "商談を検索"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Search Phonecalls"
+msgstr "通話の検索"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Search duplicates based on duplicated data in"
+msgstr "複製されたデータに基づく重複を検索"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_search_engine
+msgid "Search engine"
+msgstr ""
+
+#. module: crm
+#: field:crm.phonecall.report,section_id:0
+msgid "Section"
+msgstr "セクション"
+
+#. module: crm
+#: field:crm.case.stage,section_ids:0
+msgid "Sections"
+msgstr "セクション"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: field:crm.segmentation.line,segmentation_id:0
+#: model:ir.actions.act_window,name:crm.crm_segmentation-act
+msgid "Segmentation"
+msgstr "分類"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Description"
+msgstr "分類の説明"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Test"
+msgstr "分類のテスト"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_segmentation_line
+msgid "Segmentation line"
+msgstr "分類行"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Select Leads/Opportunities"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Select Stages for this Sales Team"
+msgstr "この営業チームの段階を選択"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Select the list of fields used to search for\n"
+"                            duplicated records. If you select several "
+"fields,\n"
+"                            Odoo will propose you to merge only those "
+"having\n"
+"                            all these fields in common. (not one of the "
+"fields)."
+msgstr ""
+"重複した記録の検索で使用するために、項目のリストを選択します。\n"
+"複数の項目を選択した場合、Odooはすべてに共通して含まれる(ひとつではない)項目のマージを提案します。"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Selection"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Send Email"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.stage,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor3
+msgid "Services"
+msgstr "サービス"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr ""
+
+#. module: crm
+#: help:crm.case.stage,on_change:0
+msgid ""
+"Setting this stage will change the probability automatically on the "
+"opportunity."
+msgstr "この段階の設定は商談により自動的に確率が変更されます。"
+
+#. module: crm
+#: model:res.groups,name:crm.group_scheduled_calls
+msgid "Show Scheduled Calls Menu"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only lead"
+msgstr "リードのみ表示"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only opportunity"
+msgstr "商談のみ表示"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Skip these contacts"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor2
+msgid "Software"
+msgstr "ソフトウェア"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,source_id:0
+#: field:crm.lead.report,source_id:0
+#: field:crm.opportunity.report,source_id:0
+#: field:crm.tracking.mixin,source_id:0
+#: model:ir.actions.act_window,name:crm.crm_tracking_source_action
+#: model:ir.model,name:crm.model_crm_tracking_source
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_source
+msgid "Source"
+msgstr ""
+
+#. module: crm
+#: field:crm.tracking.source,name:0
+msgid "Source Name"
+msgstr ""
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,stage_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,stage_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,stage_id:0
+msgid "Stage"
+msgstr "ステージ"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_stage
+msgid "Stage Changed"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.stage,name:0
+msgid "Stage Name"
+msgstr "ステージ名"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_lead_stage_search
+msgid "Stage Search"
+msgstr "ステージ検索"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_stage
+msgid "Stage of case"
+msgstr "案件ステージ"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,stage_ids:0
+#: view:crm.case.stage:crm.crm_case_stage_tree
+#: model:ir.actions.act_window,name:crm.crm_case_stage_act
+#: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+msgid "Stages"
+msgstr "ステージ"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,state:0
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: field:crm.lead,state_id:0
+msgid "State"
+msgstr "状態"
+
+#. module: crm
+#: field:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall.report,state:0
+msgid "Status"
+msgstr "ステータス"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Stop Process"
+msgstr "処理の中止"
+
+#. module: crm
+#: field:crm.lead,street:0
+msgid "Street"
+msgstr "通り"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Street..."
+msgstr "番地…"
+
+#. module: crm
+#: field:crm.lead,street2:0
+msgid "Street2"
+msgstr "番地"
+
+#. module: crm
+#: field:crm.lead,name:0
+msgid "Subject"
+msgstr "標題"
+
+#. module: crm
+#: field:crm.lead,probability:0
+msgid "Success Rate (%)"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,message_summary:0
+#: field:crm.phonecall,message_summary:0
+msgid "Summary"
+msgstr "要約"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Tag"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: crm
+#: help:crm.case.section,alias_id:0
+msgid ""
+"The email address associated with this team. New emails received will "
+"automatically create new leads assigned to the team."
+msgstr ""
+
+#. module: crm
+#: help:crm.case.section,use_leads:0
+msgid ""
+"The first contact you get with a potential customer is a lead you qualify "
+"before converting it into a real business opportunity. Check this box to "
+"manage leads in this sales team."
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,partner_name:0
+msgid ""
+"The name of the future partner company that will be created while converting "
+"the lead into opportunity"
+msgstr "見込みから営業案件となった、将来の取引先企業の名前。"
+
+#. module: crm
+#: help:crm.segmentation,name:0
+msgid "The name of the segmentation."
+msgstr "分類の名前"
+
+#. module: crm
+#: help:crm.segmentation,categ_id:0
+msgid ""
+"The partner category that will be added to partners that match the "
+"segmentation criterions after computation."
+msgstr "パートナの分類は、計算後に分類基準に一致するパートナに追加されます。"
+
+#. module: crm
+#: sql_constraint:crm.lead:0
+msgid "The probability of closing the deal should be between 0% and 100%!"
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"The selected contacts will be merged together. All\n"
+"                                documents linking to one of these contacts "
+"will be\n"
+"                                redirected to the aggregated contact. You "
+"can remove\n"
+"                                contacts from this list to avoid merging "
+"them."
+msgstr ""
+
+#. module: crm
+#: help:crm.phonecall,state:0
+msgid ""
+"The status is set to Confirmed, when a case is created.\n"
+"When the call is over, the status is set to Held.\n"
+"If the callis not applicable anymore, the status can be set to Cancelled."
+msgstr ""
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "There is no more contacts to merge for this request..."
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメールアドレスの間をコンマで区切って下さい。"
+
+#. module: crm
+#: help:crm.phonecall,email_from:0
+msgid "These people will receive email."
+msgstr "これらの人がEメールを受け取ります。"
+
+#. module: crm
+#: help:sale.config.settings,group_scheduled_calls:0
+msgid "This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"
+msgstr ""
+
+#. module: crm
+#: help:crm.case.stage,type:0
+msgid ""
+"This field is used to distinguish stages related to Leads from stages "
+"related to Opportunities, or to specify stages available for both types."
+msgstr "このフィールドは商談とリードの区別、あるいは両方を指定するために使用します。"
+
+#. module: crm
+#: help:crm.lead,campaign_id:0
+#: help:crm.lead.report,campaign_id:0
+#: help:crm.opportunity.report,campaign_id:0
+#: help:crm.tracking.mixin,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,medium_id:0
+#: help:crm.lead.report,medium_id:0
+#: help:crm.opportunity.report,medium_id:0
+#: help:crm.tracking.mixin,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,source_id:0
+#: help:crm.lead.report,source_id:0
+#: help:crm.opportunity.report,source_id:0
+#: help:crm.tracking.mixin,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+
+#. module: crm
+#: help:crm.case.stage,probability:0
+msgid ""
+"This percentage depicts the default/average probability of the Case for this "
+"stage to be a success"
+msgstr "この割合は、成功のための、この段階の案件のデフォルト/ 平均確率を示します。"
+
+#. module: crm
+#: help:crm.case.stage,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: field:crm.lead,title:0
+msgid "Title"
+msgstr "役職"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "To Do"
+msgstr "ToDo"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:393
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Lost opportunities, configure one "
+"of your sales stage as follow:\n"
+"probability = 0 %, select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your "
+"opportunity pipe."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:413
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Won opportunities, configure one of "
+"your sales stage as follow:\n"
+"probability = 100 % and select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your "
+"opportunity pipe."
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Todo"
+msgstr "ToDo"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.root_menu
+msgid "Tools"
+msgstr "ツール"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_top_opportunities
+msgid "Top Opportunities"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,planned_revenue:0
+#: field:crm.opportunity.report,total_revenue:0
+msgid "Total Revenue"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor6
+msgid "Training"
+msgstr "トレーニング"
+
+#. module: crm
+#: field:crm.case.stage,type:0
+#: field:crm.lead,type:0
+#: field:crm.lead.report,type:0
+#: field:crm.opportunity.report,type:0
+msgid "Type"
+msgstr "タイプ"
+
+#. module: crm
+#: help:crm.lead,type:0
+#: help:crm.lead.report,type:0
+#: help:crm.opportunity.report,type:0
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "リードと商談を区別するためにタイプを使います。"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Unassigned"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,message_unread:0
+#: field:crm.phonecall,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,write_date:0
+msgid "Update Date"
+msgstr "更新日"
+
+#. module: crm
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "売買ルールを使用"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner.mass,action:0
+msgid "Use existing partner or create"
+msgstr ""
+
+#. module: crm
+#: help:crm.case.section,resource_calendar_id:0
+msgid "Used to compute open days"
+msgstr "開始日数を計算するために使用"
+
+#. module: crm
+#: help:crm.case.stage,sequence:0
+msgid "Used to order stages. Lower is better."
+msgstr "ステージの順位に使用します。 低いほど良好です。"
+
+#. module: crm
+#: field:crm.lead.report,user_id:0
+#: field:crm.opportunity.report,user_id:0
+#: field:crm.phonecall.report,user_id:0
+msgid "User"
+msgstr "ユーザ"
+
+#. module: crm
+#: field:crm.lead,user_email:0
+msgid "User Email"
+msgstr "ユーザのEメール"
+
+#. module: crm
+#: field:crm.lead,user_login:0
+msgid "User Login"
+msgstr "ユーザログイン"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_vat:0
+msgid "VAT"
+msgstr ""
+
+#. module: crm
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "値"
+
+#. module: crm
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very High"
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very Low"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:392
+#: code:addons/crm/crm_lead.py:412
+#: code:addons/crm/crm_lead.py:633
+#: code:addons/crm/crm_lead.py:760
+#: code:addons/crm/crm_phonecall.py:291
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,section_id:0
+msgid ""
+"When sending mails, the default email address is taken from the sales team."
+msgstr "メールを送信する時、デフォルトEメールアドレスは営業チームのものが使われます。"
+
+#. module: crm
+#: field:base.partner.merge.line,wizard_id:0
+msgid "Wizard"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Won"
+msgstr "受注"
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr "作業時間"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:430
+#, python-format
+msgid ""
+"You are already at the top level of your sales-team category.\n"
+"Therefore you cannot escalate furthermore."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:446
+#, python-format
+msgid "You have to specify a filter for your selection"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "ZIP"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead,zip:0
+msgid "Zip"
+msgstr "郵便番号"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "e.g. Call for proposal"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:962
+#, python-format
+msgid "lead"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:91
+#, python-format
+msgid "leads"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "min(s)"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "oe_kanban_text_red"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:960
+#, python-format
+msgid "opportunity"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "unknown"
+msgstr "不明"
+
+#~ msgid "Probable Revenue"
+#~ msgstr "見込売上"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "計画売上高"
+
+#~ msgid "Team"
+#~ msgstr "チーム"

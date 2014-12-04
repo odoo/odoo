@@ -8,7 +8,7 @@
                 <div class="container">
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
-                        <div t-field="survey.thank_you_message" />
+                        <div t-field="survey.thank_you_message" class="oe_no_empty" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
                         <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
                     </div>
@@ -82,11 +82,13 @@
     </template>
 
     <!-- A survey -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        </xpath>
+    </template>
     <template id="survey" name="Survey">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            </t>
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -166,7 +168,7 @@
     </template>
 
     <template id="datetime" name="Datetime box">
-        <input type="text" class="form-control" t-att-name="prefix" placeholder="yyyy-mm-dd hh:mm:ss" />
+        <input type="text" class="form-control" t-att-name="prefix" placeholder="YYYY-MM-DD HH:mm:ss" />
     </template>
 
     <template id="simple_choice" name="Simple choice">
@@ -260,9 +262,6 @@
     <!-- Printable view of a survey (all pages) -->
     <template id="survey_print" name="Survey">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            </t>
             <div class="wrap">
                 <div class="container">
                     <div class="row">

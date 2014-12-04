@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Report Options">
                     <separator string="Aged Partner Balance"/>
-                    <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, OpenERP asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). OpenERP then calculates a table of credit balance by period. So if you request an interval of 30 days OpenERP generates an analysis of creditors for the past month, past two months, and so on. "/>
+                    <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, Odoo asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). Odoo then calculates a table of credit balance by period. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on. "/>
                     <group col="4">
                         <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
                         <field name="fiscalyear_id" invisible="1"/>
@@ -19,7 +19,7 @@
                         <newline/>
                         <field name="result_selection"/>
                         <field name="direction_selection"/>
-                        <field name="target_move"/>
+                        <field name="target_move"  widget="radio"/>
                     </group>
                     <field name="journal_ids" required="0" invisible="1"/>
                     <footer>

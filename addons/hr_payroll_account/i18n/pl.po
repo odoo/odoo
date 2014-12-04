@@ -1,40 +1,27 @@
 # Polish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-11-05 13:35+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "Konto Ma"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "Odcinek wypłaty %s"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
-"Dziennik wydatków \"%s\" nie został poprawnie skonfigurowany dla konta Ma!"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Księgowość"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -42,34 +29,11 @@ msgid "Accounting Entry"
 msgstr "Zapis księgowy"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
-"Dziennik wydatków \"%s\" nie został prawidłowo skonfigurowany dla konta "
-"Winien!"
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "Rejestr podatkowy"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Wymuś okres"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr ""
-"Pozostaw puste żeby zastosować okresu z daty zatwierdzenia (odcinka wypłaty)."
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr "Umowa"
+msgid "Adjustment Entry"
+msgstr "Zapis korygujący"
 
 #. module: hr_payroll_account
 #: field:hr.contract,analytic_account_id:0
@@ -78,14 +42,31 @@ msgid "Analytic Account"
 msgstr "Konto analityczne"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr "Błąd konfiguracji!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Umowa"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "Konto Ma"
+
+#. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
 msgstr "Konto Winien"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "Listy płac"
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "Wymuś okres"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -93,22 +74,10 @@ msgid "Generate payslips for all selected employees"
 msgstr "Generuj odcinki wypłaty dla wybranych pracowników"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr "Błąd konfiguracji!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "Księgowość"
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr ""
+"Pozostaw puste żeby zastosować okresu z daty zatwierdzenia (odcinka wypłaty)."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -116,11 +85,15 @@ msgid "Pay Slip"
 msgstr "Pasek wypłaty"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Listy płac"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Adjustment Entry"
-msgstr "Zapis korygujący"
+msgid "Payslip of %s"
+msgstr "Odcinek wypłaty %s"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
@@ -129,89 +102,24 @@ msgstr "Zapis korygujący"
 msgid "Salary Journal"
 msgstr "Dzennik wynagrodzeń"
 
-#~ msgid "Accounting Informations"
-#~ msgstr "Informacje o koncie"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "Rejestr podatkowy"
 
-#~ msgid "Other Informations"
-#~ msgstr "Inne informacje"
-
-#~ msgid "Description"
-#~ msgstr "Opis"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Pozycje płatności"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "Księgowość płac"
-
-#~ msgid "Account Lines"
-#~ msgstr "Pozycje"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "Ostrzeżenie !"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr ""
+"Dziennik wydatków \"%s\" nie został poprawnie skonfigurowany dla konta Ma!"
 
-#~ msgid "Expense Journal"
-#~ msgstr "Dziennik wydatków"
-
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Konto analityczne do analizy wynagrodzeń"
-
-#~ msgid "Period"
-#~ msgstr "Okres"
-
-#~ msgid "Employee"
-#~ msgstr "Pracownik"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Dziennik bankowy"
-
-#~ msgid "Salary Account"
-#~ msgstr "Konto wynagrodzenia"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Pozycje zapisów"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Rejestr list płac"
-
-#~ msgid "Bank Account"
-#~ msgstr "Konto bankowe"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
 #, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "Wybierz rok podatkowy dla kontraktu"
-
-#~ msgid "Name"
-#~ msgstr "Nazwa"
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "Payslip Line"
-#~ msgstr "Pozycja paska wypłaty"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Błąd ! Nie mozesz tworzyć rekurencyjnych hierarchii pracowników"
-
-#~ msgid "General Account"
-#~ msgstr "Konto główne"
-
-#~ msgid "Employee Account"
-#~ msgstr "Konto pracownika"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Błąd ! Nie możesz wybrać działu, którego pracownik jest przełożonym."
-
-#~ msgid "Sequence"
-#~ msgstr "Numeracja"
-
-#~ msgid "Leave Type"
-#~ msgstr "Typ urlopu"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Struktura wynagrodzenia"
-
-#~ msgid "Year"
-#~ msgstr "Rok"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr ""
+"Dziennik wydatków \"%s\" nie został prawidłowo skonfigurowany dla konta "
+"Winien!"

@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 
+
 class MailMailStats(osv.Model):
     """ MailMailStats models the statistics collected about emails. Those statistics
     are stored in a separated model and table to avoid bloating the mail_mail table
@@ -33,7 +34,13 @@ class MailMailStats(osv.Model):
     _order = 'message_id'
 
     _columns = {
-        'mail_mail_id': fields.many2one('mail.mail', 'Mail ID', ondelete='set null'),
+        'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null'),
+        'mail_mail_id_int': fields.integer(
+            'Mail ID (tech)',
+            help='ID of the related mail_mail. This field is an integer field because'
+                 'the related mail_mail can be deleted separately from its statistics.'
+                 'However the ID is needed for several action and controllers.'
+        ),
         'message_id': fields.char('Message-ID'),
         'model': fields.char('Document model'),
         'res_id': fields.integer('Document ID'),
@@ -62,9 +69,15 @@ class MailMailStats(osv.Model):
         'scheduled': fields.datetime.now,
     }
 
+    def create(self, cr, uid, values, context=None):
+        if 'mail_mail_id' in values:
+            values['mail_mail_id_int'] = values['mail_mail_id']
+        res = super(MailMailStats, self).create(cr, uid, values, context=context)
+        return res
+
     def _get_ids(self, cr, uid, ids=None, mail_mail_ids=None, mail_message_ids=None, domain=None, context=None):
         if not ids and mail_mail_ids:
-            base_domain = [('mail_mail_id', 'in', mail_mail_ids)]
+            base_domain = [('mail_mail_id_int', 'in', mail_mail_ids)]
         elif not ids and mail_message_ids:
             base_domain = [('message_id', 'in', mail_message_ids)]
         else:

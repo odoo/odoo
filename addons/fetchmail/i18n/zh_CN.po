@@ -1,21 +1,57 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-22 03:34+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:08+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "电子邮件数量"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "对收到的邮件可执行的动作"
+
+#. module: fetchmail
+#: field:fetchmail.server,active:0
+msgid "Active"
+msgstr "生效"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "高级"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr "高级选项"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: field:fetchmail.server,configuration:0
+msgid "Configuration"
+msgstr "配置"
+
+#. module: fetchmail
+#: view:base.config.settings:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr "配置收取邮件网关"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -23,19 +59,10 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: fetchmail
-#: field:fetchmail.server,server:0
-msgid "Server Name"
-msgstr "服务器名称"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr "POP"
-
-#. module: fetchmail
-#: help:fetchmail.server,priority:0
-msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "定义处理的顺序，值越小优先级越高。"
+#: code:addons/fetchmail/fetchmail.py:163
+#, python-format
+msgid "Connection test failed!"
+msgstr "连接测试失败！"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -45,142 +72,31 @@ msgid ""
 msgstr "连接在专用的端口用SSL/TLS加密（默认为：IMAP=993，POP3S=995）"
 
 #. module: fetchmail
-#: field:fetchmail.server,attach:0
-msgid "Keep Attachments"
-msgstr "保存附件"
+#: field:fetchmail.server,object_id:0
+msgid "Create a New Record"
+msgstr "创建新记录"
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
+#: field:fetchmail.config.settings,create_uid:0
+#: field:fetchmail.server,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: fetchmail
-#: help:fetchmail.server,original:0
-msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
-msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上。这一般会占用双倍的消息数据库。"
+#: field:fetchmail.config.settings,create_date:0
+#: field:fetchmail.server,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: fetchmail
-#: view:base.config.settings:0
-msgid "Configure the incoming email gateway"
-msgstr "配置收取邮件网关"
+#: help:fetchmail.server,priority:0
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr "定义处理的顺序，值越小优先级越高。"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "现在接收"
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Incoming Mail Servers"
-msgstr "接收邮件服务器"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr "服务器类型IMAP"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP/IMAP Servers"
-msgstr "POP/IMAP 服务器"
-
-#. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "Local Server"
-msgstr "本地服务器"
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "Status"
-msgstr "状态"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAP 服务器"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Reset Confirmation"
-msgstr "重置确认"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "SSL"
-msgstr "SSL"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"
-
-#. module: fetchmail
-#: field:fetchmail.server,date:0
-msgid "Last Fetch Date"
-msgstr "上次接收日期"
-
-#. module: fetchmail
-#: help:fetchmail.server,action_id:0
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr "可选的自定义服务器动作，用于在收到邮件时自动触发，作用于此邮件新建或修改的记录。"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "# of emails"
-msgstr "电子邮件数量"
-
-#. module: fetchmail
-#: field:fetchmail.server,original:0
-msgid "Keep Original"
-msgstr "保留原始"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
-msgstr "高级选项"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-#: field:fetchmail.server,configuration:0
-msgid "Configuration"
-msgstr "配置"
-
-#. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr "脚本"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Incoming Mail Server"
-msgstr "接收邮件服务器"
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:163
-#, python-format
-msgid "Connection test failed!"
-msgstr "连接测试失败！"
-
-#. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr "用户名："
-
-#. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
-msgstr "邮件服务器的主机名或IP"
-
-#. module: fetchmail
-#: field:fetchmail.server,name:0
-msgid "Name"
-msgstr "名称"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
@@ -193,19 +109,84 @@ msgstr ""
 " %s."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Test & Confirm"
-msgstr "测试和确认"
+#: help:fetchmail.server,server:0
+msgid "Hostname or IP of the mail server"
+msgstr "邮件服务器的主机名或IP"
 
 #. module: fetchmail
-#: field:fetchmail.server,action_id:0
-msgid "Server Action"
-msgstr "服务器动作"
+#: field:fetchmail.config.settings,id:0
+#: field:fetchmail.server,id:0
+msgid "ID"
+msgstr ""
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP 服务器"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "如果需要SSL连接。"
 
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
 msgstr "接收邮件服务器"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "接收邮件服务器"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "接收邮件服务器"
+
+#. module: fetchmail
+#: field:fetchmail.server,attach:0
+msgid "Keep Attachments"
+msgstr "保存附件"
+
+#. module: fetchmail
+#: field:fetchmail.server,original:0
+msgid "Keep Original"
+msgstr "保留原始"
+
+#. module: fetchmail
+#: field:fetchmail.server,date:0
+msgid "Last Fetch Date"
+msgstr "上次接收日期"
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_uid:0
+#: field:fetchmail.server,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_date:0
+#: field:fetchmail.server,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "本地服务器"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "登录信息"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -214,21 +195,21 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Search Incoming Mail Servers"
-msgstr "搜索接收邮件服务器"
+#: field:fetchmail.server,name:0
+msgid "Name"
+msgstr "名称"
 
 #. module: fetchmail
-#: field:fetchmail.server,active:0
-msgid "Active"
-msgstr "生效"
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "未确认"
 
 #. module: fetchmail
-#: help:fetchmail.server,attach:0
+#: help:fetchmail.server,action_id:0
 msgid ""
-"Whether attachments should be downloaded. If not enabled, incoming emails "
-"will be stripped of any attachments before being processed"
-msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被处理前去掉附件。"
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
+msgstr "可选的自定义服务器动作，用于在收到邮件时自动触发，作用于此邮件新建或修改的记录。"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -236,24 +217,24 @@ msgid "Outgoing Mails"
 msgstr "发出邮件"
 
 #. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "服务器优先级"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
-msgid "IMAP Server"
-msgstr "IMAP 服务器"
+msgid "POP Server"
+msgstr "POP 服务器"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "IMAP"
-msgstr "IMAP"
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAP 服务器"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type POP."
-msgstr "服务器类型 POP"
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP 服务器"
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -261,39 +242,9 @@ msgid "Password"
 msgstr "密码"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Actions to Perform on Incoming Mails"
-msgstr "对收到的邮件可执行的动作"
-
-#. module: fetchmail
-#: field:fetchmail.server,type:0
-msgid "Server Type"
-msgstr "服务器类型"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Login Information"
-msgstr "登录信息"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server Information"
-msgstr "服务器信息"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "If SSL required."
-msgstr "如果需要SSL连接。"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced"
-msgstr "高级"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server & Login"
-msgstr "服务器与登录"
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "端口"
 
 #. module: fetchmail
 #: help:fetchmail.server,object_id:0
@@ -304,152 +255,96 @@ msgid ""
 msgstr "对于这种类型的单据，把收到的邮件作为会话的一部分。也就是说，为新会话创建新的单据，或把接下来的邮件附加到已有的会话中。"
 
 #. module: fetchmail
-#: field:fetchmail.server,object_id:0
-msgid "Create a New Record"
-msgstr "创建新记录"
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "重置确认"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
-msgid "Not Confirmed"
-msgstr "未确认"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "POP Server"
-msgstr "POP 服务器"
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
-msgstr "端口"
+#: field:fetchmail.server,script:0
+msgid "Script"
+msgstr "脚本"
 
-#~ msgid "User Name"
-#~ msgstr "用户名"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "搜索接收邮件服务器"
 
-#~ msgid "Confirm"
-#~ msgstr "确认"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "服务器与登录"
 
-#~ msgid "Description"
-#~ msgstr "说明"
+#. module: fetchmail
+#: field:fetchmail.server,action_id:0
+msgid "Server Action"
+msgstr "服务器动作"
 
-#~ msgid "User"
-#~ msgstr "用户"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "服务器信息"
 
-#~ msgid "Search Email Servers"
-#~ msgstr "搜索电子邮件服务器"
+#. module: fetchmail
+#: field:fetchmail.server,server:0
+msgid "Server Name"
+msgstr "服务器名称"
 
-#~ msgid "Set to Draft"
-#~ msgstr "设为草稿"
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "服务器优先级"
 
-#~ msgid "Emails"
-#~ msgstr "电子邮件"
+#. module: fetchmail
+#: field:fetchmail.server,type:0
+msgid "Server Type"
+msgstr "服务器类型"
 
-#~ msgid "Auto Reply?"
-#~ msgstr "自动回复？"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "服务器类型IMAP"
 
-#~ msgid "SSL ?"
-#~ msgstr "SSL 安全连接？"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "服务器类型 POP"
 
-#~ msgid "Server"
-#~ msgstr "服务器"
+#. module: fetchmail
+#: field:fetchmail.server,state:0
+msgid "Status"
+msgstr "状态"
 
-#~ msgid "Model"
-#~ msgstr "模型"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "测试和确认"
 
-#~ msgid "Process Parameter"
-#~ msgstr "进程参数"
+#. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "用户名："
 
-#~ msgid "Date"
-#~ msgstr "日期"
+#. module: fetchmail
+#: help:fetchmail.server,original:0
+msgid ""
+"Whether a full original copy of each email should be kept for referenceand "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上。这一般会占用双倍的消息数据库。"
 
-#~ msgid "Type"
-#~ msgstr "类型"
-
-#~ msgid "Add Attachments ?"
-#~ msgstr "添加附件？"
-
-#~ msgid "Group By..."
-#~ msgstr "分组..."
-
-#~ msgid "Email Servers"
-#~ msgstr "电子邮件服务器"
-
-#~ msgid "Mail Server"
-#~ msgstr "邮件服务器"
-
-#~ msgid "Email Server Action"
-#~ msgstr "电子邮件服务器动作"
-
-#~ msgid ""
-#~ "An Email Server Action. It will be run whenever an e-mail is fetched from "
-#~ "server."
-#~ msgstr "电子邮件服务动作。它运行时从服务器取出电子邮件。"
-
-#~ msgid "Priority between 0 to 10, select define the order of Processing"
-#~ msgstr "优先级从0到10，选择它的优先级"
-
-#~ msgid "Fetch Emails"
-#~ msgstr "取邮件"
-
-#~ msgid "Fetchmail Server"
-#~ msgstr "Fetchmail服务器"
-
-#~ msgid ""
-#~ "OpenObject Model. Generates a record of this model.\n"
-#~ "Select Object with message_new attrbutes."
-#~ msgstr ""
-#~ "OpenObject模型。这模型产生一个记录。\n"
-#~ "选择对象与新属性消息。"
-
-#~ msgid "Mailgateway Message"
-#~ msgstr "邮件网关消息"
-
-#~ msgid ""
-#~ "Fetchmail: \n"
-#~ "    * Fetch email from Pop / IMAP server\n"
-#~ "    * Support SSL\n"
-#~ "    * Integrated with all Modules\n"
-#~ "    * Automatic Email Receive\n"
-#~ "    * Email based Records (Add, Update)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Fetchmail（取电子邮件）：\n"
-#~ "     从Pop/IMAP服务器取电子邮件。\n"
-#~ "    支持SSL\n"
-#~ "    整合所有模块\n"
-#~ "    自动接收邮件\n"
-#~ "    邮件根据记录（新增/更新）\n"
-#~ "    "
-
-#~ msgid "Fetches mail with attachments if true."
-#~ msgstr "如果为真取电子邮件与附件"
-
-#~ msgid ""
-#~ "Warning! Record for selected Model can not be created\n"
-#~ "Please choose valid Model"
-#~ msgstr ""
-#~ "警告！选择模型不能创建。\n"
-#~ "请选择有效的模板。"
-
-#~ msgid "Waiting for Verification"
-#~ msgstr "等待审批"
-
-#~ msgid "Warning! Can't have duplicate server configuration!"
-#~ msgstr "警告！不能创建设置重复的服务器！"
-
-#~ msgid "Email Message"
-#~ msgstr "邮件内容"
-
-#, python-format
-#~ msgid ""
-#~ "Here is what we got instead:\n"
-#~ " %s"
-#~ msgstr ""
-#~ "这是我们得到的结果：\n"
-#~ "%s"
-
-#~ msgid "Advanced options"
-#~ msgstr "高级选项"
-
-#~ msgid "State"
-#~ msgstr "省市"
+#. module: fetchmail
+#: help:fetchmail.server,attach:0
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被处理前去掉附件。"

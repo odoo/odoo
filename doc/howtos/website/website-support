@@ -1,0 +1,47 @@
+# HG changeset patch
+# Parent 7ae0db4c2ddf5d0f7f58db2af8976fcec905cc4e
+diff -r 7ae0db4c2ddf -r 0795247fa6cb academy/__openerp__.py
+--- a/academy/__openerp__.py	Tue Aug 12 11:24:14 2014 +0200
++++ b/academy/__openerp__.py	Tue Aug 12 11:27:14 2014 +0200
+@@ -5,7 +5,7 @@
+     'description': """
+     """,
+     # Which modules must be installed for this one to work
+-    'depends': ['base'],
++    'depends': ['website'],
+     # data files which are always installed
+     'data': [
+         'ir.model.access.csv',
+diff -r 7ae0db4c2ddf -r 0795247fa6cb academy/controllers.py
+--- a/academy/controllers.py	Tue Aug 12 11:24:14 2014 +0200
++++ b/academy/controllers.py	Tue Aug 12 11:27:14 2014 +0200
+@@ -2,7 +2,7 @@
+ from openerp import http
+ 
+ class Academy(http.Controller):
+-    @http.route('/academy/', auth='public')
++    @http.route('/academy/', auth='public', website=True)
+     def index(self):
+         Teachers = http.request.env['academy.teachers']
+         return http.request.render('academy.index', {
+diff -r 7ae0db4c2ddf -r 0795247fa6cb academy/templates.xml
+--- a/academy/templates.xml	Tue Aug 12 11:24:14 2014 +0200
++++ b/academy/templates.xml	Tue Aug 12 11:27:14 2014 +0200
+@@ -1,8 +1,14 @@
+ <openerp><data>
+   <template id="index">
+-    <title>Academy</title>
+-    <t t-foreach="teachers" t-as="teacher">
+-      <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++    <t t-call="website.layout">
++      <t t-set="title">Academy</t>
++      <div class="oe_structure">
++        <div class="container">
++          <t t-foreach="teachers" t-as="teacher">
++            <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++          </t>
++        </div>
++      </div>
+     </t>
+   </template>
+ </data></openerp>

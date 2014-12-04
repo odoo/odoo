@@ -19,9 +19,17 @@
     <rng:define name="value">
         <rng:element name="value">
             <rng:optional><rng:attribute name="model" /></rng:optional>
-            <rng:optional><rng:attribute name="search" /></rng:optional>
-            <rng:optional><rng:attribute name="eval" /></rng:optional>
-            <rng:optional><rng:text/></rng:optional>
+            <rng:choice>
+                <rng:attribute name="search" />
+                <rng:attribute name="eval" />
+                <rng:group>
+                    <rng:optional><rng:attribute name="type" /></rng:optional>
+                    <rng:choice>
+                        <rng:attribute name="file" />
+                        <rng:text/>
+                    </rng:choice>
+                </rng:group>
+            </rng:choice>
         </rng:element>
     </rng:define>
 
@@ -29,67 +37,33 @@
         <rng:element name="function">
             <rng:attribute name="model" />
             <rng:attribute name="name" />
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="eval" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:choice>
-                <rng:empty />
-                <rng:oneOrMore>
-                    <rng:choice>
-                        <rng:ref name="value" />
-                        <rng:ref name="function" />
-                    </rng:choice>
-                </rng:oneOrMore>
-            </rng:choice>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="assert">
-        <rng:element name="assert">
-            <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="search" /></rng:optional>
-            <rng:optional><rng:attribute name="count" /></rng:optional>
-            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <!-- doesn't look like it has any use? -->
             <rng:optional><rng:attribute name="id" /></rng:optional>
             <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:optional><rng:attribute name="severity" /></rng:optional>
-            <rng:zeroOrMore>
-                <rng:element name="test">
-                    <rng:attribute name="expr"/>
-                    <rng:choice>
-                        <rng:text />
-                        <rng:empty />
-                    </rng:choice>
-                </rng:element>
-            </rng:zeroOrMore>
+            <rng:optional>
+                <rng:choice>
+                    <rng:attribute name="eval" />
+                    <rng:oneOrMore>
+                        <rng:choice>
+                            <rng:ref name="value" />
+                            <rng:ref name="function" />
+                        </rng:choice>
+                    </rng:oneOrMore>
+                </rng:choice>
+            </rng:optional>
         </rng:element>
     </rng:define>
 
     <rng:define name="workflow">
         <rng:element name="workflow">
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="ref" /></rng:optional>
             <rng:attribute name="action"/>
             <rng:optional><rng:attribute name="uid"/></rng:optional>
             <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:choice>
-                <rng:empty/>
+                <rng:attribute name="ref" />
                 <rng:ref name="value"/>
             </rng:choice>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="wizard">
-        <rng:element name="wizard">
-            <rng:attribute name="name"/>
-            <rng:attribute name="id" />
-            <rng:optional><rng:attribute name="menu" /></rng:optional>
-            <rng:optional><rng:attribute name="model" /></rng:optional>
-            <rng:attribute name="string" />
-            <rng:optional><rng:attribute name="keyword" /></rng:optional>
-            <rng:optional><rng:attribute name="multi" /></rng:optional>
-            <rng:optional><rng:attribute name="client_action_multi" /></rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
         </rng:element>
     </rng:define>
 
@@ -197,13 +171,17 @@
 
     <rng:define name="record">
         <rng:element name="record">
-            <rng:optional><rng:attribute name="id" /> </rng:optional>
+            <rng:optional>
+                <rng:attribute name="id" />
+                <rng:optional>
+                    <rng:attribute name="forcecreate" />
+                </rng:optional>
+            </rng:optional>
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="forcecreate" /></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field" />
             </rng:zeroOrMore>
-            <rng:optional><rng:attribute name="context"/></rng:optional>
         </rng:element>
     </rng:define>
 
@@ -226,14 +204,8 @@
                         </rng:optional>
                     </rng:optional>
                     <rng:optional><rng:attribute name="groups"/></rng:optional>
-                    <rng:optional>
-                        <rng:attribute name="optional">
-                            <rng:choice>
-                                <rng:value>enabled</rng:value>
-                                <rng:value>disabled</rng:value>
-                            </rng:choice>
-                        </rng:attribute>
-                    </rng:optional>
+                    <rng:optional><rng:attribute name="active"></rng:attribute></rng:optional>
+                    <rng:optional><rng:attribute name="customize_show"></rng:attribute></rng:optional>
                 </rng:group>
                 <rng:optional>
                     <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
@@ -251,11 +223,53 @@
     <rng:define name="delete">
         <rng:element name="delete">
             <rng:attribute name="model" />
-                <rng:choice>
-                    <rng:attribute name="id" />
-                    <rng:attribute name="search" />
-                </rng:choice>
-            </rng:element>
+            <rng:choice>
+                <rng:attribute name="id" />
+                <rng:attribute name="search" />
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="menuitem">
+        <rng:element name="menuitem">
+            <!-- TODO: id should probably be mandatory -->
+            <rng:optional> <rng:attribute name="id" /></rng:optional>
+            <rng:optional> <rng:attribute name="name"/></rng:optional>
+            <rng:optional> <rng:attribute name="parent"/> </rng:optional>
+            <rng:optional> <rng:attribute name="action"/> </rng:optional>
+            <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
+            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
+            <!-- TODO: remove icon stuff -->
+            <rng:optional> <rng:attribute name="icon"/> </rng:optional>
+            <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
+            <rng:optional> <rng:attribute name="web_icon_hover"/> </rng:optional>
+            <!-- string doesn't seem used anywhere -->
+            <rng:optional> <rng:attribute name="string"/> </rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
+    <!-- TODO: remove these, useless -->
+
+    <rng:define name="assert">
+        <rng:element name="assert">
+            <rng:attribute name="model" />
+            <rng:optional><rng:attribute name="search" /></rng:optional>
+            <rng:optional><rng:attribute name="count" /></rng:optional>
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:optional><rng:attribute name="severity" /></rng:optional>
+            <rng:zeroOrMore>
+                <rng:element name="test">
+                    <rng:attribute name="expr"/>
+                    <rng:choice>
+                        <rng:text />
+                        <rng:empty />
+                    </rng:choice>
+                </rng:element>
+            </rng:zeroOrMore>
+        </rng:element>
     </rng:define>
 
     <rng:define name="ir_set">
@@ -263,25 +277,6 @@
             <rng:oneOrMore>
                 <rng:ref name="field" />
             </rng:oneOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="menuitem">
-        <rng:element name="menuitem">
-            <!-- L'identifiant devrait être obligatoire -->
-            <rng:optional> <rng:attribute name="id" /></rng:optional>
-            <!-- Attention le nom peut disparaitre uniquement si le parent est présent -->
-            <rng:optional> <rng:attribute name="name"/></rng:optional>
-            <rng:optional> <rng:attribute name="parent"/> </rng:optional>
-            <rng:optional> <rng:attribute name="icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon_hover"/> </rng:optional>
-            <rng:optional> <rng:attribute name="action"/> </rng:optional>
-            <rng:optional> <rng:attribute name="string"/> </rng:optional>
-            <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional> <rng:attribute name="menu"/> </rng:optional>
-            <rng:empty />
         </rng:element>
     </rng:define>
 
@@ -328,7 +323,6 @@
                     <rng:ref name="record" />
                     <rng:ref name="template" />
                     <rng:ref name="delete" />
-                    <rng:ref name="wizard" />
                     <rng:ref name="act_window" />
                     <rng:ref name="url" />
                     <rng:ref name="assert" />

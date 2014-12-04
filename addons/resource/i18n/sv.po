@@ -1,21 +1,153 @@
 # Swedish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-05-10 18:15+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:46+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: resource
+#: code:addons/resource/resource.py:685
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: resource
+#: code:addons/resource/faces/resource.py:340
+#, python-format
+msgid "(vacation)"
+msgstr "(semester)"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Define working hours and time table that could be scheduled "
+"to your project members\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Definiera arbetstid och tidtabell som skall utgöra underlag "
+"för tidplaneringen för dina projektdeltagare.\n"
+"              </p>\n"
+"            "
+
+#. module: resource
+#: field:resource.resource,active:0
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "Avslutande dagar"
+
+#. module: resource
+#: field:resource.resource,code:0
+msgid "Code"
+msgstr "Kod"
+
+#. module: resource
+#: field:resource.calendar,company_id:0
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,company_id:0
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,company_id:0
+msgid "Company"
+msgstr "Företag"
+
+#. module: resource
+#: code:addons/resource/resource.py:773
+#, python-format
+msgid "Configuration Error!"
+msgstr "Konfigurationsfel!"
+
+#. module: resource
+#: field:resource.calendar,create_uid:0
+#: field:resource.calendar.attendance,create_uid:0
+#: field:resource.calendar.leaves,create_uid:0
+#: field:resource.resource,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,create_date:0
+#: field:resource.calendar.attendance,create_date:0
+#: field:resource.calendar.leaves,create_date:0
+#: field:resource.resource,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Veckodag"
+
+#. module: resource
+#: help:resource.resource,calendar_id:0
+msgid "Define the schedule of resource"
+msgstr "Definiera planeringen för en resurs"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+msgid "Duration"
+msgstr "Varaktighet"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "Effektivitetsfaktor"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_to:0
+msgid "End Date"
+msgstr "Slutdatum"
+
+#. module: resource
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "Fel! Lämna start-datum måste vara lägre sedan lämna slutdatum."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Fredag"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Group By"
+msgstr ""
+
+#. module: resource
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "Timmar"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "Mänsklig"
+
+#. module: resource
+#: field:resource.calendar,id:0
+#: field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0
+#: field:resource.resource,id:0
+msgid "ID"
+msgstr ""
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -27,162 +159,67 @@ msgstr ""
 "inställd är semester / ledighet bara för denna resurs"
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "Material"
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Om det aktiva fältet är satt till False, kommer det att du kan dölja "
+"resursposten utan att ta bort det."
 
 #. module: resource
-#: field:resource.resource,resource_type:0
-msgid "Resource Type"
-msgstr "Resurstyp"
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#. module: resource
+#: field:resource.calendar,write_uid:0
+#: field:resource.calendar.attendance,write_uid:0
+#: field:resource.calendar.leaves,write_uid:0
+#: field:resource.resource,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,write_date:0
+#: field:resource.calendar.attendance,write_date:0
+#: field:resource.calendar.leaves,write_date:0
+#: field:resource.resource,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
-#: view:resource.calendar.leaves:0
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
 msgstr "Frånvarodetaljer"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
-msgid "Resources Leaves"
-msgstr "Resurser ur funktion"
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Leave Month"
+msgstr ""
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "Veckodag"
+#: field:resource.calendar,leave_ids:0
+msgid "Leaves"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Thursday"
-msgstr "Torsdag"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-msgid "Group By..."
-msgstr "Gruppera på..."
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Sunday"
-msgstr "Söndag"
-
-#. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
-msgstr "Effektivitetsfaktor"
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Search Resource"
-msgstr "Sök resurs"
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Type"
-msgstr "Typ"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
-#: view:resource.resource:0
-msgid "Resources"
-msgstr "Resurser"
-
-#. module: resource
-#: code:addons/resource/resource.py:455
+#: code:addons/resource/resource.py:773
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr "Se till att arbetstid har konfigurerats med riktiga veckodagar!"
 
 #. module: resource
-#: code:addons/resource/resource.py:373
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (kopia)"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "Sök arbetstid"
-
-#. module: resource
-#: constraint:resource.calendar.leaves:0
-msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Fel! Lämna start-datum måste vara lägre sedan lämna slutdatum."
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_calendar
-msgid "Resource Calendar"
-msgstr "Resurskalender"
-
-#. module: resource
-#: field:resource.calendar,company_id:0
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,company_id:0
-#: view:resource.resource:0
-#: field:resource.resource,company_id:0
-msgid "Company"
-msgstr "Företag"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Material"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Fredag"
-
-#. module: resource
-#: view:resource.calendar.attendance:0
-msgid "Hours"
-msgstr "Timmar"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Reason"
-msgstr "Orsak"
-
-#. module: resource
-#: view:resource.resource:0
-#: field:resource.resource,user_id:0
-msgid "User"
-msgstr "Användare"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Search Working Period Leaves"
-msgstr "Sök arbetsperiodsfrånvaro"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting Date"
-msgstr "Startdatum"
-
-#. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
-msgstr "Gruppchef"
-
-#. module: resource
-#: field:resource.calendar.leaves,date_to:0
-msgid "End Date"
-msgstr "Slutdatum"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
-msgid "Closing Days"
-msgstr "Avslutande dagar"
-
-#. module: resource
-#: model:ir.ui.menu,name:resource.menu_resource_config
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,resource_id:0
-#: view:resource.resource:0
-msgid "Resource"
-msgstr "Resurs"
+msgid "Monday"
+msgstr "Måndag"
 
 #. module: resource
 #: field:resource.calendar,name:0
@@ -193,67 +230,11 @@ msgid "Name"
 msgstr "Namn"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.calendar.leaves,calendar_id:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Arbetstid"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Start and End time of working."
-msgstr "Arbetstidens start och slut"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-msgid "Working Period"
-msgstr "Arbetsperiod"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Onsdag"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_resource
-msgid "Resource Detail"
-msgstr "Resursdetaljer"
-
-#. module: resource
-#: field:resource.resource,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: resource
-#: help:resource.resource,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-"Om det aktiva fältet är satt till False, kommer det att du kan dölja "
-"resursposten utan att ta bort det."
-
-#. module: resource
-#: field:resource.calendar.attendance,calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Resursens kalender"
-
-#. module: resource
-#: field:resource.calendar.attendance,hour_from:0
-msgid "Work from"
-msgstr "Arbeta från"
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid ""
-"Define working hours and time table that could be scheduled to your project "
-"members"
-msgstr ""
-"Definiera arbetstider och tidtabell som kan knytas till dina projektdeltagare"
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Reason"
+msgstr "Orsak"
 
 #. module: resource
 #: help:resource.resource,user_id:0
@@ -262,39 +243,108 @@ msgstr ""
 "Relaterat användarnamn för resursen vid administration av dess rättigheter"
 
 #. module: resource
-#: help:resource.resource,calendar_id:0
-msgid "Define the schedule of resource"
-msgstr "Definiera planeringen för en resurs"
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: view:resource.calendar.leaves:resource.view_resource_calendar
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,resource_id:0
+#: view:resource.resource:resource.resource_resource_form
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Resource"
+msgstr "Resurs"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Starting Date of Leave"
-msgstr "Semesterstart"
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Resurskalender"
 
 #. module: resource
-#: field:resource.resource,code:0
-msgid "Code"
-msgstr "Kod"
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "Resursdetaljer"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "Resursavgångar"
+
+#. module: resource
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "Resurstyp"
+
+#. module: resource
+#: field:resource.calendar.attendance,calendar_id:0
+msgid "Resource's Calendar"
+msgstr "Resursens kalender"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: view:resource.resource:resource.resource_resource_tree
+msgid "Resources"
+msgstr "Resurser"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "Resurser ur funktion"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett "
+"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
+"arbetsbelastning utifrån en veckoarbetstid."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
-msgstr "Måndag"
+msgid "Saturday"
+msgstr "lördag"
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_to:0
-msgid "Work to"
-msgstr "Arbeta till"
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "Sök resurs"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "Arbetsdetaljer"
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Leaves"
+msgstr "Sök arbetsperiodsfrånvaro"
+
+#. module: resource
+#: view:resource.calendar:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "Sök arbetstid"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_from:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr "Arbetstidens start och slut"
+
+#. module: resource
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr "Startdatum"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Leave by Month"
+msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Tuesday"
-msgstr "Tisdag"
+msgid "Sunday"
+msgstr "Söndag"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -310,95 +360,67 @@ msgstr ""
 "lägger en verkningsgrad på 200%, då kommer hans beläggning endast vara 50%."
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
-msgid "Resource Leaves"
-msgstr "Resursavgångar"
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-msgid ""
-"Resources allow you to create and manage resources that should be involved "
-"in a specific project phase. You can also set their efficiency level and "
-"workload based on their weekly working hours."
-msgstr ""
-"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett "
-"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
-"arbetsbelastning utifrån en veckoarbetstid."
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Inactive"
-msgstr "Inaktiv"
-
-#. module: resource
-#: code:addons/resource/faces/resource.py:340
-#, python-format
-msgid "(vacation)"
-msgstr "(semester)"
-
-#. module: resource
-#: code:addons/resource/resource.py:455
-#, python-format
-msgid "Configuration Error!"
-msgstr "Konfigurationsfel!"
-
-#. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Human"
-msgstr "Mänsklig"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Duration"
-msgstr "Varaktighet"
-
-#. module: resource
-#: field:resource.calendar.leaves,date_from:0
-msgid "Start Date"
-msgstr "Startdatum"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Thursday"
+msgstr "Torsdag"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Saturday"
-msgstr "lördag"
+msgid "Tuesday"
+msgstr "Tisdag"
 
-#~ msgid "Starting date"
-#~ msgstr "Startdatum"
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Type"
+msgstr "Typ"
 
-#~ msgid "Day of week"
-#~ msgstr "Veckodag"
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,user_id:0
+msgid "User"
+msgstr "Användare"
 
-#~ msgid "Working time"
-#~ msgstr "Arbetstid"
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Onsdag"
 
-#~ msgid "General Information"
-#~ msgstr "Allmän information"
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Arbetsdetaljer"
 
-#~ msgid "Working time will start from"
-#~ msgstr "Arbetstid startar"
+#. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr "Arbeta från"
 
-#~ msgid "Workgroup manager"
-#~ msgstr "Arbetsgruppschef"
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr "Arbeta till"
 
-#~ msgid "Efficiency factor"
-#~ msgstr "Effektivitetsfactor"
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Gruppchef"
 
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (kopia)"
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Working Period"
+msgstr "Arbetsperiod"
 
-#~ msgid "Working time will end at"
-#~ msgstr "Arbetstid slutar"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-#~ "show a load of 100% for this phase by default, but if we put a efficency of "
-#~ "200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Detta fält visar effektiviteten av resursen för att slutföra uppgifter. "
-#~ "t.ex. resurs satte ensam på en hastighet av 5 dagar med 5 uppgifter som "
-#~ "tilldelats honom, kommer att visa en belastning på 100% för denna fas som "
-#~ "standard, men om vi sätter en verkningsgrad på 200%, då hans last bara vara "
-#~ "50%."
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+#: view:resource.calendar:resource.resource_calendar_form
+#: view:resource.calendar:resource.view_resource_calendar_search
+#: view:resource.calendar:resource.view_resource_calendar_tree
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_tree
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Arbetstid"

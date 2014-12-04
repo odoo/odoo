@@ -94,7 +94,7 @@ TODO:
         "report/webkit_report_demo.xml",
     ],
     'test': [
-#        "test/print.yml",
+        "test/print.yml",
     ],
     'installable': True,
     'auto_install': False,

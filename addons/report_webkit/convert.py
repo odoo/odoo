@@ -41,7 +41,7 @@ class WebkitXMLImport(original_xml_import):
     # The solution is not meant to be long term solution, but at least
     # allows chaining of several overrides of the _tag_report method,
     # and does not require a copy/paste of the original code.
-    def _tag_report(self, cr, rec, data_node=None):
+    def _tag_report(self, cr, rec, data_node=None, mode=None):
         report_id = super(WebkitXMLImport, self)._tag_report(cr, rec, data_node)
         if rec.get('report_type') == 'webkit':
             header = rec.get('webkit_header')

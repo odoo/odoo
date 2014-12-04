@@ -1,167 +1,96 @@
 # Swedish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-08-03 22:59+0000\n"
-"Last-Translator: Stefan Lind <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:34+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:36+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: procurement
-#: model:ir.ui.menu,name:procurement.menu_stock_sched
-msgid "Schedulers"
-msgstr "Schemaläggare"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_make_procurement
-msgid "Make Procurements"
-msgstr "Göra anskaffningar"
-
-#. module: procurement
-#: help:procurement.order.compute.all,automatic:0
+#: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
-"Triggers an automatic procurement for all products that have a virtual stock "
-"under 0. You should probably not use this option, we suggest using a MTO "
-"configuration on products."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Click to create a Procurement.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Procurement Orders</b> represent the need for a certain "
+"quantity of products, at a given time, in a given location.\n"
+"              </p>\n"
+"              <p>\n"
+"                <b>Sales Orders</b> are one typical source of Procurement "
+"Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product "
+"configuration, the procurement engine will attempt to satisfy the need by "
+"reserving products from stock, ordering products from a supplier, or passing "
+"a manufacturing order, etc...\n"
+"              </p>\n"
+"              <p>\n"
+"                A <b>Procurement Exception</b> occurs when the system cannot "
+"find a way to fulfill a procurement. Some exceptions will resolve themselves "
+"automatically, but others require manual intervention (those are identified "
+"by a specific error message in the chatter).\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Utlöser en automatisk anskaffning för alla produkter som har en virtuell "
-"bestånd under 0. Du har förmodligen inte använda detta alternativ föreslår "
-"vi att du använder en MTO-konfiguration på produkter."
 
 #. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Group By..."
-msgstr "Gruppera på..."
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
-msgid "Draft procurement of the product and location of that orderpoint"
-msgstr ""
-"Anskaffningsförslag för produkter och lagerplats med denna beställningspunkt"
-
-#. module: procurement
-#: view:product.product:0
+#: model:ir.actions.act_window,help:procurement.procurement_action
 msgid ""
-"required quantities are always\n"
-"                           available"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Click to create a procurement order.  \n"
+"              </p>\n"
+"              <p>\n"
+"                A <b>procurement order</b> is used to record a need for a "
+"specific\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
+"                minimum stock rules.</i>\n"
+"              </p>\n"
+"              <p>\n"
+"                When the procurement order is confirmed, it automatically\n"
+"                creates the necessary operations to fullfil the need: "
+"purchase\n"
+"                order proposition, manufacturing order, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"If there are not enough quantities available, the delivery order\n"
-"                           will wait for new products. To fulfill the "
-"inventory, you should\n"
-"                           create others rules like orderpoints."
+#: field:procurement.rule,action:0
+msgid "Action"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,procure_method:0
-#: field:product.template,procure_method:0
-msgid "Procurement Method"
-msgstr "Anskaffningsmetod"
+#: field:procurement.rule,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: procurement
-#: selection:product.template,supply_method:0
-msgid "Manufacture"
+#: selection:procurement.group,move_type:0
+msgid "All at once"
 msgstr ""
 
 #. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "Tjänst"
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+msgid "Cancel"
+msgstr "Avbryt"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.action_procurement_compute
-msgid "Compute Stock Minimum Rules Only"
-msgstr "Beräkna endast minsta lagersaldoregel"
-
-#. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Rules"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,company_id:0
-#: field:stock.warehouse.orderpoint,company_id:0
-msgid "Company"
-msgstr "Bolag"
-
-#. module: procurement
-#: field:procurement.order,product_uos_qty:0
-msgid "UoS Quantity"
-msgstr "Måttenhet Kvantitet"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Reason"
-msgstr "Orsak"
-
-#. module: procurement
-#: view:procurement.order.compute:0
-msgid "Compute Procurements"
-msgstr "Beräkna anskaffningar"
-
-#. module: procurement
-#: field:procurement.order,message:0
-msgid "Latest error"
-msgstr "Senaste fel"
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,product_min_qty:0
-msgid "Minimum Quantity"
-msgstr ""
-
-#. module: procurement
-#: help:mrp.property,composition:0
-msgid "Not used in computations, for information purpose only."
-msgstr "Används inte i beräkningar, endast avsedd som information."
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,procurement_id:0
-msgid "Latest procurement"
-msgstr "Senaste anskaffning"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
-msgid ""
-"You can define your minimum stock rules, so that OpenERP will automatically "
-"create draft manufacturing orders or purchase quotations according to the "
-"stock level. Once the virtual stock of a product (= stock on hand minus all "
-"confirmed orders and reservations) is below the minimum quantity, OpenERP "
-"will generate a procurement request to increase the stock up to the maximum "
-"quantity."
-msgstr ""
-"Du kan definiera dina minimilagersaldoregler, så att OpenERP automatiskt "
-"skapar beställningar förslag på tillverkningsorder eller inköpsorder enligt "
-"lagernivån. När det virtuella lagret av en produkt (= på inneliggande lager "
-"minus alla bekräftade beställningar och reservationer) är lägre än den "
-"minsta kvantitet, kommer OpenERP generera en anskaffningsanmodan om att öka "
-"lagersaldo upp till den maximala kvantiteten."
-
-#. module: procurement
-#: field:procurement.order,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "Ett Undantag inträffade vid beräkning av anskaffningsorder."
-
-#. module: procurement
-#: view:product.product:0
-msgid "Products"
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Cancel Procurement"
 msgstr ""
 
 #. module: procurement
@@ -170,34 +99,129 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr "Permanenta upphandlingsfel"
-
-#. module: procurement
-#: help:procurement.order,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: procurement
-#: view:procurement.order.compute.all:0
-msgid "Scheduler Parameters"
-msgstr "Parametrar Schemaläggare"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_stock_move
-msgid "Stock Move"
-msgstr "Lagertransaktion"
-
-#. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:156
 #, python-format
-msgid "Invalid Action!"
+msgid "Cannot delete Procurement Order(s) which are in %s state."
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Check Procurement"
+msgstr ""
+
+#. module: procurement
+#: help:procurement.order,rule_id:0
+msgid ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
+msgstr ""
+
+#. module: procurement
+#: field:procurement.order,company_id:0
+#: field:procurement.rule,company_id:0
+msgid "Company"
+msgstr "Bolag"
+
+#. module: procurement
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+msgid "Compute all procurements in the background."
+msgstr ""
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Beräkna alla schemaläggare"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Confirmed"
+msgstr "Bekräftad"
+
+#. module: procurement
+#: field:procurement.group,create_uid:0
+#: field:procurement.order,create_uid:0
+#: field:procurement.order.compute.all,create_uid:0
+#: field:procurement.rule,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.group,create_date:0
+#: field:procurement.order,create_date:0
+#: field:procurement.order.compute.all,create_date:0
+#: field:procurement.rule,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: procurement
+#: help:procurement.order,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: procurement
+#: field:procurement.group,move_type:0
+msgid "Delivery Method"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.order,name:0
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Done"
+msgstr "Avslutad"
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Exception"
+msgstr "Undantag"
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Exceptions"
+msgstr "Undantag"
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "External note..."
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Extra Information"
+msgstr "Extra Information"
+
+#. module: procurement
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Fixed"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.rule,group_id:0
+msgid "Fixed Procurement Group"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.order,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.rule:procurement.view_procurement_rule_form
+msgid "General Information"
+msgstr "Allmän information"
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Group By"
+msgstr "Gruppera enligt"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.do_view_procurements
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Group's Procurements"
 msgstr ""
 
 #. module: procurement
@@ -208,408 +232,27 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: selection:procurement.order,state:0
-msgid "Ready"
-msgstr "Färdig"
-
-#. module: procurement
-#: field:procurement.order.compute.all,automatic:0
-msgid "Automatic orderpoint"
-msgstr "Automatisk orderpunkt"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_exceptions
-msgid ""
-"<p>\n"
-"                Procurement Orders represent the need for a certain quantity "
-"of products, at a given time, in a given location. Sales Orders are one "
-"typical source of Procurement Orders (but these are distinct documents). "
-"Depending on the procurement parameters and the product configuration, the "
-"procurement engine will attempt to satisfy the need by reserving products "
-"from stock, ordering products from a supplier, or passing a manufacturing "
-"order, etc. A Procurement Exception occurs when the system cannot find a way "
-"to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message).\n"
-"                </p>\n"
-"            "
+#: field:procurement.group,id:0
+#: field:procurement.order,id:0
+#: field:procurement.order.compute.all,id:0
+#: field:procurement.rule,id:0
+msgid "ID"
 msgstr ""
 
 #. module: procurement
-#: selection:procurement.order,state:0
-msgid "Confirmed"
-msgstr "Bekräftad"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Retry"
-msgstr "Försök igen"
-
-#. module: procurement
-#: view:procurement.order.compute:0
-#: view:procurement.orderpoint.compute:0
-msgid "Parameters"
-msgstr "Parametrar"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Confirm"
-msgstr "Godkänn"
-
-#. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Quantity Multiple"
+#: help:procurement.order,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: procurement
-#: help:procurement.order,origin:0
-msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by OpenERP."
+#: help:procurement.rule,active:0
+msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
-"Hänvisning till dokument som skapade denna upphandling. \n"
-" Detta sköts automatiskt av OpenERP."
 
 #. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Procurement Orders to Process"
-msgstr "Upphandlingsorder att bearbeta"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Minsta lager regel"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:155
 #, python-format
-msgid "Procurement '%s' is in exception: "
-msgstr "Upphandling '%s' behöver åtgärdas: "
-
-#. module: procurement
-#: field:procurement.order,priority:0
-msgid "Priority"
-msgstr "Prioritet"
-
-#. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Reordering Rules Search"
-msgstr ""
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "Väntar"
-
-#. module: procurement
-#: field:procurement.order,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,location_id:0
-#: view:stock.warehouse.orderpoint:0
-#: field:stock.warehouse.orderpoint,location_id:0
-msgid "Location"
-msgstr "Plats"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_stock_picking
-msgid "Picking List"
-msgstr "Plocklista"
-
-#. module: procurement
-#: field:make.procurement,warehouse_id:0
-#: view:stock.warehouse.orderpoint:0
-#: field:stock.warehouse.orderpoint,warehouse_id:0
-msgid "Warehouse"
-msgstr "Lager"
-
-#. module: procurement
-#: selection:stock.warehouse.orderpoint,logic:0
-msgid "Best price (not yet active!)"
-msgstr "Bästa pris (ännu ej aktiv!)"
-
-#. module: procurement
-#: code:addons/procurement/schedulers.py:110
-#, python-format
-msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr "PROC %d: från lager - %3.2f%-5s -%s"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute
-msgid "Compute Procurement"
-msgstr "Beräkna Anskaffning"
-
-#. module: procurement
-#: field:res.company,schedule_range:0
-msgid "Scheduler Range Days"
-msgstr "Schemaläggare antal dagar"
-
-#. module: procurement
-#: view:make.procurement:0
-msgid "Ask New Products"
-msgstr "Begär nya produkter"
-
-#. module: procurement
-#: field:make.procurement,date_planned:0
-msgid "Planned Date"
-msgstr "Planerat datum"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Group By"
-msgstr "Gruppera enligt"
-
-#. module: procurement
-#: field:make.procurement,qty:0
-#: field:procurement.order,product_qty:0
-msgid "Quantity"
-msgstr "Antal"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:365
-#, python-format
-msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "Ej tillräckligt lager och regel för minsta lager saknas."
-
-#. module: procurement
-#: field:make.procurement,uom_id:0
-#: view:procurement.order:0
-msgid "Unit of Measure"
-msgstr "Måttenhet"
-
-#. module: procurement
-#: selection:procurement.order,procure_method:0
-#: selection:product.template,procure_method:0
-msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a procurement order. \n"
-"              </p><p>\n"
-"                A procurement order is used to record a need for a specific\n"
-"                product at a specific location.  Procurement orders are "
-"usually\n"
-"                created automatically from sales orders, pull logistic rules "
-"or\n"
-"                minimum stock rules.\n"
-"              </p><p>\n"
-"                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
-"                order proposition, manufacturing order, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: procurement
-#: help:procurement.order,procure_method:0
-msgid ""
-"If you encode manually a Procurement, you probably want to use a make to "
-"order method."
-msgstr ""
-"Om du manuellt gör en upphandling, vill du förmodligen använda metoden "
-"tillverka på order."
-
-#. module: procurement
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement
-msgid "Automatic Procurements"
-msgstr "Automatiska anskaffningar"
-
-#. module: procurement
-#: view:product.product:0
-msgid ""
-"use the available\n"
-"                           inventory"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order
-#: model:process.process,name:procurement.process_process_procurementprocess0
-#: view:procurement.order:0
-msgid "Procurement"
-msgstr "Anskaffning"
-
-#. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action
-msgid "Procurement Orders"
-msgstr "Anskaffningsorders"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "To Fix"
-msgstr "Att fixa"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Exceptions"
-msgstr "Undantag"
-
-#. module: procurement
-#: model:process.node,note:procurement.process_node_serviceonorder0
-msgid "Assignment from Production or Purchase Order."
-msgstr "Uppdrag från produktion eller inköpsorder."
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_mrp_property
-msgid "Property"
-msgstr "Fastighet"
-
-#. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_make_procurement
-#: view:make.procurement:0
-msgid "Procurement Request"
-msgstr "Inköpsförfrågan"
-
-#. module: procurement
-#: view:procurement.orderpoint.compute:0
-msgid "Compute Stock"
-msgstr "Beräkna Lager"
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
-msgid "Related Procurement Orders"
-msgstr "Relaterade anskaffningsordrar"
-
-#. module: procurement
-#: field:procurement.order,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: procurement
-#: selection:mrp.property,composition:0
-msgid "plus"
-msgstr "plus"
-
-#. module: procurement
-#: help:procurement.order,state:0
-msgid ""
-"When a procurement is created the status is set to 'Draft'.\n"
-" If the procurement is confirmed, the status is set to 'Confirmed'.          "
-"  \n"
-"After confirming the status is set to 'Running'.\n"
-" If any exception arises in the order then the status is set to "
-"'Exception'.\n"
-" Once the exception is removed the status becomes 'Ready'.\n"
-" It is in 'Waiting'. status when the procurement is waiting for another one "
-"to finish."
-msgstr ""
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"orderpoint without removing it."
-msgstr ""
-"Om det aktiva fältet är satt till Falskt, kommer du att kunna dölja "
-"orderpunkt utan att ta bort det."
-
-#. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
-
-#. module: procurement
-#: help:procurement.orderpoint.compute,automatic:0
-msgid "If the stock of a product is under 0, it will act like an orderpoint"
-msgstr ""
-"Om lagersaldo understiger 0, kommer detta att fungera som beställningspunkt"
-
-#. module: procurement
-#: field:procurement.order,product_uom:0
-#: field:stock.warehouse.orderpoint,product_uom:0
-msgid "Product Unit of Measure"
-msgstr ""
-
-#. module: procurement
-#: constraint:stock.warehouse.orderpoint:0
-msgid ""
-"You have to select a product unit of measure in the same category than the "
-"default unit of measure of the product"
-msgstr ""
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Lines"
-msgstr "Anskaffningsrader"
-
-#. module: procurement
-#: view:product.product:0
-msgid ""
-"as it's a consumable (as a result of this, the quantity\n"
-"                           on hand may become negative)."
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,note:0
-msgid "Note"
-msgstr "Anteckning"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,product_min_qty:0
-msgid ""
-"When the virtual stock goes below the Min Quantity specified for this field, "
-"OpenERP generates a procurement to bring the forecasted quantity to the Max "
-"Quantity."
-msgstr ""
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Draft"
-msgstr "Utkast"
-
-#. module: procurement
-#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
-#: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
-#: view:procurement.order.compute.all:0
-msgid "Run Schedulers"
-msgstr ""
-
-#. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr "Den här guiden kommer planlägga anskaffningar."
-
-#. module: procurement
-#: view:procurement.order:0
-#: field:procurement.order,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: procurement
-#: selection:product.template,supply_method:0
-msgid "Buy"
-msgstr ""
-
-#. module: procurement
-#: view:product.product:0
-msgid "for the delivery order."
-msgstr ""
-
-#. module: procurement
-#: selection:procurement.order,priority:0
-msgid "Normal"
-msgstr "Normal"
-
-#. module: procurement
-#: help:product.template,supply_method:0
-msgid ""
-"Manufacture: When procuring the product, a manufacturing order or a task "
-"will be generated, depending on the product type. \n"
-"Buy: When procuring the product, a purchase order will be generated."
-msgstr ""
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,product_max_qty:0
-msgid "Maximum Quantity"
+msgid "Invalid Action!"
 msgstr ""
 
 #. module: procurement
@@ -618,166 +261,66 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:367
-#, python-format
-msgid "Not enough stock."
-msgstr "Inte tillräckligt lager."
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: procurement
-#: model:process.node,name:procurement.process_node_procureproducts0
-msgid "Procure Products"
-msgstr "Produktanskaffning"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:312
-#, python-format
-msgid ""
-"Please check the quantity in procurement order(s) for the product \"%s\", it "
-"should not be 0 or less!"
+#: field:procurement.order,message_last_post:0
+msgid "Last Message Date"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,date_planned:0
-msgid "Scheduled date"
-msgstr "Planerat datum"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Exception"
-msgstr "Undantag"
-
-#. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this product, a delivery order will be created.\n"
-"                           OpenERP will consider that the"
+#: field:procurement.group,write_uid:0
+#: field:procurement.order,write_uid:0
+#: field:procurement.order.compute.all,write_uid:0
+#: field:procurement.rule,write_uid:0
+msgid "Last Updated by"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:133
-#, python-format
-msgid "Automatic OP: %s"
-msgstr "Automatisk OP: %s"
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_procurement_orderpoint_compute
-msgid "Automatic Order Point"
-msgstr "Automatisk orderpunkt"
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Antal Flera"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will be rounded up to this multiple."
-msgstr ""
-"Upphandlingens kvantitet kommer att avrundas uppåt till denna multipel."
-
-#. module: procurement
-#: model:ir.model,name:procurement.model_res_company
-msgid "Companies"
-msgstr "Bolag"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Extra Information"
-msgstr "Extra Information"
-
-#. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
+#: field:procurement.group,write_date:0
+#: field:procurement.order,write_date:0
+#: field:procurement.order.compute.all,write_date:0
+#: field:procurement.rule,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: procurement
-#: sql_constraint:stock.warehouse.orderpoint:0
-msgid "Qty Multiple must be greater than zero."
-msgstr "Antal multipel måste vara större än noll."
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Late"
+msgstr "Sen"
 
 #. module: procurement
-#: selection:stock.warehouse.orderpoint,logic:0
-msgid "Order to Max"
-msgstr "Order till Max"
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Leave Empty"
+msgstr ""
 
 #. module: procurement
-#: field:procurement.order,date_close:0
-msgid "Date Closed"
-msgstr "Datum stängd"
-
-#. module: procurement
-#: view:res.company:0
+#: view:res.company:procurement.mrp_company
 msgid "Logistics"
 msgstr ""
 
 #. module: procurement
-#: help:product.template,procure_method:0
-msgid ""
-"Make to Stock: When needed, the product is taken from the stock or we wait "
-"for replenishment. \n"
-"Make to Order: When needed, the product is purchased or produced."
+#: field:procurement.order,message_ids:0
+msgid "Messages"
 msgstr ""
 
 #. module: procurement
-#: field:mrp.property,composition:0
-msgid "Properties composition"
-msgstr "Egenskaper sammansättning"
+#: help:procurement.order,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: field:procurement.rule,name:0
+msgid "Name"
+msgstr "Namn"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:213
 #, python-format
-msgid "Data Insufficient !"
-msgstr "Otillräckliga data!"
+msgid "No rule matching this procurement"
+msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_mrp_property_group
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
-msgid "Property Group"
-msgstr "Enhetsgrupp"
-
-#. module: procurement
-#: view:stock.warehouse.orderpoint:0
-msgid "Misc"
-msgstr "Övrigt"
-
-#. module: procurement
-#: field:stock.move,procurements:0
-msgid "Procurements"
-msgstr "Anskaffningar"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Run Procurement"
-msgstr "Kör upphandling"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Done"
-msgstr "Avslutad"
-
-#. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
-msgid "Cancel"
-msgstr "Avbryt"
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,logic:0
-msgid "Reordering Mode"
-msgstr "Repitorderläge"
-
-#. module: procurement
-#: field:procurement.order,origin:0
-msgid "Source Document"
-msgstr "Källdokument"
+#: selection:procurement.order,priority:0
+msgid "Normal"
+msgstr "Normal"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -785,156 +328,84 @@ msgid "Not urgent"
 msgstr "Inte brådskande"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: procurement
+#: selection:procurement.group,move_type:0
+msgid "Partial"
 msgstr ""
 
 #. module: procurement
-#: help:stock.warehouse.orderpoint,product_max_qty:0
-msgid ""
-"When the virtual stock goes below the Min Quantity, OpenERP generates a "
-"procurement to bring the forecasted quantity to the Quantity specified as "
-"Max Quantity."
-msgstr ""
+#: field:procurement.order,priority:0
+msgid "Priority"
+msgstr "Prioritet"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Beräkna alla schemaläggare"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Sen"
-
-#. module: procurement
-#: view:board.board:0
-msgid "Procurements in Exception"
-msgstr "Anskaffningar i undantag"
+#: model:ir.model,name:procurement.model_procurement_order
+#: view:procurement.order:procurement.procurement_form_view
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Procurement"
+msgstr "Anskaffning"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
 msgstr "Anskaffningsundantag"
 
 #. module: procurement
-#: field:product.product,orderpoint_ids:0
-msgid "Minimum Stock Rules"
-msgstr "Regler för Minsta Lager"
-
-#. module: procurement
-#: view:make.procurement:0
-msgid ""
-"Fill is this for to launch a procurement request for this\n"
-"                        product. According to the product configuration, "
-"this may\n"
-"                        trigger a draft purchase order, a manufacturing "
-"order or\n"
-"                        a new task."
+#: field:procurement.order,group_id:0
+msgid "Procurement Group"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,close_move:0
-msgid "Close Move at end"
-msgstr "Stäng Flytta till slutet"
+#: view:procurement.order:procurement.procurement_tree_view
+msgid "Procurement Lines"
+msgstr "Anskaffningsrader"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Scheduled Date"
-msgstr "Planerat datum"
+#: model:ir.actions.act_window,name:procurement.procurement_action
+msgid "Procurement Orders"
+msgstr "Anskaffningsorders"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_product_product
-#: field:make.procurement,product_id:0
-#: view:procurement.order:0
+#: model:ir.model,name:procurement.model_procurement_group
+msgid "Procurement Requisition"
+msgstr ""
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_rule
+msgid "Procurement Rule"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.group:procurement.procurement_group_form_view
+msgid "Procurement group"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Procurement started late"
+msgstr "Upphandling startade sent"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: view:procurement.group:procurement.procurement_group_form_view
+#: field:procurement.group,procurement_ids:0
+msgid "Procurements"
+msgstr "Anskaffningar"
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
 #: field:procurement.order,product_id:0
-#: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Produkt"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Temporary"
-msgstr "Tillfällig"
-
-#. module: procurement
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
-#: field:procurement.order,name:0
-msgid "Description"
-msgstr "Beskrivning"
-
-#. module: procurement
-#: selection:procurement.order,priority:0
-msgid "Urgent"
-msgstr "Brådskande"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Running"
-msgstr "Pågående"
-
-#. module: procurement
-#: model:process.node,name:procurement.process_node_serviceonorder0
-#: selection:procurement.order,procure_method:0
-#: selection:product.template,procure_method:0
-msgid "Make to Order"
-msgstr "Anskaffa på order"
-
-#. module: procurement
-#: field:product.template,supply_method:0
-msgid "Supply Method"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,move_id:0
-msgid "Reservation"
-msgstr "Reservation"
-
-#. module: procurement
-#: model:process.node,note:procurement.process_node_procureproducts0
-msgid "The way to procurement depends on the product type."
-msgstr "Vägen till anskaffning beror på produkttyp."
-
-#. module: procurement
-#: view:product.product:0
-msgid "When you sell this product, OpenERP will"
-msgstr ""
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Temporary Procurement Exceptions"
-msgstr "Tillfälligt anskaffningsfel"
-
-#. module: procurement
-#: field:mrp.property,name:0
-#: field:stock.warehouse.orderpoint,name:0
-msgid "Name"
-msgstr "Namn"
-
-#. module: procurement
-#: selection:mrp.property,composition:0
-msgid "max"
-msgstr "max"
-
-#. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:stock.warehouse.orderpoint:0
-msgid "Reordering Rules"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:139
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
+#: field:procurement.order,product_uom:0
+msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: procurement
@@ -943,33 +414,143 @@ msgid "Product UoS"
 msgstr "Produkt försäljningsenhet"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_product_template
-msgid "Product Template"
+#: selection:procurement.rule,group_propagation_option:0
+msgid "Propagate"
 msgstr ""
 
 #. module: procurement
-#: view:procurement.orderpoint.compute:0
+#: view:procurement.rule:procurement.view_procurement_rule_form
+msgid "Propagation Options"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.rule,group_propagation_option:0
+msgid "Propagation of Procurement Group"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.rule:procurement.view_procurement_rule_form
+msgid "Pull Rule"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.rule:procurement.view_procurement_rule_tree
+msgid "Pull Rules"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.order,product_qty:0
+msgid "Quantity"
+msgstr "Antal"
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Reconfirm Procurement"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.group,name:0
+msgid "Reference"
+msgstr ""
+
+#. module: procurement
+#: help:procurement.order,origin:0
 msgid ""
-"Wizard checks all the stock minimum rules and generate procurement order."
+"Reference of the document that created this Procurement.\n"
+"This is automatically completed by Odoo."
 msgstr ""
-"Guiden kontrollerar alla regler för minsta lager och genererar "
-"anskaffningsordrarna."
 
 #. module: procurement
-#: view:procurement.order:0
+#: field:procurement.order,rule_id:0
+msgid "Rule"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Run Procurement"
+msgstr "Kör upphandling"
+
+#. module: procurement
+#: model:ir.actions.act_window,name:procurement.action_compute_schedulers
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+msgid "Run Schedulers"
+msgstr ""
+
+#. module: procurement
+#: selection:procurement.order,state:0
+msgid "Running"
+msgstr "Pågående"
+
+#. module: procurement
+#: field:procurement.order,date_planned:0
+msgid "Scheduled Date"
+msgstr "Planerat datum"
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
+msgid "Scheduled Month"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+msgid "Scheduler Parameters"
+msgstr "Parametrar Schemaläggare"
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_form_view
+msgid "Scheduling"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Search Procurement"
 msgstr "Sök anskaffning"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
+#: field:procurement.rule,sequence:0
+msgid "Sequence"
 msgstr ""
-"Detta är tidsramen analyserad av schemaläggaren vid beräkning av "
-"upphandlingarna. Alla upphandlingar som inte ligger mellan idag och "
-"today+range utesluts för att istället kunna göra framtida beräkning."
+
+#. module: procurement
+#: field:procurement.order,origin:0
+msgid "Source Document"
+msgstr "Källdokument"
+
+#. module: procurement
+#: view:procurement.order:procurement.view_procurement_filter
+#: field:procurement.order,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: procurement
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: procurement
+#: help:procurement.rule,name:0
+msgid "This field will fill the packing origin and the name of its moves"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:procurement.procurement_tree_view
+msgid "Unit of Measure"
+msgstr "Måttenhet"
+
+#. module: procurement
+#: field:procurement.order,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: procurement
+#: field:procurement.order,product_uos_qty:0
+msgid "UoS Quantity"
+msgstr "Måttenhet Kvantitet"
+
+#. module: procurement
+#: selection:procurement.order,priority:0
+msgid "Urgent"
+msgstr "Brådskande"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -977,299 +558,6 @@ msgid "Very Urgent"
 msgstr "Mycket brådskande"
 
 #. module: procurement
-#: field:procurement.orderpoint.compute,automatic:0
-msgid "Automatic Orderpoint"
-msgstr "Automatisk Orderpunkt"
-
-#. module: procurement
-#: help:procurement.order,message_ids:0
-msgid "Messages and communication history"
+#: view:procurement.order:procurement.procurement_form_view
+msgid "e.g. SO005"
 msgstr ""
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Procurement started late"
-msgstr "Upphandling startade sent"
-
-#. module: procurement
-#: selection:mrp.property,composition:0
-msgid "min"
-msgstr "min"
-
-#. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
-msgid "or"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/schedulers.py:134
-#, python-format
-msgid "SCHEDULER"
-msgstr "SCHEMALÄGGARE"
-
-#. module: procurement
-#: view:product.product:0
-msgid "Request Procurement"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/schedulers.py:87
-#, python-format
-msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr "PROC %d : på beställning -% 3.2f%-5s -% s"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:339
-#, python-format
-msgid "Products reserved from stock."
-msgstr ""
-
-#~ msgid "Notes"
-#~ msgstr "Anteckningar"
-
-#~ msgid "Configuration"
-#~ msgstr "Konfiguration"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fel! Du kan inte skapa rekursiva bolagsstrukturer."
-
-#~ msgid "Product & Location"
-#~ msgstr "Produkt och lagerplats"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "References"
-#~ msgstr "Referenser"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Felaktig åtgärd!"
-
-#~ msgid "Min Quantity"
-#~ msgstr "Minsta antal"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "Du försöker tilldela ett parti som inte är från samma produkt."
-
-#~ msgid "Procurement Reason"
-#~ msgstr "Anskaffningsorsak"
-
-#~ msgid "on order"
-#~ msgstr "beställt"
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Leverantör saknas för denna produkt !"
-
-#~ msgid "Product UOM"
-#~ msgstr "Produktenhet"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "Du måste tilldela ett produktionsparti för denna produkt"
-
-#~ msgid ""
-#~ "Procurement Orders represent the need for a certain quantity of products, at "
-#~ "a given time, in a given location. Sales Orders are one typical source of "
-#~ "Procurement Orders (but these are distinct documents). Depending on the "
-#~ "procurement parameters and the product configuration, the procurement engine "
-#~ "will attempt to satisfy the need by reserving products from stock, ordering "
-#~ "products from a supplier, or passing a manufacturing order, etc. A "
-#~ "Procurement Exception occurs when the system cannot find a way to fulfill a "
-#~ "procurement. Some exceptions will resolve themselves automatically, but "
-#~ "others require manual intervention (those are identified by a specific error "
-#~ "message)."
-#~ msgstr ""
-#~ "Anskaffningsorder representerar behovet av en viss mängd av produkter vid en "
-#~ "given tidpunkt, på en given lagerplats. Försäljningsorder är ett typiskt "
-#~ "källa för anskaffning (men dessa är olika dokument). Beroende på "
-#~ "anskaffningsparametrar och produktkonfiguration, kommer anskaffningsmotorn "
-#~ "försöka tillgodose behovet genom att reservera produkter från lager, "
-#~ "beställa produkter från en leverantör, eller skapa en tillverkningsorder, "
-#~ "etc. Ett anskaffningsundantag inträffar när systemet inte kan hitta ett sätt "
-#~ "att uppfylla en anskaffning. Vissa undantag kommer att lösa sig automatiskt, "
-#~ "medan andra kräver handläggning (de identifieras med ett specifikt "
-#~ "felmeddelande)."
-
-#~ msgid "Product UoM"
-#~ msgstr "Produktenhet"
-
-#~ msgid "Minimum Stock Rules Search"
-#~ msgstr "Sökning på regler för minimilager"
-
-#, python-format
-#~ msgid "No address defined for the supplier"
-#~ msgstr "Ingen adress definierad för leverantören"
-
-#~ msgid ""
-#~ "When a procurement is created the state is set to 'Draft'.\n"
-#~ " If the procurement is confirmed, the state is set to 'Confirmed'.           "
-#~ " \n"
-#~ "After confirming the state is set to 'Running'.\n"
-#~ " If any exception arises in the order then the state is set to 'Exception'.\n"
-#~ " Once the exception is removed the state becomes 'Ready'.\n"
-#~ " It is in 'Waiting'. state when the procurement is waiting for another one "
-#~ "to finish."
-#~ msgstr ""
-#~ "När en upphandling skapas sätts den först till 'Utkast'.\n"
-#~ "Om upphandlingen bekräftas, sätts statusen till 'Bekräftad'.\n"
-#~ "Efter att den bekräftats blir den satt till satt till 'Pågående'.\n"
-#~ "Om något behöver åtgärdas i ordern ändras statusen till 'Undantag'.\n"
-#~ "När åtgärden är utförd blir statusen 'Klar'.\n"
-#~ "Statusen är 'Väntar' när upphandlingen väntar på åtgärd."
-
-#~ msgid "Planification"
-#~ msgstr "Planering"
-
-#, python-format
-#~ msgid ""
-#~ "Here is the procurement scheduling report.\n"
-#~ "\n"
-#~ "        Start Time: %s \n"
-#~ "        End Time: %s \n"
-#~ "        Total Procurements processed: %d \n"
-#~ "        Procurements with exceptions: %d \n"
-#~ "        Skipped Procurements (scheduled date outside of scheduler range) %d "
-#~ "\n"
-#~ "\n"
-#~ "        Exceptions:\n"
-#~ msgstr ""
-#~ "Detta är rapporten för upphandlingensschemaläggning  \n"
-#~ "\n"
-#~ " starttid:. %s \n"
-#~ " Sluttid: %s  \n"
-#~ " Totalt bearbetade upphandlingar: %d \n"
-#~ " Upphandlingar med åtgärder: %d \n"
-#~ " Överhoppade upphandling (planerade datumet utanför schemaläggaren intervall "
-#~ ") %d \n"
-#~ "\n"
-#~ " Undantag:\n"
-
-#~ msgid ""
-#~ "When the virtual stock goes below the Min Quantity, OpenERP generates a "
-#~ "procurement to bring the virtual stock to the Quantity specified as Max "
-#~ "Quantity."
-#~ msgstr ""
-#~ "När det virtuella lagret går under Min.Antal genererar OpenERP själv en "
-#~ "upphandling för att få det virtuella lager till den kvantitet som anges som "
-#~ "max antal."
-
-#~ msgid ""
-#~ "A procurement order is used to record a need for a specific product at a "
-#~ "specific location. A procurement order is usually created automatically from "
-#~ "sales orders, a Pull Logistics rule or Minimum Stock Rules. When the "
-#~ "procurement order is confirmed, it automatically creates the necessary "
-#~ "operations to fullfil the need: purchase order proposition, manufacturing "
-#~ "order, etc."
-#~ msgstr ""
-#~ "En anskaffningsorder används för att registrera ett behov av en specifik "
-#~ "produkt på en viss plats. En anskaffningsbeställning är vanligtvis skapat "
-#~ "automatiskt från en försäljningsorder, en Dra logistik regel eller "
-#~ "minimiregler för lager. När anskaffningsbeställningen bekräftas skapas "
-#~ "automatiskt de nödvändiga åtgärder för att tillfredsställa behovet: förslag "
-#~ "till inköpsorder, tillverkningsorder, etc."
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "Regel för Minsta Lager"
-
-#, python-format
-#~ msgid ""
-#~ "Please check the quantity in procurement order(s), it should not be 0 or "
-#~ "less!"
-#~ msgstr ""
-#~ "Kontrollera mängden i anskaffningsordern. Det bör inte vara 0 eller mindre!"
-
-#~ msgid "Max Quantity"
-#~ msgstr "Max antal"
-
-#~ msgid ""
-#~ "When the virtual stock goes below the Min Quantity specified for this field, "
-#~ "OpenERP generates a procurement to bring the virtual stock to the Max "
-#~ "Quantity."
-#~ msgstr ""
-#~ "När den virtuella beståndet går under Min. mängd som anges i det här fältet "
-#~ "genererar OpenERP automatiskt en anskaffning för att få den virtuella lagret "
-#~ "till Max. antal."
-
-#~ msgid "You can not move products from or to a location of the type view."
-#~ msgstr "Du kan inte flytta produkter från eller till en plats av typen vyn."
-
-#~ msgid ""
-#~ "This wizard allows you to run all procurement, production and/or purchase "
-#~ "orders that should be processed based on their configuration. By default, "
-#~ "the scheduler is launched automatically every night by OpenERP. You can use "
-#~ "this menu to force it to be launched now. Note that it runs in the "
-#~ "background, you may have to wait for a few minutes until it has finished "
-#~ "computing."
-#~ msgstr ""
-#~ "Den här guiden ger dig möjlighet att köra alla inköp, produktion och / eller "
-#~ "köp order som ska behandlas utifrån deras konfiguration. Som standard "
-#~ "startas schemaläggaren automatiskt varje natt av OpenERP. Du kan använda "
-#~ "denna meny för att tvinga den att köras nu. Observera att den körs i "
-#~ "bakgrunden. Du kan behöva vänta några minuter tills den är klar med "
-#~ "beräkningarna."
-
-#, python-format
-#~ msgid "No minimum orderpoint rule defined."
-#~ msgstr "Ingen regel för minsta orderpunkt har definieras."
-
-#~ msgid "Procurement name."
-#~ msgstr "Upphandling namn."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referens måste vara unikt per företag!"
-
-#~ msgid "Locations"
-#~ msgstr "Platser"
-
-#~ msgid "from stock"
-#~ msgstr "från lager"
-
-#~ msgid "General Information"
-#~ msgstr "Allmän information"
-
-#, python-format
-#~ msgid "No default supplier defined for this product"
-#~ msgstr "Ingen standard leverantör definierad för denna produkt"
-
-#~ msgid "Details"
-#~ msgstr "Detaljer"
-
-#~ msgid "Quantity Rules"
-#~ msgstr "Antal Regler"
-
-#~ msgid "UOM"
-#~ msgstr "Måttenhet"
-
-#~ msgid ""
-#~ "This wizard will plan the procurement for this product. This procurement may "
-#~ "generate task, production orders or purchase orders."
-#~ msgstr ""
-#~ "Den här guiden kommer att planera upphandlingen för denna produkt. Denna "
-#~ "upphandling kan generera uppgifter, produktionsorder eller anskaffningsorder."
-
-#~ msgid "MRP & Logistics Scheduler"
-#~ msgstr "MRP & Logistik Schemaläggare"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Företagsnamnet måste vara unikt!"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "från lager: Produkter tilldelade."
-
-#~ msgid "Compute Schedulers"
-#~ msgstr "Beräkna schemaläggare"
-
-#~ msgid "Procurement Details"
-#~ msgstr "Upphandling Detaljer"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Fel: felaktig EAN kod"
-
-#, python-format
-#~ msgid "Cannot delete Procurement Order(s) which are in %s state!"
-#~ msgstr "Kan inte ta bort anskaffningsorder som är i status %s !"

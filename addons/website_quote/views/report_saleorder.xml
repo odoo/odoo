@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//div[@class='page']/div[@id='informations']" position="inside">
+        <div t-if="o.validity_date" class="col-xs-3">
+            <strong>Expiry Date:</strong>
+            <p t-field="o.validity_date"/>
+        </div>
+    </xpath>
+</template>
+</data>
+</openerp>

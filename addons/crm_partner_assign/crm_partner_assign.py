@@ -56,8 +56,6 @@ class res_partner(osv.osv):
     _columns = {
         'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'),
         'grade_id': fields.many2one('res.partner.grade', 'Grade'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
@@ -127,7 +125,7 @@ class crm_lead(osv.osv):
             self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
-                salesteam_id = partner.section_id and partner.section_id.id or False
+                salesteam_id = partner.team_id and partner.team_id.id or False
                 for lead_id in ids:
                     self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], team_id=salesteam_id, context=context)
             self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)

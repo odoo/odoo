@@ -12,18 +12,18 @@
     <t t-call="website.layout">
         <div id="wrap">
             <div class="oe_structure">
-                <section data-snippet-id="text-block" class="mb16">
+                <section class="mb16">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
+                            <div class="col-md-12 text-center mb16">
                                 <h2>Our Job Offers</h2>
                                 <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
                             </div>
-                            <div class="col-md-12" data-snippet-id="colmd">
+                            <div class="col-md-12">
                                 <p>
                                     With a small team of smart people, we released the most
                                     disruptive enterprise management software in the world.
-                                    OpenERP is fully open source, super easy, full featured
+                                    Odoo is fully open source, super easy, full featured
                                     (3000+ apps) and its online offer is 3 times cheaper than
                                     traditional competitors like SAP and Ms Dynamics.
                                 </p>
@@ -123,7 +123,7 @@
         <div t-field="job.website_description"/>
 
         <div class="oe_structure">
-            <section data-snippet-id="cta" class="mt16 mb16">
+            <section class="mt16 mb16">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 text-center mt16 mb16">
@@ -210,7 +210,7 @@
                         we will get back to you soon.
                     </p>
                 </div>
-                <section data-snippet-id="cta" class="oe_dark">
+                <section class="oe_dark">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 text-center mt16 mb16">
@@ -224,10 +224,10 @@
     </t>
 </template>
 
-<template id="job_countries" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Countries">
+<template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }">All Countries</a></li>
+            <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1">All Countries</a></li>
             <t t-foreach="countries" t-as="country">
                 <li t-att-class="'active' if country_id and country_id.id == country.id else ''">
                     <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }" ><span t-field="country.name"/></a>
@@ -243,7 +243,7 @@
     </xpath>
 </template>
 
-<template id="job_departments" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Departments">
+<template id="job_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if department_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else '' }">All Departments</a></li>
@@ -262,7 +262,7 @@
     </xpath>
 </template>
 
-<template id="job_offices" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Offices">
+<template id="job_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if office_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }">All Offices</a></li>

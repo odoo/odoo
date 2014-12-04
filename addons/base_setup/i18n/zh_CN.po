@@ -1,116 +1,41 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_setup
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-22 04:14+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Emails Integration"
-msgstr "Email 集成"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "访客"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Contacts"
-msgstr "联系人"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "使用OpenID登陆(Google, Facebook...)"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid ""
-"OpenERP allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically "
-"synchronize emails with OpenERP\n"
-"                            using regular POP/IMAP accounts, using a direct "
-"email integration script for your\n"
-"                            email server, or by manually pushing emails to "
-"OpenERP using specific\n"
-"                            plugins for your preferred email application."
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "(reload fonts)"
 msgstr ""
-"OpenERP允许从收到的Email 自动创建线索（或者其他单据）\n"
-"    你能自动通过Openerp使用 POP/IMAP 账户同\n"
-"    步 Email，为你 的服务器直接集成Email脚本，\n"
-"    或者通过插件，为你首选的Email 程序手动推送\n"
-"     email到Openerp。"
 
 #. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "销售"
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer portal"
+msgstr "激活客户门户"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "会员"
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr "允许分享单据"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Portal access"
-msgstr "门户访问"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Authentication"
-msgstr "身份验证"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Quotations and Sales Orders"
-msgstr "报价和销售订单"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
-msgid "General Settings"
-msgstr "常规设置"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "捐助者"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Email"
-msgstr "Email"
-
-#. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "病人"
+#: field:base.config.settings,module_google_calendar:0
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr ""
 
 #. module: base_setup
 #: field:base.config.settings,module_base_import:0
@@ -118,19 +43,108 @@ msgid "Allow users to import data from CSV files"
 msgstr "允许导入CSV数据"
 
 #. module: base_setup
-#: field:base.config.settings,module_multi_company:0
-msgid "Manage multiple companies"
-msgstr "允许多公司操作"
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Apply"
+msgstr "应用"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
-msgstr "在邮件客户端"
+#: field:base.config.settings,module_google_drive:0
+msgid "Attach Google documents to any record"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "--db-filter=YOUR_DATABAE"
-msgstr "--db-filter=YOUR_DATABAE"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Authentication"
+msgstr "身份验证"
+
+#. module: base_setup
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr "CRM"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Cancel"
+msgstr "取消"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "客户"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "销售模块配置"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure outgoing email servers"
+msgstr "配置邮箱发件服务器"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure your company data"
+msgstr "配置公司信息"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Contacts"
+msgstr "联系人"
+
+#. module: base_setup
+#: field:base.config.settings,create_uid:0
+#: field:base.setup.terminology,create_uid:0
+#: field:sale.config.settings,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,create_date:0
+#: field:base.setup.terminology,create_date:0
+#: field:sale.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "客户"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Customer Features"
+msgstr "客户特性"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "捐助者"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Email"
+msgstr "Email"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Emails Integration"
+msgstr "Email 集成"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr "常规设置"
+
+#. module: base_setup
+#: help:sale.config.settings,module_mass_mailing:0
+msgid "Get access to statistics with your mass mailing, manage campaigns."
+msgstr ""
 
 #. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
@@ -138,46 +152,137 @@ msgid "Get contacts automatically from linkedIn"
 msgstr "自动获取LinkedIn联系人"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_thunderbird:0
-msgid "Enable Thunderbird plug-in"
-msgstr "允许 Thunderbird 插件"
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "让你的客户访问他们的单据"
 
 #. module: base_setup
-#: view:base.setup.terminology:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Calendar"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Customer Features"
-msgstr "客户特性"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:0
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "访客"
+
+#. module: base_setup
+#: field:base.setup.terminology,partner:0
+msgid "How do you call a Customer"
+msgstr "你如何称呼您的客户"
+
+#. module: base_setup
+#: field:base.config.settings,id:0
+#: field:base.setup.terminology,id:0
+#: field:sale.config.settings,id:0
+msgid "ID"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid "Import / Export"
 msgstr "导入/导出"
 
 #. module: base_setup
-#: view:sale.config.settings:0
+#: field:base.config.settings,write_uid:0
+#: field:base.setup.terminology,write_uid:0
+#: field:sale.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,write_date:0
+#: field:base.setup.terminology,write_date:0
+#: field:sale.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_mass_mailing:0
+msgid "Manage mass mailing campaigns"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr "允许多公司操作"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "会员"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid ""
+"Odoo allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with Odoo\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"Odoo using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Options"
+msgstr "选项"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "病人"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Portal access"
+msgstr "门户访问"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Quotations and Sales Orders"
+msgstr "报价和销售订单"
+
+#. module: base_setup
+#: field:base.config.settings,font:0
+msgid "Report Font"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr "销售"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
 msgid "Sale Features"
 msgstr "销售特性"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_outlook:0
-msgid "Enable Outlook plug-in"
-msgstr "允许 Outlook 插件"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
+#: help:base.config.settings,font:0
 msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "你用这个向导能在整个系统中用其他称谓来标识客户"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "承租人"
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr ""
 
 #. module: base_setup
 #: help:base.config.settings,module_share:0
@@ -185,9 +290,40 @@ msgid "Share or embbed any screen of openerp."
 msgstr "分享或者嵌入任意Openerp屏幕"
 
 #. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Social Network Integration"
+msgstr "集成社交网络"
+
+#. module: base_setup
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "指定贵公司所用的术语"
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "客户"
+msgid "Tenant"
+msgstr "承租人"
+
+#. module: base_setup
+#: help:base.config.settings,module_google_calendar:0
+msgid "This installs the module google_calendar."
+msgstr ""
+
+#. module: base_setup
+#: help:base.config.settings,module_google_drive:0
+msgid "This installs the module google_docs."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "称呼客户的另一种方式"
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr "使用OpenID登陆(Google, Facebook...)"
 
 #. module: base_setup
 #: help:sale.config.settings,module_web_linkedin:0
@@ -197,42 +333,7 @@ msgid ""
 msgstr "创建联系人或者公司时,允许自动从LinkedIn载入相关信息(照片,地址等等)."
 
 #. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies.\n"
-"                This installs the module multi_company."
-msgstr ""
-"工作在多公司环境，公司之间适当地安全访问\n"
-"               为此安装模块multi_company。"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"The public portal is accessible only if you are in a single database mode. "
-"You can\n"
-"                                    launch the OpenERP Server with the option"
-msgstr "只用当你在 单数据库 模式时，公共门户才是可以访问的。你能用此选项运行 OpenERP服务器。"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr "你能在你的公司明细里找到多个选项：用于页首和页脚的地址，逾期支付文本等"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "你如何称呼您的客户"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
 "                                    (quotation, invoice), your customer will "
@@ -245,634 +346,28 @@ msgid ""
 msgstr "当你发送单据给客户（报价单，发票），你的可能能登录，获取他单据，阅读你的公司新闻，检查他的项目等。"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "客户"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal_anonymous:0
-msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr "启用Openerp的公共部分，Openerp成为一个公共的web站点"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_thunderbird:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"The plugin allows you archive email and its attachments to the selected\n"
-"                OpenERP objects. You can select a partner, or a lead and\n"
-"                attach the selected mail as a .eml file in\n"
-"                the attachment of a selected record. You can create "
-"documents for CRM Lead,\n"
-"                Partner from the selected emails.\n"
-"                This installs the module plugin_thunderbird."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"-This installs the module multi_company."
 msgstr ""
-"插件允许把你的email和附件存档到Openerp对象。你能选择一个业务伙伴、或者线索，并 选择邮件存为 .eml 文件 附加到在选中记录的附件中。\n"
-"\n"
-"为此要安装模块 plugin_thunderbird."
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "业务伙伴"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "称呼客户的另一种方式"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:0
-msgid "Configure Sales"
-msgstr "销售模块配置"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_outlook:0
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
 msgid ""
-"The Outlook plugin allows you to select an object that you would like to "
-"add\n"
-"                to your email and its attachments from MS Outlook. You can "
-"select a partner,\n"
-"                or a lead object and archive a selected\n"
-"                email into an OpenERP mail message with attachments.\n"
-"                This installs the module plugin_outlook."
-msgstr ""
-"Outlook 插件允许你把 邮件和它附件添加到你选择对象里。 你能选择一个业务伙伴或者线索 对象，并且把选择的邮件存档到一个带附件的 Openerp "
-"邮件消息中。\n"
-"为此要安装模块plugin_outlook."
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr "你用这个向导能在整个系统中用其他称谓来标识客户"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Options"
-msgstr "选项"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "激活客户门户"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
-"to do so.\n"
-"                                    Once activated, the login page will be "
-"replaced by the public website."
-msgstr "这样做了，一旦激活，登录页面将被公共web站点替换。"
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
+msgstr "你能在你的公司明细里找到多个选项：用于页首和页脚的地址，逾期支付文本等"
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "允许分享单据"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "(company news, jobs, contact form, etc.)"
-msgstr "（公司新闻，工作，联系人表单 等）"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal_anonymous:0
-msgid "Activate the public portal"
-msgstr "启用公共门户"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure outgoing email servers"
-msgstr "配置邮箱发件服务器"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Social Network Integration"
-msgstr "集成社交网络"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "让你的客户访问他们的单据"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Apply"
-msgstr "应用"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "Specify Your Terminology"
-msgstr "指定贵公司所用的术语"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "or"
-msgstr "or"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure your company data"
-msgstr "配置公司信息"
-
-#~ msgid "Report Header"
-#~ msgstr "报表页眉"
-
-#~ msgid "Profile"
-#~ msgstr "配置"
-
-#~ msgid "Select a Profile"
-#~ msgstr "选择一个配置"
-
-#~ msgid "City"
-#~ msgstr "城市"
-
-#~ msgid "Zip code"
-#~ msgstr "邮编"
-
-#~ msgid "Report header"
-#~ msgstr "报表头"
-
-#~ msgid "Next"
-#~ msgstr "下一个"
-
-#~ msgid "Phone"
-#~ msgstr "电话"
-
-#~ msgid "Company Name"
-#~ msgstr "公司名称"
-
-#~ msgid "Country"
-#~ msgstr "国家"
-
-#~ msgid "Setup"
-#~ msgstr "设置"
-
-#~ msgid "Summary"
-#~ msgstr "概要"
-
-#~ msgid "Install"
-#~ msgstr "安装"
-
-#~ msgid "Report Footer 2"
-#~ msgstr "报表页脚 2"
-
-#~ msgid "Street2"
-#~ msgstr "街区地址2"
-
-#~ msgid "Report Information"
-#~ msgstr "报表信息"
-
-#~ msgid "Installation Done"
-#~ msgstr "安装完成"
-
-#~ msgid "Previous"
-#~ msgstr "上一个"
-
-#~ msgid "Define Main Company"
-#~ msgstr "定义主公司"
-
-#~ msgid "Use Directly"
-#~ msgstr "直接使用"
-
-#~ msgid "General Information"
-#~ msgstr "一般信息"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database "
-#~ "using the default setup."
-#~ msgstr "你可以开始设置系统或使用默认的设置连接到数据库"
-
-#~ msgid "Start Configuration"
-#~ msgstr "开始设置"
-
-#~ msgid ""
-#~ "You'll be able to install more modules later through the Administration menu."
-#~ msgstr "你以后可以通过管理员菜单安装更多的模块."
-
-#~ msgid ""
-#~ "A profile sets a pre-selection of modules for specific needs. These profiles "
-#~ "have been setup to help you discover the different aspects of OpenERP. This "
-#~ "is just an overview, we have 300+ available modules."
-#~ msgstr "配置文件规定了预选模块的具体需要.这些配置已经安装以帮助你发现系统的不同的配置.这是一个配置里面含300多个模块."
-
-#~ msgid "E-mail"
-#~ msgstr "电子邮件"
-
-#~ msgid "Base Setup"
-#~ msgstr "基础安装"
-
-#~ msgid "State"
-#~ msgstr "省/州"
-
-#~ msgid "Your new database is now fully installed."
-#~ msgstr "新帐套已安装完毕."
-
-#~ msgid "Your database is now created."
-#~ msgstr "您的帐套（数据库）已经创建。"
-
-#~ msgid "Point of Sales"
-#~ msgstr "销售点"
-
-#~ msgid ""
-#~ "Helps you handle your accounting needs, if you are not an accountant, we "
-#~ "suggest you to install only the Invoicing "
-#~ msgstr "帮助您掌控您的会计需求，如果您不是一个会计人员，我们建议您仅仅安装发票模块。 "
-
-#~ msgid "Invoicing"
-#~ msgstr "发票"
-
-#~ msgid "Extra Tools"
-#~ msgstr "额外工具"
-
-#~ msgid "Sales Management"
-#~ msgstr "销售管理"
-
-#~ msgid "Company"
-#~ msgstr "公司"
-
-#~ msgid "Marketing"
-#~ msgstr "市场营销"
-
-#~ msgid "Fed. State"
-#~ msgstr "省／州"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "知识管理"
-
-#~ msgid "Auction Houses"
-#~ msgstr "拍卖行"
-
-#~ msgid "Helps you handle your quotations, sale orders and invoicing."
-#~ msgstr "帮助您处理报价单、销售单和发票。"
-
-#~ msgid "Warehouse Management"
-#~ msgstr "仓库管理"
-
-#~ msgid "Purchase Management"
-#~ msgstr "采购管理"
-
-#~ msgid "Zip Code"
-#~ msgstr "邮政编码"
-
-#~ msgid "Project Management"
-#~ msgstr "项目管理"
-
-#~ msgid "Installed Users"
-#~ msgstr "已安装的用户"
-
-#~ msgid "Food Industry"
-#~ msgstr "食品工业"
-
-#~ msgid "Company Website"
-#~ msgstr "公司网站"
-
-#~ msgid "Information about your new database"
-#~ msgstr "您的新数据库信息"
-
-#~ msgid "Image"
-#~ msgstr "图片"
-
-#~ msgid "New Database"
-#~ msgstr "新数据库"
-
-#~ msgid "Customer Relationship Management"
-#~ msgstr "客户关系管理"
-
-#~ msgid ""
-#~ "Lets you install various tools to simplify and enhance OpenERP's report "
-#~ "creation."
-#~ msgstr "让您安装工具来简化和增强 OpenERP 的报表创建功能."
-
-#~ msgid "base.setup.installer"
-#~ msgstr "base.setup.installer"
-
-#~ msgid "Street 2"
-#~ msgstr "街道地址 2"
-
-#~ msgid "base.setup.company"
-#~ msgstr "base.setup.company"
-
-#~ msgid "Example: http://openerp.com"
-#~ msgstr "例如：http://openerp.com"
-
-#~ msgid "base.setup.config"
-#~ msgstr "base.setup.config"
-
-#~ msgid ""
-#~ "Helps you manage your purchase-related processes such as requests for "
-#~ "quotations, supplier invoices, etc..."
-#~ msgstr "帮助您管理采购相关流程，如询价、供货商发票等等"
-
-#~ msgid "Report Footer 1"
-#~ msgstr "报表页脚1"
-
-#, python-format
-#~ msgid "The following users have been installed : \n"
-#~ msgstr "下列用户已经安装 \n"
-
-#~ msgid "title"
-#~ msgstr "标题"
-
-#~ msgid "Human Resources"
-#~ msgstr "人力资源"
-
-#~ msgid "Bank Account No"
-#~ msgstr "银行账号"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "设置进度"
-
-#~ msgid "Associations"
-#~ msgstr "商会"
-
-#~ msgid "Currency"
-#~ msgstr "币别"
-
-#~ msgid "Skip Configuration Wizards"
-#~ msgstr "跳过设置向导"
-
-#~ msgid "Company Configuration"
-#~ msgstr "公司设置"
-
-#~ msgid "Logo"
-#~ msgstr "Logo"
-
-#~ msgid "Advanced Reporting"
-#~ msgstr "高级报告"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module implements a configuration system that helps user\n"
-#~ "    to configure the system at the installation of a new database.\n"
-#~ "\n"
-#~ "    It allows you to select between a list of profiles to install:\n"
-#~ "    * Minimal profile\n"
-#~ "    * Accounting only\n"
-#~ "    * Services companies\n"
-#~ "    * Manufacturing companies\n"
-#~ "\n"
-#~ "    It also asks screens to help easily configure your company, the header "
-#~ "and\n"
-#~ "    footer, the account chart to install and the language.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这模块实现一个设置向导系统帮助用户在一个新数据库配置系统\n"
-#~ "  它允许在设置列表中选择安装:\n"
-#~ "    *最小设置\n"
-#~ "    *只有会计\n"
-#~ "    *服务公司\n"
-#~ "    *制造公司\n"
-#~ "  它还通过界面对话框来帮助您轻松设置您的公司: 报页头，页脚,所用的会计表和要安装的语言\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Allows you to create your invoices and track the payments. It is an easier "
-#~ "version of the accounting module for managers who are not accountants."
-#~ msgstr "允许你创建发票并跟踪付款,这是一个面向没有会计知识的管理人员的简化版会计模块"
-
-#~ msgid ""
-#~ "Your company information will be used to personalize documents issued with "
-#~ "OpenERP such as invoices, sales orders and much more."
-#~ msgstr "你公司的信息会出现在OprnERP的各种文档上，例如发票，销售订单，和其他"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database as "
-#~ "an administrator."
-#~ msgstr "您可以开始设置系统或者直接作为管理员连接到数据库。"
-
-#~ msgid ""
-#~ "Helps you manage your human resources by encoding your employees structure, "
-#~ "generating work sheets, tracking attendance and more."
-#~ msgstr "帮助你管理你的人力资源员员工架构，生成工作计工单，考勤等"
-
-#~ msgid ""
-#~ "Helps you manage your projects and tasks by tracking them, generating "
-#~ "plannings, etc..."
-#~ msgstr "帮助你管理项目，跟踪任务，生成计划等"
-
-#~ msgid ""
-#~ "Lets you install addons geared towards sharing knowledge with and between "
-#~ "your employees."
-#~ msgstr "让您安装模块使您的员工可以分享知识。"
-
-#~ msgid "Accounting & Finance"
-#~ msgstr "会计 & 财务"
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to put bank information here:\n"
-#~ "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-#~ msgstr ""
-#~ "这将显示在报表底部。\n"
-#~ "建议你在这输入银行信息："
-
-#~ msgid ""
-#~ "Helps you get the most out of your points of sales with fast sale encoding, "
-#~ "simplified payment mode encoding, automatic picking lists generation and "
-#~ "more."
-#~ msgstr "帮助你快速设定你的销售点，简化付款方式，自动装箱单等"
-
-#~ msgid ""
-#~ "Select the Applications you want your system to cover. If you are not sure "
-#~ "about your exact needs at this stage, you can easily install them later."
-#~ msgstr "选择你系统所包含的模块。如果你当前还不确定，你可以在以后再安装它们"
-
-#~ msgid ""
-#~ "This sentence will appear at the top right corner of your reports.\n"
-#~ "We suggest you to put a slogan here:\n"
-#~ "\"Open Source Business Solutions\"."
-#~ msgstr ""
-#~ "这将显示在报表的右上角。\n"
-#~ "建议你在这放一个标语："
-
-#~ msgid "Configure Your Company Information"
-#~ msgstr "设置您的公司信息"
-
-#~ msgid "Install Specific Industry Applications"
-#~ msgstr "安装特定的行业模块"
-
-#~ msgid "Install Applications"
-#~ msgstr "安装模块"
-
-#~ msgid "Street"
-#~ msgstr "街道"
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to write legal sentences here:\n"
-#~ "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-#~ msgstr ""
-#~ "这将显示在报表底部。\n"
-#~ "建议你在这放入正式的公司信息和联系方式："
-
-#~ msgid "Your Logo - Use a size of about 450x150 pixels."
-#~ msgstr "你的Logo使用的尺寸为450×150像素"
-
-#~ msgid ""
-#~ "Helps you manage your inventory and main stock operations: delivery orders, "
-#~ "receptions, etc."
-#~ msgstr "帮助您管理库存与仓库相关操作：发货单、收货单等"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications selected to help you "
-#~ "manage your auctions as well as the business processes around them."
-#~ msgstr "安装这个OpenERP预设模块，帮助你管理拍卖以及相关的业务流程。"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your association more efficiently."
-#~ msgstr "安装这个OpenERP预设模块，帮助你管理你的商会。"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your industry."
-#~ msgstr "安装这个OpenERP预设模块，帮助你管理你的企业"
-
-#~ msgid ""
-#~ "Helps you manage your manufacturing processes and generate reports on those "
-#~ "processes."
-#~ msgstr "帮助您管理您的生产和其生成的报表。"
-
-#~ msgid ""
-#~ "Helps you track and manage relations with customers such as leads, requests "
-#~ "or issues. Can automatically send reminders, escalate requests or trigger "
-#~ "business-specific actions based on standard events."
-#~ msgstr "帮助您跟踪和管理与客户的线索，请求或问题。能自动发送提醒，提升请求等级，基于标准的事件触发指定的商业动作。"
-
-#~ msgid "Helps you manage your marketing campaigns step by step."
-#~ msgstr "帮助您管理市场营销。"
-
-#~ msgid ""
-#~ "Lets you install various interesting but non-essential tools like Survey, "
-#~ "Lunch and Ideas box."
-#~ msgstr "让你安装各种有趣的但非必需的工具如： 调查, 午餐 和 创意"
-
-#~ msgid "Manufacturing"
-#~ msgstr "生产"
-
-#~ msgid "Display Tips"
-#~ msgstr "显示提示"
-
-#~ msgid ""
-#~ "Set default for new user's timezone, used to perform timezone conversions "
-#~ "between the server and the client."
-#~ msgstr "为新用户设置默认时区, 以在服务端和客户端之间进行时区的转换."
-
-#~ msgid "Import"
-#~ msgstr "导入"
-
-#~ msgid "Sync Google Contact"
-#~ msgstr "同步Google联系人"
-
-#~ msgid "Define Users's Preferences"
-#~ msgstr "定制用户偏好"
-
-#~ msgid ""
-#~ "Create or Import Customers  and their contacts manually from this form or "
-#~ "you can import your existing partners by CSV spreadsheet from \"Import "
-#~ "Data\" wizard"
-#~ msgstr "从本表单手工创建或者导入客户及其联系方式, 您也可以使用\"导入数据\"向导, 从您已有的CSV格式表格中导入."
-
-#~ msgid "Define default users preferences"
-#~ msgstr "定制默认用户偏好"
-
-#~ msgid "Extended"
-#~ msgstr "扩展"
-
-#~ msgid ""
-#~ "Fill in your company data (address, logo, bank accounts) so that it's "
-#~ "printed on your reports. You can click on the button 'Preview Header' in "
-#~ "order to check the header/footer of PDF documents."
-#~ msgstr "填写您公司的信息(地址, 标识, 开户行账号), 以显示于您的报表上. 您可以点击\"预览页头\"按钮 以检查PDF文档的页头页脚."
-
-#~ msgid ""
-#~ "Sets default language for the all user interface, when UI translations are "
-#~ "available. If you want to Add new Language, you can add it from 'Load an "
-#~ "Official Translation' wizard  from 'Administration' menu."
-#~ msgstr ""
-#~ "当用户界面翻译可用时, 为所有的用户界面设置默认语言。如果你要增加新的语言， 可以从 'Administration'菜单的“Load an "
-#~ "Official Translation”向导增加"
-
-#~ msgid ""
-#~ "This will set the default preferences for new users and update all existing "
-#~ "ones. Afterwards, users are free to change those values on their own user "
-#~ "preference form."
-#~ msgstr "这将设置新用户的默认首选项，并更新所有现有的。此后，用户可以在他们自己的\"用户偏好\"表单随意更改自己的值。"
-
-#~ msgid "For Import Sugarcrm"
-#~ msgstr "导入 Sugarcrm"
-
-#~ msgid "Import or create customers"
-#~ msgstr "导入或者创建客户"
-
-#~ msgid "Import Sugarcrm"
-#~ msgstr "导入 Sugarcrm"
-
-#~ msgid "Create or Import Customers"
-#~ msgstr "创建或者导入客户"
-
-#~ msgid "For Sync Google Contact"
-#~ msgstr "同步google 客户"
-
-#~ msgid "Create"
-#~ msgstr "新建"
-
-#~ msgid "product.installer"
-#~ msgstr "product.installer"
-
-#~ msgid "Set Company Header and Footer"
-#~ msgstr "设置公司报表的页眉和页脚"
-
-#~ msgid "For Import Saleforce"
-#~ msgstr "导入 Saleforce"
-
-#~ msgid ""
-#~ "If you use OpenERP for the first time we strongly advise you to select the "
-#~ "simplified interface, which has less features but is easier. You can always "
-#~ "switch later from the user preferences."
-#~ msgstr "如果您是第一次使用 OpenERP 的话我们强烈建议您选择简化界面，虽然功能较少但更加容易使用。您随时能够在用户首选项中切换。"
-
-#~ msgid "For Quickbooks Ippids"
-#~ msgstr "导入Quickbooks Ippids"
-
-#~ msgid "Customers"
-#~ msgstr "客户"
-
-#~ msgid "migrade.application.installer.modules"
-#~ msgstr "Copy text \t migrade.application.installer.modules"
-
-#~ msgid "Interface"
-#~ msgstr "界面"
-
-#~ msgid "Language"
-#~ msgstr "语言"
-
-#~ msgid "Quickbooks Ippids"
-#~ msgstr "Quickbooks Ippids"
-
-#~ msgid "user.preferences.config"
-#~ msgstr "user.preferences.config"
-
-#~ msgid ""
-#~ "Check out this box if you want to always display tips on each menu action"
-#~ msgstr "如果您希望总是在每个菜单动作上显示提示信息，请选中此框"
-
-#~ msgid "Create Additional Users"
-#~ msgstr "新建用户"
-
-#~ msgid "Timezone"
-#~ msgstr "时区"
-
-#~ msgid "Import Saleforce"
-#~ msgstr "导入 Saleforce"
-
-#~ msgid "Simplified"
-#~ msgstr "简化界面"
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "res_config_contents"
+msgstr "res_config_contents"

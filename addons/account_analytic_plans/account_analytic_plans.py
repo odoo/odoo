@@ -210,7 +210,7 @@ class account_analytic_plan_instance(osv.osv):
         ana_plan_instance_obj = self.pool.get('account.analytic.plan.instance')
         acct_anal_acct = self.pool.get('account.analytic.account')
         acct_anal_plan_line_obj = self.pool.get('account.analytic.plan.line')
-        if context and 'journal_id' in context:
+        if context and context.get('journal_id'):
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
@@ -302,8 +302,8 @@ class account_invoice_line(osv.osv):
         res ['analytics_id'] = line.analytics_id and line.analytics_id.id or False
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context, company_id=company_id)
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
+        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, company_id=company_id, context=context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id': rec.analytics_id.id})
@@ -392,7 +392,7 @@ class account_invoice(osv.osv):
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
                 else:
-                    ref = self._convert_ref(cr, uid, inv.number)
+                    ref = inv.number
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
                 ctx = context.copy()
                 ctx.update({'date': inv.date_invoice})

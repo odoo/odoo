@@ -51,8 +51,8 @@ class ImBus(osv.Model):
                 "channel" : json_dump(channel),
                 "message" : json_dump(message)
             }
-            cr.commit()
             self.pool['bus.bus'].create(cr, openerp.SUPERUSER_ID, values)
+            cr.commit()
             if random.random() < 0.01:
                 self.gc(cr, uid)
         if channels:

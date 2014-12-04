@@ -29,7 +29,7 @@ class account_entries_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Effective Date', readonly=True),
+        'date': fields.date('Effective Date', readonly=True),  # TDE FIXME master: rename into date_effective
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', readonly=True),
@@ -37,14 +37,8 @@ class account_entries_report(osv.osv):
         'debit': fields.float('Debit', readonly=True),
         'credit': fields.float('Credit', readonly=True),
         'balance': fields.float('Balance', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'date': fields.date('Date', size=128, readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
@@ -53,10 +47,10 @@ class account_entries_report(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=True),
         'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True),
         'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
-        'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
+        'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
+        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),  # TDE FIXME master: rename into product_quantity
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),
@@ -67,7 +61,7 @@ class account_entries_report(osv.osv):
             ('other', 'Regular'),
             ('closed', 'Closed'),
         ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -123,9 +117,6 @@ class account_entries_report(osv.osv):
                 am.state as move_state,
                 l.state as move_line_state,
                 l.reconcile_id as reconcile_id,
-                to_char(am.date, 'YYYY') as year,
-                to_char(am.date, 'MM') as month,
-                to_char(am.date, 'YYYY-MM-DD') as day,
                 l.partner_id as partner_id,
                 l.product_id as product_id,
                 l.product_uom_id as product_uom_id,

@@ -209,6 +209,111 @@
             }
         });
 
+        CKEDITOR.plugins.add('customColor', {
+            requires: 'panelbutton,floatpanel',
+            init: function (editor) {
+                function create_button (buttonID, label) {
+                    var btnID = buttonID;
+                    editor.ui.add(buttonID, CKEDITOR.UI_PANELBUTTON, {
+                        label: label,
+                        title: label,
+                        modes: { wysiwyg: true },
+                        editorFocus: true,
+                        context: 'font',
+                        panel: {
+                            css: [  '/web/css/web.assets_common/' + (new Date().getTime()),
+                                    '/web/css/website.assets_frontend/' + (new Date().getTime()),
+                                    '/web/css/website.assets_editor/' + (new Date().getTime())],
+                            attributes: { 'role': 'listbox', 'aria-label': label },
+                        },
+                        enable: function () {
+                            this.setState(CKEDITOR.TRISTATE_OFF);
+                        },
+                        disable: function () {
+                            this.setState(CKEDITOR.TRISTATE_DISABLED);
+                        },
+                        onBlock: function (panel, block) {
+                            var self = this;
+                            var html = openerp.qweb.render('website.colorpicker');
+                            block.autoSize = true;
+                            block.element.setHtml( html );
+                            $(block.element.$).on('click', 'button', function () {
+                                self.clicked(this);
+                            });
+                            if (btnID === "TextColor") {
+                                $(".only-text", block.element.$).css("display", "block");
+                                $(".only-bg", block.element.$).css("display", "none");
+                            }
+                            var $body = $(block.element.$).parents("body");
+                            setTimeout(function () {
+                                $body.css('background-color', '#fff');
+                            }, 0);
+                        },
+                        getClasses: function () {
+                            var self = this;
+                            var classes = [];
+                            var id = this._.id;
+                            var block = this._.panel._.panel._.blocks[id];
+                            var $root = $(block.element.$);
+                            $root.find("button").map(function () {
+                                var color = self.getClass(this);
+                                if(color) classes.push( color );
+                            });
+                            return classes;
+                        },
+                        getClass: function (button) {
+                            var color = btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
+                            return color.length && color;
+                        },
+                        clicked: function (button) {
+                            var className = this.getClass(button);
+                            var ancestor = editor.getSelection().getCommonAncestor();
+
+                            editor.focus();
+                            this._.panel.hide();
+                            editor.fire('saveSnapshot');
+
+                            // remove style
+                            var classes = [];
+                            var $ancestor = $(ancestor.$);
+                            var $fonts = $(ancestor.$).find('font');
+                            if (!ancestor.$.tagName) {
+                                $ancestor = $ancestor.parent();
+                            }
+                            if ($ancestor.is('font')) {
+                                $fonts = $fonts.add($ancestor[0]);
+                            }
+
+                            $fonts.filter("."+this.getClasses().join(",.")).map(function () {
+                                var className = $(this).attr("class");
+                                if (classes.indexOf(className) === -1) {
+                                    classes.push(className);
+                                }
+                            });
+                            for (var k in classes) {
+                                editor.removeStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': classes[k] },
+                                }) );
+                            }
+
+                            // add new style
+                            if (className) {
+                                editor.applyStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': className },
+                                }) );
+                            }
+                            editor.fire('saveSnapshot');
+                        }
+
+                    });
+                }
+                create_button("BGColor", "Background Color");
+                create_button("TextColor", "Text Color");
+            }
+        });
+
         CKEDITOR.plugins.add('oeref', {
             requires: 'widget',
 
@@ -308,7 +413,6 @@
 
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
-            this.$buttons.edit.show();
 
             var $edit_button = this.$buttons.edit
                     .prop('disabled', website.no_editor);
@@ -356,7 +460,13 @@
             observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
-            editor.destroy();
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
                 .filter('.oe_dirty')
@@ -558,7 +668,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         events: {
             'mousedown a.dropdown-toggle': 'load_menu',
-            'click ul a[data-action!=ace]': 'do_customize',
+            'click ul a[data-view-id]': 'do_customize',
         },
         start: function() {
             var self = this;
@@ -744,6 +854,7 @@
             var def = $.Deferred();
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
+                $("[data-oe-type=selection]").attr("contenteditable",false);
                 editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
@@ -813,15 +924,9 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
+                .not('[data-oe-type = "selection"]')
                 .not('link, script')
-                .not('.oe_snippet_editor')
-                .filter(function () {
-                    var $this = $(this);
-                    // keep view sections and fields which are *not* in
-                    // view sections for top-level editables
-                    return $this.data('oe-model') === 'ir.ui.view'
-                       || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
-                });
+                .not('.oe_snippet_editor');
         },
 
         _current_editor: function () {
@@ -862,7 +967,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
+                extraPlugins: 'customColor,sharedspace,customdialogs,tablebutton,oeref',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -894,7 +999,7 @@
                     {name: "Heading 5", element: 'h5'},
                     {name: "Heading 6", element: 'h6'},
                     {name: "Formatted", element: 'pre'},
-                    {name: "Address", element: 'address'}
+                    {name: "Address", element: 'address'},
                 ],
             };
         },
@@ -1011,17 +1116,17 @@
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-                def.resolve('mailto:' + val, false, label);
+                def.resolve('mailto:' + val, false, label, classes);
             } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    def.resolve(data.id, false, data.text);
+                    def.resolve(data.id, false, label || data.text, classes);
                 } else {
                     // Create the page, get the URL back
                     $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            def.resolve(response, false, data.id);
+                            def.resolve(response, false, data.id, classes);
                         });
                 }
             } else {
@@ -1040,6 +1145,7 @@
         make_link: function (url, new_window, label, classes) {
         },
         bind_data: function () {
+            var self = this;
             var href = this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
             var new_window = this.element
@@ -1047,8 +1153,13 @@
                         : false;
             var text = this.element ? this.element.getText() : '';
             if (!text.length) {
-                var selection = this.editor.getSelection();
-                text = selection.getSelectedText();
+                if (this.editor) {
+                    text = this.editor.getSelection().getSelectedText();
+                } else {
+                    text = this.data.name;
+                    href = this.data.url;
+                    new_window = this.data.new_window;
+                }
             }
 
             this.$('input#link-text').val(text);
@@ -1069,8 +1180,14 @@
                 this.$('input.email-address').val(match[1]).change();
             }
             if (href && !$control) {
-                this.$('input.url').val(href).change();
-                this.$('input.window-new').closest("div").show();
+                this.page_exists(href).then(function (exist) {
+                    if (exist) {
+                        self.$('#link-page').select2('data', {'id': href, 'text': href});
+                    } else {
+                        self.$('input.url').val(href).change();
+                        self.$('input.window-new').closest("div").show();
+                    }
+                });
             }
             this.preview();
         },
@@ -1252,6 +1369,11 @@
         start: function () {
             var self = this;
 
+            if (this.editor.getSelection) {
+                var selection = this.editor.getSelection();
+                this.range = selection.getRanges(true)[0];
+            }
+
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
@@ -1305,11 +1427,9 @@
                     this.videoDialog.clear();
                 }
             } else {
-                var selection = this.editor.getSelection();
-                var range = selection.getRanges(true)[0];
                 this.media = new CKEDITOR.dom.element("img");
-                range.insertNode(this.media);
-                range.selectNodeContents(this.media);
+                self.range.insertNode(this.media);
+                self.range.selectNodeContents(this.media);
                 this.active.media = this.media;
             }
 
@@ -1320,6 +1440,7 @@
             this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
 
             setTimeout(function () {
+                if(self.range) self.range.select();
                 $el.trigger("saved", self.active.media.$);
                 $(document.body).trigger("media-saved", [$el[0], self.active.media.$]);
             },0);
@@ -1363,7 +1484,17 @@
                 this.changed($(e.target));
             },
             'click button.filepicker': function () {
-                this.$('input[type=file]').click();
+                var filepicker = this.$('input[type=file]');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
+            },
+            'click .js_disable_optimization': function () {
+                this.$('input[name="disable_optimization"]').val('1');
+                var filepicker = this.$('button.filepicker');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
@@ -1457,9 +1588,9 @@
             }
             var callback = _.uniqueId('func_');
             this.$('input[name=func]').val(callback);
-            window[callback] = function (url, error) {
+            window[callback] = function (attachments, error) {
                 delete window[callback];
-                self.file_selected(url, error);
+                self.file_selected(attachments[0]['website_url'], error);
             };
         },
         file_selection: function () {
@@ -1759,7 +1890,8 @@
                         .attr('data-size', size)
                         .addClass(size)
                         .addClass(no_sizes);
-                if ((size && _.contains(classes, size)) || (classes[2] === "" && !selected)) {
+
+                if ((size && _.contains(classes, size)) || (size === "" && !selected)) {
                     this.$preview.append($p.clone());
                     this.$('#fa-size').val(size);
                     $p.addClass('font-icons-selected');
@@ -1904,9 +2036,10 @@
                     return false;
                 }
                 switch(m.type) {
-                case 'attributes': // ignore .cke_focus being added or removed
-                    // ignore id modification
-                    if (m.attributeName === 'id') { return false; }
+                case 'attributes':
+                    // ignore special attributes and .cke_focus class being added or removed
+                    var ignored_attrs = ['id', 'contenteditable', 'attributeeditable']
+                    if (_.contains(ignored_attrs, m.attributeName)) { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 

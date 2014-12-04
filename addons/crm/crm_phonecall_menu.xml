@@ -16,7 +16,7 @@
 
 <!-- PHONE CALLS (menu)  -->
 
-    <record model="ir.actions.act_window" id="crm_case_categ_phone0">
+    <record model="ir.actions.act_window" id="crm_phonecall_category_phone0">
         <field name="name">Phone Calls</field>
         <field name="res_model">crm.phonecall</field>
         <field name="view_type">form</field>
@@ -30,28 +30,28 @@
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_phone0">
         <field name="sequence" eval="2"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="crm_case_phone_calendar_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_phone0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_phone_form_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone0"/>
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
         groups="base.group_sale_salesman"
-        parent="base.menu_base_partner" sequence="4" />
+        parent="base.menu_base_partner" sequence="2" />
 
-    <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">
+    <record model="ir.actions.act_window" id="crm_phonecall_category_phone_incoming0">
         <field name="name">Logged Calls</field>
         <field name="res_model">crm.phonecall</field>
         <field name="view_type">form</field>
@@ -64,7 +64,7 @@
           <p class="oe_view_nocontent_create">
             Click to log the summary of a phone call. 
           </p><p>
-            OpenERP allows you to log inbound calls on the fly to track the
+            Odoo allows you to log inbound calls on the fly to track the
             history of the communication with a customer or to inform another
             team member.
           </p><p>
@@ -78,28 +78,28 @@
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_inbound_phone_tree_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_incoming0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_phone_incoming0">
         <field name="sequence" eval="2"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="crm_case_phone_calendar_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_incoming0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_phone_incoming0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_phone_form_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_incoming0"/>
     </record>
 
     <menuitem name="Logged Calls" id="menu_crm_case_phone_inbound"
         parent="crm.menu_crm_case_phone"
-        action="crm_case_categ_phone_incoming0" />
+        action="crm_phonecall_category_phone_incoming0" />
 
-    <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing0">
+    <record model="ir.actions.act_window" id="crm_phonecall_category_phone_outgoing0">
         <field name="name">Scheduled Calls</field>
         <field name="res_model">crm.phonecall</field>
         <field name="view_type">form</field>
@@ -112,7 +112,7 @@
           <p class="oe_view_nocontent_create">
             Click to schedule a call 
           </p><p>
-            OpenERP allows you to easily define all the calls to be done
+            Odoo allows you to easily define all the calls to be done
             by your sales team and follow up based on their summary.
           </p><p>  
             You can use the import feature to massively import a new list of
@@ -125,27 +125,27 @@
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_outgoing0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_outgoing0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_phone_outgoing0">
         <field name="sequence" eval="2"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="crm_case_phone_calendar_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_outgoing0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_outgoing0"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_phone_outgoing0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_phone_form_view"/>
-        <field name="act_window_id" ref="crm_case_categ_phone_outgoing0"/>
+        <field name="act_window_id" ref="crm_phonecall_category_phone_outgoing0"/>
     </record>
 
     <menuitem name="Scheduled Calls" id="menu_crm_case_phone_outbound"
         parent="crm.menu_crm_case_phone"
         groups="crm.group_scheduled_calls"
-        action="crm_case_categ_phone_outgoing0"/>
+        action="crm_phonecall_category_phone_outgoing0"/>
 
 </data>
 </openerp>

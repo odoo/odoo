@@ -4,7 +4,7 @@
 
         <menuitem id="base.menu_project_report" name="Project"
             groups="project.group_project_manager"
-            parent="base.menu_reporting" sequence="25"/>
+            parent="base.menu_reporting" sequence="5"/>
 
         <record id="view_task_project_user_graph" model="ir.ui.view">
             <field name="name">report.project.task.user.graph</field>
@@ -13,28 +13,28 @@
                 <graph string="Tasks Analysis" type="pivot">
                      <field name="project_id" type="row"/>
                      <field name="nbr" type="measure"/>
-                     <field name="no_of_days" type="measure"/>
-                     <field name="total_hours" type="measure"/>
-                     <field name="hours_planned" type="measure"/>
-                     <field name="remaining_hours" type="measure"/>
                  </graph>
              </field>
         </record>
 
         <!-- Custom reports (aka filters) -->
+        <record id="filter_task_report_task_pipe" model="ir.filters">
+            <field name="name">Task Pipe</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id'], 'col_group_by': ['stage_id'], 'measures': ['nbr']}</field>
+        </record>
+        <record id="filter_task_report_workload" model="ir.filters">
+            <field name="name">Workload</field>
+            <field name="model_id">report.project.task.user</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['project_id'], 'measures': ['total_hours','hours_planned','remaining_hours']}</field>
+        </record>
         <record id="filter_task_report_responsible" model="ir.filters">
             <field name="name">By Responsible</field>
             <field name="model_id">report.project.task.user</field>
-            <field name="domain">[]</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['project_id', 'user_id']}</field>
-        </record>
-        <record id="filter_task_report_reviewer" model="ir.filters">
-            <field name="name">By Reviewer</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="domain">[]</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id', 'reviewer_id']}</field>
         </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
@@ -50,7 +50,7 @@
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="stage_id"/>
-                    <filter string="My Task" domain="[('user_id','=',uid)]" />
+                    <filter string="My Task" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
@@ -60,14 +60,12 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" context="{'group_by':'name'}" />
-                        <filter string="Contact" context="{'group_by':'partner_id'}" />
-                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}" />
+                        <filter string="Task" context="{'group_by':'name'}"/>
+                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Assignation date (day)" context="{'group_by':'date_start:day'}" help="Creation Date"/>
-                        <filter string="Assignation date (month)" context="{'group_by':'date_start:month'}" help="Creation Date"/>
-                        <filter string="Assignation date (year)" context="{'group_by':'date_start:year'}" help="Creation Date"/>
-                        <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
+                        <separator/>
+                        <filter string="Assignation Month" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>

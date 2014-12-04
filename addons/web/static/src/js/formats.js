@@ -67,28 +67,6 @@ instance.web.insert_thousand_seps = function (num) {
 };
 
 /**
- * removes literal (non-format) text from a date or time pattern, as datejs can
- * not deal with literal text in format strings (whatever the format), whereas
- * strftime allows for literal characters
- *
- * @param {String} value original format
- */
-instance.web.strip_raw_chars = function (value) {
-    var isletter = /[a-zA-Z]/, output = [];
-    for(var index=0; index < value.length; ++index) {
-        var character = value[index];
-        if(isletter.test(character) && (index === 0 || value[index-1] !== '%')) {
-            continue;
-        }
-        output.push(character);
-    }
-    return output.join('');
-};
-var normalize_format = function (format) {
-    return Date.normalizeFormat(instance.web.strip_raw_chars(format));
-};
-
-/**
  * Check with a scary heuristic if the value is a bin_size or not.
  * If not, compute an approximate size out of the base64 encoded string.
  *
@@ -134,6 +112,9 @@ instance.web.human_size = function(size) {
  * @param {String} [value_if_empty=''] returned if the ``value`` argument is considered empty
  */
 instance.web.format_value = function (value, descriptor, value_if_empty) {
+    var l10n = _t.database.parameters;
+    var date_format = instance.web.normalize_format(l10n.date_format);
+    var time_format = instance.web.normalize_format(l10n.time_format);
     // If NaN value, display as with a `false` (empty cell)
     if (typeof value === 'number' && isNaN(value)) {
         value = false;
@@ -152,7 +133,6 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
     }
-    var l10n = _t.database.parameters;
     switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
         case 'id':
             return value.toString();
@@ -190,18 +170,25 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return _.str.sprintf(_t("(%d records)"), value.length);
         case 'datetime':
             if (typeof(value) == "string")
-                value = instance.web.auto_str_to_date(value);
-
-            return value.toString(normalize_format(l10n.date_format)
-                        + ' ' + normalize_format(l10n.time_format));
+                value = moment(instance.web.auto_str_to_date(value));
+            else {
+                value = moment(value);
+            }
+            return value.format(date_format + ' ' + time_format);
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.str_to_date(value.substring(0,10));
-            return value.toString(normalize_format(l10n.date_format));
+                value = moment(instance.web.str_to_date(value.substring(0,10)));
+            else {
+                value = moment(value);
+            }
+            return value.format(date_format);
         case 'time':
             if (typeof(value) == "string")
-                value = instance.web.auto_str_to_date(value);
-            return value.toString(normalize_format(l10n.time_format));
+                value = moment(instance.web.auto_str_to_date(value));
+            else {
+                value = moment(value);
+            }
+            return value.format(time_format);
         case 'selection': case 'statusbar':
             // Each choice is [value, label]
             if(_.isArray(value)) {
@@ -218,8 +205,10 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
 };
 
 instance.web.parse_value = function (value, descriptor, value_if_empty) {
-    var date_pattern = normalize_format(_t.database.parameters.date_format),
-        time_pattern = normalize_format(_t.database.parameters.time_format);
+    var date_pattern = instance.web.normalize_format(_t.database.parameters.date_format),
+        time_pattern = instance.web.normalize_format(_t.database.parameters.time_format);
+    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
+        time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
     switch (value) {
         case false:
         case "":
@@ -267,39 +256,19 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
         case 'progressbar':
             return instance.web.parse_value(value, {type: "float"});
         case 'datetime':
-            var datetime = Date.parseExact(
-                    value, (date_pattern + ' ' + time_pattern));
-            if (datetime !== null)
-                return instance.web.datetime_to_str(datetime);
-            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
-                return m.length === 1 ? "0" + m : m ;
-            }), (date_pattern + ' ' + time_pattern));
-            if (datetime !== null)
-                return instance.web.datetime_to_str(datetime);
-            datetime = Date.parse(value);
-            if (datetime !== null)
-                return instance.web.datetime_to_str(datetime);
+            var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero], true)
+            if (datetime.isValid())
+                return instance.web.datetime_to_str(datetime.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
-            var date = Date.parseExact(value, date_pattern);
-            if (date !== null)
-                return instance.web.date_to_str(date);
-            date = Date.parseExact(value.toString().replace(/\d+/g, function(m){
-                return m.length === 1 ? "0" + m : m ;
-            }), date_pattern);
-            if (date !== null)
-                return instance.web.date_to_str(date);
-            date = Date.parse(value);
-            if (date !== null)
-                return instance.web.date_to_str(date);
+            var date = moment(value, [date_pattern, date_pattern_wo_zero], true)
+            if (date.isValid())
+                return instance.web.date_to_str(date.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
         case 'time':
-            var time = Date.parseExact(value, time_pattern);
-            if (time !== null)
-                return instance.web.time_to_str(time);
-            time = Date.parse(value);
-            if (time !== null)
-                return instance.web.time_to_str(time);
+            var time = moment(value, [time_pattern, time_pattern_wo_zero], true);
+            if (time.isValid())
+                return instance.web.time_to_str(time.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct time"), value));
     }
     return value;
@@ -335,13 +304,13 @@ instance.web.auto_date_to_str = function(value, type) {
  * performs a half up rounding with arbitrary precision, correcting for float loss of precision
  * See the corresponding float_round() in server/tools/float_utils.py for more info
  * @param {Number} the value to be rounded
- * @param {Number} a non zero precision parameter. eg: 0.01 rounds to two digits.
+ * @param {Number} a precision parameter. eg: 0.01 rounds to two digits.
  */
 instance.web.round_precision = function(value, precision){
-    if(!value){
+    if (!value) {
         return 0;
-    }else if(!precision){
-        throw new Error('round_precision(...):  Cannot round value: '+value+' with a precision of zero (or undefined)');
+    } else if (!precision || precision < 0) {
+        precision = 1;
     }
     var normalized_value = value / precision;
     var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
@@ -360,5 +329,65 @@ instance.web.round_precision = function(value, precision){
 instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
 };
+
+/**
+ * Convert Python strftime to escaped moment.js format.
+ *
+ * @param {String} value original format
+ */
+instance.web.normalize_format = function (value) {
+    if (_normalize_format_cache[value] === undefined) {
+        var isletter = /[a-zA-Z]/,
+            output = [],
+            inToken = false,
+            table = instance.web.normalize_format_table;
+
+        for (var index=0; index < value.length; ++index) {
+            var character = value[index];
+            if (character === '%' && !inToken) {
+                inToken = true;
+                continue;
+            }
+            if (isletter.test(character)) {
+                if (inToken && table[character] !== undefined) {
+                    character = table[character];
+                } else {
+                    character = '[' + character + ']'; // moment.js escape
+                }
+            }
+            output.push(character);
+            inToken = false;
+        }
+        _normalize_format_cache[value] = output.join('');
+    }
+    return _normalize_format_cache[value];
+};
+instance.web.normalize_format_table = {
+    // Python strftime to moment.js conversion table
+    // See openerp/addons/base/res/res_lang_view.xml
+    // for details about supported directives
+    'a': 'ddd',
+    'A': 'dddd',
+    'b': 'MMM',
+    'B': 'MMMM',
+    'd': 'DD',
+    'H': 'HH',
+    'I': 'hh',
+    'j': 'DDDD',
+    'm': 'MM',
+    'M': 'mm',
+    'p': 'A',
+    'S': 'ss',
+    'U': 'ww',
+    'W': 'WW',
+    'w': 'd',
+    'y': 'YY',
+    'Y': 'YYYY',
+    // unsupported directives
+    'c': 'ddd MMM D HH:mm:ss YYYY',
+    'x': 'MM/DD/YY',
+    'X': 'HH:mm:ss'
+};
+var _normalize_format_cache = {};
 
 })();

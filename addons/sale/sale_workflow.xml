@@ -262,15 +262,17 @@
         <record id="trans_ship_ship_end" model="workflow.transition">
             <field name="act_from" ref="act_ship"/>
             <field name="act_to" ref="act_ship_end"/>
-            <field name="trigger_model">procurement.order</field>
-            <field name="trigger_expr_id">procurement_lines_get()</field>
-            <field name="condition">test_state('finished')</field>
+            <field name="signal">ship_end</field>
+            <field name="trigger_model" eval="False"/> <!-- Force empty  -->
+            <field name="trigger_expr_id" eval="False"/> <!-- Force empty -->
+            <field name="condition" eval="True"/> <!-- Force empty -->
         </record>
         
         <record id="trans_ship_ship_except" model="workflow.transition">
             <field name="act_from" ref="act_ship"/>
             <field name="act_to" ref="act_ship_except"/>
             <field name="signal">ship_except</field>
+            <field name="condition" eval="True"/> <!-- Force empty -->
         </record>
         
         <record id="trans_ship_except_ship" model="workflow.transition">

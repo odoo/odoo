@@ -97,7 +97,7 @@ function reload_favorite_list(result) {
                     name: "partner_id",
                     type: "many2one",
                     options: '{"no_open": True}',
-                    placeholder: _t("Select Favorite Calendar"),
+                    placeholder: _t("Add Favorite Calendar"),
                 },
             });
             this.ir_model_m2o.insertAfter($('div.oe_calendar_filter'));
@@ -223,7 +223,7 @@ function reload_favorite_list(result) {
             }
         },
         open_invitation_form : function(invitation){
-            this.$el.html(QWeb.render('invitation_view', {'invitation': JSON.parse(invitation)}));
+            $('.oe_application').html(QWeb.render('invitation_view', {'invitation': JSON.parse(invitation)}));
         },
         redirect_meeting_view : function(db, action, meeting_id, view){
             var self = this;

@@ -87,25 +87,26 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
     def go(id, uid, ids, datas, context):
-        cr = openerp.registry(db).cursor()
-        try:
-            result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
-            if not result:
-                tb = sys.exc_info()
-                self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
-            self_reports[id]['result'] = result
-            self_reports[id]['format'] = format
-            self_reports[id]['state'] = True
-        except Exception, exception:
-            _logger.exception('Exception: %s\n', exception)
-            if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
-            else:
-                tb = sys.exc_info()
-                self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
-            self_reports[id]['state'] = True
-        cr.commit()
-        cr.close()
+        with openerp.api.Environment.manage():
+            cr = openerp.registry(db).cursor()
+            try:
+                result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
+                if not result:
+                    tb = sys.exc_info()
+                    self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
+                self_reports[id]['result'] = result
+                self_reports[id]['format'] = format
+                self_reports[id]['state'] = True
+            except Exception, exception:
+                _logger.exception('Exception: %s\n', exception)
+                if hasattr(exception, 'name') and hasattr(exception, 'value'):
+                    self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
+                else:
+                    tb = sys.exc_info()
+                    self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
+                self_reports[id]['state'] = True
+            cr.commit()
+            cr.close()
         return True
 
     threading.Thread(target=go, args=(id, uid, ids, datas, context)).start()

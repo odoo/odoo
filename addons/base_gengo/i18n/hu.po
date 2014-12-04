@@ -1,37 +1,60 @@
 # Hungarian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-16 00:40+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-05 09:47+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:50+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-06 07:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_gengo
-#: view:res.company:0
-msgid "Comments for Translator"
-msgstr "Megjegyzés a fordítónak"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add Gengo login Private Key..."
+msgstr "Adjon meg Gengo privát belépési kulcsot..."
 
 #. module: base_gengo
-#: field:ir.translation,job_id:0
-msgid "Gengo Job ID"
-msgstr "Gengó feladat azonosító ID"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add Gengo login Public Key..."
+msgstr "Adjon meg Gengo  nyilvános belépési kulcsot..."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
-#, python-format
-msgid "This language is not supported by the Gengo translation services."
-msgstr "Ez a nyelv nincs támogatva a Gengo fordító szolgáltatások által."
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add your comments here for translator...."
+msgstr "Adja meg itt a fordítónak szánt megjegyzéseket..."
+
+#. module: base_gengo
+#: field:res.company,gengo_auto_approve:0
+msgid "Auto Approve Translation ?"
+msgstr "Fordítás automatikus jóváhagyása?"
+
+#. module: base_gengo
+#: selection:base.gengo.translations,sync_type:0
+msgid "Both"
+msgstr "Mindkettő"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Cancel"
+msgstr "Megszakítás"
+
+#. module: base_gengo
+#: help:res.company,gengo_sandbox:0
+msgid ""
+"Check this box if you're using the sandbox mode of Gengo, mainly used for "
+"testing purpose."
+msgstr ""
+"Jelölje a négyzetet ha a Gengo virtuális homokozó módját használja, főként "
+"tesztelés cáljából használják."
 
 #. module: base_gengo
 #: field:res.company,gengo_comment:0
@@ -39,14 +62,108 @@ msgid "Comments"
 msgstr "Megjegyzések"
 
 #. module: base_gengo
+#: field:ir.translation,gengo_comment:0
+msgid "Comments & Activity Linked to Gengo"
+msgstr "Megjegyzések & Műveletek a Gengo felé csatolva"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Comments for Translator"
+msgstr "Megjegyzés a fordítónak"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_company
+msgid "Companies"
+msgstr "Vállalatok"
+
+#. module: base_gengo
+#: field:base.gengo.translations,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: base_gengo
+#: field:base.gengo.translations,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: base_gengo
+#: code:addons/base_gengo/ir_translation.py:76
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:102
+#, python-format
+msgid "Gengo Authentication Error"
+msgstr "Gengo aonosítási hiba"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
+msgid "Gengo Comments & Activity..."
+msgstr "Gengo Hozzászólások & Aktivitás..."
+
+#. module: base_gengo
+#: field:ir.translation,order_id:0
+msgid "Gengo Order ID"
+msgstr "Gengo Megrendelés azonosító ID"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Gengo Parameters"
+msgstr "Gengo Paraméterek"
+
+#. module: base_gengo
 #: field:res.company,gengo_private_key:0
 msgid "Gengo Private Key"
 msgstr "Gengo Privát Kulcs"
 
 #. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"
+#: field:res.company,gengo_public_key:0
+msgid "Gengo Public Key"
+msgstr "Gengo nyilvános kulcs"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Gengo Request Form"
+msgstr "Gengo kérelem űrlap"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
+msgid "Gengo Translation Service"
+msgstr "Gengo fordítási szolgáltatás"
+
+#. module: base_gengo
+#: field:ir.translation,gengo_translation:0
+msgid "Gengo Translation Service Level"
+msgstr "Gengo fordítási szolgáltatási szint"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:80
+#, python-format
+msgid ""
+"Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
+"authentication parameters under `Settings > Companies > Gengo Parameters`."
+msgstr ""
+"Gengo `Nyilvános Kulcs` vagy `Privát Kulcs` hiányzik. Írja be a Gengo "
+"azonosítási paramétereketa `Beállítások > Vállalatok > Gengo Paraméterek` "
+"alatt."
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:91
+#, python-format
+msgid ""
+"Gengo connection failed with this message:\n"
+"``%s``"
+msgstr ""
+"Gengo kapcsolat nem sikerült ezzel az üzenettel:\n"
+"``%s``"
+
+#. module: base_gengo
+#: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
+#: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
+msgid "Gengo: Manual Request of Translation"
+msgstr "Gengo: Fordítás kézi igénylése"
+
+#. module: base_gengo
+#: field:base.gengo.translations,id:0
+msgid "ID"
+msgstr "Azonosító ID"
 
 #. module: base_gengo
 #: help:res.company,gengo_auto_approve:0
@@ -59,133 +176,22 @@ msgid "Language"
 msgstr "Nyelv"
 
 #. module: base_gengo
-#: field:ir.translation,gengo_comment:0
-msgid "Comments & Activity Linked to Gengo"
-msgstr "Megjegyzések & Műveletek a Gengo felé csatolva"
+#: field:base.gengo.translations,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:124
-#, python-format
-msgid "Gengo Sync Translation (Response)"
-msgstr "Gengo Szinkron fordítás (Válasz)"
+#: field:base.gengo.translations,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:72
-#, python-format
-msgid ""
-"Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
-"authentication parameters under `Settings > Companies > Gengo Parameters`."
-msgstr ""
-"Gengo `Nyilvános Kulcs` vagy `Privát Kulcs` hiányzik. Írja be a Gengo "
-"azonosítási paramétereketa `Beállítások > Vállalatok > Gengo Paraméterek` "
-"alatt."
+#: field:base.gengo.translations,sync_limit:0
+msgid "No. of terms to sync"
+msgstr "Szinkronizálni kívánt időszakok száma"
 
 #. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
-msgid "Translation By Machine"
-msgstr "Gép által fordítva"
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:155
-#, python-format
-msgid ""
-"%s\n"
-"\n"
-"--\n"
-" Commented on %s by %s."
-msgstr ""
-"%s\n"
-"\n"
-"--\n"
-" Megjegyzés erre %s ettől %s."
-
-#. module: base_gengo
-#: field:ir.translation,gengo_translation:0
-msgid "Gengo Translation Service Level"
-msgstr "Gengo fordítási szolgáltatási szint"
-
-#. module: base_gengo
-#: constraint:ir.translation:0
-msgid ""
-"The Gengo translation service selected is not supported for this language."
-msgstr ""
-"A kiválasztott Gengo fordító szolgáltatást nem támogatott erre a nyelvre."
-
-#. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
-msgid "Standard"
-msgstr "Szabványos"
-
-#. module: base_gengo
-#: help:ir.translation,gengo_translation:0
-msgid ""
-"You can select here the service level you want for an automatic translation "
-"using Gengo."
-msgstr ""
-"Itt kiválaszthatja a szolgáltatási szintet amit használni szeretne a "
-"Gengoval az automatikus fordításhoz."
-
-#. module: base_gengo
-#: field:base.gengo.translations,restart_send_job:0
-msgid "Restart Sending Job"
-msgstr "Küldési feladat újraindítása"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "To Approve In Gengo"
-msgstr "A Gengo-ban jóváhagyni"
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Private Key"
-msgstr "Privát kulcs"
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Public Key"
-msgstr "Nyilvános kulcs"
-
-#. module: base_gengo
-#: field:res.company,gengo_public_key:0
-msgid "Gengo Public Key"
-msgstr "Gengo nyilvános kulcs"
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:123
-#, python-format
-msgid "Gengo Sync Translation (Request)"
-msgstr "Gengo szinkron fordítás (Igénylés)"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "Translations"
-msgstr "Fordítások"
-
-#. module: base_gengo
-#: field:res.company,gengo_auto_approve:0
-msgid "Auto Approve Translation ?"
-msgstr "Fordítás automatikus jóváhagyása?"
-
-#. module: base_gengo
-#: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
-#: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
-msgid "Gengo: Manual Request of Translation"
-msgstr "Gengo: Fordítás kézi igénylése"
-
-#. module: base_gengo
-#: code:addons/base_gengo/ir_translation.py:62
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
-#, python-format
-msgid "Gengo Authentication Error"
-msgstr "Gengo aonosítási hiba"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_company
-msgid "Companies"
-msgstr "Vállalatok"
-
-#. module: base_gengo
-#: view:ir.translation:0
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid ""
 "Note: If the translation state is 'In Progress', it means that the "
 "translation has to be approved to be uploaded in this system. You are "
@@ -196,39 +202,9 @@ msgstr ""
 "közvetlenül kell megtennie a Gengo előfizetésén keresztül"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:82
-#, python-format
-msgid ""
-"Gengo connection failed with this message:\n"
-"``%s``"
-msgstr ""
-"Gengo kapcsolat nem sikerült ezzel az üzenettel:\n"
-"``%s``"
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Gengo Parameters"
-msgstr "Gengo Paraméterek"
-
-#. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Send"
-msgstr "Küldés"
-
-#. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
-msgid "Ultra"
-msgstr "Ultra"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "Gengo Translation Service"
-msgstr "Gengo fordítási szolgáltatás"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Private Key"
+msgstr "Privát kulcs"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -236,15 +212,47 @@ msgid "Pro"
 msgstr "Pro"
 
 #. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Gengo Request Form"
-msgstr "Gengo kérelem űrlap"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Public Key"
+msgstr "Nyilvános kulcs"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: selection:base.gengo.translations,sync_type:0
+msgid "Receive Translation"
+msgstr "Fordítás fogadása"
+
+#. module: base_gengo
+#: field:res.company,gengo_sandbox:0
+msgid "Sandbox Mode"
+msgstr "Virtuális homokozó mód"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Send"
+msgstr "Küldés"
+
+#. module: base_gengo
+#: selection:base.gengo.translations,sync_type:0
+msgid "Send New Terms"
+msgstr "Új határidők küldése"
+
+#. module: base_gengo
+#: selection:ir.translation,gengo_translation:0
+msgid "Standard"
+msgstr "Szabványos"
+
+#. module: base_gengo
+#: field:base.gengo.translations,sync_type:0
+msgid "Sync Type"
+msgstr "Típus szinkronizálás"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:112
 #, python-format
-msgid "Warning"
-msgstr "Figyelmeztetés"
+msgid "Sync limit should between 1 to 200 for Gengo translation services."
+msgstr ""
+"Szinkronizálási határértéknke 1 és 200 között kell lennie a Gengo fordítási "
+"szolgáltatásokban."
 
 #. module: base_gengo
 #: help:res.company,gengo_comment:0
@@ -255,11 +263,43 @@ msgstr ""
 "Ez a megjegyzés automatikusan le lesz zárva minden egyes Gengo meghíváskor"
 
 #. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Cancel"
-msgstr "Megszakítás"
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:107
+#, python-format
+msgid "This language is not supported by the Gengo translation services."
+msgstr "Ez a nyelv nincs támogatva a Gengo fordító szolgáltatások által."
 
 #. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "or"
-msgstr "vagy"
+#: view:ir.translation:base_gengo.view_translation_search
+msgid "To Approve In Gengo"
+msgstr "A Gengo-ban jóváhagyni"
+
+#. module: base_gengo
+#: selection:ir.translation,gengo_translation:0
+msgid "Translation By Machine"
+msgstr "Gép által fordítva"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_translation_search
+msgid "Translations"
+msgstr "Fordítások"
+
+#. module: base_gengo
+#: selection:ir.translation,gengo_translation:0
+msgid "Ultra"
+msgstr "Ultra"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:107
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:112
+#, python-format
+msgid "Warning"
+msgstr "Figyelmeztetés"
+
+#. module: base_gengo
+#: help:ir.translation,gengo_translation:0
+msgid ""
+"You can select here the service level you want for an automatic translation "
+"using Gengo."
+msgstr ""
+"Itt kiválaszthatja a szolgáltatási szintet amit használni szeretne a "
+"Gengoval az automatikus fordításhoz."

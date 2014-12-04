@@ -29,13 +29,14 @@ class account_analytic_line(osv.osv):
     _columns = {
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
-        'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='restrict'),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict'),
         'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
         'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.'),
         'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
         'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
     }
 
     _defaults = {
@@ -74,13 +75,19 @@ class account_analytic_line(osv.osv):
         product_obj = self.pool.get('product.product')
         analytic_journal_obj =self.pool.get('account.analytic.journal')
         product_price_type_obj = self.pool.get('product.price.type')
+        product_uom_obj = self.pool.get('product.uom')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
         if prod_id:
-            unit = prod.uom_id.id
+            unit_obj = False
+            if unit:
+                unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
+            if not unit_obj or prod.uom_id.category_id.id != unit_obj.category_id.id:
+                unit = prod.uom_id.id
             if j_id.type == 'purchase':
-                unit = prod.uom_po_id.id
+                if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
+                    unit = prod.uom_po_id.id
         if j_id.type <> 'sale':
             a = prod.property_account_expense.id
             if not a:

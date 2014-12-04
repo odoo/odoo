@@ -12,8 +12,8 @@
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
-                    'search_default_section_id': [active_id],
-                    'default_section_id': active_id,
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
                     'default_type': 'lead',
                     'stage_type': 'lead',
                 }
@@ -41,8 +41,8 @@
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="context">{
-                    'search_default_section_id': [active_id],
-                    'default_section_id': active_id,
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
                     'stage_type': 'opportunity',
                     'default_type': 'opportunity',
                     'default_user_id': uid,
@@ -50,7 +50,7 @@
             </field>
             <field name="help" type="html">
                 <p>
-                    OpenERP helps you keep track of your sales pipeline to follow
+                    Odoo helps you keep track of your sales pipeline to follow
                     up potential sales and better forecast your future revenues.
                 </p><p>
                     You will be able to plan meetings and phone calls from
@@ -66,7 +66,7 @@
            <field name="context">{"search_default_month":1}</field>
            <field name="view_mode">graph</field>
            <field name="view_id" ref="crm.view_report_crm_lead_graph_two"/>
-           <field name="domain">[('type','=', 'lead'),('section_id', '=', active_id)]</field>
+           <field name="domain">[('type','=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
 
@@ -75,14 +75,14 @@
             <field name="res_model">crm.lead.report</field>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm.view_report_crm_opportunity_graph"/>
-            <field name="domain">[('type','=', 'opportunity'), ('section_id', '=', active_id)]</field>
+            <field name="domain">[('type','=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
-        <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
-            <field name="name">crm.case.section.kanban</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+        <record model="ir.ui.view" id="crm_team_salesteams_view_kanban">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//templates" position="before">
@@ -98,17 +98,17 @@
                         <div class="oe_kanban_alias text-center" t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
                             <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                         </div>
-                        <div class="oe_items_list">
-                            <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
-                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                        <div class="row oe_salesteam_kanban_view oe_margin_top_8">
+                            <div class="col-md-6 row" t-if="record.use_leads.raw_value">
+                                <a class="col-md-9" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                <a class="col-md-3" name="%(action_report_crm_lead_salesteam)d" type="action">
                                     <field name="monthly_open_leads" widget="sparkline_bar"
                                         options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
                                 </a>
                             </div>
-                            <div class="oe_salesteams_opportunities" t-if="record.use_opportunities.raw_value">
-                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
+                            <div class="col-md-6 row" t-if="record.use_opportunities.raw_value">
+                                <a class="col-md-9" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
+                                <a class="col-md-3" name="%(action_report_crm_opportunity_salesteam)d" type="action">
                                     <field name="monthly_planned_revenue" widget="sparkline_bar"
                                         options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': ' (Planned Revenue)'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
                                 </a>
@@ -120,9 +120,9 @@
         </record>
 
         <record model="ir.ui.view" id="sales_team_form_view_in_crm">
-                <field name="name">crm.case.section.form</field>
-                <field name="model">crm.case.section</field>
-                <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+                <field name="name">crm.team.form</field>
+                <field name="model">crm.team</field>
+                <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
                         <field name="use_leads"/><label for="use_leads" string="Leads"/>
@@ -154,7 +154,7 @@
                 </field>
             </record>
 
-        <!-- Case Sections Action -->
+        <!-- Case Teams Action -->
         <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
@@ -176,12 +176,12 @@
             <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
         </record>
 
-        <record id="crm_case_section_act_tree" model="ir.actions.act_window">
+        <record id="crm_team_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by Sales Team</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-            <field name="view_id" ref="sales_team.crm_case_section_view_tree"/>
+            <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>
   </data>
 </openerp>

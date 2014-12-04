@@ -6,10 +6,8 @@
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="pivot">
-                 <field name="period_id" type="row"/>
                  <field name="categ_id" type="row"/>
-                 <field name="nbr" type="measure"/>
-                 <field name="product_qty" type="measure"/>
+                 <field name="period_id" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
@@ -58,7 +56,7 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
                 <field name="date"/>
-                <filter string="This Year" name="year" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal invoices with period in current year"/>
                 <separator/>
                 <filter string="To Invoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Pro-forma" domain="['|', ('state','=','proforma'),('state','=','proforma2')]"/>
@@ -69,26 +67,19 @@
                 <separator/>
                 <filter string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
                 <filter string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
-                <field name="partner_id"/>
+                <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <group expand="1" string="Group By">
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
-                    <filter string="Commercial Partner" name="commercial_partner_id" context="{'group_by':'commercial_partner_id','residual_visible':True}"/>
-                    <filter string="Commercial Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
-                    <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Due Month" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
-                    <filter string="Category of Product" name="category_product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
-                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Invoice Date (day)" name="day" icon="terp-go-today" context="{'group_by':'date:day'}" help="Group by Invoice Date"/>
-                    <filter string="Invoice Date (month)" name="month" icon="terp-go-month" context="{'group_by':'date:month'}" help="Group by month of Invoice Date"/>
-                    <filter string="Invoice Date (year)" name="group_year" icon="terp-go-year" context="{'group_by':'date:year'}" help="Group by year of Invoice Date"/>
+                    <filter string="Salesperson" name='user' context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Category of Product" name="category_product" context="{'group_by':'categ_id','residual_invisible':True}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical" />
+                    <filter string="Period" context="{'group_by':'period_id'}"/>
+                    <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
                 </group>
             </search>
         </field>
@@ -99,7 +90,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
-        <field name="context">{'search_default_current':1, 'search_default_year': 1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_current':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 

@@ -33,11 +33,9 @@ class crm_phonecall2phonecall(osv.osv_memory):
         'user_id' : fields.many2one('res.users',"Assign To"),
         'contact_name':fields.char('Contact'),
         'phone':fields.char('Phone'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                ('object_id.model', '=', 'crm.phonecall')]"), 
+        'categ_id': fields.many2one('crm.phonecall.category', 'Category'), 
         'date': fields.datetime('Date'),
-        'section_id':fields.many2one('crm.case.section','Sales Team'),
+        'team_id':fields.many2one('crm.team','Sales Team', oldname='section_id'),
         'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
         'partner_id' : fields.many2one('res.partner', "Partner"),
         'note':fields.text('Note')
@@ -59,7 +57,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
         for this in self.browse(cr, uid, ids, context=context):
             phocall_ids = phonecall.schedule_another_phonecall(cr, uid, phonecall_ids, this.date, this.name, \
                     this.user_id and this.user_id.id or False, \
-                    this.section_id and this.section_id.id or False, \
+                    this.team_id and this.team_id.id or False, \
                     this.categ_id and this.categ_id.id or False, \
                     action=this.action, context=context)
 
@@ -90,8 +88,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 res.update({'user_id': phonecall.user_id and phonecall.user_id.id or False})
             if 'date' in fields:
                 res.update({'date': False})
-            if 'section_id' in fields:
-                res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
+            if 'team_id' in fields:
+                res.update({'team_id': phonecall.team_id and phonecall.team_id.id or False})
             if 'categ_id' in fields:
                 res.update({'categ_id': categ_id})
             if 'partner_id' in fields:

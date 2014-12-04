@@ -9,7 +9,6 @@
                 <graph string="Event on Registration"  type="pivot" >
                     <field name="event_type" type="row"/>
                     <field name="event_date" interval="month" type="col"/>
-                    <field name="nbevent" type="measure"/>
                     <field name="confirm_state" type="measure"/>
                 </graph>
             </field>
@@ -21,10 +20,10 @@
             <field name="model">report.event.registration</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
-                    <filter icon="terp-document-new" string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
-                    <filter icon="terp-check" string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
+                    <filter string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
+                    <filter string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
                     <separator/>
-                    <filter icon="terp-personal" string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <field name="event_id" string="Event"/>
                     <field name="user_id"/>
                     <group expand="0" string="Extended Filters...">
@@ -33,20 +32,16 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By">
-                        <filter string="Participant / Contact" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
-                        <filter string="Register" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Registration contact" groups="base.group_no_one"/>
-                        <filter string="Event Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
-                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'event_type'}"/>
-                        <filter string="Event State" icon="terp-stock_effects-object-colorize" context="{'group_by':'event_state'}"/>
-                        <filter string="Registration State" icon="terp-stock_effects-object-colorize" context="{'group_by':'registration_state'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Event Date (day)" domain="[]" context="{'group_by':'event_date:day'}" help="Event Beginning Date"/>
-                        <filter string="Event Date (month)" domain="[]" context="{'group_by':'event_date:month'}" help="Event Beginning Date"/>
-                        <filter string="Event Date (year)" domain="[]" context="{'group_by':'event_date:year'}" help="Event Beginning Date"/>
+                        <filter string="Participant" context="{'group_by':'name_registration'}" help="Registration contact"/>
+                        <filter string="Event Type" context="{'group_by':'event_type'}"/>
+                        <filter string="Event" name="event" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
+                        <filter string="Event State" context="{'group_by':'event_state'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Event Month" context="{'group_by':'event_date:month'}" help="Event Beginning Date"/>
                     </group>
                     <group expand="0" string="Display">
-                        <filter icon="terp-camera_test" string="Show Confirmed Registrations"
+                        <filter string="Show Confirmed Registrations" domain="[('event_state','&lt;&gt;','draft')]"
                               help="Registrations in confirmed or done state" context="{'no_of_draft_invisible':1}"/>
                     </group>
                 </search>
@@ -69,7 +64,7 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
         </record>
 
-        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="30" groups="event.group_event_manager" name="Events"/>
+        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="50" groups="event.group_event_manager" name="Events"/>
         <menuitem parent="menu_reporting_events" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
 
     </data>

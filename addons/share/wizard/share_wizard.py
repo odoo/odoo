@@ -26,6 +26,7 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
+from openerp import api
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv import expression
@@ -69,7 +70,7 @@ class share_wizard(osv.TransientModel):
         return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
 
     def has_share(self, cr, uid, unused_param, context=None):
-        return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
+        return self.has_group(cr, uid, module='base', group_xml_id='group_no_one', context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
@@ -82,6 +83,7 @@ class share_wizard(osv.TransientModel):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
+    @api.cr_uid_ids_context
     def share_url_template(self, cr, uid, _ids, context=None):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
@@ -103,7 +105,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = self.env.args
+        cr, uid, context = wizard.env.args
         if options is None:
             options = {}
 
@@ -382,38 +384,37 @@ class share_wizard(osv.TransientModel):
         models = [x[1].model for x in relation_fields]
         model_obj = self.pool.get('ir.model')
         model_osv = self.pool[model.model]
-        for colinfo in model_osv._all_columns.itervalues():
-            coldef = colinfo.column
-            coltype = coldef._type
+        for field in model_osv._fields.itervalues():
+            ftype = field.type
             relation_field = None
-            if coltype in ttypes and colinfo.column._obj not in models:
-                relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
+            if ftype in ttypes and field.comodel_name not in models:
+                relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',field.comodel_name)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
-                relation_osv = self.pool[coldef._obj]
+                relation_osv = self.pool[field.comodel_name]
                 #skip virtual one2many fields (related, ...) as there is no reverse relationship
-                if coltype == 'one2many' and hasattr(coldef, '_fields_id'):
+                if ftype == 'one2many' and field.inverse_name:
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
-                    dest_model_ci = relation_osv._all_columns
-                    reverse_rel = coldef._fields_id
-                    if reverse_rel in dest_model_ci and dest_model_ci[reverse_rel].column._type == 'many2one':
+                    dest_fields = relation_osv._fields
+                    reverse_rel = field.inverse_name
+                    if reverse_rel in dest_fields and dest_fields[reverse_rel].type == 'many2one':
                         relation_field = ('%s.%s'%(reverse_rel, suffix)) if suffix else reverse_rel
                 local_rel_fields.append((relation_field, relation_model_browse))
                 for parent in relation_osv._inherits:
                     if parent not in models:
                         parent_model = self.pool[parent]
-                        parent_colinfos = parent_model._all_columns
+                        parent_fields = parent_model._fields
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
-                        if relation_field and coldef._fields_id in parent_colinfos:
+                        if relation_field and field.inverse_name in parent_fields:
                             # inverse relationship is available in the parent
                             local_rel_fields.append((relation_field, parent_model_browse))
                         else:
                             # TODO: can we setup a proper rule to restrict inherited models
                             # in case the parent does not contain the reverse m2o?
                             local_rel_fields.append((None, parent_model_browse))
-                if relation_model_id != model.id and coltype in ['one2many', 'many2many']:
+                if relation_model_id != model.id and ftype in ['one2many', 'many2many']:
                     local_rel_fields += self._get_recursive_relations(cr, uid, relation_model_browse,
-                        [coltype], relation_fields + local_rel_fields, suffix=relation_field, context=context)
+                        [ftype], relation_fields + local_rel_fields, suffix=relation_field, context=context)
         return local_rel_fields
 
     def _get_relationship_classes(self, cr, uid, model, context=None):
@@ -639,7 +640,7 @@ class share_wizard(osv.TransientModel):
                      _('Action and Access Mode are required to create a shared access.'),
                      context=context)
         self._assert(self.has_share(cr, uid, wizard_data, context=context),
-                     _('You must be a member of the Share/User group to use the share wizard.'),
+                     _('You must be a member of the Technical group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
@@ -822,7 +823,7 @@ class share_wizard(osv.TransientModel):
             if wizard_data.message:
                 body += "%s\n\n" % (wizard_data.message)
             if result_line.newly_created:
-                body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+                body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
                 body += _("These are your credentials to access this protected area:\n")
                 body += "%s: %s" % (_("Username"), result_line.user_id.login) + "\n"
                 body += "%s: %s" % (_("Password"), result_line.password) + "\n"
@@ -830,7 +831,7 @@ class share_wizard(osv.TransientModel):
             body += _("The documents have been automatically added to your subscriptions.\n\n")
             body += '%s\n\n' % ((user.signature or ''))
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
@@ -851,7 +852,7 @@ class share_wizard(osv.TransientModel):
             subject = wizard_data.name
             body = _("Hello,\n\n")
             body += _("I've shared %s with you!\n\n") % wizard_data.name
-            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+            body += _("The documents are not attached, you can view them online directly on my Odoo server at:\n    %s\n\n") % (result_line.share_url)
             if wizard_data.message:
                 body += '%s\n\n' % (wizard_data.message)
             if result_line.newly_created:
@@ -860,11 +861,11 @@ class share_wizard(osv.TransientModel):
                 body += "%s: %s\n" % (_("Password"), result_line.password)
                 body += "%s: %s\n" % (_("Database"), cr.dbname)
             else:
-                body += _("The documents have been automatically added to your current OpenERP documents.\n")
+                body += _("The documents have been automatically added to your current Odoo documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
             body += "\n\n%s\n\n" % ( (user.signature or '') )
             body += "--\n"
-            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+            body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
                     'email_from': user.email,
@@ -892,8 +893,8 @@ class share_result_line(osv.osv_memory):
             data = dict(dbname=cr.dbname, login=this.login, password=this.password)
             if this.share_wizard_id and this.share_wizard_id.action_id:
                 data['action_id'] = this.share_wizard_id.action_id.id
-            ctx = dict(context, share_url_template_hash_arguments=['action_id'])
-            result[this.id] = this.share_wizard_id.share_url_template(context=ctx) % data
+            this = this.with_context(share_url_template_hash_arguments=['action_id'])
+            result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 
     _columns = {

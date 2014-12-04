@@ -1,181 +1,244 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * purchase_requisition
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-17 10:43+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-17 16:05+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:43+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-18 07:28+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Request a Quotation"
-msgstr "Árajánlat kérése"
+#: field:bid.line.qty,id:0
+#: field:purchase.requisition,id:0
+#: field:purchase.requisition.line,id:0
+#: field:purchase.requisition.partner,id:0
+msgid "ID"
+msgstr "Azonosító ID"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Multiple Requisitions"
-msgstr "Többszörös igénylés"
+#: help:purchase.requisition,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: purchase_requisition
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product Unit of Measure"
-msgstr "Termék mértékegysége"
+#: field:purchase.requisition,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Ő egy követő"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_last_post:0
+msgid "Last Message Date"
+msgstr "Utolsó üzenet időpontja"
+
+#. module: purchase_requisition
+#: field:bid.line.qty,write_uid:0
+#: field:purchase.requisition,write_uid:0
+#: field:purchase.requisition.line,write_uid:0
+#: field:purchase.requisition.partner,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítette"
+
+#. module: purchase_requisition
+#: field:bid.line.qty,write_date:0
+#: field:purchase.requisition,write_date:0
+#: field:purchase.requisition.line,write_date:0
+#: field:purchase.requisition.partner,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Click to start a new purchase requisition process. \n"
+"            Click to start a new Call for Bids process. \n"
 "          </p><p>\n"
-"            A purchase requisition is the step before a request for "
-"quotation.\n"
-"            In a purchase requisition (or purchase tender), you can record "
-"the\n"
-"            products you need to buy and trigger the creation of RfQs to\n"
-"            suppliers. After the negotiation, once you have reviewed all "
-"the\n"
-"            supplier's offers, you can validate some and cancel others.\n"
+"            A Call for Bids is a procedure for generating competing offers "
+"from\n"
+"            different bidders. In the call for bids, you can record the\n"
+"            products you need to buy and generate the creation of RfQs to\n"
+"            suppliers. Once the bids have been registered, you can review "
+"and\n"
+"            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Kattintson egy új vásárlási igény végrehajtásához. \n"
+"            Kattintson egy új árajánlat licit művelet elindításához. \n"
 "          </p><p>\n"
-"            A vásárlási igény az árajánlat kérés előtti lépés.\n"
-"            A vásárlási igényben (vagy beszerzési pályázat), rögzítheti a\n"
-"            vásárolni kívánt termékeket és elindíthatja a beszállítók felé "
-"az \n"
-"            árajánlatkérés elkészítését. A megegyezés után, miután átnézte "
-"az\n"
-"            összes beszállító ajánlatát, egyeseket érvényesítheti, másokat "
-"érvényteleníthet.\n"
+"            Egy árajánlat licit egy olyan művelet, mely különböző licitálók "
+"által \n"
+"            generált ajánlatokat hoz létre. Az árajánlat liciten, rögzítheti "
+"a vásárolni  \n"
+"            kívánt termékeket és hozzá generálhatja az árajánlat\n"
+"            kéréseket a beszállítók részére. Miután a licit ajánlatot\n"
+"            berögzítette, azokat átnézheti, összehasonlíthatja valamint\n"
+"            egyeseket jóvá is hagyhatja, másokat érvénytelenítheti.\n"
 "          </p>\n"
 "        "
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,user_id:0
-msgid "Responsible"
-msgstr "Felelős"
+#: field:purchase.requisition,account_analytic_id:0
+#: field:purchase.requisition.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Gyűjtő/elemző főkönyvi számla"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-#: field:purchase.requisition,state:0
-msgid "Status"
-msgstr "Állapot"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Approved by Supplier"
+msgstr "Szállító által jóváhagyva"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Send to Suppliers"
-msgstr "Beszállítóknak elküld"
+#: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
+msgid "Bid Line Qty"
+msgstr "Árajánlat licit tételsor mennyisége"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Group By..."
-msgstr "Csoportosítás..."
+#: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
+msgid "Bid Lines"
+msgstr "Árajánlat licit tételsorok"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
-msgid "Purchase Done"
-msgstr "Beszerzés megtörtént"
+msgid "Bid Selection"
+msgstr "Árajánlat licit kiválasztás"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,message_follower_ids:0
-msgid "Followers"
-msgstr "Követők"
+#: field:purchase.requisition,exclusive:0
+msgid "Bid Selection Type"
+msgstr "Árajánlat licit kiválasztás típus"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Purchase Requisition in negociation"
-msgstr "Beszerzés igénylés tárgyalás alatt"
+#: field:purchase.requisition,date_end:0
+msgid "Bid Submission Deadline"
+msgstr "Árajánlat licit részvételi határidő"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.partner,partner_id:0
-msgid "Supplier"
-msgstr "Szállító"
+#: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
+#: field:product.template,purchase_requisition:0
+#: field:purchase.order,requisition_id:0
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_tree
+#: field:purchase.requisition.line,requisition_id:0
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Call for Bids"
+msgstr "Felhívás árajánlat licitre"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: field:purchase.requisition,name:0
+msgid "Call for Bids Reference"
+msgstr "Árajánlat licit hivatkozása"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Call for Bids in negociation"
+msgstr "Árajánlat licit egyeztetés alatt"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Call for Bids where bids are closed"
+msgstr "Árajánlati licit ahol a licitek lezárva"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Call for Bif Reference:"
+msgstr "Árajánlati licit hivatkozása:"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
+#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
+msgid "Calls for Bids"
+msgstr "Árajánlati licitek"
+
+#. module: purchase_requisition
+#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
+#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
+msgid "Cancel"
+msgstr "Mégsem"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Cancel Call"
+msgstr "Licitre felhívás visszavonása"
+
+#. module: purchase_requisition
+#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
+msgid "Cancel Choice"
+msgstr "Választás visszavonása"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Cancel Purchase Order"
+msgstr "Szállítói megrendelés megszakítása"
+
+#. module: purchase_requisition
 #: selection:purchase.requisition,state:0
-msgid "New"
-msgstr "Új"
+msgid "Cancelled"
+msgstr "Megszakítva"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Product Detail"
-msgstr "Termék részletei"
+#: code:addons/purchase_requisition/purchase_requisition.py:292
+#, python-format
+msgid ""
+"Cancelled by the call for bids associated to this request for quotation."
+msgstr "Visszavonva ehhez az árajánlat kéréshez tartozó árajánlat licitre."
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Qty"
-msgstr "Mennyiség"
+#: code:addons/purchase_requisition/purchase_requisition.py:85
+#, python-format
+msgid "Cancelled by the tender associated to this quotation."
+msgstr "Visszavonva ehhez az árajánlathoz tartozó tenderre."
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Type"
-msgstr "Típus"
+#: model:ir.model,name:purchase_requisition.model_bid_line_qty
+msgid "Change Bid line quantity"
+msgstr "Árajánlat licit tételsor mennyiség változtatása"
+
+#. module: purchase_requisition
+#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
+#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
+msgid "Change Quantity"
+msgstr "Mennyiség változtatása"
+
+#. module: purchase_requisition
+#: help:product.template,purchase_requisition:0
+msgid ""
+"Check this box to generate Call for Bids instead of generating requests for "
+"quotation from procurement."
+msgstr ""
+"Jelölje be a négyzetet árajánlat licit generálásához az igények alapján "
+"történő árajánlat kérések generálása helyett."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
-#: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition
-#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
-#: field:product.product,purchase_requisition:0
-#: field:purchase.order,requisition_id:0
-#: view:purchase.requisition:0
-#: field:purchase.requisition.line,requisition_id:0
-#: view:purchase.requisition.partner:0
-msgid "Purchase Requisition"
-msgstr "Beszerzési igénylés"
+#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
+msgid "Choose Supplier"
+msgstr "Válasszon beszállítót"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
-msgid "Purchase Requisition Line"
-msgstr "Beszerzési igénylési sor"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Choose product lines"
+msgstr "Válasszon termék tételsorokat"
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Purchase Orders with requisition"
-msgstr "Vásárlási igényekkel rendelkező megrendelések"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Close Call for Bids"
+msgstr "Lezárja az árajánlati liciteket"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_product_product
-#: field:purchase.requisition.line,product_id:0
-msgid "Product"
-msgstr "Termék"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Árajánlatok"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Terms and Conditions"
-msgstr "Kikötések és feltételek"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,description:0
-msgid "Description"
-msgstr "Leírás"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_unread:0
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Closed Bids"
+msgstr "Lezárt árajánlati licitek"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -184,236 +247,110 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Árajánlat létrehozása"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Confirm Call"
+msgstr "Licit jóváhagyás"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_ids:0
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikációs történet"
+#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
+msgid "Confirm Order"
+msgstr "Rendelés visszaigazolása"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Approved by Supplier"
-msgstr "Szállító által jóváhagyva"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Confirm Purchase Order"
+msgstr "Szállítói megrendelés megerősítése"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "or"
-msgstr "vagy"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Reset to Draft"
-msgstr "Visszaállítás tervezet állapotba"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Current Purchase Requisition"
-msgstr "Jelenlegi vásárlási igények"
-
-#. module: purchase_requisition
-#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
-msgid "User"
-msgstr "Felhasználó"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Order Reference"
-msgstr "Megrendelés hivatkozása"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Ez egy követő"
-
-#. module: purchase_requisition
-#: field:purchase.requisition.line,product_qty:0
-msgid "Quantity"
-msgstr "Mennyiség"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Unassigned  Requisition"
-msgstr "Nem pontosított vásárlási igény"
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
-#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-msgid "Purchase Requisitions"
-msgstr "Beszerzési igénylések"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Quotation Detail"
-msgstr "Árajánlat részletei"
-
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:134
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
-"Már van egy %s megrendelése erre a partnerre, egy új árajánlat "
-"létrehozásához érvénytelenítenie kell ezt a megrendelést."
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "End Date"
-msgstr "Befejezési dátum"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,name:0
-msgid "Requisition Reference"
-msgstr "Igénylés hivatkozása"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,line_ids:0
-msgid "Products to Purchase"
-msgstr "Beszerzésre váró termékek"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
-msgid "Sent to Suppliers"
-msgstr "Beszállítókhoz elküldve"
+msgid "Confirmed"
+msgstr "Jóváhagyott"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Search Purchase Requisition"
-msgstr "Beszerzési Igénylés keresése"
+#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
+msgid "Create Request for Quotation"
+msgstr "Árajánlat kérés létrehozása"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
+#: field:bid.line.qty,create_uid:0
+#: field:purchase.requisition,create_uid:0
+#: field:purchase.requisition.line,create_uid:0
+#: field:purchase.requisition.partner,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: purchase_requisition
+#: field:bid.line.qty,create_date:0
+#: field:purchase.requisition,create_date:0
+#: field:purchase.requisition.line,create_date:0
+#: field:purchase.requisition.partner,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Date"
+msgstr "Dátum"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
-msgid "No Product in Tender."
-msgstr "Pályázatban nics termék meghatározva."
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Date Ordered"
-msgstr "Megrendelés dátuma"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_ids:0
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,exclusive:0
-msgid ""
-"Purchase Requisition (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Purchase Requisition(Multiple):  It allows to have multiple purchase "
-"orders.On confirmation of a purchase order it does not cancel the remaining "
-"orders"
+msgid "Define product(s) you want to include in the call for bids."
 msgstr ""
-"Exkluzív igénylés:  Egy szállítói megrendelés megerősítésekor megszakítja a "
-"többi szállítói megrendelést.\n"
-"Többszörös igénylés:  Lehetővé teszi több szállítói megrendelés "
-"létrehozását. Egy szállítói megrendelés megerősítésekor nem szakítja meg a "
-"többi megrendelést."
+"Határozzon meg termék(ek)et, melyeket hozzá akar fűzni az árajánlati "
+"licitekhez."
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Cancel Purchase Order"
-msgstr "Szállítói megrendelés megszakítása"
+#: field:purchase.requisition,description:0
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Description"
+msgstr "Leírás"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_order
-#: view:purchase.requisition:0
-msgid "Purchase Order"
-msgstr "Szállítói megrendelés"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Done"
+msgstr "Kész"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,origin:0
-msgid "Source Document"
-msgstr "Forrásdokumentum"
+#: selection:purchase.requisition,state:0
+msgid "Draft"
+msgstr "Tervezet"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "End Month"
+msgstr "Befejezés hónapja"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
-msgstr "Igénylés típusa"
+#: field:purchase.requisition,message_follower_ids:0
+msgid "Followers"
+msgstr "Követők"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "New Purchase Requisition"
-msgstr "Új beszerzési igény"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Group By"
+msgstr "Csoportosítás"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Products"
-msgstr "Termékek"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Order Date"
-msgstr "Megrendelés dátuma"
-
-#. module: purchase_requisition
-#: selection:purchase.requisition,state:0
-msgid "Cancelled"
-msgstr "Megszakítva"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
-msgid "Purchase Requisition Partner"
-msgstr "Beszerzési igénylési partner"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "Purchase for Requisitions"
-msgstr "Beszerzés az igénylésekre"
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr "Szállítói megrendelések"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,date_end:0
-msgid "Requisition Deadline"
-msgstr "Igénylési határidő"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,message_summary:0
-msgid "Summary"
-msgstr "Összegzés"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Reference"
-msgstr "Hivatkozás"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
-msgid "Procurement"
-msgstr "Beszerzés"
-
-#. module: purchase_requisition
-#: report:purchase.requisition:0
-#: view:purchase.requisition:0
-msgid "Source"
-msgstr "Forrás"
-
-#. module: purchase_requisition
-#: field:purchase.requisition,warehouse_id:0
-msgid "Warehouse"
-msgstr "Raktár"
+#: help:purchase.requisition,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
@@ -426,156 +363,405 @@ msgid "Manager"
 msgstr "Menedzser"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Purchase Requisition (exclusive)"
-msgstr "Exkluzív Igénylés"
+#: field:purchase.requisition,message_ids:0
+msgid "Messages"
+msgstr "Üzenetek"
 
 #. module: purchase_requisition
-#: help:purchase.requisition,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
-"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+#: help:purchase.requisition,message_ids:0
+msgid "Messages and communication history"
+msgstr "Üzenetek és kommunikációs történet"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
+#: field:purchase.requisition,multiple_rfq_per_supplier:0
+msgid "Multiple RFQ per supplier"
+msgstr "Beszállítónkénti többszörös árajánlat kérés"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Multiple Requisitions"
+msgstr "Többszörös igénylés"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "New"
+msgstr "Új"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "New Call for Bids"
+msgstr "Új árajánlati licit felhívás"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Order Date"
+msgstr "Megrendelés dátuma"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "PO Created"
+msgstr "Beszerzési megrendelés létrehozva"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,picking_type_id:0
+msgid "Picking Type"
+msgstr "Kiválogatás típusa"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_order
+#: field:purchase.requisition,procurement_id:0
+msgid "Procurement"
+msgstr "Beszerzés"
+
+#. module: purchase_requisition
+#: field:purchase.requisition.line,product_id:0
+msgid "Product"
+msgstr "Termék"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_template
+msgid "Product Template"
+msgstr "Terméksablon"
+
+#. module: purchase_requisition
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product Unit of Measure"
+msgstr "Termék mértékegysége"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Product UoM"
 msgstr "Termék ME"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:134
-#, python-format
-msgid "Warning!"
-msgstr "Figyelem!"
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Products"
+msgstr "Termékek"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm Purchase Order"
-msgstr "Szállítói megrendelés megerősítése"
+#: field:purchase.requisition,po_line_ids:0
+msgid "Products by supplier"
+msgstr "Termékeke beszállítónként"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Cancel"
-msgstr "Mégsem"
+#: field:purchase.requisition,line_ids:0
+msgid "Products to Purchase"
+msgstr "Beszerzésre váró termékek"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition,date_start:0
-msgid "Requisition Date"
-msgstr "Igénylés dátuma"
+#: model:ir.model,name:purchase_requisition.model_purchase_order
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Purchase Order"
+msgstr "Szállítói megrendelés"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Kezdési dátum"
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Beszerzési megrendelési tételsor"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Unassigned"
-msgstr "Nem hozzárendelt"
-
-#. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr "Igénylés"
-
-#. module: purchase_requisition
-#: help:product.product,purchase_requisition:0
-msgid ""
-"Check this box to generates purchase requisition instead of generating "
-"requests for quotation from procurement."
-msgstr ""
-"Jelölje be ezt a négyzetet beszerzési igény létrehozásához, ahelyett, hogy "
-"árajánlatot igényelne a beszerzésekből."
+#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
+msgid "Purchase Order Lines"
+msgstr "Beszerzési megrendelési tételsorok"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Szállítói megrendelések"
 
-#~ msgid "State"
-#~ msgstr "Állapot"
+#. module: purchase_requisition
+#: view:purchase.order:purchase_requisition.purchase_order_search_inherit
+msgid "Purchase Orders with requisition"
+msgstr "Vásárlási igényekkel rendelkező megrendelések"
 
-#~ msgid "Draft"
-#~ msgstr "Tervezet"
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
+msgid "Purchase Requisition"
+msgstr "Beszerzési igénylés"
 
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
+msgid "Purchase Requisition Line"
+msgstr "Beszerzési igénylés tételsor"
 
-#~ msgid "In Progress"
-#~ msgstr "Folyamatban"
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
+msgid "Purchase Requisition Partner"
+msgstr "Beszerzési igénylési partner"
 
-#~ msgid "Confirm"
-#~ msgstr "Megerősítés"
-
-#~ msgid "Address"
-#~ msgstr "Cím"
-
-#~ msgid "Notes"
-#~ msgstr "Megjegyzések"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#~ msgid "Done"
-#~ msgstr "Kész"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Hiba: Érvénytelen vonalkód"
-
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:414
 #, python-format
-#~ msgid "No Product in Tender"
-#~ msgstr "Nincs megadott termék az árajánlatban"
+msgid "Purchase Requisition created"
+msgstr "Beszerzési igény létrehozva"
 
-#~ msgid ""
-#~ "Check this box so that requisitions generates purchase requisitions instead "
-#~ "of directly requests for quotations."
-#~ msgstr ""
-#~ "Jelölje ki ezt a mezőt, ha azt szeretné, hogy az igénylések beszerzési "
-#~ "igényléseket hozzanak létre, közvetlenül árajánlatkérések helyett."
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Purchase Requisitions (exclusive)"
+msgstr "Beszerzési igények (kizárólagos)"
 
-#~ msgid ""
-#~ "\n"
-#~ "    This module allows you to manage your Purchase Requisition.\n"
-#~ "    When a purchase order is created, you now have the opportunity to save "
-#~ "the related requisition.\n"
-#~ "    This new object will regroup and will allow you to easily keep track and "
-#~ "order all your purchase orders.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "    Ez a modul lehetővé teszi, hogy kezelje beszerzési igényléseit. \n"
-#~ "    Mikor egy szállítói megrendelés létrehozásra kerül, Önnek ezt követően "
-#~ "nyílik lehetősége elmenteni a kapcsolódó igénylést.\n"
-#~ "    Ez az új objektum lehetővé fogja tenni az Ön számára, hogy "
-#~ "újracsoportosítsa, könnyedén számon tartsa és elintézze szállítói "
-#~ "megrendeléseit.\n"
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Szállítói megrendelések"
 
-#~ msgid ""
-#~ "A purchase requisition is the step before a request for quotation. In a "
-#~ "purchase requisition (or purchase tender), you can record the products you "
-#~ "need to buy and trigger the creation of RfQs to suppliers. After the "
-#~ "negotiation, once you have reviewed all the supplier's offers, you can "
-#~ "validate some and cancel others."
-#~ msgstr ""
-#~ "Egy beszerzés igénylés az árajánlatkérést megelőző lépés. Egy beszerzés "
-#~ "igénylés (vagy beszerzési tender) során, Ön felveheti a vásárlandó "
-#~ "termékeket, és kezdeményezheti árajánlatkérések létrehozását a szállítók "
-#~ "felé . A tárgyalást követően, miután Ön áttekintette összes az szállító "
-#~ "árajánlatát, érvényesítheti vagy megszakíthatja azokat."
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Qty"
+msgstr "Mennyiség"
 
-#~ msgid "Origin"
-#~ msgstr "Eredet"
+#. module: purchase_requisition
+#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
+#: field:bid.line.qty,qty:0
+#: field:purchase.requisition.line,product_qty:0
+msgid "Quantity"
+msgstr "Mennyiség"
 
-#~ msgid "_Cancel"
-#~ msgstr "_Mégsem"
+#. module: purchase_requisition
+#: field:purchase.order.line,quantity_bid:0
+msgid "Quantity Bid"
+msgstr "Mennyiségi licit"
 
-#~ msgid "Purchase - Purchase Requisition"
-#~ msgstr "Beszerzés - Beszerzési igénylés"
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:191
+#, python-format
+msgid "RFQ created"
+msgstr "Árajánlat kérés létrehozva"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Reference"
+msgstr "Hivatkozás"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Request a Quotation"
+msgstr "Árajánlat kérése"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Requests for Quotation"
+msgstr "Ajánlatkérések"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Requests for Quotation Details"
+msgstr "Árajánlat kérés részletei"
+
+#. module: purchase_requisition
+#: view:purchase.order:purchase_requisition.purchase_order_search_inherit
+msgid "Requisition"
+msgstr "Igénylés"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Reset to Draft"
+msgstr "Visszaállítás tervezet állapotba"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: field:purchase.requisition,user_id:0
+msgid "Responsible"
+msgstr "Felelős"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,schedule_date:0
+#: field:purchase.requisition.line,schedule_date:0
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Scheduled Date"
+msgstr "Ütemezés dátuma"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,ordering_date:0
+msgid "Scheduled Ordering Date"
+msgstr "Tervezett megrendelési dátum"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Scheduled Ordering Date:"
+msgstr "Tervezett megrendelési tátum:"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Search Call for Bids"
+msgstr "Árajánlati licit keresés"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,exclusive:0
+msgid "Select multiple RFQ"
+msgstr "Többszörös árajánlat kérés kiválasztás"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,exclusive:0
+msgid "Select only one RFQ (exclusive)"
+msgstr "Csak egy árajánlat kérés kiválasztása (kizárólag)"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,exclusive:0
+msgid ""
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Csak egy árajánlat kérés kiválasztása (kizárólag):  A beszerzési megrendelés "
+"jóváhagyásán, az összes megmaradt beszerzési megrendelést törölni fogja.\n"
+"Többszörös árajánlat kérés kiválasztás:  Lehetővé teszi a többszörös "
+"megrendelést. A beszerzési megrendelés jóváhagyásán, nem fogja törölni az "
+"összes megmaradt beszerzési megrendelést."
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Selection Type:"
+msgstr "Kiválasztás típusa:"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Send RFQ by Email"
+msgstr "Árajánlat kérés elküldve emailben"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Source"
+msgstr "Forrás"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,origin:0
+msgid "Source Document"
+msgstr "Forrásdokumentum"
+
+#. module: purchase_requisition
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Source:"
+msgstr "Forrás:"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Start Month"
+msgstr "Kezdő hónap"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+#: field:purchase.requisition,state:0
+msgid "Status"
+msgstr "Állapot"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_summary:0
+msgid "Summary"
+msgstr "Összegzés"
+
+#. module: purchase_requisition
+#: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
+#: field:purchase.requisition.partner,partner_id:0
+#: view:website:purchase_requisition.report_purchaserequisitions
+msgid "Supplier"
+msgstr "Szállító"
+
+#. module: purchase_requisition
+#: help:purchase.order.line,quantity_bid:0
+msgid ""
+"Technical field for not loosing the initial information about the quantity "
+"proposed in the bid"
+msgstr ""
+"Technikai mező, hogy el ne veszítse a licitre vonatkozó elsődleges "
+"mennyiségi adatokat"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "Terms and Conditions"
+msgstr "Kikötések és feltételek"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,schedule_date:0
+msgid "The expected and scheduled date where all the products are received"
+msgstr ""
+"Az elvárt és a tervezett dátum az összes termék beérkezésére vojatkozóan"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Unassigned"
+msgstr "Nem hozzárendelt"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Unassigned  Requisition"
+msgstr "Nem pontosított vásárlási igény"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,message_unread:0
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "View Products Lines"
+msgstr "Termék tételsorok megtekintése"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "View RFQs/Bids"
+msgstr "Árajánlat kéréséek/Árajánlati licitek megtekintése"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,warehouse_id:0
+msgid "Warehouse"
+msgstr "Raktár"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:188
+#: code:addons/purchase_requisition/purchase_requisition.py:239
+#: code:addons/purchase_requisition/purchase_requisition.py:248
+#, python-format
+msgid "Warning!"
+msgstr "Figyelem!"
+
+#. module: purchase_requisition
+#: field:purchase.requisition,website_message_ids:0
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: purchase_requisition
+#: help:purchase.requisition,website_message_ids:0
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:239
+#, python-format
+msgid "You have already generate the purchase order(s)."
+msgstr "Már létrehozta a beszerzési megrendelés(eke)t."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:188
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr ""
+"Már van egy %s megrendelése erre a partnerre, egy új árajánlat "
+"létrehozásához érvénytelenítenie kell ezt a megrendelést."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:248
+#, python-format
+msgid "You have no line selected for buying."
+msgstr "Nem választott ki tételsort beszerezéshez."
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "e.g. OP0025"
+msgstr "pl. BMP0025"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
+msgid "e.g. PO0025"
+msgstr "pl. PO0025"

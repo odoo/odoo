@@ -1,0 +1,16 @@
+# HG changeset patch
+# Parent e9d9740fa1852c80541c6b5b94280c8ec74cc4bb
+diff -r e9d9740fa185 -r 122340f43602 academy/controllers.py
+--- a/academy/controllers.py	Tue Aug 12 16:51:29 2014 +0200
++++ b/academy/controllers.py	Tue Aug 12 16:52:38 2014 +0200
+@@ -9,7 +9,7 @@ class Academy(http.Controller):
+             'teachers': Teachers.search([]),
+         })
+ 
+-    @http.route('/academy/<name>/', auth='public', website=True)
+-    def teacher(self, name):
+-        return '<h1>{}</h1>'.format(name)
++    @http.route('/academy/<int:id>/', auth='public', website=True)
++    def teacher(self, id):
++        return '<h1>{} ({})</h1>'.format(id, type(id).__name__)
+ 

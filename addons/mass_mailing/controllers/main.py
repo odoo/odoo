@@ -31,14 +31,15 @@ class MassMailController(http.Controller):
             request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         else:
             email_fname = None
-            if 'email_from' in request.registry[mailing.mailing_model]._all_columns:
+            model = request.registry[mailing.mailing_model]
+            if 'email_from' in model._fields:
                 email_fname = 'email_from'
-            elif 'email' in request.registry[mailing.mailing_model]._all_columns:
+            elif 'email' in model._fields:
                 email_fname = 'email'
             if email_fname:
-                record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
-            if 'opt_out' in request.registry[mailing.mailing_model]._all_columns:
-                request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
+                record_ids = model.search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
+            if 'opt_out' in model._fields:
+                model.write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         return 'OK'
 
     @http.route(['/website_mass_mailing/is_subscriber'], type='json', auth="public", website=True)
@@ -55,7 +56,7 @@ class MassMailController(http.Controller):
             email = request.session['mass_mailing_email']
 
         if email:
-            contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
+            contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email), ('opt_out', '=', False)], context=context)
             is_subscriber = len(contact_ids) > 0
 
         return {'is_subscriber': is_subscriber, 'email': email}
@@ -65,10 +66,12 @@ class MassMailController(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         Contacts = request.registry['mail.mass_mailing.contact']
 
-        contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
+        contact_ids = Contacts.search_read(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], ['opt_out'], context=context)
         if not contact_ids:
-            contact_ng = Contacts.name_create(cr, SUPERUSER_ID, email, context=context)
-            Contacts.write(cr, SUPERUSER_ID, [contact_ng[0]], {'list_id': int(list_id)}, context=context)
+            Contacts.add_to_list(cr, SUPERUSER_ID, email, int(list_id), context=context)
+        else:
+            if contact_ids[0]['opt_out']:
+                Contacts.write(cr, SUPERUSER_ID, [contact_ids[0]['id']], {'opt_out': False}, context=context)
         # add email to session
         request.session['mass_mailing_email'] = email
         return True

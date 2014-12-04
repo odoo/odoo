@@ -37,7 +37,7 @@ _logger = logging.getLogger(__name__)
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?db=%s&token=%s'
 EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
-EDI_GENERATOR = 'OpenERP ' + release.major_version
+EDI_GENERATOR = 'Odoo' + release.major_version
 EDI_GENERATOR_VERSION = release.version_info
 
 def split_external_id(ext_id):
@@ -127,7 +127,7 @@ class edi(osv.AbstractModel):
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
                 raise osv.except_osv(_('Missing Application.'),
-                            _("The document you are trying to import requires the OpenERP `%s` application. "
+                            _("The document you are trying to import requires the Odoo `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
             assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
@@ -185,9 +185,9 @@ class EDIMixin(object):
         """Generate/Retrieve unique external ID for ``record``.
         Each EDI record and each relationship attribute in it is identified by a
         unique external ID, which includes the database's UUID, as a way to
-        refer to any record within any OpenERP instance, without conflict.
+        refer to any record within any Odoo instance, without conflict.
 
-        For OpenERP records that have an existing "External ID" (i.e. an entry in
+        For Odoo records that have an existing "External ID" (i.e. an entry in
         ir.model.data), the EDI unique identifier for this record will be made of
         "%s:%s:%s" % (module, database UUID, ir.model.data ID). The database's
         UUID MUST NOT contain a colon characters (this is guaranteed by the
@@ -266,7 +266,7 @@ class EDIMixin(object):
                '__id': 'module:db-uuid:model.id',      # unique global external ID for the record
                '__last_update': '2011-01-01 10:00:00', # last update date in UTC!
                '__version': 1,                         # EDI spec version
-               '__generator' : 'OpenERP',              # EDI generator
+               '__generator' : 'Odoo',              # EDI generator
                '__generator_version' : [6,1,0],        # server version, to check compatibility.
                '__attachments_':
            }
@@ -384,18 +384,18 @@ class EDIMixin(object):
         results = []
         for record in records:
             edi_dict = self.edi_metadata(cr, uid, [record], context=context)[0]
-            for field in fields_to_export:
-                column = self._all_columns[field].column
-                value = getattr(record, field)
+            for field_name in fields_to_export:
+                field = self._fields[field_name]
+                value = getattr(record, field_name)
                 if not value and value not in ('', 0):
                     continue
-                elif column._type == 'many2one':
+                elif field.type == 'many2one':
                     value = self.edi_m2o(cr, uid, value, context=context)
-                elif column._type == 'many2many':
+                elif field.type == 'many2many':
                     value = self.edi_m2m(cr, uid, value, context=context)
-                elif column._type == 'one2many':
-                    value = self.edi_o2m(cr, uid, value, edi_struct=edi_struct.get(field, {}), context=context)
-                edi_dict[field] = value
+                elif field.type == 'one2many':
+                    value = self.edi_o2m(cr, uid, value, edi_struct=edi_struct.get(field_name, {}), context=context)
+                edi_dict[field_name] = value
             results.append(edi_dict)
         return results
 
@@ -558,25 +558,24 @@ class EDIMixin(object):
             # skip metadata and empty fields
             if field_name.startswith('__') or field_value is None or field_value is False:
                 continue
-            field_info = self._all_columns.get(field_name)
-            if not field_info:
+            field = self._fields.get(field_name)
+            if not field:
                 _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document.', field_name, self._name)
                 continue
-            field = field_info.column
             # skip function/related fields
-            if isinstance(field, fields.function):
+            if not field.store:
                 _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
                 continue
-            relation_model = field._obj
-            if field._type == 'many2one':
+            relation_model = field.comodel_name
+            if field.type == 'many2one':
                 record_values[field_name] = self.edi_import_relation(cr, uid, relation_model,
                                                                       field_value[1], field_value[0],
                                                                       context=context)
-            elif field._type == 'many2many':
+            elif field.type == 'many2many':
                 record_values[field_name] = [self.edi_import_relation(cr, uid, relation_model, m2m_value[1],
                                                                        m2m_value[0], context=context)
                                              for m2m_value in field_value]
-            elif field._type == 'one2many':
+            elif field.type == 'one2many':
                 # must wait until parent report is imported, as the parent relationship
                 # is often required in o2m child records
                 o2m_todo[field_name] = field_value
@@ -591,11 +590,12 @@ class EDIMixin(object):
 
         # process o2m values, connecting them to their parent on-the-fly
         for o2m_field, o2m_value in o2m_todo.iteritems():
-            field = self._all_columns[o2m_field].column
-            dest_model = self.pool[field._obj]
+            field = self._fields[o2m_field]
+            dest_model = self.pool[field.comodel_name]
+            dest_field = field.inverse_name
             for o2m_line in o2m_value:
                 # link to parent record: expects an (ext_id, name) pair
-                o2m_line[field._fields_id] = (ext_id_members['full'], record_display[1])
+                o2m_line[dest_field] = (ext_id_members['full'], record_display[1])
                 dest_model.edi_import(cr, uid, o2m_line, context=context)
 
         # process the attachments, if any

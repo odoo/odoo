@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-__all__ = ['synchronized', 'lazy_property']
+__all__ = ['synchronized', 'lazy_property', 'classproperty', 'conditional']
 
 from functools import wraps
 from inspect import getsourcefile
@@ -42,6 +42,10 @@ class lazy_property(object):
         setattr(obj, self.fget.__name__, value)
         return value
 
+    @property
+    def __doc__(self):
+        return self.fget.__doc__
+
     @staticmethod
     def reset_all(obj):
         """ Reset all lazy properties on the instance `obj`. """
@@ -51,6 +55,19 @@ class lazy_property(object):
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
 
+def conditional(condition, decorator):
+    """ Decorator for a conditionally applied decorator.
+
+        Example:
+
+           @conditional(get_config('use_cache'), ormcache)
+           def fn():
+               pass
+    """
+    if condition:
+        return decorator
+    else:
+        return lambda fn: fn
 
 def synchronized(lock_attr='_lock'):
     def decorator(func):
@@ -98,5 +115,13 @@ def compose(a, b):
     def wrapper(*args, **kwargs):
         return a(b(*args, **kwargs))
     return wrapper
+
+
+class _ClassProperty(property):
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
+
+def classproperty(func):
+    return _ClassProperty(classmethod(func))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

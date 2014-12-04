@@ -138,7 +138,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         if (!this.colors) { return ''; }
         var context = _.extend({}, record, {
             uid: this.session.uid,
-            current_date: new Date().toString('yyyy-MM-dd')
+            current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta
         });
         for(var i=0, len=this.colors.length; i<len; ++i) {

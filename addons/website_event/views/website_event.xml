@@ -5,6 +5,7 @@
 <template id="event_script" inherit_id="website.assets_frontend" name="Country Events Snippet Script">
     <xpath expr="/t" position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
     </xpath>
 </template>
 
@@ -57,6 +58,7 @@
                             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
+                                    <small t-if="not event.address_id" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">not published</small>
                                 </h4>
                                 <div>
@@ -87,7 +89,7 @@
     </t>
 </template>
 
-<template id="event_right_photos" inherit_id="website_event.index" optional="disabled" name="Photos">
+<template id="event_right_photos" inherit_id="website_event.index" active="False" customize_show="True" name="Photos">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -106,7 +108,7 @@
     </xpath>
 </template>
 
-<template id="event_right_quotes" inherit_id="website_event.index" optional="disabled" name="Quotes">
+<template id="event_right_quotes" inherit_id="website_event.index" active="False" customize_show="True" name="Quotes">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -123,7 +125,7 @@
     </xpath>
 </template>
 
-<template id="event_right_country_event" inherit_id="website_event.index" optional="disabled" name="Country Events">
+<template id="event_right_country_event" inherit_id="website_event.index" active="False" customize_show="True" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16 mt16 country_events">
@@ -140,7 +142,7 @@
     </xpath>
 </template>
 
-<template id="event_left_column" optional="enabled" inherit_id="website_event.index" name="Filters">
+<template id="event_left_column" customize_show="True" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
     </xpath>
@@ -159,7 +161,7 @@
     </xpath>
 </template>
 
-<template id="event_category" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Category">
+<template id="event_category" inherit_id="website_event.event_left_column" active="False" customize_show="True" name="Filter by Category">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
@@ -174,12 +176,18 @@
     </xpath>
 </template>
 
-<template id="event_location" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Country">
+<template id="event_location" inherit_id="website_event.event_left_column" active="False" customize_show="True" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries" t-as="country">
                 <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('type', 'data', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
+                    </a>
+                </li>
+                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}">
+                        <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
@@ -190,7 +198,7 @@
 
 <template id="layout">
     <t t-call="website.layout">
-      <div id="wrap" class="js_event">
+      <div id="wrap" class="js_event o_website_event">
         <div class="container">
             <div class="row mt8">
                 <div class="col-sm-7" id="event_menu">
@@ -229,7 +237,7 @@
 
 <template id="template_location">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -238,7 +246,7 @@
 
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Introduction</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -282,6 +290,9 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
+            <t t-call="website_event.registration_template"/>
+            <div class="clearfix"/>
+            <hr/>
             <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">
@@ -360,6 +371,154 @@
     </t>
 </template>
 
+<!-- Registration Templates -->
+<template id="registration_template">
+    <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <table itemprop="offers" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket Type</th>
+                    <th style="min-width: 100px">End of Subscription</th>
+                    <th style="min-width: 100px">Price</th>
+                    <th></th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Event Subscription</td>
+                    <td>
+                        <t t-if="event.date_begin">
+                            <span t-field="event.date_begin"/>
+                        </t>
+                        <t t-if="not event.date_begin">
+                            <span>Unlimited</span>
+                        </t>
+                    </td>
+                    <td>Free</td>
+                    <td></td>
+                    <td>
+                        <select t-if="event.seats_available" name="nb_register-0" class="form-control">
+                            <t t-foreach="range(0, event.seats_available > 9 and 10 or event.seats_available+1)" t-as="nb">
+                                <option t-esc="nb"/>
+                            </t>
+                        </select>
+                        <span t-if="not event.seats_available">Sold Out</span>
+                    </td>
+                 </tr>
+            </tbody>
+        </table>
+        <t t-if="event.seats_available">
+            <button type="submit" t-if="event.seats_available" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
+        </t>
+    </form>
+</template>
+
+<template id="registration_attendee_details" name="Registration Attendee Details">
+    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="myModalLabel"><strong>Attendees</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <t t-set="counter_type" t-value="1"/>
+                            <t t-set="counter" t-value="0"/>
+                            <t t-foreach="tickets" t-as="ticket">
+                                <div>
+                                    <h4>
+                                        <strong>
+                                            Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
+                                            <t t-if="ticket['price'] > 0">
+                                                <t t-esc="ticket['price']"/>
+                                                <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                            </t>
+                                            <t t-if="ticket['price'] == 0">Free</t>)
+                                        </strong>
+                                    </h4><hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Name</strong></div>
+                                    <div class="col-md-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
+                                    <div class="col-md-5"><strong>Email</strong> <span class="text-muted">(Optional)</span></div>
+                                </div>
+                                <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter">
+                                    <t t-set="counter" t-value="counter + 1"/>
+                                    <div class="row">
+                                        <div class="col-md-4"><input class='form-control input-sm' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="'Attendee #%s' %counter"/></div>
+                                        <div class="col-md-3"><input class='form-control input-sm' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                        <div class="col-md-5"><input class='form-control input-sm' type='email' t-attf-name="#{counter}-email"/></div>
+                                        <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                        <hr style="width:50%"/>
+                                    </div>
+                                </t>
+                                <t t-set="counter" t-value="counter + ticket['quantity']"/>
+                                <t t-set="counter_type" t-value="counter_type + 1"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            <button type="submit" class="btn btn-primary">Continue</button> or 
+                            <a class="js_goto_event"> Cancel Registration</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="registration_complete" name="Registration Completed">
+    <t t-call="website.layout">
+        <div class="container">
+            <h3>We are glad to confirm your subscription to our event</h3>
+            <div class="row">
+                <div class="col-md-3 mt16">
+                    <h4>Event Details</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
+                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            }'/>
+                </div>
+                <div class="col-md-3 mt16">
+                    <h4>Your subscription</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <table class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Name</th>
+                                <th>E-mail</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="attendees" t-as="attendee">
+                                <tr>
+                                    <td><t t-esc="attendee.id"/></td>
+                                    <td><i class="fa fa-user"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
+                                    <td><i class="fa fa-envelope"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
+                                    <td><i class="fa fa-phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
     <xpath expr="//div[@id='snippet_content']" position="inside">
         <div>
@@ -382,22 +541,23 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='country_events'
+        <div data-js='country_events'
             data-selector=".oe_country_events"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
-            data-selector-children=".content"
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+            data-drop-in=".content"
            >
         </div>
     </xpath>
 </template>
 
+<!-- Misc templates -->
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img class="img-rounded img-responsive" t-att-src="'/website/image?model=res.country&amp;field=image&amp;id='+str(country.id)"></img>
+                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')"></img>
                         <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
@@ -429,6 +589,21 @@
         </t>
     </t>
 </template>
+
+<template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+  <xpath expr="//footer" position="inside">
+      <div class="container mt16 mb8">
+          <div class="pull-right" t-ignore="true" t-if="not editable">
+            Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
+            Try the <a href="http://www.odoo.com/page/website-builder">open source website builder</a>.
+          </div>
+          <div class="pull-left text-muted">
+              Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+          </div>
+      </div>
+  </xpath>
+</template>
+
 
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">

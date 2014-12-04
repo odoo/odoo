@@ -52,7 +52,7 @@
             <field name="act_to"/>
             <field name="signal"/>
           </arrow>
-          <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutly need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwrited at the next update or upgrade to a future version of OpenERP."/>
+          <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutly need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwrited at the next update or upgrade to a future version of Odoo."/>
         </diagram>
       </field>
     </record>
@@ -120,6 +120,7 @@
             <page string="Transitions">
                 <field name="in_transitions">
                   <tree string="Incoming Transitions">
+                    <field name="sequence" widget="handle" />
                     <field name="act_from"/>
                     <field name="signal"/>
                     <field name="condition"/>
@@ -127,6 +128,7 @@
                 </field>
                 <field name="out_transitions">
                   <tree string="Outgoing Transitions">
+                    <field name="sequence" widget="handle" />
                     <field name="act_to"/>
                     <field name="signal"/>
                     <field name="condition"/>
@@ -196,6 +198,7 @@
           <sheet>
             <group>
                 <group>
+                    <field name="sequence" />
                     <field name="act_from"/>
                     <field name="act_to"/>
                     <field name="signal"/>
@@ -216,6 +219,7 @@
       <field name="model">workflow.transition</field>
       <field name="arch" type="xml">
         <tree string="Transition">
+          <field name="sequence" widget="handle" />
           <field name="act_from"/>
           <field name="act_to"/>
           <field name="signal"/>

@@ -21,10 +21,11 @@ function openerp_pos_db(instance, module){
             this.product_by_category_id = {};
             this.product_by_reference = {};
 
-            this.partners_sorted = [];
+            this.partner_sorted = [];
             this.partner_by_id = {};
             this.partner_by_ean13 = {};
             this.partner_search_string = "";
+            this.partner_write_date = null;
 
             this.category_by_id = {};
             this.root_category_id  = 0;
@@ -128,15 +129,21 @@ function openerp_pos_db(instance, module){
             this.cache[store] = data;
         },
         _product_search_string: function(product){
-            var str = '' + product.id + ':' + product.name;
-            if(product.ean13){
+            var str = '' + product.id + ':' + product.display_name;
+            if (product.ean13) {
                 str += '|' + product.ean13;
             }
-            if(product.default_code){
-                str += '|' + product.default_code;
+            if (product.default_code) {
+                str += '|' + product.default_code.replace(':','');
+            }
+            if (product.description) {
+                str += '|' + product.description.replace(':','');
+            }
+            if (product.description_sale) {
+                str += '|' + product.description_sale.replace(':','');
             }
             var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
-            for(var i = 0; i < packagings.length; i++){
+            for (var i = 0; i < packagings.length; i++) {
                 str += '|' + packagings[i].ean;
             }
             return str + '\n';
@@ -151,9 +158,6 @@ function openerp_pos_db(instance, module){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
                 var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
-                if (product.variants){
-                    product.name = product.name+" ("+product.variants+")";
-                }
                 product.product_tmpl_id = product.product_tmpl_id[0];
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
@@ -209,22 +213,69 @@ function openerp_pos_db(instance, module){
             if(partner.address){
                 str += '|' + partner.address;
             }
+            if(partner.phone){
+                str += '|' + partner.phone.split(' ').join('');
+            }
+            if(partner.mobile){
+                str += '|' + partner.mobile.split(' ').join('');
+            }
+            if(partner.email){
+                str += '|' + partner.email;
+            }
             return str + '\n';
         },
         add_partners: function(partners){
+            var updated_count = 0;
+            var new_write_date = '';
             for(var i = 0, len = partners.length; i < len; i++){
                 var partner = partners[i];
-                this.partner_by_id[partner.id] = partner;
-                if(partner.ean13){
-                    this.partner_by_ean13[partner.ean13] = partner;
+
+                if (    this.partner_write_date && 
+                        this.partner_by_id[partner.id] &&
+                        new Date(this.partner_write_date).getTime() + 1000 >=
+                        new Date(partner.write_date).getTime() ) {
+                    // FIXME: The write_date is stored with milisec precision in the database
+                    // but the dates we get back are only precise to the second. This means when
+                    // you read partners modified strictly after time X, you get back partners that were
+                    // modified X - 1 sec ago. 
+                    continue;
+                } else if ( new_write_date < partner.write_date ) { 
+                    new_write_date  = partner.write_date;
                 }
-                partner.address = (partner.street || '') +', '+ 
-                                  (partner.zip || '')    +' '+
-                                  (partner.city || '')   +', '+ 
-                                  (partner.country_id[1] || '');
-                this.partner_search_string += this._partner_search_string(partner);
-                this.partners_sorted.push(partner);
+                if (!this.partner_by_id[partner.id]) {
+                    this.partner_sorted.push(partner.id);
+                }
+                this.partner_by_id[partner.id] = partner;
+
+                updated_count += 1;
             }
+
+            this.partner_write_date = new_write_date || this.partner_write_date;
+
+            if (updated_count) {
+                // If there were updates, we need to completely 
+                // rebuild the search string and the ean13 indexing
+
+                this.partner_search_string = "";
+                this.partner_by_ean13 = {};
+
+                for (var id in this.partner_by_id) {
+                    var partner = this.partner_by_id[id];
+
+                    if(partner.ean13){
+                        this.partner_by_ean13[partner.ean13] = partner;
+                    }
+                    partner.address = (partner.street || '') +', '+ 
+                                      (partner.zip || '')    +' '+
+                                      (partner.city || '')   +', '+ 
+                                      (partner.country_id[1] || '');
+                    this.partner_search_string += this._partner_search_string(partner);
+                }
+            }
+            return updated_count;
+        },
+        get_partner_write_date: function(){
+            return this.partner_write_date;
         },
         get_partner_by_id: function(id){
             return this.partner_by_id[id];
@@ -232,8 +283,13 @@ function openerp_pos_db(instance, module){
         get_partner_by_ean13: function(ean13){
             return this.partner_by_ean13[ean13];
         },
-        get_partners_sorted: function(){
-            return this.partners_sorted;
+        get_partners_sorted: function(max_count){
+            max_count = max_count ? Math.min(this.partner_sorted.length, max_count) : this.partner_sorted.length;
+            var partners = [];
+            for (var i = 0; i < max_count; i++) {
+                partners.push(this.partner_by_id[this.partner_sorted[i]]);
+            }
+            return partners;
         },
         search_partner: function(query){
             try {
@@ -280,7 +336,7 @@ function openerp_pos_db(instance, module){
             }
             var pack = this.packagings_by_ean13[ean13];
             if(pack){
-                return this.product_by_id[pack.product_id[0]];
+                return this.product_by_id[pack.product_tmpl_id[0]];
             }
             return undefined;
         },
@@ -344,6 +400,9 @@ function openerp_pos_db(instance, module){
                 return order.id !== order_id;
             });
             this.save('orders',orders);
+        },
+        remove_all_orders: function(){
+            this.save('orders',[]);
         },
         get_orders: function(){
             return this.load('orders',[]);

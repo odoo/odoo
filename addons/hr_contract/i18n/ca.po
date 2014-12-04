@@ -1,88 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_contract
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-03 05:40+0000\n"
-"Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
-"<resteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:05+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salari"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Information"
+#: model:ir.model,name:hr_contract.model_base_action_rule
+msgid "Action Rules"
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr "Data d'inici"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr "Vehicle de la companyia"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Group By..."
-msgstr "Agrupa per..."
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Departament"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,employee_id:0
-#: model:ir.model,name:hr_contract.model_hr_employee
-msgid "Employee"
-msgstr "Empleat"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Cerca contracte"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_ids:0
-#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-msgid "Contracts"
-msgstr "Contractes"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Número de fills"
-
-#. module: hr_contract
-#: help:hr.employee,contract_id:0
-msgid "Latest contract of the employee"
-msgstr "Darrer contracte de l'empleat."
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Job"
-msgstr "Feina"
 
 #. module: hr_contract
 #: field:hr.contract,advantages:0
@@ -90,9 +28,45 @@ msgid "Advantages"
 msgstr "Avantatges"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Work Permit"
-msgstr "Permís de treball"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Advantages..."
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Vehicle de la companyia"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_id:0
+#: model:ir.model,name:hr_contract.model_hr_contract
+#: model:ir.ui.menu,name:hr_contract.next_id_56
+msgid "Contract"
+msgstr "Contracte"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "Referència contracte"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,type_id:0
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_form
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_tree
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
+msgid "Contract Type"
+msgstr "Tipus de contracte"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -101,9 +75,45 @@ msgid "Contract Types"
 msgstr "Tipus de contracte"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Exam"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: view:hr.contract:hr_contract.hr_contract_view_tree
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+#: field:hr.employee,contract_ids:0
+#: field:hr.employee,contracts_count:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+msgid "Contracts"
+msgstr "Contractes"
+
+#. module: hr_contract
+#: field:hr.contract,create_uid:0
+#: field:hr.contract.type,create_uid:0
+msgid "Created by"
 msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,create_date:0
+#: field:hr.contract.type,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Duration"
+msgstr "Duració"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "Empleat"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -111,84 +121,13 @@ msgid "End Date"
 msgstr "Data final"
 
 #. module: hr_contract
-#: help:hr.contract,wage:0
-msgid "Basic Salary of the employee"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,name:0
-msgid "Contract Reference"
-msgstr "Referència contracte"
-
-#. module: hr_contract
-#: help:hr.employee,vehicle_distance:0
-msgid "In kilometers"
-msgstr "En quilòmetres."
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,notes:0
-msgid "Notes"
-msgstr "Notes"
-
-#. module: hr_contract
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-#: field:hr.employee,contract_id:0
-#: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.next_id_56
-msgid "Contract"
-msgstr "Contracte"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,type_id:0
-#: view:hr.contract.type:0
-#: field:hr.contract.type,name:0
-#: model:ir.model,name:hr_contract.model_hr_contract_type
-msgid "Contract Type"
-msgstr "Tipus de contracte"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Planificació de treball"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Salary and Advantages"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,job_id:0
-msgid "Job Title"
-msgstr "Títul del treball"
-
-#. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Es un director"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Data inicial"
-
-#. module: hr_contract
-#: field:hr.contract,visa_no:0
-msgid "Visa No"
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Group By"
 msgstr ""
 
 #. module: hr_contract
@@ -197,23 +136,56 @@ msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Lloc de naixement"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period Duration"
+#: field:hr.contract,id:0
+#: field:hr.contract.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Duration"
-msgstr "Duració"
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "En quilòmetres."
 
 #. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Information"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Es un director"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Job"
+msgstr "Feina"
+
+#. module: hr_contract
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "Títul del treball"
+
+#. module: hr_contract
+#: field:hr.contract,write_uid:0
+#: field:hr.contract.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,write_date:0
+#: field:hr.contract.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Darrer contracte de l'empleat."
+
+#. module: hr_contract
+#: view:hr.employee:hr_contract.hr_hr_employee_view_form2
+msgid "Medical Exam"
 msgstr ""
 
 #. module: hr_contract
@@ -222,199 +194,93 @@ msgid "Medical Examination Date"
 msgstr "Data de l'examen mèdic"
 
 #. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+#: field:hr.contract,notes:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Número de fills"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Lloc de naixement"
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Salary and Advantages"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "Cerca contracte"
+
+#. module: hr_contract
+#: view:hr.contract.type:hr_contract.hr_contract_type_view_search
+msgid "Search Contract Type"
+msgstr "Cerca tipus contracte"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Data inicial"
+
+#. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
 msgstr "Data de finalització"
 
 #. module: hr_contract
-#: view:hr.contract.type:0
-msgid "Search Contract Type"
-msgstr "Cerca tipus contracte"
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Trial Period Duration"
+msgstr ""
 
-#~ msgid "Hourly cost computation"
-#~ msgstr "Càlcul cost per hora"
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Data d'inici"
 
-#~ msgid "Gross"
-#~ msgstr "Brut"
+#. module: hr_contract
+#: field:base.action.rule,trg_date_resource_field_id:0
+msgid "Use employee work schedule"
+msgstr ""
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
+#. module: hr_contract
+#: help:base.action.rule,trg_date_resource_field_id:0
+msgid "Use the user's working schedule."
+msgstr ""
 
-#~ msgid "Generalities"
-#~ msgstr "Generalitats"
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
-#~ msgid "Number of children"
-#~ msgstr "Número de fills"
+#. module: hr_contract
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
-#~ msgid "Factor for hour cost"
-#~ msgstr "Factor pel cost d'hora"
+#. module: hr_contract
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salari"
 
-#~ msgid "Wage Types"
-#~ msgstr "Tipus de salari"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_form
+msgid "Work Permit"
+msgstr "Permís de treball"
 
-#~ msgid "Net"
-#~ msgstr "Net"
+#. module: hr_contract
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr ""
 
-#~ msgid "Hours in the period"
-#~ msgstr "Hores en el període"
-
-#~ msgid "Function"
-#~ msgstr "Funció"
-
-#~ msgid "Marital Status"
-#~ msgstr "Estat civil"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Miscel·lània"
-
-#~ msgid "Type"
-#~ msgstr "Tipus"
-
-#~ msgid "Wage Type"
-#~ msgstr "Tipus de salari"
-
-#~ msgid "Period Name"
-#~ msgstr "Nom de període"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Estat civil de l'empleat"
-
-#~ msgid "Medical examination date"
-#~ msgstr "Data reconeixement mèdic"
-
-#~ msgid "Wage Type Name"
-#~ msgstr "Nom tipus de salari"
-
-#~ msgid "Working hours per day"
-#~ msgstr "Hores de treball per dia"
-
-#~ msgid "Salary"
-#~ msgstr "Salari"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "Wage Period"
-#~ msgstr "Període de salari"
-
-#~ msgid "Remuneration"
-#~ msgstr "Remuneració"
-
-#~ msgid "Contract Name"
-#~ msgstr "Nom contracte"
-
-#~ msgid "Contract Wage Type"
-#~ msgstr "Tipus de salari"
-
-#~ msgid "Manager"
-#~ msgstr "Director"
-
-#~ msgid "Wage period"
-#~ msgstr "Períodes de salari"
-
-#~ msgid ""
-#~ "This field is used by the timesheet system to compute the price of an hour "
-#~ "of work wased on the contract of the employee"
-#~ msgstr ""
-#~ "Aquest camp es usat pel sistema de horaris per calcular el preu d'una hora "
-#~ "de treball basat en el contracte de l' empleat"
-
-#~ msgid "Status Description"
-#~ msgstr "Descripció de l'estat civil"
-
-#~ msgid "Contract Duration"
-#~ msgstr "Duració del contracte"
-
-#~ msgid "Human Resources Contracts"
-#~ msgstr "Contractes laborals per a recursos humans"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "AUDIENS Number"
-#~ msgstr "Número d'AUDIENS"
-
-#~ msgid "Basic"
-#~ msgstr "Bàsic"
-
-#~ msgid "Passport"
-#~ msgstr "Passaport"
-
-#~ msgid "Overpassed"
-#~ msgstr "Sobrepassat"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Varis"
-
-#~ msgid "Current"
-#~ msgstr "Actual"
-
-#~ msgid "Medical Examination"
-#~ msgstr "Examen mèdic"
-
-#~ msgid "Trial Period"
-#~ msgstr "Període de proves"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Add all information on the employee form to manage contracts:\n"
-#~ "    * Marital status,\n"
-#~ "    * Security number,\n"
-#~ "    * Place of birth, birth date, ...\n"
-#~ "    You can assign several contracts per employee.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Afegeix informació en el formulari de l'empleat per gestionar "
-#~ "contractes:\n"
-#~ "    * Estat civil,\n"
-#~ "    * Número Seguretat Social,\n"
-#~ "    * Lloc de naixement, data de naixement, ...\n"
-#~ "    Podeu assignar diversos contractes per empleat.\n"
-#~ "    "
-
-#~ msgid "Personal Info"
-#~ msgstr "Informació personal"
-
-#~ msgid "Valid for"
-#~ msgstr "Vàlid per a"
-
-#~ msgid "Deductions"
-#~ msgstr "Deduccions"
-
-#~ msgid "Home-Work Distance"
-#~ msgstr "Distància de casa al treball"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Error! No podeu crear una jerarquia recursiva d'empleats."
-
-#~ msgid "Job Info"
-#~ msgstr "Informació del treball"
-
-#~ msgid "Search Wage Period"
-#~ msgstr "Cerca període de salaris"
-
-#~ msgid "Main Data"
-#~ msgstr "Dades principals"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr ""
-#~ "Error! La data d'inici de contracte ha de ser anterior a la data de "
-#~ "finalització."
-
-#~ msgid "Search Wage Type"
-#~ msgstr "Cerca tipus de salari"
-
-#~ msgid "Period"
-#~ msgstr "Període"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Error! No podeu seleccionar un departament l'empleat del qual és el director."
-
-#~ msgid "Allowances"
-#~ msgstr "Primes"
+#. module: hr_contract
+#: view:hr.contract:hr_contract.hr_contract_view_search
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Planificació de treball"

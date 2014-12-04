@@ -28,11 +28,6 @@ class sale_receipt_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
@@ -69,9 +64,6 @@ class sale_receipt_report(osv.osv):
             create or replace view sale_receipt_report as (
                 select min(avl.id) as id,
                     av.date as date,
-                    to_char(av.date, 'YYYY') as year,
-                    to_char(av.date, 'MM') as month,
-                    to_char(av.date, 'YYYY-MM-DD') as day,
                     av.partner_id as partner_id,
                     aj.currency as currency_id,
                     av.journal_id as journal_id,
@@ -107,9 +99,6 @@ class sale_receipt_report(osv.osv):
                 group by
                     av.date,
                     av.id,
-                    to_char(av.date, 'YYYY'),
-                    to_char(av.date, 'MM'),
-                    to_char(av.date, 'YYYY-MM-DD'),
                     av.partner_id,
                     aj.currency,
                     av.journal_id,

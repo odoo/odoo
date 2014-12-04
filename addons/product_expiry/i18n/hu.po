@@ -1,25 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * product_expiry
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-01 09:31+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-23 07:52+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-24 07:07+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Sonka"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Figyelmeztetés dátuma"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Minőség megőrzésének időpontja"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Kenyér"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_lait_product_template
@@ -27,51 +38,66 @@ msgid "Cow milk"
 msgstr "Tehéntej"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
+msgid "Dates"
+msgstr "Dátumok"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Határidő lejárati vég dátum"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camembert"
+msgstr "Francia camambert sajt"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Sonka"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Csomag/Széria"
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr "Termék riasztási idő"
+
+#. module: product_expiry
+#: field:product.template,life_time:0
 msgid "Product Life Time"
 msgstr "Termék élettartama"
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-"Ez annak a dátuma, amikor az ezzel a szériaszámmal rendelkező terméket ki "
-"kell vonni a raktárból."
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr "Termék eltávolításának ideje"
 
 #. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
-"terméket ki kell vonni a raktárból."
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr "Terméksablon"
 
 #. module: product_expiry
-#: field:product.product,use_time:0
+#: field:product.template,use_time:0
 msgid "Product Use Time"
 msgstr "Termék használati ideje"
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Termék"
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Mennyiségek"
 
 #. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
-"termék romlásnak indulna, de még nem veszélyes."
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Termék eltávolításának ideje"
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "Eltávolítás időpontja"
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
@@ -83,62 +109,22 @@ msgstr ""
 "rendelkező árukról."
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "Szériaszám"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
+#: help:stock.production.lot,life_date:0
 msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
 msgstr ""
-"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt "
-"egy vészjelzést ki kell adni."
+"Ez az a dátum amikor az ezzel a szériaszámmal ellátott áru veszélyes lesz és "
+"nem szabad fogyasztani."
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Eltávolítás időpontja"
-
-#. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "Kenyér"
-
-#. module: product_expiry
-#: view:product.product:0
-msgid "Dates"
-msgstr "Dátumok"
-
-#. module: product_expiry
-#: field:stock.production.lot,life_date:0
-msgid "End of Life Date"
-msgstr "Határidő lejárati vég dátum"
-
-#. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "Minőség megőrzésének időpontja"
-
-#. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Francia sajt Camenbert"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
+#: help:stock.production.lot,removal_date:0
 msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
 msgstr ""
-"Ha egy szériaszám hozzáadásra került, akkor ez a szám annak a napoknak a "
-"száma mielőtt a termék fogyaszthatatlanná válik és veszélyes lesz."
-
-#. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Figyelmeztetés dátuma"
+"Ez annak a dátuma, amikor az ezzel a szériaszámmal rendelkező terméket ki "
+"kell vonni a raktárból."
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
@@ -150,35 +136,37 @@ msgstr ""
 "anélkül, hogy az még veszélyes lenne."
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: help:product.template,alert_time:0
 msgid ""
-"This is the date on which the goods with this Serial Number may become "
-"dangerous and must not be consumed."
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
 msgstr ""
-"Ez az a dátum amikor az ezzel a szériaszámmal ellátott áru veszélyes lesz és "
-"nem szabad fogyasztani."
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt "
+"egy vészjelzést ki kell adni."
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "Termék riasztási idő"
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Ha egy szériaszám hozzáadásra került, akkor ez a szám annak a napoknak a "
+"száma mielőtt a termék fogyaszthatatlanná válik és veszélyes lesz."
 
-#~ msgid "Production lot"
-#~ msgstr "Gyártási tétel"
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
+"terméket ki kell vonni a raktárból."
 
-#~ msgid "Products date of expiry"
-#~ msgstr "Termék lejárati ideje"
-
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr ""
-#~ "A szériaszám és a belső hivatkozás kombinációjának egyedinek kell lennie !"
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "A napok száma, mielőtt a gyártási tételt el kell távolítani."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Hiba: Érvénytelen vonalkód"
-
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "Az az időpont, amikor a tételt el kell távolítani."
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
+"termék romlásnak indulna, de még nem veszélyes."

@@ -1,185 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_followup
+# Romanian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-02 21:37+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:27+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: account_followup
-#: model:email.template,subject:account_followup.email_template_account_followup_default
-#: model:email.template,subject:account_followup.email_template_account_followup_level0
-#: model:email.template,subject:account_followup.email_template_account_followup_level1
-#: model:email.template,subject:account_followup.email_template_account_followup_level2
-msgid "${user.company_id.name} Payment Reminder"
-msgstr "${user.company_id.name} Înștiințare de Plată"
-
-#. module: account_followup
-#: help:res.partner,latest_followup_level_id:0
-msgid "The maximum follow-up level"
-msgstr "Nivelul maxim de continuare"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: view:res.partner:0
-msgid "Group By..."
-msgstr "Grupați după..."
-
-#. module: account_followup
-#: field:account_followup.print,followup_id:0
-msgid "Follow-Up"
-msgstr "Urmare"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(date)s"
-msgstr "%(date)s"
-
-#. module: account_followup
-#: field:res.partner,payment_next_action_date:0
-msgid "Next Action Date"
-msgstr "Data acțiunii următoare"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,manual_action:0
-msgid "Manual Action"
-msgstr "Acțiune manuală"
-
-#. module: account_followup
-#: field:account_followup.sending.results,needprinting:0
-msgid "Needs Printing"
-msgstr "Necesită tipărire"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "⇾ Marcheaza ca Efectuat"
-
-#. module: account_followup
-#: field:account_followup.followup.line,manual_action_note:0
-msgid "Action To Do"
-msgstr "Actiune de Efectuat"
-
-#. module: account_followup
-#: field:account_followup.followup,company_id:0
-#: view:account_followup.stat:0
-#: field:account_followup.stat,company_id:0
-#: field:account_followup.stat.by.partner,company_id:0
-msgid "Company"
-msgstr "Companie"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:258
-#, python-format
-msgid "Invoice Date"
-msgstr "Data Facturii"
-
-#. module: account_followup
-#: field:account_followup.print,email_subject:0
-msgid "Email Subject"
-msgstr "Subiect Email"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(user_signature)s"
-msgstr "%(utilizator_semnatura)s"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "days overdue, do the following actions:"
-msgstr "zile restante, intreprindeti urmatoarele actiuni:"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-up Steps"
-msgstr "Pasii Continuarii"
-
-#. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "Continutul Email-ului"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
-msgid "Send Follow-Ups"
-msgstr "Trimiteti Continuari"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:262
-#, python-format
-msgid "Amount"
-msgstr "Suma"
-
-#. module: account_followup
-#: help:res.partner,payment_next_action:0
-msgid ""
-"This is the next action to be taken.  It will automatically be set when the "
-"partner gets a follow-up level that requires a manual action. "
-msgstr ""
-"Aceasta este urmatoarea actiune care va fi intreprinsa. Va fi setata automat "
-"atunci cand partenerul primeste un nivel de continuare care necesita o "
-"actiune manuala. "
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "No Responsible"
-msgstr "Fara Responsabil"
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
-"\n"
-"Details of due payments is printed below.\n"
-"\n"
-"Best Regards,\n"
-msgstr ""
-"\n"
-"Stimate %(numele_partenerului)s,\n"
-"\n"
-"Suntem dezamagiti sa constatam ca, in ciuda faptului ca v-am trimis o "
-"instiintare, acest cont este foarte restant.\n"
-"\n"
-"Este esential sa efectuati plata imediat, in caz contrar va trebui sa luam "
-"in considerare oprirea contului dumneavoastra, ceea ce inseamna ca nu vom "
-"mai putea sa furnizam companiei dumneavoastra (bunuri/servicii).\n"
-"Va rugam sa luati masurile necesare pentru a efectua plata in urmatoarele 8 "
-"zile.\n"
-"\n"
-"Daca exista vreo problema cu plata facturii, problema de care noi nu suntem "
-"constienti, nu ezitati sa contactati departamentul nostru contabil, pentru a "
-"rezolva problema rapid.\n"
-"\n"
-"Detaliile referitoare la plata restanta sunt imprimate mai jos.\n"
-"\n"
-"Cu stima,\n"
+"X-Launchpad-Export-Date: 2014-09-24 08:56+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -251,126 +87,131 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: view:account_followup.stat.by.partner:0
-msgid "Balance > 0"
-msgstr "Sold > 0"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Debit total"
-
-#. module: account_followup
-#: field:res.partner,payment_next_action:0
-msgid "Next Action"
-msgstr "Actiunea Urmatoare"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": Partner Name"
-msgstr ": Numele Partenerului"
-
-#. module: account_followup
-#: field:account_followup.followup.line,manual_action_responsible_id:0
-msgid "Assign a Responsible"
-msgstr "Atribuiti un Responsabil"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
-#: view:res.partner:0
-msgid "Follow-up"
-msgstr "Urmare"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "VAT:"
-msgstr "TVA:"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: field:account_followup.stat,partner_id:0
-#: field:account_followup.stat.by.partner,partner_id:0
-#: model:ir.model,name:account_followup.model_res_partner
-msgid "Partner"
-msgstr "Partener"
-
-#. module: account_followup
-#: view:account_followup.followup:0
+#: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
-"To remind customers of paying their invoices, you can\n"
-"                        define different actions depending on how severely\n"
-"                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
-"                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
-"                        same customer, the actions of the most \n"
-"                        overdue invoice will be executed."
-msgstr ""
-"Pentru a le aminti clientilor sa isi plateasca facturile, puteti\n"
-"                        defini diferite actiuni in functie de cat de tare\n"
-"                        este restant clientul. Aceste actiuni sunt incluse\n"
-"                        in nivelurile de urmarire care sunt declansate "
-"atunci cand data\n"
-"                        scadenta a unei facturi a depasit un anumit\n"
-"                        numar de zile. Daca mai exista facturi restante ale "
 "\n"
-"                        aceluiasi client, vor fi executate actiunile "
-"majoritatii  \n"
-"                        facturilor scadente."
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    Despite several reminders, your account is still not settled.\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of "
+"the debt will be taken without\n"
+"further notice.\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department.\n"
+"</p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; dimensiune-font: 12px; culoare: rgb(34, 34, 34); culoare-fundal: "
+"rgb(255, 255, 255); \">\n"
+"    \n"
+"    <p>Stimater ${object.name},</p>\n"
+"    <p>\n"
+"    In ciuda mai multor instiintari trimise, contul dumneavoastra inca nu "
+"este rezolvat.\n"
+"Daca plata completa nu este efectuata in urmatoarele 8 zile, vom intreprinde "
+"actiunea legala pentru recuperarea datoriei fara\n"
+"alte instiintare.\n"
+"Speram ca aceasta actiune se va dovedi a nu fi necesara, detaliile platilor "
+"restante sunt tiparite mai jos.\n"
+"In cazul in care aveti intrebari referitoare la aceasta chestiune, nu "
+"ezitati sa contactati departamentul nostru contabil.\n"
+"</p>\n"
+"<br/>\n"
+"Cu stima,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Date :"
-msgstr "Data:"
-
-#. module: account_followup
-#: field:account_followup.print,partner_ids:0
-msgid "Partners"
-msgstr "Parteneri"
-
-#. module: account_followup
-#: sql_constraint:account_followup.followup:0
-msgid "Only one follow-up per company is allowed"
-msgstr "Este permisa o singura urmarire pentru fiecare companie"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:254
-#, python-format
-msgid "Invoices Reminder"
-msgstr "Memento facturi"
-
-#. module: account_followup
-#: help:account_followup.followup.line,send_letter:0
-msgid "When processing, it will print a letter"
-msgstr "Atunci cand proceseaza, va tipari o scrisoare"
-
-#. module: account_followup
-#: field:res.partner,payment_earliest_due_date:0
-msgid "Worst Due Date"
-msgstr "Cea mai rea Data Scadenta"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Not Litigation"
-msgstr "Nu este litigiu"
-
-#. module: account_followup
-#: view:account_followup.print:0
-msgid "Send emails and generate letters"
-msgstr "Trimite email-uri si genereaza scrisori"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_customer_followup
-msgid "Manual Follow-Ups"
-msgstr "Urmariri Manuale"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(partner_name)s"
-msgstr "%(partener_nume)s"
+#: model:email.template,body_html:account_followup.email_template_account_followup_default
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    Exception made if there was a mistake of ours, it seems that the "
+"following amount stays unpaid. Please, take\n"
+"appropriate measures in order to carry out this payment in the next 8 days.\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to\n"
+"contact our accounting department.\n"
+"    </p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; dimensiune-font: 12px; color: rgb(34, 34, 34); culoare-fundal: "
+"rgb(255, 255, 255); \">\n"
+"    \n"
+"    <p>Stimate ${object.name},</p>\n"
+"    <p>\n"
+"    Exceptand faptul ca a fost o greseala din partea noastra, se pare ca "
+"urmatoarea suma este neplatita. Va rugam sa\n"
+"luati masurile necesare pentru a efectua plata in urmatoarele 8 zile.\n"
+"Daca ati efectuat plata dupa ce acest email a fost trimis, va rugam sa nu "
+"luati in considerare acest mesaj. Nu ezitati sa\n"
+"contactati departamentul nostru contabil.\n"
+"    </p>\n"
+"<br/>\n"
+"Cu stima,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -450,358 +291,40 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: field:account_followup.stat,debit:0
-msgid "Debit"
-msgstr "Debit"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Follow-up Statistics"
-msgstr "Statistica Urmarire"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Send Overdue Email"
-msgstr "Trimite Email cu Scadenta depasita"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-up Criteria"
-msgstr "Criterii de Urmarire"
-
-#. module: account_followup
-#: help:account_followup.followup.line,sequence:0
-msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
-"Da ordinea secventei atunci cand afiseaza o lista cu linii de urmarire."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:166
-#, python-format
-msgid " will be sent"
-msgstr " va fi trimis"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": User's Company Name"
-msgstr ": Numele Companiei Utilizatorului"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,send_letter:0
-msgid "Send a Letter"
-msgstr "Trimite o Scrisoare"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-msgid "Payment Follow-ups"
-msgstr "Urmariri Plata"
-
-#. module: account_followup
-#: field:account_followup.followup.line,delay:0
-msgid "Due Days"
-msgstr "Zile Scadente"
-
-#. module: account_followup
-#: field:account.move.line,followup_line_id:0
-#: view:account_followup.stat:0
-msgid "Follow-up Level"
-msgstr "Nivelul Urmaririi"
-
-#. module: account_followup
-#: field:account_followup.stat,date_followup:0
-msgid "Latest followup"
-msgstr "Ultima urmare"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
-msgid "Reconcile Invoices & Payments"
-msgstr "Reconciliaza Facturi & Plati"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_s
-msgid "Do Manual Follow-Ups"
-msgstr "Efectueaza Urmariri Manuale"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Li."
-msgstr "Li."
-
-#. module: account_followup
-#: field:account_followup.print,email_conf:0
-msgid "Send Email Confirmation"
-msgstr "Trimite Email de Confirmare"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-up Entries with period in current year"
-msgstr "Inregistrarile Urmaririi cu perioada in anul curent"
-
-#. module: account_followup
-#: field:account_followup.stat.by.partner,date_followup:0
-msgid "Latest follow-up"
-msgstr "Cea mai recenta urmarire"
-
-#. module: account_followup
-#: field:account_followup.print,partner_lang:0
-msgid "Send Email in Partner Language"
-msgstr "Trimite email in limba partenerului"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:169
-#, python-format
-msgid " email(s) sent"
-msgstr " email(uri) trimise"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_print
-msgid "Print Follow-up & Send Mail to Customers"
-msgstr "Tipareste Urmarirea & Trimite Email Clientilor"
-
-#. module: account_followup
-#: field:account_followup.followup.line,description:0
-msgid "Printed Message"
-msgstr "Mesaj tiparit"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:155
-#, python-format
-msgid "Anybody"
-msgstr "Oricine"
-
-#. module: account_followup
-#: help:account_followup.followup.line,send_email:0
-msgid "When processing, it will send an email"
-msgstr "Atunci cand proceseaza, va trimite un email"
-
-#. module: account_followup
-#: view:account_followup.stat.by.partner:0
-msgid "Partner to Remind"
-msgstr "Partenerul care va primi un memento"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Print Overdue Payments"
-msgstr "Tipareste Platile Restante"
-
-#. module: account_followup
-#: field:account_followup.followup.line,followup_id:0
-#: field:account_followup.stat,followup_id:0
-msgid "Follow Ups"
-msgstr "Urmariri"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:218
-#, python-format
-msgid "Email not sent because of email address of partner not filled in"
-msgstr ""
-"Email-ul nu a fost trimis pentru ca nu a fost introdusa adresa de email a "
-"partenerului"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup
-msgid "Account Follow-up"
-msgstr "Cont Urmarire"
-
-#. module: account_followup
-#: help:res.partner,payment_responsible_id:0
-msgid ""
-"Optionally you can assign a user to this field, which will make him "
-"responsible for the action."
-msgstr ""
-"Optional, puteti atribui un utilizator acestui camp, care il va face "
-"responsabil pentru actiune."
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_sending_results
-msgid "Results from the sending of the different letters and emails"
-msgstr "Rezultatele trimiterii diferitelor scrisori si email-uri"
-
-#. module: account_followup
-#: constraint:account_followup.followup.line:0
-msgid ""
-"Your description is invalid, use the right legend or %% if you want to use "
-"the percent character."
-msgstr ""
-"Descrierea d-voastra este nevalida, folositi legenda din partea dreapta sau "
-"%% daca doriti sa folositi caracterele procentuale."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:172
-#, python-format
-msgid " manual action(s) assigned:"
-msgstr " actiune(i) manuale atribuite:"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Search Partner"
-msgstr "Cauta Partener"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
-msgid "Send Letters and Emails"
-msgstr "Trimite Scrisori si Email-uri"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-msgid "Search Follow-up"
-msgstr "Cauta Urmarirea"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Account Move line"
-msgstr "Linie miscare Cont"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:237
-#, python-format
-msgid "Send Letters and Emails: Actions Summary"
-msgstr "Trimite Scrisori si Email-uri: Continut Actiuni"
-
-#. module: account_followup
-#: view:account_followup.print:0
-msgid "or"
-msgstr "sau"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-"Daca nu este specificat de nivelul cel mai recent al urmaririi, va trimite "
-"din sablonul implicit de email-uri"
-
-#. module: account_followup
-#: sql_constraint:account_followup.followup.line:0
-msgid "Days of the follow-up levels must be different"
-msgstr "Zilele nivelurilor de urmarire trebuie sa fie diferite"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Click to mark the action as done."
-msgstr "Faceti click pentru a marca actiunea ca efectuata."
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
-msgid "Follow-Ups Analysis"
-msgstr "Analiza Urmariri"
-
-#. module: account_followup
-#: help:res.partner,payment_next_action_date:0
-msgid ""
-"This is when the manual follow-up is needed. The date will be set to the "
-"current date when the partner gets a follow-up level that requires a manual "
-"action. Can be practical to set manually e.g. to see if he keeps his "
-"promises."
-msgstr ""
-"Acesta este atunci cand este nevoie de urmarirea manuala. Data va fi setata "
-"pe data curenta atunci cand partenerul primeste un nivel al urmaririi care "
-"necesita o actiune manuala. Setarea manuala poate fi practica, de exemplu "
-"pentru a vedea daca isi tine promisiunile."
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Print overdue payments report independent of follow-up line"
-msgstr "Tipareste raportul platilor restante independent de linia urmaririi"
-
-#. module: account_followup
-#: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-"Acest camp va permite sa selectati o data de estimare pentru a va putea "
-"planifica urmaririle"
-
-#. module: account_followup
-#: field:account_followup.print,date:0
-msgid "Follow-up Sending Date"
-msgstr "Data trimiterii urmarii"
-
-#. module: account_followup
-#: view:res.partner:0
-#: field:res.partner,payment_responsible_id:0
-msgid "Follow-up Responsible"
-msgstr "Responsabil cu urmarirea"
-
-#. module: account_followup
-#: model:email.template,body_html:account_followup.email_template_account_followup_level2
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
-"further notice.\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
+"\n"
 "I trust that this action will prove unnecessary and details of due payments "
 "is printed below.\n"
+"\n"
 "In case of any queries concerning this matter, do not hesitate to contact "
 "our accounting department.\n"
-"</p>\n"
-"<br/>\n"
+"\n"
 "Best Regards,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
 msgstr ""
 "\n"
-"<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; dimensiune-font: 12px; culoare: rgb(34, 34, 34); culoare-fundal: "
-"rgb(255, 255, 255); \">\n"
-"    \n"
-"    <p>Stimater ${object.name},</p>\n"
-"    <p>\n"
-"    In ciuda mai multor instiintari trimise, contul dumneavoastra inca nu "
-"este rezolvat.\n"
-"Daca plata completa nu este efectuata in urmatoarele 8 zile, vom intreprinde "
-"actiunea legala pentru recuperarea datoriei fara\n"
-"alte instiintare.\n"
-"Speram ca aceasta actiune se va dovedi a nu fi necesara, detaliile platilor "
-"restante sunt tiparite mai jos.\n"
-"In cazul in care aveti intrebari referitoare la aceasta chestiune, nu "
-"ezitati sa contactati departamentul nostru contabil.\n"
-"</p>\n"
-"<br/>\n"
+"Stimate %(numele_partenerului)s,\n"
+"\n"
+"In ciuda mai multor instiintari trimise, contul dumneavoastra inca nu este "
+"solutionat.\n"
+"\n"
+"Daca plata completa nu este efectuata in 8 zile, atunci vom intreprinde "
+"actiune legala pentru recuperarea datoriei, fara nici o alta instiintare.\n"
+"\n"
+"Speram ca aceasta actiune se va dovedi a nu fi necesara, iar detaliile "
+"platilor restante sunt tiparite mai jos.\n"
+"\n"
+"In cazul in care aveti intrebari referitoare la aceasta situatie, nu ezitati "
+"sa contactati departamentul nostru contabil.\n"
+"\n"
 "Cu stima,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Document : Customer account statement"
-msgstr "Document: Extras de cont client"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-msgid "Follow-up Levels"
-msgstr "Nivelurile Urmaririlor"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -841,201 +364,6 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: field:res.partner,payment_amount_due:0
-msgid "Amount Due"
-msgstr "Suma Restanta"
-
-#. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
-msgstr "Cea mai recenta Urmarire"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Download Letters"
-msgstr "Descarca Scrisorile"
-
-#. module: account_followup
-#: field:account_followup.print,company_id:0
-#: field:res.partner,unreconciled_aml_ids:0
-msgid "unknown"
-msgstr "necunoscut(a)"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#, python-format
-msgid "Printed overdue payments report"
-msgstr "Raportul tiparit al platilor restante"
-
-#. module: account_followup
-#: help:account_followup.followup.line,manual_action:0
-msgid ""
-"When processing, it will set the manual action to be taken for that "
-"customer. "
-msgstr ""
-"Atunci cand proceseaza, va veta actiunea manuala care va fi intreprinsa "
-"pentru acel client. "
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"Below is the history of the transactions of this\n"
-"                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
-msgstr ""
-"Aveti mai jos istoricul tranzactiilor acestui\n"
-"                            client. Puteti selecta \"Fara Urmarire\" pentru\n"
-"                            a-l exclude din actiunile urmatoare de urmarire."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:171
-#, python-format
-msgid " email(s) should have been sent, but "
-msgstr " email-ul(-urile) ar fi trebuit trimise, dar "
-
-#. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
-"Selectati daca doriti sa tipariti urmaririle fara a modifica nivelul "
-"acestora."
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_move_line
-msgid "Journal Items"
-msgstr "Elementele Jurnalului"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Total:"
-msgstr "Total:"
-
-#. module: account_followup
-#: field:account_followup.followup.line,email_template_id:0
-msgid "Email Template"
-msgstr "Sablon Email"
-
-#. module: account_followup
-#: field:account_followup.print,summary:0
-msgid "Summary"
-msgstr "Continut"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,send_email:0
-msgid "Send an Email"
-msgstr "Trimite un Email"
-
-#. module: account_followup
-#: field:account_followup.stat,credit:0
-msgid "Credit"
-msgstr "Credit"
-
-#. module: account_followup
-#: field:res.partner,payment_amount_overdue:0
-msgid "Amount Overdue"
-msgstr "Suma Restanta"
-
-#. module: account_followup
-#: help:res.partner,latest_followup_level_id_without_lit:0
-msgid ""
-"The maximum follow-up level without taking into account the account move "
-"lines with litigation"
-msgstr ""
-"Nivelul maxim de urmarire fara a lua in considerare liniile de miscare ale "
-"contului cu litigii"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: field:res.partner,latest_followup_date:0
-msgid "Latest Follow-up Date"
-msgstr "Data celei mai recente Urmariri"
-
-#. module: account_followup
-#: model:email.template,body_html:account_followup.email_template_account_followup_default
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
-"appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
-"contact our accounting department.\n"
-"    </p>\n"
-"<br/>\n"
-"Best Regards,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
-msgstr ""
-"\n"
-"<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; dimensiune-font: 12px; color: rgb(34, 34, 34); culoare-fundal: "
-"rgb(255, 255, 255); \">\n"
-"    \n"
-"    <p>Stimate ${object.name},</p>\n"
-"    <p>\n"
-"    Exceptand faptul ca a fost o greseala din partea noastra, se pare ca "
-"urmatoarea suma este neplatita. Va rugam sa\n"
-"luati masurile necesare pentru a efectua plata in urmatoarele 8 zile.\n"
-"Daca ati efectuat plata dupa ce acest email a fost trimis, va rugam sa nu "
-"luati in considerare acest mesaj. Nu ezitati sa\n"
-"contactati departamentul nostru contabil.\n"
-"    </p>\n"
-"<br/>\n"
-"Cu stima,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
-
-#. module: account_followup
-#: field:account.move.line,result:0
-#: view:account_followup.stat:0
-#: field:account_followup.stat,balance:0
-#: field:account_followup.stat.by.partner,balance:0
-msgid "Balance"
-msgstr "Sold"
-
-#. module: account_followup
-#: help:res.partner,payment_note:0
-msgid "Payment Note"
-msgstr "Nota de Plata"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "My Follow-ups"
-msgstr "Urmaririle Mele"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(company_name)s"
-msgstr "%(companie_nume)s"
-
-#. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
 msgid ""
 "\n"
@@ -1065,29 +393,120 @@ msgstr ""
 "Cu stima,\n"
 
 #. module: account_followup
-#: field:account_followup.stat,date_move_last:0
-#: field:account_followup.stat.by.partner,date_move_last:0
-msgid "Last move"
-msgstr "Ultima miscare"
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department, so that we can resolve the "
+"matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+"\n"
+"Stimate %(numele_partenerului)s,\n"
+"\n"
+"Suntem dezamagiti sa constatam ca, in ciuda faptului ca v-am trimis o "
+"instiintare, acest cont este foarte restant.\n"
+"\n"
+"Este esential sa efectuati plata imediat, in caz contrar va trebui sa luam "
+"in considerare oprirea contului dumneavoastra, ceea ce inseamna ca nu vom "
+"mai putea sa furnizam companiei dumneavoastra (bunuri/servicii).\n"
+"Va rugam sa luati masurile necesare pentru a efectua plata in urmatoarele 8 "
+"zile.\n"
+"\n"
+"Daca exista vreo problema cu plata facturii, problema de care noi nu suntem "
+"constienti, nu ezitati sa contactati departamentul nostru contabil, pentru a "
+"rezolva problema rapid.\n"
+"\n"
+"Detaliile referitoare la plata restanta sunt imprimate mai jos.\n"
+"\n"
+"Cu stima,\n"
 
 #. module: account_followup
-#: field:account_followup.stat,period_id:0
-msgid "Period"
-msgstr "Perioada"
+#: code:addons/account_followup/wizard/account_followup_print.py:174
+#, python-format
+msgid " email(s) sent"
+msgstr " email(uri) trimise"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:228
+#: code:addons/account_followup/wizard/account_followup_print.py:176
+#, python-format
+msgid " email(s) should have been sent, but "
+msgstr " email-ul(-urile) ar fi trebuit trimise, dar "
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:176
+#, python-format
+msgid " had unknown email address(es)"
+msgstr " a avut adrese de email necunoscute"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:177
+#, python-format
+msgid " letter(s) in report"
+msgstr " scrisori in raport"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:177
+#, python-format
+msgid " manual action(s) assigned:"
+msgstr " actiune(i) manuale atribuite:"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:171
+#, python-format
+msgid " will be sent"
+msgstr " va fi trimis"
+
+#. module: account_followup
+#: model:email.template,subject:account_followup.email_template_account_followup_default
+#: model:email.template,subject:account_followup.email_template_account_followup_level0
+#: model:email.template,subject:account_followup.email_template_account_followup_level1
+#: model:email.template,subject:account_followup.email_template_account_followup_level2
+msgid "${user.company_id.name} Payment Reminder"
+msgstr "${user.company_id.name} Înștiințare de Plată"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(company_name)s"
+msgstr "%(companie_nume)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(date)s"
+msgstr "%(date)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(partner_name)s"
+msgstr "%(partener_nume)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(user_signature)s"
+msgstr "%(utilizator_semnatura)s"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:234
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
 msgstr "%s partenerii nu au credite, prin urmare actiunea este clarificata"
 
 #. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Follow-up Report"
-msgstr "Raport Urmarire"
-
-#. module: account_followup
-#: view:res.partner:0
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
@@ -1096,229 +515,24 @@ msgstr ""
 "                            a fost:"
 
 #. module: account_followup
-#: view:account_followup.print:0
-msgid "Cancel"
-msgstr "Anuleaza"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Close"
-msgstr "Inchide"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Litigation"
-msgstr "Litigiu"
-
-#. module: account_followup
-#: field:account_followup.stat.by.partner,max_followup_id:0
-msgid "Max Follow Up Level"
-msgstr "Nivelul maxim al urmaririi"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:171
-#, python-format
-msgid " had unknown email address(es)"
-msgstr " a avut adrese de email necunoscute"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
-msgstr "Responsabil"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_finance_followup
-#: view:res.partner:0
-msgid "Payment Follow-up"
-msgstr "Urmarirea Platii"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Current Date"
 msgstr ": Data Curenta"
 
 #. module: account_followup
-#: view:account_followup.print:0
-msgid ""
-"This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
-msgstr ""
-"Aceasta actiune va trimite email-uri de urmarire, va tipari scrisorile si\n"
-"                        va seta actiunile manuale pentru fiecare client, in "
-"functie de nivelurile definite ale urmaririi."
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": Partner Name"
+msgstr ": Numele Partenerului"
 
 #. module: account_followup
-#: field:account_followup.followup.line,name:0
-msgid "Follow-Up Action"
-msgstr "Actiunea de Urmarire"
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": User Name"
+msgstr ": Numele Utilizatorului"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Including journal entries marked as a litigation"
-msgstr "Inclusiv inregistrari in jurnal marcate ca litigiu"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: field:account_followup.sending.results,description:0
-#: code:addons/account_followup/account_followup.py:259
-#, python-format
-msgid "Description"
-msgstr "Descriere"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Summary of actions"
-msgstr "Rezumatul actiunilor"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Ref"
-msgstr "Ref"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "After"
-msgstr "Dupa"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "This Fiscal year"
-msgstr "Acest an fiscal"
-
-#. module: account_followup
-#: field:res.partner,latest_followup_level_id_without_lit:0
-msgid "Latest Follow-up Level without litigation"
-msgstr "Nivelul celei mai recente Urmariri fara litigiu"
-
-#. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Nu au fost gasite elemente ale registrului.\n"
-"                </p>\n"
-"            "
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr "Inregistrari partener"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-up lines"
-msgstr "Liniile urmaririi"
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Despite several reminders, your account is still not settled.\n"
-"\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
-"\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
-"\n"
-"Best Regards,\n"
-msgstr ""
-"\n"
-"Stimate %(numele_partenerului)s,\n"
-"\n"
-"In ciuda mai multor instiintari trimise, contul dumneavoastra inca nu este "
-"solutionat.\n"
-"\n"
-"Daca plata completa nu este efectuata in 8 zile, atunci vom intreprinde "
-"actiune legala pentru recuperarea datoriei, fara nici o alta instiintare.\n"
-"\n"
-"Speram ca aceasta actiune se va dovedi a nu fi necesara, iar detaliile "
-"platilor restante sunt tiparite mai jos.\n"
-"\n"
-"In cazul in care aveti intrebari referitoare la aceasta situatie, nu ezitati "
-"sa contactati departamentul nostru contabil.\n"
-"\n"
-"Cu stima,\n"
-
-#. module: account_followup
-#: help:account_followup.print,partner_lang:0
-msgid ""
-"Do not change message text, if you want to send email in partner language, "
-"or configure from company"
-msgstr ""
-"Nu modificati textul mesajului, daca doriti sa trimiteti email-ul in limba "
-"partenerului, sau sa configurati din companie"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ""
-"Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
-"                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
-"                            using to top right icon."
-msgstr ""
-"Scrieti aici introducerea la scrisoare,\n"
-"                            in functie de nivelul urmaririi. Puteti\n"
-"                            folosi urmatoarele cuvinte cheie in text. Nu\n"
-"                            uitati sa o traduceti in toate limbile pe care "
-"le-ati instalat\n"
-"                            folosind icoana din dreapta sus."
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: model:ir.actions.act_window,name:account_followup.action_followup_stat
-msgid "Follow-ups Sent"
-msgstr "Urmariri trimise"
-
-#. module: account_followup
-#: field:account_followup.followup,name:0
-msgid "Name"
-msgstr "Nume"
-
-#. module: account_followup
-#: field:res.partner,latest_followup_level_id:0
-msgid "Latest Follow-up Level"
-msgstr "Nivelul celei mai recente Urmariri"
-
-#. module: account_followup
-#: field:account_followup.stat,date_move:0
-#: field:account_followup.stat.by.partner,date_move:0
-msgid "First move"
-msgstr "Prima miscare"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
-msgid "Follow-up Statistics by Partner"
-msgstr "Statistici Urmarire dupa Partener"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:172
-#, python-format
-msgid " letter(s) in report"
-msgstr " scrisori in raport"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Parteneri cu Credite Restante"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Customer Followup"
-msgstr "Urmarire Client"
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": User's Company Name"
+msgstr ": Numele Companiei Utilizatorului"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -1347,25 +561,760 @@ msgstr ""
 "          "
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:166
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow-up"
+msgstr "Cont Urmarire"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Account Move line"
+msgstr "Linie miscare Cont"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Accounting"
+msgstr "Contabilitate"
+
+#. module: account_followup
+#: field:account_followup.followup.line,manual_action_note:0
+msgid "Action To Do"
+msgstr "Actiune de Efectuat"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
+msgstr ""
+"Se vor lua masuri, de exemplu Apel telefonic, Verificati daca este platit, "
+"..."
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "After"
+msgstr "Dupa"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:260
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Amount"
+msgstr "Suma"
+
+#. module: account_followup
+#: field:res.partner,payment_amount_due:0
+msgid "Amount Due"
+msgstr "Suma Restanta"
+
+#. module: account_followup
+#: field:res.partner,payment_amount_overdue:0
+msgid "Amount Overdue"
+msgstr "Suma Restanta"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:281
+#, python-format
+msgid "Amount due"
+msgstr "Suma datorata"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:160
+#, python-format
+msgid "Anybody"
+msgstr "Oricine"
+
+#. module: account_followup
+#: field:account_followup.followup.line,manual_action_responsible_id:0
+msgid "Assign a Responsible"
+msgstr "Atribuiti un Responsabil"
+
+#. module: account_followup
+#: field:account.move.line,result:0
+#: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
+msgid "Balance"
+msgstr "Sold"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
+msgid "Balance > 0"
+msgstr "Sold > 0"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"Below is the history of the transactions of this\n"
+"                            customer. You can check \"No Follow-up\" in\n"
+"                            order to exclude it from the next follow-up "
+"actions."
+msgstr ""
+"Aveti mai jos istoricul tranzactiilor acestui\n"
+"                            client. Puteti selecta \"Fara Urmarire\" pentru\n"
+"                            a-l exclude din actiunile urmatoare de urmarire."
+
+#. module: account_followup
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Blocat(a)"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "Cancel"
+msgstr "Anuleaza"
+
+#. module: account_followup
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
+msgstr ""
+"Selectati daca doriti sa imprimati urmariri fara a schimba livelul urmaririi."
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Click to mark the action as done."
+msgstr "Faceti click pentru a marca actiunea ca efectuata."
+
+#. module: account_followup
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Close"
+msgstr "Inchide"
+
+#. module: account_followup
+#: field:account_followup.followup,company_id:0
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
+msgid "Company"
+msgstr "Companie"
+
+#. module: account_followup
+#: view:account.config.settings:account_followup.view_account_config_settings_inherit
+msgid "Configure your follow-up levels"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,create_uid:0
+#: field:account_followup.followup.line,create_uid:0
+#: field:account_followup.print,create_uid:0
+#: field:account_followup.sending.results,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,create_date:0
+#: field:account_followup.followup.line,create_date:0
+#: field:account_followup.print,create_date:0
+#: field:account_followup.sending.results,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "Credit"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_tree
+msgid "Customer Followup"
+msgstr "Urmarire Client"
+
+#. module: account_followup
+#: field:res.partner,payment_note:0
+msgid "Customer Payment Promise"
+msgstr "Promisiunea de Plata a Clientului"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Customer ref:"
+msgstr ""
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Date:"
+msgstr ""
+
+#. module: account_followup
+#: sql_constraint:account_followup.followup.line:0
+msgid "Days of the follow-up levels must be different"
+msgstr "Zilele nivelurilor de urmarire trebuie sa fie diferite"
+
+#. module: account_followup
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "Debit"
+
+#. module: account_followup
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:257
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Description"
+msgstr "Descriere"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.account_followup_s
+msgid "Do Manual Follow-Ups"
+msgstr "Efectueaza Urmariri Manuale"
+
+#. module: account_followup
+#: help:account_followup.print,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+"Nu modificati textul mesajului, daca doriti sa trimiteti email-ul in limba "
+"partenerului, sau sa configurati din companie"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Document: Customer account statement"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Download Letters"
+msgstr "Descarca Scrisorile"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
+msgid "Due Date"
+msgstr "Data scadentei"
+
+#. module: account_followup
+#: field:account_followup.followup.line,delay:0
+msgid "Due Days"
+msgstr "Zile Scadente"
+
+#. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Continutul Email-ului"
+
+#. module: account_followup
+#: field:account_followup.print,email_subject:0
+msgid "Email Subject"
+msgstr "Subiect Email"
+
+#. module: account_followup
+#: field:account_followup.followup.line,email_template_id:0
+msgid "Email Template"
+msgstr "Sablon Email"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:216
+#, python-format
+msgid "Email not sent because of email address of partner not filled in"
+msgstr ""
+"Email-ul nu a fost trimis pentru ca nu a fost introdusa adresa de email a "
+"partenerului"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#: code:addons/account_followup/account_followup.py:319
+#: code:addons/account_followup/report/account_followup_print.py:82
+#, python-format
+msgid "Error!"
+msgstr "Eroare!"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
+msgid "First move"
+msgstr "Prima miscare"
+
+#. module: account_followup
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
+msgstr "Urmariri"
+
+#. module: account_followup
+#: field:account_followup.print,followup_id:0
+msgid "Follow-Up"
+msgstr "Urmare"
+
+#. module: account_followup
+#: field:account_followup.followup.line,name:0
+msgid "Follow-Up Action"
+msgstr "Actiunea de Urmarire"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-Ups Analysis"
+msgstr "Analiza Urmariri"
+
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_followup_form
+#: view:account_followup.followup:account_followup.view_account_followup_followup_tree
+#: field:account_followup.followup,followup_line:0
+#: model:ir.ui.menu,name:account_followup.account_followup_main_menu
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Follow-up"
+msgstr "Urmare"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-up Criteria"
+msgstr "Criterii de Urmarire"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Follow-up Entries with period in current year"
+msgstr "Inregistrarile Urmaririi cu perioada in anul curent"
+
+#. module: account_followup
+#: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Follow-up Level"
+msgstr "Nivelul Urmaririi"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-up Levels"
+msgstr "Nivelurile Urmaririlor"
+
+#. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.action_report_followup
+msgid "Follow-up Report"
+msgstr "Raport Urmarire"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+#: field:res.partner,payment_responsible_id:0
+msgid "Follow-up Responsible"
+msgstr "Responsabil cu urmarirea"
+
+#. module: account_followup
+#: field:account_followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr "Data trimiterii urmarii"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Follow-up Statistics"
+msgstr "Statistica Urmarire"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Follow-up Statistics by Partner"
+msgstr "Statistici Urmarire dupa Partener"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_tree
+msgid "Follow-up Steps"
+msgstr "Pasii Continuarii"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid "Follow-up letter of "
 msgstr "Scrisoare de urmarire "
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "The"
-msgstr "-l"
+#: view:account_followup.stat:account_followup.view_account_followup_stat_graph
+msgid "Follow-up lines"
+msgstr "Liniile urmaririi"
 
 #. module: account_followup
-#: view:account_followup.print:0
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+msgid "Follow-ups Sent"
+msgstr "Urmariri trimise"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Follow-ups To Do"
+msgstr "Urmariri de Efectuat"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Followup Level"
+msgstr "Nivel urmarire"
+
+#. module: account_followup
+#: help:account_followup.followup.line,sequence:0
+msgid "Gives the sequence order when displaying a list of follow-up lines."
+msgstr ""
+"Da ordinea secventei atunci cand afiseaza o lista cu linii de urmarire."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Group By"
+msgstr ""
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
+msgstr ""
+"A spus ca problema este temporara si a promis sa plateasca 50% inainte de 15 "
+"mai, sold inainte de 1 iulie."
+
+#. module: account_followup
+#: field:account_followup.followup,id:0
+#: field:account_followup.followup.line,id:0
+#: field:account_followup.print,id:0
+#: field:account_followup.sending.results,id:0
+#: field:account_followup.stat,id:0
+#: field:account_followup.stat.by.partner,id:0
+#: field:report.account_followup.report_followup,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Daca nu este specificat de nivelul cel mai recent al urmaririi, va trimite "
+"din sablonul implicit de email-uri"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Including journal entries marked as a litigation"
+msgstr "Inclusiv inregistrari in jurnal marcate ca litigiu"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:256
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Invoice Date"
+msgstr "Data Facturii"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:258
+#, python-format
+msgid "Invoices Reminder"
+msgstr "Memento facturi"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
+msgstr "Elementele Jurnalului"
+
+#. module: account_followup
+#: field:account_followup.followup,write_uid:0
+#: field:account_followup.followup.line,write_uid:0
+#: field:account_followup.print,write_uid:0
+#: field:account_followup.sending.results,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,write_date:0
+#: field:account_followup.followup.line,write_date:0
+#: field:account_followup.print,write_date:0
+#: field:account_followup.sending.results,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
+msgid "Last move"
+msgstr "Ultima miscare"
+
+#. module: account_followup
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr "Cea mai recenta Urmarire"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_date:0
+msgid "Latest Follow-up Date"
+msgstr "Data celei mai recente Urmariri"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_level_id:0
+msgid "Latest Follow-up Level"
+msgstr "Nivelul celei mai recente Urmariri"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_level_id_without_lit:0
+msgid "Latest Follow-up Level without litigation"
+msgstr "Nivelul celei mai recente Urmariri fara litigiu"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Latest Follow-up Month"
+msgstr ""
+
+#. module: account_followup
+#: help:res.partner,latest_followup_date:0
+msgid "Latest date that the follow-up level of the partner was changed"
+msgstr ""
+"Data cea mai recenta la care a fost schimbat nivelul de urmarire al "
+"partenerului"
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest follow-up"
+msgstr "Cea mai recenta urmarire"
+
+#. module: account_followup
+#: field:account_followup.stat,date_followup:0
+msgid "Latest followup"
+msgstr "Ultima urmare"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Li."
+msgstr "Li."
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Lit."
+msgstr "Lit."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Litigation"
+msgstr "Litigiu"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,manual_action:0
+msgid "Manual Action"
+msgstr "Acțiune manuală"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_customer_followup
+msgid "Manual Follow-Ups"
+msgstr "Urmariri Manuale"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Maturity Date"
+msgstr "Data scadenta"
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
+msgstr "Nivelul maxim al urmaririi"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
+msgstr "Urmaririle mele"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "My Follow-ups"
+msgstr "Urmaririle Mele"
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+msgid "Name"
+msgstr "Nume"
+
+#. module: account_followup
+#: field:account_followup.sending.results,needprinting:0
+msgid "Needs Printing"
+msgstr "Necesită tipărire"
+
+#. module: account_followup
+#: field:res.partner,payment_next_action:0
+msgid "Next Action"
+msgstr "Actiunea Urmatoare"
+
+#. module: account_followup
+#: field:res.partner,payment_next_action_date:0
+msgid "Next Action Date"
+msgstr "Data acțiunii următoare"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "No Responsible"
+msgstr "Fara Responsabil"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Not Litigation"
+msgstr "Nu este litigiu"
+
+#. module: account_followup
+#: sql_constraint:account_followup.followup:0
+msgid "Only one follow-up per company is allowed"
+msgstr "Este permisa o singura urmarire pentru fiecare companie"
+
+#. module: account_followup
+#: help:res.partner,payment_responsible_id:0
+msgid ""
+"Optionally you can assign a user to this field, which will make him "
+"responsible for the action."
+msgstr ""
+"Optional, puteti atribui un utilizator acestui camp, care il va face "
+"responsabil pentru actiune."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
+msgid "Partner"
+msgstr "Partener"
+
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Partner entries"
+msgstr "Inregistrari partener"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_tree
+msgid "Partner to Remind"
+msgstr "Partenerul care va primi un memento"
+
+#. module: account_followup
+#: field:account_followup.print,partner_ids:0
+msgid "Partners"
+msgstr "Parteneri"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Partners with Overdue Credits"
+msgstr "Parteneri cu Credite Restante"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_finance_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Payment Follow-up"
+msgstr "Urmarirea Platii"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+msgid "Payment Follow-ups"
+msgstr "Urmariri Plata"
+
+#. module: account_followup
+#: help:res.partner,payment_note:0
+msgid "Payment Note"
+msgstr "Nota de Plata"
+
+#. module: account_followup
+#: field:account_followup.stat,period_id:0
+msgid "Period"
+msgstr "Perioada"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_print
+msgid "Print Follow-up & Send Mail to Customers"
+msgstr "Tipareste Urmarirea & Trimite Email Clientilor"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Print Overdue Payments"
+msgstr "Tipareste Platile Restante"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Print overdue payments report independent of follow-up line"
+msgstr "Tipareste raportul platilor restante independent de linia urmaririi"
+
+#. module: account_followup
+#: field:account_followup.followup.line,description:0
+msgid "Printed Message"
+msgstr "Mesaj tiparit"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:314
+#, python-format
+msgid "Printed overdue payments report"
+msgstr "Raportul tiparit al platilor restante"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
+msgid "Reconcile Invoices & Payments"
+msgstr "Reconciliaza Facturi & Plati"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Ref"
+msgstr "Ref"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
+msgid "Reference"
+msgstr "Referinta"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Responsible of credit collection"
+msgstr "Responsabil pentru recuperarea creditului"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_sending_results
+msgid "Results from the sending of the different letters and emails"
+msgstr "Rezultatele trimiterii diferitelor scrisori si email-uri"
+
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_filter
+msgid "Search Follow-up"
+msgstr "Cauta Urmarirea"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Search Partner"
+msgstr "Cauta Partener"
+
+#. module: account_followup
+#: field:account_followup.print,email_conf:0
+msgid "Send Email Confirmation"
+msgstr "Trimite Email de Confirmare"
+
+#. module: account_followup
+#: field:account_followup.print,partner_lang:0
+msgid "Send Email in Partner Language"
+msgstr "Trimite email in limba partenerului"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+msgid "Send Follow-Ups"
+msgstr "Trimiteti Continuari"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send Letters and Emails"
+msgstr "Trimite Scrisori si Email-uri"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:241
+#, python-format
+msgid "Send Letters and Emails: Actions Summary"
+msgstr "Trimite Scrisori si Email-uri: Continut Actiuni"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Send Overdue Email"
+msgstr "Trimite Email cu Scadenta depasita"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,send_letter:0
+msgid "Send a Letter"
+msgstr "Trimite o Scrisoare"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,send_email:0
+msgid "Send an Email"
+msgstr "Trimite un Email"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "Send emails and generate letters"
+msgstr "Trimite email-uri si genereaza scrisori"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send follow-ups"
 msgstr "Trimite urmariri"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Credit total"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1373,19 +1322,48 @@ msgid "Sequence"
 msgstr "Secventa"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Follow-ups To Do"
-msgstr "Urmariri de Efectuat"
+#: field:account_followup.print,summary:0
+msgid "Summary"
+msgstr "Continut"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Customer Ref :"
-msgstr "Ref Client :"
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Summary of actions"
+msgstr "Rezumatul actiunilor"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Maturity Date"
-msgstr "Data scadenta"
+#: field:account_followup.print,test_print:0
+msgid "Test Print"
+msgstr "Test imprimare"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "The"
+msgstr "-l"
+
+#. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:82
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
+msgstr ""
+"Planul de urmariree definit pentru actuala companie nu are nici o actiune de "
+"urmarire."
+
+#. module: account_followup
+#: help:res.partner,latest_followup_level_id:0
+msgid "The maximum follow-up level"
+msgstr "Nivelul maxim de continuare"
+
+#. module: account_followup
+#: help:res.partner,latest_followup_level_id_without_lit:0
+msgid ""
+"The maximum follow-up level without taking into account the account move "
+"lines with litigation"
+msgstr ""
+"Nivelul maxim de urmarire fara a lua in considerare liniile de miscare ale "
+"contului cu litigii"
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1399,783 +1377,186 @@ msgstr ""
 "politicoasa in prealabil."
 
 #. module: account_followup
-#: help:res.partner,latest_followup_date:0
-msgid "Latest date that the follow-up level of the partner was changed"
+#: code:addons/account_followup/account_followup.py:313
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
 msgstr ""
-"Data cea mai recenta la care a fost schimbat nivelul de urmarire al "
-"partenerului"
+"Partenerul nu are nici o inregistrare contabila de tiparit in raportul "
+"scadent pentru compania curenta."
 
 #. module: account_followup
-#: field:account_followup.print,test_print:0
-msgid "Test Print"
-msgstr "Test imprimare"
+#: code:addons/account_followup/account_followup.py:319
+#, python-format
+msgid "There is no followup plan defined for the current company."
+msgstr "Nu exista nici un plan de urmarire definit pentru compania curenta."
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": User Name"
-msgstr ": Numele Utilizatorului"
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "This Fiscal year"
+msgstr "Acest an fiscal"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Accounting"
-msgstr "Contabilitate"
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid ""
+"This action will send follow-up emails, print the letters and\n"
+"                        set the manual actions per customer, according to "
+"the follow-up levels defined."
+msgstr ""
+"Aceasta actiune va trimite email-uri de urmarire, va tipari scrisorile si\n"
+"                        va seta actiunile manuale pentru fiecare client, in "
+"functie de nivelurile definite ale urmaririi."
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Blocat(a)"
+#: help:account_followup.print,date:0
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+"Acest camp va permite sa selectati o data de estimare pentru a va putea "
+"planifica urmaririle"
 
 #. module: account_followup
-#: field:res.partner,payment_note:0
-msgid "Customer Payment Promise"
-msgstr "Promisiunea de Plata a Clientului"
+#: help:res.partner,payment_next_action:0
+msgid ""
+"This is the next action to be taken.  It will automatically be set when the "
+"partner gets a follow-up level that requires a manual action. "
+msgstr ""
+"Aceasta este urmatoarea actiune care va fi intreprinsa. Va fi setata automat "
+"atunci cand partenerul primeste un nivel de continuare care necesita o "
+"actiune manuala. "
 
-#~ msgid "Account Type"
-#~ msgstr "Tip cont"
+#. module: account_followup
+#: help:res.partner,payment_next_action_date:0
+msgid ""
+"This is when the manual follow-up is needed. The date will be set to the "
+"current date when the partner gets a follow-up level that requires a manual "
+"action. Can be practical to set manually e.g. to see if he keeps his "
+"promises."
+msgstr ""
+"Acesta este atunci cand este nevoie de urmarirea manuala. Data va fi setata "
+"pe data curenta atunci cand partenerul primeste un nivel al urmaririi care "
+"necesita o actiune manuala. Setarea manuala poate fi practica, de exemplu "
+"pentru a vedea daca isi tine promisiunile."
 
-#~ msgid "Balance:"
-#~ msgstr "Sold:"
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_followup_form
+msgid ""
+"To remind customers of paying their invoices, you can\n"
+"                        define different actions depending on how severely\n"
+"                        overdue the customer is. These actions are bundled\n"
+"                        into follow-up levels that are triggered when the "
+"due\n"
+"                        date of an invoice has passed a certain\n"
+"                        number of days. If there are other overdue invoices "
+"for the \n"
+"                        same customer, the actions of the most \n"
+"                        overdue invoice will be executed."
+msgstr ""
+"Pentru a le aminti clientilor sa isi plateasca facturile, puteti\n"
+"                        defini diferite actiuni in functie de cat de tare\n"
+"                        este restant clientul. Aceste actiuni sunt incluse\n"
+"                        in nivelurile de urmarire care sunt declansate "
+"atunci cand data\n"
+"                        scadenta a unei facturi a depasit un anumit\n"
+"                        numar de zile. Daca mai exista facturi restante ale "
+"\n"
+"                        aceluiasi client, vor fi executate actiunile "
+"majoritatii  \n"
+"                        facturilor scadente."
 
-#~ msgid "Lines"
-#~ msgstr "Linii"
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Total credit"
+msgstr "Credit total"
 
-#~ msgid "Ok"
-#~ msgstr "Ok"
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Total debit"
+msgstr "Debit total"
 
-#~ msgid "End of Month"
-#~ msgstr "Sfarsit de luna"
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Total:"
+msgstr "Total:"
 
-#~ msgid "Maturity"
-#~ msgstr "Termen"
+#. module: account_followup
+#: help:account_followup.followup.line,send_letter:0
+msgid "When processing, it will print a letter"
+msgstr "Atunci cand proceseaza, va tipari o scrisoare"
 
-#~ msgid "Net Days"
-#~ msgstr "Zile nete"
+#. module: account_followup
+#: help:account_followup.followup.line,send_email:0
+msgid "When processing, it will send an email"
+msgstr "Atunci cand proceseaza, va trimite un email"
 
-#~ msgid "Followup Report"
-#~ msgstr "Raport urmariri"
+#. module: account_followup
+#: help:account_followup.followup.line,manual_action:0
+msgid ""
+"When processing, it will set the manual action to be taken for that "
+"customer. "
+msgstr ""
+"Atunci cand proceseaza, va veta actiunea manuala care va fi intreprinsa "
+"pentru acel client. "
 
-#~ msgid "Legend"
-#~ msgstr "Legenda"
+#. module: account_followup
+#: field:res.partner,payment_earliest_due_date:0
+msgid "Worst Due Date"
+msgstr "Cea mai rea Data Scadenta"
 
-#~ msgid "Days of delay"
-#~ msgstr "Zile intarziere"
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ""
+"Write here the introduction in the letter,\n"
+"                            according to the level of the follow-up. You "
+"can\n"
+"                            use the following keywords in the text. Don't\n"
+"                            forget to translate in all languages you "
+"installed\n"
+"                            using to top right icon."
+msgstr ""
+"Scrieti aici introducerea la scrisoare,\n"
+"                            in functie de nivelul urmaririi. Puteti\n"
+"                            folosi urmatoarele cuvinte cheie in text. Nu\n"
+"                            uitati sa o traduceti in toate limbile pe care "
+"le-ati instalat\n"
+"                            folosind icoana din dreapta sus."
 
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the following "
-#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
-#~ "this payment in the next 8 days.\n"
-#~ "\n"
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "În atenţia: %(partner_name)s,\n"
-#~ "\n"
-#~ "Dacă nu s-a făcut o greşeală din partea noastră, se pare că suma de mai jos "
-#~ "nu a fost plătită la termen. Vă rugăm să întreprindeţi măsurile necesare "
-#~ "pentru a efectua această plată în următoarele ___ zile.\n"
-#~ "\n"
-#~ "În cazul în care aţi efectuat deja plata până la primirea acestui email, vă "
-#~ "rog să îl consideraţi nul. Vă rugăm nu ezitaţi să contactaţi departamentul "
-#~ "nostru contabil la ____________________.\n"
-#~ "\n"
-#~ "Cu stimă,\n"
-#~ "\t\t\t"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nume invalid de model în definirea acţiunii"
-
-#~ msgid "Due"
-#~ msgstr "Scadență"
-
-#~ msgid "All payable entries"
-#~ msgstr "Toate înregistrările de plătit"
-
-#~ msgid "Amount In Currency"
-#~ msgstr "Suma în valută"
-
-#~ msgid "Select partners"
-#~ msgstr "Selectare parteneri"
-
-#~ msgid "Email Settings"
-#~ msgstr "Configurari e-mail"
-
-#~ msgid "%(line)s: Account Move lines"
-#~ msgstr "%(line)s: Linii mişcări cont"
-
-#~ msgid "Paid"
-#~ msgstr "Plătit"
-
-#~ msgid "Follow-Ups Criteria"
-#~ msgstr "Criterii urmare"
-
-#~ msgid "Select partners to remind"
-#~ msgstr "Selectare parteneri de atenţionat"
-
-#~ msgid "Follow-up and Date Selection"
-#~ msgstr "Selecţie dată şi urmare"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-#~ "special !"
-
-#~ msgid "All receivable entries"
-#~ msgstr "Toate înregistrările de încasat"
-
-#~ msgid "Followup statistics"
-#~ msgstr "Statistici urmări"
-
-#~ msgid "Accounting follow-ups management"
-#~ msgstr "Managementul urmărilor contabile"
-
-#~ msgid "Follow-Up Lines"
-#~ msgstr "Linii urmări"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "We are disappointed to see that despite sending a reminder, that your "
-#~ "account is now seriously overdue.\n"
-#~ "\n"
-#~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no longer "
-#~ "be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in the "
-#~ "next 8 days\n"
-#~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do not "
-#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-#~ "we can resolve the matter quickly.\n"
-#~ "\n"
-#~ "Details of due payments is printed below.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "În atenţia: %(partner_name)s,\n"
-#~ "Suntem dezamăgiţi să remarcăm faptul că în pofida trimiterii unei "
-#~ "notificări, scadenţa plăţii dvs. a fost cu mult depăşită.\n"
-#~ "\n"
-#~ "Este foarte important să efectuaţi imediat această plată, altfel va trebui "
-#~ "să luăm în considerare blocarea contului dvs. ceea ce va conduce la oprirea "
-#~ "furnizării mărfurilor şi/sau serviciilor noastre către firma dvs.\n"
-#~ "Vă rugăm să întreprindeţi măsurile necesare pentru a efectua această plată "
-#~ "în următoarele ___ zile.\n"
-#~ "\n"
-#~ "Dacă există vreo problemă de care nu avem cunoştinţă referitor la plata "
-#~ "acestei facturi, vă rugăm nu ezitaţi să contactaţi departamentul nostru "
-#~ "contabil la ____________________ pentru a putea rezolva urgent această "
-#~ "problemă.\n"
-#~ "\n"
-#~ "Mai jos sunt prezentate detalii referitoare la plăţile scadente.\n"
-#~ "\n"
-#~ "Cu stimă,\n"
-#~ "\t\t\t"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Despite several reminders, your account is still not settled.\n"
-#~ "\n"
-#~ "Unless full payment is made in next 8 days , then legal action for the "
-#~ "recovery of the debt, will be taken without further notice.\n"
-#~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due payments "
-#~ "is printed below.\n"
-#~ "\n"
-#~ "In case of any queries concerning this matter, do not hesitate to contact "
-#~ "our accounting department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(partner_name)s,\n"
-#~ "\n"
-#~ "În ciuda mai multor notificări, datoria dumneavoastră nu s-a diminuat.\n"
-#~ "\n"
-#~ "Dacă nu faceţi plata integrală în termen de 8 zile, vom demara actiunile "
-#~ "legale pentru recuperarea debitului, fără alte notificari.\n"
-#~ "\n"
-#~ "Sperăm totuşi că nu se va ajunge până acolo.\n"
-#~ "\n"
-#~ "În caz ca aveţi nelămuriri legate de acest subiect, vă rugăm contactaţi "
-#~ "departamentul nostru de contabiitate.\n"
-#~ "\n"
-#~ "Cu stimă,\n"
-#~ "\t\t\t"
-
-#~ msgid "Sub-Total:"
-#~ msgstr "Subtotal:"
-
-#~ msgid "Send email confirmation"
-#~ msgstr "Trimite e-mail de confirmare"
-
-#~ msgid "Print Follow Ups & Send Mails"
-#~ msgstr "Tipărire urmăriri şi trimitere e-mailuri"
-
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:291
 #, python-format
-#~ msgid ""
-#~ "All emails have been successfully sent to Partners:.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Toate emailurile au fost trimise cu succes Partenerilor:.\n"
-#~ "\n"
-
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Mail sent to following Partners successfully, !\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Emailul trimis cu succes următorilor Parteneri, !\n"
-#~ "\n"
-
-#, python-format
-#~ msgid ""
-#~ "Mail not sent to following Partners, Email not available !\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Email netrimis următorilor Parteneri, adresa de email nu este disponibilă !\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Modules to automate letters for unpaid invoices, with multi-level "
-#~ "recalls.\n"
-#~ "\n"
-#~ "    You can define your multiple levels of recall through the menu:\n"
-#~ "        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
-#~ "\n"
-#~ "    Once it is defined, you can automatically print recalls every day\n"
-#~ "    through simply clicking on the menu:\n"
-#~ "        Accounting/Periodical Processing/Billing/Send followups\n"
-#~ "\n"
-#~ "    It will generate a PDF with all the letters according to the the\n"
-#~ "    different levels of recall defined. You can define different policies\n"
-#~ "    for different companies. You can also send mail to the customer.\n"
-#~ "\n"
-#~ "    Note that if you want to change the followup level for a given "
-#~ "partner/account entry, you can do from in the menu:\n"
-#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
-#~ "Sent\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "    Module pentru a automatiza caracterele pentru facturile neplatite, cu "
-#~ "memento-uri pe mai multe niveluri.\n"
-#~ "\n"
-#~ "Puteti defini nivelurile multiple ale memento-urilor prin meniul: \n"
-#~ "          Contabilitate/Configurare/Diverse/Urmari\n"
-#~ "\n"
-#~ "Odata definite, puteti printa automat memento-uri in fiecare zi \n"
-#~ "facand pur si simplu click pe meniul: \n"
-#~ "          Contabilitate/Procesare Periodica/Facturare/Trimite urmari\n"
-#~ "\n"
-#~ "Va genera un PDF cu toate caracterele in functie de \n"
-#~ "nivelurile diferite ale memento-ului definit. Puteti defini diferite "
-#~ "politici \n"
-#~ "pentru diferite companii. De asemenea, puteti trimite email-uri clientului. "
-#~ "\n"
-#~ "\n"
-#~ "Observati ca daca doriti sa schimbati nivelul urmarii pentru o anumita "
-#~ "inregistrare a partenerului/contului, puteti face acest lucru in meniul: \n"
-#~ "          Contabilitate/Raportare/Raportare Generala/Conturi Partener/Urmari "
-#~ "trimise\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Follow up on the reminders sent over to your partners for unpaid invoices."
-#~ msgstr ""
-#~ "Urmari ale memento-urilor trimise partenerilor dumneavoastra pentru "
-#~ "facturile neplatite."
-
-#, python-format
-#~ msgid "Follwoup Summary"
-#~ msgstr "Rezultat urmare"
-
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "E-Mail sent to following Partners successfully. !\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "E-mail trimis cu succes urmatorilor Parteneri. !\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "We are disappointed to see that despite sending a reminder, that your "
-#~ "account is now seriously overdue.\n"
-#~ "\n"
-#~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no longer "
-#~ "be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in the "
-#~ "next 8 days\n"
-#~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do not "
-#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-#~ "we can resolve the matter quickly.\n"
-#~ "\n"
-#~ "Details of due payments is printed below.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(numele_partenerului), \n"
-#~ "\n"
-#~ "Suntem dezamagiti sa vedem ca, in ciuda faptului ca v-am trimis un memento, "
-#~ "contul dumneavoastra are restante serioase. \n"
-#~ "\n"
-#~ "Este esential sa faceti plata imediat, in caz contrar vom fi nevoiti sa "
-#~ "punem oprire pe contul dumneavoastra, ceea ce insemna ca nu vom mai putea "
-#~ "furniza companiei dumneavoastra (bunuri/servicii).\n"
-#~ "Va rugam sa luati masurile necesare pentru efectuarea platii in urmatoarele "
-#~ "8 zile \n"
-#~ "\n"
-#~ "Daca exista vreo problema legata de plata facturii, de care noi nu suntem "
-#~ "constienti, nu ezitati sa contactati departamentul nostru contabil la "
-#~ "(+32).10.68.94.39 astfel incat sa putem rezolva problema repede. \n"
-#~ "\n"
-#~ "Detaliile platilor restante sunt printate mai jos.\n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "Account Follow Up"
-#~ msgstr "Urmarire cont"
-
-#~ msgid ""
-#~ "This feature allows you to send reminders to partners with pending invoices. "
-#~ "You can send them the default message for unpaid invoices or manually enter "
-#~ "a message should you need to remind them of a specific information."
-#~ msgstr ""
-#~ "Aceasta caracteristica va permite sa trimiteti memento-uri partenerilor cu "
-#~ "facturi neplatite. Le puteti trimite mesajul predefinit pentru facturi "
-#~ "neplatite sau sa introduceti manual un mesaj daca trebuie sa le amintiti "
-#~ "anumite informatii."
-
-#~ msgid "Follow-up Message"
-#~ msgstr "Mesaj de urmarire"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the following "
-#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
-#~ "this payment in the next 8 days.\n"
-#~ "\n"
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(nume_partener), \n"
-#~ "\n"
-#~ "Cu exceptia faptului ca noi am facut o greseala, se pare ca urmatoarea suma "
-#~ "a ramas neplatita. Va rugam sa luati masurile necesare pentru a efectua "
-#~ "aceasta plata in urmatoarele 8 zile. \n"
-#~ "\n"
-#~ "Daca ati efectuat deja plata, va rugam sa nu luati in considerare prezentul "
-#~ "email. Nu ezitati sa contactati departamentul nostru contabil la "
-#~ "(+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "%(user_signature)s: User Name"
-#~ msgstr "%(semnatura_utilizatorului): Numele Utilizatorului"
-
-#~ msgid "Followup Statistics by Partner"
-#~ msgstr "Statistica Urmarire dupa Partener"
-
-#~ msgid "Followup Statistics"
-#~ msgstr "Statistica Urmarire"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Despite several reminders, your account is still not settled.\n"
-#~ "\n"
-#~ "Unless full payment is made in next 8 days , then legal action for the "
-#~ "recovery of the debt, will be taken without further notice.\n"
-#~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due payments "
-#~ "is printed below.\n"
-#~ "\n"
-#~ "In case of any queries concerning this matter, do not hesitate to contact "
-#~ "our accounting department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(numele_partenerului), \n"
-#~ "\n"
-#~ "In ciuda faptului ca v-am trimis mai multe memento-uri, contul dumneavoastra "
-#~ "inca nu este clarificat. \n"
-#~ "\n"
-#~ "Daca nu se efectueaza plata completa in urmatoarele 8 zile, vom lua masurile "
-#~ "legale pentru recuperarea datoriei, fara preavize suplimentare. \n"
-#~ "\n"
-#~ "Speram ca aceasta actiune sa nu fie necesara si va anexam mai jos detaliile "
-#~ "platilor scadente. In cazul in care aveti vreo intrebare referitoare la "
-#~ "aceasta problema, nu ezitati sa contactati departamentul nostru contabil la "
-#~ "(+32).10.68.94.39. \n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "Send Mails"
-#~ msgstr "Trimite email-uri"
-
-#~ msgid "Currency"
-#~ msgstr "Moneda"
-
-#, python-format
-#~ msgid ""
-#~ "All E-mails have been successfully sent to Partners:.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Toate e-mail-urile au fost trimise cu succes Partenerilor\n"
-#~ "\n"
-
-#~ msgid "Print Followup & Send Mail to Customers"
-#~ msgstr "Printeaza urmarirea & Trimite email Clientilor"
-
-#~ msgid "%(partner_name)s: Partner Name"
-#~ msgstr "%(numele_partenerului): Numele Partenerului"
-
-#~ msgid "Followup Lines"
-#~ msgstr "Linii urmarire"
-
-#~ msgid "Companies"
-#~ msgstr "Companii"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociate."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Eroare! Nu puteti crea companii recursive."
-
-#, python-format
-#~ msgid ""
-#~ "E-Mail not sent to following Partners, Email not available !\n"
-#~ "\n"
-#~ msgstr ""
-#~ "E-mail-ul nu a fost trimis urmatorilor Parteneri, Email-ul nu este "
-#~ "disponibil !\n"
-#~ "\n"
-
-#~ msgid "Followup Level"
-#~ msgstr "Nivel urmarire"
-
-#~ msgid "Payable Items"
-#~ msgstr "Elemente de plata"
-
-#~ msgid "Receivable Items"
-#~ msgstr "Elemente de incasat"
-
-#~ msgid "%(line)s: Ledger Posting lines"
-#~ msgstr "%(linie): Linii inregistrari in registru"
-
-#~ msgid "%(company_name)s: User's Company Name"
-#~ msgstr "%(numele_companiei): Numele Companiei Utilizatorului"
-
-#~ msgid "Latest Followup Date"
-#~ msgstr "Data ultimei urmariri"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Nu puteti crea o linie de miscare intr-un cont inchis."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Nu puteti crea linia miscarii in vizualizarea contului."
-
-#~ msgid "Follow-Up Criteria"
-#~ msgstr "Criterii de urmarire"
-
-#~ msgid "Search Followup"
-#~ msgstr "Cauta Urmarea"
-
-#~ msgid ""
-#~ "Check if you want to print followups without changing followups level."
-#~ msgstr ""
-#~ "Bifati aceasta casuta daca doriti sa imprimati urmarile fara sa schimbati "
-#~ "nivelul lor."
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "We are disappointed to see that despite sending a reminder, that your "
-#~ "account is now seriously overdue.\n"
-#~ "\n"
-#~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no longer "
-#~ "be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in the "
-#~ "next 8 days.\n"
-#~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do not "
-#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-#~ "we can resolve the matter quickly.\n"
-#~ "\n"
-#~ "Details of due payments is printed below.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(nume_partener)s,\n"
-#~ "\n"
-#~ "Suntem dezamagiti sa vedem ca, in ciuda faptului ca v-am trimis un memento, "
-#~ "contul d-voastra este inca restant.\n"
-#~ "\n"
-#~ "Este esential sa efectuati plata imediat, in caz contrar vom fi nevoiti sa "
-#~ "punem oprire pe contul d-voastra ceea ce inseamna ca nu vom mai putea sa "
-#~ "furnizam compania d-voastra cu (bunuri/servicii).\n"
-#~ "Va rugam sa luati masurile care se impun pentru a efectua plata in "
-#~ "urmatoarele 8 zile.\n"
-#~ "\n"
-#~ "Daca exista vreo problema cu plata facturii de care noi nu nu suntem "
-#~ "constienti, nu ezitati sa contactati departamentul nostru contabil la "
-#~ "(+32).10.68.94.39. astfel incat sa putem rezolva aceasta problema repede.\n"
-#~ "\n"
-#~ "Detaliile referitoare la platile restante sunt tiparite mai jos.\n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "Follow up Entries with period in current year"
-#~ msgstr "Inregistrare continuari cu perioada in anul curent"
-
-#~ msgid "Follow-Ups"
-#~ msgstr "Urmari"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr ""
-#~ "Valoare gresita a creditului sau debitului in inregistrarea contabila !"
-
-#~ msgid "%(heading)s: Move line header"
-#~ msgstr "%(antet)s: Antet linie miscare"
-
-#~ msgid "Select Partners to Remind"
-#~ msgstr "Selectati Partenerii care vor primi memento-uri"
-
-#~ msgid "%(user_signature)s: User name"
-#~ msgstr "%(semnatura_utilizator)s: Nume utilizator"
-
-#~ msgid "Email body"
-#~ msgstr "Continut e-mail"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the following "
-#~ "amount stays unpaid. Please, take appropriate measures in order to carry out "
-#~ "this payment in the next 8 days.\n"
-#~ "\n"
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "ignore this message. Do not hesitate to contact our accounting department at "
-#~ "(+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimate %(nume_partener)s,\n"
-#~ "\n"
-#~ "Cu exceptia cazului in care este o greseala de-a noastra, se pare ca inca nu "
-#~ "ati achitat suma respectiva. Va rugam sa luati masurile care se impun pentru "
-#~ "a efectua aceasta plata in urmatoarele 8 zile.\n"
-#~ "\n"
-#~ "Daca plata d-voastra a fost efectuata dupa ce acest e-mail a fost trimis, va "
-#~ "rugam sa ignorati acest mesaj. Nu ezitati sa contactati departamentul "
-#~ "contabil la (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "Partner Selection"
-#~ msgstr "Selectie Partener"
-
-#, python-format
-#~ msgid ""
-#~ "All E-mails have been successfully sent to Partners:.\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Toate e-mail-urile au fost trimise cu succes catre Parteneri:.\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Send followups"
-#~ msgstr "Trimiteti urmari"
-
-#~ msgid "Message"
-#~ msgstr "Mesaj"
-
-#, python-format
-#~ msgid "Select Partners"
-#~ msgstr "Selectati Partenerii"
-
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "E-Mail sent to following Partners successfully. !\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "E-mail-ul a fost trimis cu succes urmatorilor Parteneri. !\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Print Follow Ups"
-#~ msgstr "Tipariti Urmarile"
-
-#~ msgid "%(company_name)s: User's Company name"
-#~ msgstr "%(numele_companiei)s: Numele Companiei utilizatorului"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr ""
-#~ "Nu puteti crea elemente ale jurnalului intr-un cont de tipul vizualizare."
-
-#~ msgid "Follow-Up lines"
-#~ msgstr "Linii urmarire"
-
-#~ msgid "%(company_currency)s: User's Company Currency"
-#~ msgstr "%(moneda_companiei)s: Moneda Companiei Utilizatorului"
-
-#~ msgid "Type of Term"
-#~ msgstr "Tip de termen"
-
-#~ msgid "Review Invoicing Follow-Ups"
-#~ msgstr "Verificati facturarea urmarilor"
-
-#~ msgid "Follow-Up Steps"
-#~ msgstr "Pasii urmaririi"
-
-#~ msgid ""
-#~ "Define follow up levels and their related messages and delay. For each step, "
-#~ "specify the message and the day of delay. Use the legend to know the using "
-#~ "code to adapt the email content to the good context (good name, good date) "
-#~ "and you can manage the multi language of messages."
-#~ msgstr ""
-#~ "Definiti nivelurile de urmarire, mesajele si intarzierile asociate lor. "
-#~ "Pentru fiecare pas, specificati mesajul si ziua intarzierii. Folositi "
-#~ "legenda pentru a vedea codul folosit la adaptarea continutului corect al e-"
-#~ "mail-ului (numele si data corecte) si puteti gestiona multi-limbajul "
-#~ "mesajelor."
-
-#, python-format
-#~ msgid "Followup Summary"
-#~ msgstr "Rezumat Urmarire"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociata."
-
-#, python-format
-#~ msgid ""
-#~ "E-Mail not sent to following Partners, E-mail not available !\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "E-mail-ul nu a fost trimis urmatorilor Parteneri, E-mail-ul nu e disponibil "
-#~ "!\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "%(followup_amount)s: Total Amount Due"
-#~ msgstr "%(suma_urmarire)s: Suma totala scadenta"
-
-#~ msgid "%(date)s: Current Date"
-#~ msgstr "%(data)s: Data curenta"
-
-#~ msgid "Only One Followup by Company."
-#~ msgstr "Doar o singura urmarire pe Companie."
-
-#~ msgid "Continue"
-#~ msgstr "Continuati"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Numele companiei trebuie sa fie unic !"
-
-#~ msgid "%(partner_name)s: Partner name"
-#~ msgstr "%(nume_partener)s: Nume partener"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Despite several reminders, your account is still not settled.\n"
-#~ "\n"
-#~ "Unless full payment is made in next 8 days, then legal action for the "
-#~ "recovery of the debt will be taken without further notice.\n"
-#~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due payments "
-#~ "is printed below.\n"
-#~ "\n"
-#~ "In case of any queries concerning this matter, do not hesitate to contact "
-#~ "our accounting department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Stimat (a) %(nume_partener)s,\n"
-#~ "\n"
-#~ "In ciuda primirii mai multor memento-uri, contul d-voastra inca nu este "
-#~ "stabilit.\n"
-#~ "\n"
-#~ "Daca nu efectuati plata completa in urmatoarele 8 zile, se va incepe "
-#~ "actiunea legala pentru recuperarea datoriei fara preaviz suplimentar.\n"
-#~ "\n"
-#~ "Speram ca aceasta actiune se va dovedi nenecesara, iar detaliile platilor "
-#~ "scadente sunt tiparite mai jos.\n"
-#~ "\n"
-#~ "In cazul in care aveti intrebari referitoare la aceasta problema, nu ezitati "
-#~ "sa contactati departamentul contabil la (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Cu stima,\n"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Nu puteti crea elemente ale jurnalului intr-un cont inchis."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
-#~ "schimbati data sau sa eliminati aceasta restrictie din jurnal."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
-#~ "secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
-#~ "o vizualizare multi-moneda in jurnal."
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
+msgstr ""
+"Ati devenit responsabil cu efectuarea urmatoarei actiuni pentru urmarirea "
+"platii a"
+
+#. module: account_followup
+#: constraint:account_followup.followup.line:0
+msgid ""
+"Your description is invalid, use the right legend or %% if you want to use "
+"the percent character."
+msgstr ""
+"Descrierea d-voastra este nevalida, folositi legenda din partea dreapta sau "
+"%% daca doriti sa folositi caracterele procentuale."
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "days overdue, do the following actions:"
+msgstr "zile restante, intreprindeti urmatoarele actiuni:"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr "de exemplu Sunati un client, verificati daca este platit, ..."
+
+#. module: account_followup
+#: field:account_followup.print,company_id:0
+#: field:res.partner,unreconciled_aml_ids:0
+msgid "unknown"
+msgstr "necunoscut(a)"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "⇾ Mark as Done"
+msgstr "⇾ Marcheaza ca Efectuat"

@@ -20,7 +20,7 @@ access_stock_location_mrp_worker,stock.location mrp_worker,stock.model_stock_loc
 access_stock_move_mrp_worker,stock.move mrp_worker,stock.model_stock_move,mrp.group_mrp_user,1,1,1,0
 access_stock_picking_mrp_worker,stock.picking mrp_worker,stock.model_stock_picking,mrp.group_mrp_user,1,1,1,1
 access_stock_warehouse,stock.warehouse mrp_worker,stock.model_stock_warehouse,mrp.group_mrp_user,1,0,0,0
-access_account_analytic_journal_mrp_worker,account.analytic.journal mrp_worker,account.model_account_analytic_journal,mrp.group_mrp_user,1,0,0,0
+access_account_analytic_journal_mrp_worker,account.analytic.journal mrp_worker,analytic.model_account_analytic_journal,mrp.group_mrp_user,1,0,0,0
 access_account_account,account.account mrp_worker,account.model_account_account,mrp.group_mrp_user,1,0,0,0
 access_hr_timesheet_group_mrp_worker,resource.calendar mrp_manager,resource.model_resource_calendar,mrp.group_mrp_manager,1,1,1,1
 access_procurement_user,procurement.order.user,model_procurement_order,base.group_user,1,1,1,1
@@ -28,7 +28,6 @@ access_mrp_production_stock_worker,mrp.production stock_worker,model_mrp_product
 access_report_workcenter_load,report.workcenter.load,model_report_workcenter_load,mrp.group_mrp_manager,1,1,1,1
 access_report_mrp_inout,report.mrp.inout,model_report_mrp_inout,mrp.group_mrp_manager,1,1,1,1
 access_ir_property_manager,ir.property manager,base.model_ir_property,mrp.group_mrp_manager,1,1,1,1
-access_account_sequence_fiscalyear,account.sequence.fiscalyear,account.model_account_sequence_fiscalyear,mrp.group_mrp_user,1,1,1,1
 access_product_product_user,product.product user,product.model_product_product,mrp.group_mrp_user,1,0,0,0
 access_product_template_user,product.template user,product.model_product_template,mrp.group_mrp_user,1,0,0,0
 access_product_uom_user,product.uom user,product.model_product_uom,mrp.group_mrp_user,1,0,0,0
@@ -42,14 +41,12 @@ access_resource_calendar_attendance_manager,mrp.resource.calendar.attendance.man
 access_product_puom_categ,product.uom.categ,product.model_product_uom_categ,mrp.group_mrp_user,1,0,0,0
 access_resource_resource,resource.resource,resource.model_resource_resource,mrp.group_mrp_user,1,0,0,0
 access_board_board_user,mrp.board.board,board.model_board_board,mrp.group_mrp_user,1,0,0,0
-access_account_sequence_fiscalyear_manager,account.sequence.fiscalyear,account.model_account_sequence_fiscalyear,mrp.group_mrp_manager,1,0,0,0
 access_product_supplierinfo_manager,product.supplierinfo user,product.model_product_supplierinfo,mrp.group_mrp_manager,1,0,0,0
 access_mrp_production_manager,mrp.production manager,model_mrp_production,mrp.group_mrp_manager,1,0,0,0
 access_procurement_manager,procurement.order,model_procurement_order,mrp.group_mrp_manager,1,0,0,0
 access_workcenter_manager,mrp.production.workcenter.line,model_mrp_production_workcenter_line,mrp.group_mrp_manager,1,0,0,0
 access_stock_move_mrp_manager,stock.move mrp_manager,stock.model_stock_move,mrp.group_mrp_manager,1,0,0,0
 access_mrp_production_product_line_manager,mrp.production.product.line manager,model_mrp_production_product_line,mrp.group_mrp_manager,1,0,0,0
-access_account_sequence_fiscalyear_system,account.sequence.fiscalyear.system,account.model_account_sequence_fiscalyear,mrp.group_mrp_manager,1,0,0,0
 access_stock_production_lot_user,stock.production.lot,stock.model_stock_production_lot,mrp.group_mrp_user,1,1,1,1
 access_stock_warehouse_orderpoint_user,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,mrp.group_mrp_user,1,0,0,0
 access_stock_picking_mrp_manager,stock.picking mrp_manager,stock.model_stock_picking,mrp.group_mrp_manager,1,0,0,0
@@ -76,7 +73,9 @@ access_product_pricelist_version_mrp_manager,product.pricelist.version mrp_manag
 access_product_pricelist_item_mrp_manager,product.pricelist.item mrp_manager,product.model_product_pricelist_item,mrp.group_mrp_manager,1,1,1,1
 access_resource_calendar_manufacturinguser,resource.calendar manufacturing.user,resource.model_resource_calendar,mrp.group_mrp_user,1,0,0,0
 access_account_journal_mrp_manager,account.journal mrp manager,account.model_account_journal,mrp.group_mrp_manager,1,0,0,0
-access_mrp_property_group,mrp.property.group,model_mrp_property_group,stock.group_stock_manager,1,1,1,1
-access_mrp_property,mrp.property,model_mrp_property,stock.group_stock_manager,1,1,1,1
+access_mrp_property_group_manager,mrp.property.group,model_mrp_property_group,stock.group_stock_manager,1,1,1,1
+access_mrp_property_manager,mrp.property,model_mrp_property,stock.group_stock_manager,1,1,1,1
 access_mrp_property_group,mrp.property.group,model_mrp_property_group,base.group_user,1,0,0,0
 access_mrp_property,mrp.property,model_mrp_property,base.group_user,1,0,0,0
+access_mrp_bom_invoicing_payment,mrp.bom,model_mrp_bom,account.group_account_invoice,1,0,0,0
+access_mrp_production_invoicing_payment,mrp.production,model_mrp_production,account.group_account_invoice,1,1,1,0

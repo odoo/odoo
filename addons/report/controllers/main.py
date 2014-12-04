@@ -93,7 +93,7 @@ class ReportController(Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @route(['/report/download'], type='http', auth="user", website=True)
+    @route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a pdf/controller report.
@@ -119,8 +119,8 @@ class ReportController(Controller):
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
-
-                response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
+                if 'pdf_viewer' not in requestcontent:
+                    response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
                 response.set_cookie('fileToken', token)
                 return response
             elif type =='controller':
@@ -134,7 +134,7 @@ class ReportController(Controller):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
             return request.make_response(simplejson.dumps(error))
