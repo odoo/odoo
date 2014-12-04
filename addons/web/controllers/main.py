@@ -1582,58 +1582,74 @@ class XMLExport(ExportFormat, http.Controller):
 
     def _extract_records(self, fields_name, rows, model):
         """Extract Records in dictionaries"""
-        result = {}
-        for row in rows:
-            for index, fields in enumerate(fields_name):
-                relfield_data = {}
-                field_details = request.session.model(model).fields_get(fields)
-                is_relational = lambda field: field_details[fields[0]].get('relation')
-                if is_relational(fields[0]):
-                    if field_details[fields[0]].get('type') == "one2many":
-                        o2m_fields = [fields[1:]]
-                        recordsspan = [list(itertools.islice(row, index, None))]
-                        result['child_ids'] = list(subfields for subfields in self._extract_records(o2m_fields, recordsspan, model))
-                        yield result
-                    record_span = list(itertools.islice(row, index, index + 1, None))
-                    relfield_data[fields[1]] = record_span
-                    result[fields[0]] = relfield_data
-                if not is_relational(fields[0]):
-                    recordspan = list(itertools.islice(row, index, index + 1, None))
-                    result[fields[0]] = recordspan[0]
-            yield result
+        res = {}
+        ros = {}
+
+        def extract_o2m(fields, row, index):
+            o2m_fields = [fields[1:]]
+            recordsspan = [list(itertools.islice(row, index, None))]
+            return [o2m_fields, recordsspan]
+
+        def extract_m2o_m2m(fields, row, index):
+            relfield_data = {}
+            record_span = list(itertools.islice(row, index, index + 1, None))
+            relfield_data[fields[1]] = record_span
+            return [fields[0], relfield_data]
+
+        def recursion(fields_name, rows):
+            for row in rows:
+                result = []
+                for index, fields in enumerate(fields_name):
+                    field_details = request.session.model(model).fields_get(fields)
+                    field_type = field_details[fields[0]].get('type')
+                    if field_type == 'one2many':
+                        o2m_rec = extract_o2m(fields, row, index)
+                        ros['child_ids'] = list(subfields for subfields in recursion(o2m_rec[0], o2m_rec[1]))
+                        result.append(ros)
+                    elif field_type == 'many2many' or field_type == 'many2one':
+                        rec = extract_m2o_m2m(fields, row, index)
+                        res[rec[0]] = rec[1]
+                    else:
+                        recordspan = list(itertools.islice(row, index, index + 1, None))
+                        res[fields[0]] = recordspan[0]
+                result.append(res)
+            return result
+        record = recursion(fields_name, rows)
+        yield record
 
     def _generate_xml_record(self, model, root, record, rel_field=None):
         """Generate new Odoo compitable xml records"""
-        new_record = etree.SubElement(root, "record", model=model)
-        #new_record.set("model", model)
-        field_details = request.session.model(model).fields_get(record.keys())
-        for field, value in record.iteritems():
-            # Only fields which contain data should be exported
-            if not value:
-                continue
-            if field == 'id':
-                new_record.set("id", value)
-                continue
-            elif field_details[field]['type'] == 'one2many':
-                for child_record in value:
-                    child_record.update({field_details[field]['relation_field']: {'id': [record.get('id')]}})
-                    self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
-                continue
-            new_record_element = etree.SubElement(new_record, "field", name=field)
-            #new_record_element.set("name", field)
-            # Note: For Special case where relational field is integer instead of regular m2o.
-            # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
-            # To handle this special case 'or' condition is added here.
-            if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
-                new_record_element.set("ref", value['id'][0])
-            elif field_details[field]['type'] == 'many2many':
-                eval = '[' + ', '.join(["(4, ref('%s'))" % m2m_id for m2m_id in value[0]['id'].split(',')]) + ']'
-                new_record_element.set("eval", eval)
-            elif field_details[field]['type'] == 'selection':
-                new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
-                new_record_element.text = new_value and new_value[0] or value
-            else:
-                new_record_element.text = value
+        for index, rows in enumerate(record):
+            new_record = etree.SubElement(root, "record", model=model)
+            #new_record.set("model", model)
+            field_details = request.session.model(model).fields_get(record[index].keys())
+            for field, value in record[index].iteritems():
+                # Only fields which contain data should be exported
+                if not value:
+                    continue
+                if field == 'id':
+                    new_record.set("id", value)
+                    continue
+                elif field_details[field]['type'] == 'one2many':
+                    for child_record in value:
+                        child_record.update({field_details[field]['relation_field']: {'id': [record[index].get('id')]}})
+                        self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
+                    continue
+                new_record_element = etree.SubElement(new_record, "field", name=field)
+                #new_record_element.set("name", field)
+                # Note: For Special case where relational field is integer instead of regular m2o.
+                # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
+                # To handle this special case 'or' condition is added here.
+                if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
+                    new_record_element.set("ref", value['id'][0])
+                elif field_details[field]['type'] == 'many2many':
+                    eval = '[' + ', '.join(["(4, ref('%s'))" % m2m_id for m2m_id in value[0]['id'].split(',')]) + ']'
+                    new_record_element.set("eval", eval)
+                elif field_details[field]['type'] == 'selection':
+                    new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
+                    new_record_element.text = new_value and new_value[0] or value
+                else:
+                    new_record_element.text = value
         return True
 
 class Reports(http.Controller):
