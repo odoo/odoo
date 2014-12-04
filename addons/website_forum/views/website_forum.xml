@@ -19,6 +19,9 @@
         <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
         <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
+
         <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
         <script type="text/javascript">
             var CKEDITOR_BASEPATH = '/web/static/lib/ckeditor/';
@@ -396,7 +399,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post</button>
+                    <button class="btn btn-primary social_share_call" t-att-data-hashtag-list="['link']" t-att-data-social-template="['other']" disabled="True" id="btn_post_your_article">Post</button>
                 </div>
             </div>
         </form>
@@ -421,7 +424,7 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button class="btn btn-primary">Post Your Topic</button>
+            <button class="btn btn-primary social_share_call" t-att-data-hashtag-list="['discussion']" t-att-data-social-template="['other']">Post Your Topic</button>
         </form>
     </t>
 </template>
@@ -573,7 +576,7 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="question" t-att-last-update="question.write_date">
+        <div t-attf-class="question" t-att-data-last-update="question.write_date" data-model="forum.post" t-att-data-id="question.id" >
             <div class="pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>

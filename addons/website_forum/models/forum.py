@@ -13,6 +13,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import Warning
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -159,6 +160,11 @@ class Post(models.Model):
     write_date = fields.Datetime('Update on', select=True, readonly=True)
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
     relevancy = fields.Float('Relevancy', compute="_compute_relevancy", store=True)
+
+    # Stupid function used to trigger an update on write date. I'm looking for something more elegant.
+    @api.one
+    def update_write_date(self):
+        self.name = self.name
 
     @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')

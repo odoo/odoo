@@ -94,15 +94,6 @@
         });
     });
 
-    website.ready().done(function() {
-        if (Date.now()-Date.parse($('.question').attr('last-update')) > 864*10e5) { //If the question is older than 864/10e5 seconds (=10 days)
-            console.log('>10days');
-            var hashtag_list = ['question'];
-            var social_list = ['facebook','twitter', 'linkedin', 'google-plus'];
-            new website.social_share('social_alert',$(this), social_list, hashtag_list);
-        }
-    });
-
     // Display modal after new question/answer
     $(document.body).on('click', '.social_share_call', function() {
         var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
