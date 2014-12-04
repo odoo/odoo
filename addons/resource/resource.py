@@ -529,16 +529,23 @@ class resource_calendar(osv.osv):
         planned_days = 0
         iterations = 0
         if backwards:
-            current_datetime = day_date.replace(hour=23, minute=59, second=59)
+            current_datetime = self.get_previous_day(cr, uid, id, day_date, context).replace(hour=23, minute=59, second=59)
         else:
             current_datetime = day_date.replace(hour=0, minute=0, second=0)
 
         while planned_days < days and iterations < 1000:
-            working_intervals = self.get_working_intervals_of_day(
-                cr, uid, id, current_datetime,
-                compute_leaves=compute_leaves, resource_id=resource_id,
-                default_interval=default_interval,
-                context=context)
+            if backwards:
+                working_intervals = self.get_working_intervals_of_day(
+                    cr, uid, id, end_dt=current_datetime,
+                    compute_leaves=compute_leaves, resource_id=resource_id,
+                    default_interval=default_interval,
+                    context=context)
+            else:
+                working_intervals = self.get_working_intervals_of_day(
+                    cr, uid, id, start_dt=current_datetime,
+                    compute_leaves=compute_leaves, resource_id=resource_id,
+                    default_interval=default_interval,
+                    context=context)
             if id is None or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
