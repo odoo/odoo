@@ -1372,8 +1372,10 @@ class _Relational(Field):
 
     def _setup(self, env):
         super(_Relational, self)._setup(env)
-        assert self.comodel_name in env.registry, \
-            "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
+        if self.comodel_name not in env.registry:
+            _logger.warning("Field %s with unknown comodel_name %r"
+                            % (self, self.comodel_name))
+            self.comodel_name = '_unknown'
 
     @property
     def _related_domain(self):
