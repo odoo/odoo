@@ -38,7 +38,7 @@
                         <field name="name"/>
                         <field name="journal"/>
                         <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
-                        <field name="company_id" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         <field name="partner_id" invisible="1"/>
                     </group>
                 </form>
@@ -81,7 +81,7 @@
                         <group>
                             <field name="date_prefered"/>
                             <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
-                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
@@ -107,7 +107,7 @@
                                         <field colspan="4" name="communication2"/>
                                         <field name="name"/>
                                         <field name="state"/>
-                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </page>
                                 <page string="Information">

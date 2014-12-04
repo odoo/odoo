@@ -61,7 +61,7 @@
                         <group>
                             <field name="voucher_type" invisible="True"/>
                             <field name="currency_id" invisible="True"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="account_id"
                                   domain="[('user_type.type','in', ['liquidity', 'receivable'])]"/>
@@ -167,7 +167,7 @@
                             <field name="account_id" domain="[('user_type.type', 'in', ['liquidity', 'payable'])]"/>
                             <field name="name" colspan="2"/>
                             <field name="reference"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="date" string="Bill Date"/>
