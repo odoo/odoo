@@ -146,7 +146,7 @@ class account_move_line(models.Model):
     #         for partial_reconcile_line in self.env['account_partial_reconcile'].search([('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
     #         # for partial_reconcile_line in self.reconcile_partial_ids:
     #             total += partial_reconcile_line.amount
-    #         if float_zero(total, dp.get_precision('Account')):
+    #         if float_is_zero(total, dp.get_precision('Account')):
     #             line.reconciled = True
     #         else:
     #             line.reconciled = False

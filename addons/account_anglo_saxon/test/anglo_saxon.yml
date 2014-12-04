@@ -4,8 +4,6 @@
   !record {model: account.account, id: account_anglo_stock_valuation}:
     code: X3000
     name: Stock Valuation Account- (test)
-    parent_id: account.cas
-    type: other
     user_type: account.data_account_type_asset
 -
   Configure Stock Interim account (Received).
@@ -13,8 +11,6 @@
   !record {model: account.account, id: account_anglo_stock_input}:
     code: X2800
     name: Stock Interim account (Received)
-    parent_id: account.cos
-    type: other
     user_type: account.data_account_type_expense
 -
   Configure Stock Interim account (Delivered).
@@ -22,8 +18,6 @@
   !record {model: account.account, id: account_anglo_stock_output}:
     code: X2801
     name: Stock Interim account (Delivered)
-    parent_id: account.rev
-    type: other
     user_type: account.data_account_type_income
 -
   Configure Price difference creditor Account.
@@ -31,8 +25,6 @@
   !record {model: account.account, id: account_anglo_price_difference}:
     code: X7095
     name: Price difference creditor Account
-    parent_id: account.cos
-    type: other
     user_type: account.data_account_type_expense
 -
   Configure Cash Bank Account.
@@ -40,8 +32,6 @@
   !record {model: account.account, id: account_anglo_cash}:
     code: X5000
     name: Cash/Bank Account 
-    parent_id: account.cash  
-    type: other
     user_type: account.data_account_type_asset
     reconcile: True
 -
@@ -50,8 +40,6 @@
   !record {model: account.account, id: account_anglo_payable}:
     code: X440001
     name: Creditor Account Payable 
-    parent_id: account.a_pay  
-    type: other
     user_type: account.data_account_type_payable
     reconcile: True
 -
@@ -60,8 +48,6 @@
   !record {model: account.account, id: account_anglo_receivable}:
     code: X400001
     name: Debtor Account Receivable 
-    parent_id: account.a_recv  
-    type: other
     user_type: account.data_account_type_receivable
     reconcile: True
 -
@@ -70,8 +56,6 @@
   !record {model: account.account, id: account_anglo_cogs}:
     code: X7000
     name: Cost of goods sale account
-    parent_id: account.o_expense
-    type: other
     user_type: account.data_account_type_expense
 -
   Configure Income Account.
@@ -79,8 +63,6 @@
   !record {model: account.account, id: account_anglo_income}:
     code: X8000
     name: Income Account
-    parent_id: account.o_income
-    type: other
     user_type: account.data_account_type_income
 -
   I configure the account receivable of supplier
@@ -134,15 +116,17 @@
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_stock_input')).credit
-    float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_stock_input')).credit
+    # float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not credited successfully."
 -
   I check the Stock valuation account is debited sucessfully.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).debit
-    float_compare(debit, 9, precision_digits=2) == 0, "Stock valuation account is not debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).debit
+    # float_compare(debit, 9, precision_digits=2) == 0, "Stock valuation account is not debited successfully."
 -
   I Validate Invoice of Purchase Order.
 -
@@ -154,22 +138,25 @@
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_stock_input')).debit
-    float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_stock_input')).debit
+    # float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Received) is not debited successfully."
 -
   I check the Price difference creditor Account is debited sucessfully when Invoice validated.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_price_difference')).debit
-    float_compare(debit, 1, precision_digits=2) == 0, "Price difference creditor Account is not debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_price_difference')).debit
+    # float_compare(debit, 1, precision_digits=2) == 0, "Price difference creditor Account is not debited successfully."
 -
   I check Payable(creditor) Account is Credited sucessfully when Invoice validated.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_payable')).credit
-    float_compare(credit, 10, precision_digits=2) == 0, "Payable(creditor) Account is not Credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_payable')).credit
+    # float_compare(credit, 10, precision_digits=2) == 0, "Payable(creditor) Account is not Credited successfully."
 -
   I open the Invoice.
 -
@@ -184,22 +171,25 @@
     invoice_ids = self.browse(cr, uid, ref("purchase_order_001")).invoice_ids
     order = self.browse(cr, uid, ref("purchase_order_001"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
+    import  time
     for invoice in invoice_ids:
-        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash'), ref('account.period_8'), journal_ids[0], ref('account_anglo_cash'), ref('account.period_8'), journal_ids[0], name='test')
+        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash'), time.strftime('%Y-%m-%d'), journal_ids[0], ref('account_anglo_cash'), journal_ids[0], name='test')
 -
   I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_payable')).debit
-    assert float_compare(debit, 10, precision_digits=2) == 0, "Payable(Creditors) Account is not Debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_payable')).debit
+    # assert float_compare(debit, 10, precision_digits=2) == 0, "Payable(Creditors) Account is not Debited successfully."
 -
   I check Bank/Cash account is credited sucessfully after invoice paid.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_cash')).credit
-    float_compare(credit, 10, precision_digits=2) == 0, "Bank/Cash account is not credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_cash')).credit
+    # float_compare(credit, 10, precision_digits=2) == 0, "Bank/Cash account is not credited successfully."
 -
   I create an Outgoing Picking order
 -
@@ -241,15 +231,17 @@
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_stock_output')).debit
-    float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_stock_output')).debit
+    # float_compare(debit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not debited successfully."
 -
   I check the Stock valuation account is credited sucessfully.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).credit
-    float_compare(credit, 9, precision_digits=2) == 0, "Stock valuation account is not credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_stock_valuation')).credit
+    # float_compare(credit, 9, precision_digits=2) == 0, "Stock valuation account is not credited successfully."
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
@@ -276,29 +268,33 @@
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_income')).credit
-    float_compare(credit, 20, precision_digits=2) == 0, "Income Account is not Credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_income')).credit
+    # float_compare(credit, 20, precision_digits=2) == 0, "Income Account is not Credited successfully."
 -
   I check Cost of goods sold account for debit.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_cogs')).debit
-    float_compare(debit, 9, precision_digits=2) == 0, "Cost of goods sale is not Debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_cogs')).debit
+    # float_compare(debit, 9, precision_digits=2) == 0, "Cost of goods sale is not Debited successfully."
 -
   I check Stock Interim account (Delivery)
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_stock_output')).credit
-    float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_stock_output')).credit
+    # float_compare(credit, 9, precision_digits=2) == 0, "Stock Interim account (Delivery) is not credited successfully."
 -
   I check Receivable(Debtor) Account for debit.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_receivable')).debit
-    float_compare(debit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Debited successfully."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_receivable')).debit
+    # float_compare(debit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Debited successfully."
 -
   I pay the invoice.
 -
@@ -306,23 +302,25 @@
     move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001')).name
     account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
+    import time
     pay = self.pay_and_reconcile(cr, uid, account_invoice,
-                        20.0, ref('account_anglo_cash'), ref('account.period_8'),
+                        20.0, ref('account_anglo_cash'), time.strftime('%Y-%m-%d'),
                         journal_ids[0], ref('account_anglo_cash'),
-                        ref('account.period_8'), journal_ids[0],
-                        name='Payment for test customer invoice')
+                        journal_ids[0], name='Payment for test customer invoice')
     assert (pay == True), "Incorrect Payment."
 -
   I check Receivable(Debtor) Account for credit.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    credit = self.browse(cr, uid, ref('account_anglo_receivable')).credit
-    float_compare(credit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Credited successfully."
+    # Due to credit field is removed
+    # credit = self.browse(cr, uid, ref('account_anglo_receivable')).credit
+    # float_compare(credit, 20, precision_digits=2) == 0, "Receivable(Debtors) Account is not Credited successfully."
 -
   I check Bank/Cash account is debited sucessfully after invoice paid.
 -
   !python {model: account.account}: |
     from openerp.tools import float_compare
-    debit = self.browse(cr, uid, ref('account_anglo_cash')).debit
-    float_compare(debit, 20, precision_digits=2) == 0, "Bank/Cash account is not successfully credited."
+    # Due to debit field is removed
+    # debit = self.browse(cr, uid, ref('account_anglo_cash')).debit
+    # float_compare(debit, 20, precision_digits=2) == 0, "Bank/Cash account is not successfully credited."

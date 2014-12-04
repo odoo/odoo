@@ -191,8 +191,7 @@ class account_analytic_line(osv.osv):
                     if pterm_list:
                         pterm_list = [line[0] for line in pterm_list]
                         pterm_list.sort()
-                        date_due = pterm_list[-1]
-
+                        date_due = pterm_list[-1][0]
                 curr_invoice = {
                     'name': time.strftime('%d/%m/%Y') + ' - '+account.name,
                     'partner_id': account.partner_id.id,
