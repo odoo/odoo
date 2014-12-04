@@ -137,6 +137,9 @@ _LOCALE2WIN32 = {
 
 }
 
+# These are not all english small words, just those that could potentially be isolated within views
+ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
+
 
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
@@ -676,7 +679,7 @@ def trans_generate(lang, modules, cr):
 
     def push(mod, type, name, res_id, term):
         term = (term or '').strip()
-        if len(term) > 2:
+        if len(term) > 2 or term in ENGLISH_SMALL_WORDS:
             push_translation(mod, type, name, res_id, term)
 
     def get_root_view(xml_id):
