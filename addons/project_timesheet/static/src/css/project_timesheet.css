@@ -72,7 +72,7 @@ html, body {
     bottom: 0px;
 }
 .odoo_project_timesheet .pt_stat_body {
-    height: 85%;
+    height: 89%;
 }
 .odoo_project_timesheet .pt_stat_header {
     height: 5%;
@@ -108,7 +108,7 @@ html, body {
     text-decoration: none;
     color: #FFFFFF;
 }
-.odoo_project_timesheet .pt_description_task {
+.odoo_project_timesheet .disabled_text {
     color: #999999;
 }
 .odoo_project_timesheet .pt_duration_line {
@@ -135,6 +135,11 @@ html, body {
     height: 100%;
     margin-top: 10px;
     position: relative;
+    bottom: 3px;
+}
+.odoo_project_timesheet .pt_footer .pt_sync,.odoo_project_timesheet .pt_footer .pt_back,.odoo_project_timesheet .pt_footer .pt_reporting_duration {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .odoo_project_timesheet .pt_pointer {
     cursor: pointer;
@@ -217,4 +222,9 @@ Jquery Textext related stuff
 }
 .odoo_project_timesheet .pt_m2o .text-core .text-wrap .text-dropdown .text-list .text-suggestion {
   font-size: 13px;
+}
+
+/*DHTML Chart, chart do not show x-axis label properly */
+.dhx_axis_item_x {
+    
 }

@@ -419,12 +419,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.activity_list = new project_timesheet.ActivityListView();
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
 
-            this.pad_table_to(11);
             //Add, Add Activity row after activities listview
-            var $row = $("<tr><td><span class='pt_add_activity pt_pointer'>+ Add Activity</a></td></tr>");
-            if(!this.$el.find(".pt_add_activity").length) {
+            var $row = $("<tr class='activity_row'><td><span class='pt_add_activity pt_pointer'>+ Add Activity</a></td></tr>");
+            if (!this.$el.find(".activity_row").length && !this.$el.find(".pt_add_activity").length) {
+                $row.appendTo(this.$el.find(".pt_activity_body > table > tbody").parent());
+            } else if(!this.$el.find(".pt_add_activity").length) {
                 $row.appendTo(this.$el.find(".activity_row:last").parent());
             }
+            this.pad_table_to(10);
 
             this.is_available_timer_activity();
             //When Cancel is clicked it should move user to Activity List screen
@@ -733,7 +735,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.$el.find(".pt_edit_activity_title").addClass("o_hidden");
             }
             $form_data.removeData();
+            console.log("this.project_timesheet_model.get activities is :: ", this.project_timesheet_model.get("activities").length);
             if (this.project_timesheet_model.get("activities").length) {
+                if (!this.$el.find(".pt_quick_select").length) {
+                    this.$el.find(".pt_add_activity_form").after(QWeb.render("QuickSelect", {}));
+                }
                 this.$el.find(".pt_activity_body h4").removeClass("o_hidden");
                 this.activity_list = new project_timesheet.ActivityListView();
                 this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
@@ -1140,7 +1146,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             formatted_value = this.format_duration(week_total);
             this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], (formatted_value[1] || 0)));
             var project_groups = _.groupBy(current_week_data, function(record) {
-                return record.project_id[0];
+                return record.project_id ? record.project_id[0] : undefined;
             });
             _.each(project_groups, function(groups, key) {
                 _.each(groups, function(group) {
@@ -1148,7 +1154,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         table_data[key]['unit_amount'] += group.unit_amount;
                     } else {
                         table_data[key] = {
-                            project_name: group.project_id[1] || 'Undefined',
+                            project_name: group.project_id && group.project_id[1] || 'Undefined',
                             unit_amount: group.unit_amount
                         };
                     }
@@ -1156,6 +1162,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
             chart.parse(graph_data,"json");
+            //To Fix this issue of x-axis lable partially hidden, It seem issue with DHTMLX Chart
+            this.$el.find("#pt_chart").height(
+                this.$el.find("#pt_chart").height()+20);
         },
         format_duration: function(duration) {
             return project_timesheet.format_duration(duration);
