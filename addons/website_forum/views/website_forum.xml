@@ -483,7 +483,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
-                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}"/>
+                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>

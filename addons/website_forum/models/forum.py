@@ -107,14 +107,14 @@ class Forum(models.Model):
         return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
 
     @api.model
-    def _tag_to_write_vals(self, tags=''):
+    def _tag_to_write_vals(self, tags='', post=''):
         User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
         existing_keep = []
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
-                # check that not arleady created meanwhile or maybe excluded by the limit on the search
+                # check that not already created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))
@@ -126,8 +126,13 @@ class Forum(models.Model):
             else:
                 existing_keep.append(int(tag))
         post_tags.insert(0, [6, 0, existing_keep])
-        return post_tags
 
+        # Remove unwanted tags from the post
+        if post:
+            for old_tag in [tag for tag in post.tag_ids]:
+                if old_tag.id not in existing_keep:
+                    post_tags.append((3, old_tag.id))
+        return post_tags
 
 class Post(models.Model):
     _name = 'forum.post'
