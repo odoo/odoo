@@ -20,12 +20,13 @@ class account_cashbox_line(models.Model):
         self.subtotal_opening = self.coin_value * self.number_opening
         self.subtotal_closing = self.coin_value * self.number_closing
 
-    coin_value = fields.Float(string='Unit of Currency', digits=dp.get_precision('Account'))
+    coin_value = fields.Float(string='Unit of Currency', digits=dp.get_precision('Account'), required=True)
     number_opening = fields.Integer(string='Number of Units', help='Opening Unit Numbers')
     number_closing = fields.Integer(string='Number of Units', help='Closing Unit Numbers')
     subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=dp.get_precision('Account'))
     subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=dp.get_precision('Account'))
-    cash_statement_id = fields.Many2one('account.cash.statement', string='Bank Statement', ondelete='cascade')
+    cash_statement_id = fields.Many2one('account.cash.statement', string='Bank Statement', required=True, ondelete='cascade')
+    parent_state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], related='cash_statement_id.state', string='Cash Statement Status')
 
 class account_cash_statement(models.Model):
     _name = 'account.cash.statement'
@@ -34,7 +35,16 @@ class account_cash_statement(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Bank Statement', required=True, ondelete='cascade')
     details_ids = fields.One2many('account.cashbox.line', 'cash_statement_id', string='CashBox Lines', copy=True)
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
-    cash_control = fields.Boolean(related='statement_id.journal_id.cash_control', string='Cash control')
+    state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], string='Status',
+       required=True, readonly=True, copy=False, default='draft')
+
+    @api.multi
+    def button_cancel(self):
+        for statement in self:
+            for line in statement.line_ids:
+                if line.journal_entry_id:
+                    raise Warning(_('Cannot cancel a cash register that already created journal items.'))
+        self.state = 'draft'
 
     @api.model
     def _get_cash_open_box_lines(self, journal_id):
@@ -63,12 +73,22 @@ class account_cash_statement(models.Model):
                 details_ids.append([0, False, nested_values])
         return details_ids
 
+    @api.multi
+    def button_open(self):
+        """ Changes statement state to Running."""
+        for statement in self:
+            if not statement.name or statement.name == '/':
+                context = {'ir_sequence_date', statement.date}
+                if statement.journal_id.sequence_id:
+                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
+                else:
+                    SequenceObj = self.env['ir.sequence']
+                    st_number = SequenceObj.with_context(context).next_by_code('account.cash.statement')
+                statement.name = st_number
+            statement.state = 'open'
 
     @api.multi
     def button_confirm_cash(self):
-
-        TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
-
         for statement in self:
             if statement.difference == 0.0:
                 continue
@@ -77,22 +97,23 @@ class account_cash_statement(models.Model):
                 name = _('Loss')
                 if not statement.journal_id.loss_account_id:
                     raise Warning(_('There is no Loss Account on the journal %s.') % (statement.journal_id.name,))
-            else: # statement.difference > 0.0
+            else:
+                # statement.difference > 0.0
                 account = statement.journal_id.profit_account_id
                 name = _('Profit')
                 if not statement.journal_id.profit_account_id:
                     raise Warning(_('There is no Profit Account on the journal %s.') % (statement.journal_id.name,))
 
             values = {
-                'statement_id' : statement.id,
-                'journal_id' : statement.journal_id.id,
-                'account_id' : account.id,
-                'amount' : statement.difference,
-                'name' : name,
+                'statement_id': statement.id,
+                'journal_id': statement.journal_id.id,
+                'account_id': account.id,
+                'amount': statement.difference,
+                'name': name,
             }
             self.env['account.bank.statement.line'].create(values)
-
-        return super(account_cash_statement, self).button_confirm_bank()
+        self.write({'state': 'confirm'})
+        return statement.statement_id.button_confirm_bank()
 
 
 class account_journal(models.Model):
@@ -109,8 +130,6 @@ class account_journal(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)])
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)])
     internal_account_id = fields.Many2one('account.account', string='Internal Transfers Account', index=True, domain=[('deprecated', '=', False)])
-    cash_control = fields.Boolean(string='Cash Control', default=False,
-        help='If you want the journal should be control at opening/closing, check this option')
     with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
         help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
 

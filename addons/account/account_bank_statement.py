@@ -27,6 +27,14 @@ class account_bank_statement(models.Model):
         self.difference = self.balance_end_real - (self.balance_start + total)
         self.balance_end = self.balance_start + total
 
+    @api.multi
+    def button_cancel(self):
+        for statement in self:
+            for line in statement.line_ids:
+                if line.journal_entry_id:
+                    raise Warning(_('Cannot cancel a statement that already created journal items.'))
+        self.state = 'open'
+
     @api.one
     @api.depends('journal_id')
     def _currency(self):
@@ -42,7 +50,7 @@ class account_bank_statement(models.Model):
     _description = "Bank Statement"
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Reference', states={'draft': [('readonly', False)]},
+    name = fields.Char(string='Reference', states={'open': [('readonly', False)]},
         readonly=True, # readonly for account_cash_statement
         copy=False, default='/',
         help='if you give the Name other then /, its created Accounting Entries Move '
@@ -52,8 +60,7 @@ class account_bank_statement(models.Model):
     date_done = fields.Datetime(string="Closed On")
     date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]},
         select=True, copy=False, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
-        readonly=True, states={'draft':[('readonly',False)]})
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm':[('readonly',True)]})
     balance_start = fields.Float(string='Starting Balance', digits=dp.get_precision('Account'), states={'confirm':[('readonly',True)]})
     balance_end_real = fields.Float('Ending Balance', digits=dp.get_precision('Account'),
         states={'confirm': [('readonly', True)]})
@@ -68,10 +75,10 @@ class account_bank_statement(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'statement_id',
         string='Entry lines', states={'confirm':[('readonly',True)]})
     state = fields.Selection([
-            ('draft', 'New'),
+            ('open', 'New'),
             ('confirm', 'Closed')
         ],
-        string='Status', required=True, readonly=True, copy=False, default='draft')
+        string='Status', required=True, readonly=True, copy=False, default='open')
     currency = fields.Many2one('res.currency', compute='_currency', string='Currency')
     account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', string='Account used in this journal',
         readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.')
@@ -225,7 +232,7 @@ class account_bank_statement(models.Model):
     @api.multi
     def unlink(self):
         for statement in self:
-            if statement.state != 'draft':
+            if statement.state != 'open':
                 raise Warning(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
             self.env['account.bank.statement.line'].unlink(statement.line_ids)
         return super(account_bank_statement, self).unlink()
