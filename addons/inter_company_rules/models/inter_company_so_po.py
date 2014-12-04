@@ -92,7 +92,7 @@ class sale_order(models.Model):
             raise Warning(_('Configure correct warehouse for company(%s) from Menu: Settings/companies/companies' % (company.name)))
 
         return {
-            'name': self.env['ir.sequence'].sudo().get('purchase.order'),
+            'name': self.env['ir.sequence'].sudo().next_by_code('purchase.order'),
             'origin': self.name,
             'partner_id': this_company_partner.id,
             'location_id': warehouse.lot_stock_id.id,
@@ -187,7 +187,7 @@ class purchase_order(models.Model):
     def _so_vals(self, name, partner, company, direct_delivery_address):
         partner_addr = partner.sudo().address_get(['default', 'invoice', 'delivery', 'contact'])
         return {
-            'name': self.env['ir.sequence'].sudo().get('sale.order') or '/',
+            'name': self.env['ir.sequence'].sudo().next_by_code('sale.order') or '/',
             'company_id': company.id,
             'client_order_ref': name,
             'partner_id': partner.id,
