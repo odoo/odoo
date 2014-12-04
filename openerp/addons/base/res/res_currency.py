@@ -276,7 +276,7 @@ class res_currency(osv.osv):
             That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
         function = ""
         for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
-            digits = int(math.log10(1 / row['rounding']))
+            digits = int(math.ceil(math.log10(1 / row['rounding'])))
             symbol = row['symbol'] or row['name']
 
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
