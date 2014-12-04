@@ -36,15 +36,14 @@ class except_orm(Exception):
         self.args = (name, value)
 
 class Warning(except_orm):
-    def __init__(self, msg):
-        super(Warning, self).__init__('Warning', msg)
+    pass
 
 class UserError(except_orm):
     def __init__(self, msg):
         super(UserError, self).__init__('Warning', msg)
 
 # deprecated due to collision with builtins, kept for compatibility
-Warning = UserError
+UserError=Warning
 
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
