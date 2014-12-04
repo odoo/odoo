@@ -96,18 +96,41 @@ class hr_holidays_status(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-
-        if not context.get('employee_id',False):
+        if context is None:
+            context = {}
+        if not context.get('employee_id'):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(hr_holidays_status, self).name_get(cr, uid, ids, context=context)
-
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if not record.limit:
-                name = name + ('  (%g/%g)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+                name = name + ('  (%g/%g)' % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0))
             res.append((record.id, name))
         return res
+
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        """ Override _search to order the results, according to some employee.
+        The order is the following
+
+         - limit (limited leaves first, such as Legal Leaves)
+         - virtual remaining leaves (higher the better, so using reverse on sorted)
+
+        This override is necessary because those fields are not stored and depends
+        on an employee_id given in context. This sort will be done when there
+        is an employee_id in context and that no other order has been given
+        to the method. """
+        if context is None:
+            context = {}
+        ids = super(hr_holidays_status, self)._search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count, access_rights_uid=access_rights_uid)
+        if not count and not order and context.get('employee_id'):
+            leaves = self.browse(cr, uid, ids, context=context)
+            # perform a 2-steps sort because sorting on reminaing leaves is reversed
+            # sorted keep the order and is stable so 2-steps
+            sorted_leaves = leaves.sorted(key=attrgetter('limit'))
+            sorted_leaves = leaves.sorted(key=attrgetter('virtual_remaining_leaves'), reverse=True)
+            return [leave.id for leave in sorted_leaves]
+        return ids
 
 
 class hr_holidays(osv.osv):
