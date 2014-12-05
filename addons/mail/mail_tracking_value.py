@@ -24,7 +24,7 @@ class mail_tracking_value(models.Model):
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
     new_value_date = fields.Date('New Value Date', readonly=1)
 
-    mail_message_ids = fields.Many2many('mail.message')
+    mail_message_id = fields.Many2one('mail.message', 'Message ID')
         
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info):
@@ -32,10 +32,10 @@ class mail_tracking_value(models.Model):
     
         if col_info['type'] == 'boolean':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_boolean': initial_value,
-                         'new_value_boolean': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_boolean': initial_value,
+                            'new_value_boolean': new_value})
          
         elif col_info['type'] == 'integer':
             record = super(mail_tracking_value, self).create(
@@ -46,78 +46,78 @@ class mail_tracking_value(models.Model):
 
         elif col_info['type'] == 'float':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_float': initial_value,
-                         'new_value_float': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_float': initial_value,
+                            'new_value_float': new_value})
 
         elif col_info['type'] == 'char':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_char': initial_value,
-                         'new_value_char': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_char': initial_value,
+                            'new_value_char': new_value})
 
         elif col_info['type'] == 'text':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_text': initial_value,
-                         'new_value_text': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_text': initial_value,
+                            'new_value_text': new_value})
 
         elif col_info['type'] == 'datetime':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_datetime': initial_value,
-                         'new_value_datetime': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_datetime': initial_value,
+                            'new_value_datetime': new_value})
 
         elif col_info['type'] == 'date':
             record = super(mail_tracking_value, self).create(
-                        {'field': col_name,
-                         'field_desc': col_info['string'],
-                         'old_value_date': initial_value,
-                         'new_value_date': new_value})
+                           {'field': col_name,
+                            'field_desc': col_info['string'],
+                            'old_value_date': initial_value,
+                            'new_value_date': new_value})
 
         elif col_info['type'] == 'selection':
             if not initial_value:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': '',
-                             'new_value_char': dict(col_info['selection'])[new_value]})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': '',
+                                'new_value_char': dict(col_info['selection'])[new_value]})
             elif not new_value:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': dict(col_info['selection'])[initial_value],
-                             'new_value_char': ''})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': dict(col_info['selection'])[initial_value],
+                                'new_value_char': ''})
             else:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': dict(col_info['selection'])[initial_value],
-                             'new_value_char': dict(col_info['selection'])[new_value]})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': dict(col_info['selection'])[initial_value],
+                                'new_value_char': dict(col_info['selection'])[new_value]})
 
         elif col_info['type'] == 'many2one':
             if not initial_value:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': '',
-                             'new_value_char': new_value.name_get()[0][1]})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': '',
+                                'new_value_char': new_value.name_get()[0][1]})
             elif not new_value:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': initial_value.name_get()[0][1],
-                             'new_value_char': ''})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': initial_value.name_get()[0][1],
+                                'new_value_char': ''})
             else:
                 record = super(mail_tracking_value, self).create(
-                            {'field': col_name,
-                             'field_desc': col_info['string'],
-                             'old_value_char': initial_value.name_get()[0][1],
-                             'new_value_char': new_value.name_get()[0][1]})
+                               {'field': col_name,
+                                'field_desc': col_info['string'],
+                                'old_value_char': initial_value.name_get()[0][1],
+                                'new_value_char': new_value.name_get()[0][1]})
 
         elif col_info['type'] == 'function':
             print "type function"
@@ -129,7 +129,9 @@ class mail_tracking_value(models.Model):
 
         
     @api.model
-    def update_message_ids(self, msg_ids):
-        return self.write({'mail_message_ids': [(4, mid) for mid in msg_ids]})
+    def update_message_id(self, msg_id):
+        return self.write({'mail_message_id': msg_id})
+
+
 
 

@@ -478,12 +478,12 @@ class mail_thread(osv.AbstractModel):
         if not tracked_fields:
             return True
 
-        tracking_values = []
         track_obj = self.pool.get('mail.tracking.value')
 
         for browse_record in self.browse(cr, uid, ids, context=context):
             initial = initial_values[browse_record.id]
             changes = set()
+            tracking_values = []
 
             for col_name, col_info in tracked_fields.items():
                 initial_value = initial[col_name]
@@ -516,23 +516,23 @@ class mail_thread(osv.AbstractModel):
                         if method(self, cr, uid, browse_record, context):
                             subtypes.append(subtype)
           
-            msg_ids = []
+            msg_id = 0
             if subtypes:
                 subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtypes[0], context=context)
                 if not (subtype_rec and subtype_rec.exists()):
                     _logger.debug('subtype %s not found' % subtypes[0])
                     continue
-                msg_ids.append(self.message_post(cr, uid, browse_record.id,
-                                                 subtype=subtypes[0], 
-                                                 tracking_values=tracking_values,
-                                                 context=context))
+                msg_id = self.message_post(cr, uid, browse_record.id,
+                                           subtype=subtypes[0], 
+                                           tracking_values=tracking_values,
+                                           context=context)
             else:
-                msg_ids.append(self.message_post(cr, uid, browse_record.id,
-                                                 tracking_values=tracking_values,
-                                                 context=context))
+                msg_id = self.message_post(cr, uid, browse_record.id,
+                                           tracking_values=tracking_values,
+                                           context=context)
 
             tracks_to_update = track_obj.browse(cr, uid, tracking_values, context=context)
-            tracks_to_update.update_message_ids(msg_ids)  
+            tracks_to_update.update_message_id(msg_id)  
 
         return True
 

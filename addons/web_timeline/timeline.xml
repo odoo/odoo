@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+		<record model="ir.ui.view" id="mail_timeline_view">
+			<field name="name">mail.timeline</field>
+			<field name="model">mail.message</field>
+			<field name="arch" type="xml">
+				<timeline string="Mail Timeline">
+					<field name="subject"/>
+					<field name="date"/>
+					<field name="type"/>
+					<field name="body"/>
+					<field name="parent_id"/>
+					<field name="author_id"/>
+					<field name="partner_ids"/>
+                    <field name="res_id"/>
+                    <field name="tracking_value_ids"/>
+				</timeline>
+			</field>
+		</record>
+
+	</data>
+</openerp>

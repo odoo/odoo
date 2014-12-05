@@ -1803,7 +1803,7 @@ openerp.mail = function (session) {
      * fetching and displaying to the Thread widget.
      * Use Help on the field to display a custom "no message loaded"
      */
-    session.web.form.widgets.add('mail_thread', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add('old_mail_thread', 'openerp.mail.RecordThread');
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 

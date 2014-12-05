@@ -165,7 +165,7 @@ class mail_message(osv.Model):
             'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
-        'tracking_value_ids': fields.many2many('mail.tracking.value', string='Tracking values'),
+        'tracking_value_ids': fields.one2many('mail.tracking.value', 'mail_message_id', string='Tracking values'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -323,7 +323,6 @@ class mail_message(osv.Model):
                 return tracking_value['old_value_datetime']
             return False;
             
-
         def _get_new_value(tracking_value):
             if tracking_value['old_value_boolean'] or tracking_value['new_value_boolean']:
                 return tracking_value['new_value_boolean']
