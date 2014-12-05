@@ -1127,7 +1127,7 @@ openerp.account = function (instance) {
                 var deferred_promises = [];
 
                 // Let the server prepare the ground
-                deferred_promises.push(self.model_bank_statement_line
+                deferred_promises.push(self.model_bank_statement
                     .call("reconciliation_widget_preprocess", [self.statement_ids || undefined])
                     .then(function(data) {
                         self.num_already_reconciled_lines = data.num_already_reconciled_lines;

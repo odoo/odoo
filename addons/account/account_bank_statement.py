@@ -3,6 +3,7 @@
 import time
 
 from openerp import api, fields, models, _
+from openerp.osv import expression
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
@@ -239,6 +240,78 @@ class account_bank_statement(models.Model):
             statement.line_ids.unlink()
         return super(account_bank_statement, self).unlink()
 
+    @api.v7
+    def reconciliation_widget_preprocess(self, cr, uid, statement_ids=None, context=None):
+        statements = statement_ids and self.browse(cr, uid, statement_ids, context=context) or None
+        return statements.reconciliation_widget_preprocess()
+
+    @api.v8
+    def reconciliation_widget_preprocess(self):
+        """ Get statement lines of the specified statements or all unreconciled statement lines and try to automatically reconcile them / find them a partner.
+            Return ids of statement lines left to reconcile and other data for the reconciliation widget. """
+        statements = self
+        bsl_obj = self.env['account.bank.statement.line']
+
+        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
+        # this is why we filter out statements lines where account_id is set
+        st_lines_filter = [('journal_entry_id', '=', False), ('account_id', '=', False)]
+        if statements:
+            st_lines_filter += [('statement_id', 'in', statements.ids)]
+
+        # Try to automatically reconcile statement lines
+        automatic_reconciliation_entries = []
+        st_lines_left = []
+        for st_line in bsl_obj.search(st_lines_filter, order='statement_id, id'):
+            counterpart = st_line.get_unambiguous_reconciliation_proposition()
+            counterpart_amount = sum(line['debit'] for line in counterpart) - sum(line['credit'] for line in counterpart)
+            st_line_amount = st_line.amount_currency if st_line.currency_id else st_line.amount
+            if counterpart and counterpart_amount == st_line_amount:
+                for move_line_dict in counterpart:
+                    # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
+                    # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
+                    # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
+                    # 'counterpart_move_line_id': 7,
+                    # 'credit': 500
+                    # This is what the reconciliation widget does.
+                    move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
+                    move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
+                try:
+                    st_line.process_reconciliation(counterpart)
+                    automatic_reconciliation_entries.append(st_line.journal_entry_id.id)
+                except:
+                    st_lines_left.append(st_line)
+            else:
+                st_lines_left.append(st_line)
+
+        # Try to set statement line's partner
+        for st_line in st_lines_left:
+            if st_line.name and not st_line.partner_id.id:
+                additional_domain = [('ref', '=', st_line.name)]
+                match_ids = st_line.get_move_lines_for_bank_reconciliation(limit=1, additional_domain=additional_domain, overlook_partner=True)
+                if match_ids and match_ids[0]['partner_id']:
+                    st_line.write({'partner_id': match_ids[0]['partner_id']})
+
+        # Collect various informations for the reconciliation widget
+        notifications = []
+        num_auto_reconciled = len(automatic_reconciliation_entries)
+        if num_auto_reconciled > 0:
+            notifications += [{
+                'type': 'info',
+                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled."),
+                'details': {
+                    'name': _("Automatically reconciled items"),
+                    'model': 'account.move',
+                    'ids': automatic_reconciliation_entries
+                }
+            }]
+
+        return {
+            'st_lines_ids': bsl_obj.search(st_lines_filter, order='statement_id, id'),
+            'notifications': notifications,
+            'statement_name': len(statements) == 1 and statements[0].name or False,
+            'num_already_reconciled_lines': statements and statements.number_of_lines_reconciled() or 0,
+        }
+
     @api.multi
     def link_bank_to_partner(self):
         for statement in self:
@@ -255,25 +328,20 @@ class account_bank_statement_line(models.Model):
                 raise Warning(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
         return super(account_bank_statement_line, self).unlink()
 
-    @api.multi
-    def get_data_for_reconciliations(self, excluded_ids=None, search_reconciliation_proposition=True):
+    @api.v7 
+    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
+        excluded_ids = excluded_ids or []
         ret = []
-        if excluded_ids is None:
-            excluded_ids = []
 
-        for st_line in self:
-            reconciliation_data = {}
-            if search_reconciliation_proposition:
-                reconciliation_proposition = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
-                for mv_line in reconciliation_proposition:
-                    excluded_ids.append(mv_line['id'])
-                reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
-            else:
-                reconciliation_data['reconciliation_proposition'] = []
-            st_line = st_line.get_statement_line_for_reconciliation()
-            reconciliation_data['st_line'] = st_line
-            ret.append(reconciliation_data)
+        for st_line in self.browse(ids):
+            data = {
+                'st_line': st_line.get_statement_line_for_reconciliation(),
+                'reconciliation_proposition': st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
+            }
+            for mv_line in data['reconciliation_proposition']:
+                excluded_ids.append(mv_line['id'])
+            ret.append(data)
 
         return ret
 
@@ -308,7 +376,6 @@ class account_bank_statement_line(models.Model):
             'account_code': self.journal_id.default_debit_account_id.code,
             'account_name': self.journal_id.default_debit_account_id.name,
             'partner_name': self.partner_id.name,
-            'communication_partner_name': self.partner_name,
             'amount_currency_str': amount_currency_str, # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
@@ -320,131 +387,141 @@ class account_bank_statement_line(models.Model):
 
         return data
 
-    @api.multi
-    def _domain_reconciliation_proposition(self, excluded_ids=None):
-        if excluded_ids is None:
-            excluded_ids = []
-        domain = [('ref', '=', self.name),
-                  ('reconcile_id', '=', False),
-                  ('account_id.reconcile', '=', True),
-                  ('id', 'not in', excluded_ids)]
-        return domain
+    @api.one
+    def _get_domain_maker_move_line_amount(self):
+        """ Returns a lambda that can create the appropriate domain to search on move.line amount based on st_line currency/amount """
+        currency_id = self.currency_id
+        field = currency_id and 'amount_residual_currency' or 'amount_residual'
 
-    @api.multi
-    def get_reconciliation_proposition(self, excluded_ids=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line. """
-
-        # Look for structured communication
-        if self.name:
-            structured_com_match_domain = self._domain_reconciliation_proposition(excluded_ids=excluded_ids)
-            move_line = self.env['account.move.line'].search(structured_com_match_domain, limit=1)
-            if move_line:
-                target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
-                mv_line = move_line.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)[0]
-                mv_line['has_no_partner'] = not bool(self.partner_id.id)
-                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
-                if (mv_line['partner_id']):
-                    self.write({'partner_id': mv_line['partner_id']})
-                    mv_line['has_no_partner'] = False
-                return [mv_line]
-
-        # If there is no identified partner or structured communication, don't look further
-        if not self.partner_id:
-            return []
-
-        # Look for a move line whose amount matches the statement line's amount
-        sign = 1
-        if self.journal_id.currency.id == self.journal_id.company_id.currency_id.id:
-            amount_field = 'credit'
-            if self.amount > 0:
-                amount_field = 'debit'
+        def ret(comparator, amount, f=field, s=sign, c=currency_id):
+            if comparator == '<':
+                if f == 'amount_residual_currency' and amount < 0:
+                    domain = [(f, '<', 0), (f, '>', (s * amount))]
+                else:
+                    domain = [(f, '>', 0), (f, '<', (s * amount))]
+            elif comparator == '=':
+                domain = [(f, comparator, (s * amount))]
             else:
-                sign = -1
-        else:
-            amount_field = 'amount_currency'
-            if self.amount < 0:
-                sign = -1
-        amount = self.amount_currency or self.amount
-        match_id = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=[(amount_field, '=', (sign * amount))])
-        if match_id:
-            return [match_id[0]]
+                raise osv.except_osv(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
+            if c:
+                domain += [('currency_id', '=', c)]
+            return domain
+
+        return ret
+
+    @api.one
+    def get_unambiguous_reconciliation_proposition(self, excluded_ids=None):
+        """ Returns move lines that can without doubt be used to reconcile a statement line """
+
+        # How to compare statement line amount and move lines amount
+        amount_domain_maker = self._get_domain_maker_move_line_amount()
+        equal_amount_domain = amount_domain_maker('=', self.amount)
+
+        # Look for structured communication match
+        if self.name:
+            overlook_partner = not self.partner_id # If the transaction has no partner, look for match in payable and receivable account anyway
+            domain = equal_amount_domain + [('ref', '=', self.name)]
+            match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
+            if match_ids and len(match_ids) == 1:
+                return match_ids
+
+        # Look for a single move line with the same partner, the same amount
+        if self.partner_id:
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, self, excluded_ids=excluded_ids, limit=2, additional_domain=equal_amount_domain)
+            if match_ids and len(match_ids) == 1:
+                return match_ids
 
         return []
 
     @api.one
-    def get_move_lines_for_reconciliation_by_statement_line_id(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
-        """ Bridge between the web client reconciliation widget and get_move_lines_for_reconciliation (which expects a browse record) """
-        if excluded_ids is None:
-            excluded_ids = []
-        if additional_domain is None:
-            additional_domain = []
-        return self.get_move_lines_for_reconciliation(excluded_ids, str, offset, limit, count, additional_domain)
+    def get_reconciliation_proposition(self, excluded_ids=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line """
 
-    @api.model
-    def _domain_move_lines_for_reconciliation(self, excluded_ids=None, str=False, additional_domain=None):
-        if excluded_ids is None:
-            excluded_ids = []
-        if additional_domain is None:
-            additional_domain = []
-        # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False),
-                                      ('state', '=', 'valid'),
-                                      ('account_id.reconcile', '=', True)]
-        if self.partner_id.id:
-            domain += [('partner_id', '=', self.partner_id.id)]
-        if excluded_ids:
-            domain.append(('id', 'not in', excluded_ids))
-        if str:
-            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
-            if not self.partner_id.id:
-                domain.insert(-1, '|', )
-                domain.append(('partner_id.name', 'ilike', str))
-            if str != '/':
-                domain.insert(-1, '|', )
-                domain.append(('name', 'ilike', str))
-        return domain
+        # Look for structured communication match
+        if self.name:
+            overlook_partner = not self.partner_id # If the transaction has no partner, look for match in payable and receivable account anyway
+            domain = [('ref', '=', self.name)]
+            match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=domain, overlook_partner=overlook_partner)
+            if match_ids:
+                return match_ids
 
-    @api.multi
-    def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
-        """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
+        # How to compare statement line amount and move lines amount
+        amount_domain_maker = self._get_domain_maker_move_line_amount()
 
-            :param st_line: the browse record of the statement line
-            :param integers list excluded_ids: ids of move lines that should not be fetched
-            :param boolean count: just return the number of records
-            :param tuples list additional_domain: additional domain restrictions
-        """
-        domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
+        # Look for a single move line with the same amount
+        match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=amount_domain_maker('=', self.amount))
+        if match_ids:
+            return match_ids
 
-        # Get move lines ; in case of a partial reconciliation, only consider one line
-        filtered_lines = []
-        reconcile_partial_ids = []
-        actual_offset = offset
-        while True:
-            lines = self.env['account.move.line'].search(domain, offset=actual_offset, limit=limit, order="date_maturity asc, id asc")
-            make_one_more_loop = False
-            for line in lines:
-                if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
-                    #in order to get the right number of items in the pager
-                    make_one_more_loop = True
-                    continue
-                filtered_lines.append(line)
-                if line.reconcile_partial_id:
-                    reconcile_partial_ids.append(line.reconcile_partial_id.id)
+        if not self.partner_id:
+            return []
 
-            if not limit or not make_one_more_loop or len(filtered_lines) >= limit:
+        # Look for a set of move line whose amount is <= to the line's amount
+        domain = [('reconciled', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
+        if self.amount > 0: # Make sure we can't mix receivable and payable
+            domain += [('account_id.user_type.type', '=', 'receivable')]
+        else:
+            domain += [('account_id.user_type.type', '=', 'payable')]
+        domain += amount_domain_maker('<', self.amount) # Will also enforce > 0
+        mv_lines = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
+        ret = []
+        total = 0
+        for line in mv_lines:
+            if total + abs(line['debit'] - line['credit']) <= abs(self.amount):
+                ret.append(line)
+                total += abs(line['debit'] - line['credit'])
+            if total >= abs(self.amount):
                 break
-            actual_offset = actual_offset + limit
-        lines = limit and filtered_lines[:limit] or filtered_lines
+        return ret
 
-        # Either return number of lines
+    @api.v7
+    def get_move_lines_for_bank_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
+        """ Bridge between the web client reconciliation widget and get_move_lines_for_bank_reconciliation (which expects a browse record) """
+        return self.browse(st_line_id).get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count)
+
+    @api.one
+    def _domain_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, additional_domain=None, overlook_partner=False):
+        """ Create domain criteria that are relevant to bank statement reconciliation. It is typically AND'ed with _domain_move_lines_for_reconciliation """
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
+
+        # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
+        domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id])]
+
+        # Domain for classic reconciliation
+        domain_reconciliation = [('reconciled', '=', False)]
+        if self.partner_id.id or overlook_partner:
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.user_type.type', 'in', ['payable', 'receivable'])]])
+        else:
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.reconcile', '=', True)]])
+
+        # Let's add what applies to both
+        domain = expression.OR([domain_rapprochement, domain_reconciliation])
+        if self.partner_id.id and not overlook_partner:
+            domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
+
+        return expression.AND([additional_domain, domain])
+
+    @api.one
+    def get_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False):
+        """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
+        context = dict(self._context or {})
+        aml_obj = self.env['account.move.line']
+        domain = self._domain_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, overlook_partner=overlook_partner)
+
+        # Fetch lines or lines number
+        # TODO : pass in context
+        # context['bank_statement_line'] = self
+        res = aml_obj.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=domain)
         if count:
-            return len(lines)
-
-        # Or return list of dicts representing the formatted move lines
+            return res
         else:
             target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
-            mv_lines = lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
+            mv_lines = res.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
             has_no_partner = not bool(self.partner_id.id)
             for line in mv_lines:
                 line['has_no_partner'] = has_no_partner
@@ -475,10 +552,14 @@ class account_bank_statement_line(models.Model):
             'account_id': account_id
             }
 
-    @api.model
-    def process_reconciliations(self, data):
+    @api.v7
+    def process_reconciliations(self, cr, uid, data, context=None):
         for datum in data:
             self.browse(datum[0]).process_reconciliation(datum[1])
+
+    @api.v7
+    def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
+        self.browse(id).process_reconciliation(mv_line_dicts)
 
     @api.one
     def process_reconciliation(self, mv_line_dicts):
@@ -500,8 +581,26 @@ class account_bank_statement_line(models.Model):
                     mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(mv_line_dict.get('counterpart_move_line_id'))
-                if mv_line.reconcile_id:
+                if mv_line.reconcile_id.id and mv_line.statement_id.id:
                     raise Warning(_('A selected move line was already reconciled.'))
+
+        # Particular use case : using reconciled move lines (fr: rapprochement bancaire)
+        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('is_reconciled') and x['is_reconciled'] == True]) > 0
+        if num_already_reconciled_items > 0:
+            # Check only using already reconciled move lines
+            if len(mv_line_dicts) != num_already_reconciled_items:
+                raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+            # Check all move lines are from the same move
+            move_id = aml_obj.browse(mv_line_dicts[0].get('counterpart_move_line_id')).move_id.id
+            for mv_line_dict in mv_line_dicts:
+                if move_id != aml_obj.browse(mv_line_dict.get('counterpart_move_line_id')).move_id.id:
+                    raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
+            # Link move lines to the bank statement
+            move_lines = aml_obj.browse([x['counterpart_move_line_id'] for x in mv_line_dict])
+            move_lines.write({'statement_id': st_line.statement_id.id})
+            # Mark the statement line as reconciled
+            self.journal_entry_id = move_id
+            return
 
         # Create the move
         move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
@@ -520,6 +619,7 @@ class account_bank_statement_line(models.Model):
             amount = self.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(self, move_id.id, amount, company_currency.id)
         aml_obj.create(bank_st_move_vals)
+        
         # Complete the dicts
         st_line_currency = self.currency_id or statement_currency
         st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
@@ -605,7 +705,7 @@ class account_bank_statement_line(models.Model):
     amount = fields.Float(string='Amount')
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
-    account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
+    account_id = fields.Many2one('account.account', string='Counterpart Account', domain=[('deprecated', '=', False)],
         help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account")
     statement_id = fields.Many2one('account.bank.statement', string='Statement', index=True, required=True, ondelete='cascade')
     journal_id = fields.Many2one('account.journal', related='statement_id.journal_id', string='Journal', store=True, readonly=True)
@@ -618,24 +718,3 @@ class account_bank_statement_line(models.Model):
     journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
-
-
-class account_statement_operation_template(models.Model):
-    _name = "account.statement.operation.template"
-    _description = "Preset for the lines that can be created in a bank statement reconciliation"
-    _order = "sequence"
-
-    name = fields.Char('Button Label', required=True)
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('type', '!=', 'consolidation'), ('deprecated', '=', False)])
-    label = fields.Char(string='Journal Item Label')
-    amount_type = fields.Selection([
-        ('fixed', 'Fixed'),
-        ('percentage_of_total', 'Percentage of total amount'),
-        ('percentage_of_balance', 'Percentage of open balance')
-        ], string='Amount type', required=True, default='percentage_of_balance')
-    amount = fields.Float(string='Amount', help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').",
-        required=True, default=100)
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade', domain=[('type_tax_use', 'in', ('purchase', 'all'))])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('type', '!=', 'view'), ('state', 'not in', ('close', 'cancelled'))])
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    sequence = fields.Integer('Sequence')

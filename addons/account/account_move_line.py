@@ -5,6 +5,7 @@ from datetime import datetime
 
 from openerp import workflow
 from openerp import api, fields, models, _
+from openerp.osv import expression
 from openerp.exceptions import RedirectWarning, Warning
 import openerp.addons.decimal_precision as dp
 from openerp import tools
@@ -385,109 +386,397 @@ class account_move_line(models.Model):
             else:
                 self.account_tax_id = self.account_id.tax_ids or False
 
+    @api.v7
+    def get_data_for_manual_reconciliation(self, cr, uid, res_type, res_id=None, context=None):
+        """ Returns the data required for the  manual reconciliation of a given partner/account.
+            If no id is passed, returns data for all partners/accounts that can be reconciled.
+            :param res_type: either 'partner' or 'account' """
+
+        is_partner = res_type == 'partner'
+        res_id_condition = res_id and 'AND r.id = '+str(res_id) or ''
+        cr.execute(
+            """ SELECT * FROM (
+                    SELECT %s
+                        -- to_char(a.last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked,
+                        a.id AS account_id,
+                        a.name AS account_name,
+                        a.code AS account_code,
+                        MAX(l.create_date) AS max_date
+                    FROM
+                        account_move_line l
+                        RIGHT JOIN account_account a ON (a.id = l.account_id)
+                        %s
+                    WHERE
+                        a.reconcile IS TRUE
+                        -- AND l.state <> 'draft'
+                        -- TODO : improve those 2 subqueries ?
+                        %s
+                        %s
+                        AND EXISTS (
+                            SELECT NULL
+                            FROM account_move_line l
+                            WHERE l.account_id = a.id
+                            -- AND l.state <> 'draft'
+                            AND l.amount_residual > 0
+                        )
+                        AND EXISTS (
+                            SELECT NULL
+                            FROM account_move_line l
+                            WHERE l.account_id = a.id
+                            -- AND l.state <> 'draft'
+                            AND l.amount_residual > 0
+                        )
+                    GROUP BY %s a.id, a.name, a.code --, a.last_time_entries_checked
+                    -- ORDER BY last_time_entries_checked
+                ) as s
+                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+            """ % (
+                is_partner and "p.id AS partner_id, to_char(p.last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, p.name AS partner_name,"
+                    or "to_char(a.last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked,",
+                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or "",
+                not is_partner and "AND a.type <> 'payable' AND a.type <> 'receivable'" or "",
+                res_id_condition,
+                is_partner and "l.partner_id, p.id," or "",
+            ))
+
+        # Apply ir_rules by filtering out
+        rows = cr.dictfetchall()
+        ids = [x['account_id'] for x in rows]
+        allowed_ids = set(self.env['account.account'].browse(ids).ids)
+        rows = [row for row in rows if row['account_id'] in allowed_ids]
+        if is_partner:
+            ids = [x['partner_id'] for x in rows]
+            allowed_ids = set(self.pool.get('res.partner').browse(ids).ids)
+            rows = [row for row in rows if row['partner_id'] in allowed_ids]
+
+        # Fetch other data
+        for row in rows:
+            account = self.env['account.account'].browse(row['account_id'])
+            row['currency_id'] = account.currency_id.id or account.company_currency_id.id
+            partner_id = is_partner and row['partner_id'] or False
+            row['reconciliation_proposition'] = account.get_reconciliation_proposition(partner_id=partner_id)
+
+        return rows
+
+    @api.v7
+    def get_reconciliation_proposition(self, cr, uid, account_id, partner_id=False, context=None):
+        return self.browse(account_id).get_reconciliation_proposition(partner_id)
+
+    @api.one
+    def get_reconciliation_proposition(self, partner_id=False):
+        """ Returns two lines whose amount are opposite """
+        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
+        account_id = self.id
+
+        # Get pairs
+        # TODO : once amount_residual is stored, use it and remove 'reconcile_partial_id IS NULL'
+        cr.execute(
+            """ SELECT a.id, b.id
+                FROM account_move_line a, account_move_line b
+                WHERE ((a.debit = b.credit AND a.debit <> 0) OR
+                      (a.currency_id = b.currency_id AND a.amount_currency = - b.amount_currency AND a.amount_currency <> 0))
+                AND a.reconcile_partial_id IS NULL AND b.reconcile_partial_id IS NULL
+                AND a.state = 'valid' AND b.state = 'valid' AND a.reconcile_id IS NULL AND b.reconcile_id IS NULL
+                AND a.account_id = %d AND b.account_id = %d
+                %s
+                ORDER BY a.date asc
+                LIMIT 10
+            """ % (account_id, account_id, partner_id_condition))
+        pairs = cr.fetchall()
+
+        # Apply ir_rules by filtering out
+        all_pair_ids = [element for tupl in pairs for element in tupl]
+        allowed_ids = set(self.env['account.move.line'].browse(all_pair_ids).ids)
+        pairs = [pair for pair in pairs if pair[0] in allowed_ids and pair[1] in allowed_ids]
+
+        # Return lines formatted
+        if len(pairs) > 0:
+            target_currency = self.currency_id or self.company_currency_id
+            lines = self.browse(list(pairs[0]))
+            return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
+        else:
+            return []
+
+    @api.v7
+    def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False, context=None):
+        """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
+        # Complete domain
+        additional_domain = [('reconcile_id', '=', False), ('account_id','=',account_id)]
+        if partner_id:
+            additional_domain.append(('partner_id','=',partner_id))
+
+        # Fetch lines
+        lines = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, additional_domain=additional_domain)
+        if target_currency_id:
+            target_currency = self.env['res.currency'].browse(target_currency_id)
+        else:
+            account = self.env['account.account'].browse(account_id)
+            target_currency = account.currency_id or account.company_currency_id
+        return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
+
+    @api.model
+    def _domain_move_lines_for_reconciliation(self, excluded_ids=None, str=False, additional_domain=None):
+        context = (self._context or {})
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
+
+        additional_domain = expression.AND([additional_domain, [('state', '=', 'valid')]])
+        if excluded_ids:
+            additional_domain = expression.AND([additional_domain, [('id', 'not in', excluded_ids)]])
+        if str:
+            str_domain = [
+                '|', ('move_id.name', 'ilike', str),
+                '|', ('move_id.ref', 'ilike', str),
+                '|', ('date_maturity', 'like', str),
+                '&', ('name', '!=', '/'), ('name', 'ilike', str)
+            ]
+            # Warning : this is undue coupling. But building this domain is really tricky.
+            # What follows means : "If building a domain for the bank statement reconciliation, id there's no partner
+            # and a search string, we want to find the string in any of those fields including the partner name
+            if 'bank_statement_line' in context and not context['bank_statement_line'].partner_id.id:
+                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
+
+            additional_domain = expression.AND([additional_domain, str_domain])
+            # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
+            # try:
+            #     amount = float(str)
+            #     additional_domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+            # except:
+            #     pass
+
+        return additional_domain
+
+    @api.model
+    def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
+        """ Find the move lines that could be used in a reconciliation. If count is true, only returns the number of lines.
+            This function is used for bank statement reconciliation and manual reconciliation ; each use case's domain logic is expressed through additional_domain.
+
+            :param st_line: the browse record of the statement line
+            :param integers list excluded_ids: ids of move lines that should not be fetched
+            :param boolean count: just return the number of records
+            :param tuples list additional_domain: additional domain restrictions
+        """
+        domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
+
+        # Get move lines ; in case of a partial reconciliation, only consider one line
+        filtered_lines = []
+        reconcile_partial_ids = []
+        actual_offset = offset
+        while True:
+            line_ids = self.search(domain, offset=actual_offset, limit=limit, order="date_maturity asc, id asc")
+            lines = self.browse(line_ids)
+            make_one_more_loop = False
+            for line in lines:
+                if line.id in reconcile_partial_ids:
+                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
+                    #in order to get the right number of items in the pager
+                    make_one_more_loop = True
+                    continue
+                filtered_lines.append(line)
+                if line.reconcile_partial_ids:
+                    reconcile_partial_ids.append(line.reconcile_partial_ids.ids)
+
+            if not limit or not make_one_more_loop or len(filtered_lines) >= limit:
+                break
+            actual_offset = actual_offset + limit
+        lines = limit and filtered_lines[:limit] or filtered_lines
+
+
+        # Return count or lines
+        if count:
+            return len(lines)
+        else:
+            return lines
+
+    @api.v7
+    def prepare_move_lines_for_reconciliation_widget_by_ids(self, cr, uid, line_ids, target_currency_id=False, context=None):
+        """ Bridge for reconciliation widget """
+        target_currency = target_currency_id and self.env['res.currency'].browse(target_currency_id) or False
+        return self.browse(line_ids).prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
+
     @api.multi
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
+            :param skip_partial_reconciliation_siblings: do not construct the list of partial_reconciliation_siblings
         """
-        if not self:
-            return []
-        company_currency = self.env.user.company_id.currency_id
-        rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_aml', self._context)
-        reconcile_partial_ids = []  # for a partial reconciliation, take only one line
+        context = dict(self._context or {})
+        company_currency = self.env['res.users'].browse(uid).company_id.currency_id
+        rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
         ret = []
 
         for line in self:
-            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                continue
-            if line.reconcile_partial_id:
-                partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
-                partial_reconciliation_siblings_ids.remove(line.id)
+            partial_reconciliation_siblings = []
+            if line.reconcile_partial_ids and not skip_partial_reconciliation_siblings:
+                siblings = line.reconcile_partial_ids.copy() - line
+                partial_reconciliation_siblings = prs_rs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=target_date, skip_partial_reconciliation_siblings=True)
 
             ret_line = {
                 'id': line.id,
-                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
+                'name': line.name if line.name != '/' else line.move_id.name,
                 'ref': line.move_id.ref,
+                # for reconciliation with existing entries (eg. cheques)
+                # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
+                'is_reconciled': not line.account_id.reconcile,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
-                'account_type': line.account_id.user_type.type,
+                'account_type': line.account_id.type,
                 'date_maturity': line.date_maturity,
                 'date': line.date,
+                'period_name': line.period_id.name,
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'is_partially_reconciled': bool(line.reconcile_partial_id),
-                'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
+                'is_partially_reconciled': bool(line.reconcile_partial_ids),
+                'partial_reconciliation_siblings': partial_reconciliation_siblings,
+                'currency_id': line.currency_id.id or False,
             }
 
-            # Amount residual can be negative
+            # Amount residual can technically be negative (eg: you register a payment of 150€ on an invoice of 100€)
             debit = line.debit
             credit = line.credit
-            total_amount = abs(debit - credit)
-            total_amount_currency = line.amount_currency
-            amount_residual = line.amount_residual
-            amount_residual_currency = line.amount_residual_currency
+            amount = line.amount_residual
+            amount_currency = line.amount_residual_currency
             if line.amount_residual < 0:
                 debit, credit = credit, debit
-                amount_residual = -amount_residual
-                amount_residual_currency = -amount_residual_currency
+                amount = -amount
+                amount_currency = -amount_currency
+
+            # For already reconciled lines, don't use amount_residual(_currency)
+            if not line.account_id.reconcile:
+                amount = abs(debit - credit)
+                amount_currency = line.amount_currency
 
             # Get right debit / credit:
+            target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
-            if line.currency_id and line.amount_currency:
-                amount_currency_str = rml_parser.formatLang(amount_residual_currency, currency_obj=line.currency_id)
-                total_amount_currency_str = rml_parser.formatLang(total_amount_currency, currency_obj=line.currency_id)
-            if target_currency and line_currency == target_currency and target_currency != company_currency:
-                debit = debit > 0 and amount_residual_currency or 0.0
-                credit = credit > 0 and amount_residual_currency or 0.0
-                amount_currency_str = rml_parser.formatLang(amount_residual, currency_obj=company_currency)
-                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                total_amount_str = rml_parser.formatLang(total_amount_currency, currency_obj=target_currency)
+            if line_currency != company_currency:
+                total_amount = line.amount_currency
+                actual_debit = debit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and amount_currency or 0.0
             else:
-                debit = debit > 0 and amount_residual or 0.0
-                credit = credit > 0 and amount_residual or 0.0
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
-                total_amount_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                if target_currency and target_currency != company_currency:
-                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
-                    total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
-                    ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
-                    debit = target_currency.with_context(ctx).compute(company_currency.id, debit)
-                    credit = target_currency.with_context(ctx).compute(company_currency.id, credit)
-                    amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                    total_amount = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, total_amount, context=ctx)
-                    total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
+                total_amount = abs(debit - credit)
+                actual_debit = debit > 0 and amount or 0.0
+                actual_credit = credit > 0 and amount or 0.0
+            if line_currency != target_currency:
+                amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
+                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                ret_line['credit_currency'] = actual_credit
+                ret_line['debit_currency'] = actual_debit
+                ctx = context.copy()
+                if target_date:
+                    ctx.update({'date': target_date})
+                total_amount = line_currency.with_context(ctx).compute(total_amount, target_currency)
+                actual_debit = line_currency.with_context(ctx).compute(actual_debit, target_currency)
+                actual_credit = line_currency.with_context(ctx).compute(actual_credit, target_currency)
+            amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
+            total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
-            ret_line['credit'] = credit
-            ret_line['debit'] = debit
+            ret_line['debit'] = actual_debit
+            ret_line['credit'] = actual_credit
             ret_line['amount_str'] = amount_str
+            ret_line['total_amount_str'] = total_amount_str
             ret_line['amount_currency_str'] = amount_currency_str
-            ret_line['total_amount_str'] = total_amount_str # For partial reconciliations
             ret_line['total_amount_currency_str'] = total_amount_currency_str
             ret.append(ret_line)
         return ret
+
+    @api.v7
+    def process_reconciliations(self, cr, uid, data, context=None):
+        """ Used to validate a batch of reconciliations in a single call """
+        for datum in data:
+            id = datum['id']
+            type = datum['type']
+            mv_line_ids = datum['mv_line_ids']
+            new_mv_line_dicts = datum['new_mv_line_dicts']
+
+            if len(mv_line_ids) >= 1 or len(mv_line_ids) + len(new_mv_line_dicts) >= 2:
+                self.process_reconciliation(cr, uid, mv_line_ids, new_mv_line_dicts, context=context)
+        
+            if type == 'partner':
+                self.env['res.partner'].browse(id).mark_as_reconciled()
+            if type == 'account':
+                self.env['account.account'].browse(id).mark_as_reconciled()
+
+    @api.v7
+    def process_reconciliation(self, cr, uid, mv_line_ids, new_mv_line_dicts, context=None):
+        """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on mv_line_ids and new move lines """
+
+        if len(mv_line_ids) < 1 or len(mv_line_ids) + len(new_mv_line_dicts) < 2:
+            raise osv.except_osv(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
+        mv_lines = self.browse(mv_line_ids)
+        
+        # Create writeoff move lines
+        writeoff_lines = []
+        if len(new_mv_line_dicts) > 0:
+            am_obj = self.env['account.move']
+            account = mv_lines[0].account_id
+            partner_id = mv_lines[0].partner_id.id
+            company_currency = account.company_id.currency_id
+            account_currency = account.currency_id or company_currency
+
+            for mv_line_dict in new_mv_line_dicts:
+                if mv_line_dict.get('is_tax_line'):
+                    continue
+                writeoff_dicts = []
+
+                # Data for both writeoff lines
+                for field in ['debit', 'credit', 'amount_currency']:
+                    if field not in mv_line_dict:
+                        mv_line_dict[field] = 0.0
+                if account_currency != company_currency:
+                    mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
+                    mv_line_dict['currency_id'] = account_currency
+                    mv_line_dict['debit'] = account_currency.compute(mv_line_dict['debit'], company_currency)
+                    mv_line_dict['credit'] = account_currency.compute(mv_line_dict['credit'], company_currency)
+                
+                # Writeoff line in specified writeoff account
+                first_line_dict = mv_line_dict.copy()
+                if 'analytic_account_id' in first_line_dict:
+                    del first_line_dict['analytic_account_id']
+                writeoff_dicts.append((0, 0, first_line_dict))
+
+                # Writeoff line in account being reconciled
+                second_line_dict = mv_line_dict.copy()
+                second_line_dict['account_id'] = account.id
+                second_line_dict['partner_id'] = partner_id
+                second_line_dict['debit'] = mv_line_dict['credit']
+                second_line_dict['credit'] = mv_line_dict['debit']
+                if account_currency != company_currency:
+                    second_line_dict['amount_currency'] = -mv_line_dict['amount_currency']
+                writeoff_dicts.append((0, 0, second_line_dict))
+
+                # Create the move
+                # TODO : account_move_prepare is no longer
+                move_vals = am_obj.account_move_prepare(cr, uid, mv_line_dict['journal_id'], context=context)
+                move_vals['line_id'] = writeoff_dicts
+                move = am_obj.create(move_vals)
+                writeoff_lines += move.line_id.filtered(lambda r: r.account_id == account.id)
+
+        (mv_lines|writeoff_lines).reconcile_partial()
 
     @api.model
     def list_partners_to_reconcile(self):
         self._cr.execute(
              """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
+                SELECT l.partner_id, p.last_time_entries_checked, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
-                    GROUP BY l.partner_id, p.last_reconciliation_date
+                    GROUP BY l.partner_id, p.last_time_entries_checked
                 ) AS s
-                WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date""")
+                WHERE debit > 0 AND credit > 0 AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                ORDER BY last_time_entries_checked""")
         ids = [x[0] for x in self._cr.fetchall()]
         if not ids:
             return []

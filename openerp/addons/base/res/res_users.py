@@ -28,6 +28,7 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
+from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
@@ -540,6 +541,10 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+
+    @api.v7
+    def get_company_currency_id(self, cr, uid, context=None):
+        return self.browse(uid).company_id.currency_id.id    
 
 #----------------------------------------------------------
 # Implied groups
