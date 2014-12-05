@@ -4128,6 +4128,26 @@ var lazy_build_o2m_kanban_view = function() {
     if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
         return;
     instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+        init: function (parent, dataset, view_id, options) {
+            this._super.apply(this, arguments);
+            this.kanban_group = instance.web_kanban.One2ManyKanbanGroup;
+        }
+    });
+    instance.web_kanban.One2ManyKanbanGroup = instance.web_kanban.KanbanGroup.extend({
+        do_show_more: function() {
+            var self = this;
+            var ids = [];
+            return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
+                'limit': self.view.limit,
+                'offset': self.dataset_offset += self.view.limit
+            }).then(function(records) {
+                self.view.dataset.ids = ids.concat(self.dataset.ids);
+                self.do_add_records(records);
+                self.compute_cards_auto_height();
+                self.view.postprocess_m2m_tags();
+                return records;
+            });
+        }
     });
 };
 
