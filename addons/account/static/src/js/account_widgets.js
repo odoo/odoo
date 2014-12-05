@@ -1535,7 +1535,8 @@ openerp.account = function (instance) {
             self.set("balance", balance);
     
             // Propose partial reconciliation if necessary
-            if (lines_selected_num === 1 &&
+            if (self.getCreatedLines().length === 0 &&
+                lines_selected_num === 1 &&
                 self.st_line.amount * balance > 0 &&
                 self.st_line.amount * (mv_lines_selected[0].debit - mv_lines_selected[0].credit) < 0 &&
                 ! mv_lines_selected[0].partial_reconcile) {
