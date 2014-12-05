@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="1" forcecreate="False">
 
-        <record id="demo_followup1" model="account_followup.followup">
+        <record id="demo_followup1" model="account_followup.followup" forcecreate="False">
             <field name="name">Default Follow-Up</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="description">First letter after 15 net days, 30 net days and 45 days end of month levels.</field>
         </record>
 
-        <record id="demo_followup_line1" model="account_followup.followup.line">
+        <record id="demo_followup_line1" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Level 0 : 15 net days</field>
             <field name="sequence">0</field>
             <field name="start">days</field>
@@ -25,7 +25,7 @@ Best Regards,
 </field>
         </record>
 
-        <record id="demo_followup_line2" model="account_followup.followup.line">
+        <record id="demo_followup_line2" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Level 1 : 30 net days</field>
             <field name="sequence">1</field>
             <field name="start">days</field>
@@ -47,7 +47,7 @@ Best Regards,
 </field>
         </record>
 
-        <record id="demo_followup_line3" model="account_followup.followup.line">
+        <record id="demo_followup_line3" model="account_followup.followup.line" forcecreate="False">
             <field name="name">Level 2 : 45 days end of month</field>
             <field name="sequence">2</field>
             <field name="start">end_of_month</field>
