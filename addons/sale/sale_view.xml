@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" color="state" date_start="date_order">
                     <field name="partner_id"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" widget="monetary"/>
                 </calendar>
             </field>
         </record>
@@ -36,7 +36,7 @@
             <field name="arch" type="xml">
                 <graph string="Sales Orders" type="bar">
                     <field name="partner_id" type="row"/>
-                    <field name="amount_total" type="measure"/>
+                    <field name="amount_total" type="measure" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -52,7 +52,7 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -69,7 +69,7 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -189,7 +189,7 @@
                                     <field name="price_unit"/>
                                     <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
@@ -372,7 +372,7 @@
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal" sum="Total"/>
+                    <field name="price_subtotal" sum="Total" widget="monetary"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -406,7 +406,7 @@
                         <group>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
-                            <field name="price_subtotal"/>
+                            <field name="price_subtotal" widget="monetary"/>
                             <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>

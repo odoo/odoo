@@ -9,8 +9,8 @@
              <graph string="Expenses Analysis" type="pivot" stacked="True">
                  <field name="employee_id" type="row"/>
                  <field name="create_date" interval="month" type="col"/>
-                 <field name="price_total" type="measure"/>
-                 <field name="price_average" type="measure"/>
+                 <field name="price_total" type="measure" widget="monetary"/>
+                 <field name="price_average" type="measure" widget="monetary"/>
              </graph>
          </field>
     </record>

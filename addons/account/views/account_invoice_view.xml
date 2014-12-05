@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <calendar string="Invoices" color="journal_id" date_start="date_invoice">
                     <field name="partner_id"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" widget="monetary"/>
                 </calendar>
             </field>
         </record>
@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <graph string="Invoices" type="bar">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+"/>
+                    <field name="amount_total" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -34,9 +34,9 @@
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
                     <field name="uos_id" groups="product.group_uom"/>
-                    <field name="price_unit"/>
+                    <field name="price_unit" widget="monetary"/>
                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -52,12 +52,12 @@
                                 on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)" context="{'partner_id': parent.partner_id}"/>
                             <label for="quantity"/>
                             <div>
-                                <field name="quantity" class="oe_inline"/>
+                                <field name="quantity" class="oe_inline" widget="monetary"/>
                                 <field name="uos_id" class="oe_inline" groups="product.group_uom"
                                   on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
                             </div>
-                            <field name="price_unit"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                            <field name="price_unit" widget="monetary"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                         </group>
                         <group>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id)]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
@@ -81,8 +81,8 @@
                     <field name="manual"/>
                     <field name="name"/>
                     <field name="account_id" groups="base.group_account_user"/>
-                    <field name="base"/>
-                    <field name="amount"/>
+                    <field name="base" widget="monetary"/>
+                    <field name="amount" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -98,13 +98,13 @@
                         <field name="account_id" groups="account.group_account_user"/>
                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
-                        <field name="amount"/>
-                        <field name="base" readonly="0"/>
+                        <field name="amount" widget="monetary"/>
+                        <field name="base" readonly="0" widget="monetary"/>
                         <separator colspan="4" string="Tax Codes"/>
                         <field name="base_code_id"/>
-                        <field name="base_amount"/>
+                        <field name="base_amount" widget="monetary"/>
                         <field name="tax_code_id"/>
-                        <field name="tax_amount"/>
+                        <field name="tax_amount" widget="monetary"/>
                         <field name="factor_base" invisible="True"/>
                         <field name="factor_tax" invisible="True"/>
                     </group>
@@ -130,9 +130,9 @@
                     <field name="date_due"/>
                     <field name="origin"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="residual" sum="Residual Amount"/>
-                    <field name="amount_untaxed" sum="Untaxed Amount"/>
-                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="residual" sum="Residual Amount" widget="monetary"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount" widget="monetary"/>
+                    <field name="amount_total" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -187,7 +187,7 @@
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id)" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total"/>
+                            <field name="check_total" groups="account.group_supplier_inv_check_total" widget="monetary"/>
                         </group>
                     </group>
                     <notebook>
@@ -204,14 +204,14 @@
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
-                                    <field name="quantity"/>
+                                    <field name="quantity" widget="monetary"/>
                                     <field name="uos_id" groups="product.group_uom"
                                         on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
                                         domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
@@ -234,11 +234,11 @@
                                         <field name="name"/>
                                         <field name="account_id" groups="account.group_account_invoice"/>
                                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
-                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
+                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1" widget="monetary"/>
+                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)" widget="monetary"/>
 
-                                        <field invisible="True" name="base_amount"/>
-                                        <field invisible="True" name="tax_amount"/>
+                                        <field invisible="True" name="base_amount" widget="monetary"/>
+                                        <field invisible="True" name="tax_amount" widget="monetary"/>
                                         <field name="factor_base" invisible="True"/>
                                         <field name="factor_tax" invisible="True"/>
                                     </tree>
@@ -357,14 +357,14 @@
                                         on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"/>
-                                    <field name="quantity"/>
+                                    <field name="quantity" widget="monetary"/>
                                     <field name="uos_id" groups="product.group_uom"
                                         on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
                                         domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
@@ -410,10 +410,10 @@
                                 <tree editable="bottom" string="Taxes">
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
-                                    <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
-                                    <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-                                    <field invisible="True" name="base_amount"/>
-                                    <field invisible="True" name="tax_amount"/>
+                                    <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1" widget="monetary"/>
+                                    <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)" widget="monetary"/>
+                                    <field invisible="True" name="base_amount" widget="monetary"/>
+                                    <field invisible="True" name="tax_amount" widget="monetary"/>
                                     <field name="factor_base" invisible="True"/>
                                     <field name="factor_tax" invisible="True"/>
                                 </tree>

@@ -75,7 +75,7 @@
                                                 <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                                             </div>
                                             <field name="price_unit"/>
-                                            <field name="price_subtotal"/>
+                                            <field name="price_subtotal" widget="monetary"/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
@@ -104,7 +104,7 @@
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags"/>
                                 <field name="to_invoice"/>
-                                <field name="price_subtotal"/>
+                                <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
                         <group class="oe_subtotal_footer oe_right">
@@ -149,7 +149,7 @@
                                     <group>
                                         <field name="price_unit"/>
                                         <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                        <field name="price_subtotal"/>
+                                        <field name="price_subtotal" widget="monetary"/>
                                     </group>
                                 </group>
                                 <group string="History">
@@ -168,7 +168,7 @@
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="to_invoice"/>
-                                <field name="price_subtotal"/>
+                                <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
                     </page>
