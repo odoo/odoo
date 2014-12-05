@@ -54,6 +54,8 @@ class sale_report(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
+        'currency_rate': fields.float('Currency Rate', readonly=True),
+        'currency_amount': fields.float('Amount in Currency', readonly=True),
     }
     _order = 'date desc'
 
@@ -63,7 +65,8 @@ class sale_report(osv.osv):
                     l.product_id as product_id,
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-                    sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
+                    sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as currency_amount,
+                    sum((l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) / cr.rate) as price_total,
                     count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
@@ -75,7 +78,8 @@ class sale_report(osv.osv):
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id,
-                    s.team_id as team_id
+                    s.team_id as team_id,
+                    cr.rate as currency_rate
         """
         return select_str
 
@@ -83,10 +87,16 @@ class sale_report(osv.osv):
         from_str = """
                 sale_order_line l
                       join sale_order s on (l.order_id=s.id)
+                      join product_pricelist pl on (s.pricelist_id = pl.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                    join res_currency_rate cr on (pl.currency_id = cr.currency_id)
+                        WHERE
+                        cr.id IN (SELECT id FROM res_currency_rate cr2 WHERE (cr2.currency_id = pl.currency_id)
+                    AND ((s.date_order IS NOT NULL AND cr2.name <= s.date_order) OR (s.date_order IS NULL AND cr2.name <= NOW()))
+                    ORDER BY name DESC LIMIT 1)
         """
         return from_str
 
@@ -104,7 +114,8 @@ class sale_report(osv.osv):
                     s.state,
                     s.pricelist_id,
                     s.project_id,
-                    s.team_id
+                    s.team_id,
+                    cr.rate
         """
         return group_by_str
 
@@ -113,7 +124,7 @@ class sale_report(osv.osv):
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
             %s
-            FROM ( %s )
+            FROM %s
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
 

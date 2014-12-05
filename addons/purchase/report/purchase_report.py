@@ -43,7 +43,6 @@ class purchase_report(osv.osv):
         'picking_type_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'date_approve':fields.date('Date Approved', readonly=True),
         'expected_date':fields.date('Expected Date', readonly=True),
         'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
@@ -58,7 +57,10 @@ class purchase_report(osv.osv):
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'category_id': fields.many2one('product.category', 'Category', readonly=True)
+        'category_id': fields.many2one('product.category', 'Category', readonly=True),
+        'currency_rate': fields.float('Currency Rate', readonly=True),
+        'currency_amount': fields.float('Amount in Currency', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Purchase Order Currency', readonly=True),
 
     }
     _order = 'date desc, price_total desc'
@@ -73,7 +75,6 @@ class purchase_report(osv.osv):
                     s.date_approve,
                     s.minimum_planned_date as expected_date,
                     s.dest_address_id,
-                    s.pricelist_id,
                     s.validator,
                     s.picking_type_id as picking_type_id,
                     s.partner_id as partner_id,
@@ -83,14 +84,17 @@ class purchase_report(osv.osv):
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
                     s.location_id as location_id,
+                    s.currency_id as currency_id,
                     sum(l.product_qty/u.factor*u2.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
+                    sum(l.price_unit*l.product_qty)::decimal(16,2) as currency_amount,
+                    sum((l.price_unit*l.product_qty) / cr.rate)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
+                    ((sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0)) / cr.rate)::decimal(16,2) as price_average,
+                    cr.rate as currency_rate
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
@@ -98,6 +102,13 @@ class purchase_report(osv.osv):
                             LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                    join res_currency_rate cr on (s.currency_id = cr.currency_id)
+                        WHERE
+                        cr.id IN (SELECT id FROM res_currency_rate cr2
+                            WHERE (cr2.currency_id = s.currency_id)
+                                AND ((s.date_order IS NOT NULL AND cr2.name <= s.date_order)
+                                OR (s.date_order IS NULL AND cr2.name <= NOW()))
+                                ORDER BY name DESC LIMIT 1)
                 group by
                     s.company_id,
                     s.create_uid,
@@ -109,7 +120,6 @@ class purchase_report(osv.osv):
                     l.date_planned,
                     l.product_uom,
                     s.minimum_planned_date,
-                    s.pricelist_id,
                     s.validator,
                     s.dest_address_id,
                     l.product_id,
@@ -117,11 +127,13 @@ class purchase_report(osv.osv):
                     s.date_order,
                     s.state,
                     s.picking_type_id,
+                    s.currency_id,
                     u.uom_type,
                     u.category_id,
                     t.uom_id,
                     u.id,
-                    u2.factor
+                    u2.factor,
+                    cr.rate
             )
         """)
 
