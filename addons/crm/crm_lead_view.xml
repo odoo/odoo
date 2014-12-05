@@ -548,11 +548,11 @@
                     <field name="probability"/>
                     <separator/>
                     <filter string="New" name="new"
-                            domain="[('probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
                     <filter string="Won" name="won"
-                            domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"

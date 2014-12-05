@@ -475,7 +475,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(!product || !this.pos){
                 return defaultstr;
             }
-            var unit_id = product.uos_id || product.uom_id;
+            var unit_id = product.uom_id;
             if(!unit_id){
                 return defaultstr;
             }
@@ -751,6 +751,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.pos_widget.screen_selector.show_popup('error',{
+                    'message':_t('Error: Could not Save Changes'),
+                    'comment':_t('Your Internet connection is probably down.'),
+                });
             });
         },
         
@@ -919,8 +925,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ReceiptScreenWidget = module.ScreenWidget.extend({
         template: 'ReceiptScreenWidget',
 
-        show_numpad:     true,
-        show_leftpane:   true,
+        show_numpad:     false,
+        show_leftpane:   false,
 
         show: function(){
             this._super();
@@ -939,7 +945,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.refresh();
-            this.print();
+
+            if (!this.pos.get('selectedOrder')._printed) {
+                this.print();
+            }
 
             //
             // The problem is that in chrome the print() is asynchronous and doesn't
@@ -964,6 +973,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }, 2000);
         },
         print: function() {
+            this.pos.get('selectedOrder')._printed = true;
             window.print();
         },
         finishOrder: function() {
@@ -1126,7 +1136,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 paymentlines.bind('change:selected', this.rerender_paymentline, this);
                 paymentlines.bind('change:amount', function(line){
                         if(!line.selected && line.node){
-                            line.node.value = line.amount.toFixed(2);
+                            line.node.value = line.amount.toFixed(this.pos.currency.decimals);
                         }
                         this.update_payment_summary();
                     },this);

@@ -383,7 +383,7 @@
                                     <field name="product_efficiency"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
-                                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]"/>
                                 </tree>
                             </field>
                         </page>
@@ -700,7 +700,13 @@
                             <field name="date_planned"/>
                         </group>
                         <group>
-                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
+                            <field name="bom_id"
+                                domain="['|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False)]"
+                                context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>

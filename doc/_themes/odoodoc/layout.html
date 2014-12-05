@@ -6,12 +6,18 @@
   '_static/bootstrap/js/tooltip.js',
   '_static/bootstrap/js/collapse.js',
   '_static/bootstrap/js/dropdown.js',
-  '_static/ZeroClipboard.min.js',
+  '_static/zeroclipboard-2.1.6/ZeroClipboard.min.js',
   '_static/app.js'
 ] %}
 
 {%- block doctype -%}
 <!doctype html>
+{%- endblock -%}
+
+{%- block htmltitle -%}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ super() }}
 {%- endblock -%}
 
 {%- block extrahead -%}
@@ -32,7 +38,7 @@
   <div class="sphinxsidebar">
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
-                 main_navbar=False, titles_only=False) }}
+                 navbar='side', titles_only=False) }}
       {% if github_link %}
         <p><a href="{{ github_link(mode='edit') }}" class="github">
           Edit on GitHub
@@ -72,7 +78,8 @@
       {% endif %}
     </div>
     <nav class="collapse navbar-collapse navbar-main" role="navigation">
-      {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False) }}
+      {{ toctree(titles_only=True, maxdepth=2, includehidden=True,
+                 collapse=False, navbar='main') }}
     </nav>
   </div>
 </header>
@@ -86,7 +93,7 @@
           {%- if show_copyright %}
             <li>
               {%- if hasdoc('copyright') %}
-                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>{% endtrans %}
               {%- else %}
                 {% trans copyright=copyright|e %}&copy; Copyright <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
               {%- endif %}

@@ -367,7 +367,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
 
         values = {}
-        if 'website_published' in _object._all_columns:
+        if 'website_published' in _object._fields:
             values['website_published'] = not obj.website_published
         _object.write(request.cr, request.uid, [_id],
                       values, context=request.context)

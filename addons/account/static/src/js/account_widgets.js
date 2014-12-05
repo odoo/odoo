@@ -120,6 +120,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
+                        domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
                     },
                 },
             };
@@ -278,12 +279,15 @@ openerp.account = function (instance) {
             if (! self.single_statement) return;
             var name = self.$(".change_statement_name_field").val();
             if (name === "") return;
+            self.$(".change_statement_name_button").attr("disabled", "disabled");
             return self.model_bank_statement
                 .call("write", [[self.statement_ids[0]], {'name': name}])
-                .then(function () {
+                .done(function () {
                     self.title = name;
                     self.$(".statement_name span").text(name).show();
                     self.$(".change_statement_name_container").hide();
+                }).always(function() {
+                    self.$(".change_statement_name_button").removeAttr("disabled");
                 });
         },
     
@@ -1660,9 +1664,10 @@ openerp.account = function (instance) {
             var deferred_animation = self.$el.parent().slideUp(speed*height/150);
     
             // RPC
+            self.$(".button_ok").attr("disabled", "disabled");
             return self.model_bank_statement_line
                 .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
-                .then(function () {
+                .done(function () {
                     self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
                     $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                     return $.when(deferred_animation).then(function(){
@@ -1672,10 +1677,12 @@ openerp.account = function (instance) {
                             parent.childValidated(self);
                         });
                     });
-                }, function(){
+                }).fail(function(){
                     self.$el.parent().slideDown(speed*height/150, function(){
                         self.$el.unwrap();
                     });
+                }).always(function() {
+                    self.$(".button_ok").removeAttr("disabled");
                 });
         },
     });

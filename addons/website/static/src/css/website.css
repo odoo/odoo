@@ -183,7 +183,7 @@ footer {
   background: rgba(200, 200, 200, 0.1);
 }
 
-#footer_container {
+#footer_container, #footer {
   padding-top: 24px;
   padding-bottom: 12px;
 }
@@ -194,6 +194,11 @@ footer {
   width: 100%;
 }
 
+@-moz-document url-prefix() {
+  .table .img-responsive {
+    width: 100%;
+  }
+}
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/drag_here.png") !important;

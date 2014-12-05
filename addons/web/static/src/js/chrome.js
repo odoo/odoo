@@ -1292,7 +1292,8 @@ instance.web.WebClient = instance.web.Client.extend({
         }
     },
     update_logo: function() {
-        var img = this.session.url('/web/binary/company_logo');
+        var company = this.session.company_id;
+        var img = this.session.url('/web/binary/company_logo' + (company ? '?company=' + company : ''));
         this.$('.oe_logo img').attr('src', '').attr('src', img);
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },

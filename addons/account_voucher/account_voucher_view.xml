@@ -55,7 +55,7 @@
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)" groups="base.group_multi_company"/>
                         <field name="reference"/>
                         <field name="number"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>

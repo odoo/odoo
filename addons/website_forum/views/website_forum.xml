@@ -23,8 +23,11 @@
     <xpath expr="." position="inside">
         <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
         <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
         <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
     </xpath>
 </template>
 
@@ -337,11 +340,13 @@
                 class="form-control" placeholder="Enter your Question"/>
             <h5 class="mt20">Please enter a descriptive question (should finish with a '?')</h5>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
+            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <textarea name="content" required="True" class="form-control load_editor">
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
-            <input type="text" name="question_tags" placeholder="Tags" class="form-control load_tags"/>
+            <input type="hidden" name="tag_type" value="select2"/>
+            <input type="hidden" name="question_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/>
             <button t-attf-class="btn btn-primary #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                 id="btn_ask_your_question" t-att-data-karma="forum.karma_ask">Post Your Question</button>
@@ -364,12 +369,14 @@
                 <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
+            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <textarea name="content" required="True" class="form-control load_editor">
                 <t t-esc="post.content"/>
             </textarea>
             <div t-if="not is_answer">
                 <br/>
-                <input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags" t-attf-value="#{tags}"/>
+                <input type="hidden" name="tag_type" value="select2"/>
+                <input type="hidden" name="question_tag" class="form-control col-md-9 js_select2" placeholder="Tags" value="see data init value" t-attf-data-init-value="#{tags}"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>
@@ -533,7 +540,7 @@
                             </li>
                             <li>
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edition'"/>
                                     <t t-set="label" t-value="'Edit'"/>
                                     <t t-set="classes" t-value="'fa-edit'"/>
                                     <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>

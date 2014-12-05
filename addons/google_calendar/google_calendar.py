@@ -494,7 +494,7 @@ class google_calendar(osv.AbstractModel):
 
         all_my_attendees = self.pool['calendar.attendee'].search(cr, uid, [('partner_id', '=', current_user.partner_id.id)], context=context)
         self.pool['calendar.attendee'].write(cr, uid, all_my_attendees, {'oe_synchro_date': False, 'google_internal_event_id': False}, context=context)
-        current_user.write(reset_data, context=context)
+        current_user.write(reset_data)
         return True
 
     def synchronize_events_cron(self, cr, uid, context=None):
@@ -552,7 +552,7 @@ class google_calendar(osv.AbstractModel):
                 lastSync = False
                 _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO FORCED" % user_to_sync)
         else:
-            current_user.write({'google_calendar_cal_id': current_google}, context=context)
+            current_user.write({'google_calendar_cal_id': current_google})
             lastSync = False
             _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO - NEW CAL ID" % user_to_sync)
 
@@ -562,7 +562,7 @@ class google_calendar(osv.AbstractModel):
 
         res = self.update_events(cr, uid, lastSync, context)
 
-        current_user.write({'google_calendar_last_sync_date': ask_time}, context=context)
+        current_user.write({'google_calendar_last_sync_date': ask_time})
         return {
             "status": res and "need_refresh" or "no_new_event_form_google",
             "url": ''

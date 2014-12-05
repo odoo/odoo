@@ -137,7 +137,7 @@ footer
     background: rgb(239, 248, 248)
     background: rgba(200, 200, 200, 0.1)
 
-#footer_container
+#footer_container, #footer
     padding-top: 24px
     padding-bottom: 12px
 
@@ -146,6 +146,10 @@ footer
 .col-md-12
     float: left
     width: 100%
+
+@-moz-document url-prefix()
+    .table .img-responsive
+        width: 100%
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 

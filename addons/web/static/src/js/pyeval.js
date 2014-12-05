@@ -479,6 +479,19 @@
                  && this.day === other.day)
                 ? py.True : py.False;
         },
+        replace: function () {
+            var args = py.PY_parseArgs(arguments, [
+                ['year', py.None], ['month', py.None], ['day', py.None]
+            ]);
+            var params = {};
+            for(var key in args) {
+                if (!args.hasOwnProperty(key)) { continue; }
+
+                var arg = args[key];
+                params[key] = (arg === py.None ? this[key] : asJS(arg));
+            }
+            return py.PY_call(datetime.date, params);
+        },
         __add__: function (other) {
             if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;

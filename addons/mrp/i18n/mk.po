@@ -8,31 +8,31 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-08 10:17+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:18+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-09 07:34+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:260
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr " Произведува"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Норматив"
 
 #. module: mrp
 #: field:product.product,mo_count:0
 #: field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Налози за производство"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:356
@@ -44,7 +44,7 @@ msgstr "%s (копија)"
 #: code:addons/mrp/mrp.py:958
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%sпроизведено"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -160,6 +160,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да креирате налог за производство. \n"
+"              </p><p>\n"
+"                Налог за производство, базиран на норматив, ќе\n"
+"                конзумира суровини и ќе произведе готови производи.\n"
+"              </p><p>\n"
+"                Налозите за производство најчесто автоматски се предложени "
+"базирано на\n"
+"                потребите на клиентите или автоматизирани правила како "
+"правилото за\n"
+"                минимална залиха.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -221,11 +234,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да започнете нов налог за производство. \n"
+"              </p><p>\n"
+"                Налог за производство, базиран на нормативи, ќе\n"
+"                конзумира суровини и ќе произведе готови производи.\n"
+"              </p><p>\n"
+"                Налозите за производство најчесто се предлагаат автоматски "
+"базирано\n"
+"                врз барањата на клиентите или автоматизирани правила како "
+"што е\n"
+"                правилото за минимална залиха.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Фактор од 0.9 значи 10% загуба за време на производствениот процес."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
@@ -277,6 +303,14 @@ msgid ""
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
 msgstr ""
+"Дозволува да управувате со поправките на сите производи.\n"
+"* Додади/одстрани производи во репарација\n"
+"* Импакт врз залиха\n"
+"* Фактурирање (производи и/или услуги)\n"
+"* Концепт на гаранција\n"
+"* Извештај за понуди за поправка\n"
+"* Забелешки за техничарот и за потрошувачот.\n"
+"-Ова го инсталира модулот mrp_repair."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -291,7 +325,7 @@ msgstr "Количина во часови"
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr ""
+msgstr "Мерна единица за сума"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -314,6 +348,9 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Просечен број на денови на доцнење за производство на овој производ. Во "
+"случај на повеќекратен норматив, ќе биде додадено времето на предност при "
+"производството на секоја од компонентите."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -349,6 +386,9 @@ msgid ""
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
 msgstr ""
+"Производот %s бара, да имате назначено сериски број на суровините %s за да "
+"продолжите понатаму во производство. Ве молиме кликнете на 'Произведи' "
+"копчето за да го направите тоа."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -414,6 +454,8 @@ msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
 "BoM defined."
 msgstr ""
+"Норматив \"%s\" содржи фантомска нормативна стапка но производот \"%s\" нема "
+"дефинирано норматив."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -423,7 +465,7 @@ msgstr "Хиерархија на Спецификаја на производи
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Тип на ставка на норматив"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -439,7 +481,7 @@ msgstr "Тип на спецификација"
 #: code:addons/mrp/stock.py:257
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "Не е пронајдена ниту една генеричка рута на производство."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -454,7 +496,7 @@ msgstr "Откажи"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "Откажи производство"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -465,7 +507,7 @@ msgstr "Откажано"
 #: code:addons/mrp/stock.py:182
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Не може да се конзумира движење со негативна или нула количина."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:617
@@ -515,7 +557,7 @@ msgstr "Промени ја количината на производите"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Провери Достапност"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -593,13 +635,13 @@ msgstr "Конзумирај & произведи"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Ставки на конзумација"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Движење на конзумација"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -623,7 +665,7 @@ msgstr "Конзумирани производи"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Конзумирано за"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -672,7 +714,7 @@ msgstr "Информации за чинење"
 #: field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0
@@ -693,7 +735,7 @@ msgstr ""
 #: field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -711,7 +753,7 @@ msgstr "Цена на чинење на циклус"
 #: help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Датум на испраќање на последната порака"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -789,6 +831,8 @@ msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
+"Пополнете го ова само ако сакате автоматаки внесови на налози за "
+"производство во аналитичко сметкоцодство."
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -827,6 +871,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Принудно определување на сериски број на сите движења што го содржат овој "
+"производ генерирани од налог за производство."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -852,17 +898,17 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Го дава секвентниот редослед кога прикажува листа на работни налози."
 
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Дава секвентен ред кога прикажува."
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -881,6 +927,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Содржи резиме на конверзација (број на пораки, ...). Ова резиме е директно "
+"во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -915,13 +963,15 @@ msgstr "Саатнина"
 #: field:report.workcenter.load,id:0
 #: field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
+"Ако варијанта на производот е дефинирана нормативот е достапен само за овој "
+"производ."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0
@@ -986,13 +1036,17 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Оставете празно доколку произведувате на локација каде што се потребни "
+"готовите производи. Наведете локација доколку произведувате на фиксна "
+"локација. Ова може да биде локација на партнерот доколку имате поддоговор за "
+"производствени операции."
 
 #. module: mrp
 #: field:mrp.bom,message_last_post:0
 #: field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Датум на последна порака"
 
 #. module: mrp
 #: field:change.production.qty,write_uid:0
@@ -1013,7 +1067,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0
@@ -1034,7 +1088,7 @@ msgstr ""
 #: field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1044,7 +1098,7 @@ msgstr "Доцна"
 #. module: mrp
 #: field:stock.move.consume,location_id:0
 msgid "Location"
-msgstr ""
+msgstr "Локација"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -1088,17 +1142,17 @@ msgstr "Менаџер"
 #: code:addons/mrp/stock.py:254
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Производство"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Правило за производство"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Произведи во овој магацин"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1181,7 +1235,7 @@ msgstr "Налози за производство што чекаат за су
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "Означи како започнато"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
@@ -1237,7 +1291,7 @@ msgstr "Ново"
 #: code:addons/mrp/procurement.py:120
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Не постоти норматив за овој производ"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1264,7 +1318,7 @@ msgstr "Не е итно"
 #. module: mrp
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Не се користи во пресметките, само за информативни цели."
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
@@ -1311,7 +1365,7 @@ msgstr "Отвори го менито за производство"
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "Операција"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1341,7 +1395,7 @@ msgstr "Надредено упатување"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Референца на партнер:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1361,7 +1415,7 @@ msgstr "За недела"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Фантом"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1370,6 +1424,9 @@ msgid ""
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
 msgstr ""
+"Фантом: овој производ нема да се појави во суровините на налозите за "
+"производство, директно ќе биде заменет со суровините на сопствениот "
+"норматив, без да поттикне дополнителен налог за производство."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1381,7 +1438,7 @@ msgstr "Планирање"
 #: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Ве молиме наведете соодветна количина."
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1397,12 +1454,12 @@ msgstr "Испечати Кота на чинење на производ."
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Датум на печатење:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Приоритет"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1412,7 +1469,7 @@ msgstr "Набавка"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Правило за набавка"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1476,7 +1533,7 @@ msgstr "Производство на производ"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Ставки на конзумација при производство на производ"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1500,7 +1557,7 @@ msgstr "Заокружување на производи"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Урнек на производ"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1547,12 +1604,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_id:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Варијанта на производ"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Производ:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1579,17 +1636,17 @@ msgstr "Налог за производство бр. :"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Налог за производство за произведени производи"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Налог за производство за суровини"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Производ закажан за производство"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1604,7 +1661,7 @@ msgstr "Работни центри за производство"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Прогрес на производство"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1627,7 +1684,7 @@ msgstr "Производи"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Конзумирани производи"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1667,12 +1724,12 @@ msgstr "Категории на својствата"
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr ""
+msgstr "Состав на својства"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "Сопственост"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
@@ -1703,12 +1760,12 @@ msgstr "Количина"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "Количина (изразено во стандардна единица мерка)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Количина:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1747,7 +1804,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr ""
+msgstr "Референца на позиција во надворешен план."
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
@@ -1831,17 +1888,17 @@ msgstr "Закажан датум"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Закажана дата според месец"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Закажана дата:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Закажан месец"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1873,7 +1930,7 @@ msgstr "Пребарај ги нормативите"
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Пребарај компоненти на норматив"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1888,7 +1945,7 @@ msgstr ""
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Пребарај денови за секоја операција на производство"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -1912,7 +1969,7 @@ msgstr "Секвенца"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Подеси"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1920,6 +1977,8 @@ msgid ""
 "Set: When processing a sales order for this product, the delivery order will "
 "contain the raw materials, instead of the finished product."
 msgstr ""
+"Избери: Кога се изготвуваат налози за продажба на овој производ, налогот за "
+"испорака ќе ги содржи суровините наместо готовиот производ."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1929,7 +1988,7 @@ msgstr "Изворен документ"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "Изворен документ:"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1952,6 +2011,8 @@ msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
 msgstr ""
+"Назначете количина на производи за производство или купување. Извештајот за "
+"структура на трошоци ќе биде прикажан базирано на оваа количина."
 
 #. module: mrp
 #: field:mrp.production,date_start:0
@@ -1998,7 +2059,7 @@ msgstr "Набавна цена по единица мерка"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Техничко поле што се користи за следење на произведените производи"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:366
@@ -2008,6 +2069,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"Единицата мерка на производот која ја избравте има различна категорија од "
+"онаа во формуларот за производот."
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -2059,6 +2122,12 @@ msgid ""
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
 msgstr ""
+"Ова ви дозволува да го дефинирате следново кај производt:\n"
+"* Производител\n"
+"* Име на производ од производителот\n"
+"* Код на производ од производителот\n"
+"* Атрибути на производ.\n"
+"-Ова го инсталира модулот product_manufacturer."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2102,7 +2171,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Да се конзумира"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162
@@ -2136,7 +2205,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "Следење на производство"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2174,7 +2243,7 @@ msgstr "Непрочитани пораки"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "Ажурирај"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2196,13 +2265,13 @@ msgstr "Важи од"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Валиден од датум според месец"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Важи од месец"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2214,23 +2283,23 @@ msgstr "Валиден до"
 #: help:mrp.bom.line,date_start:0
 #: help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Важност на компонента. Оставете празно ако секогаш е валидна."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Важност на норматив. Оставете го празно ако секогаш е валиден."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Варијанта"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr ""
+msgstr "Варијанти"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2240,7 +2309,7 @@ msgstr "Многу итно"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Магацин"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:366
@@ -2262,14 +2331,14 @@ msgstr "Внимание!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Пораки на веб сајт"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Историја на веб комуникација"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2305,6 +2374,8 @@ msgstr ""
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
+"Кога производите се произведуваат, тие можат да бидат произведени во овој "
+"магацин."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2435,32 +2506,36 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
+"Можете да ги конфигурирате нуспроизводите во нормативот.\n"
+"Без овој модул: A + B + C -> D.\n"
+"Со овој модул: A + B + C -> D + E.\n"
+"-Ова го инсталира модулот mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Морате да назначите сериски број за продуктот %s"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "денови"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr ""
+msgstr "максимум"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr ""
+msgstr "минимум"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr ""
+msgstr "плус"
 
 #. module: mrp
 #: field:mrp.product.produce,product_id:0
@@ -2468,7 +2543,7 @@ msgstr ""
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
+msgstr "непознато"
 
 #, python-format
 #~ msgid ""

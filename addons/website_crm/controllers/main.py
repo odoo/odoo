@@ -62,7 +62,7 @@ class contactus(http.Controller):
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 post_file.append(field_value)
-            elif field_name in request.registry['crm.lead']._all_columns and field_name not in _BLACKLIST:
+            elif field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
                 values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
@@ -72,9 +72,8 @@ class contactus(http.Controller):
         # fields validation : Check that required field from model crm_lead exists
         error = set(field for field in _REQUIRED if not values.get(field))
 
-        values = dict(values, error=error)
         if error:
-            values.update(kwargs=kwargs.items())
+            values = dict(values, error=error, kwargs=kwargs.items())
             return request.website.render(kwargs.get("view_from", "website.contactus"), values)
 
         try:

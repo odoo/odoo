@@ -103,7 +103,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.fields_order = [];
         this.datarecord = {};
         this._onchange_specs = {};
-        this.onchanges_defs = [];
+        this.onchanges_mutex = new $.Mutex();
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
@@ -509,44 +509,45 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 def = self.alive(new instance.web.Model(self.dataset.model).call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
-            var onchange_def = def.then(function(response) {
-                if (widget && widget.field['change_default']) {
-                    var fieldname = widget.name;
-                    var value_;
-                    if (response.value && (fieldname in response.value)) {
-                        // Use value from onchange if onchange executed
-                        value_ = response.value[fieldname];
-                    } else {
-                        // otherwise get form value for field
-                        value_ = self.fields[fieldname].get_value();
-                    }
-                    var condition = fieldname + '=' + value_;
+            this.onchanges_mutex.exec(function(){
+                return def.then(function(response) {
+                    if (widget && widget.field['change_default']) {
+                        var fieldname = widget.name;
+                        var value_;
+                        if (response.value && (fieldname in response.value)) {
+                            // Use value from onchange if onchange executed
+                            value_ = response.value[fieldname];
+                        } else {
+                            // otherwise get form value for field
+                            value_ = self.fields[fieldname].get_value();
+                        }
+                        var condition = fieldname + '=' + value_;
 
-                    if (value_) {
-                        return self.alive(new instance.web.Model('ir.values').call(
-                            'get_defaults', [self.model, condition]
-                        )).then(function (results) {
-                            if (!results.length) {
+                        if (value_) {
+                            return self.alive(new instance.web.Model('ir.values').call(
+                                'get_defaults', [self.model, condition]
+                            )).then(function (results) {
+                                if (!results.length) {
+                                    return response;
+                                }
+                                if (!response.value) {
+                                    response.value = {};
+                                }
+                                for(var i=0; i<results.length; ++i) {
+                                    // [whatever, key, value]
+                                    var triplet = results[i];
+                                    response.value[triplet[1]] = triplet[2];
+                                }
                                 return response;
-                            }
-                            if (!response.value) {
-                                response.value = {};
-                            }
-                            for(var i=0; i<results.length; ++i) {
-                                // [whatever, key, value]
-                                var triplet = results[i];
-                                response.value[triplet[1]] = triplet[2];
-                            }
-                            return response;
-                        });
+                            });
+                        }
                     }
-                }
-                return response;
-            }).then(function(response) {
-                return self.on_processed_onchange(response);
+                    return response;
+                }).then(function(response) {
+                    return self.on_processed_onchange(response);
+                });
             });
-            this.onchanges_defs.push(onchange_def);
-            return onchange_def;
+            return this.onchanges_mutex.def;
         } catch(e) {
             console.error(e);
             instance.webclient.crashmanager.show_message(e);
@@ -587,21 +588,18 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.mutating_mutex.exec(function() {
             function iterate() {
-                var start = $.Deferred();
-                start.resolve();
-                start = _.reduce(self.onchanges_defs, function(memo, d){
-                    return memo.then(function(){
-                        return d;
-                    }, function(){
-                        return d;
-                    });
-                }, start);
-                var defs = [start];
+
+                var mutex = new $.Mutex();
                 _.each(self.fields, function(field) {
-                    defs.push(field.commit_value());
+                    self.onchanges_mutex.def.then(function(){
+                        mutex.exec(function(){
+                            return field.commit_value();
+                        });
+                    });
                 });
+
                 var args = _.toArray(arguments);
-                return $.when.apply($, defs).then(function() {
+                return $.when.apply(null, [mutex.def, self.onchanges_mutex.def]).then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {
@@ -655,7 +653,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * if the current record is not yet saved. It will then stay in create mode.
      */
     to_edit_mode: function() {
-        this.onchanges_defs = [];
+        this.onchanges_mutex = new $.Mutex();
         this._actualize_mode("edit");
     },
     /**
@@ -4389,28 +4387,24 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.o2m.trigger_on_change();
     },
     is_valid: function () {
-        var editor = this.editor;
-        var form = editor.form;
-        // If no edition is pending, the listview can not be invalid (?)
-        if (!editor.record) {
+        var self = this;
+        if (!this.fields_view || !this.editable()){
             return true;
         }
-        // If the form has not been modified, the view can only be valid
-        // NB: is_dirty will also be set on defaults/onchanges/whatever?
-        // oe_form_dirty seems to only be set on actual user actions
-        if (!form.$el.is('.oe_form_dirty')) {
-            return true;
-        }
-        this.o2m._dirty_flag = true;
-
-        // Otherwise validate internal form
-        return _(form.fields).chain()
-            .invoke(function () {
-                this._check_css_flags();
-                return this.is_valid();
-            })
-            .all(_.identity)
-            .value();
+        var r;
+        return _.every(this.records.records, function(record){
+            r = record;
+            _.each(self.editor.form.fields, function(field){
+                field._inhibit_on_change_flag = true;
+                field.set_value(r.attributes[field.name]);
+                field._inhibit_on_change_flag = false;
+            });
+            return _.every(self.editor.form.fields, function(field){
+                field.process_modifiers();
+                field._check_css_flags();
+                return field.is_valid();
+            });
+        });
     },
     do_add_record: function () {
         if (this.editable()) {
@@ -5767,7 +5761,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -5782,8 +5776,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    start: function() {
-        this._super(this);
+    initialize_content: function() {
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     // WARNING: duplicated in 4 other M2M widgets
