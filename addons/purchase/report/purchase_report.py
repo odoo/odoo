@@ -52,14 +52,18 @@ class purchase_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'quantity': fields.integer('Unit Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
+        'quantity': fields.float('Product Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'category_id': fields.many2one('product.category', 'Category', readonly=True)
-
+        'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
+        'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
     }
     _order = 'date desc, price_total desc'
     def init(self, cr):
@@ -79,7 +83,9 @@ class purchase_report(osv.osv):
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
+                    s.fiscal_position as fiscal_position,
                     l.product_id,
+                    p.product_tmpl_id,
                     t.categ_id as category_id,
                     t.uom_id as product_uom,
                     s.location_id as location_id,
@@ -90,9 +96,12 @@ class purchase_report(osv.osv):
                     sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
+                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
+                    partner.country_id as country_id,
+                    partner.commercial_partner_id as commercial_partner_id
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
+                    join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                             LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
@@ -112,7 +121,9 @@ class purchase_report(osv.osv):
                     s.pricelist_id,
                     s.validator,
                     s.dest_address_id,
+                    s.fiscal_position,
                     l.product_id,
+                    p.product_tmpl_id,
                     t.categ_id,
                     s.date_order,
                     s.state,
@@ -121,7 +132,9 @@ class purchase_report(osv.osv):
                     u.category_id,
                     t.uom_id,
                     u.id,
-                    u2.factor
+                    u2.factor,
+                    partner.country_id,
+                    partner.commercial_partner_id
             )
         """)
 
