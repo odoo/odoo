@@ -709,7 +709,10 @@ class DateTimeConverter(osv.AbstractModel):
         if options and 'format' in options:
             pattern = options['format']
         else:
-            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+            if options and options.get('hide_time'):
+                strftime_pattern = lang.date_format
+            else:
+                strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
         if options and options.get('hide_seconds'):
