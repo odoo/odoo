@@ -6,9 +6,9 @@
         <t t-foreach="docs" t-as="o">
             <div class="page">
                 <div class="row">
-                    <pre class="col-xs-4 col-xs-offset-4">
+                    <pre class="col-xs-4 col-xs-offset-4" style="background: #ffffff;">
                         <p class="text-center mb128"><strong t-field="o.name"/></p>
-                        <p class="mt32"><img t-if="o.code" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %('Code128', o.code, 600, 100)" style="width:40%"/></p>
+                        <p class="mt16"><img t-if="o.code" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %('Code128', o.code, 600, 160)" style="width:150px;"/></p>
                     </pre>
                 </div>
             </div>
