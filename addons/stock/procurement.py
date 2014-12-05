@@ -88,19 +88,23 @@ class procurement_order(osv.osv):
         'orderpoint_id': fields.many2one('stock.warehouse.orderpoint', 'Minimum Stock Rule'),
     }
 
-    def propagate_cancel(self, cr, uid, procurement, context=None):
-        if procurement.rule_id.action == 'move' and procurement.move_ids:
-            self.pool.get('stock.move').action_cancel(cr, uid, [m.id for m in procurement.move_ids], context=context)
+    def propagate_cancels(self, cr, uid, ids, context=None):
+        move_cancel = []
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.rule_id.action == 'move' and procurement.move_ids:
+                move_cancel += [m.id for m in procurement.move_ids]
+        if move_cancel:
+            self.pool.get('stock.move').action_cancel(cr, uid, move_cancel, context=context)
+        return super(procurement_order, self).propagate_cancels(cr, uid, ids, context=context)
 
     def cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
         ctx = context.copy()
-        #set the context for the propagation of the procurement cancelation
+        #set the context for the propagation of the procurement cancellation
         ctx['cancel_procurement'] = True
-        for procurement in self.browse(cr, uid, to_cancel_ids, context=ctx):
-            self.propagate_cancel(cr, uid, procurement, context=ctx)
+        self.propagate_cancels(cr, uid, to_cancel_ids, context=ctx)
         return super(procurement_order, self).cancel(cr, uid, to_cancel_ids, context=ctx)
 
     def _find_parent_locations(self, cr, uid, procurement, context=None):

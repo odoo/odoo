@@ -40,10 +40,11 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
-    def propagate_cancel(self, cr, uid, procurement, context=None):
-        if procurement.rule_id.action == 'manufacture' and procurement.production_id:
-            self.pool.get('mrp.production').action_cancel(cr, uid, [procurement.production_id.id], context=context)
-        return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
+    def propagate_cancels(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.rule_id.action == 'manufacture' and procurement.production_id:
+                self.pool.get('mrp.production').action_cancel(cr, uid, [procurement.production_id.id], context=context)
+        return super(procurement_order, self).propagate_cancels(cr, uid, ids, context=context)
 
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
