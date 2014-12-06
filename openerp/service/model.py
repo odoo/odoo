@@ -168,7 +168,7 @@ def execute(db, uid, obj, method, *args, **kw):
             raise UserError('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
-            _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
+            _logger.info('The method %s of the object %s can not return `None` !', method, obj)
         return res
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):

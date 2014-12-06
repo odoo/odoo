@@ -2006,7 +2006,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -2058,7 +2058,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()

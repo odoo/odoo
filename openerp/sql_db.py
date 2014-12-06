@@ -519,7 +519,7 @@ class ConnectionPool(object):
         try:
             result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
         except psycopg2.Error:
-            _logger.exception('Connection to the database failed')
+            _logger.info('Connection to the database failed')
             raise
         result._original_dsn = dsn
         self._connections.append((result, True))
