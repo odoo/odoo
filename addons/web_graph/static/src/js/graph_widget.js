@@ -54,6 +54,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             self.$('.graph_options_selection label').last().toggle(result);
         });
 
+        openerp.session.rpc('/web_graph/check_xlsxwriter').then(function (result) {
+            self.$('.graph_options_selection label').last().toggle(result);
+        });
+
         return this.model.call('fields_get', {
                     context: this.graph_view.dataset.context
                 }).then(function (f) {
@@ -307,6 +311,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 break;
             case 'export_data':
                 this.export_xls();
+                break;
+            case 'export_xlsx_data':
+                this.export_xlsx();
                 break;
         }
     },
@@ -856,6 +863,17 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         openerp.web.blockUI();
         this.session.get_file({
             url: '/web_graph/export_xls',
+            data: {data: JSON.stringify(this.build_table(true))},
+            complete: openerp.web.unblockUI,
+            error: c.rpc_error.bind(c)
+        });
+    },
+
+    export_xlsx: function() {
+        var c = openerp.webclient.crashmanager;
+        openerp.web.blockUI();
+        this.session.get_file({
+            url: '/web_graph/export_xlsx',
             data: {data: JSON.stringify(this.build_table(true))},
             complete: openerp.web.unblockUI,
             error: c.rpc_error.bind(c)

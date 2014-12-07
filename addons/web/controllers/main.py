@@ -28,6 +28,10 @@ try:
     import xlwt
 except ImportError:
     xlwt = None
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
 
 import openerp
 import openerp.modules.registry
@@ -1274,6 +1278,7 @@ class Export(http.Controller):
         return [
             {'tag': 'csv', 'label': 'CSV'},
             {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
+            {'tag': 'xlsx', 'label': 'Excel', 'error': None if xlsxwriter else "XLsxWriter required"},
         ]
 
     def fields_get(self, model):
@@ -1537,6 +1542,55 @@ class ExcelExport(ExportFormat, http.Controller):
         fp.close()
         return data
 
+
+class ExcelXlsxExport(ExportFormat, http.Controller):
+    # Excel needs raw data to correctly handle numbers and date values
+    raw_data = True
+
+    @http.route('/web/export/xlsx', type='http', auth="user")
+    @serialize_exception
+    def index(self, data, token):
+        return self.base(data, token)
+
+    @property
+    def content_type(self):
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+    def filename(self, base):
+        return base + '.xlsx'
+
+    def from_data(self, fields, rows):
+        fp = StringIO()
+        workbook = xlsxwriter.Workbook(fp)
+        worksheet = workbook.add_worksheet()
+
+        for i, fieldname in enumerate(fields):
+            worksheet.write(0, i, fieldname)
+            worksheet.set_column(i, i, 30)
+
+        base_style = workbook.add_format({'text_wrap': True})
+        date_style = workbook.add_format({'text_wrap': True,
+                                          'num_format': 'YYYY-MM-DD'})
+        datetime_style = workbook.add_format({'text_wrap': True,
+                                              'num_format': 'YYYY-MM-DD HH:mm:SS'})
+
+        for row_index, row in enumerate(rows):
+            for cell_index, cell_value in enumerate(row):
+                cell_style = base_style
+                if isinstance(cell_value, basestring):
+                    cell_value = re.sub("\r", " ", cell_value)
+                elif isinstance(cell_value, datetime.datetime):
+                    cell_style = datetime_style
+                elif isinstance(cell_value, datetime.date):
+                    cell_style = date_style
+                worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
+
+        workbook.close()
+        fp.seek(0)
+        data = fp.read()
+        return data
+
+
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
     TYPES_MAPPING = {
@@ -1546,6 +1600,7 @@ class Reports(http.Controller):
         'pdf': 'application/pdf',
         'sxw': 'application/vnd.sun.xml.writer',
         'xls': 'application/vnd.ms-excel',
+        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     }
 
     @http.route('/web/report', type='http', auth="user")

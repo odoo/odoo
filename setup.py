@@ -102,6 +102,7 @@ def py2exe_options():
                         'vobject',
                         'win32service', 'win32serviceutil',
                         'xlwt',
+                        'xlsxwriter',
                         'xml', 'xml.dom',
                         'yaml',
                     ],
@@ -164,6 +165,7 @@ setup(
         'vobject',
         'werkzeug',
         'xlwt',
+        'xlsxwriter',
     ],
     extras_require={
         'SSL': ['pyopenssl'],
