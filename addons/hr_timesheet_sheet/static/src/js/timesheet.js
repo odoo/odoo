@@ -31,6 +31,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.on("change:week", this, function() {
                 self.week = self.get('week');
             });
+            this.set("year", false);
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
@@ -302,7 +303,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.dfm = this.new_account_m2o.field_manager;
             this.$(".oe_timesheet_add_row").show();
             this.new_account_m2o.prependTo(this.$(".oe_timesheet_add_row"));
-            this.$(".oe_timesheet_add_row a").click(function() {
+            //this.$(".oe_timesheet_add_row a").click(function() {
+            //To support add account on oncahnge of many2one
+            this.new_account_m2o.on("change:value", this, function() {
                 var id = self.new_account_m2o.get_value();
                 if (id === false) {
                     self.new_account_m2o.field_manager.set({display_invalid_fields: true});
@@ -400,6 +403,10 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                     account_m2o.set_value(account_id);
                     account_m2o.current_value = account_m2o.old_value = account_id;
                     account_m2o.on("change:value", this, function() {
+                        if (account_m2o.get('value') === false) {
+                            account_m2o.field_manager.set({display_invalid_fields: true});
+                            return;
+                        }
                         account_m2o.old_value = account_m2o.current_value;
                         //New record will set false in the current value and when new record is set old value = new value(i.e. false)
                         if (account_m2o.get('value')) {
@@ -907,6 +914,10 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                 account_m2o.set_value(account_id);
                 account_m2o.current_value = account_m2o.old_value = account_id;
                 account_m2o.on("change:value", this, function() {
+                    if (account_m2o.get('value') === false) {
+                        account_m2o.field_manager.set({display_invalid_fields: true});
+                        return;
+                    }
                     account_m2o.old_value = account_m2o.current_value;
                     //New record will set false in the current value and when new record is set old value = new value(i.e. false)
                     if (account_m2o.get('value')) {
@@ -1119,7 +1130,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
             });
             _.each(account.days, function(day) {
                 _.each(day.lines, function(line) {
-                    if (line.unit_amount !== 0) {
+                    //if (line.unit_amount !== 0) {
                         var tmp = _.clone(line);
                         //tmp.id = undefined;
                         _.each(line, function(v, k) {
@@ -1135,7 +1146,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                         });
                         tmp = _.omit(tmp, ignored_fields);
                         ops.push(tmp);
-                    }
+                    //}
                 });
             });
         });
