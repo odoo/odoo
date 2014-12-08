@@ -163,7 +163,8 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
-            request.registry['website.menu'].create(request.cr, request.uid, {
+            request.registry['website.menu'].create(
+                request.cr, request.uid, {
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': request.website.menu_id.id,
@@ -202,7 +203,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False):
+    def customize_template_get(self, key, full=False, bundles=False, **kw):
         """ Get inherit view's informations of the template ``xml_id``. By default, only
         returns ``customize_show`` templates (which can be active or not), if
         ``full=True`` returns inherit view's informations of the template ``xml_id``.
@@ -215,7 +216,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         user = request.registry['res.users']\
             .browse(request.cr, request.uid, request.uid, request.context)
         user_groups = set(user.groups_id)
-
         views = request.registry["ir.ui.view"]\
             ._views_get(request.cr, request.uid, key, bundles=bundles, context=dict(request.context or {}, active_test=False))
         done = set()

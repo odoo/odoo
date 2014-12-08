@@ -174,9 +174,9 @@ class Versioning_Controller(Website):
             exp_obj.create(vals)
         return check
 
-    @http.route('/website_version/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, **kw):
-        result = Website.customize_template_get(self, key, full=False, bundles=False)
+    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
+    def customize_template_get(self, key, full=False, bundles=False, **kw):
+        result = Website.customize_template_get(self, key, full=full, bundles=bundles, **kw)
         check = []
         res = []
         for data in result:
