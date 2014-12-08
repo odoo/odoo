@@ -3811,7 +3811,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
+        totranslate = context.get('lang') and context['lang'] != 'en_US'
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3821,7 +3821,7 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if (not totranslate) or not (column.translate is True):
+                    if not (totranslate and column.translate):
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
@@ -3857,6 +3857,15 @@ class BaseModel(object):
                             context_wo_lang = dict(context, lang=None)
                             self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                    elif self._columns[f].translate:
+                        # We do not handle the update of a field where translate
+                        # is a callable. One should update the value without a
+                        # language, or update translated terms separately.
+                        raise ValidationError(_(
+                            "The translation of the field '%s' cannot be "
+                            "directly updated. You can either update its value "
+                            "in English, or update translated terms separately."
+                        ) % self._fields[f].string)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
