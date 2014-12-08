@@ -2,6 +2,8 @@
 import copy
 import logging
 
+from collections import defaultdict
+from difflib import get_close_matches
 from lxml import etree, html
 
 from openerp import SUPERUSER_ID, api, tools
@@ -302,33 +304,44 @@ class view(osv.osv):
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
 
-    # When the English version of a field is modified, the algorithm tries to
-    # resync translation if the distance between modified strings is not too
-    # big. It allows to not retranslate data where a typo has been fixed in
-    # the English version.
-    def _translation_resync(self, cr, uid, model, ids, field, context=None):
-        context = context or {}
-        model_obj = self.pool.get(model)
-        trans_obj = self.pool.get('ir.translation')
-        translate = model_obj._all_columns[field].column.translate
-        if not translate:
+    @api.model
+    def _translation_resync(self, model, ids, field):
+        # When the English version of a field is modified, the algorithm tries
+        # to resynchronize translations to the terms to translate, provided the
+        # distance between modified strings is not too large. It allows to not
+        # retranslate data where a typo has been fixed in the English version.
+        records = self.env[model].browse(ids)
+        fld = records._fields[field]
+        if not callable(fld.translate):
             return
-        chunk = (lambda x: [x]) if (translate is True) else translate
 
-        for record in model_obj.browse(cr, uid, ids, context=context):
-            val = getattr(record, field)
-            if not val: continue
-            origins = list(chunk(val))
+        trans = self.env['ir.translation']
+        trans_domain = [('type', '=', 'model'), ('name', '=', model + ',' + field)]
+        discarded = trans
 
-            trans_ids = trans_obj.search(cr, uid, [
-                            ('name','=',model+','+field),('type','=','model'),
-                            ('res_id', '=', record.id)], context=context)
+        for record in records:
+            value = record[field]
+            if not value:
+                discarded += trans.search(trans_domain + [('res_id', '=', record.id)])
+                continue
 
-            for term in trans_obj.browse(cr, uid, trans_ids, context=context):
-                if term.src not in origins:
-                    newsrc = difflib.get_close_matches(term.src, origins, 1, 0.9)
-                    if newsrc:
-                        trans_obj.write(cr, uid, term.id, {'src': newsrc[0]}, context=context)
-                    elif translate is True:
-                        trans_obj.write(cr, uid, term.id, {'state': 'to_translate', 'src': val}, context=context)
+            # group translations by lang and src
+            lang_term_trans = defaultdict(dict)
+            for trans in trans.search(trans_domain + [('res_id', '=', record.id)]):
+                lang_term_trans[trans.lang][trans.src] = trans
+
+            # remap existing translations on source terms when possible
+            sources = set(fld.get_terms(value))
+            for term_trans in lang_term_trans.values():
+                for term, trans in term_trans.items():
+                    if term not in sources:
+                        terms = get_close_matches(term, sources, 1, 0.9)
+                        if terms and terms[0] not in term_trans:
+                            trans.write({'src': terms[0], 'value': trans.value})
+                            term_trans[terms[0]] = trans
+                        else:
+                            discarded += trans
+
+        # remove discarded translations
+        discarded.unlink()
         return True
