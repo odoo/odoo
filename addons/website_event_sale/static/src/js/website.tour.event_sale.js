@@ -19,13 +19,13 @@
             },
             {
                 title:     "Select 2 units of `VIP` ticket type",
-                waitFor:   'select:eq(0) option:contains(1):selected',
+                waitFor:   'select:eq(0) option:contains(1):propSelected',
                 element:   'select:eq(1)',
                 sampleText: '2',
             },
             {
                 title:     "Click on `Order Now` button",
-                waitFor:   'select:eq(1) option:contains(2):selected',
+                waitFor:   'select:eq(1) option:contains(2):propSelected',
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
