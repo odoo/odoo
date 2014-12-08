@@ -212,7 +212,7 @@ class ir_http(orm.AbstractModel):
                     return response
             except Exception, e:
                 if openerp.tools.config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
-                    raise e
+                    raise
                 exception = e
 
             values = dict(
