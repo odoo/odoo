@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+import logging
 
 from lxml import etree, html
 
@@ -7,6 +8,9 @@ from openerp import SUPERUSER_ID, tools
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
+
+_logger = logging.getLogger(__name__)
+
 
 class view(osv.osv):
     _inherit = "ir.ui.view"
@@ -16,7 +20,7 @@ class view(osv.osv):
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
         'customize_show': fields.boolean("Show As Optional Inherit"),
-        'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
+        'website_id': fields.many2one('website', ondelete='cascade', string="Website"),
     }
 
     _sql_constraints = [
@@ -50,10 +54,12 @@ class view(osv.osv):
           - but not the optional children of a non-enabled child
         * all views called from it (via t-call)
         """
+
         try:
             view = self._view_obj(cr, uid, view_id, context=context)
         except ValueError:
-            # Shall we log that ?
+            _logger.warning("Could not find view object with view_id '%s'" % (view_id))
+            # Shall we log that ? Yes, you should !
             return []
 
         while root and view.inherit_id:
@@ -148,7 +154,7 @@ class view(osv.osv):
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
-            engine='website.qweb'
+            engine = 'website.qweb'
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
@@ -231,4 +237,3 @@ class view(osv.osv):
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
-
