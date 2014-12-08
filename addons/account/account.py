@@ -171,7 +171,7 @@ class account_account(models.Model):
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
         help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
-        'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.'),
+        'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
 
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows reconciliation of journal items.")
