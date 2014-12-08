@@ -472,7 +472,7 @@ class ir_mail_server(osv.osv):
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.error(msg)
+            _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
