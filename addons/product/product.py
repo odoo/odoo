@@ -15,6 +15,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round, float_compare
 from openerp.exceptions import UserError
 from openerp.exceptions import except_orm
+from openerp.osv.expression import get_unaccent_wrapper
 
 #----------------------------------------------------------
 # UOM
@@ -961,6 +962,9 @@ class product_product(osv.osv):
             res[prod_id] = item_ids
         return res
 
+    def _display_product_name(self, cr, uid, ids, name, args, context=None):
+        return dict(self.name_get(cr, uid, ids, context=context))
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -998,6 +1002,11 @@ class product_product(osv.osv):
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
         'pricelist_item_ids': fields.function(_get_pricelist_items, type='many2many', relation='product.pricelist.item', string='Pricelist Items'),
+        'display_name': fields.function(_display_product_name, type="char", string="Name", select=True,
+            store={
+                'product.template': (_get_name_template_ids, ['name','default_code'], 10),
+                'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10)
+            }),
     }
 
     _defaults = {
@@ -1127,6 +1136,37 @@ class product_product(osv.osv):
                 ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
                 if not ids:
                     ids = self.search(cr, user, [('barcode','=',name)]+ args, limit=limit, context=context)
+                if not ids:
+                    if operator in ('=ilike', '=like'):
+                        operator = operator[1:]
+                    self.check_access_rights(cr, user, 'read')
+                    where_query = self._where_calc(cr, user, args, context=context)
+                    self._apply_ir_rules(cr, user, where_query, 'read', context=context)
+                    from_clause, where_clause, where_clause_params = where_query.get_sql()
+                    where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+
+                    search_name = name.split(' ')
+                    where_clause_params += ['%%%s%%' % search_name[0]]
+                    unaccent = get_unaccent_wrapper(cr)
+                    query = """SELECT product_product.id FROM {from_str}
+                            {where} {display_name} {operator} {name}
+                            """.format(
+                                    from_str=from_clause,
+                                    where=where_str,
+                                    display_name=unaccent('display_name'),
+                                    operator=operator,
+                                    name=unaccent("%s"))
+
+                    if len(search_name) > 1:
+                        for qname in search_name[1:]:
+                            where_clause_params += ['%%%s%%' % qname]
+                            query += " AND {display_name} {operator} {name}".format(
+                                    display_name=unaccent('display_name'),
+                                    operator=operator,
+                                    name=unaccent("%s"))
+
+                    cr.execute(query, where_clause_params)
+                    ids = map(lambda x: x[0], cr.fetchall())
             if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
