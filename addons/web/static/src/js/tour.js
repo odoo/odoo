@@ -586,7 +586,6 @@ var Tour = {
                 if ($element.is("input") ) {
                     $element.val(step.sampleText);
                 } if ($element.is("select")) {
-                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
                     $element.val(step.sampleText);
                 } else {
                     $element.html(step.sampleText);
