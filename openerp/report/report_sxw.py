@@ -32,7 +32,7 @@ import logging
 import openerp.tools as tools
 import zipfile
 import common
-from .exceptions import AccessError
+from openerp.exceptions import AccessError
 
 import openerp
 from openerp import SUPERUSER_ID
