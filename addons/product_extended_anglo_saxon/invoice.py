@@ -25,7 +25,7 @@ class account_invoice_line(osv.Model):
         product = i_line.product_id
         bom_ids = self.pool['stock.move']._check_product_phantom_bom(cr, uid, product, context=context)
         if not bom_ids:
-            return super(account_invoice_line, self)._invoiced_product_move_lines(self, cr, uid, inv, i_line, dacc, cacc, context=context)
+            return super(account_invoice_line, self)._invoiced_product_move_lines(cr, uid, inv, i_line, dacc, cacc, context=context)
 
         # product is based on phantom bom, meaning it is not actually moved
         # instead of invoicing phantom product, use raw material for COGS
