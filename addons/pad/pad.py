@@ -37,7 +37,9 @@ class pad_common(osv.osv_memory):
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
         #path
-        path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
+        # etherpad hardcodes pad id length limit to 50
+        path = '-%s-%s' % (self._name, salt)
+        path = '%s%s' % (cr.dbname.replace('_','-')[0:50 - len(path)], path)
         # contruct the url
         url = '%s/p/%s' % (pad["server"], path)
 
