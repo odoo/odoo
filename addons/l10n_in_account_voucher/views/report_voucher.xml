@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_voucher">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+	        <t t-call="report.external_layout">
+	            <div class="page">
+	                <div class="row mb32">
+	                    <div class="col-xs-6 col-xs-offset-3 text-center">
+	                        <h2><t t-esc="o.type[0].swapcase() + o.type[1:]"/> Voucher</h2>
+	                        <h5><address t-field="o.company_id.partner_id"
+	                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' /></h5>
+	                            <h5><t t-esc="o.company_id.rml_footer"/></h5>
+	                    </div>
+	                </div>
+	                <table class="table table-bordered">
+	                    <tr>
+	                        <td colspan="2"><strong>Journal:</strong></td>
+	                        <td colspan="2"><span t-field="o.type"/></td>
+	                        <td colspan="2"><strong>Number:</strong></td>
+	                        <td colspan="2"><span t-field="o.number"/></td>
+	                    </tr>
+	                    <tr>
+	                        <td><strong>Status:</strong></td>
+	                        <td>
+	                            <span t-if="o.state == 'proforma'">Pro-forma</span>
+	                            <span t-if="o.state == 'draft'">Draft</span>
+	                            <span t-if="o.state == 'cancel'">Cancelled</span>
+	                            <span t-if="o.state == 'posted'">Posted</span>
+	                        </td>
+	                        <td><strong>Ref.:</strong></td>
+	                        <td><span t-field="o.reference"/></td>
+	                        <td colspan="2"><strong>Date:</strong></td>
+	                        <td colspan="2"><span t-field="o.date"/></td>
+	                    </tr>
+	                </table>
+	                <table class="table-borderless col-xs-12 mb64">
+	                    <thead>
+	                        <tr class="table-bordered">
+	                            <th class="text-left"><h4><strong>Particulars</strong></h4></th>
+	                            <th class="text-right"><h4><strong>Debit</strong></h4></th>
+	                            <th class="text-right "><h4><strong>Credit</strong></h4></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <t t-foreach="o.move_ids" t-as="m">
+	                            <tr>
+	                                <td><t t-if="m.partner_id or 'Account'">
+	                                    <h4><strong><t t-esc="m.partner_id.name"/></strong></h4></t>
+	                                </td>
+	                                <td class="text-right"><p t-field="m.debit"/></td>
+	                                <td class="text-right"><p t-field="m.credit"/></td>
+	                            </tr>
+	                            <tr>
+	                                <td><span t-field="m.account_id.name"/></td>
+	                            </tr>
+	                            <tr>
+	                                <td>
+	                                    <t t-esc="m.name"/> - <t t-esc="o.id"/>
+	                                </td>
+	                            </tr>
+	                        </t>
+	                        <tr>
+	                            <td><h4><strong>Through: </strong></h4><h5><t t-esc=" o.narration"/></h5></td>
+	                        </tr>
+	                        <tr>
+	                            <td><h4><strong> On Account of: </strong></h4><h5><t t-esc=" o.name"/></h5></td>
+	                        </tr>
+	                        <tr>
+	                            <td>
+	                                <h4><strong>Amount (in words) :</strong></h4>
+	                                <t t-if="o.state != 'draft' and o.state != 'cancel'">
+	                                    <h5><t t-esc="o.convert()"/></h5>
+	                                </t>
+	                            </td>
+	                        </tr>
+	                        </tbody>
+	                        <tfoot>
+	                           <tr class="table-bordered">
+	                               <td class="text-right" colspan="2"><h4><strong><span t-esc="sum([move.debit for move in o.move_ids]) or 0.0"/></strong></h4></td>
+	                               <td class="text-right"><h4><strong><span t-esc="sum([move.credit for move in o.move_ids]) or 0.0"/></strong></h4></td>
+	                           </tr>
+	                        </tfoot>
+	                </table>
+                       <div class="row">
+                          <b class="pull-left">Receiver's Signature</b>
+                          <b class="pull-right">Authorised Signature</b>
+                       </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

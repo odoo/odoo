@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    <!-- Email Templates menu -->
+    <record model="ir.actions.act_window" id="email_templates_vouchers">
+        <field name="name">Email Templates</field>
+        <field name="res_model">email.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="email_template.email_template_tree"/>
+        <field name="search_view_id" ref="email_template.view_email_template_search"/>
+        <field name="context" eval="{'search_default_model_id': ref('account_voucher.model_account_voucher')}"/>
+    </record>
+    </data>
+
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!-- Email template -->
+        <record id="email_template_account_voucher" model="email.template">
+            <field name="name">Voucher Receipt Send by Email</field>
+            <field name="email_from">${(object.company_id.email or 'noreply@localhost')|safe}</field>
+            <field name="subject">${object.company_id.name} Receipt (Ref ${object.number or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="report_account_voucher"/>
+            <field name="report_name">Receipt_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+    <p>Hello ${object.partner_id.name},</p>
+
+    <p> A receipt is available for you: </p>
+
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
+        &nbsp;&nbsp;Voucher number: <strong>${object.number or ''}</strong><br />
+        &nbsp;&nbsp;Voucher total: <strong>  ${object.amount}  ${object.currency_id.name}</strong><br />
+        &nbsp;&nbsp;Voucher date: ${object.date}<br />
+        % if object.reference:
+        &nbsp;&nbsp;Payment reference: ${object.reference }<br />
+        % endif
+        % if object.name:
+        &nbsp;&nbsp;Memo: ${object.name}<br />
+        % endif
+        % if object.narration:
+        &nbsp;&nbsp;Payment Details: ${object.narration }
+        % endif
+    </p>
+    <br/>
+    <p>If you have any question, do not hesitate to contact us.</p>
+    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+     <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        %endif
+    </div>
+</div>
+        ]]></field>
+		</record>
+	</data>
+</openerp>
