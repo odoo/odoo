@@ -493,6 +493,18 @@ class product_template(osv.osv):
             res[product.id] = len(product.product_variant_ids)
         return res
 
+    def _get_main_supplier(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for template in self.browse(cr, uid, ids, context=context):
+            res[template.id] = {
+                'seller_delay': 0, 'seller_qty': 0.0, 'seller_id': False
+            }
+            if template.seller_ids:
+                res[template.id]['seller_delay'] = template.seller_ids[0].delay
+                res[template.id]['seller_qty'] = template.seller_ids[0].qty
+                res[template.id]['seller_id'] = template.seller_ids[0].name.id
+        return res
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
@@ -557,12 +569,12 @@ class product_template(osv.osv):
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
-        'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
+        'seller_delay': fields.function(_get_main_supplier, type='integer', string='Supplier Lead Time', multi="main_supplier",
             help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.related('seller_ids','qty', type='float', string='Supplier Quantity',
+        'seller_qty': fields.function(_get_main_supplier, type='float', string='Supplier Quantity', multi="main_supplier",
             help="This is minimum quantity to purchase from Main Supplier."),
-        'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Supplier',
-            help="Main Supplier who has highest priority in Supplier List."),
+        'seller_id': fields.function(_get_main_supplier, type='many2one', relation='res.partner', string='Main Supplier', multi="main_supplier",
+            help='Main Supplier who has highest priority in Supplier List.'),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
