@@ -39,6 +39,7 @@ from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
 from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from .console import Console
 
 _logger = logging.getLogger(__name__)
 
@@ -937,6 +938,19 @@ def start(preload=None, stop=False):
         autoreload.run()
 
     rc = server.run(preload, stop)
+
+    if config['shell_mode']:
+        from pprint import pprint
+        db_name = config['db_name']
+        registry = RegistryManager.get(db_name)
+        openerp.api.Environment.reset()
+        cr = registry.cursor()
+        uid = openerp.SUPERUSER_ID
+        context = {}
+        env = openerp.api.Environment(cr, uid, context)
+        print('Connected to %s. self mapped to %s.'
+              % (db_name, env.user))
+        Console(locals={'self': env.user, 'pp': pprint, 'pprint': pprint})
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
