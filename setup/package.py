@@ -52,6 +52,7 @@ PUBLISH_DIRS = {
 }
 EXTENSIONS = [
     '.tar.gz',
+    '.zip',
     '.deb',
     '.dsc',
     '.changes',
@@ -269,8 +270,9 @@ def _prepare_build_dir(o):
         shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
 def build_tgz(o):
-    system(['python2', 'setup.py', '--quiet', 'sdist'], o.build_dir)
+    system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
     system(['cp', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
+    system(['cp', glob('%s/dist/odoo-*.zip' % o.build_dir)[0], '%s/odoo.zip' % o.build_dir])
 
 def build_deb(o):
     deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
@@ -451,7 +453,7 @@ def main():
             try:
                 if not o.no_testing:
                     test_tgz(o)
-                published_files = publish(o, 'tarball', ['odoo.tar.gz'])
+                published_files = publish(o, 'tarball', ['odoo.tar.gz', 'odoo.zip'])
             except Exception, e:
                 print("Won't publish the tgz release.\n Exception: %s" % str(e))
         if not o.no_debian:
