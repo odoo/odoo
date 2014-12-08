@@ -147,15 +147,6 @@ class UNIX_LINE_TERMINATOR(csv.excel):
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 #
-# Functions to manipulate translated fields
-#
-def get_translate_terms(translate, value):
-    """ Return the sequence of terms found in `value` for a given `translate` function. """
-    terms = []
-    translate(lambda t: terms.append(t) or t, value)
-    return terms
-
-#
 # Warning: better use self.pool.get('ir.translation')._get_source if you can
 #
 def translate(cr, name, source_type, lang, source=None):
@@ -726,18 +717,18 @@ def trans_generate(lang, modules, cr):
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for field_name, field_def in obj._columns.items():
-            if field_def.translate:
+        for field_name, field_def in obj._fields.iteritems():
+            if getattr(field_def, 'translate', None):
                 name = model + "," + field_name
                 try:
-                    term = obj[field_name] or ''
+                    value = obj[field_name] or ''
                 except:
                     continue
                 if field_def.translate is True:
-                    push_translation(module, 'model', name, xml_name, encode(term))
+                    push_translation(module, 'model', name, xml_name, encode(value))
                 else:
-                    for t in set(get_translate_terms(field_def.translate, term)):
-                        push_translation(module, 'model', name, xml_name, encode(t))
+                    for term in set(field_def.get_terms(value)):
+                        push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 

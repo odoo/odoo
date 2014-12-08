@@ -1133,6 +1133,14 @@ class _String(Field):
     def _description_translate(self, env):
         return bool(self.translate)
 
+    def get_terms(self, value):
+        """ Return the sequence of terms to translate found in `value`. """
+        if not callable(self.translate):
+            return [value]
+        terms = []
+        self.translate(lambda t: terms.append(t) or t, value)
+        return terms
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a

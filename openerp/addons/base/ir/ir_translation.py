@@ -24,7 +24,7 @@ import logging
 from openerp import api, tools
 import openerp.modules
 from openerp.osv import fields, osv
-from openerp.tools.translate import _, get_translate_terms
+from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -516,7 +516,7 @@ class ir_translation(osv.osv):
                 })
             elif src:
                 # insert missing translations for each term
-                terms = set(get_translate_terms(fld.translate, src))
+                terms = set(fld.get_terms(src))
                 for term in terms:
                     query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                                 SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
