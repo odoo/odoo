@@ -981,7 +981,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'date_planned': fields.date('Scheduled Date', required=True, select=True),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -1057,9 +1057,11 @@ class purchase_order_line(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        for po_line in self.browse(cr, uid, ids, context=context):
-            if all([l.state == 'cancel' for l in po_line.order_id.order_line]):
-                self.pool.get('purchase.order').action_cancel(cr, uid, [po_line.order_id.id], context=context)
+        # Calculate the list of purchase orders first
+        purchase_orders = list(set([x.order_id for x in self.browse(cr, uid, ids, context=context)]))
+        for purchase in purchase_orders:
+            if all([l.state == 'cancel' for l in purchase.order_line]):
+                self.pool.get('purchase.order').action_cancel(cr, uid, [purchase.id], context=context)
 
     def _check_product_uom_group(self, cr, uid, context=None):
         group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
