@@ -17,7 +17,7 @@
                       <separator/>
                       <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]"/>
                       <separator />
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                       <field name="opening_date"/>
                       <field name="date_closed"/>
                     </group>

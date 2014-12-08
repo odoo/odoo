@@ -104,7 +104,7 @@
                         <field name="state"/>
                         <field name="acc_number" placeholder="Account Number"/>
                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"
-                            invisible="context.get('company_hide', True)" widget="selection"/>
+                            invisible="context.get('company_hide', True)" options="{'no_create': True}"/>
                         <field name="footer" invisible="context.get('footer_hide', True)"/>
                     </group>
                     <group>

@@ -81,7 +81,7 @@
                                     </group>
                                 </group>
                                 <group colspan="4">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
@@ -832,7 +832,7 @@
                         <field name="min_qty"/>
                         <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <p groups="product.group_purchase_pricelist" class="oe_grey">The prices below will only be taken into account when your pricelist is set as based on supplier prices.</p>
                     <field groups="product.group_purchase_pricelist" name="pricelist_ids">
@@ -859,7 +859,7 @@
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="min_qty"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 </tree>
             </field>
         </record>

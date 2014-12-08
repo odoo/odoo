@@ -64,7 +64,7 @@
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="picking_type_id" widget="selection" groups="stock.group_stock_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
                 <notebook>
@@ -85,7 +85,7 @@
                                     <field name="product_uom_id" />
                                     <field name="schedule_date"/>
                                     <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </form>
                         </field>
@@ -100,7 +100,7 @@
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
                                 <field name="partner_id"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="minimum_planned_date" invisible="1"/>
                                 <field name="origin"/>
@@ -132,7 +132,7 @@
                 <field name="name"/>
                 <field name="ordering_date"/>
                 <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                 <field name="date_end"/>
                 <field name="origin"/>
                 <field name="state"/>

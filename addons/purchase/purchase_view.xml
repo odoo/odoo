@@ -357,7 +357,7 @@
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>

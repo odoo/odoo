@@ -93,7 +93,7 @@
                         <field name="medium_id" widget="selection"/>
                         <field name="source_id" widget="selection"/>
                         <separator orientation="vertical"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         <newline/>
                         <field name="create_date"/>
                         <field name="opening_date"/>
