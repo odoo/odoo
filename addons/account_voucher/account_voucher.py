@@ -83,8 +83,8 @@ class account_voucher(models.Model):
                         \n* The \'Cancelled\' status is used when user cancel voucher.')
     reference = fields.Char('Ref #', readonly=True, states={'draft': [('readonly', False)]},
                                  help="Transaction reference number.", copy=False)
-    amount = fields.Float(string='Total', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    tax_amount = fields.Float(string='Tax Amount', readonly=True)
+    amount = fields.Float(string='Total', digits=dp.get_precision('Account'), required=True, readonly=True, states={'draft': [('readonly', False)]})
+    tax_amount = fields.Float(string='Tax Amount', digits=dp.get_precision('Account'), readonly=True)
     number = fields.Char('Number', readonly=True, copy=False)
     move_id = fields.Many2one('account.move', 'Journal Entry', copy=False)
     partner_id = fields.Many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft': [('readonly', False)]})
@@ -406,7 +406,7 @@ class account_voucher_line(models.Model):
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
         digits=dp.get_precision('Product Price'))
-    price_subtotal = fields.Float(string='Amount',
+    price_subtotal = fields.Float(string='Amount', digits=dp.get_precision('Account'),
         store=True, readonly=True, compute='_compute_subtotal')
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)

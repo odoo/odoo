@@ -255,15 +255,15 @@ class account_move_line(models.Model):
         "The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
-    debit = fields.Float(string='Debit', default=0.0)
-    credit = fields.Float(string='Credit', default=0.0)
-    amount_currency = fields.Float(string='Amount Currency', default=0.0,
+    debit = fields.Float(string='Debit', digits=dp.get_precision('Account'), default=0.0)
+    credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
+    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency, 
         help="The optional other currency if it is a multi-currency entry.")
-    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True,
+    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in the company currency.")
-    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True,
+    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)],
@@ -298,7 +298,7 @@ class account_move_line(models.Model):
     # TODO: remove with the new tax engine
     tax_code_id = fields.Many2one('account.tax.code', string='Tax Account', 
         help="The Account can either be a base tax code or a tax code account.")
-    tax_amount = fields.Float(string='Tax/Base Amount', index=True,
+    tax_amount = fields.Float(string='Tax/Base Amount', digits=dp.get_precision('Account'), index=True, 
         help="If the Tax account is a tax code account, this field will contain the taxed amount."\
         "If the tax account is base tax code, this field will contain the basic amount(without tax).")
 
