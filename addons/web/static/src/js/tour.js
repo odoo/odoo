@@ -41,7 +41,16 @@ $.extend($.expr[':'],{
         var regreg =  /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})$/,
         reg = regreg.exec(m[3]);
         return reg ? new RegExp(reg[1], reg[2]).test($.trim(a.innerHTML)) : false;
-    }
+    },
+    propChecked: function(element, index, matches) {
+        return $(element).prop("checked") === true;
+    },
+    propSelected: function(element, index, matches) {
+        return $(element).prop("selected") === true;
+    },
+    propValue: function(element, index, matches) {
+        return $(element).prop("value") === matches[3];
+    },
 });
 $.ajaxSetup({
     beforeSend:function(){
