@@ -150,14 +150,6 @@ class Versioning_Controller(Website):
             r3 = 0
         return {'tab_version':r1, 'tab_goal':r2, 'check_conf': r3}
 
-    @http.route(['/website_version/create_experiment'], type = 'json', auth = "public", website = True)
-    def create_experiment(self, name, version_ids, objectives):
-        tab = []
-        tab = [[0, False, {'frequency': '50', 'version_id': int(x)}] for x in version_ids]
-        vals = {'name':name, 'google_id': False, 'state': 'draft', 'website_id':request.context.get('website_id'), 'experiment_version_ids':tab, 'objectives': int(objectives)}
-        exp_obj = request.env['website_version.experiment']
-        exp_obj.create(vals)
-
     def check_view(self, version_ids):
         #Check if version_ids don't overlap with running experiments
         version_keys = set([v['key'] for v in request.env['ir.ui.view'].search_read([('version_id', 'in', version_ids)], ['key'])])
