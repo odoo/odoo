@@ -63,8 +63,8 @@ class account_bank_statement(models.Model):
     date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]},
         select=True, copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm':[('readonly',True)]})
-    balance_start = fields.Float(string='Starting Balance', digits=dp.get_precision('Account'), states={'confirm':[('readonly',True)]})
-    balance_end_real = fields.Float('Ending Balance', digits=dp.get_precision('Account'),
+    balance_start = fields.Float(string='Starting Balance', digits=0, states={'confirm':[('readonly',True)]})
+    balance_end_real = fields.Float('Ending Balance', digits=0,
         states={'confirm': [('readonly', True)]})
     balance_end = fields.Float(compute='_end_balance', store=True,
         string="Computed Balance", help='Balance as calculated based on Opening Balance and transaction lines')
@@ -677,7 +677,7 @@ class account_bank_statement_line(models.Model):
 
     name = fields.Char(string='Communication', required=True, default=lambda self: self.env['ir.sequence'].get('account.bank.statement.line'))
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
-    amount = fields.Float(digits=dp.get_precision('Account'))
+    amount = fields.Float(digits=0)
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
     account_id = fields.Many2one('account.account', string='Counterpart Account', domain=[('deprecated', '=', False)],
@@ -691,6 +691,5 @@ class account_bank_statement_line(models.Model):
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.")
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
     journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
-    amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.",
-        digits=dp.get_precision('Account'))
+    amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits=0)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")

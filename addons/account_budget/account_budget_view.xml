@@ -64,9 +64,9 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount" sum="Planned Amount"/>
-                                    <field name="practical_amount" sum="Practical Amount" />
-                                    <field name="theoritical_amount" sum="Theoretical Amount"/>
+                                    <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
+                                    <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
@@ -76,9 +76,9 @@
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date"/>
-                                        <field name="planned_amount"/>
-                                        <field name="practical_amount"/>
-                                        <field name="theoritical_amount"/>
+                                        <field name="planned_amount" widget="monetary"/>
+                                        <field name="practical_amount" widget="monetary"/>
+                                        <field name="theoritical_amount" widget="monetary"/>
                                         <field name="percentage"/>
                                     </group>
                                 </form>
@@ -133,9 +133,9 @@
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date"/>
-                                        <field name="planned_amount" sum="Planned Amount"/>
-                                        <field name="practical_amount" sum="Practical Amount"/>
-                                        <field name="theoritical_amount" sum="Theoretical Amount"/>
+                                        <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
+                                        <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                        <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
                                         <field name="percentage"/>
                                     </tree>
                                     <form string="Budget Lines">
@@ -143,7 +143,7 @@
                                             <group>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                                 <field name="general_budget_id"/>
-                                                <field name="planned_amount"/>
+                                                <field name="planned_amount" widget="monetary"/>
                                             </group>
                                             <group>
                                                 <label for="date_from" string="Duration"/>
@@ -244,9 +244,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="paid_date"/>
-                    <field name="planned_amount"/>
-                    <field name="practical_amount"/>
-                    <field name="theoritical_amount"/>
+                    <field name="planned_amount" widget="monetary"/>
+                    <field name="practical_amount" widget="monetary"/>
+                    <field name="theoritical_amount" widget="monetary"/>
                     <field name="percentage"/>
                 </tree>
             </field>
@@ -264,9 +264,9 @@
                             <field name="date_from"/>
                             <field name="date_to"/>
                             <field name="paid_date"/>
-                            <field name="planned_amount"/>
-                            <field name="practical_amount"/>
-                            <field name="theoritical_amount"/>
+                            <field name="planned_amount" widget="monetary"/>
+                            <field name="practical_amount" widget="monetary"/>
+                            <field name="theoritical_amount" widget="monetary"/>
                             <field name="percentage"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
@@ -309,9 +309,9 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount"/>
-                                    <field name="practical_amount" sum="Practical Amount"/>
-                                    <field name="theoritical_amount" sum="Theoritical Amount"/>
+                                    <field name="planned_amount" widget="monetary"/>
+                                    <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" sum="Theoritical Amount" widget="monetary"/>
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
@@ -320,7 +320,7 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount"/>
+                                    <field name="planned_amount" widget="monetary"/>
                                 </form>
                             </field>
                     </page>

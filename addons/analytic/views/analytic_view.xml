@@ -118,9 +118,9 @@
                     <field name="name" invisible="1"/>
                     <field name="complete_name"/>
                     <field name="code"/>
-                    <field name="debit"/>
-                    <field name="credit"/>
-                    <field name="balance"/>
+                    <field name="debit" widget="monetary"/>
+                    <field name="credit" widget="monetary"/>
+                    <field name="balance" widget="monetary"/>
                     <field name="state" invisible="1"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date" invisible="1"/>
@@ -197,7 +197,7 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Amount">
-                            <field name="amount"/>
+                            <field name="amount" widget="monetary"/>
                         </group>
                         <group string="Product Information" name="product_info">
                             <label for="unit_amount"/>
@@ -217,7 +217,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="user_id"/>
-                    <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
+                    <field name="amount" sum="Total" invisible="context.get('to_invoice', False)" widget="monetary"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -284,7 +284,7 @@
                           <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                         </group>
                         <group string="Amount">
-                            <field name="amount"/>
+                            <field name="amount" widget="monetary"/>
                         </group>
                         <group string="Product Information">
                             <label for="unit_amount"/>

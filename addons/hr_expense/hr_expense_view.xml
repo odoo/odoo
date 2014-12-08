@@ -16,7 +16,7 @@
                     <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
-                    <field name="total_amount" sum="Total"/>
+                    <field name="total_amount" sum="Total" widget="monetary"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +32,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name" string="Expense Sheet"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
@@ -48,7 +48,7 @@
                     <field name="date"/>
                     <field name="department_id"/>
                     <field name="name" string="Expense Sheet"/>
-                    <field name="amount"/>
+                    <field name="amount" widget="monetary"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                     <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
@@ -124,7 +124,7 @@
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>
-                                    <field name="total_amount" sum="Total"/>
+                                    <field name="total_amount" sum="Total" widget="monetary"/>
                                 </tree>
                             </field>
                             <group>

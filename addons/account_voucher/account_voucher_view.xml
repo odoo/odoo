@@ -12,7 +12,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id" groups="account.group_account_user"/>
                     <field name="voucher_type" invisible="context.get('visible', True)"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -27,7 +27,7 @@
                             <field name="product_id"/>
                             <field name="quantity" class="oe_inline"/>
                             <field name="price_unit"/>
-                            <field name="price_subtotal"/>
+                            <field name="price_subtotal" widget="monetary"/>
                         </group>
                         <group>
                             <field name="account_id"/>
@@ -54,7 +54,7 @@
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" widget="monetary"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -90,7 +90,7 @@
             <field name="arch" type="xml">
                 <graph string="Voucher Statistics" type="bar">
                     <field name="date"/>
-                    <field name="amount" operator="+"/>
+                    <field name="amount" operator="+" widget="monetary"/>
                 </graph>
             </field>
          </record>

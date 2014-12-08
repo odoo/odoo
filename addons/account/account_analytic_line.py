@@ -84,9 +84,8 @@ class account_analytic_line(models.Model):
             # to return a default price for those units
             ctx['uom'] = unit
         amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
-        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         amount = amount_unit * quantity or 0.0
-        result = round(amount, prec)
+        result = round(amount, self.currency_id.decimal_places)
         if not flag:
             result *= -1
         return {'value': {
@@ -140,9 +139,8 @@ class account_analytic_line(models.Model):
             # to return a default price for those units
             ctx['uom'] = unit
         amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
-        prec = self.env['decimal.precision'].precision_get('Account')
         amount = amount_unit * self.unit_amount or 0.0
-        result = round(amount, prec)
+        result = round(amount, self.currency_id.decimal_places)
         if pricetype.field != 'list_price':
             result *= -1
         self.amount = result

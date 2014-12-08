@@ -9,7 +9,7 @@ class CashBox(models.TransientModel):
     name = fields.Char(string='Reason', required=True)
     # Attention, we don't set a domain, because there is a journal_type key 
     # in the context of the action
-    amount = fields.Float(string='Amount', digits = dp.get_precision('Account'), required=True)
+    amount = fields.Float(string='Amount', digits=0, required=True)
 
 
     @api.multi

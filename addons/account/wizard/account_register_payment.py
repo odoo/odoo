@@ -18,7 +18,7 @@ class account_register_payment(models.TransientModel):
     _description = "Register payment"
     
     invoice_id = fields.Many2one('account.invoice', String="Related invoice", required=True)
-    payment_amount = fields.Float(String='Amount paid', required=True, digits=dp.get_precision('Account'))
+    payment_amount = fields.Float(String='Amount paid', required=True, digits=0)
     date_paid = fields.Date(String='Date paid', default=fields.Date.context_today, required=True)
     reference = fields.Char('Ref #', help="Transaction reference number.")
     journal_id = fields.Many2one('account.journal', String='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])

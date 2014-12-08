@@ -40,7 +40,7 @@ class SaleOrder(orm.Model):
 
     _columns = {
         'amount_delivery': fields.function(
-            _amount_all_wrapper, type='float', digits_compute=decimal_precision.get_precision('Account'),
+            _amount_all_wrapper, type='float', digits=0,
             string='Delivery Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),

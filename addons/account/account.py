@@ -38,13 +38,14 @@ class account_payment_term(models.Model):
         help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     @api.one
     def compute(self, value, date_ref=False):
         date_ref = date_ref or datetime.now().strftime('%Y-%m-%d')
         amount = value
         result = []
-        prec = self.env['decimal.precision'].precision_get('Account')
+        prec = self.company_id.currency_id.decimal_places
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
@@ -412,7 +413,7 @@ class account_move(models.Model):
     line_id = fields.One2many('account.move.line', 'move_id', string='Journal Items',
         states={'posted': [('readonly', True)]}, copy=True)
     partner_id = fields.Many2one('res.partner', related='line_id.partner_id', string="Partner", store=True)
-    amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), store=True)
+    amount = fields.Float(compute='_amount_compute', string='Amount', digits=0, store=True)
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
@@ -637,8 +638,8 @@ class account_tax(models.Model):
         } """
 
         taxes = []
-        currency = currency or self.company_id.currency_id
-        total_excluded = total_included = base = currency.round(price_unit * quantity)
+        prec = self.company_id.currency_id.decimal_places
+        total_excluded = total_included = base = round(price_unit * quantity, prec)
         for tax in self:
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
@@ -674,7 +675,6 @@ class account_tax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
-
         return {
             'taxes': taxes,
             'total_excluded': currency.round(total_excluded),
@@ -689,7 +689,6 @@ class account_tax(models.Model):
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
         return recs.compute_all(price_unit, currency, quantity, product, partner)
-
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -1548,7 +1547,7 @@ class account_operation_template(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
-    amount = fields.Float(digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])
 
@@ -1559,7 +1558,6 @@ class account_operation_template(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
-    second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0,
-        help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount = fields.Float(string='Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])

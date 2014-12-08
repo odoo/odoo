@@ -20,7 +20,7 @@ class account_entries_report(models.Model):
     credit = fields.Float(string='Credit', readonly=True)
     balance = fields.Float(string='Balance', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    amount_currency = fields.Float(string='Amount Currency', digits=dp.get_precision('Account'), readonly=True)
+    amount_currency = fields.Float(string='Amount Currency', digits=0, readonly=True)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)

@@ -262,7 +262,7 @@ class account_asset_asset(osv.osv):
         'method_period': fields.integer('Number of Months in a Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The amount of time between two depreciations, in months"),
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
-        'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
+        'value_residual': fields.function(_amount_residual, method=True, digits=0, string='Residual Value'),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]},
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
@@ -270,7 +270,7 @@ class account_asset_asset(osv.osv):
         'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
+        'salvage_value': fields.float('Salvage Value', digits=0, help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'account.asset.code'),
@@ -362,8 +362,8 @@ class account_asset_depreciation_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
-        'amount': fields.float('Current Depreciation', digits_compute=dp.get_precision('Account'), required=True),
-        'remaining_value': fields.float('Next Period Depreciation', digits_compute=dp.get_precision('Account'),required=True),
+        'amount': fields.float('Current Depreciation', digits=0, required=True),
+        'remaining_value': fields.float('Next Period Depreciation', digits=0, required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),

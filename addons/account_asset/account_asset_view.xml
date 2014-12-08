@@ -136,8 +136,8 @@
                                     <field name="depreciation_date"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="depreciated_value" readonly="1"/>
-                                    <field name="amount"/>
-                                    <field name="remaining_value" readonly="1"/>
+                                    <field name="amount" widget="monetary"/>
+                                    <field name="remaining_value" readonly="1" widget="monetary"/>
                                     <field name="move_check"/>
                                     <field name="parent_state" invisible="1"/>
                                     <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
@@ -148,7 +148,7 @@
                                             <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
-                                            <field name="amount"/>
+                                            <field name="amount" widget="monetary"/>
                                             <field name="move_id"/>
                                             <field name="move_check"/>
                                             <field name="parent_state" invisible="1"/>
@@ -157,7 +157,7 @@
                                             <field name="sequence"/>
                                             <field name="depreciation_date"/>
                                             <field name="depreciated_value" readonly="1"/>
-                                            <field name="remaining_value" readonly="1"/>
+                                            <field name="remaining_value" readonly="1" widget="monetary"/>
                                         </group>
                                     </group>
                                 </form>
@@ -188,7 +188,7 @@
                 <field name="purchase_date"/>
                 <field name="partner_id"/>
                 <field name="purchase_value"/>
-                <field name="value_residual"/>
+                <field name="value_residual" widget="monetary"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
@@ -207,7 +207,7 @@
                 <field name="category_id"/>
                 <field name="purchase_date"/>
                 <field name="purchase_value"/>
-                <field name="value_residual"/>
+                <field name="value_residual" widget="monetary"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>

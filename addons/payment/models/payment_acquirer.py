@@ -277,8 +277,8 @@ class PaymentAcquirer(osv.Model):
 
     def _wrap_payment_block(self, cr, uid, html_block, amount, currency_id, context=None):
         payment_header = _('Pay safely online')
-        amount_str = float_repr(amount, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
+        amount_str = float_repr(amount, currency.rounding)
         currency_str = currency.symbol or currency.name
         amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))
         result = u"""<div class="payment_acquirers">

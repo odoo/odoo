@@ -9,7 +9,7 @@
                     <separator string="Fill in this form if you put money in the cash register:" colspan="4" />
                     <group>
                         <field name="name" class="oe_inline"/>
-                        <field name="amount"  class="oe_inline"/>
+                        <field name="amount" class="oe_inline" widget="monetary"/>
                     </group>
                     <footer>
                         <button name="run" string="Put Money In" type="object" class="oe_highlight"/>
@@ -37,7 +37,7 @@
                     <separator string="Describe why you take money from the cash register:"/>
                     <group>
                         <field name="name" class="oe_inline"/>
-                        <field name="amount" class="oe_inline"/>
+                        <field name="amount" class="oe_inline" widget="monetary"/>
                     </group>
 
                     <footer>

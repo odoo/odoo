@@ -16,7 +16,7 @@ class hr_timesheet_report(osv.osv):
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('Cost', readonly=True, digits_compute=dp.get_precision('Account')),
+        'cost': fields.float('Cost', readonly=True, digits=0),
         'quantity': fields.float('Time', readonly=True),  # TDE FIXME master: rename into time
     }
 

@@ -82,15 +82,15 @@ class account_move_line(models.Model):
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
-    debit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
-    credit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
-    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
+    debit = fields.Float(digits=0, default=0.0)
+    credit = fields.Float(digits=0, default=0.0)
+    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
         help="The optional other currency if it is a multi-currency entry.")
-    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=dp.get_precision('Account'),
+    amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=0,
         help="The residual amount on a journal item expressed in the company currency.")
-    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=dp.get_precision('Account'),
+    amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=0,
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))

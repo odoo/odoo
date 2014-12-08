@@ -40,9 +40,9 @@ class account_invoice_report(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True)
     nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
@@ -64,7 +64,7 @@ class account_invoice_report(models.Model):
     account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     residual = fields.Float(string='Total Residual', readonly=True)
-    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
 
     _order = 'date desc'

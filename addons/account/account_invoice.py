@@ -235,11 +235,11 @@ class account_invoice(models.Model):
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
 
-    amount_untaxed = fields.Float(string='Subtotal', digits=dp.get_precision('Account'),
+    amount_untaxed = fields.Float(string='Subtotal', digits=0,
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
-    amount_tax = fields.Float(string='Tax', digits=dp.get_precision('Account'),
+    amount_tax = fields.Float(string='Tax', digits=0,
         store=True, readonly=True, compute='_compute_amount')
-    amount_total = fields.Float(string='Total', digits=dp.get_precision('Account'),
+    amount_total = fields.Float(string='Total', digits=0,
         store=True, readonly=True, compute='_compute_amount')
 
     currency_id = fields.Many2one('res.currency', string='Currency',
@@ -252,7 +252,7 @@ class account_invoice(models.Model):
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
-    check_total = fields.Float(string='Verification Total', digits=dp.get_precision('Account'),
+    check_total = fields.Float(string='Verification Total', digits=0,
         readonly=True, states={'draft': [('readonly', False)]}, default=0.0)
 
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
@@ -261,7 +261,7 @@ class account_invoice(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]})
 
-    residual = fields.Float(string='Amount due', digits=dp.get_precision('Account'),
+    residual = fields.Float(string='Amount due', digits=0,
         compute='_compute_residual', store=True, help="Remaining amount due.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')
@@ -1150,7 +1150,7 @@ class account_invoice(models.Model):
                 total += (line.debit or 0.0) - (line.credit or 0.0)
 
         inv_id, name = self.name_get()[0]
-        if not round(total, self.env['decimal.precision'].precision_get('Account')) or writeoff_acc_id:
+        if not round(total, self.company_id.currency_id.decimal_places) or writeoff_acc_id:
             lines2rec.reconcile(writeoff_acc_id, writeoff_journal_id)
         else:
             code = self.currency_id.symbol
@@ -1231,9 +1231,8 @@ class account_invoice_line(models.Model):
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
-        digits= dp.get_precision('Product Price'),
         default=_default_price_unit)
-    price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'),
+    price_subtotal = fields.Float(string='Amount', digits=0,
         store=True, readonly=True, compute='_compute_price')
     quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
@@ -1389,7 +1388,7 @@ class account_invoice_tax(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
-    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
+    amount = fields.Float(string='Amount', digits=0)
     manual = fields.Boolean(string='Manual', default=True)
     sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)

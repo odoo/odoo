@@ -265,7 +265,7 @@
                             <separator string="Available Coins" colspan="4" attrs="{'invisible' : [('type','not in', ('cash',))] }"/>
                             <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : [('type','not in', ('cash',))]}">
                                 <tree string="CashBox Lines" editable="bottom">
-                                    <field name="coin_value" />
+                                    <field name="coin_value" widget="monetary"/>
                                 </tree>
                             </field>
                         </page>
@@ -323,8 +323,8 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
+                    <field name="balance_start" widget="monetary"/>
+                    <field name="balance_end_real" widget="monetary"/>
                     <field name="balance_end" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>
@@ -407,7 +407,7 @@
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }" widget="monetary"/>
                                     <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="bank_account_id" groups="base.group_no_one"/>
                                 </tree>
@@ -548,7 +548,7 @@
                                 <field name="label"/>
                                 <label for="amount"/>
                                 <div>
-                                    <field name="amount" class="oe_inline" />
+                                    <field name="amount" class="oe_inline" widget="monetary"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
                                 <field name="journal_id" domain="[('company_id', '=', company_id)]"/>
@@ -569,7 +569,7 @@
                                 <field name="second_label"/>
                                 <label for="second_amount"/>
                                 <div>
-                                    <field name="second_amount" class="oe_inline" />
+                                    <field name="second_amount" class="oe_inline" widget="monetary"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
                                 <field name="second_journal_id" domain="[('company_id', '=', company_id)]"/>
@@ -704,7 +704,7 @@
                     <field name="date"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -835,8 +835,8 @@
                                 <group>
                                     <group string="Amount">
                                         <field name="account_id" domain="[('company_id', '=', company_id)]"/>
-                                        <field name="debit"/>
-                                        <field name="credit"/>
+                                        <field name="debit" widget="monetary"/>
+                                        <field name="credit" widget="monetary"/>
                                         <field name="quantity"/>
                                     </group>
                                     <group string="Accounting Documents">
@@ -890,8 +890,8 @@
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="partner_id"/>
                                 <newline/>
-                                <field name="debit"/>
-                                <field name="credit"/>
+                                <field name="debit" widget="monetary"/>
+                                <field name="credit" widget="monetary"/>
 
                                 <separator colspan="4" string="Optional Information"/>
                                 <field name="currency_id" invisible="1"/>
@@ -936,10 +936,10 @@
                     <field name="tax_line_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                     <field name="move_id" required="0"/>
-                    <field name="debit" sum="Total Debit"/>
-                    <field name="credit" sum="Total Credit"/>
+                    <field name="debit" sum="Total Debit" widget="monetary"/>
+                    <field name="credit" sum="Total Credit" widget="monetary"/>
                     <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
-                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
+                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)" widget="monetary"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
                     <field name="company_id" invisible="1"/>
                 </tree>
@@ -951,8 +951,8 @@
             <field name="arch" type="xml">
                 <graph string="Account Statistics" type="bar">
                     <field name="account_id"/>
-                    <field name="debit" operator="+"/>
-                    <field name="credit" operator="+"/>
+                    <field name="debit" operator="+" widget="monetary"/>
+                    <field name="credit" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -1016,7 +1016,7 @@
                     <field name="date"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
-                    <field name="amount" sum="Total Amount"/>
+                    <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1044,7 +1044,7 @@
                         <group>
                             <field name="ref"/>
                             <field name="date"/>
-                            <field name="amount" invisible="1"/>
+                            <field name="amount" invisible="1" widget="monetary"/>
                         </group>
                     </group>
                     <notebook>
@@ -1066,8 +1066,8 @@
                                             <group>
                                                 <group string="Amount">
                                                     <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
-                                                    <field name="debit"/>
-                                                    <field name="credit"/>
+                                                    <field name="debit" widget="monetary"/>
+                                                    <field name="credit" widget="monetary"/>
                                                     <field name="quantity"/>
                                                 </group>
 
@@ -1087,7 +1087,7 @@
                                                 </group>
                                                 <group string="Currency" groups="base.group_multi_currency">
                                                     <field name="currency_id"/>
-                                                    <field name="amount_currency"/>
+                                                    <field name="amount_currency" widget="monetary"/>
                                                 </group>
 
                                                 <group string="Reconciliation">
@@ -1115,10 +1115,10 @@
                                     <field name="partner_id"/>
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
-                                    <field name="debit" sum="Total Debit"/>
-                                    <field name="credit" sum="Total Credit"/>
+                                    <field name="debit" sum="Total Debit" widget="monetary"/>
+                                    <field name="credit" sum="Total Credit" widget="monetary"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="amount_currency"/>
+                                    <field name="amount_currency" widget="monetary"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_ids"/>
                                     <field name="tax_line_id"/>
@@ -1249,6 +1249,7 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
+                        <field name="company_id" invisible="1"/>
                     </group>
                     <label for="note"/>
                     <field name="note" placeholder="Payment term explanation for the customer..."/>
@@ -1448,7 +1449,7 @@
                         <page string="Tax Definition">
                             <group col="4">
                                 <field name="applicable_type"/>
-                                <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}"/>
+                                <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}" widget="monetary"/>
                                 <field name="include_base_amount"/>
                                 <field name="domain"/>
                                 <newline/>
@@ -1661,8 +1662,8 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
-                    <field name="balance_start"/>
-                    <field name="balance_end_real"/>
+                    <field name="balance_start" widget="monetary"/>
+                    <field name="balance_end_real" widget="monetary"/>
                     <field name="balance_end" invisible="1" />
                     <field name="state"/>
                 </tree>
@@ -1710,7 +1711,7 @@
                                     <field name="name"/>
                                     <field name="ref"/>
                                     <field name="partner_id"/>
-                                    <field name="amount"/>
+                                    <field name="amount" widget="monetary"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <group col="4">
@@ -1718,7 +1719,7 @@
                                         <field name="name"/>
                                         <field name="ref"/>
                                         <field name="partner_id"/>
-                                        <field name="amount"/>
+                                        <field name="amount" widget="monetary"/>
                                         <field name="sequence"/>
                                     </group>
                                     <separator string="Notes"/>
@@ -1731,7 +1732,7 @@
                                 <group string="Cash Control">
                                     <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly': [('state', '=', 'open')]}" >
                                         <tree string="Cashbox Lines" editable="bottom">
-                                            <field name="coin_value"/>
+                                            <field name="coin_value" widget="monetary"/>
                                             <field name="number_opening" attrs="{'readonly': [('parent_state', '!=', 'draft')]}"/>
                                             <field name="subtotal_opening" string="Opening Subtotal" sum="Total" attrs="{'readonly': [('parent_state', '!=', 'draft')]}"/>
                                             <field name="number_closing" attrs="{'readonly': [('parent_state', '!=', 'open')]}"/>
@@ -1778,8 +1779,8 @@
             <field name="arch" type="xml">
                 <graph string="Account Statistics" type="bar">
                     <field name="date"/>
-                    <field name="balance_start" operator="+"/>
-                    <field name="balance_end" operator="+"/>
+                    <field name="balance_start" operator="+" widget="monetary"/>
+                    <field name="balance_end" operator="+" widget="monetary"/>
                 </graph>
             </field>
          </record>

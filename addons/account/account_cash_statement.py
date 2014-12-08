@@ -22,11 +22,11 @@ class account_cashbox_line(models.Model):
         self.subtotal_opening = self.coin_value * self.number_opening
         self.subtotal_closing = self.coin_value * self.number_closing
 
-    coin_value = fields.Float(string='Unit of Currency', digits=dp.get_precision('Account'), required=True)
+    coin_value = fields.Float(string='Unit of Currency', required=True, digits=0)
     number_opening = fields.Integer(string='Number of Units', help='Opening Unit Numbers')
     number_closing = fields.Integer(string='Number of Units', help='Closing Unit Numbers')
-    subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=dp.get_precision('Account'))
-    subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=dp.get_precision('Account'))
+    subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=0)
+    subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=0)
     cash_statement_id = fields.Many2one('account.cash.statement', string='Bank Statement', required=True, ondelete='cascade')
     parent_state = fields.Selection([('draft', 'New'), ('open', 'Open'), ('confirm', 'Closed')], related='cash_statement_id.state', string='Cash Statement Status')
 
@@ -145,6 +145,6 @@ class account_journal_cashbox_line(models.Model):
     _rec_name = 'coin_value'
     _order = 'coin_value asc'
 
-    coin_value = fields.Float(string='Values', digits=dp.get_precision('Account'))
+    coin_value = fields.Float(string='Values', digits=0)
     journal_id = fields.Many2one('account.journal', string='Journal', 
         required=True, index=True, ondelete="cascade")

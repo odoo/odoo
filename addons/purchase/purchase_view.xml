@@ -158,7 +158,7 @@
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="minimum_planned_date" color="partner_id">
                     <field name="name"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" widget="monetary"/>
                     <field name="partner_id"/>
                 </calendar>
             </field>
@@ -169,7 +169,7 @@
             <field name="arch" type="xml">
                 <graph string="Purchase Order" type="bar">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+"/>
+                    <field name="amount_total" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -238,7 +238,7 @@
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" widget="monetary"/>
                                     <field name="state" invisible="1"/>
                                 </tree>
                             </field>
@@ -350,8 +350,8 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>
-                    <field name="amount_total" sum="Total amount"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -452,7 +452,7 @@
                     <field name="price_unit"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" widget="monetary"/>
                     <field name="date_planned"  widget="date" width="135"/>
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>

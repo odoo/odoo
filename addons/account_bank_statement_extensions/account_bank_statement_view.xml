@@ -11,7 +11,7 @@
         <form string="Batch Payment Info">
             <group col="4">
                 <field name="name"/>
-                <field name="amount"/>
+                <field name="amount" widget="monetary"/>
                 <field name="code"/>
                 <field name="parent_id"/>
                 <field name="type"/>
@@ -24,7 +24,7 @@
                   <field name="child_ids">
                     <tree string="Child Batch Payments">
                       <field name="name"/>
-                      <field name="amount"/>
+                      <field name="amount" widget="monetary"/>
                       <field name="code"/>
                     </tree>
                   </field>
@@ -66,7 +66,7 @@
           <field name="statement_id"/>
           <field name="ref" readonly="1"/>
           <field name="partner_id"/>
-          <field name="amount" readonly="1" sum="Total Amount"/>
+          <field name="amount" readonly="1" sum="Total Amount" widget="monetary"/>
           <field name="globalisation_id" string="Glob. Id"/>
           <field name="globalisation_amount" string="Glob. Am."/>
           <field name="state"/>
@@ -87,7 +87,7 @@
               <field name="name"/>
               <field name="ref" readonly="0"/>
               <field name="partner_id"/>
-              <field name="amount"/>
+              <field name="amount" widget="monetary" options='{"currency_field" : "currency_id"}'/>
               <field name="globalisation_id"/>
               <field name="sequence" readonly="0"/>
               <field name="state"/>

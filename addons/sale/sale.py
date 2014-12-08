@@ -218,19 +218,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
-        'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all_wrapper, digits=0, string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
-        'amount_tax': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
+        'amount_tax': fields.function(_amount_all_wrapper, digits=0, string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all_wrapper, digits=0, string='Total',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -862,7 +862,7 @@ class sale_order_line(osv.osv):
                 'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)
             }),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
         'price_reduce': fields.function(_get_price_reduce, type='float', string='Price Reduce', digits_compute=dp.get_precision('Product Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner',help="A partner to whom the particular product needs to be allotted."),

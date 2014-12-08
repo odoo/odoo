@@ -60,9 +60,9 @@
                             </td><td>
                                 <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="ca_invoiced" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
                             </td><td>
-                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                                <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}" widget="monetary"/>
                             </td><td>
                                 <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td attrs="{'invisible': [('fix_price_invoices','=',False)]}" class="oe_timesheet_action">
@@ -94,7 +94,7 @@
                             </td><td>
                                 <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" widget="monetary"/>
                             </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="hr_to_invoice_timesheets"
@@ -172,7 +172,7 @@
                                 <field name="quantity"/>
                                 <field name="uom_id"/>
                                 <field name="price_unit"/>
-                                <field name="price_subtotal"/>
+                                <field name="price_subtotal" widget="monetary"/>
                             </tree>
                         </field>
                     </div>
