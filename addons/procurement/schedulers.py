@@ -85,8 +85,9 @@ class procurement_order(osv.osv):
                         if use_new_cursor:
                             cr.commit()
                     except Exception as e:
-                        logger.warn("Exception in _procure_confirm on "
-                                    "procurement %s: %s", (proc.id, e))
+                        if not isinstance(e, OperationalError):
+                            logger.warn("Exception in _procure_confirm on "
+                                        "procurement %s: %s", (proc.name, e))
                         if use_new_cursor:
                             cr.rollback()
                             continue
@@ -107,8 +108,9 @@ class procurement_order(osv.osv):
                         if use_new_cursor:
                             cr.commit()
                     except Exception as e:
-                        logger.warn("Exception in _procure_confirm on "
-                                    "procurement %s: %s", (proc.id, e))
+                        if not isinstance(e, OperationalError):
+                            logger.warn("Exception in _procure_confirm on "
+                                        "procurement %s: %s", (proc.name, e))
                         if use_new_cursor:
                             cr.rollback()
                             continue
@@ -277,8 +279,9 @@ class procurement_order(osv.osv):
                     if use_new_cursor:
                         cr.commit()
                 except Exception as e:
-                    logger.warn("Exception in _procure_orderpoint_confirm "
-                                "on orderpoint %s: %s", (op.id, e))
+                    if not isinstance(e, OperationalError):
+                        logger.warn("Exception in _procure_orderpoint_confirm "
+                                    "on orderpoint %s: %s", (op.name, e))
                     if use_new_cursor:
                         if isinstance(e, OperationalError):
                             orderpoint_ids.append(op.id)
