@@ -517,7 +517,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         get_current_UTCDate: function() {
             var d = new Date();
-            return d.getUTCFullYear() +"-"+ (d.getUTCMonth()+1) +"-"+d.getUTCDate()+" "+_.str.sprintf("%02d", d.getUTCHours())+":"+_.str.sprintf("%02d", d.getUTCMinutes())+":"+_.str.sprintf("%02d", d.getUTCSeconds());//+"."+d.getUTCMilliseconds();
+            return d.getUTCFullYear() +"-"+ _.str.sprintf("%02d", (d.getUTCMonth()+1)) +"-"+_.str.sprintf("%02d", d.getUTCDate())+" "+_.str.sprintf("%02d", d.getUTCHours())+":"+_.str.sprintf("%02d", d.getUTCMinutes())+":"+_.str.sprintf("%02d", d.getUTCSeconds());//+"."+d.getUTCMilliseconds();
         },
         get_date_diff: function(new_date, old_date) {
             var difference = moment.duration(moment(new_date).diff(moment(old_date))).asHours();
@@ -735,7 +735,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.$el.find(".pt_edit_activity_title").addClass("o_hidden");
             }
             $form_data.removeData();
-            console.log("this.project_timesheet_model.get activities is :: ", this.project_timesheet_model.get("activities").length);
             if (this.project_timesheet_model.get("activities").length) {
                 if (!this.$el.find(".pt_quick_select").length) {
                     this.$el.find(".pt_add_activity_form").after(QWeb.render("QuickSelect", {}));
@@ -775,9 +774,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity_id = $(event.currentTarget).data("activity_id");
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var activity_clone = _.clone(activity);
-            //activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
-            activity_clone.id = this.project_timesheet_db.get_unique_id();
-            activity_clone['command'] = 0;
+            _.extend(activity_clone, {id: this.project_timesheet_db.get_unique_id(), command: 0, unit_amount: 0, name: ''});
             delete activity_clone.reference_id;
             this.project_timesheet_model.add_project(activity_clone);
             this.project_timesheet_model.add_activity(activity_clone);
@@ -1015,7 +1012,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var bar_chart =  new dhtmlXChart({
                 view: "stackedBar",
                 container: "pt_chart",
-                value: "#unit_amount_duration#",
+                value: "#unit_amount#",
                 label: "#unit_amount_duration#",
                 color: "#a24689",
                 width: 25,
@@ -1052,9 +1049,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             bar_chart.addSeries({
                 value:"#unallocated#",
                 color:"#ffcc00",
-                label:"#unallocated#",
+                label:"#unallocated_duration#",
                 tooltip:{
-                    template:"#unallocated#"
+                    template:"#unallocated_duration#"
                 }
             });
             return bar_chart;
@@ -1094,6 +1091,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 });
                 var formatted_unit_amount = self.format_duration(date_activities[key]['unit_amount']);
                 date_activities[key]['unit_amount_duration'] = formatted_unit_amount ? (formatted_unit_amount[0]+"h" +(formatted_unit_amount[1] && formatted_unit_amount[1]+"min" || "0min")) : 0;
+                var formatted_unallocated = self.format_duration(date_activities[key]['unallocated']);
+                date_activities[key]['unallocated_duration'] = formatted_unallocated ? (formatted_unallocated[0]+"h" +(formatted_unallocated[1] && formatted_unallocated[1]+"min" || "0min")) : 0;
             });
             var week_groups = _.groupBy(_.toArray(date_activities), function(activity) {
                 return moment(activity.date).week();
@@ -1151,18 +1150,18 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.each(project_groups, function(groups, key) {
                 _.each(groups, function(group) {
                     if (table_data[key]) {
-                        table_data[key]['unit_amount'] += group.unit_amount;
+                        table_data[key]['unit_amount'] += parseFloat(group.unit_amount.toFixed(2));
                     } else {
                         table_data[key] = {
                             project_name: group.project_id && group.project_id[1] || 'Undefined',
-                            unit_amount: group.unit_amount
+                            unit_amount: parseFloat(group.unit_amount.toFixed(2))
                         };
                     }
                 });
             });
             this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
             chart.parse(graph_data,"json");
-            //To Fix this issue of x-axis lable partially hidden, It seem issue with DHTMLX Chart
+            //To Fix this issue of x-axis lable partially hidden, It seems issue with DHTMLX Chart
             this.$el.find("#pt_chart").height(
                 this.$el.find("#pt_chart").height()+20);
         },

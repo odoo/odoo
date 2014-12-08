@@ -83,7 +83,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 search_result.push([task_models[i].id, task_models[i].name+"\n"+task_models[i].priority]);
             }
             if (term) {
-                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().indexOf(term.toLowerCase()) !== -1) {return x;}}));
             }
             return search_result;
         }
@@ -296,9 +296,11 @@ function odoo_project_timesheet_models(project_timesheet) {
             var defer = $.Deferred();
             var records = [];
             project_timesheet.blockUI();
+            var reference_id;
             var generate_reference_id = function() { //May be move this function in db
                 var project_timesheet_session = self.project_timesheet_db.get_project_timesheet_session();
-                return project_timesheet_session.session_id.toString() + "-" + project_timesheet_session.login_number.toString() + "-" + (self.project_timesheet_db.sequence+1);
+                self.project_timesheet_db.sequence += 1;
+                return project_timesheet_session.session_id.toString() + "-" + project_timesheet_session.login_number.toString() + "-" + (self.project_timesheet_db.sequence);
             };
             $.when(self.check_session()).done(function(){
                 var activity_collection = self.get('activities');
@@ -309,7 +311,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                         //If reference_id is not there then create unique Reference ID
                         if (!json_data.reference_id) {
                             //json_data['reference_id'] = json_data.user_id.toString() + json_data.project_id[0].toString() + json_data.date;
-                            var reference_id = generate_reference_id();
+                            reference_id = generate_reference_id();
                             _.extend(activity_models[i], {'reference_id': reference_id});
                             json_data['reference_id'] = reference_id;
                             self.project_timesheet_db.add_activity(json_data);
