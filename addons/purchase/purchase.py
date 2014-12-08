@@ -1210,6 +1210,28 @@ class procurement_order(osv.osv):
             return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
+    #TODO: Autocommit needed?
+    def run(self, cr, uid, ids, autocommit=False, context=None):
+        procs = self.browse(cr, uid, ids, context=context)
+        to_assign = [x for x in procs if x.state not in ('running', 'done')]
+        self._assign_multi(cr, uid, to_assign, context=context)
+        buy_ids = [x.id for x in procs if x.rule_id and x.rule_id.action == 'buy']
+        if buy_ids:
+            result_dict = self.make_po(cr, uid, buy_ids, context=context)
+            runnings = []
+            exceptions = []
+            for proc in result_dict.keys():
+                if result_dict[proc]:
+                    runnings += [proc]
+                else:
+                    exceptions += [proc]
+            if runnings:
+                self.write(cr, uid, runnings, {'state': 'running'}, context=context)
+            if exceptions:
+                self.write(cr, uid, exceptions, {'state': 'exception'}, context=context)
+        set_others = set(ids) - set(buy_ids)
+        return super(procurement_order, self).run(cr, uid, list(set_others), context=context)
+
     def _check(self, cr, uid, procurement, context=None):
         if procurement.purchase_line_id and procurement.purchase_line_id.order_id.shipped:  # TOCHECK: does it work for several deliveries?
             return True
@@ -1289,42 +1311,6 @@ class procurement_order(osv.osv):
     def _get_product_supplier(self, cr, uid, procurement, context=None):
         ''' returns the main supplier of the procurement's product given as argument'''
         return procurement.product_id.seller_id
-
-    def _get_po_line_values_from_proc(self, cr, uid, procurement, partner, company, schedule_date, context=None):
-        if context is None:
-            context = {}
-        uom_obj = self.pool.get('product.uom')
-        pricelist_obj = self.pool.get('product.pricelist')
-        prod_obj = self.pool.get('product.product')
-        acc_pos_obj = self.pool.get('account.fiscal.position')
-
-        seller_qty = procurement.product_id.seller_qty
-        pricelist_id = partner.property_product_pricelist_purchase.id
-        uom_id = procurement.product_id.uom_po_id.id
-        qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-        if seller_qty:
-            qty = max(qty, seller_qty)
-        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, {'uom': uom_id})[pricelist_id]
-
-        #Passing partner_id to context for purchase order line integrity of Line name
-        new_context = context.copy()
-        new_context.update({'lang': partner.lang, 'partner_id': partner.id})
-        product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
-        taxes_ids = procurement.product_id.supplier_taxes_id
-        taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-        name = product.display_name
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-
-        return {
-            'name': name,
-            'product_qty': qty,
-            'product_id': procurement.product_id.id,
-            'product_uom': uom_id,
-            'price_unit': price or 0.0,
-            'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'taxes_id': [(6, 0, taxes)],
-        }
 
     def _get_po_line_values_from_procs(self, cr, uid, procurements, partner, schedule_date, context=None):
         res = {}

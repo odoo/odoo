@@ -4075,22 +4075,39 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
-    def subtract_procurements(self, cr, uid, orderpoint, context=None):
+    def subtract_procurements_from_orderpoints(self, cr, uid, orderpoint_ids, context=None):
         '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
         '''
-        qty = 0
+
+        cr.execute("""select op.id, p.id, p.product_uom, p.product_qty, pt.uom_id, sm.product_qty from procurement_order as p left join stock_move as sm ON sm.procurement_id = p.id,
+                                    stock_warehouse_orderpoint op, product_product pp, product_template pt
+                                WHERE p.orderpoint_id = op.id AND p.state not in ('done', 'cancel') AND (sm.state IS NULL OR sm.state not in ('draft'))
+                                AND pp.id = p.product_id AND pp.product_tmpl_id = pt.id
+                                AND op.id IN %s
+                                ORDER BY op.id, p.id
+                    """, (tuple(orderpoint_ids),))
+        results = cr.fetchall()
+        current_proc = False
+        current_op = False
         uom_obj = self.pool.get("product.uom")
-        for procurement in orderpoint.procurement_ids:
-            if procurement.state in ('cancel', 'done'):
-                continue
-            procurement_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, procurement.product_id.uom_id, context=context)
-            for move in procurement.move_ids:
-                #need to add the moves in draft as they aren't in the virtual quantity + moves that have not been created yet
-                if move.state not in ('draft'):
-                    #if move is already confirmed, assigned or done, the virtual stock is already taking this into account so it shouldn't be deducted
-                    procurement_qty -= move.product_qty
-            qty += procurement_qty
-        return qty
+        op_qty = 0
+        res = dict.fromkeys(orderpoint_ids, 0.0)
+        for move_result in results:
+            op = move_result[0]
+            if current_op != op:
+                if current_op:
+                    res[current_op] = op_qty
+                current_op = op
+                op_qty = 0
+            proc = move_result[1]
+            if proc != current_proc:
+                op_qty += uom_obj._compute_qty(cr, uid, move_result[2], move_result[3], move_result[4], round=False)
+                current_proc = proc
+            if move_result[5]: #If a move is associated (is move qty)
+                op_qty -= move_result[5]
+        if current_op:
+            res[current_op] = op_qty
+        return res
 
     def _check_product_uom(self, cr, uid, ids, context=None):
         '''

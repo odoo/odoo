@@ -78,6 +78,7 @@
 - 
     !python {model: stock.quant}: |
         quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')),('qty', '=', 200), ('product_id', '=', ref("drop_shop_product"))])
+        print quant_ids, [(x.qty, x.history_ids) for x in self.browse(cr, uid, quant_ids)]
         assert quant_ids, 'No Quant found'
-        assert len(quant_ids) == 1
-        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1
+        assert len(quant_ids) == 1, 'There should be exactly one quant'
+        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1, 'The quant should have exactly 1 move in its history'
