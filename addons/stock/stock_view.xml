@@ -365,7 +365,7 @@
             <field name="model">stock.location</field>
             <field name="arch" type="xml">
                 <search string="Stock Locations">
-                    <field name="name" string="Stock Locations"/>
+                    <field name="complete_name" string="Stock Locations"/>
                     <filter icon="terp-go-home" name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                     <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                     <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
