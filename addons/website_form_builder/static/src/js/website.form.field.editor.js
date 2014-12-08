@@ -57,7 +57,6 @@
 
     };
 
-    
     website.add_template_file('/website_form_builder/static/src/xml/website.form.editor.wizard.template.xml');
 
 
@@ -339,7 +338,9 @@
                 this.getModel(model_sel).then(function(){
                     var mail = self.wizard.find('.o_form-action-mailto input[type=hidden]').val();
 
-                    if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
+                    if(self.wizard.find('select').val() != 'mail.mail') {
+                        DefferedForm.resolve();
+                    }
                     else if(mail.length > 0) {
                         new openerp.Model(openerp.website.session,"res.partner")
                         .call("find_or_create",[mail], {context: website.get_context()}).then(function(id) {
@@ -347,12 +348,17 @@
                             if(id) {
                                 var hidden_email = self.$target.find('.hidden_email_website_form_editor');
                                 
-                                if(!hidden_email || !hidden_email.length)
+                                if(!hidden_email || !hidden_email.length) {
                                     self.$target.append('<input type="hidden" class="hidden_email_website_form_editor form-data" name="recipient_ids" value="'+id+'" />');
-                                else hidden_email.val(id);
+                                }
+                                else {
+                                    hidden_email.val(id);
+                                }
                                 DefferedForm.resolve();
                             }
-                            else DefferedForm.reject();
+                            else {
+                                DefferedForm.reject();
+                            }
                         })
                         .fail(function() {DefferedForm.reject();});
                     }
@@ -368,15 +374,17 @@
                     $('#oe_snippets')   .find('#snippet_form')
                                         .addClass('active');
                     self.wizard.modal('hide');
-                    self.getModel();
+                    //self.getModel();
                 
                 });
         },
         organizeForm: function() {
-            if(this.wizard.find('select').val() == 'mail.mail')
+            if(this.wizard.find('select').val() == 'mail.mail') {
                 this.wizard.find('.o_form-action-mailto').removeClass('hidden');
-            else
+            }
+            else {
                 this.wizard.find('.o_form-action-mailto').addClass('hidden');
+            }
         },
         
         execute: function (type, value, $li) {
@@ -384,10 +392,8 @@
         },
         
         loadData: function(){
-            if(this.$target.data('model'))      this.wizard.find('#formEditor-select-action').val(this.$target.data('model'));
-            if(this.$target.data('success'))    this.wizard.find('#success').val(this.$target.data('success'));
-            if(this.$target.data('fail'))       this.wizard.find('#fail').val(this.$target.data('fail'));
-            
+            this.wizard.find('#formEditor-select-action').val(this.$target.attr('data-model'));
+            this.wizard.find('#success').val(this.$target.attr('data-success'));
         },
         on_prompt: function () {
             var self = this;
@@ -409,6 +415,18 @@
                 
                 self.wizard.find('.o_form-action-mailto input[type=hidden]').select2({
                     enable: true,
+                    initSelection: function(elem, callback) {
+                        console.log(elem,callback);
+                        var id_partner = parseInt(self.$target.find('.hidden_email_website_form_editor').val(),10);
+                        if(!id_partner) {
+                            callback();
+                            return;
+                        }
+                        new openerp.Model(openerp.website.session,"res.partner")
+                        .call('read',[[id_partner], ['email'], website.get_context()]).then(function(email_label){
+                            callback({id:email_label[0].email, text:email_label[0].email});
+                        });
+                    },
                     query: function(query) {
                         var data = {results:[{id:query.term, text:query.term}]};
                         res_partner.call("search_read",[[['email', '=like', query.term+'%']],['email']], { limit: 5, context: website.get_context()}).then(function(tlist) {
@@ -419,7 +437,7 @@
                         });
                     }
                 });
-                
+
                 self.organizeForm();
                 self.wizard.find('select').on('change',_.bind(self.organizeForm,self));
                 self.wizard.find('.validate').on('click',_.bind(self.validate,self,self.DefFormPopUp));
@@ -738,8 +756,12 @@
                     prepend_exist = false;
                 }
             
-                if(!append_exist && !prepend_exist)    this.$target.find('.wrap-unwrap').removeClass('input-group');
-                else if(append_exist || prepend_exist) this.$target.find('.wrap-unwrap').addClass('input-group');
+                if(!append_exist && !prepend_exist) {
+                    this.$target.find('.wrap-unwrap').removeClass('input-group');
+                }
+                else if(append_exist || prepend_exist) {
+                    this.$target.find('.wrap-unwrap').addClass('input-group');
+                }
             
         },
         defaultValidate: function () {
@@ -770,14 +792,24 @@
             this.$target.find('.form-data').attr('name',name);
             this.$target.find('.form-data').attr('data-cke-saved-name',name);
             this.$target.find('.form-data').prop('required',required);
-            if(required)    this.$target.find('label').removeClass('o_light');
-            else            this.$target.find('label').addClass('o_light');
+            if(required) {
+                this.$target.find('label').removeClass('o_light');
+            }
+            else {
+                this.$target.find('label').addClass('o_light');
+            }
 
             if(help.length > 0) {
-                if(this.$target.find('.help-block').length)     this.$target.find('.help-block').html(help);
-                else                                            this.$target.find('.form-data').parent().append('<p class="help-block">'+help+'</p>');
+                if(this.$target.find('.help-block').length) {
+                    this.$target.find('.help-block').html(help);
+                }
+                else {
+                    this.$target.find('.form-data').parent().append('<p class="help-block">'+help+'</p>');
+                }
             }
-            else this.$target.find('.help-block').remove();
+            else {
+                this.$target.find('.help-block').remove();
+            }
             
             this.$target.find('.control-label').html(field_label.val());
             $('#oe_snippets').removeClass('hidden');
@@ -785,8 +817,12 @@
         },
 
         confirm: function (DefferedForm) {
-                if(ValidOption) DefferedForm.resolve();
-                else            DefferedForm.reject();
+                if(ValidOption) {
+                    DefferedForm.resolve();
+                }
+                else {
+                    DefferedForm.reject();
+                }
         },
         
         execute: function (type, value, $li) {
@@ -864,7 +900,9 @@
             this.getModel = getModel;
             this.removeWizard = removeWizard;
             this.optionEditor = new website.snippet.editFormFieldOptionEditor(this);
-            if(this.$target.data('form') == 'hidden') this.$target.addClass('website-form-editor-hidden-under-edit');
+            if(this.$target.data('form') == 'hidden'){
+                this.$target.addClass('website-form-editor-hidden-under-edit');
+            }
             this.getModel();
             this._super();
         },
@@ -873,16 +911,41 @@
             var name = this.$target.find('.form-data').attr('name');
             this.$target.removeClass('has-error has-success has-warning has-feedback')
                         .find('.form-control-feedback').remove();
-            if(this.$target.data('form') == 'hidden') this.$target.removeClass('website-form-editor-hidden-under-edit');
-            if(this.$target.data('form') == 'select') this.$target.find('select').select2('destroy');
-            if(type == 'search')
+            if(this.$target.data('form') == 'hidden') {
+                this.$target.removeClass('website-form-editor-hidden-under-edit');
+            }
+            if(this.$target.data('form') == 'select') {
+                this.$target.find('select').select2('destroy');
+            }
+            if(type == 'search') {
                   this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
+            }
         }
     });
 
     website.EditorBar.include({
         save: function () {
+
+            var associatedField = function (type) {
+                switch(type) {
+                    case 'char':
+                    case 'text':            return _t('Input Text, Input Hidden, Textarea, Select or Radios');
+                    case 'binary':
+                    case 'manyBinary2many':
+                    case 'oneBinary2many':  return _t('Upload Field');
+                    case 'one2many':
+                    case 'many2many':       return _t('Select or Checkbox');
+                    case 'many2one':
+                    case 'selection':       return _t('Select or Radios');
+                    default:                return _t('Input Text, Hidden Field, Select or Radios');
+                }
+            };
+            $('#oe_snippets')   .addClass('hidden')
+                                .find('.active')
+                                .removeClass('active');
+
             var form = $('form[action*="/website_form/"]:not(.oe_snippet_body)');
+            var field;
             form.removeClass('o_send-failed o_send-success');
             form.find('.o_form-success').hide(0);
             form.find('.o_form-danger').hide(0);
@@ -890,9 +953,13 @@
 
             form.find('.form-builder-error-message').remove();
             var required_error = '';
-            if(!form.data('model')) return this._super();
-            if(!form.data('fields')) return this._super();
-            
+            if(!form.data('model')) {
+                return this._super();
+            }
+            if(!form.data('fields')) {
+                return this._super();
+            }
+
             form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
             console.log(form.data('fields').required);
             $.each(form.data('fields').required,function(i,name){
@@ -901,13 +968,17 @@
                     present = present || ($(elem).prop('name') == name);
                     console.log($(elem).prop('name'), name,($(elem).prop('name') == name));
                 });
-                if(required_error !== '') required_error += ', ';
-                if(!present)  required_error += form.data('fields').all[name].label;
+                if(required_error !== '') {
+                    required_error += ', ';
+                }
+                if(!present){
+                    field = form.data('fields').all[name];
+                    required_error += '<li><strong>'+field.label+' ('+field.name+') :: '+associatedField(field.type)+'</li></strong>';
+                }
             });
             if(required_error) {
-                var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ') + required_error;
+                var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ')  + '<ul>' + required_error + '</ul>';
                 form.prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));
-   
                 return;
             }
             this._super();

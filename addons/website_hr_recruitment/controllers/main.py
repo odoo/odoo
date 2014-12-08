@@ -78,7 +78,7 @@ class website_hr_recruitment(http.Controller):
         })
 
     @http.route('/jobs/apply/<model("hr.job"):job>', type='http', auth="public", website=True)
-    def jobs_apply(self, job):
+    def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}
         if 'website_hr_recruitment_error' in request.session:

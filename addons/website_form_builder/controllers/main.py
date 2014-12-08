@@ -42,7 +42,7 @@ class form_builder(http.Controller):
         for elem in input:
             input_int = int(self.get_int(elem))
             if input_int :
-                output.append(input_int)     
+                output.append(input_int)
         return output
     
     def many2many(self, label, input, *args):
@@ -90,8 +90,8 @@ class form_builder(http.Controller):
                 data['files'].append(field_value)
 
             elif field_name in ref_model._all_columns and field_name not in model['blacklist']:
-                type = ref_model._all_columns[field_name].column._type;
-                field_filtered = self.filter[type](field_name,field_value);
+                type = ref_model._all_columns[field_name].column._type
+                field_filtered = self.filter[type](field_name,field_value)
                 if field_filtered: data['post'][field_name] = field_filtered
                 
             elif field_name not in self._TECHNICAL:
@@ -117,14 +117,14 @@ class form_builder(http.Controller):
         if not data['message']['attachment_ids']: return True
         data['message']['res_id'] = id_record
         print data['message']
-        return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context);
+        return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context)
 
     def insertRecord(self, model, data):
-        values = data['post'];
+        values = data['post']
         if model['default_field'] not in values : values[model['default_field']] = ''
         values[model['default_field']] += "\n\n" + (self.custom_label if (data['custom'] != '') else '') + data['custom'] #+ "\n\n" + data['meta']
         print 'INSERT :: ', values
-        return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context);
+        return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context)
 
     # Link all files attached on the form
     def insertAttachment(self, model, data):
@@ -186,7 +186,7 @@ class form_builder(http.Controller):
         id_model = obj_form.search(request.cr,SUPERUSER_ID,[('model_id', '=', model),],context=request.context)
         
         #if not authorized model
-        if not id_model: return None;
+        if not id_model: return None
 
         # return all meta-fields of the selected model
         formModel = obj_form.browse(request.cr, SUPERUSER_ID, id_model)
@@ -207,5 +207,9 @@ class form_builder(http.Controller):
             print ValueError
             success = 0
 
-        if data['error'] : return json.dumps({'id': success, 'fail_required' : data['error']});
-        return json.dumps({'id': success, 'fail_required': None});
+        if request.httprequest.is_xhr:
+            if data['error'] : return json.dumps({'id': success, 'fail_required' : data['error']})
+            return json.dumps({'id': success, 'fail_required': None})
+        else:
+            if data['error'] : return self.thanks_page('default.fail.'+model['name'])
+            return self.thanks_page('default.thanks.'+model['name'])

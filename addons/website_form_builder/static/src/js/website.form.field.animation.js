@@ -139,7 +139,6 @@
                 // if the data are not inserted on the DB and server dont return list of 
                 // bad fields, we display an error
                 data = $.parseJSON(data);
-                debugger;
                 if(!(data && (data.id || (data.fail_required && data.fail_required.length)))) {
                     console.log('error without list');
                     self.$target.find('.o_form-danger').show(500)
