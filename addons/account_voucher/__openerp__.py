@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name' : 'Online Billing',
+    'name' : 'Sale & Purchase Vouchers',
     'version' : '1.0',
     'author' : 'OpenERP SA',
-    'summary': 'Send Invoices and Track Payments',
+    'summary': 'Manage your debts and credits thanks to simple sale/purchase receipts',
     'description': """
 TODO
 
@@ -43,7 +43,7 @@ This module manages:
 * Voucher Payment [Customer & Supplier]
     """,
     'category': 'Accounting & Finance',
-    'sequence': 4,
+    'sequence': 20,
     'website' : 'https://www.odoo.com/page/billing',
     'images' : ['images/customer_payment.jpeg','images/journal_voucher.jpeg','images/sales_receipt.jpeg','images/supplier_voucher.jpeg','images/customer_invoice.jpeg','images/customer_refunds.jpeg'],
     'depends' : ['account'],
@@ -62,7 +62,6 @@ This module manages:
         'test/sales_receipt.yml',
     ],
     'auto_install': False,
-    'application': True,
     'installable': True,
 }
 
