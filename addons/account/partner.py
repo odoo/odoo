@@ -114,7 +114,7 @@ class account_fiscal_position(models.Model):
             return fiscal_position
 
         fiscal_position = self.search(domain + [('country_id', '=', None), ('country_group_id', '=', None)], limit=1)
-        return fiscal_position_id or False
+        return fiscal_position.id or False
 
 
 class account_fiscal_position_tax(models.Model):

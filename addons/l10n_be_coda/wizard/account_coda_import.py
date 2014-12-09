@@ -229,7 +229,7 @@ class account_bank_statement_import(osv.TransientModel):
             balance_start_check = res and res[0]
             if balance_start_check is None:
                 if statement['journal_id'].default_debit_account_id and (statement['journal_id'].default_credit_account_id == statement['journal_id'].default_debit_account_id):
-                    balance_start_check = statement['journal_id'].default_debit_account_id.balance
+                    balance_start_check = statement['balance_start']
                 else:
                     raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
             if balance_start_check != statement['balance_start']:

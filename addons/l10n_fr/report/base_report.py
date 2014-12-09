@@ -42,7 +42,7 @@ class base_report(report_sxw.rml_parse):
         self.context = context
 
     def _load(self, name, form):
-        fiscalyear.date_start = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
+        fiscalyear = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
         date=fiscalyear.date_start
 
         if fiscalyear:
@@ -86,7 +86,7 @@ class base_report(report_sxw.rml_parse):
 
             query = "SELECT aa.code AS code, SUM(debit) as debit, SUM(credit) as credit " \
                 " FROM account_move_line aml LEFT JOIN account_account aa ON aa.id=aml.account_id "\
-                " WHERE "+query_cond+closed_cond+" AND aml.state='valid' AND aml.date = ANY(%s) GROUP BY code"
+                " WHERE "+query_cond+closed_cond+" AND aml.date = %s GROUP BY code"
             query_params.append(date)
             self.cr.execute(query, query_params)
 

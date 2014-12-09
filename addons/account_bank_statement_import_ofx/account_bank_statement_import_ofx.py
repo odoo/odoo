@@ -3,10 +3,10 @@
 import logging
 import base64
 import os
+import time
 
 from openerp.osv import osv
 from openerp.tools.translate import _
-
 _logger = logging.getLogger(__name__)
 
 from openerp.addons.account_bank_statement_import import account_bank_statement_import as ibs
@@ -60,7 +60,7 @@ class account_bank_statement_import(osv.TransientModel):
             'name': ofx.account.routing_number,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
-            'date': fields.date.context_today or False,
+            'date': time.strftime('%Y-%m-%d'),
             'journal_id': journal_id
         }
         vals_bank_statement.update({'line_ids': line_ids})
