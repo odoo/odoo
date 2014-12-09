@@ -29,7 +29,7 @@ class mrp_workorder(osv.osv):
     _auto = False
     _columns = {
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Planned Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
         'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')], 'Status', readonly=True),

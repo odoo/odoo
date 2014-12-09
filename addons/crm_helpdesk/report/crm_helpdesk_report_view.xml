@@ -28,11 +28,9 @@
                     <filter string="Open" domain="[('state','=','open')]" />
                     <filter string="Closed" domain="[('state','=','cancel')]" />
                     <separator/>
-                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
-                    <separator/>
-                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
+                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="section_id" string="Sales Team" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="company_id" groups="base.group_multi_company"/>
