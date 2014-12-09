@@ -373,7 +373,7 @@ class ir_sequence_date_range(models.Model):
         seq = super(ir_sequence_date_range, self).create(values)
         main_seq = seq.sequence_id
         if main_seq.implementation == 'standard':
-            _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, main_seq.number_next)
+            _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, values.get('number_next_actual', 1))
         return seq
 
     @api.multi
