@@ -637,8 +637,7 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="question.post_type != 'link' and question.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="question.content" class="oe_no_empty"/></div>
-                <div t-if="question.post_type != 'link' and question.create_uid.karma &lt; forum.karma_dofollow"><span t-field="question.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
+                <div t-if="question.post_type != 'link'"><span t-field="question.content" class="oe_no_empty"/></div>
 
                 <div class="clearfix">
                     <ul class="pull-right list-inline mb0" id="options">
@@ -738,8 +737,7 @@
                     style="display: inline-block;"/>
                 <div class="text-muted">On <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></div>
             </div>
-            <div class="clearfix" t-if="answer.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty"/></div>
-            <div class="clearfix" t-if="answer.create_uid.karma &lt; forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
+            <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
                 <ul class="list-inline pull-right mb0">
                     <li>
@@ -818,8 +816,7 @@
                         <t t-set="classes" t-value="'close comment_delete fa-times'"/>
                     </t>
 
-                    <div t-if="message.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="message.body" class="oe_no_empty"/></div>
-                    <div t-if="message.create_uid.karma &lt; forum.karma_dofollow"><span t-field="message.body" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
+                    <div><span t-field="message.body" class="oe_no_empty"/></div>
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
                     <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
                         <t t-set="allow_post_comment" t-value="True" />
@@ -1107,8 +1104,7 @@
                 </tr>
                 </table>
                 <div class="well well-sm">
-                    <div t-if="user.karma &gt;= forum.karma_dofollow"><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
-                    <div t-if="user.karma &lt; forum.karma_dofollow"><span t-field="user.partner_id.website_description" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
+                    <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
                     <t t-if="uid == user.id">
                         <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"> Edit Your Bio</a>
                     </t>
