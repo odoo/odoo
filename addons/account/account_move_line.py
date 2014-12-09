@@ -178,7 +178,7 @@ class account_move_line(models.Model):
                 line.amount_residual_currency = 0.0
                 digits_rounding_precision = line.company_id.currency_id.rounding
 
-            if float_zero(amount, digits_rounding_precision):
+            if float_is_zero(amount, digits_rounding_precision):
                 line.reconciled = True
             else:
                 line.reconciled = False
