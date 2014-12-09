@@ -791,7 +791,7 @@
             
             this.$target.find('.form-data').attr('name',name);
             this.$target.find('.form-data').attr('data-cke-saved-name',name);
-            this.$target.find('.form-data').prop('required',required);
+            this.$target.find('.form-data').attr('required',required);
             if(required) {
                 this.$target.find('label').removeClass('o_light');
             }

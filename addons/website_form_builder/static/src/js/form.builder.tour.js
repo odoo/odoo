@@ -501,7 +501,7 @@
             },
             {
                 title:          "Try to send empty form",
-                waitFor:        "form[action='/website_form/mail.mail']"+
+                waitFor:        "form[action='/website_form/mail.mail']" +
                                 "[data-model='mail.mail']" +
                                 "[data-success='']" +
                                 "[data-model-name='Outgoing Mails']" +
@@ -517,25 +517,148 @@
                 element:        ".o_send_button"
             },
             {
-                title:          "Check if required fields was detected",
-                waitFor:        ".has-error" +
-                                ":has(input[name=display_name])"
+                title:          "Check if required fields was detected and complete the Name field",
+                waitFor:        ".has-error:has(input[name=display_name])",
+                element:        "input[name=display_name]",
+                sampleText:     "Janne Smith"
             },
             {
-                title:          "Check if required fields was detected",
-                waitFor:        ".has-error" +
-                                 ":has(textarea[name=body_html])"
-            },/*
+                title:          "Check if required fields was detected and complete the Message field",
+                waitFor:        ".has-error:has(textarea[name=body_html])",
+                element:        "textarea[name=body_html]",
+                sampleText:     "My more usless message"
+            },
             {
-                title:          "Check if required fields was detected",
-                waitFor:        ".has-error" +
-                                ":has(div[name=Products])"
-            },*/
+                title:          "Check if required fields was detected and complete the Products field",
+                waitFor:        ".has-error:has(div[name=Products])",
+                element:        "input[id=Products-1]"
+            },
+            {
+                title:          "check another product",
+                element:        "input[id=Products-2]"
+            },
+            {
+                title:          "Check if Valid fields was detected",
+                waitFor:        ".has-success:has(div[name=Service])",
+                element:        "input[id=Service-1]"
+            },
+            {
+                title:          "Check if empty fields was detected",
+                waitFor:        ".has-warning:has(select[name=State])",
+                element:        "select[name=State]",
+                sampleText:     "be"
+            },
+            {
+                title:          "Check if empty fields was detected",
+                waitFor:        ".has-warning:has(input[name=attachment_ids])"
+            },
+            {
+                title:          "Check if empty fields was detected",
+                waitFor:        ".has-warning:has(input[name=contact_name])"
+            },
+            {
+                title:          "Send the form",
+                element:        ".o_send_button"
+            },
+            {
+                title:          "check if the form is submited without errors",
+                waitFor:        "form.o_send-success:has(.alert-success:visible):has(.alert-danger:hidden)"
+            },
+
+
+            /*
+
+            TEST THE CONTACT US FORM 
+
+            */
+
+            {
+                title:          "Go to contact us form",
+                element:        "a[href='/page/website.contactus']"
+            },
+            {
+                title:          "Complete name",
+                element:        "#contact_name",
+                sampleText:     "John Smith"
+            },
+            {
+                title:          "Complete phone number",
+                element:        "input[name=phone]",
+                sampleText:     "118.218"
+            },
+            {
+                title:          "Complete Email",
+                element:        "#email_from",
+                sampleText:     "john@smith.com"
+            },
+            {
+                title:          "Complete Subject",
+                element:        "input[name=name]",
+                sampleText:     "Usless Message"
+            },
+            {
+                title:          "Complete Subject",
+                element:        "textarea[name=description]",
+                sampleText:     "The complete usless Message"
+            },
+            {
+                title:          "Send the form",
+                element:        ".o_send_button"
+            },
+            {
+                title:          "check if the form is submited without errors",
+                waitFor:        "form.o_send-success:has(.alert-success:visible):has(.alert-danger:hidden)"
+            },
+   /*
+
+            TEST THE HR APPLICANTS FORM 
+
+            */
+            
+            {
+                title:          "Go to Job Page",
+                element:        "a[href='/jobs']"
+            },
+            {
+                title:          "Go to Experienced Developper posts",
+                element:        "a[href='/jobs/detail/experienced-developer-4']"
+            },
+            {
+                title:          "Go to Application Form",
+                element:        "a[href='/jobs/apply/4']"
+            },
+            {
+                title:          "Complete name",
+                element:        "input[name=partner_name]",
+                sampleText:     "John Smith"
+            },
+            {
+                title:          "Complete phone number",
+                element:        "input[name=partner_phone]",
+                sampleText:     "118.218"
+            },
+            {
+                title:          "Complete Email",
+                element:        "input[name=email_from]",
+                sampleText:     "john@smith.com"
+            },
+            {
+                title:          "Complete Subject",
+                element:        "textarea[name=description]",
+                sampleText:     "The complete usless Message"
+            },
+            {
+                title:          "Send the form",
+                element:        ".o_send_button"
+            },
+            {
+                title:          "check if the form is submited without errors",
+                waitFor:        "form.o_send-success:has(.alert-success:visible):has(.alert-danger:hidden)"
+            },
             {
                 title:          "Usless step",
                 waitFor:        "html"
             }
-
         ]
     });
 
