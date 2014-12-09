@@ -295,7 +295,7 @@
             <field name="user_type" ref="account.account_type_asset_view1"/>
             <field name="type">view</field>
             <field name="parent_id" ref="ch_coa_10"/>
-            <field eval="True" name="reconcile"/>
+            <field eval="False" name="reconcile"/>
             <field eval="[(6, 0, [financial_report_14])]" name="financial_report_ids"/>
         </record>
         <record id="ch_coa_1100" model="account.account.template">
@@ -304,7 +304,7 @@
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="type">receivable</field>
             <field name="parent_id" ref="ch_coa_110"/>
-            <field eval="False" name="reconcile"/>
+            <field eval="True" name="reconcile"/>
         </record>
         <record id="ch_coa_1109" model="account.account.template">
             <field name="code">1109</field>
