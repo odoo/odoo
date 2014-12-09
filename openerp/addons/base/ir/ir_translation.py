@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from collections import defaultdict
+from difflib import get_close_matches
 import logging
 
 from openerp import api, tools
@@ -413,6 +415,50 @@ class ir_translation(osv.osv):
         return result
 
     @api.model
+    def _sync_terms_translations(self, model_name, field_name, ids):
+        """ Synchronize the translations to the terms to translate, after the
+        English value of a field is modified. The algorithm tries to match
+        existing translations to the terms to translate, provided the distance
+        between modified strings is not too large. It allows to not retranslate
+        data where a typo has been fixed in the English value.
+        """
+        records = self.env[model_name].browse(ids)
+        field = records._fields[field_name]
+        if not callable(getattr(field, 'translate', None)):
+            return
+
+        trans = self.env['ir.translation']
+        trans_domain = [('type', '=', 'model'), ('name', '=', "%s,%s" % (model_name, field_name))]
+        discarded = trans
+
+        for record in records:
+            value = record[field_name]
+            if not value:
+                # discard all translations for that field
+                discarded += trans.search(trans_domain + [('res_id', '=', record.id)])
+                continue
+
+            # group existing translations by lang and src
+            lang_term_trans = defaultdict(dict)
+            for trans in trans.search(trans_domain + [('res_id', '=', record.id)]):
+                lang_term_trans[trans.lang][trans.src] = trans
+
+            # remap existing translations on source terms when possible
+            sources = set(field.get_terms(value))
+            for term_trans in lang_term_trans.values():
+                for term, trans in term_trans.items():
+                    if term not in sources:
+                        terms = get_close_matches(term, sources, 1, 0.9)
+                        if terms and terms[0] not in term_trans:
+                            trans.write({'src': terms[0], 'state': trans.state})
+                            term_trans[terms[0]] = trans
+                        else:
+                            discarded += trans
+
+        # remove discarded translations
+        discarded.unlink()
+
+    @api.model
     @tools.ormcache(skiparg=1)
     def get_field_string(self, model_name, lang):
         """ Return the translation of fields strings in the given language.
@@ -453,10 +499,10 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('src') or ('value' in vals and not(vals.get('value'))):
-            vals.update({'state':'to_translate'})
         if vals.get('value'):
-            vals.update({'state':'translated'})
+            vals.setdefault('state', 'translated')
+        elif vals.get('src') or not vals.get('value', True):
+            vals.setdefault('state', 'to_translate')
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         self.clear_caches()
         self.pool['ir.ui.view'].clear_cache()

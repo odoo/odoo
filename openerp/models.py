@@ -3856,7 +3856,7 @@ class BaseModel(object):
                             # Inserting value to DB
                             context_wo_lang = dict(context, lang=None)
                             self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                        self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
                     elif self._columns[f].translate:
                         # We do not handle the update of a field where translate
                         # is a callable. One should update the value without a
@@ -3866,6 +3866,15 @@ class BaseModel(object):
                             "directly updated. You can either update its value "
                             "in English, or update translated terms separately."
                         ) % self._fields[f].string)
+            else:
+                for f in direct:
+                    if self._columns[f].translate is True:
+                        pass
+                    elif self._columns[f].translate:
+                        # The English value of a field has been modified,
+                        # synchronize translated terms when possible.
+                        self.pool['ir.translation']._sync_terms_translations(
+                            cr, user, self._name, f, ids, context=context)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
