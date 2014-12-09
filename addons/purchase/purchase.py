@@ -1052,15 +1052,16 @@ class purchase_order_line(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        for po_line in self.browse(cr, uid, ids, context=context):
-            if all([l.state == 'cancel' for l in po_line.order_id.order_line]):
-                self.pool.get('purchase.order').action_cancel(cr, uid, [po_line.order_id.id], context=context)
+        # We will group by PO first, so we do the check only once for each PO
+        purchase_orders = list(set([x.order_id for x in self.browse(cr, uid, ids, context=context)]))
+        for purchase in purchase_orders:
+            if all([l.state == 'cancel' for l in purchase.order_line]):
+                self.pool.get('purchase.order').action_cancel(cr, uid, [purchase.id], context=context)
 
     def _check_product_uom_group(self, cr, uid, context=None):
         group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
         res = [user for user in group_uom.users if user.id == uid]
         return len(res) and True or False
-
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
@@ -1179,9 +1180,15 @@ class procurement_order(osv.osv):
 
     def propagate_cancel(self, cr, uid, procurement, context=None):
         if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
+            uom_obj = self.pool.get("product.uom")
             purchase_line_obj = self.pool.get('purchase.order.line')
-            if procurement.purchase_line_id.product_qty > procurement.product_qty and procurement.purchase_line_id.order_id.state == 'draft':
-                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - procurement.product_qty}, context=context)
+            uom = procurement.purchase_line_id.product_uom
+            product_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, uom, context=context)
+            if procurement.purchase_line_id.state not in ('draft', 'cancel'):
+                    raise osv.except_osv(_('Error!'),
+                        _('Can not cancel this procurement as the related purchase order has been confirmed already.  Please cancel the purchase order first. '))
+            if float_compare(procurement.purchase_line_id.product_qty, product_qty, 0, precision_rounding=uom.rounding) > 0:
+                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - product_qty}, context=context)
             else:
                 purchase_line_obj.action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
         return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)

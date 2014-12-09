@@ -878,7 +878,8 @@ function openerp_picking_widgets(instance){
             if (pack_op_ids.length !== 0){
                 return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
-                    .then(function(){
+                    .then(function(pack){
+                        //TODO: the functionality using current_package_id in context is not needed anymore
                         instance.session.user_context.current_package_id = false;
                         return self.refresh_ui(self.picking.id);
                     });
