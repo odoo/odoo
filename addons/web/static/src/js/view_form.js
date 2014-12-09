@@ -1542,17 +1542,17 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 return;
             page.__ic.on("change:effective_invisible", null, function() {
                 if (!page.__ic.get('effective_invisible') && page.autofocus) {
-                    $new_notebook.tabs('select', i);
+                    $new_notebook.tabs('option', 'active', i);
                     return;
                 }
-                var current = $new_notebook.tabs("option", "selected");
+                var current = $new_notebook.tabs("option", "active");
                 if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
                     return;
                 var first_visible = _.find(_.range(pages.length), function(i2) {
                     return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
                 });
                 if (first_visible !== undefined) {
-                    $new_notebook.tabs('select', first_visible);
+                    $new_notebook.tabs('option', 'active', first_visible);
                 }
             });
         });
