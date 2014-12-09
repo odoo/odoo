@@ -211,6 +211,7 @@ var Tour = {
 
 
         Tour.$element = $element;
+        Tour.scrollIntoView($element);
         $element.data("tour", state.id);
         $element.data("tour-step", step.id);
         $element.popover({
@@ -684,6 +685,16 @@ var Tour = {
         var $dropZone = $(".oe_drop_zone").first();
         var dropPosition = $dropZone.position();
         $thumbnail.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+    },
+    scrollIntoView: function ($element){
+        // if element is not on window (screen) then it scroll down to get popup visible
+        if (!$element.is('body')){
+            var element_top = $element.offset().top;
+            var visible = ((element_top > $(window).scrollTop()) && (element_top < ($(window).scrollTop() + $(window).height())));
+            if (!visible) {
+                $("body, html").animate({scrollTop: $element.offset().top - $(window).height() / 2 }, 800);
+            }
+        }
     }
 };
 openerp.Tour = Tour;
