@@ -21,7 +21,16 @@ if (typeof openerp.Tour !== "undefined") {
 }
 
 /////////////////////////////////////////////////
-
+/* To check if element is on screen or not */
+$.fn.isOnScreen = function(){
+    var viewport = {};
+    viewport.top = $(window).scrollTop();
+    viewport.bottom = viewport.top + $(window).height();
+    var bounds = {};
+    bounds.top = this.offset().top;
+    bounds.bottom = bounds.top + this.outerHeight();
+    return ((bounds.top <= viewport.bottom) && (bounds.bottom >= viewport.top));
+};
 
 /* jQuery selector to match exact text inside an element
  *  :containsExact()     - case insensitive
@@ -187,6 +196,11 @@ var Tour = {
         Tour.$element = $element;
         $element.data("tour", state.id);
         $element.data("tour-step", step.id);
+
+        // if element is not on window (screen) then it scroll down to get popup visible
+        if ($element.isOnScreen()==false)
+           $("body,html").animate({scrollTop:$element.offset().top-$(window).height()/2},800);
+
         $element.popover({
             placement: step.placement || "auto",
             animation: true,
