@@ -254,7 +254,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                         request.cr, request.uid,
                         [
                             ('type', '=', 'model'),
-                            ('name', '=', 'ir.ui.view,arch'),
+                            ('name', '=', 'ir.ui.view,arch_db'),
                             ('res_id', '=', view_id),
                             ('lang', '=', lang),
                             ('src', '=', initial_content),
@@ -267,7 +267,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 else:
                     new_trans = {
                         'type': 'model',
-                        'name': 'ir.ui.view,arch',
+                        'name': 'ir.ui.view,arch_db',
                         'state': 'translated',
                         'res_id': view_id,
                         'lang': lang,

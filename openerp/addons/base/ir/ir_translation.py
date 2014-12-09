@@ -108,7 +108,7 @@ class ir_translation_import_cursor(object):
 
         elif params['type'] == 'view':
             params['type'] = 'model'
-            params['name'] = 'ir.ui.view,arch'
+            params['name'] = 'ir.ui.view,arch_db'
             params['imd_model'] = "ir.ui.view"
 
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)

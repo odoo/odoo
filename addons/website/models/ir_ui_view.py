@@ -253,7 +253,7 @@ class view(osv.osv):
         self.write(cr, uid, res_id, {
             'arch': self._pretty_arch(arch)
         }, context=context)
-        self._translation_resync(cr, uid, 'ir.ui.view', [res_id], 'arch', context=context)
+        self._translation_resync(cr, uid, 'ir.ui.view', [res_id], 'arch_db', context=context)
 
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
