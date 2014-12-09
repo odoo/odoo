@@ -1144,10 +1144,14 @@ class _String(Field):
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
-    single-line string in clients
+    single-line string in clients.
 
     :param int size: the maximum size of values stored for that field
-    :param bool translate: whether the values of this field can be translated
+
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'char'
     _slots = {
@@ -1172,7 +1176,10 @@ class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
-    :param translate: whether the value of this field can be translated
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'text'
 
