@@ -15,7 +15,6 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.account_id = [];
             this.updating = false;
             this.defs = [];
-            this.week = false;
             this.dfms = [];
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
@@ -28,10 +27,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.set({"user_id": this.field_manager.get_field_value("user_id")});
             });
             this.on("change:sheets", this, this.update_sheets);
-            this.on("change:week", this, function() {
-                self.week = self.get('week');
-            });
-            this.set("year", false);
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
@@ -175,12 +170,19 @@ openerp.hr_timesheet_sheet = function(instance) {
                 return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
                     new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
                     accounts = _(accounts).chain().map(function(lines, account_id) {
+                        var week_count = 0;
+                        var previous_week = false;
                         account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
                         // group by days
                         account_id = account_id === "false" ? false :  Number(account_id);
                         var group_by_date = _.groupBy(lines, "date");
                         var days = _.map(dates, function(date, index) {
-                            var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], day_index: index, week: moment(date).week()};
+                            var week = moment(date).week();
+                            if (week != previous_week) {
+                                week_count += 1;
+                            }
+                            previous_week = week;
+                            var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], week_count: week_count, day_index: index};
                             // add line where we will insert/remove hours
                             var to_add = _.find(day.lines, function(line) { return line.name === self.description_line;});
                             if (to_add) {
@@ -215,9 +217,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 // we put all the gathered data in self, then we render
                 self.dates = dates;
                 if(self.dates.length) {
-                    self.set('week', moment(_.first(self.dates)).week());
-                    _.extend(self.options, {'week': self.get('week')});
-                    self.last_week = moment(_.last(self.dates)).week();
+                    _.extend(self.options, {'week_count': 0});
                 }
                 self.accounts = accounts;
                 self.account_names = account_names;
@@ -373,12 +373,12 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             _.extend(self.options, {'count': self.get('count')});
             self.parent.options = self.options;
         });
-        this.on("change:week", this, function() {
-            _.extend(self.options, {'week': self.get('week')});
+        this.on("change:week_count", this, function() {
+            _.extend(self.options, {'week_count': this.get('week_count')});
             self.parent.options = self.options;
         });
         this.set('count', (options || {}).count || 0);
-        this.set('week', (options || {}).week);
+        this.set('week_count', (options || {}).week_count || 0);
         this.set('effective_readonly', this.parent.get("effective_readonly"));
     },
     start: function() {
@@ -391,7 +391,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var self = this;
         var count = self.get('count');
         if(self.days && self.days.length)
-            self.week = self.days[count].week;
+            self.week_count = self.days[count].week_count;
         if (self.days && self.days.length) {
             var day_count = count;
              _.each(self.days[count].account_group, function(account){
@@ -500,10 +500,18 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         .flatten(true)
         .union().value();
 
+        //Need to add week_count logic, because it is quite possible that timesheet may have two weeks with same number,
+        //Say for example create timesheet with 1-1 to 31-12, it is quite possible that 1-1 and 31-12 may come in 0th week, which will create issue in week based logic
+        var count = 0;
+        var previous_week = false;
         days = _.map(dates, function(date, index) {
             var week = moment(date).week();
+            if (week != previous_week) {
+                count += 1;
+            }
+            previous_week = week;
             var account_group = _.groupBy(new_days[instance.web.date_to_str(date)], "account_id");
-            var day = {day: date, account_defaults: self.parent.account_defaults, account_group: account_group, week: week, day_index: index, };
+            var day = {day: date, account_defaults: self.parent.account_defaults, account_group: account_group, week_count: count, day_index: index, };
             return day;
         });
         return new instance.web.Model("account.analytic.account").call("name_get", [new_account_ids,
@@ -522,8 +530,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                 self.account_names = new_account_names;
                 self.days = days;
                 if(self.days.length) {
-                    self.week = _.first(self.days).week;
-                    self.last_week = _.last(self.days).week;
+                    self.week_count = _.first(self.days).week_count;
                 }
         });
     },
@@ -835,11 +842,11 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         } else {
             this.navigateDays(parseInt($(e.target).data("day-counter"), 10));
         }
-        this.week = this.days[this.get('count')].week;
+        this.week_count = this.days[this.get('count')].week_count;
         this.parent.display_data(this.options);
     },
     update_count: function (count) {
-        this.set('week', this.days[count].week);
+        this.set('week_count', this.days[count].week_count);
         this.set('count', count);
     },
     navigateNext: function() {
@@ -881,20 +888,26 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         this.account_names = parent.account_names;
         this.default_get = parent.default_get;
         this.account_defaults = parent.account_defaults;
+        var count = 0;
+        var previous_week = false;
         this.days = _.map(parent.dates, function(date, index) {
             var week = moment(date).week();
-            var day = {date: date, week: week, day_index: index, };
+            if (week != previous_week) {
+                count += 1;
+            }
+            previous_week = week;
+            var day = {date: date, day_index: index, week_count: count};
             return day;
         });
-        this.on("change:week", this, function() {
-            _.extend(self.options, {'week': self.get('week')});
+        this.on("change:week_count", this, function() {
+            _.extend(self.options, {'week_count': this.get('week_count')});
             self.parent.options = self.options;
         });
-        if (!options || (options && !options.week)) {
-            this.week = _.first(_.map(this.days, function(day) {return day.week;}));
-            this.set('week', this.week);
+        if (!options || (options && !options.week_count)) {
+            this.week_count = _.first(_.map(this.days, function(day) {return day.week_count;}));
+            this.set('week_count', this.week_count);
         } else {
-            this.set('week', (options || {}).week);
+            this.set('week_count', (options || {}).week_count || 0);
         }
     },
     start: function() {
@@ -1000,7 +1013,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         var self = this;
         var data_to_copy;
         var onchange_result = {};
-        var index = this.get('week');
+        //var index = this.get('week');
         var first_week = _.first(_.map(this.days, function(day) {return day.week;}));
         //Copy Button will be displayed only if there is no accounts in current timesheet in week mode,
         //Because in week mode if there is an account it will be displayed in all weeks, so we only need to consider scenario of fetch last timesheet 7 days
@@ -1073,7 +1086,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     do_switch_mode: function(e) {
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
-            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week: moment(this.dates[index]).week()});
+            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week_count: this.days[index].week_count});
         else
             this.parent.do_switch_mode(e);
     },
@@ -1105,7 +1118,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
             var acc_tot = 0;
             _.each(self.days, function(day) {
                 var sum = self.sum_box(account, day.day_index);
-                if (day.week == self.get('week')) {
+                if (day.week_count == self.get('week_count')) {
                     acc_tot += sum;
                     day_tots[day.day_index] += sum;
                     week_tot += sum;
@@ -1190,29 +1203,29 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
             this.navigateNext();
         else if (navigate == "this_week") {
             for(var i = 0; i < this.days.length; i++) {
-                if (_.isEqual(this.days[i].week, moment(new Date()).week())) {
-                    this.update_count(this.days[i].week);
+                if (_.isEqual(moment(this.days[i].date).week(), moment(new Date()).week())) {
+                    this.update_week_count(this.days[i].week_count);
                     break;
                 }
             }
         }
         this.parent.display_data(this.options);
     },
-    update_count: function (count) {
-        this.set('week', count);
+    update_week_count: function(count) {
+        this.set('week_count', count);
     },
     navigateNext: function() {
-        if(this.get('week') == _.last(_.map(this.days, function(day) {return day.week;})))
-            this.update_count(this.days[0].week);
+        if(this.get('week_count') == _.last(_.map(this.days, function(day) {return day.week_count;})))
+            this.update_week_count(this.days[0].week_count);
         else 
-            this.update_count(this.get('week')+1);
+            this.update_week_count(this.get('week_count')+1);
     },
     navigatePrev: function() {
-        if (this.get('week') == _.first(_.map(this.days, function(day) {return day.week;}))) {
-            this.update_count(this.days[this.days.length-1].week);
+        if (this.get('week_count') == _.first(_.map(this.days, function(day) {return day.week_count;}))) {
+            this.update_week_count(this.days[this.days.length-1].week_count);
         }
         else {
-            this.update_count(this.get('week')-1);
+            this.update_week_count(this.get('week_count')-1);
         }
     },
 });

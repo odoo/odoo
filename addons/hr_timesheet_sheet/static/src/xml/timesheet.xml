@@ -35,7 +35,7 @@
                                 <td class="oe_timesheet_weekly_day_blank"></td>
                                 <t t-set="day_count" t-value="0"/>
                                 <t t-foreach="widget.days" t-as="day">
-                                    <t t-if="(day.week == (widget.get('week') or widget.week))">
+                                    <t t-if="(day.week_count == (widget.get('week_count') or widget.week_count))">
                                         <td t-attf-class="btn-default oe_timesheet_weekly_day" t-att-data-day-counter="day.day_index">
                                             <span class="text-primary">
                                                 <t t-esc="moment(day.date).format('ddd')"/><br />
@@ -66,7 +66,7 @@
                             </td>
                             <t t-set="day_count" t-value="0"/>
                             <t t-foreach="account.days" t-as="day">
-                                <t t-if="(day.week == (widget.get('week') or widget.week))">
+                                <t t-if="(day.week_count == (widget.get('week_count') or widget.week_count))">
                                     <td>
                                         <t t-if="day.lines[day.lines.length-1].date_start">
                                             <input disabled="1" t-if="!widget.get('effective_readonly')" class="oe_timesheet_box" t-att-data-account="account.account"
@@ -106,7 +106,7 @@
                                 <!-- Remove if we are going to use day_index -->
                                 <t t-set="day_count" t-value="0"/>
                                 <t t-foreach="widget.days" t-as="day">
-                                    <t t-if="(day.week == (widget.get('week') or widget.week))">
+                                    <t t-if="(day.week_count == (widget.get('week_count') or widget.week_count))">
                                         <td class="text-primary">
                                             <p t-att-data-day-total="day.day_index" />
                                             <t t-set="day_count" t-value="day_count + 1"/>
@@ -153,7 +153,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading btn-group btn-group-lg oe_daily_header">
                                 <t t-foreach="widget.days" t-as="date">
-                                    <t t-if="(date.week == (widget.get('week') or widget.week))">
+                                    <t t-if="(date.week_count == (widget.get('week_count') or widget.week_count))">
                                         <h5 t-att-data-day-counter="date.day_index" class="btn btn-default oe_nav_button oe_header">
                                             <span t-esc="moment(date.day).format('ddd')" /><br />
                                             <span class="oe_display_day_total" t-att-data-day-total="date.day_index" t-att-data-day-counter="date.day_index" />
