@@ -15,7 +15,7 @@
 // that only one screen is shown at the same time and that show() is called after all
 // hide()s
 
-function openerp_pos_screens(instance, module){ //module is instance.point_of_sale
+openerp.point_of_sale.load_screens = function load_screens(instance, module){ //module is instance.point_of_sale
     "use strict";
 
     var QWeb = instance.web.qweb,

@@ -1,4 +1,4 @@
-function openerp_pos_db(instance, module){ 
+openerp.point_of_sale.load_db = function load_db(instance, module){ 
     "use strict";
 
     /* The PosDB holds reference to data that is either

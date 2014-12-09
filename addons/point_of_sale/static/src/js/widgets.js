@@ -1,4 +1,4 @@
-function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
+openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //module is instance.point_of_sale
     "use strict";
 
     var QWeb = instance.web.qweb;
