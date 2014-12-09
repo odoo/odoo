@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+
+<openerp>
+    <data>
+
+        <!--Call Center Phonecalls Tree View -->
+        <record model="ir.ui.view" id="crm_call_center_phonecall_tree_view">
+            <field name="name">CRM - Call Center Calls Tree</field>
+            <field name="model">crm.phonecall</field>
+            <field name="arch" type="xml">
+                <tree string="Phone Calls" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="partner_id"
+                        on_change="on_change_partner_id(partner_id)"/>
+                    <field name="partner_phone"
+                        invisible="1"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"
+                        invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
+                    <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
+                    <button string="Schedule Other Call"
+                        icon="terp-call-start"
+                        name="%(crm.phonecall_to_phonecall_act)d"
+                        type="action"/>
+                    <button string="Meeting"
+                         icon="gtk-redo"
+                         name="action_make_meeting" type="object"/>
+                    <button string="Convert to Opportunity"
+                        name="action_button_convert2opportunity"
+                        states="open,pending"
+                        icon="gtk-index"
+                        type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Add the field sequence in the form view of the phonecalls-->
+        <record model="ir.ui.view" id="phonecall_tocall_form_view">
+            <field name="name">crm.phonecall.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.crm_case_phone_form_view"/>
+            <field name="arch" type="xml">
+                <group>
+                    <field name="sequence"/>
+                </group>
+            </field>
+        </record>
+
+        
+        <!-- Add the filter "Scheduled Calls" to the search bar-->
+        <record model="ir.ui.view" id="crm_phonecall_filter_tocall">
+            <field name="name">crm.phonecall.filter.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.view_crm_case_phonecalls_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Phonecalls">
+                    <filter name="call_center_call_filter" string="Call Center Calls" domain="[('in_queue','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Add the fields to_call and sequence in the tree view of the phonecalls. 
+            The sequence field is a widget that allows to order the phonecalls-->
+        <record model="ir.ui.view" id="crm_phonecall_tree_tocall">
+            <field name="name">crm.phonecall.tree.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm_call_center_phonecall_tree_view"/>
+            <field name="arch" type="xml">
+                <tree string="Phone Calls" editable="top">
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Add the menu to reach the view of the call center calls-->
+        <record model="ir.actions.act_window" id="crm_phone_callcenter">
+            <field name="name">Call Center</field>
+            <field name="res_model">crm.phonecall</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_id" ref="crm_call_center_phonecall_tree_view"/>
+            <field name="domain">[]</field>
+            <field name="context" eval="{'search_default_call_center_call_filter':1}"/>
+            <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to log the summary of a phone call. 
+              </p><p>
+                Odoo allows you to log inbound calls on the fly to track the
+                history of the communication with a customer or to inform another
+                team member.
+              </p><p>
+                In order to follow up on the call, you can trigger a request for
+                another call, a meeting or an opportunity.
+              </p>
+            </field>
+        </record>
+        
+
+        <!-- wizard to change the log of calls -->
+        <record model="ir.ui.view" id="wizard_change_log_form_view">
+            <field name="name">phonecall.log.wizard.form</field>
+            <field name="model">crm.phonecall.log.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Edit the log">
+                    <group>
+                        <group>
+                            <div attrs="{'invisible': [('partner_name', '=', False)]}">
+                                <field name="partner_image_small" widget="image" class="oe_avatar oe_left"/>
+                                <div style="display: inline-block;">
+                                    <h2><field name="partner_name"/></h2>
+                                    <field attrs="{'invisible': 'partner_email'}" name="partner_email"/>
+                                    <div attrs="{'invisible': [('opportunity_name', '=', 'No opportunity linked')]}">
+                                        <field name="opportunity_name"/>
+                                        <span><field name="opportunity_planned_revenue" class="oe_inline"/> at <field name="opportunity_probability" class="oe_inline"/>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </group>
+
+                        <group attrs="{'invisible': [('opportunity_name', '=', 'No opportunity linked')]}">
+                            <label for="new_title_action"/>
+                            <div>
+                                <field name="new_date_action" nolabel="1"/>
+                                <field name="new_title_action" placeholder="e.g. Call for proposal" nolabel="1"/>
+                            </div>
+                            <label for="reschedule_option"/>
+                            <div>
+                                <field name="reschedule_option" widget="radio" nolabel="1"/>
+                                <field name="reschedule_date" nolabel="1" attrs="{'invisible': [('reschedule_option', '!=', 'custom')], 'required':[('reschedule_option', '=','custom')]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <separator colspan="2" string="Call Summary"/>
+                    <field name="show_duration" attrs="{'invisible': True}"/>
+                    <field name="custom_duration" widget="float_time" attrs="{'invisible': [('show_duration', '=', False)], 'required':[('show_duration', '=',True)]}" class="oe_inline"/> 
+                    <span attrs="{'invisible': [('show_duration', '=', False)], 'required':[('show_duration', '=',True)]}">min(s)</span>
+                    <group>
+                        <field name="description" nolabel="1" placeholder="Description..."/>
+                    </group>
+                    <footer>
+                        <button name="save_keep" type="object"
+                            string="Save" class="oe_highlight"/>
+                        <button name="save_go_opportunity" type="object" attrs="{'invisible': [('opportunity_name', '=', 'No opportunity linked')]}"
+                            string="Save and Open the Opportunity" class="oe_highlight"/>
+                        or
+                        <button class="oe_button oe_form_button oe_link" special="cancel" string="Discard"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard diplaying the transfer's option -->
+        <record model="ir.ui.view" id="wizard_transfer_call_form_view">
+            <field name="name">Transfer the Call</field>
+            <field name="model">crm.phonecall.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form string="transfer Option">
+                    <group string="transfer Option">
+                            <field name="transfer_choice" widget="selection"/>
+                            <field name="transfer_number" attrs="{'invisible': ['|',('transfer_choice', '=', 'physical'), ('transfer_choice','=',False)], 
+                                'required': [('transfer_choice', '=', 'extern')]}"/>
+                    </group>
+                    <footer>
+                        <button name="save" type="object"
+                                string="transfer the Call" class="oe_highlight"/>
+                        or
+                        <button class="oe_button oe_form_button oe_link" special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <menuitem name="Call Center" id="menu_crm_phone_callcenter"
+            parent="crm.menu_crm_case_phone"
+            groups="crm.group_scheduled_calls"
+            action="crm_phone_callcenter" />
+    </data>
+</openerp>

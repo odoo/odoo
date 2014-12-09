@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_voip_config" model="ir.ui.view">
+            <field name="name">voip.settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="crm.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <data>
+                        <group name="pre_sale_services">
+                            <label for="id" string="PBX Configuration"/>
+                            <div>
+                                <div>
+                                    <label for="pbx_ip"/>
+                                    <field name="pbx_ip" class="oe_inline"/>
+                                </div>
+                                <div>
+                                    <label for="wsServer"/>
+                                    <field name="wsServer" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </group>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -52,19 +52,19 @@
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+            <tree colors="gray:state in ('cancel','done');blue:state in ('to_do',)" string="Phone Calls">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
                 <button string="Meeting"
-                    states="open,pending"
+                    states="open,to_do"
                     name="action_make_meeting"
                     icon="gtk-redo"
                     type="object"/>
                 <button string="Create an Opportunity"
                     type="object"
                     name="action_button_convert2opportunity"
-                    states="open,pending"
+                    states="open,to_do"
                     icon="gtk-index"
                     attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 <field name="partner_phone"/>
@@ -165,13 +165,13 @@
                      name="action_make_meeting" type="object"/>
                 <button string="Create an Opportunity"
                     name="action_button_convert2opportunity"
-                    states="open,pending"
+                    states="open,to_do"
                     icon="gtk-index"
                     type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
             </tree>
         </field>
     </record>
-
+    
     <!-- Phonecalls Calendar View -->
     <record model="ir.ui.view" id="crm_case_phone_calendar_view">
         <field name="name">CRM - Phone Calls Calendar</field>
@@ -184,6 +184,7 @@
             </calendar>
         </field>
     </record>
+    
 
     <!-- Phonecalls Search View  -->
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+
+<openerp>
+    <data>
+
+        <record model="web.tip" id="voip_tip_1">
+            <field name="title"></field>
+            <field name="description">Changing the phone number will not change the phone numbers already in the call queue</field>
+            <field name="action_id" ref="base.action_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_group_right table tbody tr:nth-child(2):visible</field>
+            <field name="highlight_selector">.oe_group_right table tbody tr:nth-child(2) label, .oe_group_right table tbody tr:nth-child(2) .oe_form_char_content</field>
+            <field name="placement">bottom</field>
+        </record>
+    </data>
+</openerp>
+

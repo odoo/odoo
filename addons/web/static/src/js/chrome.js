@@ -348,7 +348,12 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
                     oe_link_class : 'oe_highlight',
                     post_text : _t("or"),
                     click: function() {
-                        window.location.href='#action='+error.data.arguments[1]
+                        var act_window_model = new openerp.web.Model("ir.actions.act_window");
+                        act_window_model.call('read',[error.data.arguments[1]]).then(function(result){
+                            result.res_id = openerp.session.uid;
+                            openerp.client.action_manager.do_action(result);
+                        });
+                        //window.location.href='#action='+error.data.arguments[1];
                         self.destroy();
                     }},
                 {text: _t("Cancel"), oe_link_class: 'oe_link', click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}}

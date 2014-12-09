@@ -39,23 +39,22 @@ class crm_phonecall(osv.osv):
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
+        'partner_id': fields.many2one('res.partner', 'Contact',ondelete='cascade', track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection(
-            [('open', 'Confirmed'),
+            [('no_answer', 'Not Held'),
              ('cancel', 'Cancelled'),
-             ('pending', 'Pending'),
+             ('to_do', 'To Do'),
              ('done', 'Held')
              ], string='Status', readonly=True, track_visibility='onchange',
-            help='The status is set to Confirmed, when a case is created.\n'
+            help='The status is set to To Do, when a case is created.\n'
                  'When the call is over, the status is set to Held.\n'
-                 'If the callis not applicable anymore, the status can be set to Cancelled.'),
+                 'If the call is not applicable anymore, the status can be set to Cancelled.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
         'name': fields.char('Call Summary', required=True),
-        'active': fields.boolean('Active', required=False),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.phonecall.category', 'Category'),
         'partner_phone': fields.char('Phone'),
@@ -63,18 +62,13 @@ class crm_phonecall(osv.osv):
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity',ondelete='cascade', track_visibility='onchange'),
     }
-
-    def _get_default_state(self, cr, uid, context=None):
-        if context and context.get('default_state'):
-            return context.get('default_state')
-        return 'open'
 
     _defaults = {
         'date': fields.datetime.now,
         'priority': '1',
-        'state':  _get_default_state,
+        'state':  'to_do',
         'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1
     }
@@ -122,6 +116,9 @@ class crm_phonecall(osv.osv):
             except ValueError:
                 pass
         for call in self.browse(cr, uid, ids, context=context):
+            if(call.state == "to_do"):
+                call.state = "cancel"
+                call.in_queue = False
             if not team_id:
                 team_id = call.team_id and call.team_id.id or False
             if not user_id:
@@ -132,7 +129,7 @@ class crm_phonecall(osv.osv):
                     'name' : call_summary,
                     'user_id' : user_id or False,
                     'categ_id' : categ_id or False,
-                    'description' : call.description or False,
+                    'description' : False,
                     'date' : schedule_time,
                     'team_id' : team_id or False,
                     'partner_id': call.partner_id and call.partner_id.id or False,
@@ -253,7 +250,6 @@ class crm_phonecall(osv.osv):
             vals = {
                 'partner_id': partner_id,
                 'opportunity_id': opportunity_id,
-                'state': 'done',
             }
             self.write(cr, uid, [call.id], vals, context=context)
             opportunity_dict[call.id] = opportunity_id
@@ -285,6 +281,8 @@ class crm_phonecall(osv.osv):
         :param list ids: list of calls ids to convert (typically contains a single id)
         :return dict: containing view information
         """
+        print("TEST PHONECALL")
+        print(ids)
         if len(ids) != 1:
             raise osv.except_osv(_('Warning!'),_('It\'s only possible to convert one phonecall at a time.'))
 
