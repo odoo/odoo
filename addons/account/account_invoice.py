@@ -690,9 +690,6 @@ class account_invoice(models.Model):
                 tax_key.append(key)
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
-                base = compute_taxes[key]['base']
-                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
-                    raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
                     raise except_orm(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
@@ -1351,7 +1348,7 @@ class account_invoice_line(models.Model):
     def move_line_get(self, invoice_id):
         res = []
         for line in self.env['account.invoice'].browse(invoice_id).invoice_line:
-            tax_ids = [(4, id, None) for id in line.invoice_line_tax_id.normalized_set().ids]
+            tax_ids = [(4, id, None) for id in line.invoice_line_tax_id.ids]
             res.append({
                 'invl_id': line.id,
                 'type': 'src',
@@ -1397,8 +1394,6 @@ class account_invoice_tax(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
-    subsequent_tax_ids = fields.Many2many('account.tax', string='Subsequent Taxes', help="In case the tax amount has to be added for the computation of taxes that comes after.")
-    base = fields.Float(string='Base', digits=dp.get_precision('Account'))
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
     manual = fields.Boolean(string='Manual', default=True)
     sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of invoice tax.")
@@ -1419,10 +1414,8 @@ class account_invoice_tax(models.Model):
                     'amount': tax['amount'],
                     'manual': False,
                     'sequence': tax['sequence'],
-                    'base': tax['base_amount'],
                     'account_analytic_id': line.account_analytic_id.id,
                     'account_id': invoice.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
-                    'subsequent_tax_ids': [(4, x) for x in tax['subsequent_tax_ids']],
                 }
 
                 # If the taxes generate moves on the same financial account as the invoice line
@@ -1437,11 +1430,9 @@ class account_invoice_tax(models.Model):
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
-                    tax_grouped[key]['base'] += val['base']
                     tax_grouped[key]['amount'] += val['amount']
 
         for t in tax_grouped.values():
-            t['base'] = currency.round(t['base'])
             t['amount'] = currency.round(t['amount'])
 
         return tax_grouped
@@ -1467,7 +1458,6 @@ class account_invoice_tax(models.Model):
                 'price': tax_line.amount or 0.0,
                 'account_id': tax_line.account_id.id,
                 'account_analytic_id': tax_line.account_analytic_id.id,
-                'tax_ids': [(4, x.id) for x in tax_line.subsequent_tax_ids],
             })
         return res
 

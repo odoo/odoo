@@ -584,7 +584,7 @@ class account_tax(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic_cost = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
+    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -659,30 +659,35 @@ class account_tax(models.Model):
     @api.v8
     def compute_all(self, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
-        
+
         RETURN: {
-            'total': 0.0,           # Total without taxes
-            'total_included: 0.0,   # Total with taxes
+            'total_excluded': 0.0,           # Total without taxes
+            'total_includedi': 0.0,          # Total with taxes
             'taxes': [{             # One dict for each tax in self and their children
                 'id': int,
                 'name': str,
                 'amount': float,
-                'base_amount': float,
                 'sequence': int,
                 'account_id': int,
                 'refund_account_id': int,
-                'analytic_cost': boolean,
-                'subsequent_tax_ids': list of int,
+                'analytic': boolean,
             }]
         } """
 
         taxes = []
-        total = total_included = base = price_unit * quantity
+        # TODO: use currency rounding
         prec = self.env['decimal.precision'].precision_get('Account')
-        to_apply_taxes = self.normalized_set()
-        subsequent_taxes = [x.id for x in to_apply_taxes]
-        for tax in to_apply_taxes:
-            del(subsequent_taxes[0])
+        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        for tax in self:
+            if tax.amount_type == 'group':
+                ret = tax.children_tax_ids.compute_all(price_unit, quantity)
+                total_excluded = ret['total_excluded']
+                base = ret['total_excluded']
+                total_included = ret['total_included']
+                tax_amount = total_included - total_excluded
+                taxes += ret['taxes']
+                continue
+
             if tax.amount_type == 'fixed':
                 tax_amount = tax.amount
             elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
@@ -691,36 +696,27 @@ class account_tax(models.Model):
                 tax_amount = base - (base / (1 + tax.amount / 100))
             elif tax.amount_type == 'division' and not tax.price_include:
                 tax_amount = base / (1 - tax.amount / 100) - base
-            elif tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, quantity)
-                total = ret['total']
-                total_included = ret['total_included']
-                tax_amount = total_included - total
-                taxes += ret['taxes']
-
-            if tax.amount_type != 'group':
-                tax_amount = round(tax_amount, prec)
-                total = tax.price_include and total - tax_amount or total
-                base = total
-                total_included = tax.price_include and total_included or total_included + tax_amount
-                taxes.append({
-                    'id': tax.id,
-                    'name': tax.name,
-                    'base_amount': base,
-                    'amount': tax_amount,
-                    'sequence': tax.sequence,
-                    'account_id': tax.account_id.id,
-                    'refund_account_id': tax.refund_account_id.id,
-                    'analytic_cost': tax.analytic_cost,
-                    'subsequent_tax_ids': tax.include_base_amount and list(subsequent_taxes) or [],
-                })
-
-            if tax.include_base_amount:
-                base += tax_amount
+            tax_amount = round(tax_amount, prec)
+            if tax.price_include:
+                total_excluded -= tax_amount
+                base -= tax_amount
+            else:
+                total_included += tax_amount
+                if tax.include_base_amount:
+                    base += tax_amount
+            taxes.append({
+                'id': tax.id,
+                'name': tax.name,
+                'amount': tax_amount,
+                'sequence': tax.sequence,
+                'account_id': tax.account_id.id,
+                'refund_account_id': tax.refund_account_id.id,
+                'analytic': tax.analytic,
+            })
 
         return {
             'taxes': taxes,
-            'total': round(total, prec),
+            'total_excluded': round(total_excluded, prec),
             'total_included': round(total_included, prec)
         }
 

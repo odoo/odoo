@@ -81,7 +81,6 @@
                     <field name="manual"/>
                     <field name="name"/>
                     <field name="account_id" groups="base.group_account_user"/>
-                    <field name="base"/>
                     <field name="amount"/>
                 </tree>
             </field>
@@ -99,7 +98,6 @@
                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
-                        <field name="base" readonly="0"/>
                     </group>
                 </form>
             </field>
@@ -227,7 +225,6 @@
                                         <field name="name"/>
                                         <field name="account_id" groups="account.group_account_invoice"/>
                                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                         <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
                                     </tree>
                                 </field>
@@ -398,7 +395,6 @@
                                 <tree editable="bottom" string="Taxes">
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
-                                    <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                     <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
                                 </tree>
                             </field>
