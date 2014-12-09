@@ -36,7 +36,7 @@ class ir_filters(osv.osv):
         default.update({'name':_('%s (copy)') % name})
         return super(ir_filters, self).copy(cr, uid, id, default, context)
 
-    def get_filters(self, cr, uid, model):
+    def get_filters(self, cr, uid, model, context=None):
         """Obtain the list of filters available for the user on the given model.
 
         :return: list of :meth:`~osv.read`-like dicts containing the
@@ -45,9 +45,9 @@ class ir_filters(osv.osv):
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
         filter_ids = self.search(cr, uid,
-            [('model_id','=',model),('user_id','in',[uid, False])])
+            [('model_id','=',model),('user_id','in',[uid, False])], context=context)
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'])
+            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
@@ -83,7 +83,7 @@ class ir_filters(osv.osv):
 
     def create_or_replace(self, cr, uid, vals, context=None):
         lower_name = vals['name'].lower()
-        matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'])
+        matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'], context=context)
                                 if f['name'].lower() == lower_name
                                 # next line looks for matching user_ids (specific or global), i.e.
                                 # f.user_id is False and vals.user_id is False or missing,
