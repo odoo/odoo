@@ -1215,7 +1215,7 @@ class procurement_order(osv.osv):
         procs = self.browse(cr, uid, ids, context=context)
         to_assign = [x for x in procs if x.state not in ('running', 'done')]
         self._assign_multi(cr, uid, to_assign, context=context)
-        buy_ids = [x.id for x in procs if x.rule_id and x.rule_id.action == 'buy']
+        buy_ids = [x.id for x in to_assign if x.rule_id and x.rule_id.action == 'buy']
         if buy_ids:
             result_dict = self.make_po(cr, uid, buy_ids, context=context)
             runnings = []
