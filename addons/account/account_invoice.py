@@ -142,15 +142,17 @@ class account_invoice(models.Model):
         'move_id.line_id.amount_residual',
     )
     def _compute_payments(self):
-        partial_lines = lines = self.env['account.move.line']
+        partial_lines = lines = payment_lines = self.env['account.move.line']
         for line in self.move_id.line_id:
-            if line.account_id != self.account_id:
-                continue
-            if line.reconcile_id:
-                lines |= line.reconcile_id.line_id
-            partial_lines += line
-        payment = self.env['account.move.line'].search([('reconcile_partial_id', 'in', self.move_id.line_id.ids)])
-        self.payment_ids = (lines - partial_lines + payment).sorted()
+            payment_lines += line.reconcile_partial_ids
+            # if line.account_id != self.account_id:
+            #     continue
+            # if line.reconcile_id:
+            #     lines |= line.reconcile_id.line_id
+            # partial_lines += line
+        # payment = self.env['account.move.line'].search([('reconcile_partial_id', 'in', self.move_id.line_id.ids)])
+        # self.payment_ids = (lines - partial_lines + payment).sorted()
+        self.payment_ids = payment_lines.sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]})
@@ -1136,7 +1138,7 @@ class account_invoice(models.Model):
 
         inv_id, name = self.name_get()[0]
         if not round(total, self.env['decimal.precision'].precision_get('Account')) or writeoff_acc_id:
-            lines2rec.reconcile(writeoff_acc_id, fields.Date.context_today(self), writeoff_journal_id)
+            lines2rec.reconcile(writeoff_acc_id, writeoff_journal_id)
         else:
             code = self.currency_id.symbol
             # TODO: use currency's formatting function
@@ -1144,7 +1146,7 @@ class account_invoice(models.Model):
                     (pay_amount, code, self.amount_total, code, total, code)
             self.message_post(body=msg)
             #TODO check if this method is really needed, seems to only be used in test and data files
-            # lines2rec.reconcile_partial()
+            # lines2rec.reconcile(partial=True)
 
         # Update the stored value (fields.function), so we write to trigger recompute
         return self.write({})

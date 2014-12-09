@@ -71,17 +71,17 @@ class account_register_payment(models.TransientModel):
                     reconcile_line = aml
                     break
 
-        if reconcile_line:
-            #check if we have to split payment in two
-            over_value = 0.0
-            if self.journal_id.currency and self.journal_id.currency != self.company_id.currency_id:
-                if self.payment_amount > reconcile_line.amount_residual_currency:
-                    over_value = payment_amount - abs(reconcile_line.amount_residual_currency)
-            elif (abs(debit-credit) > abs(reconcile_line.amount_residual)):
-                over_value = abs(debit-credit) - abs(reconcile_line.amount_residual)
-            if over_value != 0.0:
-                debit = reconcile_line.amount_residual if debit else 0.0
-                credit = reconcile_line.amount_residual if credit else 0.0
+        # if reconcile_line:
+        #     #check if we have to split payment in two
+        #     over_value = 0.0
+        #     if self.journal_id.currency and self.journal_id.currency != self.company_id.currency_id:
+        #         if self.payment_amount > reconcile_line.amount_residual_currency:
+        #             over_value = payment_amount - abs(reconcile_line.amount_residual_currency)
+        #     elif (abs(debit-credit) > abs(reconcile_line.amount_residual)):
+        #         over_value = abs(debit-credit) - abs(reconcile_line.amount_residual)
+        #     if over_value != 0.0:
+        #         debit = reconcile_line.amount_residual if debit else 0.0
+        #         credit = reconcile_line.amount_residual if credit else 0.0
 
         acl_dict_value = {
             'name': 'Payment from '+self.partner_id.name,
@@ -108,7 +108,7 @@ class account_register_payment(models.TransientModel):
 
         #reconcile
         if reconcile_line:
-            payment_line.reconcile_partial(reconcile_line)
-        if over_value > 0.0:
-            return self.copy({'payment_amount': over_value}).pay()
+            (payment_line + reconcile_line).reconcile(partial=True)
+        # if over_value > 0.0:
+        #     return self.copy({'payment_amount': over_value}).pay()
         return True

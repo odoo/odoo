@@ -537,14 +537,6 @@ class account_move_reconcile(models.Model):
         if any([(line.partner_id.id != first_partner) for line in self.line_id]):
             raise Warning(_('You can only reconcile journal items with the same partner.'))
 
-    @api.multi
-    def unlink(self):
-        #write false on field reconcile_id of account.move.line in order to trigger recomputation
-        #of function field reconcile_ref
-        ac_move_line_ids = [l.line_id.id for l in self]
-        self.env['account.move.line'].browse(ac_move_line_ids).write({'reconcile_id': False})
-        return super(account_move_reconcile, self).unlink()
-
 
 #----------------------------------------------------------
 # Tax

@@ -687,7 +687,7 @@ class account_bank_statement_line(models.Model):
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.browse(pair[1]).reconcile_partial(pair[0])
+            aml_obj.browse(pair).reconcile(partial=True)
         # Mark the statement line as reconciled
         self.journal_entry_id = move_id.id
 
