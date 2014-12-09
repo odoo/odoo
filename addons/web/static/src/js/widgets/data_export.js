@@ -108,7 +108,11 @@ var DataExport = Widget.extend({
         return $.when(
             got_fields,
             got_domain,
-            this.rpc('/web/export/formats', {}).done(this.do_setup_export_formats),
+            this.rpc('/web/export/formats', {})
+            .done(function (formats){
+                self.$el.find('#export_format').append(QWeb.render('Export.Formats', {'formats': formats}))
+                self.$el.find('#export_format input:first').attr("checked","checked");
+            }),
             this.show_exports_list());
     },
     on_click_move_up: function () {
@@ -130,31 +134,6 @@ var DataExport = Widget.extend({
             type: 'ir.actions.client',
             tag: 'history_back'
         });
-    },
-    do_setup_export_formats: function (formats) {
-        var $fmts = this.$el.find('#export_format');
-        _(formats).each(function (format, index) {
-            var radio_label = document.createElement("label");
-            radio_label.setAttribute("class","radio-inline");
-            var radio_button = document.createElement("input");
-
-            radio_button.setAttribute("type","radio");
-            radio_button.setAttribute("class","radio_formats");
-            radio_button.setAttribute("name","formats");
-            radio_button.setAttribute("value", format.tag);
-
-            radio_label.appendChild(radio_button);
-            radio_label.innerHTML += format.label;
-            if (format.error) {
-                radio_label.disabled = true;
-                radio_label.replaceChild(
-                    document.createTextNode(
-                        _.str.sprintf("%s — %s", format.label, format.error)),
-                    radio_label.childNodes[0]);
-            }
-            $fmts.append(radio_label);
-        });
-        this.$el.find('#export_format input:first').attr("checked","checked");
     },
     show_exports_list: function() {
         var self = this;

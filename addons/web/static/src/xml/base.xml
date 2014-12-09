@@ -1848,6 +1848,17 @@
         </div>
     </div>
 </div>
+<t t-name="Export.Formats" t-as="formats">
+    <t t-foreach="formats">
+        <label class="radio-inline">
+            <input type="radio" name="formats" t-att-id="formats.tag" t-att-value="formats.tag"></input>
+            <t t-esc="formats.label"></t>
+            <t t-if="formats.error != 'None'">
+                <t t-esc="formats.error"></t>
+            </t>
+        </label>
+    </t>
+</t>
 <t t-name="Exists.ExportList" t-as="val">
     <t t-if="existing_exports.length > 0">
         <div id="Exists.ExportList">
