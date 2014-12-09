@@ -144,9 +144,9 @@ openerp.crm_voip = function(instance) {
                 self.$el.find(".oe_dial_content").animate({
                     bottom: 0,
                 });
-
+                
                 _.each(result.phonecalls, function(phonecall){
-                    if(Date.parse(phonecall.date).getTime() <= Date.now()){
+                    if(Date.parse(phonecall.date) <= Date.now()){
                         if(refresh_by_user){
                             if(phonecall.state != "done"){
                                 self.display_in_queue(phonecall);
