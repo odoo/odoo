@@ -544,7 +544,6 @@ class TestTemplating(ViewCase):
                         'data-oe-id': str(id2),
                         'data-oe-field': 'arch',
                         'data-oe-xpath': '/xpath/item/content[1]',
-                        'data-oe-source-id': str(id)
                     }), {
                         'order': '2',
                     }),
@@ -553,7 +552,7 @@ class TestTemplating(ViewCase):
                     'data-oe-model': 'ir.ui.view',
                     'data-oe-id': str(id),
                     'data-oe-field': 'arch',
-                    'data-oe-xpath': '/root[1]/item[1]'
+                    'data-oe-xpath': '/root[1]/item[1]',
                 })
             )
         )
