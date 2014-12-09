@@ -312,7 +312,7 @@ class view(osv.osv):
         # retranslate data where a typo has been fixed in the English version.
         records = self.env[model].browse(ids)
         fld = records._fields[field]
-        if not callable(fld.translate):
+        if not callable(getattr(fld, 'translate', None)):
             return
 
         trans = self.env['ir.translation']
