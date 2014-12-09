@@ -624,6 +624,8 @@ class google_calendar(osv.AbstractModel):
                 new_google_internal_event_id = False
                 source_event_record = ev_obj.browse(cr, uid, att.event_id.recurrent_id, context)
                 source_attendee_record_id = att_obj.search(cr, uid, [('partner_id', '=', myPartnerID), ('event_id', '=', source_event_record.id)], context=context)
+                if not source_attendee_record_id:
+                    continue
                 source_attendee_record = att_obj.browse(cr, uid, source_attendee_record_id, context)[0]
 
                 if att.event_id.recurrent_id_date and source_event_record.allday and source_attendee_record.google_internal_event_id:
