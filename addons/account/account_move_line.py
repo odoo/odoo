@@ -167,7 +167,7 @@ class account_move_line(models.Model):
 
             amount = line.debit - line.credit
 
-            for rec_line in self.env['account_partial_reconcile'].search([('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
+            for rec_line in self.env['account.partial.reconcile'].search([('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
                     amount += rec_line.amount
 
             line.amount_residual = amount
