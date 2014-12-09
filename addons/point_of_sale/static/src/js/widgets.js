@@ -1269,8 +1269,16 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             self.loading_message(_t('Closing ...'));
 
             self.pos.push_order().then(function(){
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
+                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
+                .pipe(function(res) {
                     window.location = '/web#action=' + res[0]['res_id'];
+                },function(err,event) {
+                    event.preventDefault();
+                    self.screen_selector.show_popup('error',{
+                        'message': _t('Could not close the point of sale.'),
+                        'comment': _t('Your internet connection is probably down.'),
+                    });
+                    self.close_button.renderElement();
                 });
             });
 

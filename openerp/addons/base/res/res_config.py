@@ -466,10 +466,12 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             dep_name = [x.shortdesc for x  in module_pool.browse(
                 cr, uid, dep_ids + module_ids, context=context)]
             message = '\n'.join(dep_name)
-            return {'warning': {'title': _('Warning!'),
-                    'message':
-                    _('Disabling this option will also uninstall the following modules \n%s' % message)
-                   }}
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
+                }
+            }
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):

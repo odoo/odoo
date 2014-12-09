@@ -65,8 +65,8 @@ class Forum(models.Model):
         ('link', 'Link')],
         string='Default Post', required=True, default='question')
     allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
-    allow_discussion = fields.Boolean('Discussions', default=False)
-    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=False)
+    allow_discussion = fields.Boolean('Discussions', default=True)
+    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
     # karma generation
     karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
     karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
@@ -110,19 +110,21 @@ class Forum(models.Model):
         User = self.env['res.users']
         Tag = self.env['forum.tag']
         post_tags = []
+        existing_keep = []
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
                 if tag_ids:
-                    post_tags.append((4, int(tag_ids[0])))
+                    existing_keep.append(int(tag_ids[0]))
                 else:
                     # check if user have Karma needed to create need tag
                     user = User.sudo().browse(self._uid)
                     if user.exists() and user.karma >= self.karma_retag:
-                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
+                        post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
-                post_tags.append((4, int(tag)))
+                existing_keep.append(int(tag))
+        post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
 
@@ -208,28 +210,29 @@ class Post(models.Model):
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
-    @api.multi
+    @api.one
     @api.depends('create_uid', 'parent_id')
     def _is_self_reply(self):
-        self_replies = self.search([('parent_id.create_uid', '=', self._uid)])
-        for post in self:
-            post.is_self_reply = post in self_replies
+        self.self_reply = self.parent_id.create_uid.id == self._uid
 
     @api.one
-    @api.depends('child_ids')
+    @api.depends('child_ids.create_uid', 'website_message_ids')
     def _get_child_count(self):
-        self.child_count = len(self.child_ids)
+        def process(node):
+            total = len(node.website_message_ids) + len(node.child_ids)
+            for child in node.child_ids:
+                total += process(child)
+            return total
+        self.child_count = process(self)
 
     @api.one
     def _get_uid_has_answered(self):
         self.uid_has_answered = any(answer.create_uid.id == self._uid for answer in self.child_ids)
 
-    @api.multi
-    @api.depends('child_ids', 'is_correct')
+    @api.one
+    @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
-        correct_posts = [ans.parent_id for ans in self.search([('parent_id', 'in', self._ids), ('is_correct', '=', True)])]
-        for post in self:
-            post.is_correct = post in correct_posts
+        self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')

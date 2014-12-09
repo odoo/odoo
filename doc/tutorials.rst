@@ -7,5 +7,5 @@ Tutorials
 
     howtos/website
     howtos/backend
-    howtos/web
     howtos/themes
+    howtos/web

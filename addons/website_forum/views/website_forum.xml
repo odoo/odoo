@@ -12,6 +12,10 @@
 <!-- Front-end custom css / js + ckeditor lib and customization -->
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
     <xpath expr="." position="inside">
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+
         <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
         <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
@@ -102,7 +106,7 @@
         </div>
 
         <div id="wrap" class="container">
-            <div class="row">
+            <div class="row mb16">
                 <div class="col-sm-9">
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -131,7 +135,7 @@
                         <a type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/ask?post_type=#{forum.default_post_type}">
                             <t t-if="forum.default_post_type == 'question'">Ask a Question</t>
                             <t t-if="forum.default_post_type == 'link'">Submit a Link</t>
-                            <t t-if="forum.default_post_type == 'discussion'">Launch a Discussion</t>
+                            <t t-if="forum.default_post_type == 'discussion'">New Discussion</t>
                         </a>
                         <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
@@ -140,7 +144,7 @@
                         <ul class="dropdown-menu" role="menu">
                             <li t-if="forum.allow_question"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=question">Ask a Question</a></li>
                             <li t-if="forum.allow_link"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=link">Submit a Link</a></li>
-                            <li t-if="forum.allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">Launch a Discussion</a></li>
+                            <li t-if="forum.allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">New Discussion</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-default">
@@ -199,19 +203,26 @@
 
 <!-- Display a post -->
 <template id="display_post">
-    <div class="question row">
-        <div class="col-md-2 hidden-xs text-center">
+    <div class="question">
+        <div class="pull-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="question"/>
             </t>
         </div>
-        <div class="col-md-10 clearfix">
+        <div class="question-block">
             <div class="question-name">
                 <t t-if="question.post_type == 'link'">
-                    <a t-att-href="question.content_link" t-raw="question.name"/>
+                    <a t-att-href="question.content_link" target="_blank">
+                        <span class="fa fa-link" t-if="forum.default_post_type != 'link'"/>
+                        <t t-esc="question.name"/>
+                    </a>
                 </t>
                 <t t-if="question.post_type in ('question', 'discussion')">
-                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+                        <span class="fa fa-info-circle" t-if="question.post_type=='question' and forum.default_post_type != 'question'"/>
+                        <span class="fa fa-comment" t-if="question.post_type=='discussion' and forum.default_post_type != 'discussion'"/>
+                        <t t-esc="question.name"/>
+                    </a>
                 </t>
                 <span t-if="not question.active"><b> [Deleted]</b></span>
                 <span t-if="question.state == 'close'"><b> [Closed]</b></span>
@@ -238,7 +249,7 @@
 <!-- Display a post as an answer -->
 <template id="display_post_answer">
     <div class="clearfix">
-        <div t-attf-class="pull-left text-center mb16 box #{len(answer.vote_ids) and 'oe_green' or 'oe_grey'}">
+        <div t-attf-class="pull-left text-center mb16 #{len(answer.vote_ids) and 'oe_green' or 'oe_grey'}">
             <div t-esc="len(answer.vote_ids)"/>
         </div>
         <div class="question-name" style="margin-left: 32px;">
@@ -281,10 +292,10 @@
     <t t-call="website_forum.header">
         <h2 class="page-header mt0">
             <t t-esc="question_count"/>
-                <span t-if="post_type == 'all'">Posts</span>
+                <span t-if="post_type not in ('link','question','discussion')">Posts</span>
                 <span t-if="post_type == 'question'">Questions</span>
-                <span t-if="post_type == 'link'">Posts</span>
-                <span t-if="post_type == 'discussion'">Discussions</span>
+                <span t-if="post_type == 'link'">Links</span>
+                <span t-if="post_type == 'discussion'">Threads</span>
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -309,7 +320,7 @@
                   <li t-if="uid" t-att-class="filters == 'followed' and 'active' or '' ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
                   </li>
-                  <li class="dropdown-header">Tags</li>
+                  <li t-if="tag" class="dropdown-header">Tags</li>
                   <li t-if="tag" t-att-class="tag and 'active' or '' ">
                       <a href=""><t t-esc="tag.name"/></a>
                   </li>
@@ -359,7 +370,7 @@
             If the community vote on your post, it will get traction by being promoted
             in the homepage.
         </p><p>
-            We keep a high level of quality in showcased posts, only 20% of the submited
+            We keep a high level of quality in showcased posts, around 20% of the submited
             posts will be featured.
         </p>
         <form t-attf-action="/forum/#{ slug(forum) }/new?post_type=link" method="post" role="form" class="tag_text form-horizontal">
@@ -367,26 +378,27 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
                 <div class="col-sm-8">
-                    <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
+                    <input type="text" name="content_link" required="True" t-attf-value="#{post_name}"
                         class="form-control mb16 link_url" placeholder="e.g. https://www.odoo.com"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_name">Post Title</label>
                 <div class="col-sm-8">
-                    <input type="text" name="content" readonly="True" required="True" t-attf-value="#{content}"
+                    <input type="text" name="post_name" required="True" t-attf-value="#{content}"
                         class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
-                    <input type="text" name="post_tags" readonly="True" class="form-control load_tags"/>
+                    <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                    <input type="text" name="post_tags" class="form-control js_select2"/>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post Your Article</button>
+                    <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post</button>
                 </div>
             </div>
         </form>
@@ -396,9 +408,9 @@
 <!-- Edition: Post your Discussion Topic -->
 <template id="new_discussion">
     <t t-call="website_forum.header">
-        <h1 class="mt0">Post Your Discussion Topic</h1>
+        <h1 class="mt0">New Topic</h1>
         <p>
-            <b>Share</b> Start Something Awesome
+            <b>Share</b> Something Awesome.
         </p>
         <form t-attf-action="/forum/#{slug(forum)}/new?post_type=discussion" method="post" role="form" class="tag_text">
             <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
@@ -408,7 +420,8 @@
                 <t t-esc="question_content"/>
             </textarea>
             <br/>
-            <input type="text" name="post_tags" placeholder="Tags" class="form-control load_tags"/>
+            <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+            <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
             <button class="btn btn-primary">Post Your Topic</button>
         </form>
@@ -469,7 +482,8 @@
             </textarea>
             <div t-if="not is_answer">
                 <br/>
-                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-value="#{tags}"/>
+                <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
+                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>
@@ -520,17 +534,17 @@
     <div class="css_editable_mode_hidden">
         <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
-            <h3 class="mt10">Your Reply</h3>
+            <h3 class="mt8">Your Reply</h3>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" t-attf-id="content-#{str(object.id)}" class="form-control load_editor" required="True"/>
-            <button class="btn btn-primary">Post Your Reply</button>
+            <button class="btn btn-primary">Post Comment</button>
         </form>
     </div>
 </template>
 
 <!-- Edition: post an answer -->
 <template id="post_answer">
-    <h3 class="mt10">Your Reply</h3>
+    <h3 class="mt8">Your Answer</h3>
     <p t-if="question.post_type == 'question'">
         <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
         <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>
@@ -541,55 +555,68 @@
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"/>
         <button t-attf-class="btn btn-primary mt16 #{not question.can_answer and 'karma_required' or ''}"
-            t-att-data-karma="question.forum_id.karma_answer">Post Your Reply</button>
+            t-att-data-karma="question.forum_id.karma_answer">Post Answer</button>
     </form>
 </template>
 
 <template id="vote">
-    <div t-attf-class="box oe_grey">
-        <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''} #{((post.user_vote == 1 and not post.can_downvote) or not post.can_upvote) and 'karma_required' or ''}"
+    <div class="vote text-center">
+        <a t-attf-class="vote_up fa fa-caret-up no-decoration #{post.user_vote == 1 and 'text-success' or ''} #{((post.user_vote == 1 and not post.can_downvote) or not post.can_upvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{post.user_vote == 1 and post.forum_id.karma_downvote or post.forum_id.karma_upvote}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
-        <span id="vote_count" t-esc="post.vote_count"/>
-        <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''} #{((post.user_vote == -1 and not post.can_upvote) or not post.can_downvote) and 'karma_required' or ''}"
+        <div class="vote_count text-muted" t-esc="post.vote_count"/>
+        <a t-attf-class="vote_down fa fa-caret-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''} #{((post.user_vote == -1 and not post.can_upvote) or not post.can_downvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{post.user_vote == -1 and post.forum_id.karma_upvote or post.forum_id.karma_downvote}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
-        <div t-if="vote_count &gt; 1" class="subtitle">
-            votes
-        </div>
-        <div t-if="vote_count &lt; 2" class="subtitle">
-            vote
-        </div>
+        <t t-raw="0"/>
     </div>
 </template>
 
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="row question">
-            <div class="col-md-2 hidden-xs text-center">
+        <div t-attf-class="question">
+            <div class="pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
+                    <div class="mt4">
+                        <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
+                            t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                    </div>
                 </t>
-                <div class="text-muted text-center">
-                    <span t-field="question.views"/> Views
-                </div>
-                <div class="mt4">
-                    <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                        t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
-                </div>
             </div>
-            <div t-attf-class="col-md-10 #{not question.active and 'alert alert-danger' or ''}">
-                <h1 class="mt0">
+            <div t-attf-class="question-block #{not question.active and 'alert alert-danger' or ''}">
+                <h1 class="mt0 mb0">
                     <t t-if="question.post_type == 'link'">
-                        <a t-att-href="question.content_link" t-raw="question.name"/>
+                        <a t-att-href="question.content_link">
+                            <t t-esc="question.name"/>
+                        </a>
                     </t>
                     <t t-if="question.post_type in ('question', 'discussion')">
-                        <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
+                        <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" >
+                            <t t-esc="question.name"/>
+                        </a>
                     </t>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
+                <div class="pull-right">
+                    <div class="text-right">
+                        <t t-foreach="question.tag_ids" t-as="tag">
+                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label label-default" t-field="tag.name"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="text-muted mb16">
+                    By
+                    <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
+                        t-field="question.create_uid"
+                        t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                        style="display: inline-block;"/>
+                    on <span t-field="question.create_date" t-field-options='{"format":"short"}'/>
+                    • <span t-field="question.views"/> views
+                </div>
+
                 <div class="alert alert-info text-center" t-if="question.state == 'close'">
                     <p class="mt16">
                         <b>The <i t-field="question.post_type"/> has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
@@ -612,95 +639,69 @@
                 </div>
                 <div t-if="question.post_type != 'link' and question.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="question.content" class="oe_no_empty"/></div>
                 <div t-if="question.post_type != 'link' and question.create_uid.karma &lt; forum.karma_dofollow"><span t-field="question.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
-                <div class="mt16 clearfix">
-                    <div class="pull-right">
-                        <div class="text-right">
-                            <t t-foreach="question.tag_ids" t-as="tag">
-                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label label-default" t-field="tag.name"/>
+
+                <div class="clearfix">
+                    <ul class="pull-right list-inline mb0" id="options">
+                        <li t-if="question.state != 'close'">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
+                                <t t-set="label" t-value="'Close'"/>
+                                <t t-set="classes" t-value="'fa-times'"/>
+                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
-                        </div>
-                        <ul class="list-inline" id="options">
-                            <li t-if="question.post_type == 'question'">
-                                <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
-                                    t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
-                                    t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
-                                    t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
-                                    Comment
-                                </a>
-                            </li>
-                            <li t-if="question.state != 'close'">
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
-                                    <t t-set="label" t-value="'Close'"/>
-                                    <t t-set="classes" t-value="'fa-times'"/>
-                                    <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
-                                </t>
-                            </li>
-                            <li t-if="question.state == 'close'">
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
-                                    <t t-set="label" t-value="'Reopen'"/>
-                                    <t t-set="classes" t-value="'fa-undo'"/>
-                                    <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
-                                </t>
-                            </li>
-                            <li>
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
-                                    <t t-set="label" t-value="'Edit'"/>
-                                    <t t-set="classes" t-value="'fa-edit'"/>
-                                    <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
-                                </t>
-                            </li>
-                            <li t-if="question.active">
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
-                                    <t t-set="label" t-value="'Delete'"/>
-                                    <t t-set="classes" t-value="'fa-trash-o'"/>
-                                    <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
-                                </t>
-                            </li>
-                            <li t-if="not question.active">
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
-                                    <t t-set="label" t-value="'Undelete'"/>
-                                    <t t-set="classes" t-value="'fa-trash-o'"/>
-                                    <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
-                                </t>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{question.create_uid.id}/avatar"/>
-                        <div>
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
-                                t-field="question.create_uid"
-                                t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
-                                style="display: inline-block;"/>
-                            <div t-field="question.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
-                            <span class="text-muted">Asked on <span t-field="question.create_date" t-field-options='{"format":"short"}'/></span>
-                        </div>
-                    </div>
-                    <div class="visible-xs text-center">
-                        <t t-call="website_forum.vote">
-                            <t t-set="post" t-value="question"/>
-                        </t>
-                        <div class="text-muted text-center">
-                            <span t-field="question.views"/> Views
-                        </div>
-                        <div class="mt4">
-                            <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                                t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
-                        </div>
-                    </div>
+                        </li>
+                        <li t-if="question.state == 'close'">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
+                                <t t-set="label" t-value="'Reopen'"/>
+                                <t t-set="classes" t-value="'fa-undo'"/>
+                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                            </t>
+                        </li>
+                        <li>
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
+                                <t t-set="label" t-value="'Edit'"/>
+                                <t t-set="classes" t-value="'fa-edit'"/>
+                                <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
+                            </t>
+                        </li>
+                        <li t-if="question.active">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
+                                <t t-set="label" t-value="'Delete'"/>
+                                <t t-set="classes" t-value="'fa-trash-o'"/>
+                                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
+                            </t>
+                        </li>
+                        <li t-if="not question.active">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
+                                <t t-set="label" t-value="'Undelete'"/>
+                                <t t-set="classes" t-value="'fa-trash-o'"/>
+                                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
+                            </t>
+                        </li>
+                    </ul>
+                    <ul class="list-inline mb0">
+                        <li t-if="question.post_type == 'question'">
+                            <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
+                                t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
+                                t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
+                                t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
+                                Comment
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+
                 <t t-call="website_forum.post_comment">
                     <t t-set="object" t-value="question"/>
                 </t>
             </div>
         </div>
-        <hr/>
         <div t-foreach="question.child_ids" t-as="post_answer" class="mt16 mb32">
+            <hr class="mb4 mt4"/>
             <t t-call="website_forum.post_answers">
                 <t t-set="answer" t-value="post_answer"/>
             </t>
@@ -717,36 +718,30 @@
 
 <template id="post_answers">
     <a t-attf-id="answer-#{str(answer.id)}"/>
-    <div t-attf-class="forum_answer row" t-attf-id="answer_#{answer.id}" >
-        <div class="col-md-2 hidden-xs text-center">
+    <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
+        <div class="pull-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="answer"/>
+                <div t-if="question.post_type == 'question'" class="mt4">
+                    <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
+                        t-attf-data-karma="#{answer.karma_accept}"
+                        t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
+                </div>
             </t>
-            <div t-if="question.post_type == 'question'" class="text-muted mt8">
-                <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
-                    t-attf-data-karma="#{answer.karma_accept}"
-                    t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
-            </div>
         </div>
-        <div class="col-md-10 clearfix">
-            <div t-if="answer.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty"/></div>
-            <div t-if="answer.create_uid.karma &lt; forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
-            <div class="mt16">
-                <ul class="list-inline pull-right">
-                    <li t-if="question.post_type == 'question'">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or ''"
-                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
-                        </a>
-                    </li>
-                    <li t-if="question.post_type != 'question' and not answer.parent_id or answer.parent_id and not answer.parent_id.parent_id">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" data-toggle="collapse"
-                            t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
-                        </a>
-                    </li>
+        <div class="question-block">
+            <div class="pull-right author-box">
+                <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                    t-field="answer.create_uid"
+                    t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                    style="display: inline-block;"/>
+                <div class="text-muted">On <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></div>
+            </div>
+            <div class="clearfix" t-if="answer.create_uid.karma &gt;= forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty"/></div>
+            <div class="clearfix" t-if="answer.create_uid.karma &lt; forum.karma_dofollow"><span t-field="answer.content" class="oe_no_empty" t-field-options='{"nofollow": 1}'/></div>
+            <div class="clearfix">
+                <ul class="list-inline pull-right mb0">
                     <li>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
@@ -772,26 +767,26 @@
                         </t>
                     </li>
                 </ul>
-                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
-                <div>
-                    <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
-                        t-field="answer.create_uid"
-                        t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
-                        style="display: inline-block;"/>
-                    <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
-                    <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
-                </div>
-                <div class="visible-xs text-center">
-                    <t t-call="website_forum.vote">
-                        <t t-set="post" t-value="answer"/>
-                    </t>
-                    <div class="text-muted mt8">
-                        <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
-                            t-attf-data-karma="#{answer.karma_accept}"
-                            t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
-                    </div>
-                </div>
+                <ul class="list-inline mb0">
+                    <li t-if="question.post_type == 'question'">
+                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or ''"
+                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
+                        </a>
+                    </li>
+                    <li t-if="question.post_type != 'question'">
+                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                            style="cursor: pointer" data-toggle="collapse"
+                            t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
+                        </a>
+                    </li>
+                </ul>
+
             </div>
+            <hr class="mt4 mb4"/>
+
             <t t-if="answer.post_type == 'question'" t-call="website_forum.post_comment">
                 <t t-set="object" t-value="answer"/>
             </t>
@@ -800,7 +795,7 @@
                     <t t-set="object" t-value="answer"/>
                 </t>
             </div>
-            <div t-foreach="answer.child_ids" t-as="child_answer" class="mt16 mb16">
+            <div t-foreach="answer.child_ids" t-as="child_answer" class="mt4 mb4">
                 <t t-call="website_forum.post_answers">
                     <t t-set="answer" t-value="child_answer"/>
                 </t>

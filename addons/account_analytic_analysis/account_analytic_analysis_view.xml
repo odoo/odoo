@@ -218,7 +218,7 @@
                     <field name="date"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="manager_id"/>
-                    <field name="parent_id"/>
+                    <field name="template_id"/>
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
                     <filter name="pending" string="To Renew" domain="[('state','=','pending')]" help="Pending contracts"/>
                     <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed contracts"/>

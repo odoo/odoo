@@ -220,6 +220,7 @@
                     <group string="Channel Rules">
                         <field name="rule_ids" nolabel="1"/>
                     </group>
+                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be install on your server, otherwise, the countries of the rule will not be taken into account.</span>
                 </sheet>
                 </form>
             </field>
@@ -253,12 +254,9 @@
                             <field name="action"/>
                             <field name="regex_url" />
                             <field name="auto_popup_timer" />
+                            <field name="sequence" />
+                            <field name="country_ids" widget="many2many_tags"/>
                         </group>
-                        <notebook>
-                            <page string="Blocked Countries">
-                                <field name="country_ids" />
-                            </page>
-                        </notebook>
                     </sheet>
                 </form>
             </field>

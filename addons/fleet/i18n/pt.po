@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-09-17 18:27+0000\n"
-"Last-Translator: Opencloud - PT <Unknown>\n"
+"PO-Revision-Date: 2014-10-15 08:51+0000\n"
+"Last-Translator: Daniel Santos - ThinkOpen <dcs@thinkopensolutions.pt>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:07+0000\n"
+"X-Launchpad-Export-Date: 2014-10-15 20:29+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:387
 #, python-format
 msgid "%s %s has been added to the fleet!"
-msgstr ""
+msgstr "%s %s foi adicionado á frota!"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:661
@@ -57,6 +57,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um novo Contrato.\n"
+"              </p><p>\n"
+"                Gira todos os seus contratos (leasing, seguros, etc), com os "
+"\n"
+"                serviços relacionados, os custos. Odoo irá avisar "
+"automaticamente \n"
+"                quando alguns contratos têm de ser renovados.\n"
+"              </p><p>\n"
+"                 Cada contrato (por exemplo: leasing) pode incluir vários "
+"serviços \n"
+"                 (reparação, seguros, manutenção periódica).\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
@@ -70,6 +84,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um novo Custo.\n"
+"              </p><p>\n"
+"                Odoo ajuda-o a gerir custos para os seus diferentes \n"
+"                veículos. Custos são criados automaticamente a partir \n"
+"                de serviços, contratos (fixos ou recorrentes) e registos\n"
+"                de combustível.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
@@ -84,6 +107,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um novo Registo de Combustível.\n"
+"              </p><p>\n"
+"                Aqui pode adicionar entradas de reabestimento para todos os "
+"veículos. Pode\n"
+"                até filtrar registos de um veículo específico usando a campo "
+"de \n"
+"                pesquisa.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
@@ -118,6 +151,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo registo de Odómetro.\n"
+"              </p>\n"
+"              <p>\n"
+"                Aqui pode adicionar registos do Odómetro (Conta Quilómetros, "
+"\n"
+"                Quilómetros Percorrigos,..) de todos os veículos. Pode usar "
+"\n"
+"                os filtros para encontrar dados de um veículo específico. \n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
@@ -131,6 +175,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo Serviço feito no veículo.\n"
+"              </p><p>\n"
+"                Odoo ajuda-o a manter o controlo de todos os serviços feitos "
+"\n"
+"                nos veículos. Serviços podem ser de muitos tipos: ocasional "
+"\n"
+"                reparação, manutenção, etc \n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
@@ -168,6 +222,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo Veículo.\n"
+"              </p><p>\n"
+"                Irá ser capaz de gerir a sua frota, mantendo o controlo de \n"
+"                contratos, serviços, custos fixos e recorrentes, odômetros   "
+"              registo de combustíveis associados a cada veículo.\n"
+"            </p><p>\n"
+"                Odoo irá avisá-lo de quando os serviços ou contratos tiverem "
+"\n"
+"                que ser renovados.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
@@ -182,7 +248,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Carregar para criar um estado de veículo.\n"
+"                Carregar para criar um estado de Veículo.\n"
 "              </p><p>\n"
 "                Pode personalizar o estado disponível para rastrear a "
 "evolução de cada veículo. Exemplo: Ativo, Em reparação, Vendido.\n"
@@ -205,6 +271,17 @@ msgid ""
 "        </p>\n"
 "      "
 msgstr ""
+"<p>\n"
+"          Odoo ajuda-o a gerir os custos para os seus diferentes veículos. \n"
+"          Os custos são geralmente criados a partir de serviços e o contrato "
+"aparece aqui.\n"
+"        </p>\n"
+"        <p>\n"
+"          Graças aos diferentes filtros, Odoo só pode imprimir os custos "
+"efectivos, \n"
+"          classificá-los por tipo e por veículo. \n"
+"        </p>\n"
+"      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -214,7 +291,7 @@ msgstr "Substituição do compressor A/C"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_2
 msgid "A/C Condenser Replacement"
-msgstr ""
+msgstr "Substituição do Condensador A/C"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
@@ -224,7 +301,7 @@ msgstr "Diagnóstico do A/C"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
 msgid "A/C Evaporator Replacement"
-msgstr ""
+msgstr "Substituição do Evaporador A/C"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
@@ -293,7 +370,7 @@ msgstr "Gerado automaticamente"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_8
 msgid "Ball Joint Replacement"
-msgstr ""
+msgstr "Substituição da Junta da Cabeça"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_9
@@ -313,12 +390,12 @@ msgstr "Ambos"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
 msgid "Brake Caliper Replacement"
-msgstr ""
+msgstr "Substituição de Travão de Disco"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_12
 msgid "Brake Inspection"
-msgstr "Inspeção aos travões"
+msgstr "Inspeção aos Travões"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_13
@@ -363,7 +440,7 @@ msgstr "Emissões CO2 do veículo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Cálculo de Benefício em Tipo"
 
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
@@ -393,7 +470,7 @@ msgstr "Categoria do custo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_16
 msgid "Charging System Diagnosis"
-msgstr ""
+msgstr "Carregamento de Diagnóstico de Sistema"
 
 #. module: fleet
 #: field:fleet.vehicle,vin_sn:0
@@ -415,12 +492,12 @@ msgstr ""
 #. module: fleet
 #: field:fleet.vehicle,color:0
 msgid "Color"
-msgstr "Cor"
+msgstr "Côr"
 
 #. module: fleet
 #: help:fleet.vehicle,color:0
 msgid "Color of the vehicle"
-msgstr "Cor do veículo"
+msgstr "Côr do veículo"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
@@ -542,12 +619,12 @@ msgstr "Custo relacionado com um veículo"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr ""
+msgstr "Custo que é pago apenas uma vez na criação do contrato"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_subtype_id:0
 msgid "Cost type purchased with this cost"
-msgstr ""
+msgstr "Tipo de custo comprados com este custo"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
@@ -741,17 +818,17 @@ msgstr "Opções do motor"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_20
 msgid "Engine/Drive Belt(s) Replacement"
-msgstr ""
+msgstr "Substituição de Motor/Correia"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr ""
+msgstr "Entrada em taxa de serviço"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
 msgid "Exhaust Manifold Replacement"
-msgstr ""
+msgstr "Substituição de Tubo de Escape"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -773,7 +850,7 @@ msgstr "Apenas para uso interno"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Frequency of the recuring cost"
-msgstr ""
+msgstr "Frequência do custo Recorrente"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
@@ -837,7 +914,7 @@ msgstr "Custos gerados"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Generated Recurring Costs"
-msgstr ""
+msgstr "Custos Recorrentes Gerados"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -866,12 +943,12 @@ msgstr "Possui contratos por renovar"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
 msgid "Head Gasket(s) Replacement"
-msgstr ""
+msgstr "Substituição de Cabeça da Junta"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_25
 msgid "Heater Blower Motor Replacement"
-msgstr ""
+msgstr "Substituição de Ventoinha de Ar do Motor"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
@@ -881,12 +958,12 @@ msgstr "Substituição da válvula de controlo de aquecimento"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_27
 msgid "Heater Core Replacement"
-msgstr ""
+msgstr "Substituição da Soflagem"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_28
 msgid "Heater Hose Replacement"
-msgstr ""
+msgstr "Substituição de mangueira de Aquecedor"
 
 #. module: fleet
 #: help:fleet.vehicle,message_summary:0
@@ -894,6 +971,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Mantém o resumo Chatter (número de mensagens, ...). Este resumo édiretamente "
+"em formato html para ser inserido nas vistas kanban."
 
 #. module: fleet
 #: field:fleet.vehicle,horsepower:0
@@ -903,7 +982,7 @@ msgstr "Potência"
 #. module: fleet
 #: field:fleet.vehicle,horsepower_tax:0
 msgid "Horsepower Taxation"
-msgstr "Taxação de potência"
+msgstr "Tributação de potência"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -924,7 +1003,7 @@ msgstr "Híbrido"
 #: field:fleet.vehicle.state,id:0
 #: field:fleet.vehicle.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: fleet
 #: help:fleet.vehicle,message_unread:0
@@ -934,7 +1013,7 @@ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
-msgstr "Substituição da bobina de chamada"
+msgstr "Substituição da Bobina de Ignição"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -979,7 +1058,7 @@ msgstr "Informação de um veículo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
-msgstr ""
+msgstr "Substituição de Junta de colector de Admissão"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1010,7 +1089,7 @@ msgstr "Quilómetros"
 #. module: fleet
 #: field:fleet.vehicle,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data da ultima Mensagem"
 
 #. module: fleet
 #: field:fleet.vehicle,odometer:0
@@ -1031,7 +1110,7 @@ msgstr "Última quilometragem registada"
 #: field:fleet.vehicle.state,write_uid:0
 #: field:fleet.vehicle.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualzação por"
 
 #. module: fleet
 #: field:fleet.contract.state,write_date:0
@@ -1047,7 +1126,7 @@ msgstr ""
 #: field:fleet.vehicle.state,write_date:0
 #: field:fleet.vehicle.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualzação em"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1096,13 +1175,13 @@ msgstr "Logótipo"
 #: field:fleet.vehicle,image_medium:0
 #: field:fleet.vehicle.model,image_medium:0
 msgid "Logo (medium)"
-msgstr ""
+msgstr "Logótipo (médio)"
 
 #. module: fleet
 #: field:fleet.vehicle,image_small:0
 #: field:fleet.vehicle.model,image_small:0
 msgid "Logo (small)"
-msgstr ""
+msgstr "Logótipo (pequeno)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1199,7 +1278,7 @@ msgstr "Modelos"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1288,7 +1367,7 @@ msgstr "Quilometragem"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "Valores de Ódometro por Veículo"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1320,12 +1399,12 @@ msgstr "Substituição da bomba de óleo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
+msgstr "Omnium"
 
 #. module: fleet
 #: model:ir.actions.client,name:fleet.action_fleet_menu
 msgid "Open Fleet Menu"
-msgstr ""
+msgstr "Abrir Menu de Frota"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:47
@@ -1341,7 +1420,7 @@ msgstr "Preferências"
 #. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
-msgstr ""
+msgstr "Outro"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_33
@@ -1357,7 +1436,7 @@ msgstr "Substituição do sensor de oxigénio"
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 #: field:fleet.vehicle.cost,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Ascendente"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,parent_id:0
@@ -1367,12 +1446,12 @@ msgstr "Custo ascendente do atual custo"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,purchaser_id:0
 msgid "Person to which the contract is signed for"
-msgstr ""
+msgstr "Pessoa cujo contrato é assinado"
 
 #. module: fleet
 #: field:fleet.vehicle,power:0
 msgid "Power"
-msgstr ""
+msgstr "Potência"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -1479,12 +1558,12 @@ msgstr "Valor residual em %"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
 msgid "Resurface Rotors"
-msgstr ""
+msgstr "Ressurgir Rotores"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
 msgid "Rotate Tires"
-msgstr ""
+msgstr "Alternar Pneus"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_40
@@ -1649,7 +1728,7 @@ msgstr "Etiquetas"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr ""
+msgstr "Lista de Impostos"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1684,7 +1763,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
 msgid "Tie Rod End Replacement"
-msgstr ""
+msgstr "Substituição da Rótula da Barra de Direcção"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_45
@@ -1704,7 +1783,7 @@ msgstr "Para fechar"
 #. module: fleet
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,amount:0
@@ -1719,7 +1798,7 @@ msgstr "Despesas totais (excluindo IVA)"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_total:0
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "Total de contratos a vencer ou vencidos menos um"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -1785,7 +1864,7 @@ msgstr "Mensagens por ler"
 #. module: fleet
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "Usado para pedir as notas das etapas"
 
 #. module: fleet
 #: model:res.groups,name:fleet.group_fleet_user
@@ -1814,29 +1893,29 @@ msgstr "Veículo"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 msgid "Vehicle Costs"
-msgstr "Custos com os veículos"
+msgstr "Custos do Veículo"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs by Month"
-msgstr ""
+msgstr "Custos do Veículo por Mês"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
 msgid "Vehicle Details"
-msgstr "Detalhes do veículo"
+msgstr "Detalhes do Veículo"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
 msgid "Vehicle Model"
-msgstr "Modelo do veículo"
+msgstr "Modelo do Veículo"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
-msgstr ""
+msgstr "Estado do Veículo"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
@@ -1866,19 +1945,19 @@ msgstr "Contratos de veículos"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
-msgstr "Registos de combustível de veículos"
+msgstr "Registos de Combustível de Veículos"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr "Quilometragem dos veículos"
+msgstr "Quilometragem dos Veículos"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr "Registos de manutenção de veículos"
+msgstr "Registos de Manutenção de Veículos"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
@@ -1891,23 +1970,23 @@ msgstr "Custos do veículo"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Odómetros dos Veículos"
 
 #. module: fleet
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
 #: field:fleet.vehicle.model,vendors:0
 msgid "Vendors"
-msgstr "Vendedores"
+msgstr "Fornecedores"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,days_left:0
 msgid "Warning Date"
-msgstr "Data de aviso"
+msgstr "Data de Aviso"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
 msgid "Water Pump Replacement"
-msgstr "Substituição da bomba de água"
+msgstr "Substituição da Bomba de Água"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1917,7 +1996,7 @@ msgstr "Semanalmente"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_51
 msgid "Wheel Alignment"
-msgstr "Alinhamento das rodas"
+msgstr "Alinhamento das Rodas"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_52
@@ -1932,7 +2011,7 @@ msgstr "Substituição do(s) limpa parabrisas"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Write here all other information relative to this contract"
-msgstr ""
+msgstr "Escreva aqui toda a informação relativa a este contrato"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
@@ -1942,12 +2021,13 @@ msgstr "Escreva aqui todas as informações suplementares a este contrato"
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
 msgid "Write here any other information"
-msgstr ""
+msgstr "Escreva aqui qualquer outra informação"
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
 msgid "Write here any other information related to the service completed."
 msgstr ""
+"Escreva aqui qualquer outra informação relacionada com o serviço concluído."
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
@@ -1972,7 +2052,7 @@ msgstr "e"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "g/km"
-msgstr ""
+msgstr "g/km"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_kanban
@@ -1982,7 +2062,7 @@ msgstr "outro(s)"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show all the costs for this vehicle"
-msgstr "mostrar todos os custos com este veículo"
+msgstr "mostrar todos os custos deste veículo"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form

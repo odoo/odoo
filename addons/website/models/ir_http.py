@@ -211,6 +211,8 @@ class ir_http(orm.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception, e:
+                if openerp.tools.config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
+                    raise
                 exception = e
 
             values = dict(

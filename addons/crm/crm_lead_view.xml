@@ -290,9 +290,9 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">í</span>
+                                    <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Opportunity</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
                                         <li><a type="action" name="%(crm.crm_phonecall_category_phone_incoming0)d">Calls</a></li>
@@ -564,11 +564,11 @@
                     <field name="lost_reason"/>
                     <separator/>
                     <filter string="New" name="new"
-                            domain="[('probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
                     <filter string="Won" name="won"
-                            domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"

@@ -338,29 +338,23 @@
                     <h2><field name="location_id"/></h2>
 
                     <group>
-                        <div>
-                            <group string="Additional Information">
-                                <field name="usage"/>
-                                <field name="partner_id"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="scrap_location"/>
-                                <field name="active"/>
-                            </group>
-                        </div>
-                        <div>
-                            <group string="Localization" name="localization">
-                                <field name="posx"/>
-                                <field name="posy"/>
-                                <field name="posz"/>
-                                <field name="barcode"/>
-                            </group>
-                        </div>
-                        <div>
-                            <group string="Logistics" groups="stock.group_adv_location">
-                                <field name="removal_strategy_id" options="{'no_create': True}"/>
-                                <field name="putaway_strategy_id"/>
-                            </group>
-                        </div>
+                        <group string="Additional Information">
+                            <field name="usage"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="scrap_location"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Localization" name="localization">
+                            <field name="posx"/>
+                            <field name="posy"/>
+                            <field name="posz"/>
+                            <field name="barcode"/>
+                        </group>
+                        <group string="Logistics" groups="stock.group_adv_location">
+                            <field name="removal_strategy_id" options="{'no_create': True}"/>
+                            <field name="putaway_strategy_id"/>
+                        </group>
                     </group>
                     <field name="comment" placeholder="External note..."/>
                 </form>
@@ -390,6 +384,7 @@
                 <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -1051,9 +1046,7 @@
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <div>
-                                <field name="reserved_quant_ids"/>
-                            </div>
+                            <field name="reserved_quant_ids" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -1362,9 +1355,9 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_stock_picking_type">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="stock.group_stock_manager">
-                                    <span class="oe_e">í</span>
+                                    <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Warehouse</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><ul class="oe_kanban_colorpicker" data-field="color"/></li></t>
                                     </ul>

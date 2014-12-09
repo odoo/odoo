@@ -18,7 +18,7 @@
                     <span><t t-esc="title"/></span>
                     <table class="change_statement_name_container oe_form"><tr>
                         <td><input class="change_statement_name_field" type="text"/></td>
-                        <td><button class="change_statement_name_button oe_highlight">OK</button></td>
+                        <td><button class="change_statement_name_button btn btn-primary btn-sm">OK</button></td>
                     </tr></table>
                 </h1>
             </t>
@@ -50,8 +50,8 @@
             </p>
             <p class="action_buttons">
                 <t t-if="single_statement or multiple_statements">
-                    <button class="button_back_to_statement">Back to statements list</button>
-                    <button class="button_close_statement">Close the statement<t t-if="multiple_statements">s</t></button>
+                    <button class="button_back_to_statement btn btn-default btn-sm">Back to statements list</button>
+                    <button class="button_close_statement btn btn-primary btn-sm">Close the statement<t t-if="multiple_statements">s</t></button>
                 </t>
             </p>
         </div>
@@ -63,7 +63,7 @@
                 <td>
                     <table class="accounting_view">
                         <caption>
-                            <button class="button_ok"></button>
+                            <button class="button_ok btn btn-default btn-sm"></button>
                             <span t-if="! line.has_no_partner" class="partner_name">
                                 <t t-esc="line.partner_name"/>
                                 <span class="change_partner glyphicon glyphicon-pencil"></span>

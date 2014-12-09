@@ -166,7 +166,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },{
             model:  'res.partner',
             fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date'],
-            domain: null,
+            domain: [['customer','=',true]], 
             loaded: function(self,partners){
                 self.partners = partners;
                 self.db.add_partners(partners);
@@ -296,8 +296,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
-            order:   ['sequence','name'],
-            domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
+            order:  ['sequence','name'],
+            domain: [['sale_ok','=',true],['available_in_pos','=',true]],
             context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
             loaded: function(self, products){
                 self.db.add_products(products);
@@ -490,7 +490,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     } else {
                         def.reject();
                     }
-                }, function(){ def.reject(); });    
+                }, function(err,event){ event.preventDefault(); def.reject(); });    
             return def;
         },
 
