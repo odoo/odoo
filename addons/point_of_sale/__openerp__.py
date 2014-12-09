@@ -48,9 +48,10 @@ Main Features
     """,
     'author': 'OpenERP SA',
     'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',
+        'data/default_barcode_patterns.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_box.xml',

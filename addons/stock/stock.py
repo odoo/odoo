@@ -23,12 +23,14 @@ from datetime import date, datetime
 from dateutil import relativedelta
 import json
 import time
+import sets
 
+import openerp
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-from openerp import SUPERUSER_ID, api
+from openerp import SUPERUSER_ID, api, models
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
 import logging
@@ -142,7 +144,7 @@ class stock_location(osv.osv):
         'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
         'putaway_strategy_id': fields.many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
-        'loc_barcode': fields.char('Location Barcode'),
+        'barcode': fields.char('Barcode', oldname='loc_barcode'),
     }
     _defaults = {
         'active': True,
@@ -153,11 +155,11 @@ class stock_location(osv.osv):
         'posz': 0,
         'scrap_location': False,
     }
-    _sql_constraints = [('loc_barcode_company_uniq', 'unique (loc_barcode,company_id)', 'The barcode for a location must be unique per company !')]
+    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     def create(self, cr, uid, default, context=None):
-        if not default.get('loc_barcode', False):
-            default.update({'loc_barcode': default.get('complete_name', False)})
+        if not default.get('barcode', False):
+            default.update({'barcode': default.get('complete_name', False)})
         return super(stock_location, self).create(cr, uid, default, context=context)
 
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
@@ -1471,44 +1473,63 @@ class stock_picking(osv.osv):
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, op_id, increment=True, context=None):
+    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, op_id, increment=1, context=None):
         return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)
 
     def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
         '''This function is called each time there barcode scanner reads an input'''
-        lot_obj = self.pool.get('stock.production.lot')
-        package_obj = self.pool.get('stock.quant.package')
-        product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
-        stock_location_obj = self.pool.get('stock.location')
         answer = {'filter_loc': False, 'operation_id': False}
-        #check if the barcode correspond to a location
-        matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
-        if matching_location_ids:
-            #if we have a location, return immediatly with the location name
-            location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
-            answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
-            answer['filter_loc_id'] = matching_location_ids[0]
-            return answer
-        #check if the barcode correspond to a product
-        matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
-        if matching_product_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
+
+        # Barcode Nomenclatures
+        picking_type_id = self.browse(cr, uid, [picking_id], context=context).picking_type_id.id
+        barcode_nom = self.pool.get('stock.picking.type').browse(cr, uid, [picking_type_id], context=context).barcode_nomenclature_id
+        parsed_result = barcode_nom.parse_barcode(barcode_str)
+        
+        #check if the barcode is a weighted barcode or simply a product
+        if parsed_result['type'] in ['weight', 'product', 'package']:
+            weight=1
+            if parsed_result['type'] == 'weight':
+                domain = ['|', ('barcode', '=', parsed_result['base_code']), ('default_code', '=', parsed_result['base_code'])]
+                weight=parsed_result['value']
+                obj = self.pool.get('product.product')
+                id_in_operation = 'product_id'
+            elif parsed_result['type'] == 'product':
+                domain = ['|', ('barcode', '=', parsed_result['code']), ('default_code', '=', parsed_result['code'])]
+                obj = self.pool.get('product.product')
+                id_in_operation = 'product_id'
+            else:
+                domain = [('name', '=', parsed_result['code'])]
+                obj = self.pool.get('stock.quant.package')
+                id_in_operation = 'package_id'
+
+            matching_product_ids = obj.search(cr, uid, domain, context=context)
+            if matching_product_ids:
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [(id_in_operation, '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=weight, context=context)
+                answer['operation_id'] = op_id
+                return answer
+                  
         #check if the barcode correspond to a lot
-        matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
-        if matching_lot_ids:
-            lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
-        #check if the barcode correspond to a package
-        matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
-        if matching_package_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
+        elif parsed_result['type'] == 'lot':
+            lot_obj = self.pool.get('stock.production.lot')
+            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', parsed_result['code'])], context=context)
+            if matching_lot_ids:
+                lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=1, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            
+        #check if the barcode correspond to a location
+        elif parsed_result['type'] == 'location':
+            stock_location_obj = self.pool.get('stock.location')
+            matching_location_ids = stock_location_obj.search(cr, uid, [('barcode', '=', parsed_result['code'])], context=context)
+            if matching_location_ids:
+                #if we have a location, return immediatly with the location name
+                location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
+                answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+                answer['filter_loc_id'] = matching_location_ids[0]
+                return answer
+            
         return answer
 
 
@@ -3949,8 +3970,8 @@ class stock_pack_operation(osv.osv):
             new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
         self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
-    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=True, context=None):
-        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
+    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=1, context=None):
+        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty by the value of increment otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
         context can receive a key 'current_package_id' with the package to consider for this operation
@@ -3973,14 +3994,15 @@ class stock_pack_operation(osv.osv):
             operation_id = todo_operation_ids[0]
             op_obj = self.browse(cr, uid, operation_id, context=context)
             qty = op_obj.qty_done
-            if increment:
-                qty += 1
-            else:
-                qty -= 1 if qty >= 1 else 0
+            if increment > 0:
+                qty += increment 
+            elif increment < 0:
                 if qty == 0 and op_obj.product_qty == 0:
                     #we have a line with 0 qty set, so delete it
                     self.unlink(cr, uid, [operation_id], context=context)
                     return False
+                else:
+                    qty = max(0, qty-1)
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
@@ -3991,7 +4013,7 @@ class stock_pack_operation(osv.osv):
                 'product_qty': 0,
                 'location_id': picking.location_id.id, 
                 'location_dest_id': picking.location_dest_id.id,
-                'qty_done': 1,
+                'qty_done': increment,
                 }
             for key in domain:
                 var_name, dummy, value = key
@@ -4300,10 +4322,32 @@ class stock_picking_type(osv.osv):
         'rate_picking_backorders': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
 
+        # Barcode nomenclature
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required=True),
     }
+
+    def _get_default_nomenclature(self, cr, uid, context=None):
+        nom_obj = self.pool.get('barcode.nomenclature')
+        res = nom_obj.search(cr, uid, [], limit=1, context=context)
+        return res and res[0] or False
+
     _defaults = {
         'warehouse_id': _default_warehouse,
         'active': True,
+        'barcode_nomenclature_id': _get_default_nomenclature,
     }
+
+class barcode_rule(models.Model):
+    _inherit = 'barcode.rule'
+
+    def _get_type_selection(self):
+        types = sets.Set(super(barcode_rule,self)._get_type_selection()) 
+        types.update([
+            ('weight','Weighted Product'),
+            ('location','Location'),
+            ('lot','Lot'),
+            ('package','Package')
+        ])
+        return list(types)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

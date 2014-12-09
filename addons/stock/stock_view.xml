@@ -40,8 +40,8 @@
             parent="menu_product_in_config_stock" sequence="5" groups="product.group_uom"/>
         <menuitem
             action="product.product_uom_form_action" id="menu_stock_uom_form_action"
-            parent="menu_product_in_config_stock" sequence="4" groups="product.group_uom"/>
-
+            parent="menu_stock_configuration" sequence="35" groups="product.group_uom"/>
+        
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
             <field name="model">stock.inventory.line</field>
@@ -349,7 +349,7 @@
                             <field name="posx"/>
                             <field name="posy"/>
                             <field name="posz"/>
-                            <field name="loc_barcode"/>
+                            <field name="barcode"/>
                         </group>
                         <group string="Logistics" groups="stock.group_adv_location">
                             <field name="removal_strategy_id" options="{'no_create': True}"/>
@@ -1933,6 +1933,10 @@
                 </xpath>
             </field>
         </record>
-        
+
+        <!-- Barcode Nomenclatures -->
+        <menuitem parent="menu_stock_configuration" action="barcodes.action_barcode_nomenclature_form" id="menu_wms_barcode_nomenclature_all"
+            sequence="50"/>
+       
     </data>
 </openerp>
