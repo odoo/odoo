@@ -41,7 +41,7 @@ class crm_configuration(osv.TransientModel):
         'alias_domain' : fields.char('Alias Domain'),
         'group_scheduled_calls': fields.boolean("Schedule calls to manage call center",
             implied_group='crm.group_scheduled_calls',
-            help="""This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'""")
+            help="""This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"""),
     }
 
     _defaults = {

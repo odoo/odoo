@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="dial_top_button" name="dial_chat top button" inherit_id="web.menu">
+             <xpath expr="//ul[contains(@class, 'oe_systray')]" position="inside">
+                <li title='Display Dialing Panel' groups="base.group_user">
+                    <a href="#">
+                        <img class="oe_topbar_dialbutton_icon" src="/web/static/src/img/icons/terp-call-start.png"/>
+                    </a>
+                </li>
+            </xpath>
+        </template>
+        <template id="assets_backend" name="crm_voip assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/crm_voip/static/src/css/crm_voip.css"/>
+                <!-- <script type="text/javascript" src="/crm_voip/static/src/js/SIPml-api.js"></script> -->
+                <script type="text/javascript" src="/crm_voip/static/src/js/sip-0.6.3.js"></script>
+                <script type="text/javascript" src="/crm_voip/static/src/js/sip_js.js"></script>
+                <!-- <script type="text/javascript" src="/crm_voip/static/src/js/ari_client.js"></script> -->
+                <script type="text/javascript" src="/crm_voip/static/src/js/crm_voip.js"></script>
+                
+            </xpath>
+        </template>
+    </data>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_call_client_notAvailable" model="email.template">
+            <field name="name">Client not available</field>
+            
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>I just tried to call you on concerning the subject: '${object.name}'.
+                        Can you please give me your availability in order to schedule a new call?</p>
+                    <p>Yours Sincerly</p>
+                    <p>${user.name}</p>
+
+                </div>
+            ]]></field>
+        </record>
+    </data>
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_call_interrupted" model="email.template">
+            <field name="name">Call interrupted</field>
+            
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>It seems that we have been interrupted during our conversation about: '${object.name}'. Can you please give me your availability in oreder to schedule 
+                        a new call? </p>
+                    <p>Yours Sincerly</p>
+                    <p>${user.name}</p>
+
+                </div>
+            ]]></field>
+        </record>
+    </data>
+</openerp>

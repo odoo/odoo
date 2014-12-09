@@ -12,7 +12,6 @@
             <field name="state">done</field>
             <field name="partner_phone">+34 934 340 230</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_phone1"/>
             <field eval="2.3" name="duration"/>
         </record>
@@ -25,7 +24,6 @@
             <field name="state">done</field>
             <field name="partner_phone">+44 121 690 4596</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_phone1"/>
             <field eval="1.5" name="duration"/>
         </record>
@@ -35,10 +33,9 @@
             <field eval="'2'" name="priority"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="name">Ask for convenient time of meeting</field>
-            <field name="state">open</field>
+            <field name="state">to_do</field>
             <field name="partner_phone">+1 786 525 0724</field>
             <field name="team_id" ref="sales_team.crm_team_2"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_phone2"/>
             <field eval="5.0" name="duration"/>
         </record>
@@ -51,7 +48,6 @@
             <field name="partner_phone">(077) 582-4035</field>
             <field name="partner_mobile">(077) 341-3591</field>
             <field name="team_id" ref="sales_team.crm_team_2"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_phone1"/>
             <field eval="5.45" name="duration"/>
         </record>
@@ -61,10 +57,9 @@
             <field eval="'1'" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="name">More information on the proposed deal</field>
-            <field name="state">pending</field>
+            <field name="state">to_do</field>
             <field name="partner_phone">+1 312 349 2324</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_phone1"/>
             <field eval="2.08" name="duration"/>
         </record>
@@ -72,7 +67,7 @@
             <field eval="'1'" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="name">Proposal for discount offer</field>
-            <field name="state">open</field>
+            <field name="state">to_do</field>
             <field name="partner_phone">+34 230 953 485</field>
             <field name="team_id" ref="sales_team.crm_team_2"/>
             <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
