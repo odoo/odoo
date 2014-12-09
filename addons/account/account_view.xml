@@ -2540,10 +2540,18 @@
                         <page string="Report">
                             <group>
                                 <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>
-                                <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
                             </group>
+                            <field name="account_report_ids"
+                                   attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
                             <field name="account_ids" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
                             <field name="account_type_ids" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
+                            <separator string="Reverse"/>
+                            <field name="reverse_account_report_ids"
+                                       attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
+                            <field name="reverse_account_ids"
+                                   attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
+                            <field name="reverse_account_type_ids"
+                                   attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                         </page>
                     </notebook>
                 </form>
@@ -2557,7 +2565,6 @@
                     <field name="name"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
-                    <field name="account_report_id"/>
                 </tree>
             </field>
         </record>
@@ -2568,7 +2575,7 @@
                 <search string="Account Report">
                     <field name="name" string="Account Report"/>
                     <field name="type"/>
-                    <field name="account_report_id"/>
+                    <field name="account_report_ids"/>
                     <group expand="0" string="Group By">
                         <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
@@ -2596,7 +2603,6 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="account_report_id"/>
                 </tree>
             </field>
         </record>
