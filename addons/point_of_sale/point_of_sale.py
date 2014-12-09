@@ -22,6 +22,7 @@
 import logging
 import time
 import uuid
+import sets
 
 from openerp import tools, models
 from openerp.osv import fields, osv
@@ -1466,25 +1467,14 @@ class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
 
     def _get_type_selection(self):
-        types = super(barcode_rule,self)._get_type_selection() 
-
-        new_types = [
-                        ('weight','Weighted Product'),
-                        ('price','Priced Product'),
-                        ('discount','Discounted Product'),
-                        ('client','Client'),
-                        ('cashier','Cashier')
-                    ]
-
-        for (key, value) in new_types:
-            add = True
-            for (key2, value2) in types:
-                if key == key2:
-                    add = False
-                    break
-            if add:
-                types += [(key, value)]
-
-        return types
+        types = sets.Set(super(barcode_rule,self)._get_type_selection())
+        types.update([
+            ('weight','Weighted Product'),
+            ('price','Priced Product'),
+            ('discount','Discounted Product'),
+            ('client','Client'),
+            ('cashier','Cashier')
+        ])
+        return list(types)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
