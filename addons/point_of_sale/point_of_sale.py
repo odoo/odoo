@@ -144,8 +144,6 @@ class pos_config(osv.osv):
             session = record.session_ids[0]
             result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
-    def _generate_uuid(self, cr, uid, context=None):
-        return str(uuid.uuid1())
 
     def _default_sale_journal(self, cr, uid, context=None):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
@@ -189,7 +187,7 @@ class pos_config(osv.osv):
             return False
 
     _defaults = {
-        'uuid'  : _generate_uuid,
+        'uuid'  : lambda self, cr, uid, context={}: str(uuid.uuid4()),
         'state' : POS_CONFIG_STATE[0][0],
         'journal_id': _default_sale_journal,
         'group_by' : True,
