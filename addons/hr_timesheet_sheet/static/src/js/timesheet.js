@@ -971,12 +971,12 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
     get_current_week_data: function(records) {
-        var week = this.get('week');
+        var week_count = this.get('week_count');
         if (!records) {
             return;
         }
-        var groupby_week = _.groupBy(this.days, "week");
-        var current_week_dates = groupby_week[week];
+        var groupby_week = _.groupBy(this.days, "week_count");
+        var current_week_dates = groupby_week[week_count];
         var groupby_day_name = _.groupBy(current_week_dates, function(date) { return moment(date.date).format("dddd"); });
         var get_max_date = function(initial_date) {
             _.each(records, function(record) {
@@ -1013,8 +1013,6 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         var self = this;
         var data_to_copy;
         var onchange_result = {};
-        //var index = this.get('week');
-        var first_week = _.first(_.map(this.days, function(day) {return day.week;}));
         //Copy Button will be displayed only if there is no accounts in current timesheet in week mode,
         //Because in week mode if there is an account it will be displayed in all weeks, so we only need to consider scenario of fetch last timesheet 7 days
         (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
