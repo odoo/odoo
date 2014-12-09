@@ -820,7 +820,8 @@ class google_calendar(osv.AbstractModel):
                             res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
                         else:
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
+                            if parent_oe_id:
+                                calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':
