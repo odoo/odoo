@@ -87,7 +87,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'shell'
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -98,7 +98,7 @@ class configmanager(object):
         self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
@@ -264,6 +264,9 @@ class configmanager(object):
         if os.name == 'posix':
             group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
+        group.add_option('--shell', dest='shell_mode',
+                         action='store_true', my_default=False,
+                         help='enter shell mode, requires -d')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("-t", "--timezone", dest="timezone", my_default=False,
@@ -362,6 +365,9 @@ class configmanager(object):
         die(opt.translate_out and (not opt.db_name),
             "the i18n-export option cannot be used without the database (-d) option")
 
+        die(opt.shell_mode and (not opt.db_name),
+            "the shell option cannot be used without the database (-d) option")
+
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
@@ -416,7 +422,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'smtp_ssl', 'load_language',
+            'debug_mode', 'smtp_ssl', 'load_language', 'shell_mode',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',

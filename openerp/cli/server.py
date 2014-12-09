@@ -162,7 +162,7 @@ def main(args):
     if config['db_name']:
         preload = config['db_name'].split(',')
 
-    stop = config["stop_after_init"]
+    stop = config["stop_after_init"] or config["shell_mode"]
 
     setup_pid_file()
     rc = openerp.service.server.start(preload=preload, stop=stop)
