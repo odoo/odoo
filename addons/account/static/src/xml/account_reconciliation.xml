@@ -129,7 +129,6 @@
         <table class='details'>
             <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
             <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
-            <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
             <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
             <t t-if="line.is_partially_reconciled">

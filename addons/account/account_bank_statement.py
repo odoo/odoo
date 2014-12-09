@@ -241,9 +241,8 @@ class account_bank_statement(models.Model):
         return super(account_bank_statement, self).unlink()
 
     @api.v7
-    def reconciliation_widget_preprocess(self, cr, uid, statement_ids=None, context=None):
-        statements = statement_ids and self.browse(cr, uid, statement_ids, context=context) or None
-        return statements.reconciliation_widget_preprocess()
+    def reconciliation_widget_preprocess(self, cr, uid, statement_ids, context=None):
+        return self.browse(cr, uid, statement_ids, context).reconciliation_widget_preprocess()
 
     @api.v8
     def reconciliation_widget_preprocess(self):
@@ -306,10 +305,10 @@ class account_bank_statement(models.Model):
             }]
 
         return {
-            'st_lines_ids': bsl_obj.search(st_lines_filter, order='statement_id, id'),
+            'st_lines_ids': bsl_obj.search(st_lines_filter, order='statement_id, id').ids,
             'notifications': notifications,
             'statement_name': len(statements) == 1 and statements[0].name or False,
-            'num_already_reconciled_lines': statements and statements.number_of_lines_reconciled() or 0,
+            'num_already_reconciled_lines': statements and statements.line_ids.search_count([('journal_entry_id', '!=', False)]) or 0,
         }
 
     @api.multi
@@ -328,13 +327,17 @@ class account_bank_statement_line(models.Model):
                 raise Warning(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
         return super(account_bank_statement_line, self).unlink()
 
-    @api.v7 
+    @api.v7
     def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, context=None):
+        return self.browse(cr, uid, ids, context).get_data_for_reconciliations(excluded_ids)
+
+    @api.v8
+    def get_data_for_reconciliations(self, excluded_ids=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         excluded_ids = excluded_ids or []
         ret = []
 
-        for st_line in self.browse(ids):
+        for st_line in self:
             data = {
                 'st_line': st_line.get_statement_line_for_reconciliation(),
                 'reconciliation_proposition': st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
@@ -345,7 +348,6 @@ class account_bank_statement_line(models.Model):
 
         return ret
 
-    @api.one
     def get_statement_line_for_reconciliation(self):
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
         statement_currency = self.journal_id.currency or self.journal_id.company_id.currency_id
@@ -387,20 +389,19 @@ class account_bank_statement_line(models.Model):
 
         return data
 
-    @api.one
     def _get_domain_maker_move_line_amount(self):
-        """ Returns a lambda that can create the appropriate domain to search on move.line amount based on st_line currency/amount """
+        """ Returns a function that can create the appropriate domain to search on move.line amount based on st_line currency/amount """
         currency_id = self.currency_id
         field = currency_id and 'amount_residual_currency' or 'amount_residual'
 
-        def ret(comparator, amount, f=field, s=sign, c=currency_id):
+        def ret(comparator, amount, f=field, c=currency_id):
             if comparator == '<':
-                if f == 'amount_residual_currency' and amount < 0:
-                    domain = [(f, '<', 0), (f, '>', (s * amount))]
+                if amount < 0:
+                    domain = [(f, '<', 0), (f, '>', amount)]
                 else:
-                    domain = [(f, '>', 0), (f, '<', (s * amount))]
+                    domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, comparator, (s * amount))]
+                domain = [(f, comparator, amount)]
             else:
                 raise osv.except_osv(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
             if c:
@@ -409,7 +410,6 @@ class account_bank_statement_line(models.Model):
 
         return ret
 
-    @api.one
     def get_unambiguous_reconciliation_proposition(self, excluded_ids=None):
         """ Returns move lines that can without doubt be used to reconcile a statement line """
 
@@ -427,13 +427,17 @@ class account_bank_statement_line(models.Model):
 
         # Look for a single move line with the same partner, the same amount
         if self.partner_id:
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, self, excluded_ids=excluded_ids, limit=2, additional_domain=equal_amount_domain)
+            match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=equal_amount_domain)
             if match_ids and len(match_ids) == 1:
                 return match_ids
 
         return []
 
-    @api.one
+    @api.v7
+    def get_reconciliation_proposition(self, cr, uid, id, excluded_ids=None, context=None):
+        return self.browse(cr, uid, id, context).get_reconciliation_proposition(excluded_ids)
+
+    @api.v8
     def get_reconciliation_proposition(self, excluded_ids=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line """
 
@@ -474,12 +478,6 @@ class account_bank_statement_line(models.Model):
                 break
         return ret
 
-    @api.v7
-    def get_move_lines_for_bank_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
-        """ Bridge between the web client reconciliation widget and get_move_lines_for_bank_reconciliation (which expects a browse record) """
-        return self.browse(st_line_id).get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count)
-
-    @api.one
     def _domain_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, additional_domain=None, overlook_partner=False):
         """ Create domain criteria that are relevant to bank statement reconciliation. It is typically AND'ed with _domain_move_lines_for_reconciliation """
         if excluded_ids is None:
@@ -506,7 +504,12 @@ class account_bank_statement_line(models.Model):
 
         return expression.AND([additional_domain, domain])
 
-    @api.one
+    @api.v7
+    def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
+        """ Bridge between the web client reconciliation widget and get_move_lines_for_bank_reconciliation (which expects a browse record) """
+        return self.browse(cr, uid, st_line_id, context).get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count)
+
+    @api.v8
     def get_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False):
         """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
         context = dict(self._context or {})
@@ -552,16 +555,16 @@ class account_bank_statement_line(models.Model):
             'account_id': account_id
             }
 
-    @api.v7
-    def process_reconciliations(self, cr, uid, data, context=None):
+    @api.model
+    def process_reconciliations(self, data):
         for datum in data:
             self.browse(datum[0]).process_reconciliation(datum[1])
 
     @api.v7
-    def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
-        self.browse(id).process_reconciliation(mv_line_dicts)
+    def process_reconciliation(self, cr, uid, st_line_id, mv_line_dicts, context=None):
+        return self.browse(cr, uid, st_line_id, context).process_reconciliation(mv_line_dicts)
 
-    @api.one
+    @api.v8
     def process_reconciliation(self, mv_line_dicts):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
 

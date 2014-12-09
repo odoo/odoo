@@ -1983,7 +1983,7 @@ openerp.account = function (instance) {
                 if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
                     excluded_ids.push(globally_excluded_ids[i]);
             return self.model_bank_statement_line
-                .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
+                .call("get_move_lines_for_bank_reconciliation", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                 .then(function (lines) {
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     return callback.call(self, lines);
@@ -2460,7 +2460,7 @@ openerp.account = function (instance) {
             this.updateMatches();
             var line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
             self.model_aml
-                .call("prepare_move_lines_for_reconciliation_widget_by_ids", [line_ids, self.get("currency_id")])
+                .call("prepare_move_lines_for_reconciliation_widget", [line_ids, self.get("currency_id")])
                 .then(function(lines) {
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     self.set("mv_lines_selected", lines);
