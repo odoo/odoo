@@ -2420,6 +2420,10 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
   width: 100% !important;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime .oe_datepicker_main, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date .oe_datepicker_main {
+  width: -webkit-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_reference {
   display: table;
 }
