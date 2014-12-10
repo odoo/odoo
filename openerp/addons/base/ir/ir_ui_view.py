@@ -21,7 +21,6 @@
 import collections
 import copy
 import datetime
-import dateutil
 from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
@@ -45,7 +44,7 @@ from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
-from openerp.tools.translate import _
+from openerp.tools.translate import xml_translator, _
 
 _logger = logging.getLogger(__name__)
 
@@ -142,29 +141,6 @@ def get_view_arch_from_file(filename, xmlid):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
-# TODO: move this method in tools for all XML fields?
-def translate_xml(attrs=('string', 'help', 'sum', 'avg', 'confirm', 'placeholder')):
-    """ Return a `translate` function for translating xml fields. """
-    def translate(callback, value):
-        def process(node):
-            if not isinstance(node, SKIPPED_ELEMENT_TYPES):
-                if node.text and node.text.strip():
-                    node.text = callback(node.text.strip())
-            if node.tail and node.tail.strip():
-                node.tail = callback(node.tail.strip())
-            if node.tag == 'attribute' and node.get('name') in attrs:
-                if node.text:
-                    node.text = callback(node.text)
-            for attr in attrs:
-                if node.get(attr):
-                    node.set(attr, callback(node.get(attr)))
-            for child in node:
-                process(child)
-        root = etree.fromstring(encode(value))
-        process(root)
-        return etree.tostring(root)
-
-    return translate
 
 class view(osv.osv):
     _name = 'ir.ui.view'
@@ -229,7 +205,7 @@ class view(osv.osv):
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob', translate=translate_xml(), oldname='arch'),
+        'arch_db': fields.text('Arch Blob', translate=xml_translator(), oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
