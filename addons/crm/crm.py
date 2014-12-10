@@ -155,6 +155,7 @@ class crm_case_categ(osv.osv):
         'name': fields.char('Name', required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
+        'active': fields.boolean('Active'),
     }
 
     def _find_object_id(self, cr, uid, context=None):
@@ -163,8 +164,10 @@ class crm_case_categ(osv.osv):
         object_id = context.get('object_id', False)
         ids = self.pool.get('ir.model').search(cr, uid, ['|', ('id', '=', object_id), ('model', '=', context.get('object_name', False))])
         return ids and ids[0] or False
+
     _defaults = {
-        'object_id': _find_object_id
+        'object_id': _find_object_id,
+        'active': lambda *a: 1,
     }
 
 
