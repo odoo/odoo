@@ -621,6 +621,8 @@ class configmanager(object):
                 continue
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
+            elif opt == 'log_handler':
+                p.set('options', opt, ','.join(self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
 
