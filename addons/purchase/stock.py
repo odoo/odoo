@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -39,10 +40,12 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
                     order_id = move.purchase_line_id.order_id.id
+                    # update linked purchase order as superuser as the warehouse
+                    # user may not have rights to access purchase.order
                     if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_done', cr)
+                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_done', cr)
                     if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
-                        workflow.trg_validate(uid, 'purchase.order', order_id, 'picking_cancel', cr)
+                        workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_cancel', cr)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

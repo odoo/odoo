@@ -1177,7 +1177,7 @@ openerp.account = function (instance) {
             var self = this;
             $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_matched_lines").empty();
-    
+
             _(self.get("mv_lines_selected")).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: true}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1194,7 +1194,7 @@ openerp.account = function (instance) {
     
             _(self.getCreatedLines()).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_created_line", {line: line}));
-                $line.find(".line_remove_button").click(function(){ self.removeLine($(this).closest(".created_line")) });
+                $line.click(function(){ self.removeLine($(this)) });
                 self.$(".tbody_created_lines").append($line);
                 if (line.no_remove_action) {
                     // Then the previous line's remove button deletes this line too
@@ -1535,7 +1535,8 @@ openerp.account = function (instance) {
             self.set("balance", balance);
     
             // Propose partial reconciliation if necessary
-            if (lines_selected_num === 1 &&
+            if (self.getCreatedLines().length === 0 &&
+                lines_selected_num === 1 &&
                 self.st_line.amount * balance > 0 &&
                 self.st_line.amount * (mv_lines_selected[0].debit - mv_lines_selected[0].credit) < 0 &&
                 ! mv_lines_selected[0].partial_reconcile) {
