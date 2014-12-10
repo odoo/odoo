@@ -56,7 +56,6 @@ openerp.crm_voip = function(instance) {
         init: function(parent) {    
             this._super(parent);
             this.shown = false;
-            this.set("current_search", "");
             this.phonecalls = {};
             this.widgets = {};
             this.buttonAnimated = false;
@@ -83,6 +82,7 @@ openerp.crm_voip = function(instance) {
                     self.search_phonecalls_status();
                 });
             this.$el.css("bottom", -this.$el.outerHeight());
+            //bind the bus trigger with the functions
             openerp.web.bus.on('reload_panel', this, this.search_phonecalls_status);
             openerp.web.bus.on('transfer_call',this,this.transfer_call);
             openerp.web.bus.on('select_call',this,this.select_call);
@@ -93,6 +93,7 @@ openerp.crm_voip = function(instance) {
         input_change: function() {
             var self = this;
             var search = this.$(".oe_dial_searchbox").val().toLowerCase();
+            //for each phonecall, check if the search is in phonecall name or the partner name
             _.each(this.phonecalls,function(phonecall){
                 var flag = phonecall.partner_name.toLowerCase().indexOf(search) == -1 && 
                     phonecall.name.toLowerCase().indexOf(search) == -1;
@@ -113,7 +114,8 @@ openerp.crm_voip = function(instance) {
                     self.buttonAnimated = false;
                 });
             }
-            new openerp.web.Model("crm.phonecall").call("get_list",[this.get("current_search")]).then(function(result){
+            //get the phonecalls' information and populate the queue
+            new openerp.web.Model("crm.phonecall").call("get_list").then(function(result){
                 var old_widgets = self.widgets;                   
                 self.widgets = {};
                 self.phonecalls = {};
@@ -125,6 +127,8 @@ openerp.crm_voip = function(instance) {
                     bottom: 0,
                 });
                 var phonecall_displayed = false;
+                //for each phonecall display it only if the date is lower than the current one
+                //if the refresh is done by the user, retrieve the phonecalls set as "done"
                 _.each(result.phonecalls, function(phonecall){
                     if(Date.parse(phonecall.date) <= Date.now()){
                         phonecall_displayed = true;
@@ -151,6 +155,7 @@ openerp.crm_voip = function(instance) {
             
         },
 
+        //function which will add the phonecall in the queue and create the tooltip
         display_in_queue: function(phonecall){
             var inCall = false;
             //Check if the current phonecall is currently done to add the microphone icon
@@ -181,6 +186,7 @@ openerp.crm_voip = function(instance) {
                 display_opp_name = false;
             }
             var empty_star = parseInt(phonecall.max_priority) - parseInt(phonecall.opportunity_priority);
+            //creation of the tooltip
             $("[rel='popover']").popover({
                 placement : 'right', // top, bottom, left or right
                 title : QWeb.render("crm_voip_Tooltip_title", {
@@ -298,6 +304,7 @@ openerp.crm_voip = function(instance) {
             } 
         },
 
+        //remove the phonecall from the queue
         remove_phonecall: function(phonecall_widget){
             var phonecall_model = new openerp.web.Model("crm.phonecall");
             var phonecall_id = phonecall_widget.$(".oe_dial_phonecall_partner_name").data().id;
@@ -417,28 +424,6 @@ openerp.crm_voip = function(instance) {
                     'headless': true,
                 }
             });
-            /*
-            //Launch the Log Call wizard
-            openerp.client.action_manager.do_action({
-                type: 'ir.actions.act_window',
-                key2: 'client_action_multi',
-                src_model: "crm.phonecall",
-                res_model: "crm.phonecall.log.wizard",
-                multi: "True",
-                target: 'new',
-                context: {'phonecall_id': id,
-                'default_description' : this.phonecalls[id].description,
-                'default_opportunity_name' : this.phonecalls[id].opportunity_name,
-                'default_opportunity_planned_revenue' : this.phonecalls[id].opportunity_planned_revenue,
-                'default_opportunity_title_action' : this.phonecalls[id].opportunity_title_action,
-                'default_opportunity_probability' : this.phonecalls[id].opportunity_probability,
-                'default_partner_name' : this.phonecalls[id].partner_name,
-                'default_partner_phone' : this.phonecalls[id].partner_phone,
-                'default_partner_mobile' : this.phonecalls[id].partner_mobile,
-                'default_partner_email' : this.phonecalls[id].partner_email,
-                'default_partner_image_small' : this.phonecalls[id].partner_image_small,},
-                views: [[false, 'form']],
-            });*/
         },
 
         //action done when the button "Send Email" is clicked
