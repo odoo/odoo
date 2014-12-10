@@ -1809,7 +1809,7 @@
     <div>
         <div class="col-md-3">
             <div class="oe_input_margin radio" id="export_format"></div>
-            <div class="oe_input_margin" title="Data will export in Import-Compatible mode. It can easily import with out any trouble.">
+            <div class="oe_input_margin checkbox" title="Data will export in Import-Compatible mode. It can easily import with out any trouble.">
                 <label>
                     <input type="checkbox" id="import_compat" value="yes" checked="true">Import-Compatible Export</input>
                 </label>
@@ -1837,10 +1837,10 @@
         </div>
         <div class="col-md-2 oe_export_fields_selector_center">
             <div class="row"><button class="btn btn-default" id="add_field" title="Add Selected Field to Export List">Add</button></div>
-            <div class="row"><button class="btn btn-default oe_button_unable" id="remove_field" title="Remove Selected Field from Export List">Remove</button></div>
-            <div class="row"><button class="btn btn-default oe_button_unable" id="remove_all_field" title="Clear All Fields From List">Remove All</button></div>
-            <div class="row"><button class="btn btn-default oe_button_unable" id="move_up" title="Move Selected Field Up">Move Up</button></div>
-            <div class="row"><button class="btn btn-default oe_button_unable" id="move_down" title="Move Selected Field Down">Move Down</button></div>
+            <div class="row"><button class="btn btn-default oe_button_unable" disabled="disabled" id="remove_field" title="Remove Selected Field from Export List">Remove</button></div>
+            <div class="row"><button class="btn btn-default oe_button_unable" disabled="disabled" id="remove_all_field" title="Clear All Fields From List">Remove All</button></div>
+            <div class="row"><button class="btn btn-default oe_button_unable" disabled="disabled" id="move_up" title="Move Selected Field Up">Move Up</button></div>
+            <div class="row"><button class="btn btn-default oe_button_unable" disabled="disabled" id="move_down" title="Move Selected Field Down">Move Down</button></div>
         </div>
         <div class="col-md-5 oe_export_fields_selector_right">
             <div class="text-left"><h4>Fields to export   </h4></div>
