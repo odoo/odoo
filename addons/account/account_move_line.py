@@ -356,13 +356,13 @@ class account_move_line(models.Model):
                 ) as s
                 WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
             """ % (
-                is_partner and "partner_id, partner_name," or "",
-                is_partner and "p.id AS partner_id, p.name AS partner_name," or "",
+                is_partner and "partner_id, partner_name," or ' ',
+                is_partner and "p.id AS partner_id, p.name AS partner_name," or ' ',
                 is_partner and "p" or "a",
-                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or "",
-                is_partner and "" or "AND at.type <> 'payable' AND at.type <> 'receivable'",
+                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or ' ',
+                is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 res_id_condition,
-                is_partner and "l.partner_id, p.id," or "",
+                is_partner and "l.partner_id, p.id," or ' ',
                 is_partner and "p" or "a",
                 is_partner and "p" or "a",
             ))
@@ -381,31 +381,28 @@ class account_move_line(models.Model):
         for row in rows:
             account = self.env['account.account'].browse(row['account_id'])
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
-            partner_id = is_partner and row['partner_id'] or False
-            row['reconciliation_proposition'] = account.get_reconciliation_proposition(partner_id=partner_id)
+            partner_id = is_partner and row['partner_id'] or None
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(account.id, partner_id)
 
         return rows
 
     @api.model
     def get_reconciliation_proposition(self, account_id, partner_id=False):
         """ Returns two lines whose amount are opposite """
-        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
 
         # Get pairs
-        # TODO : once amount_residual is stored, use it and remove 'reconcile_partial_id IS NULL'
-        cr.execute(
+        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
+        self.env.cr.execute(
             """ SELECT a.id, b.id
                 FROM account_move_line a, account_move_line b
-                WHERE ((a.debit = b.credit AND a.debit <> 0) OR
-                      (a.currency_id = b.currency_id AND a.amount_currency = - b.amount_currency AND a.amount_currency <> 0))
-                AND a.reconcile_partial_id IS NULL AND b.reconcile_partial_id IS NULL
-                AND a.state = 'valid' AND b.state = 'valid' AND a.reconcile_id IS NULL AND b.reconcile_id IS NULL
+                WHERE a.amount_residual = - b.amount_residual
+                AND a.reconciled IS NULL AND b.reconciled IS NULL
                 AND a.account_id = %d AND b.account_id = %d
                 %s
                 ORDER BY a.date asc
                 LIMIT 10
             """ % (account_id, account_id, partner_id_condition))
-        pairs = cr.fetchall()
+        pairs = self.env.cr.fetchall()
 
         # Apply ir_rules by filtering out
         all_pair_ids = [element for tupl in pairs for element in tupl]
@@ -510,8 +507,7 @@ class account_move_line(models.Model):
 
     @api.v7
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, line_ids, target_currency_id=False, context=None):
-        """ Bridge for reconciliation widget """
-        target_currency = target_currency_id and self.env['res.currency'].browse(target_currency_id) or False
+        target_currency = target_currency_id and self.pool.get('res.currency').browse(cr, uid, target_currency_id, context=context) or False
         return self.browse(cr, uid, line_ids, context).prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
 
     @api.v8
@@ -553,15 +549,10 @@ class account_move_line(models.Model):
                 'currency_id': line.currency_id.id or False,
             }
 
-            # Amount residual can technically be negative (eg: you register a payment of 150€ on an invoice of 100€)
             debit = line.debit
             credit = line.credit
             amount = line.amount_residual
             amount_currency = line.amount_residual_currency
-            if line.amount_residual < 0:
-                debit, credit = credit, debit
-                amount = -amount
-                amount_currency = -amount_currency
 
             # For already reconciled lines, don't use amount_residual(_currency)
             if not line.account_id.reconcile:
@@ -576,11 +567,11 @@ class account_move_line(models.Model):
             if line_currency != company_currency:
                 total_amount = line.amount_currency
                 actual_debit = debit > 0 and amount_currency or 0.0
-                actual_credit = credit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and -amount_currency or 0.0
             else:
                 total_amount = abs(debit - credit)
                 actual_debit = debit > 0 and amount or 0.0
-                actual_credit = credit > 0 and amount or 0.0
+                actual_credit = credit > 0 and -amount or 0.0
             if line_currency != target_currency:
                 amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
                 total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)

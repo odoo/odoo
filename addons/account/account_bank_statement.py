@@ -280,15 +280,19 @@ class account_bank_statement(models.Model):
             counterpart_amount = sum(line['debit'] for line in counterpart) - sum(line['credit'] for line in counterpart)
             st_line_amount = st_line.amount_currency if st_line.currency_id else st_line.amount
             if counterpart and counterpart_amount == st_line_amount:
-                for move_line_dict in counterpart:
-                    # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
-                    # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
-                    # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
-                    # 'counterpart_move_line_id': 7,
-                    # 'credit': 500
-                    # This is what the reconciliation widget does.
-                    move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
-                    move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
+                # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
+                # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
+                # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
+                # 'counterpart_move_line_id': 7,
+                # 'credit': 500
+                # This is what the reconciliation widget does.
+                counterpart = map(lambda l: {
+                    'name': l['name'],
+                    'debit': l['credit'],
+                    'credit': l['debit'],
+                    'is_reconciled': l['is_reconciled'],
+                    'counterpart_move_line_id': l['id'],
+                }, counterpart)
                 try:
                     st_line.process_reconciliation(counterpart)
                     automatic_reconciliation_entries.append(st_line.journal_entry_id.id)
@@ -393,6 +397,7 @@ class account_bank_statement_line(models.Model):
             'account_code': self.journal_id.default_debit_account_id.code,
             'account_name': self.journal_id.default_debit_account_id.name,
             'partner_name': self.partner_id.name,
+            'communication_partner_name': self.partner_name,
             'amount_currency_str': amount_currency_str, # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
@@ -693,16 +698,16 @@ class account_bank_statement_line(models.Model):
         # Create move lines
         move_line_pairs_to_reconcile = []
         for mv_line_dict in to_create:
-            counterpart_move_line_id = None # NB : this attribute is irrelevant for aml_obj.create() and needs to be removed from the dict
+            counterpart_move_line = None # NB : this attribute is irrelevant for aml_obj.create() and needs to be removed from the dict
             if mv_line_dict.get('counterpart_move_line_id'):
-                counterpart_move_line_id = mv_line_dict['counterpart_move_line_id']
+                counterpart_move_line = 'counterpart_move_line_id' in mv_line_dict and aml_obj.browse(mv_line_dict['counterpart_move_line_id']) or None
                 del mv_line_dict['counterpart_move_line_id']
-            new_aml_id = aml_obj.create(mv_line_dict)
-            if counterpart_move_line_id is not None:
-                move_line_pairs_to_reconcile.append([new_aml_id.id, counterpart_move_line_id])
+            new_aml = aml_obj.create(mv_line_dict)
+            if counterpart_move_line:
+                move_line_pairs_to_reconcile.append(new_aml|counterpart_move_line)
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.browse(pair).reconcile(partial=True)
+            pair.reconcile(partial=True)
         # Mark the statement line as reconciled
         self.journal_entry_id = move_id.id
 
