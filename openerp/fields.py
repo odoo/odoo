@@ -447,6 +447,7 @@ class Field(object):
         for name in self.related:
             recs._setup_fields()
             field = recs._fields[name]
+            field.setup(env)
             recs = recs[name]
             fields.append(field)
 
@@ -568,6 +569,8 @@ class Field(object):
                 _logger.debug("Field %s is recursively defined", self)
                 self.recursive = True
                 continue
+
+            field.setup(env)
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
