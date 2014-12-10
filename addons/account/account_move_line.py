@@ -135,13 +135,10 @@ class account_move_line(models.Model):
             for unreconciled lines, and something in-between for partially reconciled lines. """
         for line in self:
 
-            amount = line.debit - line.credit
+            amount = abs(line.debit - line.credit)
 
             for rec_line in self.env['account.partial.reconcile'].search(['|', ('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
-                if rec_line.source_move_id == line:
-                    amount -= rec_line.amount
-                else:
-                    amount += rec_line.amount
+                amount -= rec_line.amount
 
             line.amount_residual = amount
             if line.currency_id:
