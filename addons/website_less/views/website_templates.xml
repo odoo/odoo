@@ -1,6 +1,12 @@
 <openerp>
     <data>
 
+<template id="website_less.theme" inherit_id="website.theme" name="Fix table-row in theme">
+    <xpath expr='//link[@href="/website/static/src/css/website.css"]' position="after">
+        <link rel="stylesheet" href='/website_less/static/src/less/website.less'/>
+    </xpath>
+</template>
+
 <template id="website_less.assets_editor" inherit_id="website.assets_editor" name="Editor assets for Less">
     <xpath expr='//link[@href="/website/static/src/css/editor.css"]' position="replace">
         <link rel='stylesheet' href='/website_less/static/src/css/editor.css'/>
