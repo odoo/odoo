@@ -709,7 +709,7 @@ class account_move_line(models.Model):
             can find a debit and a credit to reconcile together. It returns the recordset of the
             account move lines that were not reconciled during the process
         """
-        sm_debit_move, sm_credit_move = self.get_pair_to_reconcile()
+        sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
         #there is no more pair to reconcile so return what move_line are left 
         if not sm_credit_move or not sm_debit_move:
             return self
@@ -745,7 +745,7 @@ class account_move_line(models.Model):
         reconciled_account = list(all_accounts)[0]
         if not reconciled_account.reconcile:
             raise Warning(_('The account is not defined to be reconciled !'))
-        if reconciled_account.user_type_id.type in ('receivable', 'payable'):
+        if reconciled_account.user_type.type in ('receivable', 'payable'):
             all_partners = set([l.partner_id.id for l in self])
             if len(all_partners) > 1:
                 raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
