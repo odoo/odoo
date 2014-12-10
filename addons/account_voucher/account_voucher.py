@@ -69,8 +69,10 @@ class account_voucher(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         journal_pool = self.pool.get('account.journal')
         if context.get('invoice_id', False):
-            currency_id = invoice_pool.browse(cr, uid, context['invoice_id'], context=context).currency_id.id
-            journal_id = journal_pool.search(cr, uid, [('currency', '=', currency_id)], limit=1)
+            invoice = invoice_pool.browse(cr, uid, context['invoice_id'], context=context)
+            journal_id = journal_pool.search(cr, uid, [
+                ('currency', '=', invoice.currency_id.id), ('company_id', '=', invoice.company_id.id)
+            ], limit=1, context=context)
             return journal_id and journal_id[0] or False
         if context.get('journal_id', False):
             return context.get('journal_id')
@@ -123,6 +125,9 @@ class account_voucher(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if journal_id:
+            if isinstance(journal_id, (list, tuple)):
+                # sometimes journal_id is a pair (id, display_name)
+                journal_id = journal_id[0]
             journal = journal_pool.browse(cr, uid, journal_id, context=context)
             if journal.currency:
                 return journal.currency.id
@@ -878,7 +883,13 @@ class account_voucher(osv.osv):
             currency_id = journal.currency.id
         else:
             currency_id = journal.company_id.currency_id.id
-        vals['value'].update({'currency_id': currency_id, 'payment_rate_currency_id': currency_id})
+
+        period_ids = self.pool['account.period'].find(cr, uid, context=dict(context, company_id=company_id))
+        vals['value'].update({
+            'currency_id': currency_id,
+            'payment_rate_currency_id': currency_id,
+            'period_id': period_ids and period_ids[0] or False
+        })
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
@@ -890,6 +901,18 @@ class account_voucher(osv.osv):
             for key in res.keys():
                 vals[key].update(res[key])
         return vals
+
+    def onchange_company(self, cr, uid, ids, partner_id, journal_id, currency_id, company_id, context=None):
+        """
+        If the company changes, check that the journal is in the right company.
+        If not, fetch a new journal.
+        """
+        journal_pool = self.pool['account.journal']
+        journal = journal_pool.browse(cr, uid, journal_id, context=context)
+        if journal.company_id.id != company_id:
+            # can not guess type of journal, better remove it
+            return {'value': {'journal_id': False}}
+        return {}
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
         self.signal_workflow(cr, uid, ids, 'proforma_voucher')

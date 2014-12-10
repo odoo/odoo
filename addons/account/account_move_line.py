@@ -799,51 +799,45 @@ class account_move_line(osv.osv):
             # Amount residual can be negative
             debit = line.debit
             credit = line.credit
-            total_amount = abs(debit - credit)
-            total_amount_currency = line.amount_currency
-            amount_residual = line.amount_residual
-            amount_residual_currency = line.amount_residual_currency
+            amount = line.amount_residual
+            amount_currency = line.amount_residual_currency
             if line.amount_residual < 0:
                 debit, credit = credit, debit
-                amount_residual = -amount_residual
-                amount_residual_currency = -amount_residual_currency
+                amount = -amount
+                amount_currency = -amount_currency
 
             # Get right debit / credit:
+            target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
-            if line.currency_id and line.amount_currency:
-                amount_currency_str = rml_parser.formatLang(amount_residual_currency, currency_obj=line.currency_id)
-                total_amount_currency_str = rml_parser.formatLang(total_amount_currency, currency_obj=line.currency_id)
-            if target_currency and line_currency == target_currency and target_currency != company_currency:
-                debit = debit > 0 and amount_residual_currency or 0.0
-                credit = credit > 0 and amount_residual_currency or 0.0
-                amount_currency_str = rml_parser.formatLang(amount_residual, currency_obj=company_currency)
-                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                total_amount_str = rml_parser.formatLang(total_amount_currency, currency_obj=target_currency)
+            if line_currency != company_currency:
+                total_amount = line.amount_currency
+                actual_debit = debit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and amount_currency or 0.0
             else:
-                debit = debit > 0 and amount_residual or 0.0
-                credit = credit > 0 and amount_residual or 0.0
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
-                total_amount_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                if target_currency and target_currency != company_currency:
-                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
-                    total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
-                    ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
-                    debit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, debit, context=ctx)
-                    credit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, credit, context=ctx)
-                    amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                    total_amount = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, total_amount, context=ctx)
-                    total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
+                total_amount = abs(debit - credit)
+                actual_debit = debit > 0 and amount or 0.0
+                actual_credit = credit > 0 and amount or 0.0
+            if line_currency != target_currency:
+                amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
+                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                ret_line['credit_currency'] = actual_credit
+                ret_line['debit_currency'] = actual_debit
+                ctx = context.copy()
+                if target_date:
+                    ctx.update({'date': target_date})
+                total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
+                actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
+                actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
+            amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
+            total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
-            ret_line['credit'] = credit
-            ret_line['debit'] = debit
+            ret_line['debit'] = actual_debit
+            ret_line['credit'] = actual_credit
             ret_line['amount_str'] = amount_str
+            ret_line['total_amount_str'] = total_amount_str
             ret_line['amount_currency_str'] = amount_currency_str
-            ret_line['total_amount_str'] = total_amount_str # For partial reconciliations
             ret_line['total_amount_currency_str'] = total_amount_currency_str
             ret.append(ret_line)
         return ret
@@ -1203,7 +1197,7 @@ class account_move_line(osv.osv):
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
-        if check:
+        if check and not context.get('novalidate'):
             done = []
             for line in self.browse(cr, uid, ids):
                 if line.move_id.id not in done:

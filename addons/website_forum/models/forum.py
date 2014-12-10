@@ -4,7 +4,9 @@ from datetime import datetime
 import uuid
 from werkzeug.exceptions import Forbidden
 
+import logging
 import openerp
+
 from openerp import api, tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
@@ -13,6 +15,7 @@ from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 
+_logger = logging.getLogger(__name__)
 
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
@@ -115,6 +118,31 @@ class Forum(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         return super(Forum, self).create(cr, uid, values, context=create_context)
+
+    def _tag_to_write_vals(self, cr, uid, ids, tags='', context=None):
+        User = self.pool['res.users']
+        Tag = self.pool['forum.tag']
+        result = {}
+        for forum in self.browse(cr, uid, ids, context=context):
+            post_tags = []
+            existing_keep = []
+            for tag in filter(None, tags.split(',')):
+                if tag.startswith('_'):  # it's a new tag
+                    # check that not already created meanwhile or maybe excluded by the limit on the search
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
+                    if tag_ids:
+                        existing_keep.append(int(tag_ids[0]))
+                    else:
+                        # check if user have Karma needed to create need tag
+                        user = User.browse(cr, uid, uid, context=context)
+                        if user.exists() and user.karma >= forum.karma_retag:
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
+                else:
+                    existing_keep.append(int(tag))
+            post_tags.insert(0, [6, 0, existing_keep])
+            result[forum.id] = post_tags
+
+        return result
 
 
 class Post(osv.Model):
@@ -379,10 +407,40 @@ class Post(osv.Model):
                 self.message_post(cr, uid, obj_id, body=body, subtype=subtype, context=context)
         return res
 
+
+    def reopen(self, cr, uid, ids, context=None):
+        if any(post.parent_id or post.state != 'close'
+                    for post in self.browse(cr, uid, ids, context=context)):
+            return False
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.closed_reason_id.id in (reason_offensive, reason_spam):
+                _logger.info('Upvoting user <%s>, reopening spam/offensive question',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * -5,
+                                                 context=context)
+        self.pool['forum.post'].write(cr, SUPERUSER_ID, ids, {'state': 'active'}, context=context)
+
     def close(self, cr, uid, ids, reason_id, context=None):
         if any(post.parent_id for post in self.browse(cr, uid, ids, context=context)):
             return False
-        return self.pool['forum.post'].write(cr, uid, ids, {
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        if reason_id in (reason_offensive, reason_spam):
+            for post in self.browse(cr, uid, ids, context=context):
+                _logger.info('Downvoting user <%s> for posting spam/offensive contents',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * 5,
+                                                 context=context)
+
+        self.pool['forum.post'].write(cr, uid, ids, {
             'state': 'close',
             'closed_uid': uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),

@@ -183,6 +183,7 @@ class res_partner_bank(osv.osv):
                 try:
                     if not data.get('bank_name'):
                         data['bank_name'] = _('BANK')
+                    data = dict((k, v or '') for (k, v) in data.iteritems())
                     name = bank_code_format[data['state']] % data
                 except Exception:
                     raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))

@@ -65,15 +65,16 @@
           t-att-data-oe-company-name="res_company.name">
         <head>
             <meta charset="utf-8" />
-            <t t-if="main_object and 'website_meta_title' in main_object">
+            <t t-if="main_object and 'website_meta_title' in main_object and not title">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
-            <t t-if="not title and main_object and 'name' in main_object">
+            <t t-if="main_object and 'name' in main_object and not title and not additional_title">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-if="not title">
-                <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
+
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
@@ -172,7 +173,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
-            <img src="/logo.png"/>
+            <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
         </a>
     </xpath>
 </template>
@@ -247,7 +248,7 @@
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
         <div class="oe_structure" id="footer">
-            <section data-snippet-id='three-columns' class="mt16 mb16">
+            <section data-snippet-id='three-columns'>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">

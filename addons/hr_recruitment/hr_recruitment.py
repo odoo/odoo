@@ -256,9 +256,13 @@ class hr_applicant(osv.Model):
         return {'value': {'department_id': department_id, 'user_id': user_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
+        values = {}
         if not stage_id:
-            stage_id = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
-        return {'value': {'stage_id': stage_id}}
+            values['stage_id'] = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
+        if department_id:
+            department = self.pool['hr.department'].browse(cr, uid, department_id, context=context)
+            values['company_id'] = department.company_id.id
+        return {'value': values}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         data = {'partner_phone': False,
@@ -488,7 +492,7 @@ class hr_applicant(osv.Model):
                 address_id = self.pool.get('res.partner').address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
-                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1}, context=context)
+                applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 create_ctx = dict(context, mail_broadcast=True)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,

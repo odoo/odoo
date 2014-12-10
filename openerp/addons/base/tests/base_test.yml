@@ -60,7 +60,8 @@
         self.pool._init = False
 
         # Force partner_categ.copy() to copy children
-        self.pool['res.partner.category']._columns['child_ids'].copy = True
+        self._fields['child_ids'].copy = True
+        self._columns['child_ids'].copy = True
 -
     "1.0 Setup test partner categories: parent root"
 -
@@ -145,7 +146,8 @@
 -
     !python {model: res.partner.category}: |
         self.pool._init = True
-        self.pool['res.partner.category']._columns['child_ids'].copy = False
+        self._fields['child_ids'].copy = False
+        self._columns['child_ids'].copy = False
 
 -
     "Float precision tests: verify that float rounding methods are working correctly via res.currency"

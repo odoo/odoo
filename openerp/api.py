@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP (<http://www.openerp.com>).
+#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -717,7 +717,7 @@ class Environment(object):
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = set()                  # set(record)
+        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -814,6 +814,24 @@ class Environment(object):
             env.prefetch.clear()
             env.computed.clear()
             env.dirty.clear()
+
+    def clear(self):
+        """ Clear all record caches, and discard all fields to recompute.
+            This may be useful when recovering from a failed ORM operation.
+        """
+        self.invalidate_all()
+        self.all.todo.clear()
+
+    @contextmanager
+    def clear_upon_failure(self):
+        """ Context manager that clears the environments (caches and fields to
+            recompute) upon exception.
+        """
+        try:
+            yield
+        except Exception:
+            self.clear()
+            raise
 
     def field_todo(self, field):
         """ Check whether `field` must be recomputed, and returns a recordset

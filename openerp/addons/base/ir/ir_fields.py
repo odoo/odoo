@@ -8,12 +8,8 @@ import time
 import psycopg2
 import pytz
 
-from openerp.osv import orm
-from openerp.tools.translate import _
-from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
-                               DEFAULT_SERVER_DATETIME_FORMAT,\
-                               ustr
-from openerp.tools import html_sanitize
+from openerp import models, api, _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, ustr
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
 def only_ref_fields(record):
@@ -37,33 +33,12 @@ class ImportWarning(Warning):
 
 class ConversionNotFound(ValueError): pass
 
-class ColumnWrapper(object):
-    def __init__(self, column, cr, uid, pool, fromtype, context=None):
-        self._converter = None
-        self._column = column
-        if column._obj:
-            self._pool = pool
-            self._converter_args = {
-                'cr': cr,
-                'uid': uid,
-                'model': pool[column._obj],
-                'fromtype': fromtype,
-                'context': context
-            }
-    @property
-    def converter(self):
-        if not self._converter:
-            self._converter = self._pool['ir.fields.converter'].for_model(
-                **self._converter_args)
-        return self._converter
 
-    def __getattr__(self, item):
-        return getattr(self._column, item)
-
-class ir_fields_converter(orm.Model):
+class ir_fields_converter(models.Model):
     _name = 'ir.fields.converter'
 
-    def for_model(self, cr, uid, model, fromtype=str, context=None):
+    @api.model
+    def for_model(self, model, fromtype=str):
         """ Returns a converter object for the model. A converter is a
         callable taking a record-ish (a dictionary representing an openerp
         record with values of typetag ``fromtype``) and returning a converted
@@ -73,17 +48,19 @@ class ir_fields_converter(orm.Model):
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict
         """
-        columns = dict(
-            (k, ColumnWrapper(v.column, cr, uid, self.pool, fromtype, context))
-            for k, v in model._all_columns.iteritems())
-        converters = dict(
-            (k, self.to_field(cr, uid, model, column, fromtype, context))
-            for k, column in columns.iteritems())
+        # make sure model is new api
+        model = self.env[model._name]
+
+        converters = {
+            name: self.to_field(model, field, fromtype)
+            for name, field in model._fields.iteritems()
+        }
 
         def fn(record, log):
             converted = {}
             for field, value in record.iteritems():
-                if field in (None, 'id', '.id'): continue
+                if field in (None, 'id', '.id'):
+                    continue
                 if not value:
                     converted[field] = False
                     continue
@@ -97,20 +74,21 @@ class ir_fields_converter(orm.Model):
                         log(field, w)
                 except ValueError, e:
                     log(field, e)
-
             return converted
+
         return fn
 
-    def to_field(self, cr, uid, model, column, fromtype=str, context=None):
-        """ Fetches a converter for the provided column object, from the
+    @api.model
+    def to_field(self, model, field, fromtype=str):
+        """ Fetches a converter for the provided field object, from the
         specified type.
 
         A converter is simply a callable taking a value of type ``fromtype``
         (or a composite of ``fromtype``, e.g. list or dict) and returning a
-        value acceptable for a write() on the column ``column``.
+        value acceptable for a write() on the field ``field``.
 
         By default, tries to get a method on itself with a name matching the
-        pattern ``_$fromtype_to_$column._type`` and returns it.
+        pattern ``_$fromtype_to_$field.type`` and returns it.
 
         Converter callables can either return a value and a list of warnings
         to their caller or raise ``ValueError``, which will be interpreted as a
@@ -132,42 +110,43 @@ class ir_fields_converter(orm.Model):
         it returns. The handling of a warning at the upper levels is the same
         as ``ValueError`` above.
 
-        :param column: column object to generate a value for
-        :type column: :class:`fields._column`
-        :param fromtype: type to convert to something fitting for ``column``
+        :param field: field object to generate a value for
+        :type field: :class:`openerp.fields.Field`
+        :param fromtype: type to convert to something fitting for ``field``
         :type fromtype: type | str
         :param context: openerp request context
-        :return: a function (fromtype -> column.write_type), if a converter is found
+        :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """
         assert isinstance(fromtype, (type, str))
         # FIXME: return None
         typename = fromtype.__name__ if isinstance(fromtype, type) else fromtype
-        converter = getattr(
-            self, '_%s_to_%s' % (typename, column._type), None)
-        if not converter: return None
+        converter = getattr(self, '_%s_to_%s' % (typename, field.type), None)
+        if not converter:
+            return None
+        return functools.partial(converter, model, field)
 
-        return functools.partial(
-            converter, cr, uid, model, column, context=context)
-
-    def _str_to_boolean(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
         true, yes, false, no = _(u"true"), _(u"yes"), _(u"false"), _(u"no")
         # potentially broken casefolding? What about locales?
         trues = set(word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
-            self._get_translations(cr, uid, ['code'], u"true", context=context),
-            self._get_translations(cr, uid, ['code'], u"yes", context=context),
+            self._get_translations(['code'], u"true"),
+            self._get_translations(['code'], u"yes"),
         ))
-        if value.lower() in trues: return True, []
+        if value.lower() in trues:
+            return True, []
 
         # potentially broken casefolding? What about locales?
         falses = set(word.lower() for word in itertools.chain(
             [u'', u"0", u"false", u"no"],
-            self._get_translations(cr, uid, ['code'], u"false", context=context),
-            self._get_translations(cr, uid, ['code'], u"no", context=context),
+            self._get_translations(['code'], u"false"),
+            self._get_translations(['code'], u"no"),
         ))
-        if value.lower() in falses: return False, []
+        if value.lower() in falses:
+            return False, []
 
         return True, [ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
@@ -175,7 +154,8 @@ class ir_fields_converter(orm.Model):
                 'moreinfo': _(u"Use '1' for yes and '0' for no")
             })]
 
-    def _str_to_integer(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_integer(self, model, field, value):
         try:
             return int(value), []
         except ValueError:
@@ -183,7 +163,8 @@ class ir_fields_converter(orm.Model):
                 _(u"'%s' does not seem to be an integer for field '%%(field)s'")
                 % value)
 
-    def _str_to_float(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_float(self, model, field, value):
         try:
             return float(value), []
         except ValueError:
@@ -191,11 +172,14 @@ class ir_fields_converter(orm.Model):
                 _(u"'%s' does not seem to be a number for field '%%(field)s'")
                 % value)
 
-    def _str_id(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_id(self, model, field, value):
         return value, []
+
     _str_to_reference = _str_to_char = _str_to_text = _str_to_binary = _str_to_html = _str_id
 
-    def _str_to_date(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_date(self, model, field, value):
         try:
             time.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
             return value, []
@@ -205,28 +189,28 @@ class ir_fields_converter(orm.Model):
                     'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"
                 })
 
-    def _input_tz(self, cr, uid, context):
+    @api.model
+    def _input_tz(self):
         # if there's a tz in context, try to use that
-        if context.get('tz'):
+        if self._context.get('tz'):
             try:
-                return pytz.timezone(context['tz'])
+                return pytz.timezone(self._context['tz'])
             except pytz.UnknownTimeZoneError:
                 pass
 
         # if the current user has a tz set, try to use that
-        user = self.pool['res.users'].read(
-            cr, uid, [uid], ['tz'], context=context)[0]
-        if user['tz']:
+        user = self.env.user
+        if user.tz:
             try:
-                return pytz.timezone(user['tz'])
+                return pytz.timezone(user.tz)
             except pytz.UnknownTimeZoneError:
                 pass
 
         # fallback if no tz in context or on user: UTC
         return pytz.UTC
 
-    def _str_to_datetime(self, cr, uid, model, column, value, context=None):
-        if context is None: context = {}
+    @api.model
+    def _str_to_datetime(self, model, field, value):
         try:
             parsed_value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -236,40 +220,37 @@ class ir_fields_converter(orm.Model):
                     'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"
                 })
 
-        input_tz = self._input_tz(cr, uid, context)# Apply input tz to the parsed naive datetime
+        input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
         dt = input_tz.localize(parsed_value, is_dst=False)
         # And convert to UTC before reformatting for writing
         return dt.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), []
 
-    def _get_translations(self, cr, uid, types, src, context):
+    @api.model
+    def _get_translations(self, types, src):
         types = tuple(types)
         # Cache translations so they don't have to be reloaded from scratch on
         # every row of the file
-        tnx_cache = cr.cache.setdefault(self._name, {})
+        tnx_cache = self._cr.cache.setdefault(self._name, {})
         if tnx_cache.setdefault(types, {}) and src in tnx_cache[types]:
             return tnx_cache[types][src]
 
-        Translations = self.pool['ir.translation']
-        tnx_ids = Translations.search(
-            cr, uid, [('type', 'in', types), ('src', '=', src)], context=context)
-        tnx = Translations.read(cr, uid, tnx_ids, ['value'], context=context)
-        result = tnx_cache[types][src] = [t['value'] for t in tnx if t['value'] is not False]
+        Translations = self.env['ir.translation']
+        tnx = Translations.search([('type', 'in', types), ('src', '=', src)])
+        result = tnx_cache[types][src] = [t.value for t in tnx if t.value is not False]
         return result
 
-    def _str_to_selection(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_selection(self, model, field, value):
+        # get untranslated values
+        env = self.with_context(lang=None).env
+        selection = field.get_description(env)['selection']
 
-        selection = column.selection
-        if not isinstance(selection, (tuple, list)):
-            # FIXME: Don't pass context to avoid translations?
-            #        Or just copy context & remove lang?
-            selection = selection(model, cr, uid, context=None)
         for item, label in selection:
             label = ustr(label)
-            labels = self._get_translations(
-                cr, uid, ('selection', 'model', 'code'), label, context=context)
-            labels.append(label)
+            labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
             if value == unicode(item) or value in labels:
                 return item, []
+
         raise ValueError(
             _(u"Value '%s' not found in selection field '%%(field)s'") % (
                 value), {
@@ -277,13 +258,13 @@ class ir_fields_converter(orm.Model):
                              if _label or item]
             })
 
-
-    def db_id_for(self, cr, uid, model, column, subfield, value, context=None):
+    @api.model
+    def db_id_for(self, model, field, subfield, value):
         """ Finds a database id for the reference ``value`` in the referencing
-        subfield ``subfield`` of the provided column of the provided model.
+        subfield ``subfield`` of the provided field of the provided model.
 
-        :param model: model to which the column belongs
-        :param column: relational column for which references are provided
+        :param model: model to which the field belongs
+        :param field: relational field for which references are provided
         :param subfield: a relational subfield allowing building of refs to
                          existing records: ``None`` for a name_get/name_search,
                          ``id`` for an external id and ``.id`` for a database
@@ -295,7 +276,6 @@ class ir_fields_converter(orm.Model):
                  warnings
         :rtype: (ID|None, unicode, list)
         """
-        if context is None: context = {}
         id = None
         warnings = []
         action = {'type': 'ir.actions.act_window', 'target': 'new',
@@ -303,19 +283,18 @@ class ir_fields_converter(orm.Model):
                   'views': [(False, 'tree'), (False, 'form')],
                   'help': _(u"See all possible values")}
         if subfield is None:
-            action['res_model'] = column._obj
+            action['res_model'] = field.comodel_name
         elif subfield in ('id', '.id'):
             action['res_model'] = 'ir.model.data'
-            action['domain'] = [('model', '=', column._obj)]
+            action['domain'] = [('model', '=', field.comodel_name)]
 
-        RelatedModel = self.pool[column._obj]
+        RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
             field_type = _(u"database id")
             try: tentative_id = int(value)
             except ValueError: tentative_id = value
             try:
-                if RelatedModel.search(cr, uid, [('id', '=', tentative_id)],
-                                       context=context):
+                if RelatedModel.search([('id', '=', tentative_id)]):
                     id = tentative_id
             except psycopg2.DataError:
                 # type error
@@ -325,18 +304,16 @@ class ir_fields_converter(orm.Model):
         elif subfield == 'id':
             field_type = _(u"external id")
             if '.' in value:
-                module, xid = value.split('.', 1)
+                xmlid = value
             else:
-                module, xid = context.get('_import_current_module', ''), value
-            ModelData = self.pool['ir.model.data']
+                xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
             try:
-                _model, id = ModelData.get_object_reference(
-                    cr, uid, module, xid)
-            except ValueError: pass # leave id is None
+                id = self.env.ref(xmlid).id
+            except ValueError:
+                pass # leave id is None
         elif subfield is None:
             field_type = _(u"name")
-            ids = RelatedModel.name_search(
-                cr, uid, name=value, operator='=', context=context)
+            ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
@@ -376,31 +353,32 @@ class ir_fields_converter(orm.Model):
         [subfield] = fieldset
         return subfield, []
 
-    def _str_to_many2one(self, cr, uid, model, column, values, context=None):
+    @api.model
+    def _str_to_many2one(self, model, field, values):
         # Should only be one record, unpack
         [record] = values
 
         subfield, w1 = self._referencing_subfield(record)
 
         reference = record[subfield]
-        id, subfield_type, w2 = self.db_id_for(
-            cr, uid, model, column, subfield, reference, context=context)
+        id, _, w2 = self.db_id_for(model, field, subfield, reference)
         return id, w1 + w2
 
-    def _str_to_many2many(self, cr, uid, model, column, value, context=None):
+    @api.model
+    def _str_to_many2many(self, model, field, value):
         [record] = value
 
         subfield, warnings = self._referencing_subfield(record)
 
         ids = []
         for reference in record[subfield].split(','):
-            id, subfield_type, ws = self.db_id_for(
-                cr, uid, model, column, subfield, reference, context=context)
+            id, _, ws = self.db_id_for(model, field, subfield, reference)
             ids.append(id)
             warnings.extend(ws)
         return [REPLACE_WITH(ids)], warnings
 
-    def _str_to_one2many(self, cr, uid, model, column, records, context=None):
+    @api.model
+    def _str_to_one2many(self, model, field, records):
         commands = []
         warnings = []
 
@@ -418,6 +396,9 @@ class ir_fields_converter(orm.Model):
             if not isinstance(e, Warning):
                 raise e
             warnings.append(e)
+
+        convert = self.for_model(self.env[field.comodel_name])
+
         for record in records:
             id = None
             refs = only_ref_fields(record)
@@ -426,11 +407,10 @@ class ir_fields_converter(orm.Model):
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
                 reference = record[subfield]
-                id, subfield_type, w2 = self.db_id_for(
-                    cr, uid, model, column, subfield, reference, context=context)
+                id, _, w2 = self.db_id_for(model, field, subfield, reference)
                 warnings.extend(w2)
 
-            writable = column.converter(exclude_ref_fields(record), log)
+            writable = convert(exclude_ref_fields(record), log)
             if id:
                 commands.append(LINK_TO(id))
                 commands.append(UPDATE(id, writable))

@@ -23,7 +23,8 @@ from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv
-from openerp.tools import config, which
+from openerp.tools import config
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -48,8 +49,10 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    return which('wkhtmltopdf', path=os.pathsep.join(defpath))
+    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
+    if wkhtmltopdf_bin is None:
+        raise IOError
+    return wkhtmltopdf_bin
 
 
 #--------------------------------------------------------------------------
@@ -211,21 +214,22 @@ class Report(osv.Model):
         # in order to extract headers, bodies and footers.
         try:
             root = lxml.html.fromstring(html)
+            match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
             for node in root.xpath("//html/head/style"):
                 css += node.text
 
-            for node in root.xpath("//div[@class='header']"):
+            for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
                 header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
-            for node in root.xpath("//div[@class='footer']"):
+            for node in root.xpath(match_klass.format('footer')):
                 body = lxml.html.tostring(node)
                 footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
-            for node in root.xpath("//div[@class='page']"):
+            for node in root.xpath(match_klass.format('page')):
                 # Previously, we marked some reports to be saved in attachment via their ids, so we
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model

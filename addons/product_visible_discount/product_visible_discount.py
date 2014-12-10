@@ -72,7 +72,7 @@ class sale_order_line(osv.osv):
         result=res['value']
         pricelist_obj=self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
-        if product and pricelist:
+        if product and pricelist and self.pool.get('res.users').has_group(cr, uid, 'sale.group_discount_per_so_line'):
             if result.get('price_unit',False):
                 price=result['price_unit']
             else:

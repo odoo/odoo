@@ -28,5 +28,17 @@
             </field>
         </record>
 
+        <!-- Add requested_date and commitment_date on quotation view -->
+        <record id="view_quotation_tree_date" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <field name="date_order" position="after">
+                    <field name="requested_date"/>
+                    <field name="commitment_date"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

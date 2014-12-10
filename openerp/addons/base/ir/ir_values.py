@@ -423,7 +423,7 @@ class ir_values(osv.osv):
             if action_model_name not in self.pool:
                 continue    # unknow model? skip it
             action_model = self.pool[action_model_name]
-            fields = [field for field in action_model._all_columns if field not in EXCLUDED_FIELDS]
+            fields = [field for field in action_model._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
                 action_def = action_model.read(cr, uid, int(action_id), fields, context)

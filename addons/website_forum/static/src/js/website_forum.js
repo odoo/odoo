@@ -1,5 +1,4 @@
-$(document).ready(function () {
-    if ($('.website_forum').length){
+    openerp.website.if_dom_contains('.website_forum', function () {
         $('.karma_required').on('click', function (ev) {
             var karma = $(ev.currentTarget).data('karma');
             if (karma) {
@@ -120,6 +119,66 @@ $(document).ready(function () {
             openerp.jsonRpc("/forum/validate_email/close", 'call', {});
         });
 
+
+        $('input.js_select2').select2({
+            tags: true,
+            tokenSeparators: [",", " ", "_"],
+            maximumInputLength: 35,
+            minimumInputLength: 2,
+            maximumSelectionSize: 5,
+            lastsearch: [],
+            createSearchChoice: function (term) {
+                if ($(lastsearch).filter(function () { return this.text.localeCompare(term) === 0;}).length === 0) {
+                    //check Karma
+                    if (parseInt($("#karma").val()) >= parseInt($("#karma_retag").val())) {
+                        return {
+                            id: "_" + $.trim(term),
+                            text: $.trim(term) + ' *',
+                            isNew: true,
+                        };
+                    }
+                    
+                }
+            },
+            formatResult: function(term) {
+                if (term.isNew) {
+                    return '<span class="label label-primary">New</span> ' + _.escape(term.text);
+                }
+                else {
+                    return _.escape(term.text);
+                }
+            },
+            ajax: {
+                url: '/forum/get_tags',
+                dataType: 'json',
+                data: function(term, page) {
+                    return {
+                        q: term,
+                        t: 'select2',
+                        l: 50
+                    };
+                },
+                results: function(data, page) {
+                    var ret = [];
+                    _.each(data, function(x) {
+                        ret.push({ id: x.id, text: x.name, isNew: false });
+                    });
+                    lastsearch = ret;
+                    return { results: ret };
+                }
+            },
+
+            // Take default tags from the input value
+            initSelection: function (element, callback) {
+                var data = [];
+                _.each(element.data('init-value'), function(x) {
+                    data.push({ id: x.id, text: x.name, isNew: false });
+                });
+                element.val('');
+                callback(data);
+            },
+        });
+
         if($('input.load_tags').length){
             var tags = $("input.load_tags").val();
             $("input.load_tags").val("");
@@ -150,28 +209,27 @@ $(document).ready(function () {
                 }
             });
         }
+        //END-TODO Remove in master
 
         if ($('textarea.load_editor').length) {
             var editor = CKEDITOR.instances['content'];
             editor.on('instanceReady', CKEDITORLoadComplete);
         }
+
+        function CKEDITORLoadComplete(){
+            "use strict";
+            $('.cke_button__link').attr('onclick','website_forum_IsKarmaValid(33,30)');
+            $('.cke_button__unlink').attr('onclick','website_forum_IsKarmaValid(37,30)');
+            $('.cke_button__image').attr('onclick','website_forum_IsKarmaValid(41,30)');
+        }
+    });
+
+   function website_forum_IsKarmaValid(eventNumber, minKarma){
+        "use strict";
+        if(parseInt($("#karma").val()) >= minKarma){
+            CKEDITOR.tools.callFunction(eventNumber, this);
+            return false;
+        } else {
+            alert("Sorry you need more than " + minKarma + " Karma.");
+        }
     }
-});
-
-
-function IsKarmaValid(eventNumber,minKarma){
-    "use strict";
-    if(parseInt($("#karma").val()) >= minKarma){
-        CKEDITOR.tools.callFunction(eventNumber,this);
-        return false;
-    } else {
-        alert("Sorry you need more than " + minKarma + " Karma.");
-    }
-}
-
-function CKEDITORLoadComplete(){
-    "use strict";
-    $('.cke_button__link').attr('onclick','IsKarmaValid(33,30)');
-    $('.cke_button__unlink').attr('onclick','IsKarmaValid(37,30)');
-    $('.cke_button__image').attr('onclick','IsKarmaValid(41,30)');
-}

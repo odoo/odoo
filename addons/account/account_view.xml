@@ -626,7 +626,7 @@
                             <label for="balance_end" />
                             <button name="button_dummy" states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                         </div>
-                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency'}"/>
                     </group>
                     <div class="oe_clear"/>
                 </sheet>
@@ -702,9 +702,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="account_id"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="tax_id"/>
                             </group>
                             <group>
                                 <field name="label"/>

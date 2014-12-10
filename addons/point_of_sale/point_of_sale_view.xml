@@ -496,7 +496,7 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="Product Product Categories">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -699,7 +699,7 @@
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                            <field name="receipt_footer" placeholder="A custom receipt footer message"/>
                         </group>
                         <group string="Barcode Types" col="1">
                             <p>

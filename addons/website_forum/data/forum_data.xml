@@ -19,6 +19,7 @@
         <record id="action_open_forum" model="ir.actions.act_url">
             <field name="name">Forum</field>
             <field name="target">self</field>
+            <!-- TODO in master : remove the tutorial or create one tutorial forum -->
             <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))+'/#tutorial.forum=true'"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">

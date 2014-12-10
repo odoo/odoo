@@ -96,7 +96,7 @@
                         </h1>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
-                            <label for="use_tasks"/>
+                            <label for="use_tasks" string="Use Tasks"/>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
@@ -114,7 +114,7 @@
                                     attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                     context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                             <newline/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
                         </group>
                             <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
                                 To invoice or setup invoicing and renewal options, go to the related contract:
@@ -168,7 +168,7 @@
                                         groups="project.group_time_work_estimation_tasks"/>
                             </group>
                             <group string="Miscellaneous" name="misc">
-                                <field name="date_start"/>
+                                <field name="date_start" string="Start Date"/>
                                 <field name="date" string="End Date"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>

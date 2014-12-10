@@ -138,7 +138,7 @@ class view(osv.osv):
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.text('View Architecture', required=True),
-        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
+        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
         'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
@@ -811,11 +811,11 @@ class view(osv.osv):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
         if node.tag in ('kanban'):
-            group_by_field = node.get('default_group_by')
-            if group_by_field and Model._all_columns.get(group_by_field):
-                group_by_column = Model._all_columns[group_by_field].column
-                if group_by_column._type == 'many2one':
-                    group_by_model = Model.pool.get(group_by_column._obj)
+            group_by_name = node.get('default_group_by')
+            if group_by_name in Model._fields:
+                group_by_field = Model._fields[group_by_name]
+                if group_by_field.type == 'many2one':
+                    group_by_model = Model.pool[group_by_field.comodel_name]
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
                         if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
                             node.set(action, 'false')
