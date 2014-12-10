@@ -58,7 +58,7 @@ def check_ssl():
     except:
         return False
 
-DEFAULT_LOG_HANDLER = [':INFO']
+DEFAULT_LOG_HANDLER = ':INFO'
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
@@ -189,7 +189,7 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=list(DEFAULT_LOG_HANDLER), my_default=list(DEFAULT_LOG_HANDLER), metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
@@ -402,14 +402,14 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_level', 'log_db',
                 'geoip_database',
         ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
             # action=append requiring a real default, so we cannot use the my_default workaround)
-            if getattr(opt, arg) and getattr(opt, arg) != DEFAULT_LOG_HANDLER:
+            if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
@@ -417,6 +417,7 @@ class configmanager(object):
 
         if isinstance(self.options['log_handler'], basestring):
             self.options['log_handler'] = self.options['log_handler'].split(',')
+        self.options['log_handler'].extend(opt.log_handler)
 
         # if defined but None take the configfile value
         keys = [
