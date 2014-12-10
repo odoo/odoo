@@ -1136,7 +1136,7 @@ class _String(Field):
     def get_terms(self, value):
         """ Return the sequence of terms to translate found in `value`. """
         if not callable(self.translate):
-            return [value]
+            return [value] if value else []
         terms = []
         self.translate(lambda t: terms.append(t) or t, value)
         return terms
