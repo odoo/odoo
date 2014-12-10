@@ -684,7 +684,7 @@ class account_bank_statement_line(models.Model):
                 del mv_line_dict['counterpart_move_line_id']
             new_aml_id = aml_obj.create(mv_line_dict)
             if counterpart_move_line_id is not None:
-                move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
+                move_line_pairs_to_reconcile.append([new_aml_id.id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
             aml_obj.browse(pair).reconcile(partial=True)

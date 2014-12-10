@@ -725,7 +725,6 @@ class account_move_line(models.Model):
             return self
 
         #Reconcile the pair together
-        import pdb;pdb.set_trace()
         amount_reconcile = sm_debit_move.amount_residual if sm_debit_move.amount_residual <= abs(sm_credit_move.amount_residual) else sm_credit_move.amount_residual
         self.env['account.partial.reconcile'].create({'source_move_id': sm_debit_move.id, 'rec_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
         (sm_debit_move + sm_credit_move).write({'partial_reconciled': True})
@@ -763,7 +762,6 @@ class account_move_line(models.Model):
         #the line from self and perform algo again, do that until we don't have any line remaining or 
         #until we can't find a pair of line to reconcile anymore.
         remaining_moves = self.auto_reconcile_lines()
-        import pdb;pdb.set_trace()
         #if partial == False, then create write-off move with value the remaining amount from move in self
         if not partial and remaining_moves:
             if not writeoff_acc_id:
