@@ -623,7 +623,7 @@ class configmanager(object):
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             elif opt == 'log_handler':
-                p.set('options', opt, ','.join(self.options[opt]))
+                p.set('options', opt, ','.join(deduplicate_loggers(self.options[opt])))
             else:
                 p.set('options', opt, self.options[opt])
 
@@ -685,6 +685,19 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
+
+def deduplicate_loggers(loggers):
+    """ Avoid saving multiple logging levels for the same loggers to a save
+    file, that just takes space and the list can potentially grow unbounded
+    if for some odd reason people use :option`odoo.py --save`` all the time.
+    """
+    # dict(iterable) -> the last item of iterable for any given key wins,
+    # which is what we want and expect. Output order should not matter as
+    # there are no duplicates within the output sequence
+    return (
+        '{}:{}'.format(logger, level)
+        for logger, level in dict(it.split(':') for it in loggers).iteritems()
+    )
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
