@@ -74,7 +74,7 @@ class crm_phonecall(models.Model):
                 "max_priority": self.opportunity_id._all_columns.get('priority').column.selection[-1][0]}
 
     @api.model
-    def get_list(self, current_search):
+    def get_list(self):
         return {"phonecalls": self.search([('in_queue','=',True),('user_id','=',self.env.user[0].id)], order='sequence,id').get_info()}
 
     @api.model
