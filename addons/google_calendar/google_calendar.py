@@ -494,7 +494,7 @@ class google_calendar(osv.AbstractModel):
 
         all_my_attendees = self.pool['calendar.attendee'].search(cr, uid, [('partner_id', '=', current_user.partner_id.id)], context=context)
         self.pool['calendar.attendee'].write(cr, uid, all_my_attendees, {'oe_synchro_date': False, 'google_internal_event_id': False}, context=context)
-        current_user.write(reset_data, context=context)
+        current_user.write(reset_data)
         return True
 
     def synchronize_events_cron(self, cr, uid, context=None):
@@ -552,7 +552,7 @@ class google_calendar(osv.AbstractModel):
                 lastSync = False
                 _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO FORCED" % user_to_sync)
         else:
-            current_user.write({'google_calendar_cal_id': current_google}, context=context)
+            current_user.write({'google_calendar_cal_id': current_google})
             lastSync = False
             _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO - NEW CAL ID" % user_to_sync)
 
@@ -562,7 +562,7 @@ class google_calendar(osv.AbstractModel):
 
         res = self.update_events(cr, uid, lastSync, context)
 
-        current_user.write({'google_calendar_last_sync_date': ask_time}, context=context)
+        current_user.write({'google_calendar_last_sync_date': ask_time})
         return {
             "status": res and "need_refresh" or "no_new_event_form_google",
             "url": ''
@@ -624,6 +624,8 @@ class google_calendar(osv.AbstractModel):
                 new_google_internal_event_id = False
                 source_event_record = ev_obj.browse(cr, uid, att.event_id.recurrent_id, context)
                 source_attendee_record_id = att_obj.search(cr, uid, [('partner_id', '=', myPartnerID), ('event_id', '=', source_event_record.id)], context=context)
+                if not source_attendee_record_id:
+                    continue
                 source_attendee_record = att_obj.browse(cr, uid, source_attendee_record_id, context)[0]
 
                 if att.event_id.recurrent_id_date and source_event_record.allday and source_attendee_record.google_internal_event_id:
@@ -818,7 +820,8 @@ class google_calendar(osv.AbstractModel):
                             res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
                         else:
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
+                            if parent_oe_id:
+                                calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':

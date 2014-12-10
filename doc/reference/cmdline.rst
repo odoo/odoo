@@ -54,6 +54,12 @@ Running the server
 
     runs tests after installing modules
 
+.. option:: --debug
+
+    when an unexpected error is raised (not a warning or an access error),
+    automatically starts :mod:`python:pdb` before logging and returning the
+    error
+
 .. _reference/cmdline/scaffold:
 
 Scaffolding
@@ -71,7 +77,7 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 .. option:: -t <template>
 
     a template directory, files are passed through jinja2_ then copied to
-    the :option:`destination` directory
+    the ``destination`` directory
 
 .. option:: name
 

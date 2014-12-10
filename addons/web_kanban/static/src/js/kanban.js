@@ -274,12 +274,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 return false;
             }
             self.nb_records = 0;
-            var remaining = groups.length - 1,
-                groups_array = [];
+            var groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
                 var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
+                if (self.dataset._sort) {
+                    dataset.set_sort(self.dataset._sort);
+                }
                 if (group.attributes.length >= 1) {
                     def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
                 }
@@ -287,17 +289,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (self.dataset.index >= records.length){
-                            self.dataset.index = self.dataset.size() ? 0 : null;
-                        }
-                        if (!remaining--) {
-                            return self.do_add_groups(groups_array);
-                        }
                 });
             })).then(function () {
                 if(!self.nb_records) {
                     self.no_result();
                 }
+                if (self.dataset.index >= self.nb_records){
+                    self.dataset.index = self.dataset.size() ? 0 : null;
+                }
+                return self.do_add_groups(groups_array);
             });
         });
     },

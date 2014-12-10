@@ -68,7 +68,7 @@ class hr_attendance(osv.osv):
                     last_signin_datetime = datetime.strptime(last_signin.name, '%Y-%m-%d %H:%M:%S')
                     signout_datetime = datetime.strptime(obj.name, '%Y-%m-%d %H:%M:%S')
                     workedhours_datetime = (signout_datetime - last_signin_datetime)
-                    res[obj.id] = ((workedhours_datetime.seconds) / 60) / 60
+                    res[obj.id] = ((workedhours_datetime.seconds) / 60) / 60.0
                 else:
                     res[obj.id] = False
         return res

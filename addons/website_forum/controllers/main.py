@@ -170,9 +170,18 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
-    def tag_read(self, **post):
-        tags = request.registry['forum.tag'].search_read(request.cr, request.uid, [], ['name'], context=request.context)
-        data = [tag['name'] for tag in tags]
+    def tag_read(self, q='', l=25, t='texttext', **post):
+        data = request.registry['forum.tag'].search_read(
+            request.cr,
+            request.uid,
+            domain=[('name', '=ilike', (q or '') + "%")],
+            fields=['id', 'name'],
+            limit=int(l),
+            context=request.context
+        )
+        if t == 'texttext':
+            # old tag with texttext - Retro for V8 - #TODO Remove in master
+            data = [tag['name'] for tag in data]
         return simplejson.dumps(data)
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
@@ -195,29 +204,35 @@ class WebsiteForum(http.Controller):
     def question_ask(self, forum, **post):
         if not request.session.uid:
             return login_redirect()
-        values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
+        values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
         return request.website.render("website_forum.ask_question", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/new', type='http', auth="user", methods=['POST'], website=True)
     def question_create(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
         question_tag_ids = []
-        if post.get('question_tags').strip('[]'):
-            tags = post.get('question_tags').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-                if tag_ids:
-                    question_tag_ids.append((4, tag_ids[0]))
-                else:
-                    question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+        tag_version = post.get('tag_type', 'texttext')
+        if tag_version == "texttext":  # TODO Remove in master
+            if post.get('question_tags').strip('[]'):
+                tags = post.get('question_tags').strip('[]').replace('"', '').split(",")
+                for tag in tags:
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                    if tag_ids:
+                        question_tag_ids.append((4, tag_ids[0]))
+                    else:
+                        question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+                question_tag_ids = {forum.id: question_tag_ids}
+        elif tag_version == "select2":
+            question_tag_ids = Forum._tag_to_write_vals(cr, uid, [forum.id], post.get('question_tags', ''), context)
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
                 'name': post.get('question_name'),
                 'content': post.get('content'),
-                'tag_ids': question_tag_ids,
+                'tag_ids': question_tag_ids[forum.id],
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
@@ -286,7 +301,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
-        request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'state': 'active'}, context=request.context)
+        request.registry['forum.post'].reopen(request.cr, request.uid, [question.id], context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
@@ -357,10 +372,16 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
-        tags = ""
-        for tag_name in post.tag_ids:
-            tags += tag_name.name + ","
+        tag_version = kwargs.get('tag_type', 'texttext')
+        if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
+            tags = ""
+            for tag_name in post.tag_ids:
+                tags += tag_name.name + ","
+        elif tag_version == "select2":  # new version
+            tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
+            tags = simplejson.dumps(tags)
         values = self._prepare_forum_values(forum=forum)
+
         values.update({
             'tags': tags,
             'post': post,
@@ -369,25 +390,39 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.edit_post", values)
 
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edition', type='http', auth="user", website=True)
+    def post_edit_retro(self, forum, post, **kwargs):
+        # This function is only there for retrocompatibility between old template using texttext and template using select2
+        # It should be removed into master  #TODO JKE: remove in master all condition with tag_type
+        kwargs.update(tag_type="select2")
+        return self.post_edit(forum, post, **kwargs)
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         question_tags = []
-        if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
-            Tag = request.registry['forum.tag']
-            tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-                if tag_ids:
-                    question_tags += tag_ids
-                else:
-                    new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
-                    question_tags.append(new_tag)
+        Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
+        tag_version = kwargs.get('tag_type', 'texttext')
+        
         vals = {
-            'tag_ids': [(6, 0, question_tags)],
             'name': kwargs.get('question_name'),
             'content': kwargs.get('content'),
         }
+        if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
+            if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
+                tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
+                for tag in tags:
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                    if tag_ids:
+                        question_tags += tag_ids
+                    else:
+                        new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
+                        question_tags.append(new_tag)
+                vals['tag_ids'] = [(6, 0, question_tags)]
+        elif tag_version == "select2":  # new version
+            vals['tag_ids'] = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)[forum.id]
+
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
@@ -472,18 +507,27 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or user.karma < 1:
+        current_user = User.browse(cr, SUPERUSER_ID, uid, context=context)
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user.exists() or
+               (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search(cr, uid, [
                 ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_questions = len(user_question_ids)
+
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
         # displaying only the 20 most recent questions
         user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
 

@@ -301,7 +301,7 @@
                                 <group>
                                     <field name="user_id" 
                                         context="{'default_groups_ref': ['base.group_partner_manager']}"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="customer"/>
@@ -455,7 +455,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('customer','=',1)]</field>
+            <field name="domain">[]</field>
             <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">

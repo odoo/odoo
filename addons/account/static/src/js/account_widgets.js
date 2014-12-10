@@ -120,6 +120,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
+                        domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
                     },
                 },
             };
@@ -278,12 +279,15 @@ openerp.account = function (instance) {
             if (! self.single_statement) return;
             var name = self.$(".change_statement_name_field").val();
             if (name === "") return;
+            self.$(".change_statement_name_button").attr("disabled", "disabled");
             return self.model_bank_statement
                 .call("write", [[self.statement_ids[0]], {'name': name}])
-                .then(function () {
+                .done(function () {
                     self.title = name;
                     self.$(".statement_name span").text(name).show();
                     self.$(".change_statement_name_container").hide();
+                }).always(function() {
+                    self.$(".change_statement_name_button").removeAttr("disabled");
                 });
         },
     
@@ -1173,7 +1177,7 @@ openerp.account = function (instance) {
             var self = this;
             $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_matched_lines").empty();
-    
+
             _(self.get("mv_lines_selected")).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: true}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1190,7 +1194,7 @@ openerp.account = function (instance) {
     
             _(self.getCreatedLines()).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_created_line", {line: line}));
-                $line.find(".line_remove_button").click(function(){ self.removeLine($(this).closest(".created_line")) });
+                $line.click(function(){ self.removeLine($(this)) });
                 self.$(".tbody_created_lines").append($line);
                 if (line.no_remove_action) {
                     // Then the previous line's remove button deletes this line too
@@ -1531,7 +1535,8 @@ openerp.account = function (instance) {
             self.set("balance", balance);
     
             // Propose partial reconciliation if necessary
-            if (lines_selected_num === 1 &&
+            if (self.getCreatedLines().length === 0 &&
+                lines_selected_num === 1 &&
                 self.st_line.amount * balance > 0 &&
                 self.st_line.amount * (mv_lines_selected[0].debit - mv_lines_selected[0].credit) < 0 &&
                 ! mv_lines_selected[0].partial_reconcile) {
@@ -1660,9 +1665,10 @@ openerp.account = function (instance) {
             var deferred_animation = self.$el.parent().slideUp(speed*height/150);
     
             // RPC
+            self.$(".button_ok").attr("disabled", "disabled");
             return self.model_bank_statement_line
                 .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
-                .then(function () {
+                .done(function () {
                     self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
                     $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                     return $.when(deferred_animation).then(function(){
@@ -1672,10 +1678,12 @@ openerp.account = function (instance) {
                             parent.childValidated(self);
                         });
                     });
-                }, function(){
+                }).fail(function(){
                     self.$el.parent().slideDown(speed*height/150, function(){
                         self.$el.unwrap();
                     });
+                }).always(function() {
+                    self.$(".button_ok").removeAttr("disabled");
                 });
         },
     });

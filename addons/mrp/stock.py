@@ -76,9 +76,6 @@ class StockMove(osv.osv):
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
             
-            state = 'confirmed'
-            if move.state == 'assigned':
-                state = 'assigned'
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type != 'service':
@@ -89,7 +86,7 @@ class StockMove(osv.osv):
                         'product_uom_qty': line['product_qty'],
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
-                        'state': state,
+                        'state': 'draft',  #will be confirmed below
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
@@ -129,6 +126,10 @@ class StockMove(osv.osv):
                 moves = move.procurement_id.move_ids
                 if len(moves) == 1:
                     proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
+
+            if processed_ids and move.state == 'assigned':
+                # Set the state of resulting moves according to 'assigned' as the original move is assigned
+                move_obj.write(cr, uid, list(set(processed_ids) - set([move.id])), {'state': 'assigned'}, context=context)
                 
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
@@ -240,6 +241,10 @@ class stock_warehouse(osv.osv):
         'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse', 
                                                   help="When products are manufactured, they can be manufactured in this warehouse."),
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
+    }
+
+    _defaults = {
+        'manufacture_to_resupply': True,
     }
 
     def _get_manufacture_pull_rule(self, cr, uid, warehouse, context=None):

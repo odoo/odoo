@@ -334,6 +334,11 @@ class mrp_bom(osv.osv):
             res['value'].update({'product_uom': product.uom_id.id})
         return res
 
+    def unlink(self, cr, uid, ids, context=None):
+        if self.pool['mrp.production'].search(cr, uid, [('bom_id', 'in', ids), ('state', 'not in', ['done', 'cancel'])], context=context):
+            raise osv.except_osv(_('Warning!'), _('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
+        return super(mrp_bom, self).unlink(cr, uid, ids, context=context)
+
     def onchange_product_tmpl_id(self, cr, uid, ids, product_tmpl_id, product_qty=0, context=None):
         """ Changes UoM and name if product_id changes.
         @param product_id: Changed product_id
@@ -1036,7 +1041,8 @@ class mrp_production(osv.osv):
         source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         procs = proc_obj.search(cr, uid, [('production_id', '=', production.id)], context=context)
-        procurement_id = procs and procs[0] or False
+        procurement = procs and\
+            proc_obj.browse(cr, uid, procs[0], context=context) or False
         data = {
             'name': production.name,
             'date': production.date_planned,
@@ -1048,10 +1054,11 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
-            'procurement_id': procurement_id,
+            'procurement_id': procurement and procurement.id,
             'company_id': production.company_id.id,
             'production_id': production.id,
             'origin': production.name,
+            'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
         #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
@@ -1136,6 +1143,7 @@ class mrp_production(osv.osv):
             'price_unit': product.standard_price,
             'origin': production.name,
             'warehouse_id': loc_obj.get_warehouse(cr, uid, production.location_src_id, context=context),
+            'group_id': production.move_prod_id.group_id.id,
         }, context=context)
         
         if prev_move:
@@ -1184,7 +1192,7 @@ class mrp_production(osv.osv):
                     self._make_service_procurement(cr, uid, line, context=context)
             if stock_moves:
                 self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
-            production.write({'state': 'confirmed'}, context=context)
+            production.write({'state': 'confirmed'})
         return 0
 
     def action_assign(self, cr, uid, ids, context=None):

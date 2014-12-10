@@ -484,7 +484,7 @@ function openerp_picking_widgets(instance){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);
                         self.pickings_by_id[picking.id] = picking;
-                        self.picking_search_string += '' + picking.id + ':' + picking.name.toUpperCase() + '\n'
+                        self.picking_search_string += '' + picking.id + ':' + (picking.name ? picking.name.toUpperCase(): '') + '\n';
                     }
 
                 });
@@ -878,7 +878,8 @@ function openerp_picking_widgets(instance){
             if (pack_op_ids.length !== 0){
                 return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
-                    .then(function(){
+                    .then(function(pack){
+                        //TODO: the functionality using current_package_id in context is not needed anymore
                         instance.session.user_context.current_package_id = false;
                         return self.refresh_ui(self.picking.id);
                     });

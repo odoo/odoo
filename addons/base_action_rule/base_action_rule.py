@@ -131,9 +131,9 @@ class base_action_rule(osv.osv):
 
         # modify records
         values = {}
-        if 'date_action_last' in model._all_columns:
+        if 'date_action_last' in model._fields:
             values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if action.act_user_id and 'user_id' in model._all_columns:
+        if action.act_user_id and 'user_id' in model._fields:
             values['user_id'] = action.act_user_id.id
         if values:
             model.write(cr, uid, record_ids, values, context=context)
@@ -230,8 +230,8 @@ class base_action_rule(osv.osv):
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            model_obj = self.pool[model]
-            if not hasattr(model_obj, 'base_action_ruled'):
+            model_obj = self.pool.get(model)
+            if model_obj and not hasattr(model_obj, 'base_action_ruled'):
                 # monkey-patch methods create and write
                 model_obj._patch_method('create', make_create())
                 model_obj._patch_method('write', make_write())
@@ -320,7 +320,7 @@ class base_action_rule(osv.osv):
 
             # determine when action should occur for the records
             date_field = action.trg_date_id.name
-            if date_field == 'date_action_last' and 'create_date' in model._all_columns:
+            if date_field == 'date_action_last' and 'create_date' in model._fields:
                 get_record_dt = lambda record: record[date_field] or record.create_date
             else:
                 get_record_dt = lambda record: record[date_field]

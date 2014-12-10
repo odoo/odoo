@@ -245,7 +245,7 @@ class im_chat_presence(osv.Model):
     _name = 'im_chat.presence'
 
     _columns = {
-        'user_id' : fields.many2one('res.users', 'Users', required=True, select=True),
+        'user_id' : fields.many2one('res.users', 'Users', required=True, select=True, ondelete="cascade"),
         'last_poll': fields.datetime('Last Poll'),
         'last_presence': fields.datetime('Last Presence'),
         'status' : fields.selection([('online','Online'), ('away','Away'), ('offline','Offline')], 'IM Status'),

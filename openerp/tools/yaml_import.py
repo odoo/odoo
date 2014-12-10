@@ -482,15 +482,15 @@ class YamlInterpreter(object):
             record_dict[field_name] = field_value
         return record_dict
 
-    def process_ref(self, node, column=None):
+    def process_ref(self, node, field=None):
         assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
         if node.search:
             if node.model:
                 model_name = node.model
-            elif column:
-                model_name = column._obj
+            elif field:
+                model_name = field.comodel_name
             else:
-                raise YamlImportException('You need to give a model for the search, or a column to infer it.')
+                raise YamlImportException('You need to give a model for the search, or a field to infer it.')
             model = self.get_model(model_name)
             q = eval(node.search, self.eval_context)
             ids = model.search(self.cr, self.uid, q)
@@ -510,34 +510,32 @@ class YamlInterpreter(object):
 
     def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
-        if field_name in model._columns:
-            column = model._columns[field_name]
-        elif field_name in model._inherit_fields:
-            column = model._inherit_fields[field_name][2]
-        else:
+        if field_name not in model._fields:
             raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
+        field = model._fields[field_name]
+
         if is_ref(expression):
-            elements = self.process_ref(expression, column)
-            if column._type in ("many2many", "one2many"):
+            elements = self.process_ref(expression, field)
+            if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
             else: # many2one
                 if isinstance(elements, (list,tuple)):
                     value = self._get_first_result(elements)
                 else:
                     value = elements
-        elif column._type == "many2one":
+        elif field.type == "many2one":
             value = self.get_id(expression)
-        elif column._type == "one2many":
-            other_model = self.get_model(column._obj)
+        elif field.type == "one2many":
+            other_model = self.get_model(field.comodel_name)
             value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
-        elif column._type == "many2many":
+        elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
-        elif column._type == "date" and is_string(expression):
+        elif field.type == "date" and is_string(expression):
             # enforce ISO format for string date values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
             value = expression
-        elif column._type == "datetime" and is_string(expression):
+        elif field.type == "datetime" and is_string(expression):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
@@ -546,7 +544,7 @@ class YamlInterpreter(object):
                 value = self.process_eval(expression)
             else:
                 value = expression
-            # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
+            # raise YamlImportException('Unsupported field "%s" or value %s:%s' % (field_name, type(expression), expression))
         return value
 
     def process_context(self, node):

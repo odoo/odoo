@@ -32,10 +32,10 @@ import tarfile
 import tempfile
 import threading
 from babel.messages import extract
-from os.path import join
-
+from collections import defaultdict
 from datetime import datetime
 from lxml import etree
+from os.path import join
 
 import config
 import misc
@@ -57,7 +57,7 @@ _LOCALE2WIN32 = {
     'ar_SA': 'Arabic_Saudi Arabia',
     'eu_ES': 'Basque_Spain',
     'be_BY': 'Belarusian_Belarus',
-    'bs_BA': 'Serbian (Latin)',
+    'bs_BA': 'Bosnian_Bosnia and Herzegovina',
     'bg_BG': 'Bulgarian_Bulgaria',
     'ca_ES': 'Catalan_Spain',
     'hr_HR': 'Croatian_Croatia',
@@ -137,6 +137,9 @@ _LOCALE2WIN32 = {
 
 }
 
+# These are not all english small words, just those that could potentially be isolated within views
+ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
+
 
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
@@ -195,26 +198,31 @@ class GettextAlias(object):
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
         # self.env.lang, self.localcontext.get('lang')
-        if 'context' in frame.f_locals:
-            return frame.f_locals['context'].get('lang')
-        kwargs = frame.f_locals.get('kwargs', {})
-        if 'context' in kwargs:
-            return kwargs['context'].get('lang')
-        s = frame.f_locals.get('self')
-        if hasattr(s, 'env'):
-            return s.env.lang
-        if hasattr(s, 'localcontext'):
-            return s.localcontext.get('lang')
-        # Last resort: attempt to guess the language of the user
-        # Pitfall: some operations are performed in sudo mode, and we
-        #          don't know the originial uid, so the language may
-        #          be wrong when the admin language differs.
-        pool = getattr(s, 'pool', None)
-        (cr, dummy) = self._get_cr(frame, allow_create=False)
-        uid = self._get_uid(frame)
-        if pool and cr and uid:
-            return pool['res.users'].context_get(cr, uid)['lang']
-        return None
+        lang = None
+        if frame.f_locals.get('context'):
+            lang = frame.f_locals['context'].get('lang')
+        if not lang:
+            kwargs = frame.f_locals.get('kwargs', {})
+            if kwargs.get('context'):
+                lang = kwargs['context'].get('lang')
+        if not lang:
+            s = frame.f_locals.get('self')
+            if hasattr(s, 'env'):
+                lang = s.env.lang
+            if not lang:
+                if hasattr(s, 'localcontext'):
+                    lang = s.localcontext.get('lang')
+            if not lang:
+                # Last resort: attempt to guess the language of the user
+                # Pitfall: some operations are performed in sudo mode, and we
+                #          don't know the originial uid, so the language may
+                #          be wrong when the admin language differs.
+                pool = getattr(s, 'pool', None)
+                (cr, dummy) = self._get_cr(frame, allow_create=False)
+                uid = self._get_uid(frame)
+                if pool and cr and uid:
+                    lang = pool['res.users'].context_get(cr, uid)['lang']
+        return lang
 
     def __call__(self, source):
         res = source
@@ -500,13 +508,8 @@ def trans_export(lang, modules, buffer, format, cr):
             raise Exception(_('Unrecognized extension: must be one of '
                 '.csv, .po, or .tgz (received .%s).' % format))
 
-    trans_lang = lang
-    if not trans_lang and format == 'csv':
-        # CSV files are meant for translators and they need a starting point,
-        # so we at least put the original term in the translation column
-        trans_lang = 'en_US'
     translations = trans_generate(lang, modules, cr)
-    modules = set([t[0] for t in translations[1:]])
+    modules = set(t[0] for t in translations)
     _process(format, modules, translations, buffer, lang)
     del translations
 
@@ -561,18 +564,17 @@ def trans_parse_view(element, callback):
         :param callable callback: a callable in the form ``f(term, source_line)``,
             that will be called for each extracted term.
     """
-    if (not isinstance(element, SKIPPED_ELEMENT_TYPES)
-            and element.tag.lower() not in SKIPPED_ELEMENTS
-            and element.text):
-        _push(callback, element.text, element.sourceline)
-    if element.tail:
-        _push(callback, element.tail, element.sourceline)
-    for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
-        value = element.get(attr)
-        if value:
-            _push(callback, value, element.sourceline)
-    for n in element:
-        trans_parse_view(n, callback)
+    for el in element.iter():
+        if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
+                and el.tag.lower() not in SKIPPED_ELEMENTS
+                and el.text):
+            _push(callback, el.text, el.sourceline)
+        if el.tail:
+            _push(callback, el.tail, el.sourceline)
+        for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+            value = el.get(attr)
+            if value:
+                _push(callback, value, el.sourceline)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -593,9 +595,9 @@ def _extract_translatable_qweb_terms(element, callback):
         a QWeb template, and call ``callback(term)`` for each
         translatable term that is found in the document.
 
-        :param ElementTree element: root of etree document to extract terms from
-        :param callable callback: a callable in the form ``f(term, source_line)``,
-            that will be called for each extracted term.
+        :param etree._Element element: root of etree document to extract terms from
+        :param Callable callback: a callable in the form ``f(term, source_line)``,
+                                  that will be called for each extracted term.
     """
     # not using elementTree.iterparse because we need to skip sub-trees in case
     # the ancestor element had a reason to be skipped
@@ -604,8 +606,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
                 and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
-                and not ("t-translation" in el.attrib and
-                         el.attrib["t-translation"].strip() == "off")):
+                and el.get("t-translation", '').strip() != "off"):
             _push(callback, el.text, el.sourceline)
             for att in ('title', 'alt', 'label', 'placeholder'):
                 if att in el.attrib:
@@ -615,6 +616,7 @@ def _extract_translatable_qweb_terms(element, callback):
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """Babel message extractor for qweb template files.
+
     :param fileobj: the file-like object the messages should be extracted from
     :param keywords: a list of keywords (i.e. function names) that should
                      be recognized as translation functions
@@ -623,7 +625,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     :param options: a dictionary of additional options (optional)
     :return: an iterator over ``(lineno, funcname, message, comments)``
              tuples
-    :rtype: ``iterator``
+    :rtype: Iterable
     """
     result = []
     def handle_text(text, lineno):
@@ -636,13 +638,11 @@ def trans_generate(lang, modules, cr):
     dbname = cr.dbname
 
     registry = openerp.registry(dbname)
-    trans_obj = registry.get('ir.translation')
-    model_data_obj = registry.get('ir.model.data')
+    trans_obj = registry['ir.translation']
+    model_data_obj = registry['ir.model.data']
     uid = 1
-    l = registry.models.items()
-    l.sort()
 
-    query = 'SELECT name, model, res_id, module'    \
+    query = 'SELECT name, model, res_id, module' \
             '  FROM ir_model_data'
 
     query_models = """SELECT m.id, m.model, imd.module
@@ -662,15 +662,15 @@ def trans_generate(lang, modules, cr):
 
     cr.execute(query, query_param)
 
-    _to_translate = []
+    _to_translate = set()
     def push_translation(module, type, name, id, source, comments=None):
-        tuple = (module, source, name, id, type, comments or [])
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         if not source or len(source.strip()) <= 1:
             return
-        if tuple not in _to_translate:
-            _to_translate.append(tuple)
+
+        tnx = (module, source, name, id, type, tuple(comments or ()))
+        _to_translate.add(tnx)
 
     def encode(s):
         if isinstance(s, unicode):
@@ -679,7 +679,7 @@ def trans_generate(lang, modules, cr):
 
     def push(mod, type, name, res_id, term):
         term = (term or '').strip()
-        if len(term) > 2:
+        if len(term) > 2 or term in ENGLISH_SMALL_WORDS:
             push_translation(mod, type, name, res_id, term)
 
     def get_root_view(xml_id):
@@ -699,15 +699,15 @@ def trans_generate(lang, modules, cr):
             _logger.error("Unable to find object %r", model)
             continue
 
-        if not registry[model]._translate:
+        Model = registry[model]
+        if not Model._translate:
             # explicitly disabled
             continue
 
-        exists = registry[model].exists(cr, uid, res_id)
-        if not exists:
+        obj = Model.browse(cr, uid, res_id)
+        if not obj.exists():
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
-        obj = registry[model].browse(cr, uid, res_id)
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
@@ -825,9 +825,9 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-    modobj = registry['ir.module.module']
-    installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
-    installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
+    installed_modules = map(
+        lambda m: m['name'],
+        registry['ir.module.module'].search_read(cr, uid, [('state', '=', 'installed')], fields=['name']))
 
     path_list = list(openerp.modules.module.ad_paths)
     # Also scan these non-addon paths
@@ -836,14 +836,12 @@ def trans_generate(lang, modules, cr):
 
     _logger.debug("Scanning modules at paths: %s", path_list)
 
-    mod_paths = list(path_list)
-
     def get_module_from_path(path):
-        for mp in mod_paths:
-            if path.startswith(mp) and (os.path.dirname(path) != mp):
+        for mp in path_list:
+            if path.startswith(mp) and os.path.dirname(path) != mp:
                 path = path[len(mp)+1:]
                 return path.split(os.path.sep)[0]
-        return 'base'   # files that are not in a module are considered as being in 'base' module
+        return 'base' # files that are not in a module are considered as being in 'base' module
 
     def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
@@ -858,20 +856,20 @@ def trans_generate(lang, modules, cr):
                                extra_comments=None, extract_keywords={'_': None}):
         module, fabsolutepath, _, display_path = verified_module_filepaths(fname, path, root)
         extra_comments = extra_comments or []
-        if module:
-            src_file = open(fabsolutepath, 'r')
-            try:
-                for extracted in extract.extract(extract_method, src_file,
-                                                 keywords=extract_keywords):
-                    # Babel 0.9.6 yields lineno, message, comments
-                    # Babel 1.3 yields lineno, message, comments, context
-                    lineno, message, comments = extracted[:3] 
-                    push_translation(module, trans_type, display_path, lineno,
-                                     encode(message), comments + extra_comments)
-            except Exception:
-                _logger.exception("Failed to extract terms from %s", fabsolutepath)
-            finally:
-                src_file.close()
+        if not module: return
+        src_file = open(fabsolutepath, 'r')
+        try:
+            for extracted in extract.extract(extract_method, src_file,
+                                             keywords=extract_keywords):
+                # Babel 0.9.6 yields lineno, message, comments
+                # Babel 1.3 yields lineno, message, comments, context
+                lineno, message, comments = extracted[:3]
+                push_translation(module, trans_type, display_path, lineno,
+                                 encode(message), comments + extra_comments)
+        except Exception:
+            _logger.exception("Failed to extract terms from %s", fabsolutepath)
+        finally:
+            src_file.close()
 
     for path in path_list:
         _logger.debug("Scanning files of modules at %s", path)
@@ -894,11 +892,10 @@ def trans_generate(lang, modules, cr):
                                         extra_comments=[WEB_TRANSLATION_COMMENT])
 
     out = []
-    _to_translate.sort()
     # translate strings marked as to be translated
-    for module, source, name, id, type, comments in _to_translate:
+    for module, source, name, id, type, comments in sorted(_to_translate):
         trans = '' if not lang else trans_obj._get_source(cr, uid, name, type, lang, source)
-        out.append([module, type, name, id, source, encode(trans) or '', comments])
+        out.append((module, type, name, id, source, encode(trans) or '', comments))
     return out
 
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
@@ -943,11 +940,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             reader = csv.reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
             for row in reader:
-                f = row
+                fields = row
                 break
         elif fileformat == 'po':
             reader = TinyPoFile(fileobj)
-            f = ['type', 'name', 'res_id', 'src', 'value', 'comments']
+            fields = ['type', 'name', 'res_id', 'src', 'value', 'comments']
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
@@ -956,10 +953,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
-                    head, _ = os.path.split(fileobj.name)
-                    head2, _ = os.path.split(head)
-                    head3, tail3 = os.path.split(head2)
-                    pot_handle = misc.file_open(os.path.join(head3, tail3, 'i18n', tail3 + '.pot'))
+                    addons_module_i18n, _ = os.path.split(fileobj.name)
+                    addons_module, _ = os.path.split(addons_module_i18n)
+                    addons, module = os.path.split(addons_module)
+                    pot_handle = misc.file_open(os.path.join(addons, module, 'i18n', module + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass
@@ -968,59 +965,57 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
-        # Read the POT `reference` comments, and keep them indexed by source
-        # string.
-        pot_targets = {}
+        # Read the POT references, and keep them indexed by source string.
+        class Target(object):
+            def __init__(self):
+                self.value = None
+                self.targets = set()            # set of (type, name, res_id)
+                self.comments = None
+
+        pot_targets = defaultdict(Target)
         for type, name, res_id, src, _, comments in pot_reader:
             if type is not None:
-                pot_targets.setdefault(src, {'value': None, 'targets': []})
-                pot_targets[src]['targets'].append((type, name, res_id))
+                target = pot_targets[src]
+                target.targets.add((type, name, res_id))
+                target.comments = comments
 
         # read the rest of the file
         irt_cursor = trans_obj._get_import_cursor(cr, SUPERUSER_ID, context=context)
 
         def process_row(row):
             """Process a single PO (or POT) entry."""
-            # skip empty rows and rows where the translation field (=last fiefd) is empty
-            #if (not row) or (not row[-1]):
-            #    return
-
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
             #  'src': ..., 'value': ..., 'module':...}
-            dic = dict.fromkeys(('name', 'res_id', 'src', 'type', 'imd_model', 'imd_name', 'module', 'value', 'comments'))
+            dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
+                                 'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            for i, field in enumerate(f):
-                dic[field] = row[i]
+            dic.update(zip(fields, row))
 
-            # Get the `reference` comments from the POT.
-            src = row[3]
-            if pot_reader and src in pot_targets:
-                pot_targets[src]['targets'] = filter(lambda x: x != row[:3], pot_targets[src]['targets'])
-                pot_targets[src]['value'] = row[4]
-                if not pot_targets[src]['targets']:
-                    del pot_targets[src]
+            # discard the target from the POT targets.
+            src = dic['src']
+            if src in pot_targets:
+                target = pot_targets[src]
+                target.value = dic['value']
+                target.targets.discard((dic['type'], dic['name'], dic['res_id']))
 
             # This would skip terms that fail to specify a res_id
-            if not dic.get('res_id'):
+            res_id = dic['res_id']
+            if not res_id:
                 return
 
-            res_id = dic.pop('res_id')
-            if res_id and isinstance(res_id, (int, long)) \
-                or (isinstance(res_id, basestring) and res_id.isdigit()):
-                    dic['res_id'] = int(res_id)
-                    dic['module'] = module_name
+            if isinstance(res_id, (int, long)) or \
+                    (isinstance(res_id, basestring) and res_id.isdigit()):
+                dic['res_id'] = int(res_id)
+                dic['module'] = module_name
             else:
-                tmodel = dic['name'].split(',')[0]
-                if '.' in res_id:
-                    tmodule, tname = res_id.split('.', 1)
-                else:
-                    tmodule = False
-                    tname = res_id
-                dic['imd_model'] = tmodel
-                dic['imd_name'] =  tname
-                dic['module'] = tmodule
+                # res_id is an xml id
                 dic['res_id'] = None
+                dic['imd_model'] = dic['name'].split(',')[0]
+                if '.' in res_id:
+                    dic['module'], dic['imd_name'] = res_id.split('.', 1)
+                else:
+                    dic['module'], dic['imd_name'] = False, res_id
 
             irt_cursor.push(dic)
 
@@ -1032,10 +1027,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src in pot_targets:
-            value = pot_targets[src]['value']
-            for type, name, res_id in pot_targets[src]['targets']:
-                pot_rows.append((type, name, res_id, src, value, comments))
+        for src, target in pot_targets.iteritems():
+            if target.value:
+                for type, name, res_id in target.targets:
+                    pot_rows.append((type, name, res_id, src, target.value, target.comments))
+        pot_targets.clear()
         for row in pot_rows:
             process_row(row)
 
@@ -1043,6 +1039,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         trans_obj.clear_caches()
         if verbose:
             _logger.info("translation file loaded succesfully")
+
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         _logger.exception("couldn't read translation file %s", filename)
