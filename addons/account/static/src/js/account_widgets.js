@@ -81,7 +81,7 @@ openerp.account = function (instance) {
                         relation: "account.account",
                         string: _t("Account"),
                         type: "many2one",
-                        domain: [['deprecated', '=', false], ['type','!=','consolidation']],
+                        domain: [['deprecated', '=', false], ['user_type.type', '!=', 'consolidation']],
                     },
                 },
                 label: {
