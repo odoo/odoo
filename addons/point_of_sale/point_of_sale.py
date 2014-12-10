@@ -94,12 +94,6 @@ class pos_config(osv.osv):
         'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
     }
 
-    def _check_cash_control(self, cr, uid, ids, context=None):
-        return all(
-            (sum(int(journal.cash_control) for journal in record.journal_ids) <= 1)
-            for record in self.browse(cr, uid, ids, context=context)
-        )
-
     def _check_company_location(self, cr, uid, ids, context=None):
         for config in self.browse(cr, uid, ids, context=context):
             if config.stock_location_id.company_id and config.stock_location_id.company_id.id != config.company_id.id:
@@ -123,7 +117,6 @@ class pos_config(osv.osv):
         return True
 
     _constraints = [
-        (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
         (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
         (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
         (_check_company_payment, "The company of a payment method is different than the one of point of sale", ['company_id', 'journal_ids']),
@@ -247,11 +240,12 @@ class pos_session(osv.osv):
                 'cash_register_id' : False,
                 'cash_control' : False,
             }
-            for st in record.statement_ids:
-                if st.journal_id.cash_control == True:
-                    result[record.id]['cash_control'] = True
-                    result[record.id]['cash_journal_id'] = st.journal_id.id
-                    result[record.id]['cash_register_id'] = st.id
+            # TODO: cash_control field is removed.
+            # for st in record.statement_ids:
+            #     if st.journal_id.cash_control == True:
+            #         result[record.id]['cash_control'] = True
+            #         result[record.id]['cash_journal_id'] = st.journal_id.id
+            #         result[record.id]['cash_register_id'] = st.id
 
         return result
 
@@ -1068,7 +1062,7 @@ class pos_order(osv.osv):
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'date' : fields.Date.context_today,
+                    'date' : fields.date.context_today,
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })

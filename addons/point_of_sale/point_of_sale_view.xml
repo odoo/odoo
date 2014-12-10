@@ -678,7 +678,6 @@
                                 <field name="code" />
                                 <field name="name" />
                                 <field name="type" />
-                                <field name="cash_control" />
                             </tree>
                         </field>
                         <group string="Features" >
@@ -845,8 +844,7 @@
                             <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '!=', 'opening_control')]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
+                                        <field name="number_opening"/>
                                         <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                     </tree>
                                 </field>
@@ -854,8 +852,7 @@
                             <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
                                 <field name="details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', '=', 'closed')]}">
                                     <tree string="Cashbox Lines" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
+                                        <field name="number_closing"/>
                                         <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                     </tree>
                                 </field>

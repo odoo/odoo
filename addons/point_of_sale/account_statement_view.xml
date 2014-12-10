@@ -58,29 +58,29 @@
         <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Register</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.bank.statement</field>
+            <field name="res_model">account.cash.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="account.view_bank_statement_form2"/>
-            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="view_id" ref="account.view_cash_statement_form"/>
+            <field name="search_view_id" ref="account.view_account_cash_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="5"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="view_id" ref="account.view_cash_statement_tree"/>
             <field name="act_window_id" ref="action_new_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
             <field name="sequence" eval="0"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="view_id" ref="account.view_cash_statement_form"/>
             <field name="act_window_id" ref="action_new_bank_statement_tree"/>
         </record>
 
         <record id="view_cash_statement_pos_tree" model="ir.ui.view">
-            <field name="name">account.bank.statement.tree</field>
-            <field name="model">account.bank.statement</field>
+            <field name="name">account.cash.statement.tree</field>
+            <field name="model">account.cash.statement</field>
             <field name="inherit_id" ref="account.view_cash_statement_tree"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
@@ -92,11 +92,11 @@
         <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
             <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.bank.statement</field>
+            <field name="res_model">account.cash.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="account.view_bank_statement_form2"/>
-            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="view_id" ref="account.view_cash_statement_form"/>
+            <field name="search_view_id" ref="account.view_account_cash_statement_filter"/>
             <field name="context">{'search_default_state_draft': 1, 'search_default_state_open': 1}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
@@ -108,7 +108,7 @@
         <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
             <field name="sequence" eval="5"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="view_id" ref="account.view_cash_statement_form"/>
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
     </data>
