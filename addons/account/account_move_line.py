@@ -705,64 +705,68 @@ class account_move_line(models.Model):
         # To apply the ir_rules
         partners = self.env['res.partner'].search([('id', 'in', ids)])
         return partners.name_get()
+        
+    def _get_pair_to_reconcile(self):
+        #target the pair of move in self with smallest debit, credit
+        smallest_debit = smallest_credit = False
+        for aml in self:
+            if aml.amount_residual > 0:
+                smallest_debit = (not smallest_debit or aml.amount_residual < smallest_debit.amount_residual) and aml or smallest_debit
+            elif aml.amount_residual < 0:
+                smallest_credit = (not smallest_credit or aml.amount_residual > smallest_credit.amount_residual) and aml or smallest_credit
+        return smallest_debit, smallest_credit
 
     def auto_reconcile_lines(self):
-        #target the pair of move in self with smallest debit, credit
-        sm_debit_move = sm_credit_move = False
-        for aml in self:
-            if not sm_debit_move and aml.amount_residual > 0:
-                sm_debit_move = aml
-                continue
-            if not sm_credit_move and aml.amount_residual < 0:
-                sm_credit_move = aml
-                continue
-            if aml.amount_residual > 0 and aml.amount_residual < sm_debit_move.amount_residual:
-                sm_debit_move = aml
-            if aml.amount_residual < 0 and aml.amount_residual > sm_credit_move.amount_residual:
-                sm_credit_move = aml
+        """ This function iterates recursively on the recordset given as parameter as long as it
+            can find a debit and a credit to reconcile together. It returns the recordset of the
+            account move lines that were not reconciled during the process
+        """
+        sm_debit_move, sm_credit_move = self.get_pair_to_reconcile()
         #there is no more pair to reconcile so return what move_line are left 
         if not sm_credit_move or not sm_debit_move:
             return self
 
         #Reconcile the pair together
-        amount_reconcile = sm_debit_move.amount_residual if sm_debit_move.amount_residual <= abs(sm_credit_move.amount_residual) else sm_credit_move.amount_residual
-        self.env['account.partial.reconcile'].create({'source_move_id': sm_debit_move.id, 'rec_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
-        (sm_debit_move + sm_credit_move).write({'partial_reconciled': True})
-
-        #Remove line from process if they are totally reconciled
-        if sm_debit_move.amount_residual == 0:
+        amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual) 
+        #Remove from recordset the one(s) that will be totally reconciled
+        if amount_reconcile == sm_debit_move.amount_residual:
             self -= sm_debit_move
-        if sm_credit_move.amount_residual == 0:
+        if amount_reconcile == sm_credit_move.amount_residual:
             self -= sm_credit_move
 
-        #if recordset if empty exit method, everything has been reconciled
-        if not self:
-            return False
+        self.env['account.partial.reconcile'].create({'source_move_id': sm_debit_move.id, 'rec_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
+
+        #TODO: use 2 one2many instead of a m2m, to allow the normal recomputation of amount_residual and remove the field partial_reconciled
+        (sm_debit_move + sm_credit_move).write({'partial_reconciled': True})
 
         #Iterate process again on self
         return self.auto_reconcile_lines()
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False, partial=False):
-        #Perform all checks on line
+        #Perform all checks on lines
+        #TODO: refactore to have only _one_ loop for all the tests below ?
         company_ids = set([l.company_id.id for l in self])
-        reconciled = set([l.reconciled for l in self])
         all_accounts = set([l.account_id for l in self])
         if len(company_ids) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries!'))
-        if len(reconciled) > 1 or list(reconciled)[0] == True:
+        if any([l.reconciled for l in self]):
             raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))
         if len(all_accounts) > 1:
             raise Warning(_('Entries are not of the same account!'))
-        if not list(all_accounts)[0].reconcile:
+        reconciled_account = list(all_accounts)[0]
+        if not reconciled_account.reconcile:
             raise Warning(_('The account is not defined to be reconciled !'))
+        if reconciled_account.user_type_id.type in ('receivable', 'payable'):
+            all_partners = set([l.partner_id.id for l in self])
+            if len(all_partners) > 1:
+                raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
         
-        #Target line with the minimum credit still > 0 and line with the minimum debit still > 0 and make
-        #a partial reconciliation between them. If amount_residual of the lines after that is 0, remove
-        #the line from self and perform algo again, do that until we don't have any line remaining or 
-        #until we can't find a pair of line to reconcile anymore.
+        #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
         #if partial == False, then create write-off move with value the remaining amount from move in self
+        #TODO: create writeoff in a separated method
+        #TODO: remove partial_parameter and use writeoff_acc_id and writeoff_journal_id instead
         if not partial and remaining_moves:
             if not writeoff_acc_id:
                 raise Warning(_('You have to provide an account for the write off/exchange difference entry.'))
@@ -774,7 +778,7 @@ class account_move_line(models.Model):
                 'date': self._context.get('date_p', time.strftime('%Y-%m-%d')),
                 'state': 'draft',
                 })
-
+            #TODO: create the move and the 2 lines in a single operation 
             writeoff_line_value = {
                 'name': self._context.get('comment', _('Write-Off')),
                 'move_id': writeoff_move.id,
