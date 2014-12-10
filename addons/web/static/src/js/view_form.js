@@ -1532,30 +1532,34 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             });
         });
         var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
-        $notebook.contents().appendTo($new_notebook);
+        $notebook.contents().appendTo($new_notebook.find('.tab-content'));
         $notebook.before($new_notebook).remove();
         self.process($($new_notebook.children()[0]));
-        //tabs and invisibility handling
-        $new_notebook.tabs();
+
+        var autofocus_found = false;
         _.each(pages, function(page, i) {
-            if (! page.__ic)
+            if (!autofocus_found && page.autofocus) {
+                autofocus_found = true;
+                $new_notebook.find("#" + page.id).addClass('active');
+                $new_notebook.find("[href=#" + page.id + "]").tab('show');
+            }
+
+            if (!page.__ic)
                 return;
             page.__ic.on("change:effective_invisible", null, function() {
                 if (!page.__ic.get('effective_invisible') && page.autofocus) {
-                    $new_notebook.tabs('option', 'active', i);
+                $new_notebook.find("#" + page.id).addClass('active');
+                    $new_notebook.find("[href=#" + page.id + "]").tab('show');
                     return;
-                }
-                var current = $new_notebook.tabs("option", "active");
-                if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
-                    return;
-                var first_visible = _.find(_.range(pages.length), function(i2) {
-                    return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
-                });
-                if (first_visible !== undefined) {
-                    $new_notebook.tabs('option', 'active', first_visible);
                 }
             });
         });
+
+        if (!autofocus_found) {
+            var first_tab = $new_notebook.find('li:not(.oe_form_invisible) a').first();
+            first_tab.parent().addClass('active');
+            $new_notebook.find(first_tab.attr('href')).addClass('active');
+        }
 
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
