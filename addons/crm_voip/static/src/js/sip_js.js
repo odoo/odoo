@@ -80,13 +80,16 @@ openerp.sip_js = function(instance) {
                 };    
                 //Make the call
                 session = ua.invite(number,call_options);
-                openerp.client.action_manager.do_action({
-                    type: 'ir.actions.client',
-                    tag: 'select_call',
-                    params: {'phonecall_id': current_phonecall.id}
-                });
+                if(this.$(".oe_dial_selected_phonecall").data('id') !== current_phonecall.id ){
+                    openerp.client.action_manager.do_action({
+                        type: 'ir.actions.client',
+                        tag: 'select_call',
+                        params: {'phonecall_id': current_phonecall.id}
+                    });
+                }
+                
 
-                $(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == current_phonecall.id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
+                $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == current_phonecall.id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
                 ua.on('invite', function (invite_session){
                     console.log(invite_session.remoteIdentity.displayName);
                     var confirmation = confirm("Incomming call from " + invite_session.remoteIdentity.displayName);
@@ -135,13 +138,12 @@ openerp.sip_js = function(instance) {
                     ringbacktone = document.getElementById("ringbacktone");
                     ringbacktone.pause();
                     var id = current_phonecall.id;
-                    $(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall").remove();
+                    $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                     if(in_automatic_mode === true){
                         next_call();
                     }else{
                         $('.oe_dial_big_callbutton').html("Call");
-                        $(".oe_dial_transferbutton").attr('disabled','disabled');
-                        $(".oe_dial_hangupbutton").attr('disabled','disabled');
+                        $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
                     }
                 });
                 session.on('refer',function(response){console.log("REFER");console.log(response);});
@@ -153,8 +155,7 @@ openerp.sip_js = function(instance) {
                     ringbacktone.pause();
                     var id = current_phonecall.id;
                     console.log(current_phonecall);
-                    console.log($(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall"));
-                    $(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall").remove();
+                    $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                     //TODO if the sale cancel one call, continue the automatic call or not ? 
                     if(in_automatic_mode === true){
                         next_call();
@@ -175,7 +176,7 @@ openerp.sip_js = function(instance) {
                         duration = parseFloat(result.duration).toFixed(2);
                         loggedCallOption(duration);
                         var id = current_phonecall.id;
-                        $(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall").remove();
+                        $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                         if(in_automatic_mode === true){
                             next_call();
                         }else{
@@ -204,7 +205,6 @@ openerp.sip_js = function(instance) {
             phonecalls_ids = [];
             phonecalls = phonecalls_list;
             for (var phone in phonecalls){
-                console.log(phonecalls[phone]);
                 if(phonecalls[phone].state != "done"){
                     phonecalls_ids.push(phone);
                 }
@@ -225,12 +225,10 @@ openerp.sip_js = function(instance) {
     function next_call(){
         if(phonecalls_ids.length){
             if(!session){
-                console.log("NEXT CALL");
                 current_call = phonecalls[phonecalls_ids.shift()];
                 call(current_call);
             }
         }else{
-            console.log("END OF LIST");
             stop_automatic_call();
         }
     }
@@ -241,12 +239,11 @@ openerp.sip_js = function(instance) {
 
     stop_automatic_call = function(){
         in_automatic_mode = false;
-        $(".oe_dial_split_callbutton").css("display","inline-block");
-        $(".oe_dial_stop_autocall_button").css("display","none");
+        $(".oe_dial_split_callbutton").show();
+        $(".oe_dial_stop_autocall_button").hide();
         if(!session){
             $('.oe_dial_big_callbutton').html("Call");
-            $(".oe_dial_transferbutton").attr('disabled','disabled');
-            $(".oe_dial_hangupbutton").attr('disabled','disabled');
+            $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
         }else{
             $('.oe_dial_big_callbutton').html("Calling...");
         }

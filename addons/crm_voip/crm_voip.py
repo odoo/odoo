@@ -185,17 +185,17 @@ class crm_lead(models.Model):
                         'default_opportunity_id': phonecall.opportunity_id.id,
                         'default_name': phonecall.name,
                         'default_duration': phonecall.duration,
-                        'default_description' : phonecall.description,
-                        'default_opportunity_name' : phonecall.opportunity_id.name,
-                        'default_opportunity_planned_revenue' : phonecall.opportunity_id.planned_revenue,
-                        'default_opportunity_title_action' : phonecall.opportunity_id.title_action,
-                        'default_opportunity_date_action' : phonecall.opportunity_id.date_action,
-                        'default_opportunity_probability' : phonecall.opportunity_id.probability,
+                        'default_description': phonecall.description,
+                        'default_opportunity_name': phonecall.opportunity_id.name,
+                        'default_opportunity_planned_revenue': phonecall.opportunity_id.planned_revenue,
+                        'default_opportunity_title_action': phonecall.opportunity_id.title_action,
+                        'default_opportunity_date_action': phonecall.opportunity_id.date_action,
+                        'default_opportunity_probability': phonecall.opportunity_id.probability,
                         'default_partner_id': phonecall.partner_id.id,
-                        'default_partner_name' : phonecall.partner_id.name,
-                        'default_partner_email' : phonecall.partner_id.email,
+                        'default_partner_name': phonecall.partner_id.name,
+                        'default_partner_email': phonecall.partner_id.email,
                         'default_partner_phone': phonecall.partner_id.phone,
-                        'default_partner_image_small' : phonecall.partner_id.image_small,},
+                        'default_partner_image_small': phonecall.partner_id.image_small,},
                         'default_show_duration': self._context.get('default_show_duration'),
             'views': [[False, 'form']],
             'flags': {
@@ -229,22 +229,6 @@ class crm_phonecall_log_wizard(models.TransientModel):
     show_duration = fields.Boolean()
     custom_duration = fields.Float(default=0)
 
-    #Old function not sure we keep it
-    @api.multi
-    def save(self):
-        phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall_id'))
-        phonecall.description = self.description
-        phonecall.in_queue = False
-        if(self._context.get('opportunity_id')):
-            opportunity = self.env['crm.lead'].browse(self._context.get('opportunity_id'))
-            opportunity.title_action = self.opportunity_title_action
-            opportunity.date_action = self.opportunity_date_action
-            opportunity.message_post(phonecall.description)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload_panel',
-        }
-
     def schedule_again(self):
         new_phonecall = self.env['crm.phonecall'].create({
             'name': self.name,
@@ -268,8 +252,7 @@ class crm_phonecall_log_wizard(models.TransientModel):
             new_phonecall.date = self.reschedule_date
 
     @api.multi
-    def save_keep(self):
-        phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall_id'))
+    def modify_phonecall(self, phonecall):
         phonecall.description = self.description
         if(self.opportunity_id):
             opportunity = self.env['crm.lead'].browse(self.opportunity_id)
@@ -292,6 +275,11 @@ class crm_phonecall_log_wizard(models.TransientModel):
             opportunity.message_post(message)
         if self.reschedule_option != "no_reschedule":
             self.schedule_again()
+
+    @api.multi
+    def save_keep(self):
+        phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall_id'))
+        self.modify_phonecall(phonecall)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
@@ -301,27 +289,7 @@ class crm_phonecall_log_wizard(models.TransientModel):
     def save_go_opportunity(self):
         phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall_id'))
         phonecall.description = self.description
-        if(self.opportunity_id):
-            opportunity = self.env['crm.lead'].browse(self.opportunity_id)
-            if self.new_title_action and self.new_date_action:
-                opportunity.title_action = self.new_title_action
-                opportunity.date_action = self.new_date_action
-            else:
-                opportunity.title_action = self.opportunity_title_action
-                opportunity.date_action = self.opportunity_date_action
-            if (self.show_duration):
-                mins = int(self.custom_duration)
-                sec = (self.custom_duration - mins)*0.6
-                sec = '%.2f' % sec
-                time = str(mins) + ":" + sec[-2:]
-                message = "Call " + time + " min(s)"
-            else:
-                message = "Call " + self.duration + " min(s)"
-            if(phonecall.description):
-                message += " about " + phonecall.description
-            opportunity.message_post(message)
-        if self.reschedule_option != "no_reschedule":
-            self.schedule_again()
+        self.modify_phonecall(phonecall)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
@@ -348,7 +316,6 @@ class crm_custom_phonecall_wizard(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
         }
-
 
 
 class crm_phonecall_transfer_wizard(models.TransientModel):
