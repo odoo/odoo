@@ -240,6 +240,21 @@ class account_bank_statement(models.Model):
             statement.line_ids.unlink()
         return super(account_bank_statement, self).unlink()
 
+    @api.multi
+    def button_journal_entries(self):
+        context = dict(self._context or {})
+        context['journal_id'] = self.journal_id.id
+        return {
+            'name': _('Journal Items'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('statement_id', 'in', self.ids)],
+            'context': context,
+        }
+
     @api.v7
     def reconciliation_widget_preprocess(self, cr, uid, statement_ids, context=None):
         return self.browse(cr, uid, statement_ids, context).reconciliation_widget_preprocess()
