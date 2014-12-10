@@ -562,16 +562,15 @@ class ir_translation(osv.osv):
                 })
             elif src:
                 # insert missing translations for each term
-                terms = set(fld.get_terms(src))
-                for term in terms:
-                    query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                                SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
-                                FROM res_lang l
-                                WHERE l.code != 'en_US' AND NOT EXISTS (
-                                    SELECT 1 FROM ir_translation
-                                    WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
-                                );
-                            """
+                query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
+                            SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+                            FROM res_lang l
+                            WHERE l.code != 'en_US' AND NOT EXISTS (
+                                SELECT 1 FROM ir_translation
+                                WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                            );
+                        """
+                for term in set(fld.get_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (fld.model_name, fld.name),
                         'res_id': rid,
