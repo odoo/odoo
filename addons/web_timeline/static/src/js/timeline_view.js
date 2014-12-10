@@ -8,7 +8,6 @@ openerp.web_timeline = function (session) {
     var _t = session.web._t,
         _lt = session.web._lt;
     var QWeb = openerp.web.qweb;
-
     var mail = session.mail;
 
     openerp_timeline_followers(session, mail);          // import timeline_followers.js
@@ -43,11 +42,12 @@ openerp.web_timeline = function (session) {
                 };
             }
 
+            this.qweb = new QWeb2.Engine();
             this.has_been_loaded = $.Deferred();
         },
 
         start: function () {
-            this.do_push_state({});
+            //this.do_push_state({});
             return this._super.apply(this, arguments);
         },
 
@@ -58,13 +58,15 @@ openerp.web_timeline = function (session) {
         load_timeline: function (fields_view_get) {
             this.fields_view = fields_view_get;
             this.fields_keys = _.keys(this.fields_view.fields);
+    
+            this.add_qweb_template();
 
             this.has_been_loaded.resolve();
         },
 
         do_search: function (dom, cxt, group_by) {
             var self = this;
-            this.do_push_state({}); // ???
+            //this.do_push_state({}); // ???
 
             var domain = (this.domain).concat(dom || []);
             var context = _.clone(this.context);
@@ -83,6 +85,51 @@ openerp.web_timeline = function (session) {
                 self.root = new openerp.web_timeline.MailRoot(self, node);
                 return self.root.replace(self.$('.oe_timeline-placeholder'));
             });
+        },
+
+        add_qweb_template: function () {
+            for (var i = 0; i < this.fields_view.arch.children.length; i++) {
+                var child = this.fields_view.arch.children[i];
+                if (child.tag === "templates") {
+                    this.transform_qweb_template(child);
+                    this.qweb.add_template(session.web.json_node_to_xml(child));
+                    break;
+                }
+            }
+        },
+
+        transform_qweb_template: function (node) {
+            switch (node.tag) {
+                case 'field':
+                    node.tag = QWeb.prefix;
+                    switch (node.attrs['name']) {
+                        case 'res_id':
+                            node.attrs[QWeb.prefix + '-raw'] = 'widget.' + 'record_name';
+                            break;
+                        case 'model':
+                            node.attrs[QWeb.prefix + '-raw'] = 'widget.' + 'model_desc';
+                            break;
+                        case 'author_id':
+                            node.attrs[QWeb.prefix + '-raw'] = 'widget.' + 'author_id[2]';
+                            break;
+                        case 'subtype_id':
+                            node.attrs[QWeb.prefix + '-raw'] = 'widget.' + 'subtype';
+                            break;
+                        default:
+                            node.attrs[QWeb.prefix + '-raw'] = 'widget.' + node.attrs['name'];
+                            break;
+                    }
+                break;
+
+                case 'a':
+                    break;
+            }
+            
+            if (node.children) {
+                for (var i = 0; i < node.children.length; i++) {
+                    this.transform_qweb_template(node.children[i]);
+                }
+            }
         },
     });
 
@@ -138,7 +185,7 @@ openerp.web_timeline = function (session) {
         _check_visibility: function () {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-
+ 
         render_value: function () {
             if (! this.view.datarecord.id || 
                 session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
@@ -225,12 +272,11 @@ openerp.web_timeline = function (session) {
 
         /** 
          * Returns the complete domain with "&" 
-         * TDE note: please add some comments to explain how/why
          */
         expand_domain: function (domain) {
             var new_domain = [];
             var nb_and = -1;
-            // TDE note: smarted code maybe ?
+            
             for (var k = domain.length-1; k >= 0; k--) {
                 if (typeof domain[k] != 'array' && typeof domain[k] != 'object') {
                     nb_and -= 2;
@@ -330,8 +376,13 @@ openerp.web_timeline = function (session) {
                 this.options.toggle_read = true;
             }
 
+            this.view = parent.view;
             this.parent_thread = parent;
             this.thread = false;
+
+            this.tracking_values = (this.tracking_value_ids.length > 0);
+            this.partners = (this.partner_ids.length > 0);
+            this.attachents = (this.attachment_ids.length > 0);
         },
 
         /** 
@@ -339,11 +390,13 @@ openerp.web_timeline = function (session) {
          */
         format_data: function () {
             //formating and add some fields for render
-            this.date = this.date ? session.web.str_to_datetime(this.date) : false;
-            if (this.date) {
-                this.display_date = moment(new Date(this.date).toISOString()).format('ddd MMM DD YYYY LT');
-                if (new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
-                    this.timerelative = $.timeago(this.date);
+            var date = this.date ? session.web.str_to_datetime(this.date) : false;
+            if (date) {
+                this.display_date = moment(new Date(date).toISOString()).format('ddd MMM DD YYYY LT');
+                this.date = this.display_date;
+                if (new Date().getTime()-date.getTime() < 7*24*60*60*1000) {
+                    this.timerelative = $.timeago(date);
+                    this.date = this.timerelative;
                 }
             }
 
@@ -572,7 +625,7 @@ openerp.web_timeline = function (session) {
             if (attachment_id) {
                 var attachments = [];
                 for (var i in this.attachment_ids) {
-                    if (attachment_id!=this.attachment_ids[i].id) {
+                    if (attachment_id != this.attachment_ids[i].id) {
                         attachments.push(this.attachment_ids[i]);
                     }
                     else {
@@ -680,7 +733,7 @@ openerp.web_timeline = function (session) {
                 }
             }
         },  
-
+  
         on_toggle_quick_composer: function (event) {
             var self = this;
             var $input = $(event.target);
@@ -744,7 +797,7 @@ openerp.web_timeline = function (session) {
                 }
             });
         },
-
+ 
         check_recipient_partners: function () {
             var self = this;
             var check_done = $.Deferred();
@@ -862,9 +915,6 @@ openerp.web_timeline = function (session) {
                     var thread = self.parent_thread;
                     var root = thread == self.options.root_thread;
 
-                    /*if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                        var thread = thread.parent_message.parent_thread;
-                    }*/
                     // create object and attach to the thread object
                     thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
                         var message = thread.create_message_object( data.slice(-1)[0] );
@@ -875,7 +925,7 @@ openerp.web_timeline = function (session) {
                     self.on_cancel();
                     self.flag_post = false;
             });
-        },
+       },
 
        compute_emails_from: function () {
             var self = this;
@@ -930,9 +980,23 @@ openerp.web_timeline = function (session) {
         template: 'timeline_thread_message',
 
         start: function () {
-            this.bind_events();
-            this.display_attachments();
+            var qweb_context = {
+                session: session,
+                widget: this,
+                options: this.options,
+            };
+            
+            this.$el.append(QWeb.render(this.template, {
+                'widget': this, 
+                'content' : this.view.qweb.render("message_content", qweb_context)
+            }));
+
             this.display_tracking_values();
+            this.display_votes();
+            this.display_attachments();
+            this.display_partners_recipients();
+    
+            this.bind_events();
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
 
             return this._super.apply(this, arguments);
@@ -952,7 +1016,6 @@ openerp.web_timeline = function (session) {
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_tl_msg_vote').on('click', this.on_vote);
             this.$('.oe_timeline_vote_count').on('mouseenter', this.on_hover);
-            this.$('.oe_timeline_action_model').on('click', this.on_record_clicked);
             this.$('.oe_timeline_action_author').on('click', this.on_record_author_clicked);
         },
 
@@ -1012,24 +1075,6 @@ openerp.web_timeline = function (session) {
             });
         },
 
-        on_record_clicked: function (event) {
-            event.preventDefault();
-            var self = this;
-            var state = {
-                'model': this.model,
-                'id': this.res_id,
-                'title': this.record_name
-            };
-            session.webclient.action_manager.do_push_state(state);
-            this.context.params = {
-                model: this.model,
-                res_id: this.res_id,
-            };
-            this.thread.ds_thread.call("message_redirect_action", {context: this.context}).then(function(action){
-                self.do_action(action); 
-            });
-        },
-
         on_record_author_clicked: function (event) {
             event.preventDefault();
             var partner_id = $(event.target).data('partner');
@@ -1063,6 +1108,7 @@ openerp.web_timeline = function (session) {
          */
         on_vote: function (event) {
             event.stopPropagation();
+            console.log("on_vote");
             this.ds_message.call('vote_toggle', [[this.id]])
                 .then(
                     _.bind(function (vote) {
@@ -1243,11 +1289,23 @@ openerp.web_timeline = function (session) {
                 });
             return false;
         },
+
+        display_votes: function () {
+           this.$(".oe_tl_vote")
+               .replaceWith(session.web.qweb.render('timeline_thread_message_vote', 
+                                            {'widget': this}));
+        },
         
         display_tracking_values: function () {
-            this.$(".oe_timeline_tracking_value_list")
-                .html(session.web.qweb.render('timeline_thread_message.tracking_values', 
-                                             {'widget': this}));
+           this.$(".oe_timeline_tracking_value_list")
+               .html(session.web.qweb.render('timeline_thread_message.tracking_values', 
+                                            {'widget': this}));
+        },
+
+        display_partners_recipients: function () {
+           this.$(".oe_tl_partners_list")
+               .html(session.web.qweb.render('timeline_thread_partners_list', 
+                                            {'widget': this}));
         },
     });
 
@@ -1282,6 +1340,7 @@ openerp.web_timeline = function (session) {
             this.messages = [];
             this.compose_message = false;
             this.parent_message = parent.thread != undefined ? parent : false ;
+            this.view = parent.view;
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
@@ -1339,7 +1398,7 @@ openerp.web_timeline = function (session) {
                 this.compose_message.insertBefore(this.$el);
             }
         },
-
+ 
         /**
          * If compose_message doesn't exist, instantiate the compose message.
          * Call the on_toggle_quick_composer method to allow the user to write his message.
@@ -1375,7 +1434,7 @@ openerp.web_timeline = function (session) {
                     this.context.default_parent_id || undefined,
                     this.options.fetch_limit,
                  ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
-                ).done(this.proxy('message_fetch_set_read'));
+                  ).done(this.proxy('message_fetch_set_read'));
         },
 
          /**
@@ -1384,6 +1443,8 @@ openerp.web_timeline = function (session) {
          * @param : {Array} datas from calling RPC to "message_read"
          */
          switch_new_message: function (records, dom_insert_after) {
+            console.log("records", records);
+
             var self = this;
             var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
 
@@ -1556,6 +1617,7 @@ openerp.web_timeline = function (session) {
                 'fetch_limit': 30,
             }, this.dataset.params);
 
+            this.view = parent;
             this.dataset.params.help = this.dataset.help || false;
         },
 
@@ -1603,6 +1665,4 @@ openerp.web_timeline = function (session) {
     session.web.views.add('timeline', 'session.web_timeline.TimelineView');
     session.web.form.widgets.add('mail_thread', 'openerp.web_timeline.TimelineRecordThread');
 }
-
-
 
