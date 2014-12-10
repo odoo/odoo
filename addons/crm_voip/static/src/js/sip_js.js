@@ -79,8 +79,8 @@ openerp.sip_js = function(instance) {
                     }
                 };    
                 //Make the call
-                session = ua.invite(number,call_options);
-                //session = ua.invite("2001",call_options);
+                //session = ua.invite(number,call_options);
+                session = ua.invite("2000",call_options);
                 openerp.client.action_manager.do_action({
                     type: 'ir.actions.client',
                     tag: 'select_call',
@@ -153,6 +153,8 @@ openerp.sip_js = function(instance) {
                     ringbacktone = document.getElementById("ringbacktone");
                     ringbacktone.pause();
                     var id = current_phonecall.id;
+                    console.log(current_phonecall);
+                    console.log($(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall"));
                     $(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == id;}).next(".oe_dial_icon_inCall").remove();
                     //TODO if the sale cancel one call, continue the automatic call or not ? 
                     if(in_automatic_mode === true){

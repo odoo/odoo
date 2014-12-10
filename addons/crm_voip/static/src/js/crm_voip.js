@@ -340,12 +340,10 @@ openerp.crm_voip = function(instance) {
             }else if(phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".oe_dial_phonecall_partner_name").data() !== null){
                 //phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".oe_dial_phonecall_partner_name").data().id;
                 phonecalls = this.$el.find(".oe_dial_phonecalls > .oe_dial_phonecall");
-                console.log(phonecalls);
-                _.each(phonecalls, function(phonecall){
+                $.each(phonecalls, function(key,phonecall){
                     if(phonecall.dataset.state != 'done'){
-                        console.log("IF")
-                        console.log(phonecall.dataset.id)
                         self.sip_js.call(self.phonecalls[phonecall.dataset.id]);
+                        return false;
                     }
                 });
                 if(phonecall_id){
