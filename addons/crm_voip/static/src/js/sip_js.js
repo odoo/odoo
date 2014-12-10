@@ -79,8 +79,7 @@ openerp.sip_js = function(instance) {
                     }
                 };    
                 //Make the call
-                //session = ua.invite(number,call_options);
-                session = ua.invite("2000",call_options);
+                session = ua.invite(number,call_options);
                 openerp.client.action_manager.do_action({
                     type: 'ir.actions.client',
                     tag: 'select_call',
