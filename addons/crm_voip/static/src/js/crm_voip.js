@@ -105,9 +105,9 @@ openerp.crm_voip = function(instance) {
             _.each(this.phonecalls,function(phonecall){
                 if(phonecall.partner_name.toLowerCase().indexOf(this.$(".oe_dial_searchbox").val().toLowerCase()) == -1 && 
                 phonecall.name.toLowerCase().indexOf(this.$(".oe_dial_searchbox").val().toLowerCase()) == -1){
-                    self.$el.find(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == phonecall.id;}).parent().parent().hide();
+                    self.$el.find(".oe_dial_phonecall").filter(function(){return $(this)[0].dataset.id == phonecall.id;}).hide();
                 }else{
-                    self.$el.find(".oe_dial_phonecall_partner_name").filter(function(){return $(this)[0].dataset.id == phonecall.id;}).parent().parent().show();
+                    self.$el.find(".oe_dial_phonecall").filter(function(){return $(this)[0].dataset.id == phonecall.id;}).show();
                 }
             });
         },
@@ -337,8 +337,7 @@ openerp.crm_voip = function(instance) {
                 });
                 */
                 this.sip_js.call(this.phonecalls[phonecall_id]);
-            }else if(phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".oe_dial_phonecall_partner_name").data() !== null){
-                //phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".oe_dial_phonecall_partner_name").data().id;
+            }else{
                 phonecalls = this.$el.find(".oe_dial_phonecalls > .oe_dial_phonecall");
                 $.each(phonecalls, function(key,phonecall){
                     if(phonecall.dataset.state != 'done'){
