@@ -143,7 +143,7 @@ class Field(orm.AbstractModel):
 
 class Integer(orm.AbstractModel):
     _name = 'website.qweb.field.integer'
-    _inherit = ['website.qweb.field']
+    _inherit = ['website.qweb.field', 'ir.qweb.field.integer']
 
     value_from_string = int
 
