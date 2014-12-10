@@ -46,6 +46,12 @@ class mail_group(osv.Model):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+
+    # def _get_groups_subscriptions(self, cr, uid, ids, context=None):
+
+    def _subscribe_from_group_ids(self, cr, uid, record, context=None):
+        return record.group_ids.mapped('users').mapped('partner_id').ids
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'description': fields.text('Description'),
@@ -56,6 +62,7 @@ class mail_group(osv.Model):
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
+            track_subscribe=_subscribe_from_group_ids,
             help="Members of those groups will automatically added as followers. "\
                  "Note that they will be able to manage their subscription manually "\
                  "if necessary."),
@@ -107,12 +114,12 @@ class mail_group(osv.Model):
             return '%sGroup email gateway: %s@%s' % (header, group.alias_name, group.alias_domain)
         return header
 
-    def _subscribe_users(self, cr, uid, ids, context=None):
-        for mail_group in self.browse(cr, uid, ids, context=context):
-            partner_ids = []
-            for group in mail_group.group_ids:
-                partner_ids += [user.partner_id.id for user in group.users]
-            self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+    # def _subscribe_users(self, cr, uid, ids, context=None):
+    #     for mail_group in self.browse(cr, uid, ids, context=context):
+    #         partner_ids = []
+    #         for group in mail_group.group_ids:
+    #             partner_ids += [user.partner_id.id for user in group.users]
+    #         self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -158,8 +165,8 @@ class mail_group(osv.Model):
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
             mobj.write(cr, SUPERUSER_ID, menu_id, {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
-        if vals.get('group_ids'):
-            self._subscribe_users(cr, uid, [mail_group_id], context=context)
+        # if vals.get('group_ids'):
+        #     self._subscribe_users(cr, uid, [mail_group_id], context=context)
         return mail_group_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -182,8 +189,8 @@ class mail_group(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('group_ids'):
-            self._subscribe_users(cr, uid, ids, context=context)
+        # if vals.get('group_ids'):
+        #     self._subscribe_users(cr, uid, ids, context=context)
         # if description, name or alias is changed: update client action
         if vals.get('description') or vals.get('name') or vals.get('alias_id') or vals.get('alias_name'):
             cobj = self.pool.get('ir.actions.client')
