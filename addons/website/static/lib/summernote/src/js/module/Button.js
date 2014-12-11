@@ -36,6 +36,46 @@ define([
         $btn.toggleClass('active', pred());
       };
 
+      if (styleInfo.image) {
+        var $img = $(styleInfo.image);
+
+        btnState('button[data-event="imageShape"][data-value="img-rounded"]', function () {
+          return $img.hasClass("img-rounded");
+        });
+        btnState('button[data-event="imageShape"][data-value="img-circle"]', function () {
+          return $img.hasClass("img-circle");
+        });
+        btnState('button[data-event="imageShape"][data-value="img-thumbnail"]', function () {
+          return $img.hasClass("img-thumbnail");
+        });
+        btnState('button[data-event="imageShape"]:not([data-value])', function () {
+          return !$img.is(".img-rounded, .img-circle, .img-thumbnail");
+        });
+
+        var imgFloat = $img.css("float");
+        btnState('button[data-event="floatMe"][data-value="left"]', function () {
+          return imgFloat === "left";
+        });
+        btnState('button[data-event="floatMe"][data-value="right"]', function () {
+          return imgFloat === "right";
+        });
+        btnState('button[data-event="floatMe"][data-value="none"]', function () {
+          return imgFloat !== "left" && imgFloat !== "right";
+        });
+
+        var style = $img.attr("style");
+        btnState('button[data-event="resize"][data-value="1"]', function () {
+          return !!/(^|\s)(max-)?width\s*:\s*100%/.test(style);
+        });
+        btnState('button[data-event="resize"][data-value="0.5"]', function () {
+          return !!/(^|\s)(max-)?width\s*:\s*50%/.test(style);
+        });
+        btnState('button[data-event="resize"][data-value="0.25"]', function () {
+          return !!/(^|\s)(max-)?width\s*:\s*25%/.test(style);
+        });
+        return;
+      }
+
       // fontname
       var $fontname = $container.find('.note-fontname');
       if ($fontname.length) {
