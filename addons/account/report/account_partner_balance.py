@@ -256,4 +256,3 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/account_partner_balance.rml',parser=partner_balance, header="internal")
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

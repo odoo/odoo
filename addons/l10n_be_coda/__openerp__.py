@@ -101,4 +101,3 @@ If required, you can manually adjust the descriptions via the CODA configuration
     'license': 'AGPL-3',
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

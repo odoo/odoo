@@ -542,4 +542,3 @@ class survey_browse_response(report_rml):
 
 survey_browse_response('report.survey.browse.response', 'survey','','')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

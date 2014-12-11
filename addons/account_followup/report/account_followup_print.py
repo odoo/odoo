@@ -115,4 +115,3 @@ report_sxw.report_sxw('report.account_followup.followup.print',
         'account_followup.stat.by.partner', 'addons/account_followup/report/account_followup_print.rml',
         parser=report_rappel)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

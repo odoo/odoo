@@ -68,4 +68,3 @@ class authorizer:
         """Return the user's quitting message."""
         return 'Bye.'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

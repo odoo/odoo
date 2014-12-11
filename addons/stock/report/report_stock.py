@@ -164,4 +164,3 @@ class report_stock_lines_date(osv.osv):
 
 report_stock_lines_date()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

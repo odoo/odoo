@@ -35,5 +35,4 @@ class bilan(base_report.base_report):
 
 report_sxw.report_sxw('report.l10n.fr.bilan', 'account.move.line','addons/l10n_fr/report/bilan_report.rml', parser=bilan, header=False)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -24,5 +24,4 @@ class except_wkf(Exception):
         self.name = name
         self.value = value
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

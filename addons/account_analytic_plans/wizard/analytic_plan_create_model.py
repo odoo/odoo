@@ -57,4 +57,3 @@ class analytic_plan_create_model(osv.osv_memory):
 
 analytic_plan_create_model()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

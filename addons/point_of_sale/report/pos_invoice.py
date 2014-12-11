@@ -55,4 +55,3 @@ class pos_invoice(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/account_print_invoice.rml', parser= pos_invoice)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

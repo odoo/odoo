@@ -73,4 +73,3 @@ class mrp_config_settings(osv.osv_memory):
                 This installs the module product_manufacturer."""),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

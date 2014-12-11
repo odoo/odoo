@@ -76,4 +76,3 @@ class sale_config_settings(osv.osv_memory):
                 This installs the module plugin_outlook."""),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

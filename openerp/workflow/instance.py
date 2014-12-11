@@ -73,5 +73,4 @@ def _update_end(cr, inst_id, ident):
     return ok
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

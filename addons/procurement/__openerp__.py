@@ -63,4 +63,3 @@ depending on the product's configuration.
     'auto_install': True,
     'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

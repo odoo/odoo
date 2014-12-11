@@ -117,5 +117,4 @@ class report_custom(report_rml):
 
 report_custom('report.hr.analytical.timesheet_users', 'hr.employee', '', 'addons/hr_timesheet/report/users_timesheet.xsl')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

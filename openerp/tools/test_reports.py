@@ -303,4 +303,3 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
 
 #eof
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

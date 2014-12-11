@@ -189,4 +189,3 @@ class budget_report(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml', parser=budget_report, header='internal')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -932,4 +932,3 @@ class share_result_line(osv.osv_memory):
         'newly_created': True,
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

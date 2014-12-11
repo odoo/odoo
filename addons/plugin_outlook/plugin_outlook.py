@@ -39,4 +39,3 @@ class outlook_installer(osv.osv_memory):
         res['plugin64'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

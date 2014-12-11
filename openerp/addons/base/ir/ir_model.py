@@ -1147,4 +1147,3 @@ class ir_model_data(osv.osv):
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool.get(model).unlink(cr, uid, [res_id])
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

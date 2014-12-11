@@ -83,4 +83,3 @@ class google_login(osv.osv_memory):
 
 google_login()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

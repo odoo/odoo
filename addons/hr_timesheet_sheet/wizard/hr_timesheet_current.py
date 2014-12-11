@@ -60,4 +60,3 @@ class hr_timesheet_current_open(osv.osv_memory):
 
 hr_timesheet_current_open()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

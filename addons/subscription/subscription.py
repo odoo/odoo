@@ -171,5 +171,4 @@ class subscription_subscription_history(osv.osv):
 subscription_subscription_history()
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

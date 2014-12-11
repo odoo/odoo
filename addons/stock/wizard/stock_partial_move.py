@@ -84,4 +84,3 @@ class stock_partial_move(osv.osv_memory):
         self.pool.get('stock.move').do_partial(cr, uid, moves_ids, partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

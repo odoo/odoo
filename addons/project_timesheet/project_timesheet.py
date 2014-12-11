@@ -328,4 +328,3 @@ class account_analytic_line(osv.osv):
 
 account_analytic_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

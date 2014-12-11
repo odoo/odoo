@@ -39,4 +39,3 @@ membership products (schemes).
     'auto_install': False,
     'images': ['images/association1.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

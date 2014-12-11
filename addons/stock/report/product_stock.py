@@ -121,5 +121,4 @@ class report_stock(report_int):
 report_stock('report.stock.product.history')
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

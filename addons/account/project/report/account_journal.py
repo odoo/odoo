@@ -45,5 +45,4 @@ class journal_print(report_sxw.rml_parse):
 report_sxw.report_sxw('report.account.analytic.journal.print', 'account.analytic.journal', 'addons/account/project/report/analytic_journal.rml',parser=journal_print)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

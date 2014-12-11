@@ -23,4 +23,3 @@ import attendance_errors
 import attendance_by_month
 import timesheet
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

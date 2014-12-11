@@ -237,5 +237,4 @@ osv_abstract = AbstractModel # ;-)
 def start_object_proxy():
     object_proxy()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -60,4 +60,3 @@ def main():
         o = commands[command]()
         o.run(args)
 
-# vim:et:ts=4:sw=4:

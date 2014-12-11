@@ -340,4 +340,3 @@ class WebKitParser(report_sxw):
             html = "<!DOCTYPE html>\n" + html
         return html
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

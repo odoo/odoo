@@ -59,5 +59,4 @@ class base_report_designer_installer(osv.osv_memory):
         """
     }
 base_report_designer_installer()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -79,4 +79,3 @@ if __name__ == '__main__':
     # Do with the service whatever option is passed in the command line
     win32serviceutil.HandleCommandLine(OpenERPServerService, customOptionHandler=option_handler)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

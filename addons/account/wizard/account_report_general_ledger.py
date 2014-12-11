@@ -60,4 +60,3 @@ class account_report_general_ledger(osv.osv_memory):
 
 account_report_general_ledger()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

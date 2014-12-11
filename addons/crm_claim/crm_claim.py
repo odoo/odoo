@@ -216,4 +216,3 @@ class res_partner(osv.osv):
         'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

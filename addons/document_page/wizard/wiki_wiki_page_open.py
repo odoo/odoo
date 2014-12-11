@@ -63,4 +63,3 @@ class wiki_wiki_page_open(osv.osv_memory):
 
 wiki_wiki_page_open()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

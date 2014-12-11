@@ -63,5 +63,4 @@ class validate_account_move_lines(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 validate_account_move_lines()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

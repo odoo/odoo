@@ -265,4 +265,3 @@ elif __name__=="package":
     g_ImplementationHelper.addImplementation( Fields, "org.openoffice.openerp.report.fields", ("com.sun.star.task.Job",),)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

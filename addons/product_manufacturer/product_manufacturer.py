@@ -40,4 +40,3 @@ class product_attribute(osv.osv):
     }
 product_attribute()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

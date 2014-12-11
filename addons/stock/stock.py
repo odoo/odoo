@@ -3150,4 +3150,3 @@ class stock_picking_out(osv.osv):
         'type': 'out',
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,4 +22,3 @@
 import base_state
 import base_stage
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

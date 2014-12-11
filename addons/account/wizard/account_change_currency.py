@@ -75,4 +75,3 @@ class account_change_currency(osv.osv_memory):
 
 account_change_currency()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

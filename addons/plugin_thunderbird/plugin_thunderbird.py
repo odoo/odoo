@@ -42,4 +42,3 @@ class plugin_thunderbird_installer(osv.osv_memory):
         res['plugin_file'] = base_url + '/plugin_thunderbird/static/openerp_plugin.xpi'
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

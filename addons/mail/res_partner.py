@@ -69,4 +69,3 @@ class res_partner_mail(osv.Model):
             thread_id = False
         return super(res_partner_mail, self).message_post(cr, uid, thread_id, **kwargs)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -24,4 +24,3 @@ checks = [
     test_account_followup,
 ]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

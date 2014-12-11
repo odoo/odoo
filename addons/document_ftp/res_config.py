@@ -34,4 +34,3 @@ class documnet_ftp_setting(osv.osv_memory):
         action = self.pool.get('ir.model.data').get_object(cr, uid, 'document_ftp', 'action_document_browse')
         return {'document_ftp_url': action.url}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

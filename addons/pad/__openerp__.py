@@ -24,4 +24,3 @@ pads (by default, http://ietherpad.com/).
     'css': ['static/src/css/etherpad.css',],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -104,5 +104,4 @@ class res_bank(osv.osv):
         'rib_code': fields.char('RIB Bank Code', size=64),
     }
 res_bank()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

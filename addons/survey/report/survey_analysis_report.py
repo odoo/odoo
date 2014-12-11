@@ -428,4 +428,3 @@ class survey_analysis(report_rml):
 
 survey_analysis('report.survey.analysis', 'survey','','')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

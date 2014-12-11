@@ -539,5 +539,4 @@ class audittrail_objects_proxy(object_proxy):
 
 audittrail_objects_proxy()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

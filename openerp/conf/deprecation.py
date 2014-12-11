@@ -34,4 +34,3 @@ by the user to check if her code is future proof.
 # Introduced around 2011.02.
 open_openerp_namespace = True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

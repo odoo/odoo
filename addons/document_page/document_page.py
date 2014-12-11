@@ -130,4 +130,3 @@ class document_page_history(osv.osv):
         diff = difflib.HtmlDiff()
         return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

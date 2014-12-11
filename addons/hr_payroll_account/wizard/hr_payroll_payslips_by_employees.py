@@ -38,4 +38,3 @@ class hr_payslip_employees(osv.osv_memory):
 
 hr_payslip_employees()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

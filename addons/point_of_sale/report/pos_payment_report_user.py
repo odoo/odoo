@@ -61,4 +61,3 @@ class pos_payment_report_user(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.pos.payment.report.user', 'pos.order', 'addons/point_of_sale/report/pos_payment_report_user.rml', parser=pos_payment_report_user,header='internal')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

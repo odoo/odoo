@@ -244,4 +244,3 @@ class stock_partial_picking(osv.osv_memory):
             'context': context,
         }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

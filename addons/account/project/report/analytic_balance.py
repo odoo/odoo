@@ -156,5 +156,4 @@ report_sxw.report_sxw('report.account.analytic.account.balance',
         parser=account_analytic_balance, header="internal")
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

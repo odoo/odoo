@@ -348,4 +348,3 @@ class account_analytic_line(osv.osv):
         (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

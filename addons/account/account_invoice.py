@@ -1824,4 +1824,3 @@ class mail_compose_message(osv.Model):
             self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

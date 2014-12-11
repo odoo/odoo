@@ -46,4 +46,3 @@ class ir_model_access(osv.Model):
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
     
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

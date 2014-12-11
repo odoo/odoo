@@ -137,4 +137,3 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.all.closed.cashbox.of.the.day', 'account.bank.statement', 'addons/point_of_sale/report/all_closed_cashbox_of_the_day.rml', parser=all_closed_cashbox_of_the_day,header='internal')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

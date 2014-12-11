@@ -23,5 +23,4 @@ from rml2html import parseString
 
 #.apidoc title: RML to HTML engine
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -192,4 +192,3 @@ class OpenERPSession(object):
 
         context['lang'] = lang or 'en_US'
 
-# vim:et:ts=4:sw=4:

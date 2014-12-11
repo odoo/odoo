@@ -118,4 +118,3 @@ class change_standard_price(osv.osv_memory):
 
 change_standard_price()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -405,4 +405,3 @@ class event_registration(osv.osv):
             data.update(d['value'])
         return {'value': data}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -124,5 +124,4 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
 report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header="internal")
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

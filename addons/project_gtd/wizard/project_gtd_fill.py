@@ -58,4 +58,3 @@ class project_timebox_fill(osv.osv_memory):
 
 project_timebox_fill()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

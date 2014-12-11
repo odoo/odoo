@@ -37,4 +37,3 @@ class marketing_config_settings(osv.osv_memory):
                 This installs the module crm_profiling."""),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

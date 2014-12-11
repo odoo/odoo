@@ -359,4 +359,3 @@ class hr_evaluation_interview(osv.osv):
 
 hr_evaluation_interview()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

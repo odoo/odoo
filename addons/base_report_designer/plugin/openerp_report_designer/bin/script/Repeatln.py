@@ -276,4 +276,3 @@ elif __name__=="package":
     g_ImplementationHelper = unohelper.ImplementationHelper()
     g_ImplementationHelper.addImplementation( RepeatIn, "org.openoffice.openerp.report.repeatln", ("com.sun.star.task.Job",),)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

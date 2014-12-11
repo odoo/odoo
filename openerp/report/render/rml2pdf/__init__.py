@@ -24,4 +24,3 @@ from trml2pdf import parseString, parseNode
 #.apidoc title: RML to PDF engine
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

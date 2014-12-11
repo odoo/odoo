@@ -100,4 +100,3 @@ class account_partner_reconcile_process(osv.osv_memory):
 
 account_partner_reconcile_process()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

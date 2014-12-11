@@ -63,4 +63,3 @@ class res_currency(osv.osv, EDIMixin):
                                                                          'rate': rate}, context=context)
         return currency_id
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

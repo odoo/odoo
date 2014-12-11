@@ -158,4 +158,3 @@ class journal_print(report_sxw.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

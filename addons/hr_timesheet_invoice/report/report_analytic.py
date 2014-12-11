@@ -107,5 +107,4 @@ class report_account_analytic_line_to_invoice(osv.osv):
         """)
 report_account_analytic_line_to_invoice()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

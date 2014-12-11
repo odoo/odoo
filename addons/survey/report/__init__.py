@@ -24,4 +24,3 @@ import survey_analysis_report
 import survey_form
 import survey_browse_response
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

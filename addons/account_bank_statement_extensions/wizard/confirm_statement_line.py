@@ -34,4 +34,3 @@ class confirm_statement_line(osv.osv_memory):
 
 confirm_statement_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

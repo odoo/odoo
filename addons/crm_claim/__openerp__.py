@@ -53,4 +53,3 @@ automatically new claims based on incoming emails.
     'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

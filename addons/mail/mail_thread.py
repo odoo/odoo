@@ -1464,4 +1464,3 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

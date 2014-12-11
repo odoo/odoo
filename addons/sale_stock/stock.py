@@ -150,4 +150,3 @@ class stock_picking_out(osv.osv):
         'sale_id': fields.many2one('sale.order', 'Sale Order',
             ondelete='set null', select=True),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

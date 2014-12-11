@@ -57,4 +57,3 @@ def frame_codeinfo(fframe, back=0):
     except Exception:
         return "<unknown>", ''
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

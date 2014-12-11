@@ -97,4 +97,3 @@ class wiki_make_index(osv.osv_memory):
 
 wiki_make_index()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

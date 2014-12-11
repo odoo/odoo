@@ -68,4 +68,3 @@ class hr_salary_employee_bymonth(osv.osv_memory):
 
 hr_salary_employee_bymonth()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

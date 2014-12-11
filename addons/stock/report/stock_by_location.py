@@ -80,5 +80,4 @@ class report_custom(report_rml):
 
 report_custom('report.stock.lot.location', 'stock.location', '', 'addons/stock/report/stock_by_location.xsl')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

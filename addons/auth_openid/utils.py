@@ -32,4 +32,3 @@ SREG2AX = {     # from http://www.axschema.org/types/#sreg
     'timezone': 'http://axschema.org/pref/timezone',
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

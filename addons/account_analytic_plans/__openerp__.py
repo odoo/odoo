@@ -81,4 +81,3 @@ The analytic plan validates the minimum and maximum percentage at the time of cr
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

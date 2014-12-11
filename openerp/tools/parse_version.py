@@ -100,4 +100,3 @@ if __name__ == '__main__':
         chk(('5.0.0-0_rc3', '5.0.0-1dev', '5.0.0-1'), False) 
         
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

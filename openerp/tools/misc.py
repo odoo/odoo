@@ -1096,4 +1096,3 @@ def stripped_sys_argv(*strip_args):
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

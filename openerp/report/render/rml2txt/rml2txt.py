@@ -500,5 +500,4 @@ if __name__=="__main__":
         print 'Usage: trml2txt input.rml >output.pdf'
         print 'Try \'trml2txt --help\' for more information.'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

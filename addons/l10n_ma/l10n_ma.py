@@ -49,4 +49,3 @@ class l10n_ma_line(osv.osv):
     ]
 l10n_ma_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

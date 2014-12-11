@@ -146,4 +146,3 @@ class account_config_settings(osv.osv_memory):
             return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

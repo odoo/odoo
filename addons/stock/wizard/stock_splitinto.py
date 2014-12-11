@@ -83,4 +83,3 @@ class stock_split_into(osv.osv_memory):
 stock_split_into()
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

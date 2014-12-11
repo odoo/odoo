@@ -152,5 +152,4 @@ class workflow_service(netsvc.Service):
                     cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (new_id[0], item_id))
 workflow_service()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

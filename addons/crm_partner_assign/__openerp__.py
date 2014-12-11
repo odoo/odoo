@@ -54,4 +54,3 @@ You can also use the geolocalization without using the GPS coordinates.
     'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

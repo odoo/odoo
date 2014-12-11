@@ -50,4 +50,3 @@ class account_unreconcile_reconcile(osv.osv_memory):
 
 account_unreconcile_reconcile()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

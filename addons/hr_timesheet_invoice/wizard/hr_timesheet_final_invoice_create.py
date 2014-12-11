@@ -60,4 +60,3 @@ class final_invoice_create(osv.osv_memory):
 
 final_invoice_create()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

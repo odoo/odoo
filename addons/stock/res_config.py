@@ -84,4 +84,3 @@ This installs the module product_expiry."""),
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
         dp.write({'digits': config.decimal_precision})
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

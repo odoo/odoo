@@ -61,4 +61,3 @@ class crm_phonecall2meeting(osv.osv_memory):
 
 crm_phonecall2meeting()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

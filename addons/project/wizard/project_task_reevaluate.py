@@ -82,4 +82,3 @@ class project_task_reevaluate(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 project_task_reevaluate()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

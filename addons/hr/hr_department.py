@@ -106,4 +106,3 @@ class ir_action_window(osv.osv):
 ir_action_window()
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

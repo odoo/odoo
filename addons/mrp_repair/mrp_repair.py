@@ -753,4 +753,3 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
     }
 
 mrp_repair_fee()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

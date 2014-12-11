@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak
 # Copyright (c) 2007, Ashish Kulkarni <kulkarni.ashish@gmail.com>

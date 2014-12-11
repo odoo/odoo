@@ -1776,4 +1776,3 @@ class Reports(openerpweb.Controller):
                  ('Content-Length', len(report))],
              cookies={'fileToken': token})
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -528,5 +528,4 @@ def close_db(db_name):
         _Pool.close_all(dsn(db_name))
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

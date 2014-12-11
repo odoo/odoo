@@ -176,4 +176,3 @@ class OpenERPAuthProvider(AuthProvider):
         self.auth_tries += 1
         raise AuthRequiredExc(atype='Basic', realm=self.realm)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

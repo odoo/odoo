@@ -40,4 +40,3 @@ Once you have modified it you can upload the report using the same wizard.
     'auto_install': False,
     'images': ['images/base_report_designer1.jpeg','images/base_report_designer2.jpeg',],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -249,4 +249,3 @@ class OpenIDController(openerp.addons.web.http.Controller):
         return {'status': session.get('status'), 'message': session.get('message')}
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

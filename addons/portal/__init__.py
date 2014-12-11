@@ -25,4 +25,3 @@ import mail_message
 import wizard
 import acquirer
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

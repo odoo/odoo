@@ -1310,4 +1310,3 @@ class account_invoice(osv.Model):
             wf_service.trg_write(uid, 'purchase.order', order.id, cr)
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

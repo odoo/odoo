@@ -41,4 +41,3 @@ Add a Shortcut icon besides the views title in order to add/remove a shortcut.
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

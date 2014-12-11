@@ -42,4 +42,3 @@ You can track your suppliers, customers and other contacts.
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

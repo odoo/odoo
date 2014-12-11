@@ -317,4 +317,3 @@ class account_followup_print(osv.osv_memory):
 
 account_followup_print()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -83,4 +83,3 @@ report_sxw.report_sxw(
     'addons/account_check_writing/report/check_print_bottom.rml',
     parser=report_print_check,header=False
 )
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -474,4 +474,3 @@ class res_partner(osv.osv):
                                                     fnct_search=_payment_earliest_date_search),
         }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

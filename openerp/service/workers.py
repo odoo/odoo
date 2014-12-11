@@ -428,4 +428,3 @@ class WorkerCron(Worker):
         self.db_index = int(len(self._db_list()) * p)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

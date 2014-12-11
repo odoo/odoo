@@ -659,5 +659,4 @@ class abstracted_fs(object):
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, path)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

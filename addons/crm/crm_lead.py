@@ -1100,4 +1100,3 @@ class crm_lead(base_stage, format_address, osv.osv):
             return {'value':{'country_id':country_id}}
         return {}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

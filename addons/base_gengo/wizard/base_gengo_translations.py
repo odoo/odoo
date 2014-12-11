@@ -251,4 +251,3 @@ class base_gengo_translations(osv.osv_memory):
         except Exception, e:
             _logger.error("%s", e)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

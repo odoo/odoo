@@ -89,5 +89,4 @@ report_sxw.report_sxw('report.ir.module.reference', 'ir.module.module',
         parser=ir_module_reference_print, header=False)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

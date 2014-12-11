@@ -23,4 +23,3 @@
 from decimal_precision import get_precision
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -393,4 +393,3 @@ class survey_form(report_rml):
 
 survey_form('report.survey.form', 'survey','','')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

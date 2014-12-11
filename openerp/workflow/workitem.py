@@ -197,5 +197,4 @@ def _join_test(cr, trans_id, inst_id, ident, stack):
                 cr.execute('delete from wkf_witm_trans where trans_id=%s and inst_id=%s', (id,inst_id))
             create(cr, [activity], inst_id, ident, stack)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

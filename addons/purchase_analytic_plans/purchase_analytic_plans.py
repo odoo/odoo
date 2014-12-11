@@ -52,4 +52,3 @@ class stock_picking(osv.osv):
             res['analytics_id'] = move_line.purchase_line_id.analytics_id.id
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

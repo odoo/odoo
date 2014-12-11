@@ -181,4 +181,3 @@ class stock_picking_in(osv.osv):
             ondelete='set null', select=True),
         'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse', readonly=True),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

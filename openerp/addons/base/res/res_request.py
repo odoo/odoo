@@ -119,5 +119,4 @@ class res_request_history(osv.osv):
 res_request_history()
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

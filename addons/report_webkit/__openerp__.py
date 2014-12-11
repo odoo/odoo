@@ -95,4 +95,3 @@ TODO:
     'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

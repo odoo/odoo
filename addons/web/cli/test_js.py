@@ -32,4 +32,3 @@ class TestJs(openerp.cli.Command):
         if r.errors or r.failures:
             sys.exit(1)
 
-# vim:et:ts=4:sw=4:

@@ -52,5 +52,4 @@ class pos_confirm(osv.osv_memory):
         return {}
 pos_confirm()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

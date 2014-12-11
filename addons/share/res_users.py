@@ -51,4 +51,3 @@ class res_groups(osv.osv):
         return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -48,4 +48,3 @@ class account_statement(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement,header='internal')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

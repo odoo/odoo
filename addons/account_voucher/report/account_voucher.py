@@ -72,4 +72,3 @@ report_sxw.report_sxw(
     parser=report_voucher,header="external"
 )
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

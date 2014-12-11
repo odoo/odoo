@@ -627,4 +627,3 @@ class Root(object):
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
 
-# vim:et:ts=4:sw=4:

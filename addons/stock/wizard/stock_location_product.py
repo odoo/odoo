@@ -59,4 +59,3 @@ class stock_location_product(osv.osv_memory):
 
 stock_location_product()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

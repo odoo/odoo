@@ -44,5 +44,3 @@ class account_common_partner_report(osv.osv_memory):
 
 account_common_partner_report()
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

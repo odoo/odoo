@@ -122,4 +122,3 @@ class account_analytic_profit(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.analytic.profit', 'account.analytic.line', 'addons/hr_timesheet_invoice/report/account_analytic_profit.rml', parser=account_analytic_profit)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

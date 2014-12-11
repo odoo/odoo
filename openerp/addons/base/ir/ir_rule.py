@@ -174,5 +174,4 @@ class ir_rule(osv.osv):
 
 ir_rule()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

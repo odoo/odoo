@@ -33,5 +33,4 @@ class expense(report_sxw.rml_parse):
 report_sxw.report_sxw('report.hr.expense', 'hr.expense.expense', 'addons/hr_expense/report/expense.rml',parser=expense)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

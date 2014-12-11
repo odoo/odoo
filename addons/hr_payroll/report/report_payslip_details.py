@@ -115,4 +115,3 @@ class payslip_details_report(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.paylip.details', 'hr.payslip', 'hr_payroll/report/report_payslip_details.rml', parser=payslip_details_report)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

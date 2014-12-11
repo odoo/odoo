@@ -184,5 +184,4 @@ class report_custom(report_int):
 
 report_custom('report.crm.case')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -121,4 +121,3 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         return self.send_mail(cr, uid, ids, context=context)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

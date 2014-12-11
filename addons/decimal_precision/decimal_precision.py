@@ -76,4 +76,3 @@ def get_precision(application):
         return (16, res)
     return change_digit
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

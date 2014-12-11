@@ -2143,4 +2143,3 @@ def str2url(str):
 		str = str.replace(*i)
 	return str
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

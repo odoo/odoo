@@ -350,4 +350,3 @@ class account_journal_cashbox_line(osv.osv):
 
 account_journal_cashbox_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

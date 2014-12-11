@@ -83,4 +83,3 @@ class product_margin(osv.osv_memory):
 
 product_margin()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

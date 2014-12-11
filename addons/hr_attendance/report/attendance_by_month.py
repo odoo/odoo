@@ -192,4 +192,3 @@ class report_custom(report_rml):
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

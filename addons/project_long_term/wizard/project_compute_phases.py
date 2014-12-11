@@ -74,4 +74,3 @@ class project_compute_phases(osv.osv_memory):
 
 project_compute_phases()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

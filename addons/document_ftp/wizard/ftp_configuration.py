@@ -49,4 +49,3 @@ class document_ftp_configuration(osv.osv_memory):
 
 document_ftp_configuration()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

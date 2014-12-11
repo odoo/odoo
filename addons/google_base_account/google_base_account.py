@@ -29,5 +29,4 @@ class res_users(osv.osv):
     }
 res_users()    
 
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 

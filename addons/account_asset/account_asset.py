@@ -494,4 +494,3 @@ class account_asset_history(osv.osv):
 
 account_asset_history()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

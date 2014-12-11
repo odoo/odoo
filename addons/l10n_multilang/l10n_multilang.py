@@ -150,4 +150,3 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
 wizard_multi_charts_accounts()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

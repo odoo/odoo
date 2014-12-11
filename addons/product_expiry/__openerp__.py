@@ -41,5 +41,4 @@ Used, for example, in food industries.""",
     'installable': True,
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

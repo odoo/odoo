@@ -80,4 +80,3 @@ class email_template_preview(osv.osv_memory):
             vals[k] = mail_values[k]
         return {'value': vals}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -69,4 +69,3 @@ def get_ftp_fulldata(ftp, fname, limit=8192):
 
 #eof
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

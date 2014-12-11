@@ -5506,4 +5506,3 @@ PGERROR_TO_OE = collections.defaultdict(
     # unique constraint error
     '23505': convert_pgerror_23505,
 })
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -55,4 +55,3 @@ This module shows the basic processes involved in the selected modules and in th
     ],
     'auto_install': True
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

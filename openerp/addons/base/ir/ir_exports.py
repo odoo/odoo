@@ -43,5 +43,4 @@ class ir_exports_line(osv.osv):
     }
 ir_exports_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

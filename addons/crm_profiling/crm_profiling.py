@@ -291,5 +291,4 @@ class crm_segmentation(osv.osv):
 
 crm_segmentation()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

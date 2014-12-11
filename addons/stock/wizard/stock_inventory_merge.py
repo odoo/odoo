@@ -88,5 +88,4 @@ class stock_inventory_merge(osv.osv_memory):
 
 stock_inventory_merge()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

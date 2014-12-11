@@ -36,4 +36,3 @@ class crm_claim(base_stage, osv.osv):
                 cr, SUPERUSER_ID, [res['partner_id']], context=context)[0]
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

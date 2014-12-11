@@ -22,5 +22,4 @@
 import hr_holidays_summary_department
 import hr_holidays_summary_employees
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

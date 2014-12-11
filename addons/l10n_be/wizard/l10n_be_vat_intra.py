@@ -293,4 +293,3 @@ class vat_intra_print(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print, header="internal")
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

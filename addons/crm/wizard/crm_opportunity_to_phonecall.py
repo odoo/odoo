@@ -77,4 +77,3 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
 crm_opportunity2phonecall()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

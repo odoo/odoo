@@ -387,4 +387,3 @@ class process_transition_action(osv.osv):
 
 process_transition_action()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

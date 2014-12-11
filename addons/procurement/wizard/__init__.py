@@ -24,4 +24,3 @@ import mrp_procurement
 import schedulers_all
 import make_procurement_product
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

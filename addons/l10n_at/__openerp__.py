@@ -38,4 +38,3 @@ Please keep in mind that you should review and adapt it with your Accountant, be
 }
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

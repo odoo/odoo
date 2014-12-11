@@ -87,4 +87,3 @@ class base_module_import(osv.osv_memory):
         }
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

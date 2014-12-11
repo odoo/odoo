@@ -108,4 +108,3 @@ class TestACL(common.TransactionCase):
 if __name__ == '__main__':
     unittest2.main()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -45,4 +45,3 @@ class account_open_closed_fiscalyear(osv.osv_memory):
 
 account_open_closed_fiscalyear()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

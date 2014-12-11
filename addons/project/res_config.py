@@ -77,4 +77,3 @@ class project_configuration(osv.osv_memory):
             return {'value': {'group_tasks_work_on_tasks': True}}
         return {}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

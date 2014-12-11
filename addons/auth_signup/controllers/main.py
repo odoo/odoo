@@ -80,4 +80,3 @@ class Controller(openerp.addons.web.http.Controller):
                 raise(e)
         return True
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -51,4 +51,3 @@ class hr_attendance_byweek(osv.osv_memory):
 
 hr_attendance_byweek()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

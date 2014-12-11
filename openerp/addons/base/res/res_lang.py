@@ -365,4 +365,3 @@ def _group_examples():
     assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
