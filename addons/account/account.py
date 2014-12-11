@@ -1158,7 +1158,7 @@ class account_add_tmpl_wizard(models.TransientModel):
         account = False
         if not ptids or not ptids[0]['code']:
             raise Warning(_('There is no parent code for the template account.'))
-            accounts = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
+            account = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
         return account
 
     cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent(),
@@ -1167,7 +1167,7 @@ class account_add_tmpl_wizard(models.TransientModel):
     @api.multi
     def action_create(self):
         context = dict(self._context or {})
-        AccountObj = self.pool.get('account.account')
+        AccountObj = self.env['account.account']
         data = self.read()[0]
         company_id = AccountObj.read([data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
         account_template = self.env['account.account.template'].browse(context['tmpl_ids'])
