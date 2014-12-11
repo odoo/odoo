@@ -163,7 +163,7 @@
             var triggers = tip.trigger_selector ? tip.trigger_selector.split(',') : [];
             var trigger_tip = true;
 
-            if(!$(highlight_selector).length > 0) {
+            if(!$(highlight_selector).length > 0 || !$(highlight_selector).is(":visible")) {
                 return def.reject();
             }
             for (var i = 0; i < triggers.length; i++) {
