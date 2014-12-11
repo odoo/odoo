@@ -70,5 +70,3 @@ class account_analytic_journal_report(osv.osv_memory):
         if 'analytic_account_journal_id' in fields:
             res.update({'analytic_account_journal_id': journal_ids})
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

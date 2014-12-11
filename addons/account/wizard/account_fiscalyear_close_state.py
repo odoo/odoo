@@ -65,6 +65,3 @@ class account_fiscalyear_close_state(osv.osv_memory):
             self.invalidate_cache(cr, uid, context=context)
 
             return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

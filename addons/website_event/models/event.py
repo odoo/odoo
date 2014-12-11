@@ -125,4 +125,3 @@ class event(osv.osv):
         if event.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
         return None
-

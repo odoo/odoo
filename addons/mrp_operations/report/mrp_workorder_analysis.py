@@ -63,6 +63,3 @@ class mrp_workorder(osv.osv):
                 group by
                     w.costs_hour, mp.product_id, mp.name, wl.state, wl.date_planned, wl.production_id, wl.workcenter_id
         )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4298,5 +4298,3 @@ class stock_picking_type(osv.osv):
         'warehouse_id': _default_warehouse,
         'active': True,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -82,6 +82,3 @@ class open_questionnaire(osv.osv_memory):
             'target': 'new',
             'context': context
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

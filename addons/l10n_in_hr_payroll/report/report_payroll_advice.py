@@ -82,5 +82,3 @@ class wrapped_report_payroll_advice(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_in_hr_payroll.report_payrolladvice'
     _wrapped_report_class = payroll_advice_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

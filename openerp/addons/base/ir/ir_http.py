@@ -179,5 +179,3 @@ def convert_exception_to(to_type, with_message=False):
         raise to_type, message, tb
     except to_type, e:
         return e
-
-# vim:et:

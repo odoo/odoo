@@ -58,6 +58,3 @@ the bank account\nin the journal definition for reconciliation.'))
             'context': "{'journal_id': %d}" % (data['journal_id'],),
             'type': 'ir.actions.act_window'
              }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

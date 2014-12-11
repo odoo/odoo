@@ -67,5 +67,3 @@ sxw_namespace = {
     "ooow":"{http://openoffice.org/2004/writer}",
     "oooc":"{http://openoffice.org/2004/calc}",
     "dom":"{http://www.w3.org/2001/xml-events}"}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

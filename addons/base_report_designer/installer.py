@@ -57,5 +57,3 @@ class base_report_designer_installer(osv.osv_memory):
             4. if your connection success, A message appears like 'You can start creating your report in current document.'.
         """
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -331,6 +331,3 @@ class WorkflowItem(object):
                 return False
 
         return self.wkf_expr_eval_expr(transition['condition'])
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

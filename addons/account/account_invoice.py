@@ -1641,5 +1641,3 @@ class mail_compose_message(models.Model):
             invoice.write({'sent': True})
             invoice.message_post(body=_("Invoice sent"))
         return super(mail_compose_message, self).send_mail()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

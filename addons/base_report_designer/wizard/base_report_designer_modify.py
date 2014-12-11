@@ -146,6 +146,3 @@ class base_report_rml_save(osv.osv_memory):
     _columns = {
         'file_rml':fields.binary('Save As'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

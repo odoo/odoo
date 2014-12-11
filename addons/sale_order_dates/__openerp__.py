@@ -44,5 +44,3 @@ You can add the following additional dates to a sales order:
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

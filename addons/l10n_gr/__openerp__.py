@@ -43,6 +43,3 @@ Greek accounting chart and localization.
     'installable': True,
     'images': ['images/config_chart_l10n_gr.jpeg','images/l10n_gr_chart.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

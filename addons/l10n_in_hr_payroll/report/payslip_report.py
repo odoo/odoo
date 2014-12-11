@@ -83,5 +83,3 @@ class payslip_report(osv.osv):
                     l.employee_id,p.struct_id,l.category_id
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

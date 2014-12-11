@@ -466,5 +466,3 @@ class RegistryManager(object):
             finally:
                 cr.close()
             registry.base_registry_signaling_sequence = r
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -427,6 +427,3 @@ class res_users(osv.osv):
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

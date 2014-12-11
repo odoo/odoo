@@ -46,4 +46,3 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
     'auto_install': False,
     'images': ['images/1_delivery_method.jpeg','images/2_delivery_pricelist.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

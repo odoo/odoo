@@ -179,7 +179,3 @@ class crm_segmentation_line(osv.osv):
                 if res:
                     return True
         return True
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

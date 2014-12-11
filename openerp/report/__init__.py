@@ -38,7 +38,3 @@ def render_report(cr, uid, ids, name, data, context=None):
     """
     registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
     return registry['ir.actions.report.xml'].render_report(cr, uid, ids, name, data, context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

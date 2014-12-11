@@ -82,5 +82,3 @@ class asset_asset_report(osv.osv):
                     a.purchase_value, a.id, a.salvage_value
         )""")
 	
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

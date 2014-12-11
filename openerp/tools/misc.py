@@ -1276,5 +1276,3 @@ if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0
 else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

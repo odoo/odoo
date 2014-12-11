@@ -77,6 +77,3 @@ class purchase_order_group(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

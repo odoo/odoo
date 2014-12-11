@@ -26,5 +26,3 @@ import gui
 import logreport
 import rpc
 import tiny_socket
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -44,6 +44,3 @@ class account_journal_select(osv.osv_memory):
             result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
             result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
         return result
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

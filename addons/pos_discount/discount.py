@@ -36,4 +36,3 @@ class pos_config(osv.osv):
     _defaults = {
         'discount_pc': 10,
     }
-

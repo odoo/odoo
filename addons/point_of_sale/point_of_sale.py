@@ -1439,7 +1439,3 @@ class res_partner(osv.osv):
             partner_id = self.create(cr, uid, partner, context=context)
         
         return partner_id
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

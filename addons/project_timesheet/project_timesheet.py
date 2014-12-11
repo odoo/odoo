@@ -320,6 +320,3 @@ class account_analytic_line(osv.osv):
        if acc.state == 'close' or acc.state == 'cancelled':
            raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

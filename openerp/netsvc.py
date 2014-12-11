@@ -221,5 +221,3 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['openerp:ERROR', 'werkzeug:ERROR'],
     'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -199,4 +199,3 @@ class event_sponsors(osv.osv):
     def has_access_to_partner(self, cr, uid, ids, context=None):
         partner_ids = [sponsor.partner_id.id for sponsor in self.browse(cr, uid, ids, context=context)]
         return len(partner_ids) == self.pool.get("res.partner").search(cr, uid, [("id", "in", partner_ids)], count=True, context=context)
-

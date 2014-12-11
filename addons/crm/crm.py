@@ -176,5 +176,3 @@ class crm_payment_mode(osv.osv):
         'name': fields.char('Name', required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

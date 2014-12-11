@@ -38,6 +38,3 @@ class account_state_open(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _('Invoice is already reconciled.'))
             invoice.signal_workflow('open_test')
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

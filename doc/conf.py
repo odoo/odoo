@@ -234,4 +234,3 @@ def _build_url(root, branch, pagename):
         canonical_page=(pagename + '.html').replace('index.html', '')
                                            .replace('index/', ''),
     )
-

@@ -84,5 +84,3 @@ class email_template_preview(osv.osv_memory):
         vals = dict((field, mail_values.get(field, False)) for field in ('email_from', 'email_to', 'email_cc', 'reply_to', 'subject', 'body_html', 'partner_to', 'partner_ids', 'attachment_ids'))
         vals['name'] = template.name
         return {'value': vals}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

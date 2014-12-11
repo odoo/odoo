@@ -114,4 +114,3 @@ class account_voucher(osv.osv):
                 node.set('widget', '')
             res['arch'] = etree.tostring(doc)
         return res
-

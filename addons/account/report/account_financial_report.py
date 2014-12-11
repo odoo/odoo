@@ -113,5 +113,3 @@ class report_financial(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_financial'
     _wrapped_report_class = report_account_common
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

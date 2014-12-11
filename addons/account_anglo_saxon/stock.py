@@ -65,7 +65,3 @@ class stock_picking(osv.osv):
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return res
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

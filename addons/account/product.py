@@ -60,6 +60,3 @@ class product_template(osv.osv):
             string="Expense Account",
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -47,6 +47,3 @@ class account_subscription_generate(osv.osv_memory):
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['domain'] = str([('id','in',moves_created)])
         return result
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,5 +26,3 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     speaker = fields.Boolean(help="Check this box if this contact is a speaker.")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

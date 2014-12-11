@@ -341,5 +341,3 @@ class stock_valuation_adjustment_lines(osv.osv):
         'weight': 1.0,
         'volume': 1.0,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

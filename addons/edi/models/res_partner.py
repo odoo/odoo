@@ -88,6 +88,3 @@ class res_partner(osv.osv, EDIMixin):
                                                                  'bank type: %s, ignoring', import_ctx['default_state'],
                                                                  exc_info=True)
         return contact_id
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

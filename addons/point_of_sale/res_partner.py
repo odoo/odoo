@@ -21,4 +21,3 @@ class res_users(osv.osv):
     _constraints = [
         (_check_ean, "Error: Invalid ean code", ['ean13'],),
     ]
-

@@ -1089,5 +1089,3 @@ class crm_lead(format_address, osv.osv):
                     partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
                     break
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

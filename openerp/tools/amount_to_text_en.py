@@ -129,6 +129,3 @@ if __name__=='__main__':
             print i, ">>", int_to_text(i, lang)
     else:
         print int_to_text(int(argv[1]), lang)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

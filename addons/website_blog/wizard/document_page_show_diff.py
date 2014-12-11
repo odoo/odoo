@@ -57,5 +57,3 @@ class showdiff(osv.osv_memory):
     _defaults = {
         'diff': get_diff
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

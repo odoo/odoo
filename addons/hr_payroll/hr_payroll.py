@@ -972,6 +972,3 @@ class hr_employee(osv.osv):
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
         'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -979,6 +979,3 @@ class change_password_user(osv.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write(cr, uid, ids, {'new_passwd': False}, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

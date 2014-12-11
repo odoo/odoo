@@ -78,6 +78,3 @@ class pos_order_report(osv.osv):
                     s.user_id,s.location_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

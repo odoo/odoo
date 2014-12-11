@@ -85,6 +85,3 @@ class pos_open_statement(osv.osv_memory):
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'search_view_id': search_id,
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

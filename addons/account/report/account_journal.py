@@ -213,5 +213,3 @@ class report_salepurchasejournal(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_salepurchasejournal'
     _wrapped_report_class = journal_print
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

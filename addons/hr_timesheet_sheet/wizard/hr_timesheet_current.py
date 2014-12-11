@@ -57,6 +57,3 @@ class hr_timesheet_current_open(osv.osv_memory):
         if len(ids) == 1:
             value['res_id'] = ids[0]
         return value
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

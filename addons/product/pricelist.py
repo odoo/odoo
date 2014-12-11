@@ -517,8 +517,3 @@ class product_pricelist_item(osv.osv):
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

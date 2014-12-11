@@ -203,5 +203,3 @@ class res_partner(osv.osv):
     _columns = {
         'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
