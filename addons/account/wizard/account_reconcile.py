@@ -91,8 +91,7 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
     @api.multi
     def trans_rec_reconcile_partial(self):
         context = dict(self._context or {})
-        #TODO need to create new wizard for partial reconciliation
-        self.env['account.move.line'].browse(context.get('active_ids', [])).reconcile(partial=True)
+        self.env['account.move.line'].browse(context.get('active_ids', [])).reconcile()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

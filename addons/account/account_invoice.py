@@ -142,17 +142,11 @@ class account_invoice(models.Model):
         'move_id.line_id.amount_residual',
     )
     def _compute_payments(self):
-        partial_lines = lines = payment_lines = self.env['account.move.line']
+        payment_lines = []
         for line in self.move_id.line_id:
-            payment_lines += line.reconcile_partial_ids
-            # if line.account_id != self.account_id:
-            #     continue
-            # if line.reconcile_id:
-            #     lines |= line.reconcile_id.line_id
-            # partial_lines += line
-        # payment = self.env['account.move.line'].search([('reconcile_partial_id', 'in', self.move_id.line_id.ids)])
-        # self.payment_ids = (lines - partial_lines + payment).sorted()
-        self.payment_ids = payment_lines.sorted()
+            payment_lines.extend([rp.rec_move_id.id for rp in line.reconcile_partial_ids])
+            payment_lines.extend([rp.source_move_id.id for rp in line.reconcile_partial_with_ids])
+        self.payment_ids = self.env['account.move.line'].browse(payment_lines).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]})
@@ -1146,7 +1140,7 @@ class account_invoice(models.Model):
                     (pay_amount, code, self.amount_total, code, total, code)
             self.message_post(body=msg)
             #TODO check if this method is really needed, seems to only be used in test and data files
-            # lines2rec.reconcile(partial=True)
+            # lines2rec.reconcile()
 
         # Update the stored value (fields.function), so we write to trigger recompute
         return self.write({})

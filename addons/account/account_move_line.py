@@ -15,7 +15,6 @@ from openerp.tools import float_is_zero
 
 class account_partial_reconcile(models.Model):
     _name = "account.partial.reconcile"
-    _table = "account_partial_reconcile_rel"
     _description = "Partial Reconcile"
 
     source_move_id = fields.Many2one('account.move.line')
@@ -124,11 +123,8 @@ class account_move_line(models.Model):
                 result.append((line.id, line.move_id.name))
         return result
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 
-        'reconcile_partial_ids.debit', 'reconcile_partial_ids.credit',
-        'reconcile_partial_ids.partial_reconciled', 
-        'partial_reconciled',
-        'account_id.reconcile')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id',
+        'reconcile_partial_ids.amount', 'reconcile_partial_with_ids.amount')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
@@ -136,11 +132,12 @@ class account_move_line(models.Model):
         for line in self:
 
             amount = abs(line.debit - line.credit)
+            sign = 1 if (line.debit - line.credit) > 0 else -1
 
-            for rec_line in self.env['account.partial.reconcile'].search(['|', ('source_move_id', '=', line.id), ('rec_move_id', '=', line.id)]):
-                amount -= rec_line.amount
+            for partial_line in (line.reconcile_partial_ids + line.reconcile_partial_with_ids):
+                amount -= partial_line.amount
 
-            line.amount_residual = amount
+            line.amount_residual = amount*sign
             if line.currency_id:
                 line.amount_residual_currency = line.company_id.currency_id.compute(amount, line.currency_id)
                 digits_rounding_precision = line.currency_id.rounding
@@ -207,8 +204,8 @@ class account_move_line(models.Model):
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
     reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile', 
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
-    partial_reconciled = fields.Boolean('Is part of a partial reconciliation')
-    reconcile_partial_ids = fields.Many2many('account.move.line', 'account_partial_reconcile_rel', 'source_move_id', 'rec_move_id', string='Partial Reconcile')
+    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with', help='Moves in which this move is involved for partial reconciliation')
+    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation', help='Moves involved in this move partial reconciliation')
     reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
@@ -670,7 +667,7 @@ class account_move_line(models.Model):
                 move = am_obj.create(move_vals)
                 writeoff_lines += move.line_id.filtered(lambda r: r.account_id == account.id)
 
-        (self|writeoff_lines).reconcile(partial=True)
+        (self|writeoff_lines).reconcile()
 
     @api.model
     def list_partners_to_reconcile(self):
@@ -724,75 +721,82 @@ class account_move_line(models.Model):
 
         self.env['account.partial.reconcile'].create({'source_move_id': sm_debit_move.id, 'rec_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
 
-        #TODO: use 2 one2many instead of a m2m, to allow the normal recomputation of amount_residual and remove the field partial_reconciled
-        (sm_debit_move + sm_credit_move).write({'partial_reconciled': True})
-
         #Iterate process again on self
         return self.auto_reconcile_lines()
 
     @api.multi
-    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False, partial=False):
+    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
         #Perform all checks on lines
-        #TODO: refactore to have only _one_ loop for all the tests below ?
-        company_ids = set([l.company_id.id for l in self])
-        all_accounts = set([l.account_id for l in self])
-        if len(company_ids) > 1:
+        company_ids = []
+        all_accounts = []
+        partners = []
+        for move in self:
+            company_ids.append(move.id)
+            all_accounts.append(move.account_id)
+            if (move.account_id.user_type.type in ('receivable', 'payable')):
+                partners.append(move.partner_id.id)
+            if move.reconciled:
+                raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))      
+
+        if len(set(company_ids)) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries!'))
-        if any([l.reconciled for l in self]):
-            raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))
-        if len(all_accounts) > 1:
+        if len(set(all_accounts)) > 1:
             raise Warning(_('Entries are not of the same account!'))
-        reconciled_account = list(all_accounts)[0]
-        if not reconciled_account.reconcile:
+        if not all_accounts[0].reconcile:
             raise Warning(_('The account is not defined to be reconciled !'))
-        if reconciled_account.user_type.type in ('receivable', 'payable'):
-            all_partners = set([l.partner_id.id for l in self])
-            if len(all_partners) > 1:
-                raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
-        
+        if len(set(partners)) > 1:
+            raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
+
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
-        #if partial == False, then create write-off move with value the remaining amount from move in self
-        #TODO: create writeoff in a separated method
-        #TODO: remove partial_parameter and use writeoff_acc_id and writeoff_journal_id instead
-        if not partial and remaining_moves:
-            if not writeoff_acc_id:
-                raise Warning(_('You have to provide an account for the write off/exchange difference entry.'))
-            writeoff_amount = sum([r.amount_residual for r in remaining_moves])
-            writeoff_amount_currency = sum([r.amount_residual_currency for r in remaining_moves])
-            writeoff_move = self.env['account.move'].create({
-                'journal_id': writeoff_journal_id,
-                'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
-                'date': self._context.get('date_p', time.strftime('%Y-%m-%d')),
-                'state': 'draft',
-                })
-            #TODO: create the move and the 2 lines in a single operation 
-            writeoff_line_value = {
-                'name': self._context.get('comment', _('Write-Off')),
-                'move_id': writeoff_move.id,
-                'debit': writeoff_amount if writeoff_amount > 0 else 0.0,
-                'credit': abs(writeoff_amount) if writeoff_amount < 0 else 0.0,
-                'account_id': list(all_accounts)[0].id,
-                'date': self._context.get('date_p', time.strftime('%Y-%m-%d')),
-                'partner_id': remaining_moves[0].partner_id and remaining_moves[0].partner_id.id or False,
-                'currency_id': remaining_moves[0].currency_id and remaining_moves[0].currency_id.id or False,
-                'amount_currency': writeoff_amount_currency,
-                }
-            writeoff_to_reconcile = self.create(writeoff_line_value)
-            writeoff_line_value.update({
-                'debit': abs(writeoff_amount) if writeoff_amount < 0 else 0.0, 
-                'credit': writeoff_amount if writeoff_amount > 0 else 0.0, 
-                'account_id': writeoff_acc_id,
-                })
-            self.create(writeoff_line_value)
+        
+        #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
+        if writeoff_acc_id and writeoff_journal_id and remaining_moves:
+            writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_acc_id, writeoff_journal_id)
             #add writeoff line to reconcile algo and finish the reconciliation
-            (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
+            remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
             
+        if not remaining_moves:
             #write last date of reconciliation on partner
             partner = self[0].partner_id
             if partner and not partner.has_something_to_reconcile():
                 partner.mark_as_reconciled()
         return True
+
+    def _create_writeoff(self, writeoff_acc_id, writeoff_journal_id):
+        writeoff_amount = sum([r.amount_residual for r in self])
+        writeoff_amount_currency = sum([r.amount_residual_currency for r in self])
+        #writeoff move
+        writeoff_value_dict = {
+            'name': self._context.get('comment', _('Write-Off')),
+            'debit': writeoff_amount if writeoff_amount > 0 else 0.0,
+            'credit': abs(writeoff_amount) if writeoff_amount < 0 else 0.0,
+            'account_id': self[0].account_id.id,
+            'date': self._context.get('date_p', time.strftime('%Y-%m-%d')),
+            'partner_id': self[0].partner_id and self[0].partner_id.id or False,
+            'currency_id': self[0].currency_id and self[0].currency_id.id or False,
+            'amount_currency': writeoff_amount_currency,
+            }
+        #writeoff counterpart move
+        writeoff_counterpart_value_dict = writeoff_value_dict.copy()
+        writeoff_counterpart_value_dict.update({
+            'debit': abs(writeoff_amount) if writeoff_amount < 0 else 0.0, 
+            'credit': writeoff_amount if writeoff_amount > 0 else 0.0, 
+            'account_id': writeoff_acc_id,
+            })
+        writeoff_move = self.env['account.move'].create({
+            'journal_id': writeoff_journal_id,
+            'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
+            'date': self._context.get('date_p', time.strftime('%Y-%m-%d')),
+            'state': 'draft',
+            'line_id': [(0, 0, writeoff_value_dict), (0, 0, writeoff_counterpart_value_dict)],
+            })
+
+        #return move to be reconciled
+        for line in writeoff_move.line_id:
+            if line.account_id == self[0].account_id:
+                return line
+        return False
 
     @api.multi
     def _remove_move_reconcile(self):
