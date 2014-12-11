@@ -63,6 +63,22 @@
     </t>
 
     <!--
+        mail.mention template
+        Dropdown list for @ mention functionality
+        -->
+    <t t-name="mail.mention">
+        <div class="mention">
+            <ul>
+                <t t-if="widget.result">
+                    <t t-foreach="widget.result" t-as='res'>
+                        <li><img class="list_img" t-attf-src='/web/binary/image?model=res.partner&amp;field=image_small&amp;id=#{res.id}' /> <span t-attf-id='#{res.id}'><t t-raw='widget.highlight(res.name, widget.search_str)' /></span> (<i><t t-raw='widget.highlight(res.email, widget.search_str)' /></i>)</li>
+                    </t>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <!--
         mail.compose_message.add_attachment template
         Small template to be inserted in the composition for add attachments
         -->
