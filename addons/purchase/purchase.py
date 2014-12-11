@@ -622,7 +622,7 @@ class purchase_order(osv.osv):
             self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
                     {'state': 'cancel'})
 
-        for (id, name) in self.name_get(cr, uid, ids):
+        for id in ids:
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True
 
